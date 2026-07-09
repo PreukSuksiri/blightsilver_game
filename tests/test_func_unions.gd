@@ -12,6 +12,7 @@ func _ready() -> void:
 	var A := CharacterData.Affinity
 	var AB := CharacterData.AbilityType
 	_run_summon_manual_tests()
+	_run_full_release_summon_tests()
 	_run_excel_only_manual_tests()
 	_run_ability_tests(A, AB)
 	_run_none_smoke_tests(A, AB)
@@ -63,6 +64,11 @@ func _manual(tc_id: String) -> void:
 	passed += 1
 	print("  SKIP: %s [MANUAL — requires TurnManager/GameBoard]" % tc_id)
 
+func _assert_deck_can_form_union(union_name: String, deck: Array, tc_id: String) -> void:
+	var u: UnionData = UnionDatabase.get_union(union_name)
+	assert_true(u != null, "%s: union exists" % tc_id)
+	assert_true(UnionDatabase.deck_can_form_union(deck, u), "%s: deck_can_form_union" % tc_id)
+
 # ---------------------------------------------------------------------------
 # Pattern C — Union summon UI (-000 tests)
 # ---------------------------------------------------------------------------
@@ -87,6 +93,73 @@ func _run_summon_manual_tests() -> void:
 	_manual("TC-FUNC-Sky-Protector-000")
 	_manual("TC-FUNC-Ten-Arms-Yaksa-000")
 	_manual("TC-FUNC-X-Death-Squad-000")
+
+# ---------------------------------------------------------------------------
+# Full-release union summon material tests (deck_can_form_union)
+# ---------------------------------------------------------------------------
+
+func _run_full_release_summon_tests() -> void:
+	print("-- Full-release union summon material tests")
+	_assert_deck_can_form_union("Mass Extinction Dragon", ["Nuki the Tanuki", "Wood Wisp", "Elegant Butterfly", "Armored Monkey", "Magical Butterfly"], "TC-FUNC-Mass-Extinction-Dragon-summon")
+	_assert_deck_can_form_union("Beowolf", ["Kulu the Alpha Leader", "Mina the Chemist"], "TC-FUNC-Beowolf-summon")
+	_assert_deck_can_form_union("Dew the Heroic Prince", ["Dew the Frog Knight", "Wendella the Wise Princess"], "TC-FUNC-Dew-the-Heroic-Prince-summon")
+	_assert_deck_can_form_union("Gemina the Supreme Queen", ["Wendella the Wise Princess", "Fern the Mermaid Princess", "Rena the Space Princess"], "TC-FUNC-Gemina-the-Supreme-Queen-summon")
+	_assert_deck_can_form_union("Manticore", ["Centaur", "Minotaur", "Pegasus"], "TC-FUNC-Manticore-summon")
+	_assert_deck_can_form_union("Wyriah the Roc", ["Steel Eagle", "Ostrich Cannon"], "TC-FUNC-Wyriah-the-Roc-summon")
+	_assert_deck_can_form_union("Mad Eye the Collector", ["Space Janitor", "Mini Probe"], "TC-FUNC-Mad-Eye-the-Collector-summon")
+	_assert_deck_can_form_union("Ice Hawk", ["Drill Woodpecker", "Nuki the Tanuki"], "TC-FUNC-Ice-Hawk-summon")
+	_assert_deck_can_form_union("Dwarven Drill", ["Dwarven Explorer", "Dwarven Miner"], "TC-FUNC-Dwarven-Drill-summon")
+	_assert_deck_can_form_union("Cullan the Flaming Blade", ["Cullan the Magic Swordsman", "Red Mage"], "TC-FUNC-Cullan-the-Flaming-Blade-summon")
+	_assert_deck_can_form_union("The Undertaker", ["Sinister Cultist", "Chaotic Wisp"], "TC-FUNC-The-Undertaker-summon")
+	_assert_deck_can_form_union("Ethereal Marquees", ["Moon Nobleman", "Energy Wisp"], "TC-FUNC-Ethereal-Marquees-summon")
+	_assert_deck_can_form_union("Charm Mistress", ["Alluring Spellcaster", "Energy Wisp"], "TC-FUNC-Charm-Mistress-summon")
+	_assert_deck_can_form_union("Chronoteleporter", ["Freya the Rift Walker", "Bingo the Chrono Rabbit"], "TC-FUNC-Chronoteleporter-summon")
+	_assert_deck_can_form_union("Death Colony", ["Long Tongue", "Lessor Leech"], "TC-FUNC-Death-Colony-summon")
+	_assert_deck_can_form_union("Nuclear Elemental", ["Mind Elemental", "Fire Elemental"], "TC-FUNC-Nuclear-Elemental-summon")
+	_assert_deck_can_form_union("Acid Elemental", ["Mind Elemental", "Water Elemental"], "TC-FUNC-Acid-Elemental-summon")
+	_assert_deck_can_form_union("Vacuum Elemental", ["Mind Elemental", "Wind Elemental"], "TC-FUNC-Vacuum-Elemental-summon")
+	_assert_deck_can_form_union("Magnet Elemental", ["Mind Elemental", "Earth Elemental"], "TC-FUNC-Magnet-Elemental-summon")
+	_assert_deck_can_form_union("Dwarven Berserker", ["Dwarven Explorer", "Energy Wisp"], "TC-FUNC-Dwarven-Berserker-summon")
+	_assert_deck_can_form_union("Tholin Whale", ["Tholin Lobster", "Tholin Shark"], "TC-FUNC-Tholin-Whale-summon")
+	_assert_deck_can_form_union("Dark Invader", ["Lukkey the Jammer", "Mini Probe"], "TC-FUNC-Dark-Invader-summon")
+	_assert_deck_can_form_union("Europan Warcraft", ["Europan Trooper", "Europan Architect"], "TC-FUNC-Europan-Warcraft-summon")
+	_assert_deck_can_form_union("Capnomancer", ["Pyromancer", "Mini Probe"], "TC-FUNC-Capnomancer-summon")
+	_assert_deck_can_form_union("Perseus the Lightborn", ["Aether Warden", "Huntress of Green Glade"], "TC-FUNC-Perseus-the-Lightborn-summon")
+	_assert_deck_can_form_union("Illuminatus", ["Blue Mage", "Aether Warden"], "TC-FUNC-Illuminatus-summon")
+	_assert_deck_can_form_union("Eldritch Warlock", ["Vampire Duchess", "Blue Mage"], "TC-FUNC-Eldritch-Warlock-summon")
+	_assert_deck_can_form_union("Devilshifter", ["Vampire Duchess", "Huntress of Green Glade"], "TC-FUNC-Devilshifter-summon")
+	_assert_deck_can_form_union("Embodiment of Destiny", ["Vampire Duchess", "Aether Warden"], "TC-FUNC-Embodiment-of-Destiny-summon")
+	_assert_deck_can_form_union("Meteorkin", ["Ostrich Cannon", "Space Boy"], "TC-FUNC-Meteorkin-summon")
+	_assert_deck_can_form_union("Chainsaw Tank", ["Prowler Tank", "Mina the Chemist"], "TC-FUNC-Chainsaw-Tank-summon")
+	_assert_deck_can_form_union("Titan Tank", ["Flak Tank", "Mini Tank"], "TC-FUNC-Titan-Tank-summon")
+	_assert_deck_can_form_union("Atomic Tank", ["Prowler Tank", "Thunderclap Tank"], "TC-FUNC-Atomic-Tank-summon")
+	_assert_deck_can_form_union("Mutant Queen", ["Claw Mutant", "Lessor Leech"], "TC-FUNC-Mutant-Queen-summon")
+	_assert_deck_can_form_union("Battle Maid Ayumi", ["Battle Maid Naru", "Battle Maid Kyoko"], "TC-FUNC-Battle-Maid-Ayumi-summon")
+	_assert_deck_can_form_union("Theo the Dragon Knight", ["Dragon Hunter Eugene", "Mina the Chemist"], "TC-FUNC-Theo-the-Dragon-Knight-summon")
+	_assert_deck_can_form_union("War Empress", ["War Queen", "Brave Knight"], "TC-FUNC-War-Empress-summon")
+	_assert_deck_can_form_union("Blood Moon Mage", ["Apprentice Mage", "Moon Rabbit"], "TC-FUNC-Blood-Moon-Mage-summon")
+	_assert_deck_can_form_union("Moon Knight", ["Moon Rabbit", "Mina the Chemist"], "TC-FUNC-Moon-Knight-summon")
+	_assert_deck_can_form_union("Priestess of the Moon", ["Moon Rabbit", "Tiny Pixie"], "TC-FUNC-Priestess-of-the-Moon-summon")
+	_assert_deck_can_form_union("Moon Shifter", ["Moon Rabbit", "Nuki the Tanuki"], "TC-FUNC-Moon-Shifter-summon")
+	_assert_deck_can_form_union("Carbon Behemoth", ["Space Boy", "Slim Gray Trooper", "Mastimus the Outlaw"], "TC-FUNC-Carbon-Behemoth-summon")
+	_assert_deck_can_form_union("Nanomites Rafflesia", ["Nanomites Worms", "Black Worms"], "TC-FUNC-Nanomites-Rafflesia-summon")
+	_assert_deck_can_form_union("Gamma Kraken", ["Gamma Emitter", "Daddy Long Legs", "Dystopian Cultist"], "TC-FUNC-Gamma-Kraken-summon")
+	_assert_deck_can_form_union("Enormous Slime", ["Waste Slime", "Daddy Long Legs"], "TC-FUNC-Enormous-Slime-summon")
+	_assert_deck_can_form_union("Supreme Lich", ["Lich Servant", "Chaotic Wisp"], "TC-FUNC-Supreme-Lich-summon")
+	_assert_deck_can_form_union("The Last Paladin", ["Brave Knight", "Mina the Chemist"], "TC-FUNC-The-Last-Paladin-summon")
+	_assert_deck_can_form_union("Desperado", ["Johnny the Most Wanted", "Mina the Chemist"], "TC-FUNC-Desperado-summon")
+	_assert_deck_can_form_union("Raijin Fujin and Suijin", ["Raijin", "Fujin", "Suigin"], "TC-FUNC-Raijin-Fujin-and-Suijin-summon")
+	_assert_deck_can_form_union("Raijin Fujin and Suigin", ["Raijin", "Fujin", "Suigin"], "TC-FUNC-Raijin-Fujin-and-Suigin-summon")
+	_assert_deck_can_form_union("Death Parasite", ["Parasite Mimas", "Parasite Enceladus"], "TC-FUNC-Death-Parasite-summon")
+	# New unions (xlsx full-release import)
+	_assert_deck_can_form_union("Nanomites Dragon", ["Nanomites Worms", "Lab Zombie"], "TC-FUNC-Nanomites-Dragon-summon")
+	_assert_deck_can_form_union("Immortal Siegfried", ["Battle Maid Midori", "Sea Fortress"], "TC-FUNC-Immortal-Siegfried-summon")
+	_assert_deck_can_form_union("Dark Champion", ["Death Knight", "Chaotic Wisp"], "TC-FUNC-Dark-Champion-summon")
+	_assert_deck_can_form_union("Dark Surgeon", ["Mad Doctor", "Wicked Nurse"], "TC-FUNC-Dark-Surgeon-summon")
+	_assert_deck_can_form_union("Genesis Mech", ["Mean Angel", "Big Thug"], "TC-FUNC-Genesis-Mech-summon")
+	_assert_deck_can_form_union("Elven King", ["Elven Archer", "Elven Swordsman"], "TC-FUNC-Elven-King-summon")
+	_assert_deck_can_form_union("Bloody Mask", ["Jacob the Ski Mask", "Franky the Steel Claw"], "TC-FUNC-Bloody-Mask-summon")
+	_assert_deck_can_form_union("Lab Abomination", ["Lab Bloater", "Lab Crawler"], "TC-FUNC-Lab-Abomination-summon")
 
 # ---------------------------------------------------------------------------
 # Pattern C — EXCEL_ONLY_NOT_IN_UNION_DATABASE (not wired in engine)

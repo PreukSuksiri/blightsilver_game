@@ -45,7 +45,7 @@ func test_first_player_roll_binary() -> void:
 	print("-- test_first_player_roll_binary")
 	var results := {}
 	for i in range(200):
-		var r := DiceRoller.roll_first_player()
+		var r := DiceRoller.flip_coin_first_player()
 		results[r] = true
 	assert_true(results.has(0), "First player roll can return 0")
 	assert_true(results.has(1), "First player roll can return 1")

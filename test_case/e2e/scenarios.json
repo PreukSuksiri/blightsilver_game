@@ -1,9 +1,9 @@
 {
   "version": 2,
   "generated_from": "CardDatabase.gd + UnionDatabase.gd + demo_flags.json",
-  "scenario_count": 414,
-  "tier1_count": 207,
-  "tier2_count": 207,
+  "scenario_count": 480,
+  "tier1_count": 240,
+  "tier2_count": 240,
   "scenarios": [
     {
       "tier": 1,
@@ -106,7 +106,7 @@
       "card_name": "Aerial the Battlemage",
       "card_type": "Character",
       "ability_type": "ATK_DEF_BONUS_IF_UNION_ON_FIELD",
-      "ability_description": "+20 ATK&DEF if there is Union card on its side",
+      "ability_description": "+20 ATK&DEF if there is Union card on your side",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -680,7 +680,7 @@
       "card_name": "Archbishop",
       "card_type": "Character",
       "ability_type": "REDIRECT_DESTRUCTION_TO_ALLY",
-      "ability_description": "If this card would be destroyed, the owner can destroy 1 other Divine card on their side instead",
+      "ability_description": "If this card would be destroyed, you can destroy 1 other Divine card on your side instead",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -1443,7 +1443,7 @@
       "card_name": "Bat Swarm",
       "card_type": "Character",
       "ability_type": "INTERCEPT_ALLY_ATTACK",
-      "ability_description": "If a Chaos card is being attacked, they can swap this card\u2019s position with that card. Usable face-down.",
+      "ability_description": "If a Chaos card on your side is being attacked, you may swap this card's position with that card. Usable face-down.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -1721,6 +1721,199 @@
       "notes": "Tier 2: verify base ATK=40 when Big Thug attacks.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Big\\ Thug\".*ATK=40\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Black-Worms-001",
+      "card_name": "Black Worms",
+      "card_type": "Character",
+      "ability_type": "TURN_END_FOE_CRYSTAL_PER_MUTAGEN",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Black Worms",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Black Worms",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Black-Worms-002",
+      "card_name": "Black Worms",
+      "card_type": "Character",
+      "ability_type": "TURN_END_FOE_CRYSTAL_PER_MUTAGEN",
+      "ability_description": "At your turn\u2019s end, foe loses 300 Crystals for each Mutagen flag on the field",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Black Worms",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Black Worms",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Black Worms",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: TURN_END_FOE_CRYSTAL_PER_MUTAGEN \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Black\\ Worms\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Black\\ Worms\")",
+        "(\"Black\\ Worms\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Black\\ Worms\")"
+      ],
+      "expect_log_any": [
+        "Black Worms",
+        "MSG:"
       ]
     },
     {
@@ -4096,7 +4289,7 @@
       "card_name": "Cursed Well",
       "card_type": "Character",
       "ability_type": "PERM_ATK_BOOST_WHEN_EXPOSED",
-      "ability_description": "At the end of the turn that it\u2019s been exposed, +15 ATK",
+      "ability_description": "At the end of the turn that it\u2019s been exposed, +15 ATK permanently",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -4670,7 +4863,7 @@
       "card_name": "Dark Tengu",
       "card_type": "Character",
       "ability_type": "SELF_DEBUFF_ON_ATTACK_AND_DEFEND",
-      "ability_description": "-5 ATK once it successfully attacked. -5 DEF once it successfully defended.",
+      "ability_description": "-10 ATK once it successfully attacked. -10 DEF once it successfully defended.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -4863,7 +5056,7 @@
       "card_name": "Death Cobra",
       "card_type": "Character",
       "ability_type": "VENOM_FLAG_END_OF_TURN",
-      "ability_description": "Owner\u2019s turn end: select 1 exposed card. Put 1 venom flag on it. In Reckoning, foe with Venom Flag get -50 DEF",
+      "ability_description": "Your turn end: select 1 exposed card on either\u2019s side. Put 1 venom flag on it. In Reckoning, foe with Venom Flag get -50 DEF",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -5056,7 +5249,7 @@
       "card_name": "Death Knight",
       "card_type": "Character",
       "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
-      "ability_description": "+5 ATK per Chaos unit on their side",
+      "ability_description": "+5 ATK per Chaos unit on your side. +5 DEF per Chaos unit in your void.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -5249,7 +5442,7 @@
       "card_name": "Demon Spawn",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "None",
+      "ability_description": "Destroy this card in Reckoning with Divine units.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -5522,6 +5715,382 @@
       "notes": "Tier 2: verify base ATK=15 when Doom Wisp attacks.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Doom\\ Wisp\".*ATK=15\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Dystopian-Cultist-001",
+      "card_name": "Dystopian Cultist",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Dystopian Cultist",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Dystopian Cultist",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Dystopian-Cultist-002",
+      "card_name": "Dystopian Cultist",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Dystopian Cultist",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Dystopian Cultist",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Dystopian Cultist",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=65 when Dystopian Cultist attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Dystopian\\ Cultist\".*ATK=65\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Earth-Elemental-001",
+      "card_name": "Earth Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Earth Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Earth Elemental",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Earth-Elemental-002",
+      "card_name": "Earth Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Earth Elemental",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Earth Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Earth Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=20 when Earth Elemental attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Earth\\ Elemental\".*ATK=20\\s"
       ]
     },
     {
@@ -5917,6 +6486,199 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Elemental-Master-001",
+      "card_name": "Elemental Master",
+      "card_type": "Character",
+      "ability_type": "FIELD_ATK_BOOST_OWN_AFFINITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Elemental Master",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Elemental Master",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Elemental-Master-002",
+      "card_name": "Elemental Master",
+      "card_type": "Character",
+      "ability_type": "FIELD_ATK_BOOST_OWN_AFFINITY",
+      "ability_description": "While exposed, +60 ATK to ally Elemental units",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Elemental Master",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Elemental Master",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Elemental Master",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: FIELD_ATK_BOOST_OWN_AFFINITY \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Elemental\\ Master\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Elemental\\ Master\")",
+        "(\"Elemental\\ Master\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Elemental\\ Master\")"
+      ],
+      "expect_log_any": [
+        "Elemental Master",
+        "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
       "id": "E2E-Feral-Vampire-001",
       "card_name": "Feral Vampire",
       "card_type": "Character",
@@ -6106,6 +6868,194 @@
       "expect_log_any": [
         "Feral Vampire",
         "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Fire-Elemental-001",
+      "card_name": "Fire Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Fire Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Fire Elemental",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Fire-Elemental-002",
+      "card_name": "Fire Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Fire Elemental",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Fire Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Fire Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=35 when Fire Elemental attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Fire\\ Elemental\".*ATK=35\\s"
       ]
     },
     {
@@ -6961,7 +7911,7 @@
       "card_name": "Gamma Emitter",
       "card_type": "Character",
       "ability_type": "ATK_DEF_BONUS_VS_AFFINITY",
-      "ability_description": "+10 ATK&DEF vs Nature",
+      "ability_description": "+10 ATK&DEF vs Nature. With Mutagen Flag : +5 ATK",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -7046,6 +7996,195 @@
       "notes": "Tier 2: +10 ATK vs NATURE.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Gamma\\ Emitter\".*ATK=30\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Gem-Turtle-001",
+      "card_name": "Gem Turtle",
+      "card_type": "Character",
+      "ability_type": "ONE_USE_PERM_DEBUFF_ATTACKER_ATK",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Gem Turtle",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Gem Turtle",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Gem-Turtle-002",
+      "card_name": "Gem Turtle",
+      "card_type": "Character",
+      "ability_type": "ONE_USE_PERM_DEBUFF_ATTACKER_ATK",
+      "ability_description": "Once, when this card defends, the attacker permanently loses 5 ATK.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Gem Turtle",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Gem Turtle",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Gem Turtle",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: one-use ability ONE_USE_PERM_DEBUFF_ATTACKER_ATK.",
+      "expect_log_regex": [
+        "(\"Gem\\ Turtle\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Gem\\ Turtle\")",
+        "Attack P0\\(2,2\\)\"Gem\\ Turtle\".*ATK=5\\s"
       ]
     },
     {
@@ -7720,7 +8859,7 @@
       "card_name": "Golden Senju",
       "card_type": "Character",
       "ability_type": "MULTI_ATTACK_VS_NON_CHARACTER",
-      "ability_description": "Once, after attacked a non-unit cell, this card can attack 1 more time.",
+      "ability_description": "After attacked a non-unit cell, this card can attack 1 more time.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -8479,7 +9618,7 @@
       "card_name": "Grave Worm",
       "card_type": "Character",
       "ability_type": "OPPONENT_EXTRA_CRYSTAL_LOSS",
-      "ability_description": "Each time foe loses Crystal: foe loses 20 more Crystals",
+      "ability_description": "Each time foe loses Crystal: foe loses 200 more Crystals",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -9048,7 +10187,7 @@
       "card_name": "Hairpin Assassin",
       "card_type": "Character",
       "ability_type": "OPTIONAL_CRYSTAL_PAY_ATK_BOOST",
-      "ability_description": "In Reckoning, the owner can pay 100 Crystal for +10 ATK bonus",
+      "ability_description": "In Reckoning, you can pay 800 Crystal for +10 ATK bonus",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -9338,7 +10477,7 @@
       "id": "E2E-Hands-in-the-Attic-001",
       "card_name": "Hands in the Attic",
       "card_type": "Character",
-      "ability_type": "TEMP_ATK_BOOST_OWN_TURN_START",
+      "ability_type": "ONE_USE_ATK_BOOST",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -9433,8 +10572,8 @@
       "id": "E2E-Hands-in-the-Attic-002",
       "card_name": "Hands in the Attic",
       "card_type": "Character",
-      "ability_type": "TEMP_ATK_BOOST_OWN_TURN_START",
-      "ability_description": "+10 ATK until Reckoning ends",
+      "ability_type": "ONE_USE_ATK_BOOST",
+      "ability_description": "Once, +10 ATK when attack",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -9516,14 +10655,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: TEMP_ATK_BOOST_OWN_TURN_START \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2: one-use ability ONE_USE_ATK_BOOST.",
       "expect_log_regex": [
         "(\"Hands\\ in\\ the\\ Attic\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Hands\\ in\\ the\\ Attic\")",
-        "(\"Hands\\ in\\ the\\ Attic\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Hands\\ in\\ the\\ Attic\")"
-      ],
-      "expect_log_any": [
-        "Hands in the Attic",
-        "MSG:"
+        "Attack P0\\(2,2\\)\"Hands\\ in\\ the\\ Attic\".*ATK=30\\s"
       ]
     },
     {
@@ -10196,7 +11331,7 @@
       "card_name": "Immortal Vampire",
       "card_type": "Character",
       "ability_type": "DESTROY_SELF_VS_DIVINE_BOTH",
-      "ability_description": "+50 ATK for each other exposed Chaos card on its side. In Reckoning with Divine, destroy this card.",
+      "ability_description": "+30 ATK for each other exposed Chaos card on your side. In Reckoning with Divine, destroy this card.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -11343,7 +12478,7 @@
       "card_name": "Lab Bloater",
       "card_type": "Character",
       "ability_type": "MUTAGEN_DESTROY_ATTACKER",
-      "ability_description": "With Mutagen Flag: owner can destroy both units in Reckoning. Both players pay no cost.",
+      "ability_description": "With Mutagen Flag: Destroy both units in Reckoning. Both players pay no cost.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -12704,7 +13839,7 @@
       "card_name": "Leopard Jailer",
       "card_type": "Character",
       "ability_type": "LOCK_TARGET_ON_ATTACK",
-      "ability_description": "If this card attacks a unit card, the target is unable to attack until the end of owner's turn.",
+      "ability_description": "If this card attacks a unit card, the target is unable to attack until the end of foe\u2019s turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -12897,7 +14032,7 @@
       "card_name": "Leorudus the Warlord",
       "card_type": "Character",
       "ability_type": "BOOST_PER_ANIMA_ON_FIELD",
-      "ability_description": "+20 ATK&DEF for each other exposed Anima card on its side",
+      "ability_description": "+20 ATK&DEF for each other exposed Anima card on your side",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -12987,6 +14122,584 @@
       "notes": "Tier 2: +20 ATK with ANIMA ally (1 ally simulated via field).",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Leorudus\\ the\\ Warlord\".*ATK=100\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Lightning-Hawk-001",
+      "card_name": "Lightning Hawk",
+      "card_type": "Character",
+      "ability_type": "COIN_FLIP_2_EXTRA_ATTACK",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Lightning Hawk",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Lightning Hawk",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Lightning-Hawk-002",
+      "card_name": "Lightning Hawk",
+      "card_type": "Character",
+      "ability_type": "COIN_FLIP_2_EXTRA_ATTACK",
+      "ability_description": "After it performed attack, flip 2 coins, Both are heads: this card can attack 1 more time.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Lightning Hawk",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Lightning Hawk",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Lightning Hawk",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: COIN_FLIP_2_EXTRA_ATTACK \u2014 card enters combat and coin flip occurs.",
+      "expect_log_regex": [
+        "(\"Lightning\\ Hawk\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lightning\\ Hawk\")",
+        "(\"Lightning\\ Hawk\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lightning\\ Hawk\")"
+      ],
+      "expect_log_any": [
+        "Coin flip:"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Lockpicker-001",
+      "card_name": "Lockpicker",
+      "card_type": "Character",
+      "ability_type": "ON_EXPOSE_REVEAL_FOE_ONCE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Lockpicker",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Lockpicker",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Lockpicker-002",
+      "card_name": "Lockpicker",
+      "card_type": "Character",
+      "ability_type": "ON_EXPOSE_REVEAL_FOE_ONCE",
+      "ability_description": "Once exposed, reveal 1 foe\u2019s cell",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Lockpicker",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Lockpicker",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Lockpicker",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: ON_EXPOSE_REVEAL_FOE_ONCE \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Lockpicker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lockpicker\")",
+        "(\"Lockpicker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lockpicker\")"
+      ],
+      "expect_log_any": [
+        "Lockpicker",
+        "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Lunar-Wraith-001",
+      "card_name": "Lunar Wraith",
+      "card_type": "Character",
+      "ability_type": "MOON_ALLY_FIELD_AURA",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Lunar Wraith",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Lunar Wraith",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Lunar-Wraith-002",
+      "card_name": "Lunar Wraith",
+      "card_type": "Character",
+      "ability_type": "MOON_ALLY_FIELD_AURA",
+      "ability_description": "+15 ATK&DEF to all exposed Moon card on your side. +30 ATK to itself if there is exposed Moon card on your side",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Lunar Wraith",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Lunar Wraith",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Lunar Wraith",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: MOON_ALLY_FIELD_AURA \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Lunar\\ Wraith\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lunar\\ Wraith\")",
+        "(\"Lunar\\ Wraith\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lunar\\ Wraith\")"
+      ],
+      "expect_log_any": [
+        "Lunar Wraith",
+        "MSG:"
       ]
     },
     {
@@ -13175,6 +14888,194 @@
       "notes": "Tier 2: verify base ATK=30 when Mad Raccoon attacks.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Mad\\ Raccoon\".*ATK=30\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Mad-Wyvern-001",
+      "card_name": "Mad Wyvern",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Mad Wyvern",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Mad Wyvern",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Mad-Wyvern-002",
+      "card_name": "Mad Wyvern",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Mad Wyvern",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Mad Wyvern",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Mad Wyvern",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=65 when Mad Wyvern attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Mad\\ Wyvern\".*ATK=65\\s"
       ]
     },
     {
@@ -14040,7 +15941,7 @@
       "card_name": "Melissa the Healer",
       "card_type": "Character",
       "ability_type": "CRYSTAL_RECOVER_ON_BIG_LOSS",
-      "ability_description": "If the owner loses 500 or more Crystals, they recover 300 Crystals",
+      "ability_description": "If you lose 500 or more Crystals, you recover 300 Crystals.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -14319,6 +16220,199 @@
       ],
       "expect_log_any": [
         "Mephisto the Fallen",
+        "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Methanomancer-001",
+      "card_name": "Methanomancer",
+      "card_type": "Character",
+      "ability_type": "ADJACENT_ATTACK_FLIP_BUFF",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Methanomancer",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Methanomancer",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Methanomancer-002",
+      "card_name": "Methanomancer",
+      "card_type": "Character",
+      "ability_type": "ADJACENT_ATTACK_FLIP_BUFF",
+      "ability_description": "If its surrounding cell is targeted for attack, flip this card face-up and gain +30 ATK&DEF.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Methanomancer",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Methanomancer",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Methanomancer",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: ADJACENT_ATTACK_FLIP_BUFF \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Methanomancer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Methanomancer\")",
+        "(\"Methanomancer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Methanomancer\")"
+      ],
+      "expect_log_any": [
+        "Methanomancer",
         "MSG:"
       ]
     },
@@ -14804,7 +16898,7 @@
       "card_name": "Miner Probe",
       "card_type": "Character",
       "ability_type": "CRYSTAL_GAIN_ON_DEAD_END_ATTACK",
-      "ability_description": "Gain 20 Crystals upon hitting Dead End",
+      "ability_description": "Gain 200 Crystals upon hitting Dead End",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -15567,7 +17661,7 @@
       "card_name": "Moonrise Gentleman",
       "card_type": "Character",
       "ability_type": "DEFENSE_STANCE_BOOST",
-      "ability_description": "If it defends: +10 DEF,-10 ATK",
+      "ability_description": "If it defends: +10 DEF,-10 ATK permanently (if possible)",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -15846,6 +17940,382 @@
       "expect_log_any": [
         "Revealed:",
         "Reveal"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Nanomites-Beast-001",
+      "card_name": "Nanomites Beast",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_VS_AFFINITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Nanomites Beast",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Nanomites Beast",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Nanomites-Beast-002",
+      "card_name": "Nanomites Beast",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_VS_AFFINITY",
+      "ability_description": "+50 ATK vs Cosmic",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Nanomites Beast",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Nanomites Beast",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Moon Rover",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Nanomites Beast",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Moon Rover",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: +50 ATK vs COSMIC (Moon Rover).",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Nanomites\\ Beast\".*ATK=100\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Nanomites-Walker-001",
+      "card_name": "Nanomites Walker",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_VS_AFFINITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Nanomites Walker",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Nanomites Walker",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Nanomites-Walker-002",
+      "card_name": "Nanomites Walker",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_VS_AFFINITY",
+      "ability_description": "+5 ATK vs Cosmic",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Nanomites Walker",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Nanomites Walker",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Moon Rover",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Nanomites Walker",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Moon Rover",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: +5 ATK vs COSMIC (Moon Rover).",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Nanomites\\ Walker\".*ATK=20\\s"
       ]
     },
     {
@@ -16331,7 +18801,7 @@
       "card_name": "Night Whisperer",
       "card_type": "Character",
       "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
-      "ability_description": "+30 ATK&DEF for each exposed \u2018wisp\u2019 card on its side",
+      "ability_description": "+30 ATK&DEF for each exposed \u2018wisp\u2019 card on your side",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -16421,6 +18891,199 @@
       "notes": "Tier 2: +30 ATK with typed ally on field.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Night\\ Whisperer\".*ATK=60\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Nimrod-the-Wonder-Seeker-001",
+      "card_name": "Nimrod the Wonder Seeker",
+      "card_type": "Character",
+      "ability_type": "TURN_END_REVEAL_OPPONENT_CELLS_ONCE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Nimrod the Wonder Seeker",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Nimrod the Wonder Seeker",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Nimrod-the-Wonder-Seeker-002",
+      "card_name": "Nimrod the Wonder Seeker",
+      "card_type": "Character",
+      "ability_type": "TURN_END_REVEAL_OPPONENT_CELLS_ONCE",
+      "ability_description": "Once, at this turn\u2019s end, reveal 2 foe\u2019s cell and 1 of your cell.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Nimrod the Wonder Seeker",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Nimrod the Wonder Seeker",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Nimrod the Wonder Seeker",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: TURN_END_REVEAL_OPPONENT_CELLS_ONCE \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Nimrod\\ the\\ Wonder\\ Seeker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Nimrod\\ the\\ Wonder\\ Seeker\")",
+        "(\"Nimrod\\ the\\ Wonder\\ Seeker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Nimrod\\ the\\ Wonder\\ Seeker\")"
+      ],
+      "expect_log_any": [
+        "Nimrod the Wonder Seeker",
+        "MSG:"
       ]
     },
     {
@@ -16716,7 +19379,7 @@
       "card_name": "Ostrich Cannon",
       "card_type": "Character",
       "ability_type": "LOCK_SELF_AFTER_ATTACK",
-      "ability_description": "After performing an attack, this card cannot attack during their next turn.",
+      "ability_description": "After performing an attack, this card cannot attack during your next turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -16998,6 +19661,199 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Padmapani-001",
+      "card_name": "Padmapani",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_IF_TECH_PLAYED",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Padmapani",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Padmapani",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Padmapani-002",
+      "card_name": "Padmapani",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_IF_TECH_PLAYED",
+      "ability_description": "+75 ATK if there is Prayer card in your void.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Padmapani",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Padmapani",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Padmapani",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: ATK_BONUS_IF_TECH_PLAYED \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Padmapani\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Padmapani\")",
+        "(\"Padmapani\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Padmapani\")"
+      ],
+      "expect_log_any": [
+        "Padmapani",
+        "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
       "id": "E2E-Parom-the-Smuggler-001",
       "card_name": "Parom the Smuggler",
       "card_type": "Character",
@@ -17097,7 +19953,7 @@
       "card_name": "Parom the Smuggler",
       "card_type": "Character",
       "ability_type": "CRYSTAL_GAIN_ON_OPP_REVEAL",
-      "ability_description": "Each time foe\u2019s cell got revealed: gain 40 Crystals.",
+      "ability_description": "Each time foe\u2019s cell got revealed by a card\u2019s ability: gain 40 Crystals.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -17480,7 +20336,7 @@
       "card_name": "Plant-29",
       "card_type": "Character",
       "ability_type": "TURN_START_COIN_FLIP_FLAG",
-      "ability_description": "Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.",
+      "ability_description": "Start of your turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -18143,6 +20999,199 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Radiaghoul-001",
+      "card_name": "Radiaghoul",
+      "card_type": "Character",
+      "ability_type": "PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Radiaghoul",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Radiaghoul",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Radiaghoul-002",
+      "card_name": "Radiaghoul",
+      "card_type": "Character",
+      "ability_type": "PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY",
+      "ability_description": "Before Reckoning, -5 DEF permanently to Nature foe",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Radiaghoul",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Radiaghoul",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Radiaghoul",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"Radiaghoul\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Radiaghoul\")",
+        "(\"Radiaghoul\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Radiaghoul\")"
+      ],
+      "expect_log_any": [
+        "Radiaghoul",
+        "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
       "id": "E2E-Raijin-001",
       "card_name": "Raijin",
       "card_type": "Character",
@@ -18618,7 +21667,7 @@
       "card_name": "Rotten Shrieker",
       "card_type": "Character",
       "ability_type": "PERM_ATK_LOSS_PER_OWN_TURN",
-      "ability_description": "Without Mutagen Flag : -10 ATK permanently at the end of owner's turn.",
+      "ability_description": "Without Mutagen Flag : -10 ATK permanently at the end of your turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -19380,7 +22429,7 @@
       "card_name": "Scout Probe",
       "card_type": "Character",
       "ability_type": "REVEAL_ADJACENT_AFTER_ATTACK",
-      "ability_description": "Choose and reveal any adjacent square after it attacked.",
+      "ability_description": "After this card attacks, choose and reveal 1 adjacent cell.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -20620,7 +23669,7 @@
       "id": "E2E-Skeleton-Grappler-001",
       "card_name": "Skeleton Grappler",
       "card_type": "Character",
-      "ability_type": "LOCK_ATTACKER_ON_DESTROYED",
+      "ability_type": "LOCK_ATTACKER_ON_DEFEND",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -20715,8 +23764,8 @@
       "id": "E2E-Skeleton-Grappler-002",
       "card_name": "Skeleton Grappler",
       "card_type": "Character",
-      "ability_type": "LOCK_ATTACKER_ON_DESTROYED",
-      "ability_description": "After Reckoning: that foe\u2019s unit must wait until foe\u2019s turn ends",
+      "ability_type": "LOCK_ATTACKER_ON_DEFEND",
+      "ability_description": "After Reckoning: that foe\u2019s unit cannot attack until foe\u2019s turn ends",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -20798,7 +23847,7 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: LOCK_ATTACKER_ON_DESTROYED \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: LOCK_ATTACKER_ON_DEFEND \u2014 combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
         "(\"Skeleton\\ Grappler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Grappler\")",
         "(\"Skeleton\\ Grappler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Grappler\")"
@@ -21950,6 +24999,194 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Spell-Sniper-001",
+      "card_name": "Spell Sniper",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_VS_FACEDOWN",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Spell Sniper",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Spell Sniper",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Spell-Sniper-002",
+      "card_name": "Spell Sniper",
+      "card_type": "Character",
+      "ability_type": "ATK_BONUS_VS_FACEDOWN",
+      "ability_description": "+50 ATK vs face-down card",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Spell Sniper",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Spell Sniper",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Spell Sniper",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: +50 ATK vs face-down defender (revealed during attack).",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Spell\\ Sniper\".*ATK=70\\s"
+      ]
+    },
+    {
+      "tier": 1,
       "id": "E2E-Staircase-Lady-001",
       "card_name": "Staircase Lady",
       "card_type": "Character",
@@ -23000,7 +26237,7 @@
       "card_name": "Sunrise Lady",
       "card_type": "Character",
       "ability_type": "ATTACK_STANCE_BOOST",
-      "ability_description": "If it attacks: +10 ATK,-10 DEF permanently",
+      "ability_description": "If it attacks: +10 ATK,-10 DEF permanently (if possible)",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -23188,7 +26425,7 @@
       "card_name": "Swarmcaller",
       "card_type": "Character",
       "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
-      "ability_description": "+15 ATK&DEF for each other exposed Nature card on its side",
+      "ability_description": "+15 ATK&DEF for each other exposed Nature card on your side",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -23570,7 +26807,7 @@
       "card_name": "Tomb Bandit",
       "card_type": "Character",
       "ability_type": "IMMUNE_TO_TRAPS",
-      "ability_description": "This Unit cannot be destroyed by Traps.",
+      "ability_description": "This Unit cannot be destroyed by Traps. It gets -20 DEF permanently if it attacked a trap card.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -23660,6 +26897,199 @@
       "expect_log_any": [
         "Tomb Bandit",
         "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Uproaring-Warband-001",
+      "card_name": "Uproaring Warband",
+      "card_type": "Character",
+      "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Uproaring Warband",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Uproaring Warband",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Uproaring-Warband-002",
+      "card_name": "Uproaring Warband",
+      "card_type": "Character",
+      "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
+      "ability_description": "+5 ATK&DEF for each exposed ally Anima on your side",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Uproaring Warband",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Uproaring Warband",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Uproaring Warband",
+          "row": 2,
+          "col": 2
+        },
+        {
+          "card_name": "Ox Patrol",
+          "row": 2,
+          "col": 1
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: +5 ATK with typed ally on field.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Uproaring\\ Warband\".*ATK=35\\s"
       ]
     },
     {
@@ -24053,7 +27483,7 @@
       "id": "E2E-Venom-Queen-001",
       "card_name": "Venom Queen",
       "card_type": "Character",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "FIELD_DEBUFF_ALL_VENOM_CARDS",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -24148,7 +27578,7 @@
       "id": "E2E-Venom-Queen-002",
       "card_name": "Venom Queen",
       "card_type": "Character",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "FIELD_DEBUFF_ALL_VENOM_CARDS",
       "ability_description": "While this card remains exposed, -15 ATK&DEF to all cards with Venom Flag",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
@@ -24231,7 +27661,7 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: NOT_IMPLEMENTED \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: FIELD_DEBUFF_ALL_VENOM_CARDS \u2014 combat + MSG/card presence.",
       "expect_log_regex": [
         "(\"Venom\\ Queen\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Venom\\ Queen\")",
         "(\"Venom\\ Queen\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Venom\\ Queen\")"
@@ -24246,7 +27676,7 @@
       "id": "E2E-Venom-Toad-001",
       "card_name": "Venom Toad",
       "card_type": "Character",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "VENOM_TOAD_RECKONING",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -24341,7 +27771,7 @@
       "id": "E2E-Venom-Toad-002",
       "card_name": "Venom Toad",
       "card_type": "Character",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "VENOM_TOAD_RECKONING",
       "ability_description": "After Reckoning, add venom flag to the foe\u2019s unit. In Reckoning, destroy foe\u2019s unit with venom flag",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
@@ -24424,7 +27854,7 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: NOT_IMPLEMENTED \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: VENOM_TOAD_RECKONING \u2014 combat + MSG/card presence.",
       "expect_log_regex": [
         "(\"Venom\\ Toad\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Venom\\ Toad\")",
         "(\"Venom\\ Toad\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Venom\\ Toad\")"
@@ -24439,7 +27869,7 @@
       "id": "E2E-Vicious-Lizard-001",
       "card_name": "Vicious Lizard",
       "card_type": "Character",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "ATK_DEF_BONUS_VS_VENOM",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -24534,7 +27964,7 @@
       "id": "E2E-Vicious-Lizard-002",
       "card_name": "Vicious Lizard",
       "card_type": "Character",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "ATK_DEF_BONUS_VS_VENOM",
       "ability_description": "+60 ATK&DEF vs foe with Venom Flag. +40 ATK if itself has Venom Flag",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
@@ -24617,7 +28047,7 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: NOT_IMPLEMENTED \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: ATK_DEF_BONUS_VS_VENOM \u2014 combat + MSG/card presence.",
       "expect_log_regex": [
         "(\"Vicious\\ Lizard\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vicious\\ Lizard\")",
         "(\"Vicious\\ Lizard\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vicious\\ Lizard\")"
@@ -25010,6 +28440,199 @@
     },
     {
       "tier": 1,
+      "id": "E2E-WK-17-the-Siren-001",
+      "card_name": "WK-17 the Siren",
+      "card_type": "Character",
+      "ability_type": "PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "WK-17 the Siren",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "WK-17 the Siren",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-WK-17-the-Siren-002",
+      "card_name": "WK-17 the Siren",
+      "card_type": "Character",
+      "ability_type": "PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY",
+      "ability_description": "Before Reckoning, flip 2 coin. Both are Heads : foe choose their ally to fight in place of this card. Both are Tails : Destroy this card.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "WK-17 the Siren",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo WK-17 the Siren",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "WK-17 the Siren",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2 best-effort: PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY \u2014 combat + MSG/card presence.",
+      "expect_log_regex": [
+        "(\"WK\\-17\\ the\\ Siren\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"WK\\-17\\ the\\ Siren\")",
+        "(\"WK\\-17\\ the\\ Siren\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"WK\\-17\\ the\\ Siren\")"
+      ],
+      "expect_log_any": [
+        "WK-17 the Siren",
+        "MSG:"
+      ]
+    },
+    {
+      "tier": 1,
       "id": "E2E-Wandering-Swordsman-001",
       "card_name": "Wandering Swordsman",
       "card_type": "Character",
@@ -25391,6 +29014,383 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Waste-Slime-001",
+      "card_name": "Waste Slime",
+      "card_type": "Character",
+      "ability_type": "ONE_USE_SURVIVE_DESTRUCTION",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Waste Slime",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Waste Slime",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Waste-Slime-002",
+      "card_name": "Waste Slime",
+      "card_type": "Character",
+      "ability_type": "ONE_USE_SURVIVE_DESTRUCTION",
+      "ability_description": "Once, if it\u2019s going to be destroyed by Anima or Bio card, it\u2019s not destroyed.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Waste Slime",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Waste Slime",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Waste Slime",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: one-use ability ONE_USE_SURVIVE_DESTRUCTION.",
+      "expect_log_regex": [
+        "(\"Waste\\ Slime\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Waste\\ Slime\")",
+        "(\"Waste\\ Slime\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Waste\\ Slime\")"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Water-Elemental-001",
+      "card_name": "Water Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Water Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Water Elemental",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Water-Elemental-002",
+      "card_name": "Water Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Water Elemental",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Water Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Water Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=25 when Water Elemental attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Water\\ Elemental\".*ATK=25\\s"
+      ]
+    },
+    {
+      "tier": 1,
       "id": "E2E-White-Tiger-001",
       "card_name": "White Tiger",
       "card_type": "Character",
@@ -25578,6 +29578,194 @@
       ],
       "expect_log_any": [
         "Attacker loses 15 ATK"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Wind-Elemental-001",
+      "card_name": "Wind Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Wind Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Wind Elemental",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Wind-Elemental-002",
+      "card_name": "Wind Elemental",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Wind Elemental",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Wind Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Wind Elemental",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=30 when Wind Elemental attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Wind\\ Elemental\".*ATK=30\\s"
       ]
     },
     {
@@ -25954,6 +30142,194 @@
       "notes": "Tier 2: verify base ATK=30 when Yaksa attacks.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Yaksa\".*ATK=30\\s"
+      ]
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Zealot-001",
+      "card_name": "Zealot",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_character_attacker",
+      "deck0": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Zealot",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "Zealot",
+        "GAME OVER"
+      ],
+      "notes": "Tier 1 smoke: character on field, battle completes."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Zealot-002",
+      "card_name": "Zealot",
+      "card_type": "Character",
+      "ability_type": "NONE",
+      "ability_description": "If this card is used for Union summon, increase the Union card\u2019s ATK&DEF by 40",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": false,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "Zealot",
+        "GAME OVER"
+      ],
+      "role": "t2_solo_attacker",
+      "deck0": {
+        "deck_name": "E2E T2 solo Zealot",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [
+        {
+          "card_name": "Zealot",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "notes": "Tier 2: verify base ATK=75 when Zealot attacks.",
+      "expect_log_regex": [
+        "Attack P0\\(2,2\\)\"Zealot\".*ATK=75\\s"
       ]
     },
     {
@@ -26467,7 +30843,7 @@
       "card_name": "Great Diplomacy",
       "card_type": "Tech",
       "ability_type": "REVEAL_ALL_OWN_CHARACTERS",
-      "ability_description": "This player selects up to 5 of their units and reveal them.",
+      "ability_description": "You select up to 3 of your units and reveal them.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -26570,7 +30946,7 @@
       "id": "E2E-Potent-Poison-001",
       "card_name": "Potent Poison",
       "card_type": "Tech",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "DESTROY_VENOM_DOUBLE_COST",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -26669,7 +31045,7 @@
       "id": "E2E-Potent-Poison-002",
       "card_name": "Potent Poison",
       "card_type": "Tech",
-      "ability_type": "NOT_IMPLEMENTED",
+      "ability_type": "DESTROY_VENOM_DOUBLE_COST",
       "ability_description": "Select 1 card with Venom Flag. Double its cost, then destroy it.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
@@ -26766,7 +31142,7 @@
         "Card destroyed",
         "MSG:"
       ],
-      "notes": "Tier 2: tech Potent Poison played (NOT_IMPLEMENTED)."
+      "notes": "Tier 2: tech Potent Poison played (DESTROY_VENOM_DOUBLE_COST)."
     },
     {
       "tier": 1,
@@ -27279,7 +31655,7 @@
       "card_name": "Release Mutagen",
       "card_type": "Tech",
       "ability_type": "ADD_MUTAGEN_FLAG",
-      "ability_description": "Add Mutagen Flag to 1 of this player\u2019s unit",
+      "ability_description": "Add Mutagen Flag to 1 of your unit",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -28295,7 +32671,7 @@
       "card_name": "War Supply",
       "card_type": "Tech",
       "ability_type": "TEMP_ATK_DEF_BOOST_ALL",
-      "ability_description": "This player\u2019s units get +10 ATK&DEF in Reckoning until turn\u2019s end",
+      "ability_description": "Your units get +10 ATK&DEF in Reckoning until the end of the turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -28677,7 +33053,7 @@
       "card_name": "Alarm",
       "card_type": "Trap",
       "ability_type": "FIELD_BOOST_AFFINITY_DEF",
-      "ability_description": "Until this turn ends, All trapper\u2019s Anima monster gain +10 DEF in Reckoning",
+      "ability_description": "Until your turn ends, All your Anima units gain +10 ATK&DEF in Reckoning",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -28866,7 +33242,7 @@
       "card_name": "Bait",
       "card_type": "Trap",
       "ability_type": "REVEAL_DEFENDING_CHOICE",
-      "ability_description": "The trapper chooses one other cell on their side and reveal it",
+      "ability_description": "You choose one other cell on your side and reveal it.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -29622,7 +33998,7 @@
       "card_name": "Cursed Reflection",
       "card_type": "Trap",
       "ability_type": "SWAP_ATTACKER_ATK_DEF_TEMP",
-      "ability_description": "Swap the attacker's ATK&DEF until the trapper\u2019s turn ends",
+      "ability_description": "Swap the attacking unit's ATK&DEF until the end of your turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -30000,7 +34376,7 @@
       "card_name": "Defensive Pheromone",
       "card_type": "Trap",
       "ability_type": "SWAP_ARMORED_NATURE",
-      "ability_description": "Trapper switch 1 'Armored' Nature card on their side with this cell, then repeat Reckoning.",
+      "ability_description": "You switch 1 'Armored' Nature card on your side with this cell, then repeat Reckoning.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -30378,7 +34754,7 @@
       "card_name": "Explosive Barrels",
       "card_type": "Trap",
       "ability_type": "DESTROY_ATTACKER_DEFENDER_PAYS",
-      "ability_description": "Destroy the attacking unit. Trapper also pay the same cost as attacker.",
+      "ability_description": "Destroy the attacking unit. You also pay the same cost as attacker.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -30566,7 +34942,7 @@
       "card_name": "Flame Trap",
       "card_type": "Trap",
       "ability_type": "PERMANENT_ATK_DEBUFF",
-      "ability_description": "Attacking unit get -10 ATK permanently",
+      "ability_description": "The attacking unit gets -10 ATK permanently.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -30943,7 +35319,7 @@
       "card_name": "Hard Scale",
       "card_type": "Trap",
       "ability_type": "TEMP_DEF_BOOST_ONE_OWN",
-      "ability_description": "All of trapper\u2019s unit gain +5 DEF in Reckoning until attacker\u2019s next turn ends",
+      "ability_description": "All of your unit gain +5 DEF in Reckoning until attacker\u2019s next turn ends",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31042,7 +35418,7 @@
       "id": "E2E-Hostage-001",
       "card_name": "Hostage",
       "card_type": "Trap",
-      "ability_type": "NULLIFY_ATTACK_REVEAL_ADJACENT",
+      "ability_type": "NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": false,
@@ -31131,8 +35507,8 @@
       "id": "E2E-Hostage-002",
       "card_name": "Hostage",
       "card_type": "Trap",
-      "ability_type": "NULLIFY_ATTACK_REVEAL_ADJACENT",
-      "ability_description": "Trapper reveal 1 own cell. Until this turn ends, attacker cannot target that cell.",
+      "ability_type": "NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE",
+      "ability_description": "You reveal 1 own cell. Until this turn ends, attacker cannot target that cell.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31320,7 +35696,7 @@
       "card_name": "Hypnosis",
       "card_type": "Trap",
       "ability_type": "HYPNOTIZE_ATTACKER",
-      "ability_description": "The attacking unit cannot attack during their next turn",
+      "ability_description": "The attacking unit cannot attack during the foe's next turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31508,7 +35884,7 @@
       "card_name": "Pepper Spray",
       "card_type": "Trap",
       "ability_type": "COIN_FLIP_2_ATK_DEBUFF",
-      "ability_description": "Flip 2 coin, if head, the attacker lose -5 ATK for each head(s) until attacker\u2019s next turn ends.",
+      "ability_description": "Flip 2 coins. The attacking unit get -5 ATK for each heads until the foe's next turn ends.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31697,7 +36073,7 @@
       "card_name": "Red Card",
       "card_type": "Trap",
       "ability_type": "COIN_FLIP_2_LOCK_ATTACKER",
-      "ability_description": "Flip 2 coin, if both are head, that unit cannot until attacker\u2019s next turn ends",
+      "ability_description": "Flip 2 coins. If both are heads, that unit cannot attack until the foe's next turn ends.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31886,7 +36262,7 @@
       "card_name": "Self-destruct",
       "card_type": "Trap",
       "ability_type": "SELF_DESTROY_TEMP_ATK_BOOST",
-      "ability_description": "Trapper select 1 of their unit. +10 ATK until trapper\u2019s turn ends, but also destroy it. Trapper pay no cost.",
+      "ability_description": "You select 1 of your unit. +10 ATK until your turn ends, but also destroy it. You pay no cost.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -32449,7 +36825,7 @@
       "card_name": "Street Joke",
       "card_type": "Trap",
       "ability_type": "REVEAL_OWN_GAIN_CRYSTAL",
-      "ability_description": "Trapper reveal 1 of their cell, they receive 100 Crystal",
+      "ability_description": "You reveal 1 of your cell, you receive 100 Crystal",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -33450,10 +37826,10 @@
     },
     {
       "tier": 1,
-      "id": "E2E-Blood-hungry-Mutant-001",
-      "card_name": "Blood-hungry Mutant",
+      "id": "E2E-Bioterrorist-001",
+      "card_name": "Bioterrorist",
       "card_type": "Union",
-      "ability_type": "CRYSTAL_GAIN_ON_DESTROY",
+      "ability_type": "DESTROY_SELF_AFTER_BATTLE",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": true,
@@ -33532,18 +37908,18 @@
         "GAME OVER"
       ],
       "expect_log_any": [
-        "Blood-hungry Mutant",
+        "Bioterrorist",
         "Union summoned"
       ],
       "notes": "Tier 1 smoke: union materials placed."
     },
     {
       "tier": 2,
-      "id": "E2E-Blood-hungry-Mutant-002",
-      "card_name": "Blood-hungry Mutant",
+      "id": "E2E-Bioterrorist-002",
+      "card_name": "Bioterrorist",
       "card_type": "Union",
-      "ability_type": "CRYSTAL_GAIN_ON_DESTROY",
-      "ability_description": "After destroying foe\u2019s card: +80 Crystals",
+      "ability_type": "DESTROY_SELF_AFTER_BATTLE",
+      "ability_description": "Destroy this card after Reckoning",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -33557,7 +37933,7 @@
       ],
       "role": "t2_union",
       "deck0": {
-        "deck_name": "E2E T2 union Blood-hungry Mutant",
+        "deck_name": "E2E T2 union Bioterrorist",
         "characters": [
           "Chaotic Wisp",
           "Foul Wisp",
@@ -33620,19 +37996,19 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_any": [
-        "Union summoned P0: Blood-hungry Mutant",
-        "Attack P\\d\\(\\d+,\\d+\\)\"Blood\\-hungry\\ Mutant\"",
-        "MSG:.*Blood\\-hungry",
+        "Union summoned P0: Bioterrorist",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Bioterrorist\"",
+        "MSG:.*Bioterrorist",
         "MSG:"
       ],
-      "notes": "Tier 2: union Blood-hungry Mutant \u2014 summon logged and/or union attacks with ATK=55."
+      "notes": "Tier 2: union Bioterrorist \u2014 summon logged and/or union attacks with ATK=150."
     },
     {
       "tier": 1,
       "id": "E2E-Burning-Phoenix-001",
       "card_name": "Burning Phoenix",
       "card_type": "Union",
-      "ability_type": "IMMUNE_DESTROY_BY_NON_UNION",
+      "ability_type": "REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": true,
@@ -33721,8 +38097,8 @@
       "id": "E2E-Burning-Phoenix-002",
       "card_name": "Burning Phoenix",
       "card_type": "Union",
-      "ability_type": "IMMUNE_DESTROY_BY_NON_UNION",
-      "ability_description": "Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.",
+      "ability_type": "REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION",
+      "ability_description": "Once, if destroyed by non-union cards, revive it at the start of your turn.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -33917,7 +38293,7 @@
       "card_name": "Choir Lead Amber",
       "card_type": "Union",
       "ability_type": "FIELD_ATK_BOOST_OWN_AFFINITY",
-      "ability_description": "+20 ATK to all Divine units on its side",
+      "ability_description": "+20 ATK to all Divine units on your side",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -34016,6 +38392,185 @@
         "MSG:"
       ],
       "notes": "Tier 2: union Choir Lead Amber \u2014 summon logged and/or union attacks with ATK=35."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Cloud-Elemental-001",
+      "card_name": "Cloud Elemental",
+      "card_type": "Union",
+      "ability_type": "ONE_USE_SURVIVE_DESTRUCTION",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Cloud Elemental",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Cloud-Elemental-002",
+      "card_name": "Cloud Elemental",
+      "card_type": "Union",
+      "ability_type": "ONE_USE_SURVIVE_DESTRUCTION",
+      "ability_description": "Once, this card is not destroyed",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Cloud Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Cloud Elemental",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Cloud\\ Elemental\"",
+        "MSG:.*Cloud",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Cloud Elemental \u2014 summon logged and/or union attacks with ATK=65."
     },
     {
       "tier": 1,
@@ -34198,10 +38753,188 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Diamond-Elemental-001",
+      "card_name": "Diamond Elemental",
+      "card_type": "Union",
+      "ability_type": "NONE",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Diamond Elemental",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Diamond-Elemental-002",
+      "card_name": "Diamond Elemental",
+      "card_type": "Union",
+      "ability_type": "NONE",
+      "ability_description": "None",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Diamond Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Diamond Elemental",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Diamond\\ Elemental\"",
+        "MSG:.*Diamond"
+      ],
+      "notes": "Tier 2: union Diamond Elemental \u2014 summon logged and/or union attacks with ATK=60."
+    },
+    {
+      "tier": 1,
       "id": "E2E-Diamond-Unicorn-001",
       "card_name": "Diamond Unicorn",
       "card_type": "Union",
-      "ability_type": "ONE_USE_ATK_BOOST",
+      "ability_type": "NONE",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": true,
@@ -34296,7 +39029,7 @@
       "id": "E2E-Diamond-Unicorn-002",
       "card_name": "Diamond Unicorn",
       "card_type": "Union",
-      "ability_type": "ONE_USE_ATK_BOOST",
+      "ability_type": "NONE",
       "ability_description": "Summoned: +15 ATK until this turn\u2019s end",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
@@ -34382,10 +39115,188 @@
       "expect_log_any": [
         "Union summoned P0: Diamond Unicorn",
         "Attack P\\d\\(\\d+,\\d+\\)\"Diamond\\ Unicorn\"",
-        "MSG:.*Diamond",
-        "MSG:"
+        "MSG:.*Diamond"
       ],
       "notes": "Tier 2: union Diamond Unicorn \u2014 summon logged and/or union attacks with ATK=30."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Dimensional-Virus-001",
+      "card_name": "Dimensional Virus",
+      "card_type": "Union",
+      "ability_type": "PERM_STAT_PENALTY_VS_NON_AFFINITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Dimensional Virus",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Dimensional-Virus-002",
+      "card_name": "Dimensional Virus",
+      "card_type": "Union",
+      "ability_type": "PERM_STAT_PENALTY_VS_NON_AFFINITY",
+      "ability_description": "Foe\u2019s unit get -10 ATK&DEF permanently in Reckoning . With Mutagen Flag : Cannot be destroyed by Non-Arcane.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Dimensional Virus",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Dimensional Virus",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Dimensional\\ Virus\"",
+        "MSG:.*Dimensional",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Dimensional Virus \u2014 summon logged and/or union attacks with ATK=0."
     },
     {
       "tier": 1,
@@ -34482,7 +39393,7 @@
       "card_name": "False Prophet",
       "card_type": "Union",
       "ability_type": "TURN_END_REVEAL_OPPONENT_CELL",
-      "ability_description": "End of owner\u2019s turn: Reveal 1 foe\u2019s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.",
+      "ability_description": "End of your turn: Reveal 1 foe\u2019s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -35195,7 +40106,7 @@
       "card_name": "Giant Mining Pod",
       "card_type": "Union",
       "ability_type": "CRYSTAL_GAIN_ON_DEAD_END_ATTACK",
-      "ability_description": "If this card attacks a Dead End, receive 200 Crystals",
+      "ability_description": "If this card attacks a Dead End, receive 900 Crystals",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -35842,6 +40753,364 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Helios-the-Prideful-Fortress-001",
+      "card_name": "Helios the Prideful Fortress",
+      "card_type": "Union",
+      "ability_type": "IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Helios the Prideful Fortress",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Helios-the-Prideful-Fortress-002",
+      "card_name": "Helios the Prideful Fortress",
+      "card_type": "Union",
+      "ability_type": "IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP",
+      "ability_description": "With another exposed Cosmic: this card cannot be destroyed. If targeted by tech, destroy this card.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Helios the Prideful Fortress",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Helios the Prideful Fortress",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Helios\\ the\\ Prideful\\ Fortress\"",
+        "MSG:.*Helios",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Helios the Prideful Fortress \u2014 summon logged and/or union attacks with ATK=145."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Ice-Elemental-001",
+      "card_name": "Ice Elemental",
+      "card_type": "Union",
+      "ability_type": "LOCK_TARGET_ON_ATTACK",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Ice Elemental",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Ice-Elemental-002",
+      "card_name": "Ice Elemental",
+      "card_type": "Union",
+      "ability_type": "LOCK_TARGET_ON_ATTACK",
+      "ability_description": "Card that battles this card cannot perform attack until the end of their next turn.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Ice Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Ice Elemental",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Ice\\ Elemental\"",
+        "MSG:.*Ice",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Ice Elemental \u2014 summon logged and/or union attacks with ATK=80."
+    },
+    {
+      "tier": 1,
       "id": "E2E-Imperial-Frame-001",
       "card_name": "Imperial Frame",
       "card_type": "Union",
@@ -36201,7 +41470,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Katana\\ Shark\"",
         "MSG:.*Katana"
       ],
-      "notes": "Tier 2: union Katana Shark \u2014 summon logged and/or union attacks with ATK=75."
+      "notes": "Tier 2: union Katana Shark \u2014 summon logged and/or union attacks with ATK=105."
     },
     {
       "tier": 1,
@@ -36298,7 +41567,7 @@
       "card_name": "Kiba the Giant Slayer",
       "card_type": "Union",
       "ability_type": "ATK_BONUS_VS_UNION",
-      "ability_description": "+30 ATK vs Union",
+      "ability_description": "+70 ATK vs Union",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -36568,6 +41837,185 @@
         "MSG:.*Kitsune"
       ],
       "notes": "Tier 2: union Kitsune \u2014 summon logged and/or union attacks with ATK=35."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Legendary-Locksmith-001",
+      "card_name": "Legendary Locksmith",
+      "card_type": "Union",
+      "ability_type": "UNION_SUMMON_REVEAL_FIELD",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Legendary Locksmith",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Legendary-Locksmith-002",
+      "card_name": "Legendary Locksmith",
+      "card_type": "Union",
+      "ability_type": "UNION_SUMMON_REVEAL_FIELD",
+      "ability_description": "Summoned: Reveal 3 cards on the field",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Legendary Locksmith",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Legendary Locksmith",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Legendary\\ Locksmith\"",
+        "MSG:.*Legendary",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Legendary Locksmith \u2014 summon logged and/or union attacks with ATK=35."
     },
     {
       "tier": 1,
@@ -37229,7 +42677,7 @@
       "card_name": "Pixie Queen",
       "card_type": "Union",
       "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
-      "ability_description": "+5 ATK for each Divine cards on its side",
+      "ability_description": "+5 ATK for each Divine cards on your side",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -37616,7 +43064,7 @@
       "card_name": "Rebel King",
       "card_type": "Union",
       "ability_type": "OPPONENT_TURN_END_SWAP_ATK_DEF",
-      "ability_description": "At the end of foe\u2019s turn: the owner of this card select 1 exposed foe\u2019s unit and swap its ATK&DEF",
+      "ability_description": "At the end of foe\u2019s turn: you select 1 exposed foe\u2019s unit and swap its ATK&DEF",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -37977,7 +43425,7 @@
       "card_name": "Rocket Peacock",
       "card_type": "Union",
       "ability_type": "POST_BATTLE_COIN_FLIP_DESTROY",
-      "ability_description": "After this card battles, select 1 foe\u2019s card, flip a coin. Head: destroy that card",
+      "ability_description": "After this card battles, select 1 foe\u2019s exposed card, flip a coin. Head: destroy that card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -38060,6 +43508,185 @@
         "MSG:"
       ],
       "notes": "Tier 2: union Rocket Peacock \u2014 summon logged and/or union attacks with ATK=150."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Sand-Elemental-001",
+      "card_name": "Sand Elemental",
+      "card_type": "Union",
+      "ability_type": "ATK_DEF_BONUS_VS_NON_AFFINITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Sand Elemental",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Sand-Elemental-002",
+      "card_name": "Sand Elemental",
+      "card_type": "Union",
+      "ability_type": "ATK_DEF_BONUS_VS_NON_AFFINITY",
+      "ability_description": "+50 ATK&DEF vs Non-Arcane cards",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Sand Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Sand Elemental",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Sand\\ Elemental\"",
+        "MSG:.*Sand",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Sand Elemental \u2014 summon logged and/or union attacks with ATK=55."
     },
     {
       "tier": 1,
@@ -38629,7 +44256,7 @@
       "id": "E2E-Sky-Protector-001",
       "card_name": "Sky Protector",
       "card_type": "Union",
-      "ability_type": "STANCE_FIXED_STATS",
+      "ability_type": "UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE",
       "max_turns": 50,
       "max_watchdog_timeouts": 5,
       "union_enabled": true,
@@ -38729,8 +44356,8 @@
       "id": "E2E-Sky-Protector-002",
       "card_name": "Sky Protector",
       "card_type": "Union",
-      "ability_type": "STANCE_FIXED_STATS",
-      "ability_description": "If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.",
+      "ability_type": "UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE",
+      "ability_description": "Summon: choose either permanently gain +80 ATK or +80 DEF permanently",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -38827,6 +44454,185 @@
     },
     {
       "tier": 1,
+      "id": "E2E-Team-Galaxos-001",
+      "card_name": "Team Galaxos",
+      "card_type": "Union",
+      "ability_type": "UNION_SUMMON_COSMIC_ANIMA_IMMUNITY",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Team Galaxos",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Team-Galaxos-002",
+      "card_name": "Team Galaxos",
+      "card_type": "Union",
+      "ability_type": "UNION_SUMMON_COSMIC_ANIMA_IMMUNITY",
+      "ability_description": "Summoned: Until the end of foe\u2019s turn, Cosmic and Anima units on your side are not destroyed",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Team Galaxos",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Team Galaxos",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Team\\ Galaxos\"",
+        "MSG:.*Team",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Team Galaxos \u2014 summon logged and/or union attacks with ATK=85."
+    },
+    {
+      "tier": 1,
       "id": "E2E-Ten-Arms-Yaksa-001",
       "card_name": "Ten Arms Yaksa",
       "card_type": "Union",
@@ -38920,7 +44726,7 @@
       "card_name": "Ten Arms Yaksa",
       "card_type": "Union",
       "ability_type": "MULTI_ATTACK_ANY_WITH_ATK_LOSS",
-      "ability_description": "This card can choose two attack targets. -5 ATK for each successful attack.",
+      "ability_description": "This card can choose up to 3 attack targets. -5 ATK after the third attack.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -39002,7 +44808,186 @@
         "MSG:.*Ten",
         "MSG:"
       ],
-      "notes": "Tier 2: union Ten Arms Yaksa \u2014 summon logged and/or union attacks with ATK=45."
+      "notes": "Tier 2: union Ten Arms Yaksa \u2014 summon logged and/or union attacks with ATK=50."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Thunder-Elemental-001",
+      "card_name": "Thunder Elemental",
+      "card_type": "Union",
+      "ability_type": "REVEAL_ON_WIN",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Thunder Elemental",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Thunder-Elemental-002",
+      "card_name": "Thunder Elemental",
+      "card_type": "Union",
+      "ability_type": "REVEAL_ON_WIN",
+      "ability_description": "After a successful attack, reveal 1 foe\u2019s card",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Thunder Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Thunder Elemental",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Thunder\\ Elemental\"",
+        "MSG:.*Thunder",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Thunder Elemental \u2014 summon logged and/or union attacks with ATK=90."
     },
     {
       "tier": 1,
@@ -39182,6 +45167,185 @@
         "MSG:"
       ],
       "notes": "Tier 2: union Volatile Slasher \u2014 summon logged and/or union attacks with ATK=50."
+    },
+    {
+      "tier": 1,
+      "id": "E2E-Wood-Elemental-001",
+      "card_name": "Wood Elemental",
+      "card_type": "Union",
+      "ability_type": "PERM_DEF_ON_FOE_TURN_END",
+      "max_turns": 50,
+      "max_watchdog_timeouts": 5,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "role": "t1_union",
+      "deck0": {
+        "deck_name": "E2E T1 Union Deck",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T1 Character Deck",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman",
+          "Skeleton Lancer",
+          "Shredder Doll",
+          "Ponycorn"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "expect_log_any": [
+        "Wood Elemental",
+        "Union summoned"
+      ],
+      "notes": "Tier 1 smoke: union materials placed."
+    },
+    {
+      "tier": 2,
+      "id": "E2E-Wood-Elemental-002",
+      "card_name": "Wood Elemental",
+      "card_type": "Union",
+      "ability_type": "PERM_DEF_ON_FOE_TURN_END",
+      "ability_description": "At the end of each foe\u2019s turn, +5 DEF permanently.",
+      "max_turns": 55,
+      "max_watchdog_timeouts": 6,
+      "union_enabled": true,
+      "expect_log_not_contains": [
+        "SCRIPT ERROR",
+        "Invalid call",
+        "Stack trace"
+      ],
+      "expect_log_contains": [
+        "GAME OVER"
+      ],
+      "role": "t2_union",
+      "deck0": {
+        "deck_name": "E2E T2 union Wood Elemental",
+        "characters": [
+          "Chaotic Wisp",
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "deck1": {
+        "deck_name": "E2E T2 solo Chaotic Wisp",
+        "characters": [
+          "Foul Wisp",
+          "Doom Wisp",
+          "Church Guard",
+          "Big Thug",
+          "Dark Monk",
+          "Goblin Poacher",
+          "Mad Raccoon",
+          "Ox Patrol",
+          "Wandering Swordsman"
+        ],
+        "traps": [
+          "Trap Hole",
+          "Hypnosis",
+          "Spike Trap",
+          "Snare Trap",
+          "Flame Trap"
+        ],
+        "techs": [
+          "Radar",
+          "Spy",
+          "Bribe"
+        ]
+      },
+      "forced_cells_0": [],
+      "forced_cells_1": [
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "forced_tech_0": [],
+      "forced_tech_1": [],
+      "expect_log_any": [
+        "Union summoned P0: Wood Elemental",
+        "Attack P\\d\\(\\d+,\\d+\\)\"Wood\\ Elemental\"",
+        "MSG:.*Wood",
+        "MSG:"
+      ],
+      "notes": "Tier 2: union Wood Elemental \u2014 summon logged and/or union attacks with ATK=65."
     },
     {
       "tier": 1,

@@ -117,7 +117,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -244,7 +245,8 @@
 			"tags": [
 				"normal"
 			],
-			"union_formula": "2 Divine cards + 300 cost"
+			"union_formula": "2 Divine cards + 300 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -356,7 +358,8 @@
 			"label": "Easy / Bio - Gamma",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -483,7 +486,8 @@
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_surveillance_room_invest_4_0.json",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"id": "easy_kitsune",
@@ -602,7 +606,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -722,7 +727,8 @@
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_smoking_room_cond_got_usb_1.json",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -842,7 +848,8 @@
 			"tags": [
 				"normal"
 			],
-			"union_formula": "Kiyoko the Death Whisper + 1 Anima card (≥ 500 cost) + 800 cost"
+			"union_formula": "Kiyoko the Death Whisper + 1 Anima card (\u2265 500 cost) + 800 cost",
+			"quick_duel": true
 		},
 		{
 			"id": "easy_pixie_queen",
@@ -961,7 +968,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1087,7 +1095,8 @@
 			"label": "Easy / Cos - Pure Moon",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1220,7 +1229,8 @@
 			"label": "Easy / Ani - Rebel King",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1352,7 +1362,8 @@
 			"label": "Easy / Cha - Skeleton",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1472,7 +1483,8 @@
 			"tags": [
 				"easy"
 			],
-			"union_formula": "Sunrise Lady + Moonrise Gentleman + 400 cost"
+			"union_formula": "Sunrise Lady + Moonrise Gentleman + 400 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1605,7 +1617,8 @@
 			"label": "Easy / Cha - Ten Arms",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1760,7 +1773,8 @@
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_storage_invest_0_0.json",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -1881,7 +1895,8 @@
 			"tags": [
 				"normal"
 			],
-			"union_formula": "1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost"
+			"union_formula": "1 Bio (\u2265 800 cost) + 1 Arcane (\u2265 800 cost) + 800 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -2027,7 +2042,8 @@
 			"label": "Hard / Nat - Barros",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -2148,7 +2164,8 @@
 			"tags": [
 				"hard"
 			],
-			"union_formula": "1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost"
+			"union_formula": "1 Bio (\u2265 800 cost) + 1 Arcane (\u2265 800 cost) + 800 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -2288,7 +2305,8 @@
 			"label": "Hard / Arc - Full Elemental",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -2434,7 +2452,8 @@
 			"label": "Hard / Arc - Gaia Arcane",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -2554,7 +2573,8 @@
 			"label": "Hard / Div - Gryphon",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -2700,7 +2720,8 @@
 			"label": "Hard / Cos - Helios",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"id": "hard_lord_of_terror",
@@ -2845,7 +2866,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"id": "hard_rocket_peacock",
@@ -2991,7 +3013,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"id": "hard_seraphim_fistmaster",
@@ -3131,7 +3154,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"id": "hard_team_galaxos",
@@ -3141,7 +3165,7 @@
 			],
 			"featured_union": "Team Galaxos",
 			"featured_unit": "Satellite Cannon",
-			"union_formula": "1 Cosmic (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost",
+			"union_formula": "1 Cosmic (\u2265 800 cost) + 1 Anima (\u2265 800 cost) + 800 cost",
 			"deck": {
 				"deck_name": "Hard / Cos+Ani - Team Galaxos",
 				"characters": [
@@ -3248,7 +3272,8 @@
 						]
 					}
 				]
-			}
+			},
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -3388,7 +3413,8 @@
 			"label": "Hard / Nat - Venom",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -3526,7 +3552,8 @@
 			"label": "Hard / Anim - Zealot Kiba",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -3659,7 +3686,8 @@
 			"label": "Norm / Bio - Bioterrorist",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -3792,7 +3820,8 @@
 			"label": "Norm / Nat - Armored",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -3912,7 +3941,8 @@
 			"tags": [
 				"easy"
 			],
-			"union_formula": "3 Choir Lady cards + 500 cost"
+			"union_formula": "3 Choir Lady cards + 500 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4027,7 +4057,8 @@
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_meeting_room_char_???.json",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4147,7 +4178,8 @@
 			"tags": [
 				"easy"
 			],
-			"union_formula": "2 Grand Fort card + 500 cost"
+			"union_formula": "2 Grand Fort card + 500 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4267,7 +4299,8 @@
 			"tags": [
 				"easy"
 			],
-			"union_formula": "1 Succubus + 1 Chaos + 800 cost"
+			"union_formula": "1 Succubus + 1 Chaos + 800 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4387,7 +4420,8 @@
 			"tags": [
 				"normal"
 			],
-			"union_formula": "1 Lockpicker + 1 Anima + 800 cost"
+			"union_formula": "1 Lockpicker + 1 Anima + 800 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4502,7 +4536,8 @@
 			"label": "Norm / Anim - Leorudus",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4636,7 +4671,8 @@
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_technician_office_invest_0_2.json",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4790,7 +4826,8 @@
 			"label": "Norm / Arc - Phoenix",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -4930,7 +4967,8 @@
 			"label": "Norm / Div - Raijin Fujin",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -5070,7 +5108,8 @@
 			"label": "Norm / Nat - Shark",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -5217,7 +5256,8 @@
 			"label": "Norm / Arc - Thunder Elemental",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -5349,7 +5389,8 @@
 			"tags": [
 				"normal"
 			],
-			"union_formula": "1 Bladeshifter + 1 Bio card + 1000 cost"
+			"union_formula": "1 Bladeshifter + 1 Bio card + 1000 cost",
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -5390,7 +5431,8 @@
 			"label": "Norm / Arc - Wood Elemental",
 			"tags": [
 				"hard"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -5517,7 +5559,8 @@
 			"label": "Norm / Ani - X Death",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"ai_personality_defensive": "Tomb Trap (Hard)",
@@ -5674,7 +5717,8 @@
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_cond_toilet_front_password_correct_1.json",
 			"tags": [
 				"normal"
-			]
+			],
+			"quick_duel": true
 		},
 		{
 			"deck": {
@@ -5792,7 +5836,8 @@
 			"label": "Norm / Cos - Vergaia",
 			"tags": [
 				"easy"
-			]
+			],
+			"quick_duel": true
 		}
 	]
 }

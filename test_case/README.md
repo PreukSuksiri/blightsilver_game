@@ -2,25 +2,25 @@
 
 Generated from `context/card_data.xlsx` filtering **Demo = Yes** only.
 
-**Total demo cards:** 207
+**Total demo cards:** 240
 
 ## Card counts
 
-- **Character**: 136
+- **Character**: 159
 - **Tech**: 12
 - **Trap**: 23
-- **Union**: 36
+- **Union**: 46
 
 ## Test case files
 
 | File | Description |
 |------|-------------|
 | [test_framework.md](./test_framework.md) | Shared setup, Godot execution guide, verification checklist |
-| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 136 character cards |
+| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 159 character cards |
 | [tech/tech_demo_test_cases.md](./tech/tech_demo_test_cases.md) | 12 tech cards |
 | [trap/trap_demo_test_cases.md](./trap/trap_demo_test_cases.md) | 23 trap cards |
-| [union/union_demo_test_cases.md](./union/union_demo_test_cases.md) | 36 union cards |
-| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 831 test case IDs for progress tracking |
+| [union/union_demo_test_cases.md](./union/union_demo_test_cases.md) | 46 union cards |
+| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 974 test case IDs for progress tracking |
 | [generate_test_cases.py](./generate_test_cases.py) | Regenerator script (re-run after Excel updates) |
 
 ## Functional tests (code-accurate)
@@ -107,6 +107,7 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Armored Rhino
 - Bat Swarm
 - Big Thug
+- Black Worms
 - Bladeshifter
 - Bleacher Squad
 - Blue Mage
@@ -127,14 +128,19 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Death Knight
 - Demon Spawn
 - Doom Wisp
+- Dystopian Cultist
+- Earth Elemental
 - Echo Bringer
 - Electrogazer
+- Elemental Master
 - Feral Vampire
+- Fire Elemental
 - Flame Lizard
 - Flame Seraph
 - Foul Wisp
 - Fujin
 - Gamma Emitter
+- Gem Turtle
 - Giant Centipede
 - Goblin Poacher
 - Goddess of Virtue
@@ -166,13 +172,18 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Leech Man
 - Leopard Jailer
 - Leorudus the Warlord
+- Lightning Hawk
+- Lockpicker
+- Lunar Wraith
 - Mad Raccoon
+- Mad Wyvern
 - Mafia Associates
 - Magenta the Nightbloom
 - Magical Butterfly
 - Mars Drill
 - Melissa the Healer
 - Mephisto the Fallen
+- Methanomancer
 - Mind Flayer
 - Mine Guard
 - Miner Probe
@@ -181,18 +192,23 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Moon Tribe Twin Blader
 - Moonrise Gentleman
 - Mysterious Miner
+- Nanomites Beast
+- Nanomites Walker
 - Needle Porcupine
 - Neptune Diver
 - Night Whisperer
+- Nimrod the Wonder Seeker
 - Nuki the Tanuki
 - Ostrich Cannon
 - Ox Patrol
+- Padmapani
 - Parom the Smuggler
 - Pit Lord
 - Plant-29
 - Poltergeist
 - Ponycorn
 - Pyromancer
+- Radiaghoul
 - Raijin
 - Red Mage
 - Rotten Shrieker
@@ -213,6 +229,7 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Sonic Seraph
 - Space Boy
 - Spear Shark
+- Spell Sniper
 - Staircase Lady
 - Stinky Insect
 - Street Rogue
@@ -222,6 +239,7 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Swarmcaller
 - Tiny Pixie
 - Tomb Bandit
+- Uproaring Warband
 - Vampire Duchess
 - Vampire Servant
 - Venom Queen
@@ -229,11 +247,16 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Vicious Lizard
 - Vile Creeper
 - Void Stalker
+- WK-17 the Siren
 - Wandering Swordsman
 - War Genie 
+- Waste Slime
+- Water Elemental
 - White Tiger
+- Wind Elemental
 - Witchhunter
 - Yaksa
+- Zealot
 
 ### Tech
 - Accident
@@ -279,11 +302,14 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Armored Dino
 - Barros the Colossal
 - Berserk Hyena
-- Blood-hungry Mutant
+- Bioterrorist
 - Burning Phoenix
 - Choir Lead Amber
+- Cloud Elemental
 - Colorful Mage
+- Diamond Elemental
 - Diamond Unicorn
+- Dimensional Virus
 - False Prophet
 - Gaia Turtle
 - Gamma Mermaid
@@ -292,10 +318,13 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Grand Fort Captain
 - Greater Succubus
 - Gryphon Rider
+- Helios the Prideful Fortress
+- Ice Elemental
 - Imperial Frame
 - Katana Shark
 - Kiba the Giant Slayer
 - Kitsune
+- Legendary Locksmith
 - Lord of Terror
 - Moon Lady Ninja
 - Moon Tribe Shaman
@@ -304,10 +333,14 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Rebel King
 - Rocket Marauder
 - Rocket Peacock
+- Sand Elemental
 - Scarlet Shroom
 - Seraphim Fistmaster
 - Skeleton Overlord
 - Sky Protector
+- Team Galaxos
 - Ten Arms Yaksa
+- Thunder Elemental
 - Volatile Slasher
+- Wood Elemental
 - X-Death Squad

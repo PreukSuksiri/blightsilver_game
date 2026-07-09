@@ -309,6 +309,8 @@ func _choose_best_attack() -> Dictionary:
 
 	for entry: Dictionary in eligible:
 		var attacker_pos: Vector2i = entry["pos"]
+		var attacker: GameState.CardInstance = GameState.get_card(
+				player_index, attacker_pos.x, attacker_pos.y)
 		var reveal_penalty: int = _REVEAL_ATTACKER_PENALTY if entry.get("needs_reveal", false) else 0
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
@@ -319,6 +321,9 @@ func _choose_best_attack() -> Dictionary:
 					continue
 				var target: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 				if target.was_destroyed:
+					continue
+				if not BattleResolver.is_attack_target_allowed(
+						player_index, attacker_pos, attacker, opponent_index, target_pos, target):
 					continue
 				var sc: int = _score_attack(attacker_pos, target_pos) + randi() % 3 - reveal_penalty
 				if sc > best_score:
@@ -511,7 +516,7 @@ func _get_eligible_attackers() -> Array:
 		eligible.append({"pos": pos_v, "needs_reveal": false})
 
 	if facedown_attackers.is_empty():
-		return eligible
+		return _filter_eligible_by_legal_targets(eligible)
 
 	var max_ai_faceup: int = _max_allowed_faceup(opponent_faceup)
 	if ai_faceup >= max_ai_faceup:
@@ -535,7 +540,19 @@ func _get_eligible_attackers() -> Array:
 	var reveal_pool: Array = adjacent if not adjacent.is_empty() else facedown_attackers
 	for pos_v in reveal_pool:
 		eligible.append({"pos": pos_v, "needs_reveal": true})
-	return eligible
+	return _filter_eligible_by_legal_targets(eligible)
+
+
+func _filter_eligible_by_legal_targets(eligible: Array) -> Array:
+	var filtered: Array = []
+	for entry: Dictionary in eligible:
+		var pos: Vector2i = entry.get("pos", Vector2i(-1, -1))
+		if pos.x < 0:
+			continue
+		var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
+		if BattleResolver.attacker_has_any_legal_target(player_index, pos, card):
+			filtered.append(entry)
+	return filtered
 
 
 ## E2E helper: if a face-down highlight card exists in facedown_attackers but is
@@ -589,6 +606,11 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			# Skip visibly destroyed slots (was_destroyed is shown as an empty cell)
 			if card.was_destroyed:
+				continue
+			var attacker: GameState.CardInstance = GameState.get_card(
+				player_index, attacker_pos.x, attacker_pos.y)
+			if not BattleResolver.is_attack_target_allowed(
+					player_index, attacker_pos, attacker, opponent_index, pos, card):
 				continue
 			var sc: int = _score_attack(attacker_pos, pos) + randi() % 3
 			if sc > best_score:
@@ -972,6 +994,10 @@ func decide_target(filter: String) -> Vector2i:
 			if opp_card.face_up:
 				return opp_pos
 			return _best_own_faceup()
+		"any_field_card_destroy":
+			return _best_field_destroy_target()
+		"own_character_destroy_no_cost":
+			return _weakest_own_character_pos()
 		"venom_flagged_card":
 			return _strongest_venom_flagged_pos()
 		"opponent_faceup_no_cost":
@@ -1338,6 +1364,42 @@ func _best_own_character() -> Vector2i:
 				if card.get_effective_atk() > best_atk:
 					best_atk = card.get_effective_atk()
 					best_pos = Vector2i(r, c)
+	return best_pos
+
+func _weakest_own_character_pos() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_atk: int = 999999
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character":
+				var atk: int = card.get_effective_atk()
+				if atk < best_atk:
+					best_atk = atk
+					best_pos = Vector2i(r, c)
+	if best_pos.x < 0:
+		return Vector2i(0, 0)
+	return best_pos
+
+func _best_field_destroy_target() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -1
+	for p in range(2):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type == "dead_end":
+					continue
+				if card.card_type == "character" and GameState.is_immune_to_tech_cards(card):
+					continue
+				var score: int = card.get_effective_atk() + card.get_effective_def()
+				if p == opponent_index:
+					score += 1000
+				if score > best_score:
+					best_score = score
+					best_pos = Vector2i(r, c)
+	if best_pos.x < 0:
+		return Vector2i(0, 0)
 	return best_pos
 
 func _best_own_armored_nature() -> Vector2i:

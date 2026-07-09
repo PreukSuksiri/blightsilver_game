@@ -1,0 +1,5 @@
+# Removed from CardDatabase.gd — replaced by Rank C Bounty / Rank S Bounty in xlsx
+		["Bounty", 0, TrapData.TrapEffectType.DESTROY_ATTACKER,
+			{"refund_half_cost_on_kill": true}, "Until the end of your turn, if you destroy that unit, they receive Crystal equal to half of the unit's cost",
+			CharacterData.Rarity.UNCOMMON,
+			true],

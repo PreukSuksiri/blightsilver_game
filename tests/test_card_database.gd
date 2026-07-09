@@ -43,19 +43,72 @@ func run_all_tests() -> void:
 	test_chain_tech_requirements()
 	test_all_characters_have_valid_affinity()
 	test_all_tech_have_descriptions()
+	test_no_not_implemented_stubs()
+	test_exact_card_counts()
+	test_rename_cleanup()
+
+func test_no_not_implemented_stubs() -> void:
+	print("-- test_no_not_implemented_stubs")
+	UnionDatabase.bootstrap()
+	var ni_chars := 0
+	var ni_traps := 0
+	var ni_tech := 0
+	for cname in CardDatabase.characters:
+		var c: CharacterData = CardDatabase.characters[cname]
+		if c.ability_type == CharacterData.AbilityType.NOT_IMPLEMENTED:
+			ni_chars += 1
+	for tname in CardDatabase.traps:
+		var t: TrapData = CardDatabase.traps[tname]
+		if t.effect_type == TrapData.TrapEffectType.NOT_IMPLEMENTED:
+			ni_traps += 1
+	for tname in CardDatabase.tech_cards:
+		var t: TechCardData = CardDatabase.tech_cards[tname]
+		if t.effect_type == TechCardData.TechEffectType.NOT_IMPLEMENTED:
+			ni_tech += 1
+	var ni_unions := 0
+	for uname in UnionDatabase.get_all_unions():
+		var u = UnionDatabase.get_union(uname)
+		if u != null and u.ability_type == CharacterData.AbilityType.NOT_IMPLEMENTED:
+			ni_unions += 1
+	assert_eq(ni_chars, 0, "No character NOT_IMPLEMENTED stubs")
+	assert_eq(ni_traps, 0, "No trap NOT_IMPLEMENTED stubs")
+	assert_eq(ni_tech, 0, "No tech NOT_IMPLEMENTED stubs")
+	assert_eq(ni_unions, 0, "No union NOT_IMPLEMENTED stubs")
+
+func test_exact_card_counts() -> void:
+	print("-- test_exact_card_counts")
+	assert_eq(CardDatabase.characters.size(), 504, "504 characters")
+	assert_eq(CardDatabase.traps.size(), 72, "72 traps")
+	assert_eq(CardDatabase.tech_cards.size(), 117, "117 tech cards")
+	UnionDatabase.bootstrap()
+	assert_eq(UnionDatabase.get_all_unions().size(), 131, "131 unions")
+
+func test_rename_cleanup() -> void:
+	print("-- test_rename_cleanup")
+	assert_not_null(CardDatabase.get_character("Spider Lady"), "Spider Lady exists")
+	assert_eq(CardDatabase.get_character("Spider Woman"), null, "Spider Woman removed")
+	assert_eq(CardDatabase.get_trap("Bounty"), null, "Bounty trap removed")
+	assert_not_null(CardDatabase.get_trap("Rank C Bounty"), "Rank C Bounty exists")
+	assert_not_null(CardDatabase.get_trap("Rank S Bounty"), "Rank S Bounty exists")
+	var death_stag: CharacterData = CardDatabase.get_character("Death Stag")
+	if death_stag:
+		assert_eq(death_stag.ability_type, CharacterData.AbilityType.NONE, "Death Stag NONE")
+	var asteroid: CharacterData = CardDatabase.get_character("Asteroid Trooper")
+	if asteroid:
+		assert_eq(asteroid.ability_type, CharacterData.AbilityType.NONE, "Asteroid Trooper NONE")
 
 func test_characters_loaded() -> void:
 	print("-- test_characters_loaded")
 	assert_true(CardDatabase.characters.size() > 0, "Characters dict not empty")
-	assert_true(CardDatabase.characters.size() >= 20, "At least 20 characters defined")
+	assert_true(CardDatabase.characters.size() >= 450, "At least 450 characters defined")
 
 func test_traps_loaded() -> void:
 	print("-- test_traps_loaded")
-	assert_true(CardDatabase.traps.size() >= 10, "At least 10 traps defined")
+	assert_true(CardDatabase.traps.size() >= 55, "At least 55 traps defined")
 
 func test_tech_loaded() -> void:
 	print("-- test_tech_loaded")
-	assert_true(CardDatabase.tech_cards.size() >= 20, "At least 20 tech cards defined")
+	assert_true(CardDatabase.tech_cards.size() >= 100, "At least 100 tech cards defined")
 
 func test_angel_gatekeeper_stats() -> void:
 	print("-- test_angel_gatekeeper_stats")

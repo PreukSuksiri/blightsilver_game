@@ -1,6 +1,6 @@
 # Character Card Test Cases (Demo = Yes)
 
-Total cards: 136
+Total cards: 159
 
 Ordered by complexity/priority (most complex first).
 
@@ -9,7 +9,7 @@ Ordered by complexity/priority (most complex first).
 Card Name: Lab Bloater
 Type: Character
 Stats: Cost=800 ATK=20 DEF=85 Affinity=Bio
-Ability: With Mutagen Flag: owner can destroy both units in Reckoning. Both players pay no cost.
+Ability: With Mutagen Flag: Destroy both units in Reckoning. Both players pay no cost.
 Test Cases:
 
 
@@ -59,7 +59,7 @@ Preconditions:
 Steps:
 Step 1: Play Release Mutagen; select Lab Bloater.
 Step 2: Verify mutagen flag icon appears on card.
-Step 3: Trigger combat scenario described: With Mutagen Flag: owner can destroy both units in Reckoning. Both players pay no cost.
+Step 3: Trigger combat scenario described: With Mutagen Flag: Destroy both units in Reckoning. Both players pay no cost.
 Expected Result:
 - has_mutagen_flag is true (not merely 'mutogen' string in flags array).
 - Mutagen-granted ability activates per card text.
@@ -267,7 +267,7 @@ Expected Result:
 Card Name: Plant-29
 Type: Character
 Stats: Cost=900 ATK=45 DEF=85 Affinity=Bio
-Ability: Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.
+Ability: Start of your turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.
 Test Cases:
 
 
@@ -317,7 +317,7 @@ Preconditions:
 Steps:
 Step 1: Play Release Mutagen; select Plant-29.
 Step 2: Verify mutagen flag icon appears on card.
-Step 3: Trigger combat scenario described: Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.
+Step 3: Trigger combat scenario described: Start of your turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.
 Expected Result:
 - has_mutagen_flag is true (not merely 'mutogen' string in flags array).
 - Mutagen-granted ability activates per card text.
@@ -504,7 +504,7 @@ Expected Result:
 Card Name: Archbishop
 Type: Character
 Stats: Cost=1200 ATK=70 DEF=90 Affinity=Divine
-Ability: If this card would be destroyed, the owner can destroy 1 other Divine card on their side instead
+Ability: If this card would be destroyed, you can destroy 1 other Divine card on your side instead
 Test Cases:
 
 
@@ -645,7 +645,7 @@ Expected Result:
 Card Name: Immortal Vampire
 Type: Character
 Stats: Cost=1200 ATK=30 DEF=80 Affinity=Chaos
-Ability: +50 ATK for each other exposed Chaos card on its side. In Reckoning with Divine, destroy this card.
+Ability: +30 ATK for each other exposed Chaos card on your side. In Reckoning with Divine, destroy this card.
 Test Cases:
 
 
@@ -908,7 +908,7 @@ Expected Result:
 Card Name: Death Cobra
 Type: Character
 Stats: Cost=900 ATK=85 DEF=50 Affinity=Nature
-Ability: Owner’s turn end: select 1 exposed card. Put 1 venom flag on it. In Reckoning, foe with Venom Flag get -50 DEF
+Ability: Your turn end: select 1 exposed card on either’s side. Put 1 venom flag on it. In Reckoning, foe with Venom Flag get -50 DEF
 Test Cases:
 
 
@@ -989,7 +989,7 @@ Expected Result:
 
 Card Name: Giant Centipede
 Type: Character
-Stats: Cost=1500 ATK=20 DEF=20 Affinity=Nature
+Stats: Cost=850 ATK=20 DEF=20 Affinity=Nature
 Ability: +100 ATK vs cards with venom flag
 Test Cases:
 
@@ -1115,7 +1115,7 @@ Expected Result:
 Card Name: Tomb Bandit
 Type: Character
 Stats: Cost=1000 ATK=75 DEF=60 Affinity=Anima
-Ability: This Unit cannot be destroyed by Traps.
+Ability: This Unit cannot be destroyed by Traps. It gets -20 DEF permanently if it attacked a trap card.
 Test Cases:
 
 
@@ -1241,7 +1241,7 @@ Expected Result:
 Card Name: Bat Swarm
 Type: Character
 Stats: Cost=200 ATK=15 DEF=15 Affinity=Chaos
-Ability: If a Chaos card is being attacked, they can swap this card’s position with that card. Usable face-down.
+Ability: If a Chaos card on your side is being attacked, you may swap this card's position with that card. Usable face-down.
 Test Cases:
 
 
@@ -1405,7 +1405,7 @@ Expected Result:
 Card Name: Melissa the Healer
 Type: Character
 Stats: Cost=700 ATK=0 DEF=25 Affinity=Divine
-Ability: If the owner loses 500 or more Crystals, they recover 300 Crystals
+Ability: If you lose 500 or more Crystals, you recover 300 Crystals.
 Test Cases:
 
 
@@ -1452,7 +1452,7 @@ Preconditions:
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Record crystal totals before trigger.
 Steps:
-Step 1: Trigger ability: If the owner loses 500 or more Crystals, they recover 300 Crystals
+Step 1: Trigger ability: If you lose 500 or more Crystals, you recover 300 Crystals.
 Expected Result:
 - Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
 
@@ -1474,7 +1474,7 @@ Expected Result:
 Card Name: Grave Worm
 Type: Character
 Stats: Cost=250 ATK=15 DEF=30 Affinity=Chaos
-Ability: Each time foe loses Crystal: foe loses 20 more Crystals
+Ability: Each time foe loses Crystal: foe loses 200 more Crystals
 Test Cases:
 
 
@@ -1521,7 +1521,7 @@ Preconditions:
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Record crystal totals before trigger.
 Steps:
-Step 1: Trigger ability: Each time foe loses Crystal: foe loses 20 more Crystals
+Step 1: Trigger ability: Each time foe loses Crystal: foe loses 200 more Crystals
 Expected Result:
 - Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
 
@@ -1724,7 +1724,7 @@ Expected Result:
 Card Name: Hairpin Assassin
 Type: Character
 Stats: Cost=300 ATK=25 DEF=15 Affinity=Anima
-Ability: In Reckoning, the owner can pay 100 Crystal for +10 ATK bonus
+Ability: In Reckoning, you can pay 800 Crystal for +10 ATK bonus
 Test Cases:
 
 
@@ -1771,7 +1771,7 @@ Preconditions:
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Record crystal totals before trigger.
 Steps:
-Step 1: Trigger ability: In Reckoning, the owner can pay 100 Crystal for +10 ATK bonus
+Step 1: Trigger ability: In Reckoning, you can pay 800 Crystal for +10 ATK bonus
 Expected Result:
 - Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
 
@@ -1806,7 +1806,7 @@ Expected Result:
 Card Name: Leopard Jailer
 Type: Character
 Stats: Cost=450 ATK=30 DEF=45 Affinity=Anima
-Ability: If this card attacks a unit card, the target is unable to attack until the end of owner's turn.
+Ability: If this card attacks a unit card, the target is unable to attack until the end of foe’s turn.
 Test Cases:
 
 
@@ -2274,7 +2274,7 @@ Expected Result:
 Card Name: Golden Senju
 Type: Character
 Stats: Cost=200 ATK=15 DEF=0 Affinity=Divine
-Ability: Once, after attacked a non-unit cell, this card can attack 1 more time.
+Ability: After attacked a non-unit cell, this card can attack 1 more time.
 Test Cases:
 
 
@@ -2322,6 +2322,144 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Golden Senju and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: WK-17 the Siren
+Type: Character
+Stats: Cost=200 ATK=10 DEF=25 Affinity=Bio
+Ability: Before Reckoning, flip 2 coin. Both are Heads : foe choose their ally to fight in place of this card. Both are Tails : Destroy this card.
+Test Cases:
+
+
+Test Case ID: TC-WK-17-the-Siren-001
+Description:
+Happy path — WK-17 the Siren attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'WK-17 the Siren' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place WK-17 the Siren face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects WK-17 the Siren as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- WK-17 the Siren participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-WK-17-the-Siren-002
+Description:
+Edge — WK-17 the Siren placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'WK-17 the Siren' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place WK-17 the Siren face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal WK-17 the Siren via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with WK-17 the Siren.
+Expected Result:
+- WK-17 the Siren reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-WK-17-the-Siren-003
+Description:
+Coin flip — WK-17 the Siren ability resolution.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'WK-17 the Siren' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Note: coin flip uses RNG; run multiple iterations or log outcomes.
+Steps:
+Step 1: Trigger battle/turn event that activates coin flip for WK-17 the Siren.
+Expected Result:
+- On heads: positive branch occurs. On tails: alternate branch or no effect per card text.
+
+Test Case ID: TC-WK-17-the-Siren-004
+Description:
+Edge — low crystals during WK-17 the Siren battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'WK-17 the Siren' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with WK-17 the Siren and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Lunar Wraith
+Type: Character
+Stats: Cost=500 ATK=30 DEF=20 Affinity=Cosmic
+Ability: +15 ATK&DEF to all exposed Moon card on your side. +30 ATK to itself if there is exposed Moon card on your side
+Test Cases:
+
+
+Test Case ID: TC-Lunar-Wraith-001
+Description:
+Happy path — Lunar Wraith attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lunar Wraith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Lunar Wraith face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Lunar Wraith as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Lunar Wraith participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Lunar-Wraith-002
+Description:
+Edge — Lunar Wraith placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lunar Wraith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Lunar Wraith face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Lunar Wraith via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Lunar Wraith.
+Expected Result:
+- Lunar Wraith reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Lunar-Wraith-003
+Description:
+Exposure edge — Lunar Wraith face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lunar Wraith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Lunar Wraith each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Lunar-Wraith-004
+Description:
+Edge — low crystals during Lunar Wraith battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lunar Wraith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Lunar Wraith and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -2473,6 +2611,157 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Laughing Granny and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Methanomancer
+Type: Character
+Stats: Cost=350 ATK=20 DEF=20 Affinity=Cosmic
+Ability: If its surrounding cell is targeted for attack, flip this card face-up and gain +30 ATK&DEF.
+Test Cases:
+
+
+Test Case ID: TC-Methanomancer-001
+Description:
+Happy path — Methanomancer attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Methanomancer' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Methanomancer face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Methanomancer as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Methanomancer participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Methanomancer-002
+Description:
+Edge — Methanomancer placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Methanomancer' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Methanomancer face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Methanomancer via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Methanomancer.
+Expected Result:
+- Methanomancer reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Methanomancer-003
+Description:
+Coin flip — Methanomancer ability resolution.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Methanomancer' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Note: coin flip uses RNG; run multiple iterations or log outcomes.
+Steps:
+Step 1: Trigger battle/turn event that activates coin flip for Methanomancer.
+Expected Result:
+- On heads: positive branch occurs. On tails: alternate branch or no effect per card text.
+
+Test Case ID: TC-Methanomancer-004
+Description:
+Exposure edge — Methanomancer face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Methanomancer' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Methanomancer each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Methanomancer-005
+Description:
+Edge — low crystals during Methanomancer battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Methanomancer' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Methanomancer and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Lightning Hawk
+Type: Character
+Stats: Cost=500 ATK=20 DEF=10 Affinity=Arcane
+Ability: After it performed attack, flip 2 coins, Both are heads: this card can attack 1 more time.
+Test Cases:
+
+
+Test Case ID: TC-Lightning-Hawk-001
+Description:
+Happy path — Lightning Hawk attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lightning Hawk' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Lightning Hawk face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Lightning Hawk as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Lightning Hawk participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Lightning-Hawk-002
+Description:
+Edge — Lightning Hawk placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lightning Hawk' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Lightning Hawk face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Lightning Hawk via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Lightning Hawk.
+Expected Result:
+- Lightning Hawk reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Lightning-Hawk-003
+Description:
+Coin flip — Lightning Hawk ability resolution.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lightning Hawk' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Note: coin flip uses RNG; run multiple iterations or log outcomes.
+Steps:
+Step 1: Trigger battle/turn event that activates coin flip for Lightning Hawk.
+Expected Result:
+- On heads: positive branch occurs. On tails: alternate branch or no effect per card text.
+
+Test Case ID: TC-Lightning-Hawk-004
+Description:
+Edge — low crystals during Lightning Hawk battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lightning Hawk' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Lightning Hawk and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -2715,10 +3004,178 @@ Expected Result:
 
 ---
 
+Card Name: Zealot
+Type: Character
+Stats: Cost=900 ATK=75 DEF=50 Affinity=Anima
+Ability: If this card is used for Union summon, increase the Union card’s ATK&DEF by 40
+Test Cases:
+
+
+Test Case ID: TC-Zealot-001
+Description:
+Happy path — Zealot attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Zealot' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Zealot face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Zealot as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Zealot participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Zealot-002
+Description:
+Edge — Zealot placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Zealot' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Zealot face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Zealot via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Zealot.
+Expected Result:
+- Zealot reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Zealot-003
+Description:
+Union interaction — Zealot vs Union target.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Zealot' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Summon a Demo Union (e.g. Gryphon Rider) on opponent field face-up.
+Steps:
+Step 1: Attack the Union card with Zealot.
+Expected Result:
+- Union-specific ATK/DEF modifiers apply during calculation.
+
+Test Case ID: TC-Zealot-004
+Description:
+Edge — low crystals during Zealot battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Zealot' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Zealot and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Black Worms
+Type: Character
+Stats: Cost=800 ATK=45 DEF=65 Affinity=Bio
+Ability: At your turn’s end, foe loses 300 Crystals for each Mutagen flag on the field
+Test Cases:
+
+
+Test Case ID: TC-Black-Worms-001
+Description:
+Happy path — Black Worms attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Black Worms face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Black Worms as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Black Worms participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Black-Worms-002
+Description:
+Edge — Black Worms placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Black Worms face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Black Worms via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Black Worms.
+Expected Result:
+- Black Worms reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Black-Worms-003
+Description:
+Mutagen — Black Worms with has_mutagen_flag active.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has Release Mutagen in hand.
+- Place face-up Bio character Black Worms on field.
+Steps:
+Step 1: Play Release Mutagen; select Black Worms.
+Step 2: Verify mutagen flag icon appears on card.
+Step 3: Trigger combat scenario described: At your turn’s end, foe loses 300 Crystals for each Mutagen flag on the field
+Expected Result:
+- has_mutagen_flag is true (not merely 'mutogen' string in flags array).
+- Mutagen-granted ability activates per card text.
+
+Test Case ID: TC-Black-Worms-004
+Description:
+Mutagen edge — Black Worms WITHOUT mutagen flag.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Black Worms face-up without using Release Mutagen.
+Steps:
+Step 1: Attempt the mutagen-dependent action or battle.
+Expected Result:
+- Mutagen-specific bonus/effect does NOT apply.
+
+Test Case ID: TC-Black-Worms-005
+Description:
+Crystal interaction — Black Worms crystal gain/loss/drain.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Record crystal totals before trigger.
+Steps:
+Step 1: Trigger ability: At your turn’s end, foe loses 300 Crystals for each Mutagen flag on the field
+Expected Result:
+- Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
+
+Test Case ID: TC-Black-Worms-006
+Description:
+Edge — low crystals during Black Worms battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Black Worms and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Dark Tengu
 Type: Character
-Stats: Cost=250 ATK=25 DEF=25 Affinity=Chaos
-Ability: -5 ATK once it successfully attacked. -5 DEF once it successfully defended.
+Stats: Cost=250 ATK=30 DEF=30 Affinity=Chaos
+Ability: -10 ATK once it successfully attacked. -10 DEF once it successfully defended.
 Test Cases:
 
 
@@ -2784,10 +3241,66 @@ Expected Result:
 
 ---
 
+Card Name: Waste Slime
+Type: Character
+Stats: Cost=150 ATK=10 DEF=15 Affinity=Bio
+Ability: Once, if it’s going to be destroyed by Anima or Bio card, it’s not destroyed.
+Test Cases:
+
+
+Test Case ID: TC-Waste-Slime-001
+Description:
+Happy path — Waste Slime attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Waste Slime' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Waste Slime face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Waste Slime as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Waste Slime participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Waste-Slime-002
+Description:
+Edge — Waste Slime placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Waste Slime' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Waste Slime face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Waste Slime via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Waste Slime.
+Expected Result:
+- Waste Slime reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Waste-Slime-003
+Description:
+Edge — low crystals during Waste Slime battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Waste Slime' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Waste Slime and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Ostrich Cannon
 Type: Character
 Stats: Cost=800 ATK=60 DEF=30 Affinity=Nature
-Ability: After performing an attack, this card cannot attack during their next turn.
+Ability: After performing an attack, this card cannot attack during your next turn.
 Test Cases:
 
 
@@ -3060,6 +3573,144 @@ Expected Result:
 
 ---
 
+Card Name: Parom the Smuggler
+Type: Character
+Stats: Cost=300 ATK=30 DEF=20 Affinity=Cosmic
+Ability: Each time foe’s cell got revealed by a card’s ability: gain 40 Crystals.
+Test Cases:
+
+
+Test Case ID: TC-Parom-the-Smuggler-001
+Description:
+Happy path — Parom the Smuggler attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Parom the Smuggler face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Parom the Smuggler as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Parom the Smuggler participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Parom-the-Smuggler-002
+Description:
+Edge — Parom the Smuggler placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Parom the Smuggler face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Parom the Smuggler via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Parom the Smuggler.
+Expected Result:
+- Parom the Smuggler reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Parom-the-Smuggler-003
+Description:
+Crystal interaction — Parom the Smuggler crystal gain/loss/drain.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Record crystal totals before trigger.
+Steps:
+Step 1: Trigger ability: Each time foe’s cell got revealed by a card’s ability: gain 40 Crystals.
+Expected Result:
+- Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
+
+Test Case ID: TC-Parom-the-Smuggler-004
+Description:
+Reveal effect — Parom the Smuggler post-attack/ability reveal.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has multiple face-down cells.
+Steps:
+Step 1: Trigger reveal via Parom the Smuggler's ability.
+Expected Result:
+- Correct number of opponent/own cells revealed; selection UI works.
+
+Test Case ID: TC-Parom-the-Smuggler-005
+Description:
+Edge — low crystals during Parom the Smuggler battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Parom the Smuggler and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Death Knight
+Type: Character
+Stats: Cost=850 ATK=65 DEF=65 Affinity=Chaos
+Ability: +5 ATK per Chaos unit on your side. +5 DEF per Chaos unit in your void.
+Test Cases:
+
+
+Test Case ID: TC-Death-Knight-001
+Description:
+Happy path — Death Knight attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Death Knight' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Death Knight face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Death Knight as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Death Knight participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Death-Knight-002
+Description:
+Edge — Death Knight placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Death Knight' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Death Knight face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Death Knight via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Death Knight.
+Expected Result:
+- Death Knight reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Death-Knight-003
+Description:
+Edge — low crystals during Death Knight battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Death Knight' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Death Knight and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Lazy Troll
 Type: Character
 Stats: Cost=1000 ATK=120 DEF=60 Affinity=Nature
@@ -3212,105 +3863,6 @@ Expected Result:
 
 ---
 
-Card Name: Rotten Shrieker
-Type: Character
-Stats: Cost=450 ATK=50 DEF=30 Affinity=Bio
-Ability: Without Mutagen Flag : -10 ATK permanently at the end of owner's turn.
-Test Cases:
-
-
-Test Case ID: TC-Rotten-Shrieker-001
-Description:
-Happy path — Rotten Shrieker attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Rotten Shrieker face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Rotten Shrieker as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Rotten Shrieker participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Rotten-Shrieker-002
-Description:
-Edge — Rotten Shrieker placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Rotten Shrieker face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Rotten Shrieker via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Rotten Shrieker.
-Expected Result:
-- Rotten Shrieker reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Rotten-Shrieker-003
-Description:
-Mutagen — Rotten Shrieker with has_mutagen_flag active.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has Release Mutagen in hand.
-- Place face-up Bio character Rotten Shrieker on field.
-Steps:
-Step 1: Play Release Mutagen; select Rotten Shrieker.
-Step 2: Verify mutagen flag icon appears on card.
-Step 3: Trigger combat scenario described: Without Mutagen Flag : -10 ATK permanently at the end of owner's turn.
-Expected Result:
-- has_mutagen_flag is true (not merely 'mutogen' string in flags array).
-- Mutagen-granted ability activates per card text.
-
-Test Case ID: TC-Rotten-Shrieker-004
-Description:
-Mutagen edge — Rotten Shrieker WITHOUT mutagen flag.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Rotten Shrieker face-up without using Release Mutagen.
-Steps:
-Step 1: Attempt the mutagen-dependent action or battle.
-Expected Result:
-- Mutagen-specific bonus/effect does NOT apply.
-
-Test Case ID: TC-Rotten-Shrieker-005
-Description:
-End-of-turn — Rotten Shrieker turn boundary effect.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Rotten Shrieker survives to end of relevant turn.
-Steps:
-Step 1: End turn; observe end-of-turn processing.
-Expected Result:
-- Turn-end stat changes, flags, or self-destruct occur as specified.
-
-Test Case ID: TC-Rotten-Shrieker-006
-Description:
-Edge — low crystals during Rotten Shrieker battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Rotten Shrieker and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
 Card Name: Mafia Associates
 Type: Character
 Stats: Cost=500 ATK=45 DEF=40 Affinity=Anima
@@ -3393,9 +3945,78 @@ Expected Result:
 
 ---
 
+Card Name: Skeleton Grappler
+Type: Character
+Stats: Cost=150 ATK=20 DEF=5 Affinity=Chaos
+Ability: After Reckoning: that foe’s unit cannot attack until foe’s turn ends
+Test Cases:
+
+
+Test Case ID: TC-Skeleton-Grappler-001
+Description:
+Happy path — Skeleton Grappler attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Skeleton Grappler face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Skeleton Grappler as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Skeleton Grappler participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Skeleton-Grappler-002
+Description:
+Edge — Skeleton Grappler placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Skeleton Grappler face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Skeleton Grappler via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Skeleton Grappler.
+Expected Result:
+- Skeleton Grappler reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Skeleton-Grappler-003
+Description:
+Attack lock — Skeleton Grappler or target attack restriction.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Trigger the lock condition via battle.
+Steps:
+Step 1: Attempt additional attack on locked unit next turn.
+Expected Result:
+- Locked character cannot be selected as attacker until restriction expires.
+
+Test Case ID: TC-Skeleton-Grappler-004
+Description:
+Edge — low crystals during Skeleton Grappler battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Skeleton Grappler and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Vicious Lizard
 Type: Character
-Stats: Cost=900 ATK=40 DEF=25 Affinity=Nature
+Stats: Cost=1100 ATK=40 DEF=25 Affinity=Nature
 Ability: +60 ATK&DEF vs foe with Venom Flag. +40 ATK if itself has Venom Flag
 Test Cases:
 
@@ -3457,6 +4078,75 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Vicious Lizard and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Gem Turtle
+Type: Character
+Stats: Cost=200 ATK=0 DEF=30 Affinity=Arcane
+Ability: Once, when this card defends, the attacker permanently loses 5 ATK.
+Test Cases:
+
+
+Test Case ID: TC-Gem-Turtle-001
+Description:
+Happy path — Gem Turtle attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gem Turtle' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Gem Turtle face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Gem Turtle as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Gem Turtle participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Gem-Turtle-002
+Description:
+Edge — Gem Turtle placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gem Turtle' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Gem Turtle face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Gem Turtle via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Gem Turtle.
+Expected Result:
+- Gem Turtle reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Gem-Turtle-003
+Description:
+Defend scenario — Gem Turtle as defender.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gem Turtle' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent attacks Gem Turtle.
+Steps:
+Step 1: Resolve defense; check defend-only crystal/stat effects.
+Expected Result:
+- Defend-triggered permanent/temporary stat changes apply to attacker or self.
+
+Test Case ID: TC-Gem-Turtle-004
+Description:
+Edge — low crystals during Gem Turtle battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gem Turtle' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Gem Turtle and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -3531,6 +4221,187 @@ Expected Result:
 
 ---
 
+Card Name: Rotten Shrieker
+Type: Character
+Stats: Cost=450 ATK=40 DEF=30 Affinity=Bio
+Ability: Without Mutagen Flag : -10 ATK permanently at the end of your turn.
+Test Cases:
+
+
+Test Case ID: TC-Rotten-Shrieker-001
+Description:
+Happy path — Rotten Shrieker attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Rotten Shrieker face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Rotten Shrieker as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Rotten Shrieker participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Rotten-Shrieker-002
+Description:
+Edge — Rotten Shrieker placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Rotten Shrieker face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Rotten Shrieker via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Rotten Shrieker.
+Expected Result:
+- Rotten Shrieker reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Rotten-Shrieker-003
+Description:
+Mutagen — Rotten Shrieker with has_mutagen_flag active.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has Release Mutagen in hand.
+- Place face-up Bio character Rotten Shrieker on field.
+Steps:
+Step 1: Play Release Mutagen; select Rotten Shrieker.
+Step 2: Verify mutagen flag icon appears on card.
+Step 3: Trigger combat scenario described: Without Mutagen Flag : -10 ATK permanently at the end of your turn.
+Expected Result:
+- has_mutagen_flag is true (not merely 'mutogen' string in flags array).
+- Mutagen-granted ability activates per card text.
+
+Test Case ID: TC-Rotten-Shrieker-004
+Description:
+Mutagen edge — Rotten Shrieker WITHOUT mutagen flag.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Rotten Shrieker face-up without using Release Mutagen.
+Steps:
+Step 1: Attempt the mutagen-dependent action or battle.
+Expected Result:
+- Mutagen-specific bonus/effect does NOT apply.
+
+Test Case ID: TC-Rotten-Shrieker-005
+Description:
+End-of-turn — Rotten Shrieker turn boundary effect.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Rotten Shrieker survives to end of relevant turn.
+Steps:
+Step 1: End turn; observe end-of-turn processing.
+Expected Result:
+- Turn-end stat changes, flags, or self-destruct occur as specified.
+
+Test Case ID: TC-Rotten-Shrieker-006
+Description:
+Edge — low crystals during Rotten Shrieker battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Rotten Shrieker and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Cursed Well
+Type: Character
+Stats: Cost=300 ATK=0 DEF=25 Affinity=Chaos
+Ability: At the end of the turn that it’s been exposed, +15 ATK permanently
+Test Cases:
+
+
+Test Case ID: TC-Cursed-Well-001
+Description:
+Happy path — Cursed Well attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Cursed Well face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Cursed Well as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Cursed Well participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Cursed-Well-002
+Description:
+Edge — Cursed Well placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Cursed Well face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Cursed Well via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Cursed Well.
+Expected Result:
+- Cursed Well reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Cursed-Well-003
+Description:
+Exposure edge — Cursed Well face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Cursed Well each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Cursed-Well-004
+Description:
+End-of-turn — Cursed Well turn boundary effect.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Cursed Well survives to end of relevant turn.
+Steps:
+Step 1: End turn; observe end-of-turn processing.
+Expected Result:
+- Turn-end stat changes, flags, or self-destruct occur as specified.
+
+Test Case ID: TC-Cursed-Well-005
+Description:
+Edge — low crystals during Cursed Well battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Cursed Well and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Green Mage
 Type: Character
 Stats: Cost=400 ATK=15 DEF=15 Affinity=Arcane
@@ -3600,57 +4471,70 @@ Expected Result:
 
 ---
 
-Card Name: Skeleton Grappler
+Card Name: Nimrod the Wonder Seeker
 Type: Character
-Stats: Cost=150 ATK=20 DEF=5 Affinity=Chaos
-Ability: After Reckoning: that foe’s unit must wait until foe’s turn ends
+Stats: Cost=720 ATK=65 DEF=50 Affinity=Cosmic
+Ability: Once, at this turn’s end, reveal 2 foe’s cell and 1 of your cell.
 Test Cases:
 
 
-Test Case ID: TC-Skeleton-Grappler-001
+Test Case ID: TC-Nimrod-the-Wonder-Seeker-001
 Description:
-Happy path — Skeleton Grappler attacks and wins a standard battle.
+Happy path — Nimrod the Wonder Seeker attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Nimrod the Wonder Seeker' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Skeleton Grappler face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Nimrod the Wonder Seeker face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Skeleton Grappler as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Nimrod the Wonder Seeker as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Skeleton Grappler participates in battle resolution without errors.
+- Nimrod the Wonder Seeker participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Skeleton-Grappler-002
+Test Case ID: TC-Nimrod-the-Wonder-Seeker-002
 Description:
-Edge — Skeleton Grappler placed face-down, revealed on attack.
+Edge — Nimrod the Wonder Seeker placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Nimrod the Wonder Seeker' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Skeleton Grappler face-down on Player 0 field.
+- Place Nimrod the Wonder Seeker face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Skeleton Grappler via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Skeleton Grappler.
+Step 1: Attack with another unit or reveal Nimrod the Wonder Seeker via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Nimrod the Wonder Seeker.
 Expected Result:
-- Skeleton Grappler reveals correctly on attack.
+- Nimrod the Wonder Seeker reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Skeleton-Grappler-003
+Test Case ID: TC-Nimrod-the-Wonder-Seeker-003
 Description:
-Edge — low crystals during Skeleton Grappler battle.
+Reveal effect — Nimrod the Wonder Seeker post-attack/ability reveal.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Skeleton Grappler' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Nimrod the Wonder Seeker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has multiple face-down cells.
+Steps:
+Step 1: Trigger reveal via Nimrod the Wonder Seeker's ability.
+Expected Result:
+- Correct number of opponent/own cells revealed; selection UI works.
+
+Test Case ID: TC-Nimrod-the-Wonder-Seeker-004
+Description:
+Edge — low crystals during Nimrod the Wonder Seeker battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nimrod the Wonder Seeker' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Skeleton Grappler and lose card (crystal cost payment).
+Step 1: Attack/defend with Nimrod the Wonder Seeker and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -3794,6 +4678,75 @@ Expected Result:
 
 ---
 
+Card Name: Scout Probe
+Type: Character
+Stats: Cost=700 ATK=40 DEF=50 Affinity=Cosmic
+Ability: After this card attacks, choose and reveal 1 adjacent cell.
+Test Cases:
+
+
+Test Case ID: TC-Scout-Probe-001
+Description:
+Happy path — Scout Probe attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Scout Probe face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Scout Probe as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Scout Probe participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Scout-Probe-002
+Description:
+Edge — Scout Probe placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Scout Probe face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Scout Probe via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Scout Probe.
+Expected Result:
+- Scout Probe reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Scout-Probe-003
+Description:
+Reveal effect — Scout Probe post-attack/ability reveal.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has multiple face-down cells.
+Steps:
+Step 1: Trigger reveal via Scout Probe's ability.
+Expected Result:
+- Correct number of opponent/own cells revealed; selection UI works.
+
+Test Case ID: TC-Scout-Probe-004
+Description:
+Edge — low crystals during Scout Probe battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Scout Probe and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Sonic Seraph
 Type: Character
 Stats: Cost=550 ATK=45 DEF=50 Affinity=Divine
@@ -3880,7 +4833,7 @@ Expected Result:
 Card Name: Swarmcaller
 Type: Character
 Stats: Cost=950 ATK=45 DEF=45 Affinity=Nature
-Ability: +15 ATK&DEF for each other exposed Nature card on its side
+Ability: +15 ATK&DEF for each other exposed Nature card on your side
 Test Cases:
 
 
@@ -3949,7 +4902,7 @@ Expected Result:
 Card Name: Leorudus the Warlord
 Type: Character
 Stats: Cost=1150 ATK=80 DEF=80 Affinity=Anima
-Ability: +20 ATK&DEF for each other exposed Anima card on its side
+Ability: +20 ATK&DEF for each other exposed Anima card on your side
 Test Cases:
 
 
@@ -4015,70 +4968,126 @@ Expected Result:
 
 ---
 
-Card Name: Scout Probe
+Card Name: Moonrise Gentleman
 Type: Character
-Stats: Cost=700 ATK=40 DEF=50 Affinity=Cosmic
-Ability: Choose and reveal any adjacent square after it attacked.
+Stats: Cost=400 ATK=40 DEF=30 Affinity=Divine
+Ability: If it defends: +10 DEF,-10 ATK permanently (if possible)
 Test Cases:
 
 
-Test Case ID: TC-Scout-Probe-001
+Test Case ID: TC-Moonrise-Gentleman-001
 Description:
-Happy path — Scout Probe attacks and wins a standard battle.
+Happy path — Moonrise Gentleman attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Scout Probe face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Moonrise Gentleman face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Scout Probe as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Moonrise Gentleman as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Scout Probe participates in battle resolution without errors.
+- Moonrise Gentleman participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Scout-Probe-002
+Test Case ID: TC-Moonrise-Gentleman-002
 Description:
-Edge — Scout Probe placed face-down, revealed on attack.
+Edge — Moonrise Gentleman placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Scout Probe face-down on Player 0 field.
+- Place Moonrise Gentleman face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Scout Probe via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Scout Probe.
+Step 1: Attack with another unit or reveal Moonrise Gentleman via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Moonrise Gentleman.
 Expected Result:
-- Scout Probe reveals correctly on attack.
+- Moonrise Gentleman reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Scout-Probe-003
+Test Case ID: TC-Moonrise-Gentleman-003
 Description:
-Reveal effect — Scout Probe post-attack/ability reveal.
+Defend scenario — Moonrise Gentleman as defender.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has multiple face-down cells.
+- Opponent attacks Moonrise Gentleman.
 Steps:
-Step 1: Trigger reveal via Scout Probe's ability.
+Step 1: Resolve defense; check defend-only crystal/stat effects.
 Expected Result:
-- Correct number of opponent/own cells revealed; selection UI works.
+- Defend-triggered permanent/temporary stat changes apply to attacker or self.
 
-Test Case ID: TC-Scout-Probe-004
+Test Case ID: TC-Moonrise-Gentleman-004
 Description:
-Edge — low crystals during Scout Probe battle.
+Edge — low crystals during Moonrise Gentleman battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Scout Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Scout Probe and lose card (crystal cost payment).
+Step 1: Attack/defend with Moonrise Gentleman and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Sunrise Lady
+Type: Character
+Stats: Cost=300 ATK=20 DEF=30 Affinity=Divine
+Ability: If it attacks: +10 ATK,-10 DEF permanently (if possible)
+Test Cases:
+
+
+Test Case ID: TC-Sunrise-Lady-001
+Description:
+Happy path — Sunrise Lady attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sunrise Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Sunrise Lady face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Sunrise Lady as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Sunrise Lady participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Sunrise-Lady-002
+Description:
+Edge — Sunrise Lady placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sunrise Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Sunrise Lady face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Sunrise Lady via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Sunrise Lady.
+Expected Result:
+- Sunrise Lady reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Sunrise-Lady-003
+Description:
+Edge — low crystals during Sunrise Lady battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sunrise Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Sunrise Lady and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -4153,83 +5162,70 @@ Expected Result:
 
 ---
 
-Card Name: Cursed Well
+Card Name: Night Whisperer
 Type: Character
-Stats: Cost=300 ATK=0 DEF=25 Affinity=Chaos
-Ability: At the end of the turn that it’s been exposed, +15 ATK
+Stats: Cost=900 ATK=30 DEF=30 Affinity=Chaos
+Ability: +30 ATK&DEF for each exposed ‘wisp’ card on your side
 Test Cases:
 
 
-Test Case ID: TC-Cursed-Well-001
+Test Case ID: TC-Night-Whisperer-001
 Description:
-Happy path — Cursed Well attacks and wins a standard battle.
+Happy path — Night Whisperer attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Cursed Well face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Night Whisperer face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Cursed Well as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Night Whisperer as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Cursed Well participates in battle resolution without errors.
+- Night Whisperer participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Cursed-Well-002
+Test Case ID: TC-Night-Whisperer-002
 Description:
-Edge — Cursed Well placed face-down, revealed on attack.
+Edge — Night Whisperer placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Cursed Well face-down on Player 0 field.
+- Place Night Whisperer face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Cursed Well via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Cursed Well.
+Step 1: Attack with another unit or reveal Night Whisperer via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Night Whisperer.
 Expected Result:
-- Cursed Well reveals correctly on attack.
+- Night Whisperer reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Cursed-Well-003
+Test Case ID: TC-Night-Whisperer-003
 Description:
-Exposure edge — Cursed Well face-up vs face-down states.
+Exposure edge — Night Whisperer face-up vs face-down states.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Run once with defender face-up before attack; once face-down until reveal.
 Steps:
-Step 1: Attack with Cursed Well each time.
+Step 1: Attack with Night Whisperer each time.
 Expected Result:
 - Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
 
-Test Case ID: TC-Cursed-Well-004
+Test Case ID: TC-Night-Whisperer-004
 Description:
-End-of-turn — Cursed Well turn boundary effect.
+Edge — low crystals during Night Whisperer battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Cursed Well survives to end of relevant turn.
-Steps:
-Step 1: End turn; observe end-of-turn processing.
-Expected Result:
-- Turn-end stat changes, flags, or self-destruct occur as specified.
-
-Test Case ID: TC-Cursed-Well-005
-Description:
-Edge — low crystals during Cursed Well battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Cursed Well and lose card (crystal cost payment).
+Step 1: Attack/defend with Night Whisperer and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -4304,152 +5300,268 @@ Expected Result:
 
 ---
 
-Card Name: Night Whisperer
+Card Name: Uproaring Warband
 Type: Character
-Stats: Cost=900 ATK=30 DEF=30 Affinity=Chaos
-Ability: +30 ATK&DEF for each exposed ‘wisp’ card on its side
+Stats: Cost=280 ATK=30 DEF=15 Affinity=Anima
+Ability: +5 ATK&DEF for each exposed ally Anima on your side
 Test Cases:
 
 
-Test Case ID: TC-Night-Whisperer-001
+Test Case ID: TC-Uproaring-Warband-001
 Description:
-Happy path — Night Whisperer attacks and wins a standard battle.
+Happy path — Uproaring Warband attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Uproaring Warband' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Night Whisperer face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Uproaring Warband face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Night Whisperer as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Uproaring Warband as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Night Whisperer participates in battle resolution without errors.
+- Uproaring Warband participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Night-Whisperer-002
+Test Case ID: TC-Uproaring-Warband-002
 Description:
-Edge — Night Whisperer placed face-down, revealed on attack.
+Edge — Uproaring Warband placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Uproaring Warband' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Night Whisperer face-down on Player 0 field.
+- Place Uproaring Warband face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Night Whisperer via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Night Whisperer.
+Step 1: Attack with another unit or reveal Uproaring Warband via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Uproaring Warband.
 Expected Result:
-- Night Whisperer reveals correctly on attack.
+- Uproaring Warband reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Night-Whisperer-003
+Test Case ID: TC-Uproaring-Warband-003
 Description:
-Exposure edge — Night Whisperer face-up vs face-down states.
+Exposure edge — Uproaring Warband face-up vs face-down states.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Uproaring Warband' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Run once with defender face-up before attack; once face-down until reveal.
 Steps:
-Step 1: Attack with Night Whisperer each time.
+Step 1: Attack with Uproaring Warband each time.
 Expected Result:
 - Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
 
-Test Case ID: TC-Night-Whisperer-004
+Test Case ID: TC-Uproaring-Warband-004
 Description:
-Edge — low crystals during Night Whisperer battle.
+Edge — low crystals during Uproaring Warband battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Night Whisperer' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Uproaring Warband' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Night Whisperer and lose card (crystal cost payment).
+Step 1: Attack/defend with Uproaring Warband and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
 ---
 
-Card Name: Parom the Smuggler
+Card Name: Radiaghoul
 Type: Character
-Stats: Cost=300 ATK=30 DEF=20 Affinity=Cosmic
-Ability: Each time foe’s cell got revealed: gain 40 Crystals.
+Stats: Cost=160 ATK=20 DEF=5 Affinity=Bio
+Ability: Before Reckoning, -5 DEF permanently to Nature foe
 Test Cases:
 
 
-Test Case ID: TC-Parom-the-Smuggler-001
+Test Case ID: TC-Radiaghoul-001
 Description:
-Happy path — Parom the Smuggler attacks and wins a standard battle.
+Happy path — Radiaghoul attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Radiaghoul' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Parom the Smuggler face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Radiaghoul face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Parom the Smuggler as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Radiaghoul as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Parom the Smuggler participates in battle resolution without errors.
+- Radiaghoul participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Parom-the-Smuggler-002
+Test Case ID: TC-Radiaghoul-002
 Description:
-Edge — Parom the Smuggler placed face-down, revealed on attack.
+Edge — Radiaghoul placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Radiaghoul' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Parom the Smuggler face-down on Player 0 field.
+- Place Radiaghoul face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Parom the Smuggler via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Parom the Smuggler.
+Step 1: Attack with another unit or reveal Radiaghoul via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Radiaghoul.
 Expected Result:
-- Parom the Smuggler reveals correctly on attack.
+- Radiaghoul reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Parom-the-Smuggler-003
+Test Case ID: TC-Radiaghoul-003
 Description:
-Crystal interaction — Parom the Smuggler crystal gain/loss/drain.
+Edge — low crystals during Radiaghoul battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Record crystal totals before trigger.
-Steps:
-Step 1: Trigger ability: Each time foe’s cell got revealed: gain 40 Crystals.
-Expected Result:
-- Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
-
-Test Case ID: TC-Parom-the-Smuggler-004
-Description:
-Reveal effect — Parom the Smuggler post-attack/ability reveal.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has multiple face-down cells.
-Steps:
-Step 1: Trigger reveal via Parom the Smuggler's ability.
-Expected Result:
-- Correct number of opponent/own cells revealed; selection UI works.
-
-Test Case ID: TC-Parom-the-Smuggler-005
-Description:
-Edge — low crystals during Parom the Smuggler battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Parom the Smuggler' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Radiaghoul' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Parom the Smuggler and lose card (crystal cost payment).
+Step 1: Attack/defend with Radiaghoul and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Demon Spawn
+Type: Character
+Stats: Cost=400 ATK=40 DEF=35 Affinity=Chaos
+Ability: Destroy this card in Reckoning with Divine units.
+Test Cases:
+
+
+Test Case ID: TC-Demon-Spawn-001
+Description:
+Happy path — Demon Spawn attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Demon Spawn' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Demon Spawn face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Demon Spawn as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Demon Spawn participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Demon-Spawn-002
+Description:
+Edge — Demon Spawn placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Demon Spawn' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Demon Spawn face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Demon Spawn via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Demon Spawn.
+Expected Result:
+- Demon Spawn reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Demon-Spawn-003
+Description:
+Edge — low crystals during Demon Spawn battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Demon Spawn' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Demon Spawn and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Gamma Emitter
+Type: Character
+Stats: Cost=220 ATK=20 DEF=15 Affinity=Bio
+Ability: +10 ATK&DEF vs Nature. With Mutagen Flag : +5 ATK
+Test Cases:
+
+
+Test Case ID: TC-Gamma-Emitter-001
+Description:
+Happy path — Gamma Emitter attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Gamma Emitter face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Gamma Emitter as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Gamma Emitter participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Gamma-Emitter-002
+Description:
+Edge — Gamma Emitter placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Gamma Emitter face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Gamma Emitter via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Gamma Emitter.
+Expected Result:
+- Gamma Emitter reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Gamma-Emitter-003
+Description:
+Mutagen — Gamma Emitter with has_mutagen_flag active.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has Release Mutagen in hand.
+- Place face-up Bio character Gamma Emitter on field.
+Steps:
+Step 1: Play Release Mutagen; select Gamma Emitter.
+Step 2: Verify mutagen flag icon appears on card.
+Step 3: Trigger combat scenario described: +10 ATK&DEF vs Nature. With Mutagen Flag : +5 ATK
+Expected Result:
+- has_mutagen_flag is true (not merely 'mutogen' string in flags array).
+- Mutagen-granted ability activates per card text.
+
+Test Case ID: TC-Gamma-Emitter-004
+Description:
+Mutagen edge — Gamma Emitter WITHOUT mutagen flag.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Gamma Emitter face-up without using Release Mutagen.
+Steps:
+Step 1: Attempt the mutagen-dependent action or battle.
+Expected Result:
+- Mutagen-specific bonus/effect does NOT apply.
+
+Test Case ID: TC-Gamma-Emitter-005
+Description:
+Edge — low crystals during Gamma Emitter battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Gamma Emitter and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -4744,6 +5856,75 @@ Expected Result:
 
 ---
 
+Card Name: Aerial the Battlemage
+Type: Character
+Stats: Cost=750 ATK=50 DEF=45 Affinity=Arcane
+Ability: +20 ATK&DEF if there is Union card on your side
+Test Cases:
+
+
+Test Case ID: TC-Aerial-the-Battlemage-001
+Description:
+Happy path — Aerial the Battlemage attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Aerial the Battlemage face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Aerial the Battlemage as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Aerial the Battlemage participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Aerial-the-Battlemage-002
+Description:
+Edge — Aerial the Battlemage placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Aerial the Battlemage face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Aerial the Battlemage via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Aerial the Battlemage.
+Expected Result:
+- Aerial the Battlemage reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Aerial-the-Battlemage-003
+Description:
+Union interaction — Aerial the Battlemage vs Union target.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Summon a Demo Union (e.g. Gryphon Rider) on opponent field face-up.
+Steps:
+Step 1: Attack the Union card with Aerial the Battlemage.
+Expected Result:
+- Union-specific ATK/DEF modifiers apply during calculation.
+
+Test Case ID: TC-Aerial-the-Battlemage-004
+Description:
+Edge — low crystals during Aerial the Battlemage battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Aerial the Battlemage and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Armored Monkey
 Type: Character
 Stats: Cost=170 ATK=10 DEF=20 Affinity=Nature
@@ -4813,70 +5994,70 @@ Expected Result:
 
 ---
 
-Card Name: Aerial the Battlemage
+Card Name: Elemental Master
 Type: Character
-Stats: Cost=750 ATK=50 DEF=45 Affinity=Arcane
-Ability: +20 ATK&DEF if there is Union card on its side
+Stats: Cost=800 ATK=20 DEF=60 Affinity=Arcane
+Ability: While exposed, +60 ATK to ally Elemental units
 Test Cases:
 
 
-Test Case ID: TC-Aerial-the-Battlemage-001
+Test Case ID: TC-Elemental-Master-001
 Description:
-Happy path — Aerial the Battlemage attacks and wins a standard battle.
+Happy path — Elemental Master attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Elemental Master' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Aerial the Battlemage face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Elemental Master face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Aerial the Battlemage as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Elemental Master as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Aerial the Battlemage participates in battle resolution without errors.
+- Elemental Master participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Aerial-the-Battlemage-002
+Test Case ID: TC-Elemental-Master-002
 Description:
-Edge — Aerial the Battlemage placed face-down, revealed on attack.
+Edge — Elemental Master placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Elemental Master' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Aerial the Battlemage face-down on Player 0 field.
+- Place Elemental Master face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Aerial the Battlemage via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Aerial the Battlemage.
+Step 1: Attack with another unit or reveal Elemental Master via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Elemental Master.
 Expected Result:
-- Aerial the Battlemage reveals correctly on attack.
+- Elemental Master reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Aerial-the-Battlemage-003
+Test Case ID: TC-Elemental-Master-003
 Description:
-Union interaction — Aerial the Battlemage vs Union target.
+Exposure edge — Elemental Master face-up vs face-down states.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Elemental Master' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Summon a Demo Union (e.g. Gryphon Rider) on opponent field face-up.
+- Run once with defender face-up before attack; once face-down until reveal.
 Steps:
-Step 1: Attack the Union card with Aerial the Battlemage.
+Step 1: Attack with Elemental Master each time.
 Expected Result:
-- Union-specific ATK/DEF modifiers apply during calculation.
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
 
-Test Case ID: TC-Aerial-the-Battlemage-004
+Test Case ID: TC-Elemental-Master-004
 Description:
-Edge — low crystals during Aerial the Battlemage battle.
+Edge — low crystals during Elemental Master battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Aerial the Battlemage' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Elemental Master' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Aerial the Battlemage and lose card (crystal cost payment).
+Step 1: Attack/defend with Elemental Master and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -4959,6 +6140,62 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Moon Rover and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Padmapani
+Type: Character
+Stats: Cost=1000 ATK=50 DEF=25 Affinity=Divine
+Ability: +75 ATK if there is Prayer card in your void.
+Test Cases:
+
+
+Test Case ID: TC-Padmapani-001
+Description:
+Happy path — Padmapani attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Padmapani' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Padmapani face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Padmapani as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Padmapani participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Padmapani-002
+Description:
+Edge — Padmapani placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Padmapani' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Padmapani face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Padmapani via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Padmapani.
+Expected Result:
+- Padmapani reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Padmapani-003
+Description:
+Edge — low crystals during Padmapani battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Padmapani' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Padmapani and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -5296,62 +6533,6 @@ Expected Result:
 
 ---
 
-Card Name: Sunrise Lady
-Type: Character
-Stats: Cost=300 ATK=20 DEF=25 Affinity=Divine
-Ability: If it attacks: +10 ATK,-10 DEF permanently
-Test Cases:
-
-
-Test Case ID: TC-Sunrise-Lady-001
-Description:
-Happy path — Sunrise Lady attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sunrise Lady' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Sunrise Lady face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Sunrise Lady as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Sunrise Lady participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Sunrise-Lady-002
-Description:
-Edge — Sunrise Lady placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sunrise Lady' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Sunrise Lady face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Sunrise Lady via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Sunrise Lady.
-Expected Result:
-- Sunrise Lady reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Sunrise-Lady-003
-Description:
-Edge — low crystals during Sunrise Lady battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sunrise Lady' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Sunrise Lady and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
 Card Name: Laser Walker
 Type: Character
 Stats: Cost=250 ATK=20 DEF=10 Affinity=Cosmic
@@ -5563,6 +6744,88 @@ Expected Result:
 
 ---
 
+Card Name: Miner Probe
+Type: Character
+Stats: Cost=200 ATK=10 DEF=10 Affinity=Cosmic
+Ability: Gain 200 Crystals upon hitting Dead End
+Test Cases:
+
+
+Test Case ID: TC-Miner-Probe-001
+Description:
+Happy path — Miner Probe attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Miner Probe face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Miner Probe as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Miner Probe participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Miner-Probe-002
+Description:
+Edge — Miner Probe placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Miner Probe face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Miner Probe via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Miner Probe.
+Expected Result:
+- Miner Probe reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Miner-Probe-003
+Description:
+Dead end attack — Miner Probe hits empty/dead-end cell.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Mark a cell as dead_end or attack blank revealed cell.
+Steps:
+Step 1: Attack dead-end with Miner Probe.
+Expected Result:
+- Dead-end post-attack effect triggers (extra attack, crystal gain, reveal, etc.).
+
+Test Case ID: TC-Miner-Probe-004
+Description:
+Crystal interaction — Miner Probe crystal gain/loss/drain.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Record crystal totals before trigger.
+Steps:
+Step 1: Trigger ability: Gain 200 Crystals upon hitting Dead End
+Expected Result:
+- Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
+
+Test Case ID: TC-Miner-Probe-005
+Description:
+Edge — low crystals during Miner Probe battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Miner Probe and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Skeleton Scout
 Type: Character
 Stats: Cost=150 ATK=20 DEF=5 Affinity=Chaos
@@ -5641,88 +6904,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Skeleton Scout and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Miner Probe
-Type: Character
-Stats: Cost=200 ATK=10 DEF=10 Affinity=Cosmic
-Ability: Gain 20 Crystals upon hitting Dead End
-Test Cases:
-
-
-Test Case ID: TC-Miner-Probe-001
-Description:
-Happy path — Miner Probe attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Miner Probe face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Miner Probe as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Miner Probe participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Miner-Probe-002
-Description:
-Edge — Miner Probe placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Miner Probe face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Miner Probe via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Miner Probe.
-Expected Result:
-- Miner Probe reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Miner-Probe-003
-Description:
-Dead end attack — Miner Probe hits empty/dead-end cell.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Mark a cell as dead_end or attack blank revealed cell.
-Steps:
-Step 1: Attack dead-end with Miner Probe.
-Expected Result:
-- Dead-end post-attack effect triggers (extra attack, crystal gain, reveal, etc.).
-
-Test Case ID: TC-Miner-Probe-004
-Description:
-Crystal interaction — Miner Probe crystal gain/loss/drain.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Record crystal totals before trigger.
-Steps:
-Step 1: Trigger ability: Gain 20 Crystals upon hitting Dead End
-Expected Result:
-- Crystal delta matches card text; respects insufficient-crystal edge cases where payment is optional.
-
-Test Case ID: TC-Miner-Probe-005
-Description:
-Edge — low crystals during Miner Probe battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Miner Probe' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Miner Probe and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -5904,62 +7085,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with White Tiger and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Death Knight
-Type: Character
-Stats: Cost=850 ATK=65 DEF=65 Affinity=Chaos
-Ability: +5 ATK per Chaos unit on their side
-Test Cases:
-
-
-Test Case ID: TC-Death-Knight-001
-Description:
-Happy path — Death Knight attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Death Knight' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Death Knight face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Death Knight as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Death Knight participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Death-Knight-002
-Description:
-Edge — Death Knight placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Death Knight' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Death Knight face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Death Knight via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Death Knight.
-Expected Result:
-- Death Knight reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Death-Knight-003
-Description:
-Edge — low crystals during Death Knight battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Death Knight' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Death Knight and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -6314,6 +7439,88 @@ Expected Result:
 
 ---
 
+Card Name: Lockpicker
+Type: Character
+Stats: Cost=450 ATK=30 DEF=35 Affinity=Anima
+Ability: Once exposed, reveal 1 foe’s cell
+Test Cases:
+
+
+Test Case ID: TC-Lockpicker-001
+Description:
+Happy path — Lockpicker attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lockpicker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Lockpicker face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Lockpicker as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Lockpicker participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Lockpicker-002
+Description:
+Edge — Lockpicker placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lockpicker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Lockpicker face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Lockpicker via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Lockpicker.
+Expected Result:
+- Lockpicker reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Lockpicker-003
+Description:
+Exposure edge — Lockpicker face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lockpicker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Lockpicker each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Lockpicker-004
+Description:
+Reveal effect — Lockpicker post-attack/ability reveal.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lockpicker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has multiple face-down cells.
+Steps:
+Step 1: Trigger reveal via Lockpicker's ability.
+Expected Result:
+- Correct number of opponent/own cells revealed; selection UI works.
+
+Test Case ID: TC-Lockpicker-005
+Description:
+Edge — low crystals during Lockpicker battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Lockpicker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Lockpicker and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Claw Mutant
 Type: Character
 Stats: Cost=180 ATK=15 DEF=10 Affinity=Bio
@@ -6395,131 +7602,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Claw Mutant and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Moonrise Gentleman
-Type: Character
-Stats: Cost=400 ATK=40 DEF=30 Affinity=Divine
-Ability: If it defends: +10 DEF,-10 ATK
-Test Cases:
-
-
-Test Case ID: TC-Moonrise-Gentleman-001
-Description:
-Happy path — Moonrise Gentleman attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Moonrise Gentleman face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Moonrise Gentleman as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Moonrise Gentleman participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Moonrise-Gentleman-002
-Description:
-Edge — Moonrise Gentleman placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Moonrise Gentleman face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Moonrise Gentleman via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Moonrise Gentleman.
-Expected Result:
-- Moonrise Gentleman reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Moonrise-Gentleman-003
-Description:
-Defend scenario — Moonrise Gentleman as defender.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent attacks Moonrise Gentleman.
-Steps:
-Step 1: Resolve defense; check defend-only crystal/stat effects.
-Expected Result:
-- Defend-triggered permanent/temporary stat changes apply to attacker or self.
-
-Test Case ID: TC-Moonrise-Gentleman-004
-Description:
-Edge — low crystals during Moonrise Gentleman battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moonrise Gentleman' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Moonrise Gentleman and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Hands in the Attic
-Type: Character
-Stats: Cost=300 ATK=20 DEF=20 Affinity=Chaos
-Ability: +10 ATK until Reckoning ends
-Test Cases:
-
-
-Test Case ID: TC-Hands-in-the-Attic-001
-Description:
-Happy path — Hands in the Attic attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hands in the Attic' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Hands in the Attic face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Hands in the Attic as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Hands in the Attic participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Hands-in-the-Attic-002
-Description:
-Edge — Hands in the Attic placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hands in the Attic' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Hands in the Attic face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Hands in the Attic via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Hands in the Attic.
-Expected Result:
-- Hands in the Attic reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Hands-in-the-Attic-003
-Description:
-Edge — low crystals during Hands in the Attic battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hands in the Attic' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Hands in the Attic and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -6719,6 +7801,62 @@ Expected Result:
 
 ---
 
+Card Name: Hands in the Attic
+Type: Character
+Stats: Cost=300 ATK=20 DEF=20 Affinity=Chaos
+Ability: Once, +10 ATK when attack
+Test Cases:
+
+
+Test Case ID: TC-Hands-in-the-Attic-001
+Description:
+Happy path — Hands in the Attic attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hands in the Attic' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Hands in the Attic face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Hands in the Attic as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Hands in the Attic participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Hands-in-the-Attic-002
+Description:
+Edge — Hands in the Attic placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hands in the Attic' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Hands in the Attic face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Hands in the Attic via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Hands in the Attic.
+Expected Result:
+- Hands in the Attic reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Hands-in-the-Attic-003
+Description:
+Edge — low crystals during Hands in the Attic battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hands in the Attic' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Hands in the Attic and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Mind Flayer
 Type: Character
 Stats: Cost=1500 ATK=100 DEF=70 Affinity=Arcane
@@ -6770,6 +7908,75 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Mind Flayer and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Spell Sniper
+Type: Character
+Stats: Cost=700 ATK=20 DEF=50 Affinity=Arcane
+Ability: +50 ATK vs face-down card
+Test Cases:
+
+
+Test Case ID: TC-Spell-Sniper-001
+Description:
+Happy path — Spell Sniper attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Spell Sniper' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Spell Sniper face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Spell Sniper as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Spell Sniper participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Spell-Sniper-002
+Description:
+Edge — Spell Sniper placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Spell Sniper' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Spell Sniper face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Spell Sniper via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Spell Sniper.
+Expected Result:
+- Spell Sniper reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Spell-Sniper-003
+Description:
+Exposure edge — Spell Sniper face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Spell Sniper' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Spell Sniper each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Spell-Sniper-004
+Description:
+Edge — low crystals during Spell Sniper battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Spell Sniper' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Spell Sniper and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -7014,62 +8221,6 @@ Expected Result:
 
 ---
 
-Card Name: Gamma Emitter
-Type: Character
-Stats: Cost=220 ATK=20 DEF=15 Affinity=Bio
-Ability: +10 ATK&DEF vs Nature
-Test Cases:
-
-
-Test Case ID: TC-Gamma-Emitter-001
-Description:
-Happy path — Gamma Emitter attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Gamma Emitter face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Gamma Emitter as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Gamma Emitter participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Gamma-Emitter-002
-Description:
-Edge — Gamma Emitter placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Gamma Emitter face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Gamma Emitter via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Gamma Emitter.
-Expected Result:
-- Gamma Emitter reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Gamma-Emitter-003
-Description:
-Edge — low crystals during Gamma Emitter battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Emitter' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Gamma Emitter and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
 Card Name: Witchhunter
 Type: Character
 Stats: Cost=250 ATK=20 DEF=20 Affinity=Anima
@@ -7126,6 +8277,62 @@ Expected Result:
 
 ---
 
+Card Name: Nanomites Beast
+Type: Character
+Stats: Cost=800 ATK=50 DEF=55 Affinity=Bio
+Ability: +50 ATK vs Cosmic
+Test Cases:
+
+
+Test Case ID: TC-Nanomites-Beast-001
+Description:
+Happy path — Nanomites Beast attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nanomites Beast' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Nanomites Beast face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Nanomites Beast as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Nanomites Beast participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Nanomites-Beast-002
+Description:
+Edge — Nanomites Beast placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nanomites Beast' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Nanomites Beast face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Nanomites Beast via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Nanomites Beast.
+Expected Result:
+- Nanomites Beast reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Nanomites-Beast-003
+Description:
+Edge — low crystals during Nanomites Beast battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nanomites Beast' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Nanomites Beast and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Red Mage
 Type: Character
 Stats: Cost=400 ATK=20 DEF=20 Affinity=Arcane
@@ -7177,6 +8384,62 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Red Mage and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Nanomites Walker
+Type: Character
+Stats: Cost=170 ATK=15 DEF=15 Affinity=Bio
+Ability: +5 ATK vs Cosmic
+Test Cases:
+
+
+Test Case ID: TC-Nanomites-Walker-001
+Description:
+Happy path — Nanomites Walker attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nanomites Walker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Nanomites Walker face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Nanomites Walker as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Nanomites Walker participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Nanomites-Walker-002
+Description:
+Edge — Nanomites Walker placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nanomites Walker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Nanomites Walker face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Nanomites Walker via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Nanomites Walker.
+Expected Result:
+- Nanomites Walker reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Nanomites-Walker-003
+Description:
+Edge — low crystals during Nanomites Walker battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Nanomites Walker' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Nanomites Walker and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -7872,64 +9135,6 @@ Expected Result:
 
 ---
 
-Card Name: Demon Spawn
-Type: Character
-Stats: Cost=400 ATK=40 DEF=30 Affinity=Chaos
-Ability: None
-Test Cases:
-
-
-Test Case ID: TC-Demon-Spawn-001
-Description:
-Happy path — Demon Spawn attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Demon Spawn' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Demon Spawn face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Demon Spawn as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Demon Spawn participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Demon-Spawn-002
-Description:
-Edge — Demon Spawn placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Demon Spawn' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Demon Spawn face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Demon Spawn via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Demon Spawn.
-Expected Result:
-- Demon Spawn reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Demon-Spawn-003
-Description:
-Baseline — Demon Spawn defends successfully.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Demon Spawn' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
-Steps:
-Step 1: Opponent attacks Demon Spawn.
-Step 2: Resolve defense.
-Expected Result:
-- Demon Spawn survives if DEF (30) exceeds attacker ATK.
-- No special post-battle effects fire.
-
----
-
 Card Name: Doom Wisp
 Type: Character
 Stats: Cost=100 ATK=15 DEF=15 Affinity=Chaos
@@ -7984,6 +9189,180 @@ Step 1: Opponent attacks Doom Wisp.
 Step 2: Resolve defense.
 Expected Result:
 - Doom Wisp survives if DEF (15) exceeds attacker ATK.
+- No special post-battle effects fire.
+
+---
+
+Card Name: Dystopian Cultist
+Type: Character
+Stats: Cost=550 ATK=65 DEF=40 Affinity=Bio
+Ability: None
+Test Cases:
+
+
+Test Case ID: TC-Dystopian-Cultist-001
+Description:
+Happy path — Dystopian Cultist attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dystopian Cultist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Dystopian Cultist face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Dystopian Cultist as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Dystopian Cultist participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Dystopian-Cultist-002
+Description:
+Edge — Dystopian Cultist placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dystopian Cultist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Dystopian Cultist face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Dystopian Cultist via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Dystopian Cultist.
+Expected Result:
+- Dystopian Cultist reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Dystopian-Cultist-003
+Description:
+Baseline — Dystopian Cultist defends successfully.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dystopian Cultist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
+Steps:
+Step 1: Opponent attacks Dystopian Cultist.
+Step 2: Resolve defense.
+Expected Result:
+- Dystopian Cultist survives if DEF (40) exceeds attacker ATK.
+- No special post-battle effects fire.
+
+---
+
+Card Name: Earth Elemental
+Type: Character
+Stats: Cost=380 ATK=20 DEF=40 Affinity=Arcane
+Ability: None
+Test Cases:
+
+
+Test Case ID: TC-Earth-Elemental-001
+Description:
+Happy path — Earth Elemental attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Earth Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Earth Elemental face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Earth Elemental as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Earth Elemental participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Earth-Elemental-002
+Description:
+Edge — Earth Elemental placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Earth Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Earth Elemental face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Earth Elemental via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Earth Elemental.
+Expected Result:
+- Earth Elemental reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Earth-Elemental-003
+Description:
+Baseline — Earth Elemental defends successfully.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Earth Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
+Steps:
+Step 1: Opponent attacks Earth Elemental.
+Step 2: Resolve defense.
+Expected Result:
+- Earth Elemental survives if DEF (40) exceeds attacker ATK.
+- No special post-battle effects fire.
+
+---
+
+Card Name: Fire Elemental
+Type: Character
+Stats: Cost=380 ATK=35 DEF=20 Affinity=Arcane
+Ability: None
+Test Cases:
+
+
+Test Case ID: TC-Fire-Elemental-001
+Description:
+Happy path — Fire Elemental attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Fire Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Fire Elemental face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Fire Elemental as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Fire Elemental participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Fire-Elemental-002
+Description:
+Edge — Fire Elemental placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Fire Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Fire Elemental face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Fire Elemental via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Fire Elemental.
+Expected Result:
+- Fire Elemental reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Fire-Elemental-003
+Description:
+Baseline — Fire Elemental defends successfully.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Fire Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
+Steps:
+Step 1: Opponent attacks Fire Elemental.
+Step 2: Resolve defense.
+Expected Result:
+- Fire Elemental survives if DEF (20) exceeds attacker ATK.
 - No special post-battle effects fire.
 
 ---
@@ -8568,6 +9947,64 @@ Expected Result:
 
 ---
 
+Card Name: Mad Wyvern
+Type: Character
+Stats: Cost=550 ATK=65 DEF=40 Affinity=Arcane
+Ability: None
+Test Cases:
+
+
+Test Case ID: TC-Mad-Wyvern-001
+Description:
+Happy path — Mad Wyvern attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mad Wyvern' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Mad Wyvern face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Mad Wyvern as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Mad Wyvern participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Mad-Wyvern-002
+Description:
+Edge — Mad Wyvern placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mad Wyvern' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Mad Wyvern face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Mad Wyvern via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Mad Wyvern.
+Expected Result:
+- Mad Wyvern reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Mad-Wyvern-003
+Description:
+Baseline — Mad Wyvern defends successfully.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mad Wyvern' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
+Steps:
+Step 1: Opponent attacks Mad Wyvern.
+Step 2: Resolve defense.
+Expected Result:
+- Mad Wyvern survives if DEF (40) exceeds attacker ATK.
+- No special post-battle effects fire.
+
+---
+
 Card Name: Ponycorn
 Type: Character
 Stats: Cost=300 ATK=25 DEF=20 Affinity=Divine
@@ -9028,6 +10465,122 @@ Step 1: Opponent attacks Wandering Swordsman.
 Step 2: Resolve defense.
 Expected Result:
 - Wandering Swordsman survives if DEF (60) exceeds attacker ATK.
+- No special post-battle effects fire.
+
+---
+
+Card Name: Water Elemental
+Type: Character
+Stats: Cost=380 ATK=25 DEF=35 Affinity=Arcane
+Ability: None
+Test Cases:
+
+
+Test Case ID: TC-Water-Elemental-001
+Description:
+Happy path — Water Elemental attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Water Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Water Elemental face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Water Elemental as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Water Elemental participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Water-Elemental-002
+Description:
+Edge — Water Elemental placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Water Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Water Elemental face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Water Elemental via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Water Elemental.
+Expected Result:
+- Water Elemental reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Water-Elemental-003
+Description:
+Baseline — Water Elemental defends successfully.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Water Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
+Steps:
+Step 1: Opponent attacks Water Elemental.
+Step 2: Resolve defense.
+Expected Result:
+- Water Elemental survives if DEF (35) exceeds attacker ATK.
+- No special post-battle effects fire.
+
+---
+
+Card Name: Wind Elemental
+Type: Character
+Stats: Cost=380 ATK=30 DEF=30 Affinity=Arcane
+Ability: None
+Test Cases:
+
+
+Test Case ID: TC-Wind-Elemental-001
+Description:
+Happy path — Wind Elemental attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wind Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Wind Elemental face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Wind Elemental as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Wind Elemental participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Wind-Elemental-002
+Description:
+Edge — Wind Elemental placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wind Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Wind Elemental face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Wind Elemental via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Wind Elemental.
+Expected Result:
+- Wind Elemental reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Wind-Elemental-003
+Description:
+Baseline — Wind Elemental defends successfully.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wind Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
+Steps:
+Step 1: Opponent attacks Wind Elemental.
+Step 2: Resolve defense.
+Expected Result:
+- Wind Elemental survives if DEF (30) exceeds attacker ATK.
 - No special post-battle effects fire.
 
 ---

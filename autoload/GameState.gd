@@ -121,6 +121,7 @@ class CardInstance:
 	var field_aura_def_bonus: int = 0  # passive DEF from allied field auras (e.g. Gamma Mermaid mutagen)
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
+	var eot_atk_bonus: int = 0  # End-of-turn ATK bonus cleared after attack (e.g. Manticore)
 	var carry_def_bonus: int = 0   # Garrison-style DEF; wiped at start of owner's next turn
 	var trap_carry_def_bonus: int = 0  # Trap DEF (Hard Scale); cleared after attacker's next turn ends
 	var trap_carry_def_clear_attacker: int = -1
@@ -132,6 +133,7 @@ class CardInstance:
 	var halved: bool = false
 	var mutagen_attacked: bool = false # Mutagen immediate attack used
 	var atk_debuff: int = 0
+	var temp_cost_multiplier: int = 1  # Rank S Bounty etc.
 	var revealed_on_turn: int = -1       # set to turn_number when flipped face-up; -1 = never
 	var flags: Array[String] = []        # string tags: "bio", "cosmic", "mutagen", etc.
 	var active_rules: Array = []         # Array of CardRule — populated by CardRuleEngine
@@ -306,6 +308,10 @@ var bluff_emoticons: Array = []  # bluff_emoticons[player][row][col] -> String (
 var tech_hands: Array = [[], []]  # tech_hands[player] -> Array of TechCardData names
 var dice_result: int = 0
 var attacks_remaining: int = 0
+var attacks_used_this_turn: int = 0       # Attacks completed this turn (for first-attack traps)
+var attack_cap_next_turn: Array = [-1, -1]  # Per-player max attacks next turn (-1 = no cap)
+var opponent_crystal_on_dead_end: int = 0 # Active tech: crystals foe gains per dead-end hit (0 = off)
+var opponent_crystal_on_dead_end_owner: int = -1
 var current_mode: TurnMode = TurnMode.NONE
 var attacker_card: CardInstance = null
 var attacker_pos: Vector2i = Vector2i(-1, -1)
@@ -380,6 +386,7 @@ var skip_counts: Array = [0, 0]              # Consecutive no-attack turns per p
 var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may reroll once before next attack
 var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
 var turn_start_revives: Array = []                  # {player, row, col, card_name} — e.g. Burning Phoenix
+var turn_end_material_revives: Array = []           # Red Zombie union-material revive at turn end
 var destruction_from_tech_self_destruct: bool = false
 var analytics_battle_tag: String = ""
 var analytics_battle_id: String = ""
@@ -813,7 +820,21 @@ func place_character(player_index: int, row: int, col: int, char_name: String) -
 	inst.grid_row = row
 	inst.grid_col = col
 	grids[player_index][row][col] = inst
+	_apply_adjacent_placement_cost_modifiers(player_index, row, col)
 	emit_signal("card_placed", player_index, row, col)
+
+func _apply_adjacent_placement_cost_modifiers(player_index: int, row: int, col: int) -> void:
+	var card: CardInstance = grids[player_index][row][col]
+	if card.card_type != "character":
+		return
+	for adj: Vector2i in get_adjacent_positions(row, col):
+		var neighbor: CardInstance = grids[player_index][adj.x][adj.y]
+		if neighbor.card_type != "character":
+			continue
+		if neighbor.ability_type == CharacterData.AbilityType.ADJACENT_AFFINITY_COST_HALVED:
+			var needed: String = str(neighbor.ability_params.get("affinity", ""))
+			if needed != "" and card.affinity == CharacterData.Affinity.get(needed, -99):
+				card.crystal_cost = maxi(0, int(card.crystal_cost / 2))
 
 func place_trap(player_index: int, row: int, col: int, trap_name: String) -> void:
 	var data: TrapData = CardDatabase.get_trap(trap_name)
@@ -928,6 +949,60 @@ func process_turn_start_revives(player_index: int) -> void:
 		BattleResolver.recalculate_all_field_bonuses()
 		post_message("%s revives at the start of your turn!" % revived.display_name)
 	turn_start_revives = kept
+
+func queue_union_material_turn_end_revive(
+		player_index: int,
+		row: int,
+		col: int,
+		card: CardInstance
+) -> void:
+	if card == null or card.card_type != "character":
+		return
+	if card.ability_type != CharacterData.AbilityType.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION:
+		return
+	if not card.ability_params.get("union_material", false):
+		return
+	if card.ability_params.get("requires_mutagen", false) and not card.has_mutagen_flag:
+		return
+	turn_end_material_revives.append({
+		"player": player_index,
+		"row": row,
+		"col": col,
+		"snapshot": _clone_card_for_revive(card),
+	})
+
+func process_turn_end_material_revives(player_index: int) -> void:
+	var kept: Array = []
+	for entry: Variant in turn_end_material_revives:
+		if entry is not Dictionary:
+			continue
+		var revive_player: int = int((entry as Dictionary).get("player", -1))
+		if revive_player != player_index:
+			kept.append(entry)
+			continue
+		var row: int = int((entry as Dictionary).get("row", -1))
+		var col: int = int((entry as Dictionary).get("col", -1))
+		var snapshot: Variant = (entry as Dictionary).get("snapshot")
+		if row < 0 or col < 0 or snapshot == null:
+			continue
+		var cell: CardInstance = get_card(player_index, row, col)
+		if cell.card_type != "dead_end":
+			continue
+		var revived: CardInstance = snapshot as CardInstance
+		revived.grid_row = row
+		revived.grid_col = col
+		revived.face_up = true
+		grids[player_index][row][col] = revived
+		BattleResolver.recalculate_all_field_bonuses()
+		post_message("%s revives at the end of your turn!" % revived.display_name)
+	turn_end_material_revives = kept
+
+func is_immune_to_tech_cards(card: CardInstance) -> bool:
+	if card == null or card.card_type != "character":
+		return false
+	if card.ability_type == CharacterData.AbilityType.IMMUNE_TO_TECH_CARDS:
+		return true
+	return false
 
 func _clone_card_for_revive(source: CardInstance) -> CardInstance:
 	var copy := CardInstance.new()
@@ -1100,6 +1175,18 @@ func get_adjacent_positions(row: int, col: int) -> Array:
 		if nr >= 0 and nr < GRID_SIZE and nc >= 0 and nc < GRID_SIZE:
 			result.append(Vector2i(nr, nc))
 	return result
+
+## Maria the Battle Priest: adjacent units' coin-flip abilities always land heads (Maria may be face-down).
+func adjacent_force_coin_heads_active_for(player_index: int, row: int, col: int) -> bool:
+	for adj: Vector2i in get_adjacent_positions(row, col):
+		var neighbor: CardInstance = grids[player_index][adj.x][adj.y]
+		if neighbor.card_type != "character":
+			continue
+		if neighbor.ability_type != CharacterData.AbilityType.ADJACENT_FORCE_COIN_HEADS:
+			continue
+		if neighbor.face_up or neighbor.ability_params.get("face_down", false):
+			return true
+	return false
 
 func find_card_position(player_index: int, card_inst: CardInstance) -> Vector2i:
 	for r in range(GRID_SIZE):
@@ -1372,6 +1459,9 @@ func apply_mutagen_flag(card: CardInstance) -> void:
 	card.has_mutagen_flag = true
 	if "mutagen" not in card.flags:
 		card.flags.append("mutagen")
+	if card.ability_type == CharacterData.AbilityType.MUTAGEN_IMMEDIATE_ATTACK \
+			and not card.mutagen_attacked:
+		card.cannot_attack_until = -1
 
 func add_flag(player_index: int, row: int, col: int, flag: String) -> void:
 	if is_unit_effect_flag(flag):

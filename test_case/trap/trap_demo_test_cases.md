@@ -8,7 +8,7 @@ Ordered by complexity/priority (most complex first).
 
 Card Name: Brainwash
 Type: Trap
-Cost: 1500
+Cost: 1000
 Ability: The attacker chooses their own ally as an attack target
 Test Cases:
 
@@ -61,7 +61,7 @@ Expected Result:
 Card Name: Explosive Barrels
 Type: Trap
 Cost: 0
-Ability: Destroy the attacking unit. Trapper also pay the same cost as attacker.
+Ability: Destroy the attacking unit. You also pay the same cost as attacker.
 Test Cases:
 
 
@@ -76,7 +76,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Destroy the attacking unit. Trapper also pay the same cost as attacker. resolves.
+Step 2: Trap reveals and Destroy the attacking unit. You also pay the same cost as attacker. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -139,7 +139,7 @@ Expected Result:
 
 Card Name: Spike Trap
 Type: Trap
-Cost: 1500
+Cost: 1200
 Ability: Destroy the attacking unit
 Test Cases:
 
@@ -204,7 +204,7 @@ Expected Result:
 
 Card Name: Snare Trap
 Type: Trap
-Cost: 500
+Cost: 700
 Ability: The attacking unit's ability becomes None until attacker’s next turn ends
 Test Cases:
 
@@ -257,7 +257,7 @@ Expected Result:
 Card Name: Self-destruct
 Type: Trap
 Cost: 0
-Ability: Trapper select 1 of their unit. +10 ATK until trapper’s turn ends, but also destroy it. Trapper pay no cost.
+Ability: You select 1 of your unit. +10 ATK until your turn ends, but also destroy it. You pay no cost.
 Test Cases:
 
 
@@ -272,7 +272,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Trapper select 1 of their unit. +10 ATK until trapper’s turn ends, but also destroy it. Trapper pay no cost. resolves.
+Step 2: Trap reveals and You select 1 of your unit. +10 ATK until your turn ends, but also destroy it. You pay no cost. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -453,7 +453,7 @@ Expected Result:
 
 Card Name: Echo Barrier
 Type: Trap
-Cost: 1000
+Cost: 600
 Ability: This turn, attacker cannot perform any more attack.
 Test Cases:
 
@@ -558,7 +558,7 @@ Expected Result:
 Card Name: Hostage
 Type: Trap
 Cost: 200
-Ability: Trapper reveal 1 own cell. Until this turn ends, attacker cannot target that cell.
+Ability: You reveal 1 own cell. Until this turn ends, attacker cannot target that cell.
 Test Cases:
 
 
@@ -573,7 +573,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Trapper reveal 1 own cell. Until this turn ends, attacker cannot target that cell. resolves.
+Step 2: Trap reveals and You reveal 1 own cell. Until this turn ends, attacker cannot target that cell. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -622,8 +622,8 @@ Expected Result:
 
 Card Name: Defensive Pheromone
 Type: Trap
-Cost: 500
-Ability: Trapper switch 1 'Armored' Nature card on their side with this cell, then repeat Reckoning.
+Cost: 400
+Ability: You switch 1 'Armored' Nature card on your side with this cell, then repeat Reckoning.
 Test Cases:
 
 
@@ -638,7 +638,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Trapper switch 1 'Armored' Nature card on their side with this cell, then repeat Reckoning. resolves.
+Step 2: Trap reveals and You switch 1 'Armored' Nature card on your side with this cell, then repeat Reckoning. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -675,7 +675,7 @@ Expected Result:
 Card Name: Cursed Reflection
 Type: Trap
 Cost: 500
-Ability: Swap the attacker's ATK&DEF until the trapper’s turn ends
+Ability: Swap the attacking unit's ATK&DEF until the end of your turn.
 Test Cases:
 
 
@@ -690,7 +690,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Swap the attacker's ATK&DEF until the trapper’s turn ends resolves.
+Step 2: Trap reveals and Swap the attacking unit's ATK&DEF until the end of your turn. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -820,7 +820,7 @@ Expected Result:
 Card Name: Pepper Spray
 Type: Trap
 Cost: 0
-Ability: Flip 2 coin, if head, the attacker lose -5 ATK for each head(s) until attacker’s next turn ends.
+Ability: Flip 2 coins. The attacking unit get -5 ATK for each heads until the foe's next turn ends.
 Test Cases:
 
 
@@ -835,7 +835,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Flip 2 coin, if head, the attacker lose -5 ATK for each head(s) until attacker’s next turn ends. resolves.
+Step 2: Trap reveals and Flip 2 coins. The attacking unit get -5 ATK for each heads until the foe's next turn ends. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -900,7 +900,7 @@ Expected Result:
 Card Name: Red Card
 Type: Trap
 Cost: 0
-Ability: Flip 2 coin, if both are head, that unit cannot until attacker’s next turn ends
+Ability: Flip 2 coins. If both are heads, that unit cannot attack until the foe's next turn ends.
 Test Cases:
 
 
@@ -915,7 +915,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Flip 2 coin, if both are head, that unit cannot until attacker’s next turn ends resolves.
+Step 2: Trap reveals and Flip 2 coins. If both are heads, that unit cannot attack until the foe's next turn ends. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -964,6 +964,19 @@ Expected Result:
 
 Test Case ID: TC-Red-Card-005
 Description:
+Turn control — Red Card attack/turn restriction.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Trigger trap mid-turn with attacks remaining.
+Steps:
+Step 1: Verify turn ends or next-turn attack lock on attacker.
+Expected Result:
+- Attacker cannot attack next turn OR turn ends immediately per Blackmail choice.
+
+Test Case ID: TC-Red-Card-006
+Description:
 Edge — Red Card attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -980,7 +993,7 @@ Expected Result:
 Card Name: Hard Scale
 Type: Trap
 Cost: 700
-Ability: All of trapper’s unit gain +5 DEF in Reckoning until attacker’s next turn ends
+Ability: All of your unit gain +5 DEF in Reckoning until attacker’s next turn ends
 Test Cases:
 
 
@@ -995,7 +1008,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and All of trapper’s unit gain +5 DEF in Reckoning until attacker’s next turn ends resolves.
+Step 2: Trap reveals and All of your unit gain +5 DEF in Reckoning until attacker’s next turn ends resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1032,7 +1045,7 @@ Expected Result:
 Card Name: Alarm
 Type: Trap
 Cost: 0
-Ability: Until this turn ends, All trapper’s Anima monster gain +10 DEF in Reckoning
+Ability: Until your turn ends, All your Anima units gain +10 ATK&DEF in Reckoning
 Test Cases:
 
 
@@ -1047,7 +1060,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Until this turn ends, All trapper’s Anima monster gain +10 DEF in Reckoning resolves.
+Step 2: Trap reveals and Until your turn ends, All your Anima units gain +10 ATK&DEF in Reckoning resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1254,10 +1267,75 @@ Expected Result:
 
 ---
 
+Card Name: Hypnosis 
+Type: Trap
+Cost: 800
+Ability: The attacking unit cannot attack during the foe's next turn.
+Test Cases:
+
+
+Test Case ID: TC-Hypnosis-001
+Description:
+Happy path — opponent attacks Hypnosis .
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Hypnosis  face-down on Player 1 field.
+- Player 0 has an attacker ready.
+Steps:
+Step 1: Player 0 attacks the trap cell.
+Step 2: Trap reveals and The attacking unit cannot attack during the foe's next turn. resolves.
+Expected Result:
+- Trap effect applies to attacker/active player as described.
+- Trap is consumed/destroyed after activation unless otherwise stated.
+
+Test Case ID: TC-Hypnosis-002
+Description:
+Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Hypnosis .
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has trap-immune character.
+- Hypnosis  face-down on opponent field.
+Steps:
+Step 1: Attack trap with immune character.
+Expected Result:
+- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
+
+Test Case ID: TC-Hypnosis-003
+Description:
+Turn control — Hypnosis  attack/turn restriction.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Trigger trap mid-turn with attacks remaining.
+Steps:
+Step 1: Verify turn ends or next-turn attack lock on attacker.
+Expected Result:
+- Attacker cannot attack next turn OR turn ends immediately per Blackmail choice.
+
+Test Case ID: TC-Hypnosis-004
+Description:
+Edge — Hypnosis  attacked by face-up vs face-down attacker path.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Repeat with attacker revealed before combat.
+Steps:
+Step 1: Attack trap.
+Expected Result:
+- Trap activates identically regardless of attacker exposure state.
+
+---
+
 Card Name: Bait
 Type: Trap
 Cost: 0
-Ability: The trapper chooses one other cell on their side and reveal it
+Ability: You choose one other cell on your side and reveal it.
 Test Cases:
 
 
@@ -1272,7 +1350,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and The trapper chooses one other cell on their side and reveal it resolves.
+Step 2: Trap reveals and You choose one other cell on your side and reveal it. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1336,7 +1414,7 @@ Expected Result:
 Card Name: Street Joke
 Type: Trap
 Cost: 0
-Ability: Trapper reveal 1 of their cell, they receive 100 Crystal
+Ability: You reveal 1 of your cell, you receive 100 Crystal
 Test Cases:
 
 
@@ -1351,7 +1429,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Trapper reveal 1 of their cell, they receive 100 Crystal resolves.
+Step 2: Trap reveals and You reveal 1 of your cell, you receive 100 Crystal resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1425,75 +1503,10 @@ Expected Result:
 
 ---
 
-Card Name: Hypnosis 
-Type: Trap
-Cost: 800
-Ability: The attacking unit cannot attack during their next turn
-Test Cases:
-
-
-Test Case ID: TC-Hypnosis-001
-Description:
-Happy path — opponent attacks Hypnosis .
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Hypnosis  face-down on Player 1 field.
-- Player 0 has an attacker ready.
-Steps:
-Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and The attacking unit cannot attack during their next turn resolves.
-Expected Result:
-- Trap effect applies to attacker/active player as described.
-- Trap is consumed/destroyed after activation unless otherwise stated.
-
-Test Case ID: TC-Hypnosis-002
-Description:
-Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Hypnosis .
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has trap-immune character.
-- Hypnosis  face-down on opponent field.
-Steps:
-Step 1: Attack trap with immune character.
-Expected Result:
-- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
-
-Test Case ID: TC-Hypnosis-003
-Description:
-Turn control — Hypnosis  attack/turn restriction.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Trigger trap mid-turn with attacks remaining.
-Steps:
-Step 1: Verify turn ends or next-turn attack lock on attacker.
-Expected Result:
-- Attacker cannot attack next turn OR turn ends immediately per Blackmail choice.
-
-Test Case ID: TC-Hypnosis-004
-Description:
-Edge — Hypnosis  attacked by face-up vs face-down attacker path.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Repeat with attacker revealed before combat.
-Steps:
-Step 1: Attack trap.
-Expected Result:
-- Trap activates identically regardless of attacker exposure state.
-
----
-
 Card Name: Flame Trap
 Type: Trap
 Cost: 250
-Ability: Attacking unit get -10 ATK permanently
+Ability: The attacking unit gets -10 ATK permanently.
 Test Cases:
 
 
@@ -1508,7 +1521,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Attacking unit get -10 ATK permanently resolves.
+Step 2: Trap reveals and The attacking unit gets -10 ATK permanently. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.

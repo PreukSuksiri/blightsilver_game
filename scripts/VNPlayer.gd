@@ -20,6 +20,8 @@ const STAGE_DESIGN_SIZE := Vector2(1600.0, 900.0)
 
 const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
 const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
+const TEXT_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 1.0)
+const TEXT_SHADOW_OFFSET := 2
 
 # ── Toggle dialog style ───────────────────────────────────────
 # true  = decorative windowskin (NinePatchRect)
@@ -118,6 +120,11 @@ func _make_font(weight: int) -> Font:
 
 func _tag_ui(node: Control, property: String, weight: int = 400) -> void:
 	FontManager.tag_font(node, property, "primary", weight)
+
+func _apply_text_shadow(node: Control) -> void:
+	node.add_theme_color_override("font_shadow_color", TEXT_SHADOW_COLOR)
+	node.add_theme_constant_override("shadow_offset_x", TEXT_SHADOW_OFFSET)
+	node.add_theme_constant_override("shadow_offset_y", TEXT_SHADOW_OFFSET)
 
 func _on_fonts_changed() -> void:
 	FontManager.refresh_tree(self)
@@ -271,6 +278,7 @@ func _build_ui() -> void:
 	_tag_ui(_speaker_lbl, "font", 700)
 	_speaker_lbl.add_theme_font_size_override("font_size", 24)
 	_speaker_lbl.add_theme_color_override("font_color", Color(0.72, 0.92, 1.0, 1.0))
+	_apply_text_shadow(_speaker_lbl)
 	_speaker_panel.add_child(_speaker_lbl)
 
 	# Dialog text (inside panel) — RichTextLabel for BBCode color tag support
@@ -282,6 +290,7 @@ func _build_ui() -> void:
 	_tag_ui(_dialog_lbl, "normal_font", 400)
 	_dialog_lbl.add_theme_font_size_override("normal_font_size", 30)
 	_dialog_lbl.add_theme_color_override("default_color", Color(0.90, 0.95, 1.0, 0.97))
+	_apply_text_shadow(_dialog_lbl)
 	_dialog_panel.add_child(_dialog_lbl)
 
 	# Continue icon (bottom-right of dialog panel)
@@ -894,9 +903,7 @@ func _show_beat() -> void:
 		lbl.text = center_txt
 		lbl.add_theme_font_size_override("font_size", int(beat.get("center_text_size", 48)))
 		lbl.add_theme_color_override("font_color", Color.WHITE)
-		lbl.add_theme_constant_override("shadow_offset_x", 2)
-		lbl.add_theme_constant_override("shadow_offset_y", 2)
-		lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+		_apply_text_shadow(lbl)
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART

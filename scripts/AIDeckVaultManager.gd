@@ -11,6 +11,7 @@ const GRID_COLS := 5
 const CELL_SIZE := 48
 const MAX_FORMATIONS := 5
 const MAX_TAGS := 5
+const QUICK_DUEL_LIST_BG := Color(0.12, 0.62, 0.72, 0.38)
 
 var _entries: Array = []
 var _selected_idx: int = -1
@@ -22,6 +23,8 @@ var _featured_unit: String = ""
 var _vault_list: ItemList = null
 var _entry_id_edit: LineEdit = null
 var _entry_label_edit: LineEdit = null
+var _quick_duel_check: CheckBox = null
+var _quick_duel_block_sync: bool = false
 var _tags_list: ItemList = null
 var _tag_input: LineEdit = null
 var _featured_union_option: OptionButton = null
@@ -77,6 +80,7 @@ func _make_blank_entry(entry_id: String, label: String) -> Dictionary:
 		"id": entry_id,
 		"label": label,
 		"tags": [],
+		"quick_duel": false,
 		"featured_union": "",
 		"featured_unit": "",
 		"deck": {
@@ -96,6 +100,7 @@ func _sync_current_entry() -> void:
 	entry["id"] = _entry_id_edit.text.strip_edges() if _entry_id_edit else str(entry.get("id", ""))
 	entry["label"] = _entry_label_edit.text.strip_edges() if _entry_label_edit else str(entry.get("label", ""))
 	entry["tags"] = _tags.duplicate()
+	entry["quick_duel"] = _quick_duel_check.button_pressed if _quick_duel_check else false
 	entry["featured_union"] = _featured_union.strip_edges()
 	entry["featured_unit"] = _featured_unit.strip_edges()
 	entry["deck"] = _deck.to_dict()
@@ -127,6 +132,10 @@ func _select_entry(idx: int) -> void:
 	_refresh_tags_list()
 	_featured_union = str(entry.get("featured_union", "")).strip_edges()
 	_featured_unit = str(entry.get("featured_unit", "")).strip_edges()
+	if _quick_duel_check:
+		_quick_duel_block_sync = true
+		_quick_duel_check.button_pressed = bool(entry.get("quick_duel", false))
+		_quick_duel_block_sync = false
 	_refresh_featured_union_options()
 	_refresh_featured_unit_options()
 	var deck_raw: Variant = entry.get("deck", {})
@@ -135,19 +144,51 @@ func _select_entry(idx: int) -> void:
 	else:
 		_deck = DeckData.new()
 	_refresh_deck_ui()
-	if _vault_list:
-		_vault_list.select(idx)
+	_select_vault_list_row_for_entry(idx)
+
+
+func _entry_quick_duel_enabled(entry: Variant) -> bool:
+	if entry is Dictionary:
+		return bool((entry as Dictionary).get("quick_duel", false))
+	return false
+
+
+func _vault_list_order() -> Array:
+	var pinned: Array = []
+	var rest: Array = []
+	for i: int in range(_entries.size()):
+		if _entry_quick_duel_enabled(_entries[i]):
+			pinned.append(i)
+		else:
+			rest.append(i)
+	pinned.append_array(rest)
+	return pinned
+
+
+func _select_vault_list_row_for_entry(entry_idx: int) -> void:
+	if _vault_list == null or entry_idx < 0:
+		return
+	for list_idx: int in range(_vault_list.item_count):
+		if int(_vault_list.get_item_metadata(list_idx)) == entry_idx:
+			_vault_list.select(list_idx)
+			return
 
 
 func _refresh_vault_list() -> void:
 	if _vault_list == null:
 		return
-	var keep_idx := _selected_idx
+	var keep_entry_idx := _selected_idx
 	_vault_list.clear()
-	for e: Variant in _entries:
+	for entry_idx: Variant in _vault_list_order():
+		var idx: int = int(entry_idx)
+		if idx < 0 or idx >= _entries.size():
+			continue
+		var e: Variant = _entries[idx]
 		if e is Dictionary:
 			var ed: Dictionary = e as Dictionary
 			var line := "%s\n  %s" % [str(ed.get("label", "?")), str(ed.get("id", ""))]
+			if _entry_quick_duel_enabled(ed):
+				line = "⚡ " + line
 			var raw_tags: Variant = ed.get("tags", [])
 			if raw_tags is Array and not (raw_tags as Array).is_empty():
 				var tag_bits: PackedStringArray = []
@@ -163,9 +204,12 @@ func _refresh_vault_list() -> void:
 			var fcu := str(ed.get("featured_unit", "")).strip_edges()
 			if not fcu.is_empty():
 				line += "\n  ◆ %s" % fcu
-			_vault_list.add_item(line)
-	if keep_idx >= 0 and keep_idx < _vault_list.item_count:
-		_vault_list.select(keep_idx)
+			var list_idx: int = _vault_list.add_item(line)
+			_vault_list.set_item_metadata(list_idx, idx)
+			if _entry_quick_duel_enabled(ed):
+				_vault_list.set_item_custom_bg_color(list_idx, QUICK_DUEL_LIST_BG)
+	if keep_entry_idx >= 0:
+		_select_vault_list_row_for_entry(keep_entry_idx)
 
 
 func _refresh_deck_ui() -> void:
@@ -236,6 +280,14 @@ func _remove_tag() -> void:
 	_sync_current_entry()
 	_refresh_vault_list()
 	_set_status("Removed tag: %s" % removed)
+
+
+func _on_quick_duel_toggled(_on: bool) -> void:
+	if _quick_duel_block_sync:
+		return
+	_sync_current_entry()
+	_refresh_vault_list()
+	_set_status("Quick Duel %s for this deck." % ("enabled" if _on else "disabled"))
 
 
 func _refresh_featured_union_options() -> void:
@@ -416,7 +468,10 @@ func _build_ui() -> void:
 	_vault_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_vault_list.add_theme_font_override("font", CHIVO_FONT)
 	_vault_list.add_theme_font_size_override("font_size", 11)
-	_vault_list.item_selected.connect(func(idx: int) -> void: _select_entry(idx))
+	_vault_list.item_selected.connect(func(list_idx: int) -> void:
+		if list_idx < 0 or list_idx >= _vault_list.item_count:
+			return
+		_select_entry(int(_vault_list.get_item_metadata(list_idx))))
 	left.add_child(_vault_list)
 
 	var vault_btns := HBoxContainer.new()
@@ -475,6 +530,14 @@ func _build_ui() -> void:
 			_deck.deck_name = t
 			_deck_name_edit.text = t)
 	label_row.add_child(_entry_label_edit)
+
+	_quick_duel_check = CheckBox.new()
+	_quick_duel_check.text = "Quick Duel"
+	_quick_duel_check.add_theme_font_override("font", CHIVO_FONT)
+	_quick_duel_check.add_theme_font_size_override("font_size", 12)
+	_quick_duel_check.tooltip_text = "When enabled, this deck can appear in Quick Duel's random pool."
+	_quick_duel_check.toggled.connect(_on_quick_duel_toggled)
+	left.add_child(_quick_duel_check)
 
 	var tags_hdr := Label.new()
 	tags_hdr.text = "Tags  (max %d)" % MAX_TAGS

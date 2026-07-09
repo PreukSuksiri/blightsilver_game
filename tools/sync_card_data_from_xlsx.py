@@ -57,6 +57,30 @@ AFFINITY = {
 }
 
 AFFINITY_WORDS = {k.lower(): v for k, v in AFFINITY.items()}
+AFFINITY_WORDS["cosmo"] = "COSMIC"
+
+# xlsx rows with missing/typo affinity (card name → sheet Affinity value)
+UNIT_AFFINITY_OVERRIDES: dict[str, str] = {
+    "Deep Tribe Witchdoctor": "Nature",
+}
+
+
+def resolve_affinity(raw, *, card_name: str = "") -> str | None:
+    """Map xlsx Affinity cell to GD enum token (case-insensitive)."""
+    if card_name and card_name in UNIT_AFFINITY_OVERRIDES:
+        raw = UNIT_AFFINITY_OVERRIDES[card_name]
+    s = str(raw or "").strip()
+    if not s:
+        return None
+    if s in AFFINITY:
+        return AFFINITY[s]
+    low = s.lower()
+    if low in AFFINITY_WORDS:
+        return AFFINITY_WORDS[low]
+    for label, token in AFFINITY.items():
+        if label.lower() == low:
+            return token
+    return None
 
 RARITY = {
     "Common": "COMMON",
@@ -157,9 +181,32 @@ def _count_name_or_affinity_material(count: int, label: str) -> list[dict]:
     return [{"name_contains": label.lower()}] * count
 
 
+def _parse_or_label(label: str) -> dict | None:
+    """Parse 'Arcane or Anima' / 'Elven or Elf' style labels."""
+    if " or " not in label.lower():
+        return None
+    tokens = [t.strip() for t in re.split(r"\s+or\s+", label, flags=re.I) if t.strip()]
+    if len(tokens) < 2:
+        return None
+    affs: list[str] = []
+    names: list[str] = []
+    for tok in tokens:
+        tok = re.sub(r"\s+cards?$", "", tok, flags=re.I)
+        aff = _affinity_word(tok)
+        if aff:
+            affs.append(aff)
+        else:
+            names.append(tok.lower())
+    if affs and not names:
+        return {"affinities": affs}
+    if names and not affs:
+        return {"name_contains_any": names}
+    return None
+
+
 def _parse_material_part(part: str) -> list[dict]:
-    part = part.strip()
-    if not part or re.fullmatch(r"\d+\s*(?:crystals?|cost)", part, re.I):
+    part = part.strip().rstrip(".")
+    if not part or re.fullmatch(r"\d+\s*(?:crystals?|cost)\.?", part, re.I):
         return []
 
     low = part.lower()
@@ -174,6 +221,28 @@ def _parse_material_part(part: str) -> list[dict]:
         return [{"name_contains": "princess"}]
 
     patterns: list[tuple[str, callable]] = [
+        (
+            r"(\d+)\s+(\w+)\s+\(def\s*≥?\s*(\d+)\)",
+            lambda m: (
+                [{"affinity": _affinity_word(m.group(2)), "min_def": int(m.group(3))}]
+                * int(m.group(1))
+                if _affinity_word(m.group(2))
+                else []
+            ),
+        ),
+        (
+            r"(\d+)\s+(\w+)\s+\(≥?\s*(\d+)\s+def\)",
+            lambda m: (
+                [{"affinity": _affinity_word(m.group(2)), "min_def": int(m.group(3))}]
+                * int(m.group(1))
+                if _affinity_word(m.group(2))
+                else []
+            ),
+        ),
+        (
+            r"1\s+tank\s+unit\s*\(≥?\s*(\d+)\s+cost\)",
+            lambda m: [{"name_contains": "tank", "min_cost": int(m.group(1))}],
+        ),
         (
             r"(\d+)\s+any\s+units?\s*\(≥?\s*(\d+)\s+def\)",
             lambda m: [{"min_def": int(m.group(2))}] * int(m.group(1)),
@@ -250,7 +319,17 @@ def _parse_material_part(part: str) -> list[dict]:
 
     m = re.match(r"(\d+)\s+(.+?)\s+(?:cards?|units?)\s*$", part, re.I)
     if m:
-        return _count_name_or_affinity_material(int(m.group(1)), m.group(2).strip())
+        label = m.group(2).strip()
+        or_cond = _parse_or_label(label)
+        if or_cond:
+            return [or_cond] * int(m.group(1))
+        return _count_name_or_affinity_material(int(m.group(1)), label)
+
+    m = re.match(r"1\s+(.+?\s+or\s+.+)$", part, re.I)
+    if m:
+        or_cond = _parse_or_label(m.group(1).strip())
+        if or_cond:
+            return [or_cond]
 
     m = re.match(r"(\d+)\s+(\w+)\s*$", part, re.I)
     if m:
@@ -310,6 +389,12 @@ def cond_to_gd(cond: dict) -> str:
         val = cond[key]
         if key == "affinity":
             parts.append(f'"affinity": A.{val}')
+        elif key == "affinities" and isinstance(val, list):
+            aff_parts = ", ".join(f"A.{a}" for a in val)
+            parts.append(f'"affinities": [{aff_parts}]')
+        elif key == "name_contains_any" and isinstance(val, list):
+            name_parts = ", ".join(f'"{esc(str(n))}"' for n in val)
+            parts.append(f'"name_contains_any": [{name_parts}]')
         elif isinstance(val, str):
             parts.append(f'"{key}": "{esc(val)}"')
         else:
@@ -327,8 +412,6 @@ def conds_to_gd(conds: list[dict], zone_size: int) -> str:
 def sync_characters(text: str, units: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in units:
-        if not is_demo_card(card):
-            continue
         name = gd_name(card["_name"])
         aff = AFFINITY.get(str(card.get("Affinity", "")).strip(), None)
         if not aff:
@@ -366,8 +449,6 @@ def sync_characters(text: str, units: list[dict]) -> tuple[str, int]:
 def sync_traps(text: str, traps: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in traps:
-        if not is_demo_card(card):
-            continue
         name = gd_name(card["_name"])
         cost = int(card.get("Cost") or 0)
         pat = rf'(\["{re.escape(name)}",\s*)\d+(\,\s*TrapData)'
@@ -394,8 +475,6 @@ def sync_traps(text: str, traps: list[dict]) -> tuple[str, int]:
 def sync_tech(text: str, techs: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in techs:
-        if not is_demo_card(card):
-            continue
         name = gd_name(card["_name"])
         cost = int(card.get("Cost") or 0)
         pat = rf'(\["{re.escape(name)}",\s*)\d+(\,\s*TechCardData)'
@@ -422,8 +501,6 @@ def sync_tech(text: str, techs: list[dict]) -> tuple[str, int]:
 def sync_unions(text: str, unions: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in unions:
-        if not is_demo_card(card):
-            continue
         name = gd_name(card["_name"])
         aff = AFFINITY.get(str(card.get("Affinity", "")).strip())
         if not aff:
@@ -658,8 +735,8 @@ def main():
 
     demo_count = write_demo_flags(wb)
     pack_updates, pack_added, pack_removed = sync_custom_packs(wb)
-    print(f"CardDatabase: {u1} character stat/desc touches, {u2} traps, {u3} tech (DEMO=Yes only)")
-    print(f"UnionDatabase: {u4} union touches (DEMO=Yes only)")
+    print(f"CardDatabase: {u1} character stat/desc touches, {u2} traps, {u3} tech (all in-game cards)")
+    print(f"UnionDatabase: {u4} union touches (all in-game cards)")
     print(f"demo_flags.json: {demo_count} demo=yes entries")
     print(
         f"custom_packs.json: {pack_updates} pack(s) updated "

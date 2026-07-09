@@ -286,6 +286,8 @@ var pending_tech_filter: String = ""
 var _pending_human_defender_tech: bool = false
 var _pending_ability_destroy_pos: Vector2i = Vector2i(-1, -1)
 var _pending_ability_destroy_player: int = -1
+var _pending_field_destroy_pos: Vector2i = Vector2i(-1, -1)
+var _pending_field_destroy_player: int = -1
 var pending_tech_name: String = ""
 var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
 var _deferred_ai_turn_flow: bool = false
@@ -2941,6 +2943,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		and (GameState.berserk_active[current_player] == null
 			or GameState.berserk_active[current_player] == card)
 		and not _decoy_blocked
+		and BattleResolver.attacker_has_any_legal_target(current_player, Vector2i(row, col), card)
 	)
 	var can_info: bool  = (card.card_type != "dead_end" and card.card_name != "")
 	var can_bluff: bool = (ctx_player == current_player)
@@ -3485,6 +3488,76 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 			else:
 				_sp_card.perm_def_bonus += _sp_amt
 				GameState.post_message("%s: +%d DEF permanently!" % [u.card_name, _sp_amt])
+		CharacterData.AbilityType.UNION_SUMMON_DESTROY_OTHER_EXPOSED_ALLIES:
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					if Vector2i(r, c) == anchor:
+						continue
+					var card: GameState.CardInstance = GameState.get_card(player, r, c)
+					if card.card_type == "character" and card.face_up:
+						GameState.destroy_card(player, r, c, false)
+			GameState.post_message("%s: Other exposed allies destroyed (no crystal cost)!" % u.card_name)
+		CharacterData.AbilityType.UNION_SUMMON_TEMP_STAT_BOOST:
+			var _ts_card: GameState.CardInstance = GameState.get_card(player, anchor.x, anchor.y)
+			var _ts_atk: int = int(u.ability_params.get("atk", 0))
+			var _ts_def: int = int(u.ability_params.get("def", 0))
+			_ts_card.temp_atk_bonus += _ts_atk
+			_ts_card.temp_def_bonus += _ts_def
+			if u.ability_params.get("until_foe_turn_end", false):
+				pass  # Temp buff clears at owner's turn end via clear_temp_buffs()
+			GameState.post_message("%s: +%d ATK, +%d DEF until turn end!" % [u.card_name, _ts_atk, _ts_def])
+		CharacterData.AbilityType.UNION_SUMMON_ACID_ALL_FOE:
+			var foe_acid: int = GameState.get_opponent(player)
+			var _acid_debuff: int = int(u.ability_params.get("def_debuff", 10))
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(foe_acid, r, c)
+					if card.card_type == "character" and card.face_up:
+						card.perm_def_bonus -= _acid_debuff
+			GameState.post_message("%s: All foe units lose %d DEF!" % [u.card_name, _acid_debuff])
+		CharacterData.AbilityType.UNION_SUMMON_DESTROY_FIELD:
+			var _df_count: int = maxi(1, int(u.ability_params.get("count", 1)))
+			for _df_i: int in range(_df_count):
+				await turn_manager._prompt_and_await_target_selection(
+					"%s: Choose a card on the field to destroy (%d remaining)." % [
+						u.card_name, _df_count - _df_i],
+					"any_field_card_destroy")
+			GameState.post_message("%s: Destroyed %d card(s) on the field!" % [u.card_name, _df_count])
+		CharacterData.AbilityType.UNION_SUMMON_CRYSTAL_GAIN:
+			var _cg_amount: int = int(u.ability_params.get("amount", 0))
+			if u.ability_params.has("per_exposed_divine"):
+				var _divine_count: int = 0
+				for _cg_r: int in range(GameState.GRID_SIZE):
+					for _cg_c: int in range(GameState.GRID_SIZE):
+						for _cg_p: int in range(2):
+							var _cg_card: GameState.CardInstance = GameState.get_card(_cg_p, _cg_r, _cg_c)
+							if _cg_card.card_type == "character" and _cg_card.face_up \
+									and _cg_card.affinity == CharacterData.Affinity.DIVINE:
+								_divine_count += 1
+				_cg_amount = _divine_count * int(u.ability_params.get("per_exposed_divine", 0))
+			if _cg_amount > 0:
+				GameState.gain_crystals(player, _cg_amount, "union")
+				GameState.post_message("%s: Gained %d crystals!" % [u.card_name, _cg_amount])
+		CharacterData.AbilityType.UNION_SUMMON_AVERAGE_CRYSTALS:
+			var _avg: int = (GameState.crystals[0] + GameState.crystals[1]) / 2
+			GameState.gain_crystals(player, _avg, "union")
+			GameState.post_message("%s: Gained %d crystals (average)!" % [u.card_name, _avg])
+		CharacterData.AbilityType.UNION_SUMMON_DESTROY_UNITS:
+			var _du_count: int = maxi(1, int(u.ability_params.get("count", 1)))
+			var _du_players: Array = [player]
+			if u.ability_params.get("both_players", false):
+				_du_players.append(GameState.get_opponent(player))
+			for _du_p: int in _du_players:
+				var _du_destroyed: int = 0
+				for _du_r: int in range(GameState.GRID_SIZE):
+					for _du_c: int in range(GameState.GRID_SIZE):
+						if _du_destroyed >= _du_count:
+							break
+						var _du_card: GameState.CardInstance = GameState.get_card(_du_p, _du_r, _du_c)
+						if _du_card.card_type == "character":
+							GameState.destroy_card(_du_p, _du_r, _du_c, false)
+							_du_destroyed += 1
+			GameState.post_message("%s: Destroyed up to %d unit(s) per side!" % [u.card_name, _du_count])
 
 
 func _perform_pending_union() -> void:
@@ -3513,25 +3586,35 @@ func _perform_pending_union() -> void:
 	# Remove selected material cards (except the first which becomes the union)
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
+		var _mat_card: GameState.CardInstance = GameState.get_card(player, cell.x, cell.y)
+		GameState.queue_union_material_turn_end_revive(player, cell.x, cell.y, _mat_card)
 		GameState.remove_union_material(player, cell.x, cell.y)
-	# Place union at first selected cell
-	var _zealot_boost: int = 0
+	# Material abilities (Zealot, Crystal Rabbit, etc.)
+	var _union_atk_boost: int = 0
+	var _union_def_boost: int = 0
+	var _union_crystal_gain: int = 0
 	for _zm: Vector2i in _pending_union_selected_materials:
 		var _zm_card: GameState.CardInstance = GameState.get_card(player, _zm.x, _zm.y)
-		if _zm_card.card_type == "character" and _zm_card.card_name == "Zealot":
-			_zealot_boost = int(_zm_card.ability_params.get("union_material_boost", 40))
-			break
+		if _zm_card.card_type != "character":
+			continue
+		match _zm_card.ability_type:
+			CharacterData.AbilityType.UNION_MATERIAL_ATK_DEF_BOOST:
+				var _boost: int = int(_zm_card.ability_params.get(
+					"boost", _zm_card.ability_params.get("union_material_boost", 0)))
+				_union_atk_boost = maxi(_union_atk_boost, _boost)
+				_union_def_boost = maxi(_union_def_boost, _boost)
+			CharacterData.AbilityType.UNION_MATERIAL_CRYSTAL_GAIN:
+				_union_crystal_gain += int(_zm_card.ability_params.get(
+					"amount", _zm_card.ability_params.get("union_material_crystal_gain", 0)))
 	GameState.place_union_card(player, first_cell.x, first_cell.y, u)
-	if _zealot_boost > 0:
+	if _union_atk_boost > 0 or _union_def_boost > 0:
 		var _union_inst: GameState.CardInstance = GameState.get_card(player, first_cell.x, first_cell.y)
-		_union_inst.current_atk += _zealot_boost
-		_union_inst.current_def += _zealot_boost
-		GameState.post_message("Zealot: Union gains +%d ATK&DEF!" % _zealot_boost)
-	if u.card_name == "Diamond Unicorn":
-		var _du_card: GameState.CardInstance = GameState.get_card(player, first_cell.x, first_cell.y)
-		if _du_card.card_type == "character":
-			_du_card.temp_atk_bonus += 15
-			GameState.post_message("Diamond Unicorn: +15 ATK until end of turn!")
+		_union_inst.current_atk += _union_atk_boost
+		_union_inst.current_def += _union_def_boost
+		GameState.post_message("Union material bonus: +%d ATK&DEF!" % _union_atk_boost)
+	if _union_crystal_gain > 0:
+		GameState.gain_crystals(player, _union_crystal_gain, "union material")
+		GameState.post_message("Union material bonus: +%d crystals!" % _union_crystal_gain)
 	GameState.union_summoned.emit(
 		player,
 		BattleLogFormat.format_unit_at(player, first_cell.x, first_cell.y, u.card_name),
@@ -4946,11 +5029,19 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 		var tech_node: Control = grid_nodes[player][row][col]
 		if tech_node.is_highlighted and _should_show_ability_target_flash():
 			_set_tech_hover_node(tech_node)
-	# Red hover during attack target selection — unrevealed dead_end slots are valid targets
+	# Red hover during attack target selection — only legal targets pulse red
 	if selection_state == SelectionState.SELECTING_TARGET \
-			and player == GameState.get_opponent(GameState.current_player) \
-			and not inst.was_destroyed:
-		_set_attack_hover_node(grid_nodes[player][row][col])
+			and player == GameState.get_opponent(GameState.current_player):
+		var attacker: GameState.CardInstance = GameState.get_card(
+			GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
+		if BattleResolver.is_attack_target_allowed(
+				GameState.current_player,
+				selected_attacker_pos,
+				attacker,
+				player,
+				Vector2i(row, col),
+				inst):
+			_set_attack_hover_node(grid_nodes[player][row][col])
 	# Dead-end slots have no info to show
 	if inst.card_type == "dead_end":
 		return
@@ -6735,6 +6826,13 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			if pos in GameState.locked_attack_positions:
 				GameState.post_message("That square is locked by a trap.")
 				return
+			var attacker: GameState.CardInstance = GameState.get_card(
+				current_player, selected_attacker_pos.x, selected_attacker_pos.y)
+			var _target_check: Dictionary = BattleResolver.validate_attack_target(
+				current_player, selected_attacker_pos, attacker, opponent, pos, target_card)
+			if not _target_check.get("ok", false):
+				GameState.post_message(_target_check.get("reason", "Invalid attack target."))
+				return
 			SFXManager.play(SFXManager.SFX_TARGET)
 			_start_confirm_attack(opponent, pos)
 
@@ -7173,7 +7271,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
 			"ability_plant29_venom", "ability_plant29_mutagen", "ability_death_cobra_venom",
-			"ability_lockpicker_reveal", "wk17_foe_pick_character", "opponent_any_hidden", "adjacent"]:
+			"ability_lockpicker_reveal", "wk17_foe_pick_character", "opponent_any_hidden", "adjacent",
+			"any_field_card_destroy", "own_character_destroy_no_cost"]:
 		var _ai_responds: bool = _is_ai_turn()
 		if filter in ["ability_plant29_venom", "ability_plant29_mutagen"]:
 			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
@@ -7248,6 +7347,18 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				var _ab_owner: int = turn_manager._pending_reveal_attacker_player
 				_ab_player = GameState.get_opponent(_ab_owner)
 				_ab_target = _get_ai_for_player(_ab_owner).decide_target(filter)
+			elif filter == "any_field_card_destroy":
+				_ab_target = _active_ai.decide_target(filter)
+				_ab_player = GameState.current_player
+				for _fd_p: int in range(2):
+					var _fd_card: GameState.CardInstance = GameState.get_card(
+						_fd_p, _ab_target.x, _ab_target.y)
+					if _fd_card.card_type != "dead_end":
+						_ab_player = _fd_p
+						break
+			elif filter == "own_character_destroy_no_cost":
+				_ab_player = GameState.current_player
+				_ab_target = _active_ai.decide_target(filter)
 			elif filter == "wk17_foe_pick_character":
 				_ab_player = turn_manager._pending_wk17_foe_player
 				_ab_target = _get_ai_for_player(_ab_player).decide_wk17_foe_pick(
@@ -7258,7 +7369,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
 			elif filter in ["ability_false_prophet_reveal", "ability_lockpicker_reveal", "opponent_any_hidden",
-					"adjacent", "opponent_character_ability_destroy"]:
+					"adjacent", "opponent_character_ability_destroy", "any_field_card_destroy",
+					"own_character_destroy_no_cost"]:
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
 			elif filter == "wk17_foe_pick_character":
@@ -7296,6 +7408,12 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			var opp_card: GameState.CardInstance = GameState.get_card(opp_idx, ai_target.x, ai_target.y)
 			if opp_card.face_up and opp_card.card_type != "dead_end":
 				target_player = opp_idx
+		elif filter == "any_field_card_destroy":
+			for p in range(2):
+				var picked: GameState.CardInstance = GameState.get_card(p, ai_target.x, ai_target.y)
+				if picked.card_type != "dead_end":
+					target_player = p
+					break
 		elif filter == "venom_flagged_card":
 			for p in range(2):
 				var picked: GameState.CardInstance = GameState.get_card(p, ai_target.x, ai_target.y)
@@ -7413,6 +7531,19 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var opponent := GameState.get_opponent(current_player)
 	var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
 
+	if pending_tech_filter not in [
+		"ability_false_prophet_reveal", "ability_lockpicker_reveal",
+		"own_bio_character", "bribe_reveal", "own_character_destroy_no_cost",
+	] and card.card_type == "character" and GameState.is_immune_to_tech_cards(card):
+		GameState.post_message("%s is unaffected by Tech cards!" % card.card_name)
+		if pending_tech_filter == "any_field_card_destroy":
+			_clear_after_ability()
+		elif _is_post_attack_ability_filter(pending_tech_filter):
+			_clear_after_ability()
+		else:
+			_finish_tech_action(current_player)
+		return
+
 	if pending_tech_filter == "ability_false_prophet_reveal":
 		if player == opponent and not card.face_up:
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
@@ -7476,6 +7607,20 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					GameState.post_message("WK-17: %s will fight in place of %s!" % [
 						card.card_name, _wk17_siren.card_name])
 			_clear_after_ability()
+		return
+
+	if pending_tech_filter == "any_field_card_destroy":
+		if card.card_type != "dead_end":
+			GameState.destroy_card(player, pos.x, pos.y, false)
+			GameState.post_message("Destroyed %s." % card.card_name)
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "own_character_destroy_no_cost":
+		if player == current_player and card.card_type == "character":
+			GameState.destroy_card(current_player, pos.x, pos.y, false)
+			GameState.post_message("%s destroyed." % card.card_name)
+		_clear_after_ability()
 		return
 
 	if pending_tech_filter == "opponent_character_ability_destroy":
@@ -8199,6 +8344,8 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"own_any_as_target",
 		"ability_false_prophet_reveal",
 		"opponent_character_ability_destroy",
+		"any_field_card_destroy",
+		"own_character_destroy_no_cost",
 		"ability_rebel_king_swap",
 		"ability_plant29_venom",
 		"ability_plant29_mutagen",
@@ -8476,7 +8623,24 @@ func _update_end_turn_blink() -> void:
 			_show_guide("Choose a unit to attack with")
 
 func _highlight_valid_targets() -> void:
-	pass  # No visual hints on opponent cards during target selection
+	_clear_highlights()
+	if selection_state != SelectionState.SELECTING_TARGET:
+		return
+	if selected_attacker_pos == Vector2i(-1, -1):
+		return
+	var player: int = GameState.current_player
+	var opponent: int = GameState.get_opponent(player)
+	var attacker: GameState.CardInstance = GameState.get_card(
+		player, selected_attacker_pos.x, selected_attacker_pos.y)
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var pos: Vector2i = Vector2i(r, c)
+			var target: GameState.CardInstance = GameState.get_card(opponent, r, c)
+			var ok: bool = pos not in locked_positions
+			ok = ok and pos not in GameState.locked_attack_positions
+			ok = ok and BattleResolver.is_attack_target_allowed(
+				player, selected_attacker_pos, attacker, opponent, pos, target)
+			grid_nodes[opponent][r][c].set_highlighted(ok)
 
 ## Returns true if at least one cell is currently highlighted across both grids.
 func _any_highlighted() -> bool:
@@ -8591,6 +8755,23 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(_wk17_foe, r, c)
 				var ok: bool = card.card_type == "character" and pos != _exclude_pos
 				grid_nodes[_wk17_foe][r][c].set_highlighted(ok)
+
+	elif filter == "any_field_card_destroy":
+		for p in range(2):
+			for r in range(GameState.GRID_SIZE):
+				for c in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(p, r, c)
+					var ok: bool = card.card_type != "dead_end"
+					if ok and card.card_type == "character" \
+							and GameState.is_immune_to_tech_cards(card):
+						ok = false
+					grid_nodes[p][r][c].set_highlighted(ok)
+
+	elif filter == "own_character_destroy_no_cost":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				grid_nodes[player][r][c].set_highlighted(card.card_type == "character")
 
 	elif filter == "opponent_character_ability_destroy":
 		var _coin_foe: int = _reveal_attacker_foe_player(opponent)

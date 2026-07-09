@@ -83,8 +83,8 @@ Card Name: Pepper Spray
 Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_ATK_DEBUFF
-effect_params: {'amount': 5}
-Description: Flip 2 coin, if head, the attacker lose -5 ATK for each head(s) until attacker’s next turn ends.
+effect_params: {'amount': 5, 'per_head': True, 'carry_atk_debuff': True}
+Description: Flip 2 coins. The attacking unit get -5 ATK for each heads until the foe's next turn ends.
 Test Cases:
 
 Test Case ID: TC-FUNC-Pepper-Spray-001
@@ -128,7 +128,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_LOCK_ATTACKER
 effect_params: {}
-Description: Flip 2 coin, if both are head, that unit cannot until attacker’s next turn ends
+Description: Flip 2 coins. If both are heads, that unit cannot attack until the foe's next turn ends.
 Test Cases:
 
 Test Case ID: TC-FUNC-Red-Card-001
@@ -169,7 +169,7 @@ Expected Result:
 
 Card Name: Spike Trap
 Type: Trap
-Trap Cost: 1500
+Trap Cost: 1200
 TrapEffectType: DESTROY_ATTACKER
 effect_params: {}
 Description: Destroy the attacking unit
@@ -200,7 +200,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: DESTROY_ATTACKER_DEFENDER_PAYS
 effect_params: {}
-Description: Destroy the attacking unit. Trapper also pay the same cost as attacker.
+Description: Destroy the attacking unit. You also pay the same cost as attacker.
 Test Cases:
 
 Test Case ID: TC-FUNC-Explosive-Barrels-001
@@ -293,7 +293,7 @@ Type: Trap
 Trap Cost: 200
 TrapEffectType: DRAIN_ATTACKER_CRYSTALS
 effect_params: {'amount': 300, 'transfer_to_defender': True}
-Description: Attacking player loses 300 Crystals. Increase trapper’s Crystal by that amount
+Description: Foe loses 300 Crystals. You gain 300 Crystals.
 Test Cases:
 
 Test Case ID: TC-FUNC-Mana-Drain-001
@@ -370,8 +370,8 @@ Card Name: Alarm
 Type: Trap
 Trap Cost: 0
 TrapEffectType: FIELD_BOOST_AFFINITY_DEF
-effect_params: {'affinity': 'ANIMA', 'def': 10}
-Description: Until this turn ends, All trapper’s Anima monster gain +10 DEF in Reckoning
+effect_params: {'affinity': 'ANIMA', 'atk': 10, 'def': 10}
+Description: Until your turn ends, All your Anima units gain +10 ATK&DEF in Reckoning
 Test Cases:
 
 Test Case ID: TC-FUNC-Alarm-001
@@ -412,7 +412,7 @@ Expected Result:
 
 Card Name: Brainwash
 Type: Trap
-Trap Cost: 1500
+Trap Cost: 1000
 TrapEffectType: FORCE_FRIENDLY_FIRE
 effect_params: {}
 Description: The attacker chooses their own ally as an attack target
@@ -429,7 +429,7 @@ Preconditions:
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
 - Attacker has own character on field.
-- Brainwash cost 1500.
+- Brainwash cost 1000.
 Steps:
 Step 1: Attack trap; select own ally as redirected target.
 Expected Result:
@@ -442,7 +442,7 @@ Type: Trap
 Trap Cost: 800
 TrapEffectType: HYPNOTIZE_ATTACKER
 effect_params: {}
-Description: The attacking unit cannot attack during their next turn
+Description: The attacking unit cannot attack during the foe's next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Hypnosis-001
@@ -465,7 +465,7 @@ Expected Result:
 
 Card Name: Echo Barrier
 Type: Trap
-Trap Cost: 1000
+Trap Cost: 600
 TrapEffectType: LOCK_ATTACKER_REMAINING_ATTACKS
 effect_params: {}
 Description: This turn, attacker cannot perform any more attack.
@@ -492,7 +492,7 @@ Expected Result:
 
 Card Name: Snare Trap
 Type: Trap
-Trap Cost: 500
+Trap Cost: 700
 TrapEffectType: NULLIFY_ATTACKER_EFFECT
 effect_params: {}
 Description: The attacking unit's ability becomes None until attacker’s next turn ends
@@ -520,28 +520,26 @@ Expected Result:
 Card Name: Hostage
 Type: Trap
 Trap Cost: 200
-TrapEffectType: NULLIFY_ATTACK_REVEAL_ADJACENT
-effect_params: {'directions': [], 'lock_revealed': True}
-Description: Trapper reveal 1 own cell. Until this turn ends, attacker cannot target that cell.
+TrapEffectType: NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE
+effect_params: {'lock_revealed': True}
+Description: You reveal 1 own cell. Until this turn ends, attacker cannot target that cell.
 Test Cases:
 
 Test Case ID: TC-FUNC-Hostage-001
 Description:
-Hostage: reveal adjacent + lock from targeting
+Hostage: trap NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE
 Implementation Reference:
-- TurnManager NULLIFY_ATTACK_REVEAL_ADJACENT
-- TrapEffectType.NULLIFY_ATTACK_REVEAL_ADJACENT
+- TrapEffectType.NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE
+- TurnManager._handle_trap_effect
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Hidden cells adjacent to trap.
-- Hostage at center of cluster.
+- Hostage face-down.
 Steps:
 Step 1: Attack trap.
 Expected Result:
-- All adjacent opponent cells revealed.
-- Positions added to GameState.locked_attack_positions until turn end.
+- You reveal 1 own cell. Until this turn ends, attacker cannot target that cell.
 
 ---
 
@@ -576,7 +574,7 @@ Type: Trap
 Trap Cost: 250
 TrapEffectType: PERMANENT_ATK_DEBUFF
 effect_params: {'amount': 10}
-Description: Attacking unit get -10 ATK permanently
+Description: The attacking unit gets -10 ATK permanently.
 Test Cases:
 
 Test Case ID: TC-FUNC-Flame-Trap-001
@@ -602,7 +600,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: REVEAL_DEFENDING_CHOICE
 effect_params: {}
-Description: The trapper chooses one other cell on their side and reveal it
+Description: You choose one other cell on your side and reveal it.
 Test Cases:
 
 Test Case ID: TC-FUNC-Bait-001
@@ -646,7 +644,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: REVEAL_OWN_GAIN_CRYSTAL
 effect_params: {'amount': 100}
-Description: Trapper reveal 1 of their cell, they receive 100 Crystal
+Description: You reveal 1 of your cell, you receive 100 Crystal
 Test Cases:
 
 Test Case ID: TC-FUNC-Street-Joke-001
@@ -690,7 +688,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: SELF_DESTROY_TEMP_ATK_BOOST
 effect_params: {'atk': 10}
-Description: Trapper select 1 of their unit. +10 ATK until trapper’s turn ends, but also destroy it. Trapper pay no cost.
+Description: You select 1 of your unit. +10 ATK until your turn ends, but also destroy it. You pay no cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Self-destruct-001
@@ -731,10 +729,10 @@ Expected Result:
 
 Card Name: Defensive Pheromone
 Type: Trap
-Trap Cost: 500
+Trap Cost: 400
 TrapEffectType: SWAP_ARMORED_NATURE
 effect_params: {}
-Description: Trapper switch 1 'Armored' Nature card on their side with this cell, then repeat Reckoning.
+Description: You switch 1 'Armored' Nature card on your side with this cell, then repeat Reckoning.
 Test Cases:
 
 Test Case ID: TC-FUNC-Defensive-Pheromone-001
@@ -761,7 +759,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: SWAP_ATTACKER_ATK_DEF_TEMP
 effect_params: {}
-Description: Swap the attacker's ATK&DEF until the trapper’s turn ends
+Description: Swap the attacking unit's ATK&DEF until the end of your turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Cursed-Reflection-001
@@ -832,7 +830,7 @@ Type: Trap
 Trap Cost: 700
 TrapEffectType: TEMP_DEF_BOOST_ONE_OWN
 effect_params: {'def': 5, 'all_own_units': True}
-Description: All of trapper’s unit gain +5 DEF in Reckoning until attacker’s next turn ends
+Description: All of your unit gain +5 DEF in Reckoning until attacker’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Hard-Scale-001

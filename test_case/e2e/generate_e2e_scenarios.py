@@ -98,7 +98,7 @@ def extract_union_materials(formula: str) -> list[str]:
     if not formula:
         return []
     known = [
-        "Gryphon", "Tiny Pixie", "Ponycorn", "Cleaver Saint", "Cruel Angel",
+        "Gryphon", "Tiny Pixie", "Ponycorn", "Cleaver Saint", "Mean Angel",
         "Choir Lady Abigail", "Choir Lady Alice", "Choir Lady Anna",
         "Moon Lady Ninja", "Moon Tribe Shaman", "Colorful Mage",
         "Imperial Mech", "Jirayu the Rebel King",

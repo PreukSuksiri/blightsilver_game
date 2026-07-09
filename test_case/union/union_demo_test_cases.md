@@ -1,6 +1,6 @@
 # Union Card Test Cases (Demo = Yes)
 
-Total cards: 36
+Total cards: 46
 
 Ordered by complexity/priority (most complex first).
 
@@ -111,8 +111,8 @@ Expected Result:
 Card Name: Burning Phoenix
 Type: Union
 Stats: ATK=125 DEF=50 Affinity=Arcane
-Partial Ability: Cannot be destroyed by ???. If targeted by tech, ???
-Full Ability: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
+Partial Ability: Once, if ???, revive it at the start of your turn.
+Full Ability: Once, if destroyed by non-union cards, revive it at the start of your turn.
 Summon Formula: 1 Arcane (≥ 500 cost) + 1 Nature (≥ 500 cost) + 1 Divine (≥ 500 cost) + 800 cost
 Test Cases:
 
@@ -176,7 +176,7 @@ Preconditions:
 - Burning Phoenix summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Burning Phoenix; verify: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
+Step 1: Attack or defend with Burning Phoenix; verify: Once, if destroyed by non-union cards, revive it at the start of your turn.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -195,6 +195,20 @@ Expected Result:
 - Destroy immunity or destroy-on-tech behavior matches full ability.
 
 Test Case ID: TC-Burning-Phoenix-006
+Description:
+On-summon — Burning Phoenix immediate effect.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Burning Phoenix' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Prepare empty cell and valid revive target in graveyard/state.
+Steps:
+Step 1: Complete union summon of Burning Phoenix.
+Expected Result:
+- On-summon effect (revive, venom flags, etc.) fires once.
+
+Test Case ID: TC-Burning-Phoenix-007
 Description:
 Battle — Burning Phoenix as defender vs character.
 Preconditions:
@@ -505,9 +519,9 @@ Expected Result:
 Card Name: Rocket Peacock
 Type: Union
 Stats: ATK=150 DEF=100 Affinity=Nature
-Partial Ability: After this card battles, select 1 foe’s card, flip a coin. Head: ???
-Full Ability: After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card
-Summon Formula: Ostrich Cannon + 1 Nature + 1500 cost
+Partial Ability: After this card battles, select 1 foe’s exposed card, flip a coin. Head: ???
+Full Ability: After this card battles, select 1 foe’s exposed card, flip a coin. Head: destroy that card
+Summon Formula: Ostrich Cannon + 1 Nature (≥ 800 cost)  + 1500 cost
 Test Cases:
 
 
@@ -519,7 +533,7 @@ Preconditions:
 - Ensure 'Rocket Peacock' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Ostrich Cannon + 1 Nature + 1500 cost
+- Gather material cards per formula: Ostrich Cannon + 1 Nature (≥ 800 cost)  + 1500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -570,7 +584,7 @@ Preconditions:
 - Rocket Peacock summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Rocket Peacock; verify: After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card
+Step 1: Attack or defend with Rocket Peacock; verify: After this card battles, select 1 foe’s exposed card, flip a coin. Head: destroy that card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -621,8 +635,8 @@ Expected Result:
 Card Name: False Prophet
 Type: Union
 Stats: ATK=30 DEF=40 Affinity=Divine
-Partial Ability: End of owner’s turn: Reveal ???.
-Full Ability: End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
+Partial Ability: End of your turn: Reveal ???.
+Full Ability: End of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
 Summon Formula: 2 Divine cards + 300 cost
 Test Cases:
 
@@ -686,7 +700,7 @@ Preconditions:
 - False Prophet summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with False Prophet; verify: End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
+Step 1: Attack or defend with False Prophet; verify: End of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -822,108 +836,6 @@ Expected Result:
 
 ---
 
-Card Name: Blood-hungry Mutant
-Type: Union
-Stats: ATK=55 DEF=40 Affinity=Cosmic
-Partial Ability: After destroying foe’s card: ???
-Full Ability: After destroying foe’s card: +80 Crystals
-Summon Formula: 2 Mutant cards + 600 cost
-Test Cases:
-
-
-Test Case ID: TC-Blood-hungry-Mutant-001
-Description:
-Summon happy path — Blood-hungry Mutant union placement.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Mutant cards + 600 cost
-- Player 0 has sufficient crystals for summon cost.
-- Material cells marked in union zone pattern (5×5 bitmask).
-Steps:
-Step 1: Enter union summon mode; select materials matching formula.
-Step 2: Pay crystal cost; place Blood-hungry Mutant face-up at anchor cell.
-Expected Result:
-- Blood-hungry Mutant appears as is_union=true, face-up.
-- Material cards removed from grid without crystal loss.
-- Union summon consumed for this duel (cannot summon second union).
-
-Test Case ID: TC-Blood-hungry-Mutant-002
-Description:
-Edge — insufficient crystals for Blood-hungry Mutant.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Set crystals below required summon cost.
-- Valid materials on field.
-Steps:
-Step 1: Attempt union summon.
-Expected Result:
-- Summon blocked; materials remain; no partial state.
-
-Test Case ID: TC-Blood-hungry-Mutant-003
-Description:
-Edge — wrong materials for Blood-hungry Mutant.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Place non-qualifying characters in zone.
-Steps:
-Step 1: Attempt union summon.
-Expected Result:
-- Formula validation fails; summon does not proceed.
-
-Test Case ID: TC-Blood-hungry-Mutant-004
-Description:
-Ability — Blood-hungry Mutant full ability in battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Blood-hungry Mutant summoned and face-up.
-- Opponent has valid battle target.
-Steps:
-Step 1: Attack or defend with Blood-hungry Mutant; verify: After destroying foe’s card: +80 Crystals
-Expected Result:
-- Full (not partial) ability text applies after union summon.
-
-Test Case ID: TC-Blood-hungry-Mutant-005
-Description:
-Destruction — Blood-hungry Mutant destroy effects.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Set up valid destroy targets per ability.
-Steps:
-Step 1: Trigger destroy via battle or tech targeting Blood-hungry Mutant.
-Expected Result:
-- Destroy immunity or destroy-on-tech behavior matches full ability.
-
-Test Case ID: TC-Blood-hungry-Mutant-006
-Description:
-Battle — Blood-hungry Mutant as defender vs character.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Opponent character attacks union.
-Steps:
-Step 1: Resolve battle with union stats.
-Expected Result:
-- Union uses character battle rules; is_union flag preserved.
-
----
-
 Card Name: Volatile Slasher
 Type: Union
 Stats: ATK=50 DEF=45 Affinity=Bio
@@ -1014,10 +926,10 @@ Expected Result:
 
 Card Name: Ten Arms Yaksa
 Type: Union
-Stats: ATK=45 DEF=30 Affinity=Chaos
-Partial Ability: This card can choose ?? attack targets. -?? ATK for each successful attack.
-Full Ability: This card can choose two attack targets. -5 ATK for each successful attack.
-Summon Formula: Yaksa + 1 Chaos + 600 cost
+Stats: ATK=50 DEF=30 Affinity=Chaos
+Partial Ability: This card can choose up to ???attack targets. -5 ATK after ???
+Full Ability: This card can choose up to 3 attack targets. -5 ATK after the third attack.
+Summon Formula: Yaksa + 1 Chaos + 800 cost
 Test Cases:
 
 
@@ -1029,7 +941,7 @@ Preconditions:
 - Ensure 'Ten Arms Yaksa' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Yaksa + 1 Chaos + 600 cost
+- Gather material cards per formula: Yaksa + 1 Chaos + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1080,7 +992,7 @@ Preconditions:
 - Ten Arms Yaksa summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Ten Arms Yaksa; verify: This card can choose two attack targets. -5 ATK for each successful attack.
+Step 1: Attack or defend with Ten Arms Yaksa; verify: This card can choose up to 3 attack targets. -5 ATK after the third attack.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1103,9 +1015,9 @@ Expected Result:
 Card Name: Sky Protector
 Type: Union
 Stats: ATK=0 DEF=0 Affinity=Divine
-Partial Ability: If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.
-Full Ability: If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.
-Summon Formula: Sunrise Lady + Moonrise Gentleman + 400 cost
+Partial Ability: Summon: choose either permanently gain ??? or ???permanently
+Full Ability: Summon: choose either permanently gain +80 ATK or +80 DEF permanently
+Summon Formula: Sunrise Lady + Moonrise Gentleman + 700 cost
 Test Cases:
 
 
@@ -1117,7 +1029,7 @@ Preconditions:
 - Ensure 'Sky Protector' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Sunrise Lady + Moonrise Gentleman + 400 cost
+- Gather material cards per formula: Sunrise Lady + Moonrise Gentleman + 700 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1168,7 +1080,7 @@ Preconditions:
 - Sky Protector summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Sky Protector; verify: If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.
+Step 1: Attack or defend with Sky Protector; verify: Summon: choose either permanently gain +80 ATK or +80 DEF permanently
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1280,7 +1192,7 @@ Card Name: Rebel King
 Type: Union
 Stats: ATK=60 DEF=40 Affinity=Anima
 Partial Ability: At the end of foe’s turn: ??? and swap its ATK&DEF
-Full Ability: At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF
+Full Ability: At the end of foe’s turn: you select 1 exposed foe’s unit and swap its ATK&DEF
 Summon Formula: Jirayu the Rebellious Prince + 1 Anima card (≥ 500 cost) + 800 cost
 Test Cases:
 
@@ -1344,7 +1256,7 @@ Preconditions:
 - Rebel King summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Rebel King; verify: At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF
+Step 1: Attack or defend with Rebel King; verify: At the end of foe’s turn: you select 1 exposed foe’s unit and swap its ATK&DEF
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1632,7 +1544,7 @@ Card Name: Kiba the Giant Slayer
 Type: Union
 Stats: ATK=80 DEF=55 Affinity=Anima
 Partial Ability: +??? vs Union
-Full Ability: +30 ATK vs Union
+Full Ability: +70 ATK vs Union
 Summon Formula: Kiyoko the Death Whisper + Silver Spearman + 1000 cost
 Test Cases:
 
@@ -1696,7 +1608,7 @@ Preconditions:
 - Kiba the Giant Slayer summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Kiba the Giant Slayer; verify: +30 ATK vs Union
+Step 1: Attack or defend with Kiba the Giant Slayer; verify: +70 ATK vs Union
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1720,7 +1632,7 @@ Card Name: Choir Lead Amber
 Type: Union
 Stats: ATK=35 DEF=35 Affinity=Divine
 Partial Ability: +20 ATK to all ?????
-Full Ability: +20 ATK to all Divine units on its side
+Full Ability: +20 ATK to all Divine units on your side
 Summon Formula: 3 Choir Lady cards + 500 cost
 Test Cases:
 
@@ -1784,7 +1696,7 @@ Preconditions:
 - Choir Lead Amber summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Choir Lead Amber; verify: +20 ATK to all Divine units on its side
+Step 1: Attack or defend with Choir Lead Amber; verify: +20 ATK to all Divine units on your side
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1808,7 +1720,7 @@ Card Name: Pixie Queen
 Type: Union
 Stats: ATK=30 DEF=30 Affinity=Divine
 Partial Ability: +5 ATK for each ????
-Full Ability: +5 ATK for each Divine cards on its side
+Full Ability: +5 ATK for each Divine cards on your side
 Summon Formula: 1 Tiny Pixie + 1 Divine+ 300 cost
 Test Cases:
 
@@ -1872,7 +1784,7 @@ Preconditions:
 - Pixie Queen summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Pixie Queen; verify: +5 ATK for each Divine cards on its side
+Step 1: Attack or defend with Pixie Queen; verify: +5 ATK for each Divine cards on your side
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1882,6 +1794,400 @@ Battle — Pixie Queen as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Pixie Queen' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Helios the Prideful Fortress
+Type: Union
+Stats: ATK=145 DEF=60 Affinity=Cosmic
+Partial Ability: As long as there is exposed ???, this card cannot be ???. If targeted by tech, ???
+Full Ability: With another exposed Cosmic: this card cannot be destroyed. If targeted by tech, destroy this card.
+Summon Formula: 2 Cosmic (≥ 800 cost) + 1500 cost
+Test Cases:
+
+
+Test Case ID: TC-Helios-the-Prideful-Fortress-001
+Description:
+Summon happy path — Helios the Prideful Fortress union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Helios the Prideful Fortress' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: 2 Cosmic (≥ 800 cost) + 1500 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Helios the Prideful Fortress face-up at anchor cell.
+Expected Result:
+- Helios the Prideful Fortress appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Helios-the-Prideful-Fortress-002
+Description:
+Edge — insufficient crystals for Helios the Prideful Fortress.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Helios the Prideful Fortress' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Helios-the-Prideful-Fortress-003
+Description:
+Edge — wrong materials for Helios the Prideful Fortress.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Helios the Prideful Fortress' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Helios-the-Prideful-Fortress-004
+Description:
+Ability — Helios the Prideful Fortress full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Helios the Prideful Fortress' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Helios the Prideful Fortress summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Helios the Prideful Fortress; verify: With another exposed Cosmic: this card cannot be destroyed. If targeted by tech, destroy this card.
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Helios-the-Prideful-Fortress-005
+Description:
+Destruction — Helios the Prideful Fortress destroy effects.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Helios the Prideful Fortress' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set up valid destroy targets per ability.
+Steps:
+Step 1: Trigger destroy via battle or tech targeting Helios the Prideful Fortress.
+Expected Result:
+- Destroy immunity or destroy-on-tech behavior matches full ability.
+
+Test Case ID: TC-Helios-the-Prideful-Fortress-006
+Description:
+Battle — Helios the Prideful Fortress as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Helios the Prideful Fortress' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Dimensional Virus
+Type: Union
+Stats: ATK=0 DEF=0 Affinity=Bio
+Partial Ability: Foe’s unit get ??? in Reckoning . With Mutagen Flag : ???
+Full Ability: Foe’s unit get -10 ATK&DEF permanently in Reckoning . With Mutagen Flag : Cannot be destroyed by Non-Arcane.
+Summon Formula: 1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost
+Test Cases:
+
+
+Test Case ID: TC-Dimensional-Virus-001
+Description:
+Summon happy path — Dimensional Virus union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dimensional Virus' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: 1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Dimensional Virus face-up at anchor cell.
+Expected Result:
+- Dimensional Virus appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Dimensional-Virus-002
+Description:
+Edge — insufficient crystals for Dimensional Virus.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dimensional Virus' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Dimensional-Virus-003
+Description:
+Edge — wrong materials for Dimensional Virus.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dimensional Virus' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Dimensional-Virus-004
+Description:
+Ability — Dimensional Virus full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dimensional Virus' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Dimensional Virus summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Dimensional Virus; verify: Foe’s unit get -10 ATK&DEF permanently in Reckoning . With Mutagen Flag : Cannot be destroyed by Non-Arcane.
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Dimensional-Virus-005
+Description:
+Destruction — Dimensional Virus destroy effects.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dimensional Virus' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set up valid destroy targets per ability.
+Steps:
+Step 1: Trigger destroy via battle or tech targeting Dimensional Virus.
+Expected Result:
+- Destroy immunity or destroy-on-tech behavior matches full ability.
+
+Test Case ID: TC-Dimensional-Virus-006
+Description:
+Battle — Dimensional Virus as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Dimensional Virus' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Ice Elemental
+Type: Union
+Stats: ATK=80 DEF=50 Affinity=Arcane
+Partial Ability: Card that battles this card cannot ??? until the end of their next turn.
+Full Ability: Card that battles this card cannot perform attack until the end of their next turn.
+Summon Formula: Water Elemental + Wind Elemental + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Ice-Elemental-001
+Description:
+Summon happy path — Ice Elemental union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ice Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: Water Elemental + Wind Elemental + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Ice Elemental face-up at anchor cell.
+Expected Result:
+- Ice Elemental appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Ice-Elemental-002
+Description:
+Edge — insufficient crystals for Ice Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ice Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Ice-Elemental-003
+Description:
+Edge — wrong materials for Ice Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ice Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Ice-Elemental-004
+Description:
+Ability — Ice Elemental full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ice Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Ice Elemental summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Ice Elemental; verify: Card that battles this card cannot perform attack until the end of their next turn.
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Ice-Elemental-005
+Description:
+Battle — Ice Elemental as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ice Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Team Galaxos
+Type: Union
+Stats: ATK=85 DEF=85 Affinity=Cosmic
+Partial Ability: Summoned: Until the end of foe’s turn ??? are not destroyed
+Full Ability: Summoned: Until the end of foe’s turn, Cosmic and Anima units on your side are not destroyed
+Summon Formula: 1 Cosmic (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost
+Test Cases:
+
+
+Test Case ID: TC-Team-Galaxos-001
+Description:
+Summon happy path — Team Galaxos union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Team Galaxos' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: 1 Cosmic (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Team Galaxos face-up at anchor cell.
+Expected Result:
+- Team Galaxos appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Team-Galaxos-002
+Description:
+Edge — insufficient crystals for Team Galaxos.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Team Galaxos' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Team-Galaxos-003
+Description:
+Edge — wrong materials for Team Galaxos.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Team Galaxos' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Team-Galaxos-004
+Description:
+Ability — Team Galaxos full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Team Galaxos' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Team Galaxos summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Team Galaxos; verify: Summoned: Until the end of foe’s turn, Cosmic and Anima units on your side are not destroyed
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Team-Galaxos-005
+Description:
+Destruction — Team Galaxos destroy effects.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Team Galaxos' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set up valid destroy targets per ability.
+Steps:
+Step 1: Trigger destroy via battle or tech targeting Team Galaxos.
+Expected Result:
+- Destroy immunity or destroy-on-tech behavior matches full ability.
+
+Test Case ID: TC-Team-Galaxos-006
+Description:
+Battle — Team Galaxos as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Team Galaxos' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -1984,7 +2290,7 @@ Card Name: Giant Mining Pod
 Type: Union
 Stats: ATK=20 DEF=80 Affinity=Cosmic
 Partial Ability: If this card attacks a Dead End, receive ??? Crystals
-Full Ability: If this card attacks a Dead End, receive 200 Crystals
+Full Ability: If this card attacks a Dead End, receive 900 Crystals
 Summon Formula: 1 Miner probe + 1 Cosmic + 500 cost
 Test Cases:
 
@@ -2048,7 +2354,7 @@ Preconditions:
 - Giant Mining Pod summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Giant Mining Pod; verify: If this card attacks a Dead End, receive 200 Crystals
+Step 1: Attack or defend with Giant Mining Pod; verify: If this card attacks a Dead End, receive 900 Crystals
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -2058,6 +2364,270 @@ Battle — Giant Mining Pod as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Giant Mining Pod' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Wood Elemental
+Type: Union
+Stats: ATK=65 DEF=85 Affinity=Arcane
+Partial Ability: At the end of each foe’s turn, ???
+Full Ability: At the end of each foe’s turn, +5 DEF permanently.
+Summon Formula: Water Elemental + Earth Elemental + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Wood-Elemental-001
+Description:
+Summon happy path — Wood Elemental union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wood Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: Water Elemental + Earth Elemental + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Wood Elemental face-up at anchor cell.
+Expected Result:
+- Wood Elemental appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Wood-Elemental-002
+Description:
+Edge — insufficient crystals for Wood Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wood Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Wood-Elemental-003
+Description:
+Edge — wrong materials for Wood Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wood Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Wood-Elemental-004
+Description:
+Ability — Wood Elemental full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wood Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Wood Elemental summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Wood Elemental; verify: At the end of each foe’s turn, +5 DEF permanently.
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Wood-Elemental-005
+Description:
+Battle — Wood Elemental as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Wood Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Legendary Locksmith
+Type: Union
+Stats: ATK=35 DEF=60 Affinity=Anima
+Partial Ability: Summoned: Reveal ??? cards on the field
+Full Ability: Summoned: Reveal 3 cards on the field
+Summon Formula: 1 Lockpicker + 1 Anima + 800 cost
+Test Cases:
+
+
+Test Case ID: TC-Legendary-Locksmith-001
+Description:
+Summon happy path — Legendary Locksmith union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Legendary Locksmith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: 1 Lockpicker + 1 Anima + 800 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Legendary Locksmith face-up at anchor cell.
+Expected Result:
+- Legendary Locksmith appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Legendary-Locksmith-002
+Description:
+Edge — insufficient crystals for Legendary Locksmith.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Legendary Locksmith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Legendary-Locksmith-003
+Description:
+Edge — wrong materials for Legendary Locksmith.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Legendary Locksmith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Legendary-Locksmith-004
+Description:
+Ability — Legendary Locksmith full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Legendary Locksmith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Legendary Locksmith summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Legendary Locksmith; verify: Summoned: Reveal 3 cards on the field
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Legendary-Locksmith-005
+Description:
+Battle — Legendary Locksmith as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Legendary Locksmith' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Thunder Elemental
+Type: Union
+Stats: ATK=90 DEF=55 Affinity=Arcane
+Partial Ability: After a successful attack, ???
+Full Ability: After a successful attack, reveal 1 foe’s card
+Summon Formula: Fire Elemental + Wind Elemental + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Thunder-Elemental-001
+Description:
+Summon happy path — Thunder Elemental union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Thunder Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: Fire Elemental + Wind Elemental + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Thunder Elemental face-up at anchor cell.
+Expected Result:
+- Thunder Elemental appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Thunder-Elemental-002
+Description:
+Edge — insufficient crystals for Thunder Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Thunder Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Thunder-Elemental-003
+Description:
+Edge — wrong materials for Thunder Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Thunder Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Thunder-Elemental-004
+Description:
+Ability — Thunder Elemental full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Thunder Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Thunder Elemental summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Thunder Elemental; verify: After a successful attack, reveal 1 foe’s card
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Thunder-Elemental-005
+Description:
+Battle — Thunder Elemental as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Thunder Elemental' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2146,6 +2716,108 @@ Battle — Diamond Unicorn as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Diamond Unicorn' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Bioterrorist
+Type: Union
+Stats: ATK=150 DEF=0 Affinity=Bio
+Partial Ability: Destroy this card after ???
+Full Ability: Destroy this card after Reckoning
+Summon Formula: 2 Bio cards (≥ 800 cost) + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Bioterrorist-001
+Description:
+Summon happy path — Bioterrorist union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Bioterrorist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: 2 Bio cards (≥ 800 cost) + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Bioterrorist face-up at anchor cell.
+Expected Result:
+- Bioterrorist appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Bioterrorist-002
+Description:
+Edge — insufficient crystals for Bioterrorist.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Bioterrorist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Bioterrorist-003
+Description:
+Edge — wrong materials for Bioterrorist.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Bioterrorist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Bioterrorist-004
+Description:
+Ability — Bioterrorist full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Bioterrorist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Bioterrorist summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Bioterrorist; verify: Destroy this card after Reckoning
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Bioterrorist-005
+Description:
+Destruction — Bioterrorist destroy effects.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Bioterrorist' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set up valid destroy targets per ability.
+Steps:
+Step 1: Trigger destroy via battle or tech targeting Bioterrorist.
+Expected Result:
+- Destroy immunity or destroy-on-tech behavior matches full ability.
+
+Test Case ID: TC-Bioterrorist-006
+Description:
+Battle — Bioterrorist as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Bioterrorist' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2248,6 +2920,196 @@ Battle — Moon Lady Ninja as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Sand Elemental
+Type: Union
+Stats: ATK=55 DEF=55 Affinity=Arcane
+Partial Ability: +??? vs Non-Arcane cards
+Full Ability: +50 ATK&DEF vs Non-Arcane cards
+Summon Formula: Wind Elemental + Earth Elemental + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Sand-Elemental-001
+Description:
+Summon happy path — Sand Elemental union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sand Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: Wind Elemental + Earth Elemental + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Sand Elemental face-up at anchor cell.
+Expected Result:
+- Sand Elemental appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Sand-Elemental-002
+Description:
+Edge — insufficient crystals for Sand Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sand Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Sand-Elemental-003
+Description:
+Edge — wrong materials for Sand Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sand Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Sand-Elemental-004
+Description:
+Ability — Sand Elemental full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sand Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Sand Elemental summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Sand Elemental; verify: +50 ATK&DEF vs Non-Arcane cards
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Sand-Elemental-005
+Description:
+Battle — Sand Elemental as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sand Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Cloud Elemental
+Type: Union
+Stats: ATK=65 DEF=65 Affinity=Arcane
+Partial Ability: Once, this card is ???
+Full Ability: Once, this card is not destroyed
+Summon Formula: Fire Elemental + Water Elemental + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Cloud-Elemental-001
+Description:
+Summon happy path — Cloud Elemental union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cloud Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: Fire Elemental + Water Elemental + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Cloud Elemental face-up at anchor cell.
+Expected Result:
+- Cloud Elemental appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Cloud-Elemental-002
+Description:
+Edge — insufficient crystals for Cloud Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cloud Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Cloud-Elemental-003
+Description:
+Edge — wrong materials for Cloud Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cloud Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Cloud-Elemental-004
+Description:
+Ability — Cloud Elemental full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cloud Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Cloud Elemental summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Cloud Elemental; verify: Once, this card is not destroyed
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Cloud-Elemental-005
+Description:
+Destruction — Cloud Elemental destroy effects.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cloud Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set up valid destroy targets per ability.
+Steps:
+Step 1: Trigger destroy via battle or tech targeting Cloud Elemental.
+Expected Result:
+- Destroy immunity or destroy-on-tech behavior matches full ability.
+
+Test Case ID: TC-Cloud-Elemental-006
+Description:
+Battle — Cloud Elemental as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cloud Elemental' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2467,6 +3329,79 @@ Battle — Berserk Hyena as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Berserk Hyena' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
+Card Name: Diamond Elemental
+Type: Union
+Stats: ATK=60 DEF=100 Affinity=Arcane
+Partial Ability: None
+Full Ability: None
+Summon Formula: Fire Elemental + Earth Elemental + 1000 cost
+Test Cases:
+
+
+Test Case ID: TC-Diamond-Elemental-001
+Description:
+Summon happy path — Diamond Elemental union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Diamond Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: Fire Elemental + Earth Elemental + 1000 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Diamond Elemental face-up at anchor cell.
+Expected Result:
+- Diamond Elemental appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Diamond-Elemental-002
+Description:
+Edge — insufficient crystals for Diamond Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Diamond Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Diamond-Elemental-003
+Description:
+Edge — wrong materials for Diamond Elemental.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Diamond Elemental' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Diamond-Elemental-004
+Description:
+Battle — Diamond Elemental as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Diamond Elemental' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2771,7 +3706,7 @@ Expected Result:
 
 Card Name: Katana Shark
 Type: Union
-Stats: ATK=75 DEF=50 Affinity=Nature
+Stats: ATK=105 DEF=50 Affinity=Nature
 Partial Ability: None
 Full Ability: None
 Summon Formula: 3 ‘Sharks’ name + 800 cost

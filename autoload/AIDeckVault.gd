@@ -2,7 +2,8 @@ extends Node
 # Named AI deck templates for battles (exploration, campaign, etc.).
 # Edited via admin command: ai_deck_vault
 #
-# Entry schema: { id, label, tags, featured_union, featured_unit, deck, ... }
+# Entry schema: { id, label, tags, quick_duel, featured_union, featured_unit, deck, ... }
+# quick_duel — when true, deck may appear in Quick Duel's random pool.
 # featured_union — optional union name; AI strongly prefers it when summoning.
 # featured_unit — optional character name; Quick Duel capsule portrait when set.
 #
@@ -77,6 +78,14 @@ func get_featured_unit(entry_id: String) -> String:
 	if entry.is_empty():
 		return ""
 	return str(entry.get("featured_unit", "")).strip_edges()
+
+
+func is_quick_duel_enabled(entry: Dictionary) -> bool:
+	return bool(entry.get("quick_duel", false))
+
+
+func is_quick_duel_entry(entry_id: String) -> bool:
+	return is_quick_duel_enabled(get_entry(entry_id))
 
 
 func populate_vault_option(opt: OptionButton, none_label: String = "(none — manual deck)") -> void:
@@ -327,6 +336,8 @@ func pick_random_entry_for_tags(tags: Array, demo_only: bool = true) -> Dictiona
 			if eid.is_empty() or seen.has(eid):
 				continue
 			if demo_only and not is_entry_demo_safe(entry):
+				continue
+			if not is_quick_duel_enabled(entry):
 				continue
 			seen[eid] = true
 			candidates.append(entry)

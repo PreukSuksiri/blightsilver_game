@@ -9,7 +9,7 @@ Ordered by complexity/priority (most complex first).
 Card Name: Release Mutagen
 Type: Tech
 Cost: 0
-Ability: Add Mutagen Flag to 1 of this player’s unit
+Ability: Add Mutagen Flag to 1 of your unit
 Test Cases:
 
 
@@ -26,7 +26,7 @@ Steps:
 Step 1: Enter tech play phase; select Release Mutagen from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Add Mutagen Flag to 1 of this player’s unit
+- Effect resolves: Add Mutagen Flag to 1 of your unit
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Release-Mutagen-002
@@ -408,7 +408,7 @@ Expected Result:
 Card Name: Great Diplomacy
 Type: Tech
 Cost: 1000
-Ability: This player selects up to 5 of their units and reveal them.
+Ability: You select up to 3 of your units and reveal them.
 Test Cases:
 
 
@@ -425,7 +425,7 @@ Steps:
 Step 1: Enter tech play phase; select Great Diplomacy from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: This player selects up to 5 of their units and reveal them.
+- Effect resolves: You select up to 3 of your units and reveal them.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Great-Diplomacy-002
@@ -459,7 +459,7 @@ Expected Result:
 Card Name: War Supply
 Type: Tech
 Cost: 1000
-Ability: This player’s units get +10 ATK&DEF in Reckoning until turn’s end
+Ability: Your units get +10 ATK&DEF in Reckoning until the end of the turn.
 Test Cases:
 
 
@@ -476,7 +476,7 @@ Steps:
 Step 1: Enter tech play phase; select War Supply from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: This player’s units get +10 ATK&DEF in Reckoning until turn’s end
+- Effect resolves: Your units get +10 ATK&DEF in Reckoning until the end of the turn.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-War-Supply-002

@@ -22,6 +22,14 @@ func run_all_tests() -> void:
 	test_armored_bee_preview_silent()
 	test_reckoning_overlay_log_lines()
 	test_reckoning_pills_copied_from_preview()
+	test_death_colony_union_zone_targeting()
+	test_magnet_elemental_taunt_non_arcane()
+	test_maria_adjacent_force_coin_heads()
+
+func _make_union_char(name: String, atk: int, def_val: int, ability: int, params: Dictionary = {}) -> GameState.CardInstance:
+	var c := _make_char(name, atk, def_val, 0, CharacterData.Affinity.BIO, ability, params)
+	c.is_union = true
+	return c
 
 func _make_char(name: String, atk: int, def_val: int, cost: int,
 		affinity: int = CharacterData.Affinity.ANIMA,
@@ -234,3 +242,54 @@ func test_reckoning_pills_copied_from_preview() -> void:
 	assert_eq(final.attacker_atk_delta, 0, "Final mod excludes pill-only temp boost")
 	var lines: PackedStringArray = BattleResolver.reckoning_overlay_log_lines(0, 1, final)
 	assert_true(" MISMATCH" in lines[0], "Optional pay after preview flags mismatch")
+
+func test_death_colony_union_zone_targeting() -> void:
+	print("-- test_death_colony_union_zone_targeting")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var death_colony := _make_union_char(
+		"Death Colony", 180, 150, CharacterData.AbilityType.ATTACK_ONLY_UNION_ZONE_PATTERN)
+	death_colony.grid_row = 2
+	death_colony.grid_col = 2
+	var in_pattern := BattleResolver.is_attack_target_allowed(
+		0, Vector2i(2, 2), death_colony, 1, Vector2i(2, 2), _make_char("Target", 10, 10, 100))
+	var off_pattern := BattleResolver.is_attack_target_allowed(
+		0, Vector2i(2, 2), death_colony, 1, Vector2i(0, 1), _make_char("Other", 10, 10, 100))
+	assert_true(in_pattern, "Death Colony may attack center of union zone pattern")
+	assert_true(not off_pattern, "Death Colony cannot attack off-pattern cells")
+
+func test_magnet_elemental_taunt_non_arcane() -> void:
+	print("-- test_magnet_elemental_taunt_non_arcane")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var nature_atk := _make_char("Warg", 50, 30, 500, CharacterData.Affinity.NATURE)
+	var arcane_atk := _make_char("Mage", 50, 30, 500, CharacterData.Affinity.ARCANE)
+	var magnet_u: UnionData = UnionDatabase.get_union("Magnet Elemental")
+	assert_true(magnet_u != null, "Magnet Elemental union data exists")
+	GameState.place_union_card(1, 2, 2, magnet_u)
+	GameState.place_character(1, 0, 0, "Canyon Warg")
+	GameState.get_card(1, 0, 0).face_up = true
+	var blocked := BattleResolver.validate_attack_target(
+		0, Vector2i(1, 1), nature_atk, 1, Vector2i(0, 0), GameState.get_card(1, 0, 0))
+	var allowed_magnet := BattleResolver.validate_attack_target(
+		0, Vector2i(1, 1), nature_atk, 1, Vector2i(2, 2), GameState.get_card(1, 2, 2))
+	var arcane_ok := BattleResolver.validate_attack_target(
+		0, Vector2i(1, 1), arcane_atk, 1, Vector2i(0, 0), GameState.get_card(1, 0, 0))
+	assert_true(not blocked.get("ok", true), "Non-Arcane cannot attack other exposed units while Magnet is up")
+	assert_true(allowed_magnet.get("ok", false), "Non-Arcane may attack Magnet Elemental")
+	assert_true(arcane_ok.get("ok", false), "Arcane may ignore Magnet taunt")
+
+func test_maria_adjacent_force_coin_heads() -> void:
+	print("-- test_maria_adjacent_force_coin_heads")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Maria the Battle Priest")
+	GameState.get_card(0, 2, 2).face_up = false
+	GameState.place_character(0, 2, 1, "Nuki the Tanuki")
+	var nuki: GameState.CardInstance = GameState.get_card(0, 2, 1)
+	nuki.ability_type = CharacterData.AbilityType.COIN_FLIP_ATK_BOOST
+	nuki.ability_params = {"bonus": 10}
+	assert_true(
+		GameState.adjacent_force_coin_heads_active_for(0, 2, 1),
+		"Maria forces heads for adjacent unit coin flips while face-down")
+	BattleResolver.set_coin_flip_source(nuki, 0)
+	var forced_heads: bool = BattleResolver._roll_battle_coin()
+	BattleResolver.clear_coin_flip_source()
+	assert_true(forced_heads, "Battle coin roll forced to heads beside Maria")

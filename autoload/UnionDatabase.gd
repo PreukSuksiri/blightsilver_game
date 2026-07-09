@@ -192,8 +192,8 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "seraph"}, {"affinity": A.DIVINE, "min_cost": 800}], 12))
 
 	_add("One Winged Angel", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
-		AB.PERM_BOOST_END_OF_TURN, {"atk": 30, "def": 0},
-		"Once, +30 ATK permanently at the end of your turn",
+		AB.PERM_BOOST_END_OF_TURN, {"atk": 30, "def": 0, "max_atk": 120},
+		"+30 ATK permanently at the end of your turn (max 120)",
 		"+??? ATK permanently at ???",
 		"1 Cleaver Saint + 1 Divine card + 1500 cost",
 		"1 ??? + 1 ??? + 1500 cost",
@@ -210,7 +210,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Tiny Pixie"}, {"affinity": A.DIVINE}], 9))
 
 	_add("Diamond Unicorn", A.DIVINE, 30, 35, 500, R.UNCOMMON,
-		AB.NONE, {},
+		AB.UNION_SUMMON_TEMP_STAT_BOOST, {"atk": 15, "def": 0, "until_turn_end": true},
 		"Summoned: +15 ATK until this turn’s end",
 		"Summoned: ??? until this turn’s end",
 		"1 Ponycorn + 1 Divine card + 500 cost",
@@ -229,10 +229,10 @@ func _load_unions() -> void:
 	_add("Genesis Mech", A.DIVINE, 60, 40, 1000, R.RARE,
 		AB.ONE_USE_DESTROY_BY_AFFINITY, {"aff1": A.DIVINE, "aff2": A.ANIMA}, "Once, destroy Divine or Anima card",
 		"Once, destroy ???or ??? card",
-		"1 Cruel Angel + 1 Anima Card + 1000 cost",
+		"1 Mean Angel + 1 Anima Card + 1000 cost",
 		"1 ??? + 1 ??? + 1000 cost",
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,0], [1,1], [1,2], [1,3], [1,4]]),
-		_conds([{"card_name": "Cruel Angel"}, {"affinity": A.ANIMA}], 10))
+		_conds([{"card_name": "Mean Angel"}, {"affinity": A.ANIMA}], 10))
 
 	_add("Keeper of the Afterlife", A.DIVINE, 40, 65, 1000, R.UNCOMMON,
 		AB.COIN_FLIP_NULLIFY_ON_DEFEND, {}, "At Reckoning, flip a coin. If head, the attack does nothing",
@@ -677,6 +677,426 @@ func _load_unions() -> void:
 		_z([[0,0], [0,1], [1,2], [2,3], [3,3], [4,4]]),
 		_conds([{"name_contains": "shark"}, {"name_contains": "shark"}, {"name_contains": "shark"}], 6))
 
+	# ── Full-release import (unions) ──
+	_add("Mass Extinction Dragon", A.NATURE, 250, 180, 3000, R.COMMON,
+		AB.UNION_SUMMON_DESTROY_OTHER_EXPOSED_ALLIES, {}, "Summoned: destroy all other exposed ally units. No paid cost.", "Summoned: destroy all ???",
+		"5 Nature cards + 3000 Crystals", "5 ??? + 3000 Crystals",
+		_z([[0,0], [0,4], [2,2], [3,3], [4,0], [4,4]]),
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}], 6))
+
+	_add("Beowolf", A.NATURE, 55, 50, 1000, R.COMMON,
+		AB.ATK_BONUS_WHEN_CAN_DESTROY, {"bonus": 25}, "+25 ATK when this card can destroy a unit card", "+?? ATK when this card can destroy ???",
+		"1 Kulu the Alpha Leader + 1 Anima + 1000 cost", "1 ??? + 1 ??? + 1000 cost",
+		_z([[0,0], [0,2], [0,4], [2,1], [2,3], [4,0], [4,2], [4,4]]),
+		_conds([{"card_name": "Kulu the Alpha Leader"}, {"affinity": A.ANIMA}], 8))
+
+	_add("Dew the Heroic Prince", A.NATURE, 80, 70, 1000, R.COMMON,
+		AB.ATK_BONUS_VS_UNION, {"bonus": 40}, "At Reckoning, +40 ATK and +40 DEF vs Union cards", "At Reckoning, +?? ATK and +?? DEF vs ???",
+		"1 Dew the Frog Knight + 1 card including ‘princess’ name or card with princess flag + 1000 cost", "1 ??? + 1 ??? + 1000 cost",
+		_z([[0,0], [0,1], [0,3], [0,4], [2,2], [3,2], [4,0], [4,1], [4,3], [4,4]]),
+		_conds([{"card_name": "Dew the Frog Knight"}, {"name_contains": "princess"}], 10))
+
+	_add("Gemina the Supreme Queen", A.ANIMA, 90, 90, 1000, R.COMMON,
+		AB.IMMUNE_TO_TRAPS, {"block_tech_both_sides": true, "when_exposed": true}, "Both sides cannot use tech while this card is exposed. This card is unaffected by traps.", "Both sides cannot use ??? while this card is exposed. This card is unaffected by ???.",
+		"3 ‘Princess’ or card with princess flag + 1000 cost", "3 ??? + 1000 cost",
+		_z([[0,1], [0,2], [0,3], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2], [4,3]]),
+		_conds([{"name_contains": "princess"}], 12))
+
+	_add("Manticore", A.NATURE, 50, 85, 500, R.COMMON,
+		AB.END_OF_TURN_COIN_FLIP_STAT_BOOST, {"atk": 50, "flat_boost": true, "reset_on_attack": true}, "+50 ATK at the end of your turn. Reset this bonus after performed attack.", "+?? ATK at the end of your turn. Whenever this card attacks, ??",
+		"Centaur + Minotaur + Pegasus + 500 cost", "1 ??? + 1 ??? + 1 ??? + 500 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"name_contains": "centaur"}, {"name_contains": "minotaur"}, {"name_contains": "pegasus"}], 8))
+
+	_add("Wyriah the Roc", A.NATURE, 80, 25, 1000, R.COMMON,
+		AB.IMMUNE_TO_TRAPS, {}, "This card is unaffected by trap effect", "This card is unaffected by ???",
+		"1 Steel Eagle + 1 Nature (≥ 800 cost) + 1000 cost", "1 ??? + 1 ??? + 1000 cost",
+		_z([[1,1], [1,2], [1,3], [2,0], [2,1], [2,2], [2,3], [2,4], [3,2], [4,2]]),
+		_conds([{"card_name": "Steel Eagle"}, {"affinity": A.NATURE, "min_cost": 800}], 10))
+
+	_add("Mad Eye the Collector", A.COSMIC, 60, 60, 1000, R.COMMON,
+		AB.DESTROY_SELF_AFTER_BATTLE, {}, "In Reckoning, you can choose to destroy 1 trap card on your side to +60 ATK&DEF", "In Reckoning, you can choose to destroy ??? to +??? ATK&DEF",
+		"1 Space Janitor + 1 Cosmic + 1000 cost", "1 ??? + 1 ??? + 1000 cost",
+		_z([[1,2], [2,1], [2,2], [2,3], [3,2]]),
+		_conds([{"card_name": "Space Janitor"}, {"affinity": A.COSMIC}], 5))
+
+	_add("Ice Hawk", A.NATURE, 35, 25, 1000, R.COMMON,
+		AB.LOCK_ATTACKER_ON_DEFEND, {}, "Defender is unable to attack on next foe’s turn.", "Defender is ??? on next foe’s turn.",
+		"Drill Woodpecker + 1 Nature + 1000 cost", "1 ??? + 1 ???+ 1000 cost",
+		_z([[0,0], [0,2], [1,1], [1,2], [1,3], [1,4], [2,0], [2,2]]),
+		_conds([{"card_name": "Drill Woodpecker"}, {"affinity": A.NATURE}], 8))
+
+	_add("Dwarven Drill", A.ARCANE, 55, 80, 1000, R.COMMON,
+		AB.REVEAL_ON_WIN, {"count": 2}, "If this card have not attacked and this turn ends, reveal 2 card on foe’s side.", "If this card have not attacked and this turn ends, reveal ???",
+		"2 Dwarven cards + 1000 Crystal.", "2 ??? + 1000 Crystal.",
+		_z([[0,4], [1,1], [1,2], [1,3], [1,4], [2,0], [2,1], [2,2]]),
+		_conds([{"name_contains": "dwarven"}, {"name_contains": "dwarven"}], 8))
+
+	_add("Cullan the Flaming Blade", A.ARCANE, 40, 30, 1000, R.COMMON,
+		AB.ATK_DEF_BONUS_VS_AFFINITY, {"affinity": CharacterData.Affinity.NATURE, "atk": 30, "def": 30}, "+30 ATK&DEF vs Nature", "+??? ATK&DEF vs Nature",
+		"Cullan the Magic Swordsman + Red Mage + 1000 cost", "1 ??? + 1 ??? + 1000 cost",
+		_z([[0,4], [1,3], [2,1], [2,2], [3,1], [3,2], [3,3], [4,0]]),
+		_conds([{"card_name": "Cullan the Magic Swordsman"}, {"card_name": "Red Mage"}], 8))
+
+	_add("The Undertaker", A.CHAOS, 90, 75, 1000, R.COMMON,
+		AB.PERM_ATK_BOOST_WHEN_EXPOSED, {"amount": 15}, "If foe destroys a card on your side, gain +15 ATK  permanently (max 90).", "If foe destroys a card on your side, gain ???",
+		"Sinister Cultist + 1 Chaos card + 1000 cost", "Sinister Cultist + 1 Chaos card + 1000 cost",
+		_z([[2,1], [2,2], [2,3], [3,1], [3,2], [3,3], [4,1], [4,2], [4,3]]),
+		_conds([{"card_name": "Sinister Cultist"}, {"affinity": A.CHAOS}], 9))
+
+	_add("Ethereal Marquees", A.ARCANE, 175, 140, 1500, R.COMMON,
+		AB.DEF_PENALTY_VS_NON_AFFINITY, {"affinity": CharacterData.Affinity.ARCANE, "def": 80, "survive_crystal_cost": 500}, "-80 DEF if defends against Arcane card. If this card battles and survived, pay 500 Crystal cost", "-80 DEF if ???",
+		"Nobleman of Luminaso + 1 Arcane + 1500 cost", "Nobleman of Luminaso + 1 Arcane + 1500 cost",
+		_z([[0,2], [1,1], [1,3], [2,0], [2,2], [2,4], [3,1], [3,3], [4,0], [4,2], [4,4]]),
+		_conds([{"card_name": "Nobleman of Luminaso"}, {"affinity": A.ARCANE}], 11))
+
+	_add("Charm Mistress", A.ARCANE, 30, 50, 1000, R.COMMON,
+		AB.LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE, {}, "Foe’s turn start: flip a coin. Head, foe can only attack once.", "Foe’s turn start: flip a coin. Head, ???",
+		"Alluring Spellcaster + 1 Arcane + 1000 cost", "Alluring Spellcaster + 1 Arcane + 1000 cost",
+		_z([[1,1], [1,3], [2,1], [2,2], [2,3], [3,2]]),
+		_conds([{"card_name": "Alluring Spellcaster"}, {"affinity": A.ARCANE}], 6))
+
+	_add("Chronoteleporter", A.ARCANE, 60, 80, 1000, R.COMMON,
+		AB.INTERCEPT_ALLY_ATTACK, {"affinity": CharacterData.Affinity.ARCANE, "swap_self": true}, "When ally Arcane unit is targeted, you can swap its location with this card.", "When ??? is targeted, you can swap ???",
+		"Freya the Rift Walker + Bingo the Chrono Rabbit + 1000 cost.", "Freya the Rift Walker + Bingo the Chrono Rabbit + 1000 cost.",
+		_z([[0,3], [1,1], [2,3], [3,1], [4,4]]),
+		_conds([{"card_name": "Freya the Rift Walker"}, {"card_name": "Bingo the Chrono Rabbit"}], 5))
+
+	_add("Death Colony", A.BIO, 180, 150, 1000, R.COMMON,
+		AB.ATTACK_ONLY_UNION_ZONE_PATTERN, {}, "This card can only choose attack target in the same pattern as its union zone", "This card can only choose attack target in the same pattern as ???",
+		"Long Tongue + 1 Bio card + 1000 cost.", "Long Tongue + 1 Bio card + 1000 cost.",
+		_z([[0,0], [0,4], [1,1], [1,3], [2,2], [3,1], [3,3], [4,0], [4,4]]),
+		_conds([{"card_name": "Long Tongue"}, {"affinity": A.BIO}], 9))
+
+	_add("Nuclear Elemental", A.ARCANE, 120, 80, 1500, R.COMMON,
+		AB.PERM_ATK_BOOST_WHEN_EXPOSED, {"amount": 10}, "At the end of this turn, +10 ATK permanently", "At the end of this turn, ??? permanently",
+		"Mind Elemental + Fire Elemental + 1500 cost", "Mind Elemental + Fire Elemental + 1500 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Mind Elemental"}, {"card_name": "Fire Elemental"}], 9))
+
+	_add("Acid Elemental", A.ARCANE, 50, 120, 1500, R.COMMON,
+		AB.UNION_SUMMON_ACID_ALL_FOE, {"def_debuff": 10}, "Summoned : put acid flag on all of foe’s exposed card. Card with acid flag get -10 DEF at the end of foe’s turn", "Summoned : put acid flag on ???. Card with acid flag get ???",
+		"Mind Elemental + Water Elemental + 1500 cost", "Mind Elemental + Water Elemental + 1500 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Mind Elemental"}, {"card_name": "Water Elemental"}], 9))
+
+	_add("Vacuum Elemental", A.ARCANE, 175, 0, 1500, R.COMMON,
+		AB.NONE, {}, "None", "None",
+		"Mind Elemental + Wind Elemental + 1500 cost", "Mind Elemental + Wind Elemental + 1500 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Mind Elemental"}, {"card_name": "Wind Elemental"}], 9))
+
+	_add("Magnet Elemental", A.ARCANE, 10, 135, 1500, R.COMMON,
+		AB.TAUNT_NON_ARCANE, {}, "Foe’s non-Arcane cards cannot target exposed card other than this card.", "Foe’s non-Arcane cards cannot target exposed card other than this card.",
+		"Mind Elemental + Earth Elemental + 1500 cost", "Mind Elemental + Earth Elemental + 1500 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Mind Elemental"}, {"card_name": "Earth Elemental"}], 9))
+
+	_add("Dwarven Berserker", A.ARCANE, 120, 0, 1500, R.COMMON,
+		AB.MULTI_ATTACK_ANY, {"max_attacks": 2}, "This card can attack twice", "This card can attack twice",
+		"1 Dwarven card + 1 Arcane or Anima card + 1500 cost", "1 Dwarven card + 1 Arcane or Anima card + 1500 cost",
+		_z([[0,1], [0,2], [0,3], [1,0], [1,2], [1,4], [2,2], [3,2]]),
+		_conds([{"name_contains": "dwarven"}, {"affinities": [A.ARCANE, A.ANIMA]}], 8))
+
+	_add("Tholin Whale", A.COSMIC, 50, 200, 1000, R.COMMON,
+		AB.PERM_ATK_BOOST_WHEN_EXPOSED, {"amount": 100}, "If attacked a trap, +100 ATK permanently", "If attacked a trap, +100 ATK permanently",
+		"2 Tholin card + 1000 cost", "2 Tholin card + 1000 cost",
+		_z([[0,0], [0,1], [1,0], [2,1], [2,2], [2,3], [2,4], [3,1], [3,2], [3,3], [3,4]]),
+		_conds([{"name_contains": "tholin"}, {"name_contains": "tholin"}], 11))
+
+	_add("Dark Invader", A.COSMIC, 50, 30, 1000, R.COMMON,
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"per_revealed": true, "atk": 5, "def": 5}, "+5 ATK&DEF per revealed cells on your side", "+5 ATK&DEF per revealed cells on your side",
+		"Lukkey the Jammer+ 1 Cosmic card + 1000 cost", "Lukkey the Jammer+ 1 Cosmic card + 1000 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,3], [3,0], [3,1], [3,2], [3,3], [3,4]]),
+		_conds([{"card_name": "Lukkey the Jammer"}, {"affinity": A.COSMIC}], 10))
+
+	_add("Europan Warcraft", A.COSMIC, 85, 105, 1000, R.COMMON,
+		AB.REDIRECT_DESTRUCTION_TO_ALLY, {"flag": "Europa", "any_ally": true}, "If this card is going to be destroy, you can remove 1 Europa flag from any card on your side.", "If this card is going to be destroy, you can remove 1 Europa flag from any card on your side.",
+		"2 Europan cards + 1000 cost", "2 Europan cards + 1000 cost",
+		_z([[1,0], [2,0], [3,1], [3,2], [3,3], [3,4], [4,1], [4,2], [4,3]]),
+		_conds([{"name_contains": "europan"}, {"name_contains": "europan"}], 9))
+
+	_add("Capnomancer", A.ARCANE, 0, 180, 500, R.COMMON,
+		AB.UNION_SUMMON_REVIVE_MATCH, {"revive_name": "Pyromancer", "destroy_self_turn_start": true}, "Start of your turn: can choose to destroy this card to revive Pyromancer", "Start of your turn: can choose to destroy this card to ???",
+		"1 Pyromancer + 1 Cosmic + 500 cost", "1 ???",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"name_contains": "pyromancer"}, {"affinity": A.COSMIC}], 9))
+
+	_add("Perseus the Lightborn", A.DIVINE, 55, 40, 800, R.COMMON,
+		AB.UNION_SUMMON_DESTROY_FIELD, {"count": 1, "no_destroy_cost": true}, "Summoned: Destroy 1 card on the field", "Summoned: Destroy ???",
+		"1 Divine (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost", "1 ??? + 1 ??? + 800 cost",
+		_z([[0,4], [1,3], [2,3], [3,2], [4,1]]),
+		_conds([{"affinity": A.DIVINE, "min_cost": 800}, {"affinity": A.ANIMA, "min_cost": 800}], 5))
+
+	_add("Illuminatus", A.ARCANE, 100, 55, 800, R.COMMON,
+		AB.UNION_SUMMON_TEMP_STAT_BOOST, {"atk": 35, "def": 35, "until_foe_turn_end": true}, "Summoned: +35 ATK&DEF until the end of foe’s turn", "Summoned: +??? until the end of foe’s turn",
+		"1 Arcane (≥ 800 cost) + 1 Divine (≥ 800 cost) + 800 cost", "1 Arcane (≥ 800 cost) + 1 Divine (≥ 800 cost) + 800 cost",
+		_z([[0,1], [0,2], [0,3], [0,4], [1,4], [2,0], [2,1], [2,2], [2,4], [3,2], [4,2]]),
+		_conds([{"affinity": A.ARCANE, "min_cost": 800}, {"affinity": A.DIVINE, "min_cost": 800}], 11))
+
+	_add("Eldritch Warlock", A.ARCANE, 140, 65, 800, R.COMMON,
+		AB.NULLIFY_FOE_ABILITY_IN_RECKONING, {"permanent": true}, "In Reckoning, foe’s unit becomes None permanently", "In Reckoning, foe’s unit becomes None permanently",
+		"1 Chaos (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost", "1 Chaos (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost",
+		_z([[0,2], [1,1], [1,3], [2,0], [2,2], [3,0], [4,1], [4,2], [4,3]]),
+		_conds([{"affinity": A.CHAOS, "min_cost": 800}, {"affinity": A.ARCANE, "min_cost": 800}], 9))
+
+	_add("Devilshifter", A.CHAOS, 130, 70, 1000, R.COMMON,
+		AB.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, {"turn_end": true, "affinity_on_revive": "ANIMA"}, "Once, if this card is destroyed, revive it at the end of this turn. Affinity becomes Anima", "Once, if this card is destroyed, ???. Affinity becomes ???",
+		"1 Chaos (≥ 800 cost) + 1 Anima (≥ 800 cost) + 1000 cost", "1 Chaos (≥ 800 cost) + 1 Anima (≥ 800 cost) + 1000 cost",
+		_z([[0,3], [0,4], [1,0], [1,4], [2,0], [2,4], [3,0], [3,4], [4,0], [4,1]]),
+		_conds([{"affinity": A.CHAOS, "min_cost": 800}, {"affinity": A.ANIMA, "min_cost": 800}], 10))
+
+	_add("Embodiment of Destiny", A.CHAOS, 100, 100, 1500, R.COMMON,
+		AB.ATK_BONUS_UNION_ZONE_PATTERN, {"bonus": 60}, "Gain +60 ATK when attacking target in the same pattern as its union zone", "Gain ??? ATK when attacking target in ??? pattern ???",
+		"1 Chaos (≥ 800 cost) + 1 Divine (≥ 800 cost) + 1500 cost", "1 Chaos (≥ 800 cost) + 1 Divine (≥ 800 cost) + 1500 cost",
+		_z([[0,2], [1,2], [2,0], [2,1], [2,3], [2,4], [3,2], [4,2]]),
+		_conds([{"affinity": A.CHAOS, "min_cost": 800}, {"affinity": A.DIVINE, "min_cost": 800}], 8))
+
+	_add("Meteorkin", A.NATURE, 80, 80, 800, R.COMMON,
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"affinity": CharacterData.Affinity.COSMIC, "atk_bonus": 10, "def_bonus": 0, "field_scope": "owner"}, "+10 ATK for each Cosmic unit in your void", "+??? ATK for each ??? in your void",
+		"1 Nature (≥ 800 cost) + 1 Cosmo (≥ 800 cost) + 800 cost", "1 Nature (≥ 800 cost) + 1 Cosmo (≥ 800 cost) + 800 cost",
+		_z([[0,1], [0,2], [0,3], [1,1], [1,3], [2,0], [2,2], [2,4], [3,2]]),
+		_conds([{"affinity": A.NATURE, "min_cost": 800}, {"affinity": A.COSMIC, "min_cost": 800}], 9))
+
+	_add("Chainsaw Tank", A.ANIMA, 90, 70, 500, R.COMMON,
+		AB.ATK_BONUS_VS_AFFINITY, {"affinity": CharacterData.Affinity.NATURE, "bonus": 65}, "+65 ATK vs Nature,Chaos", "+??? ATK vs Nature,Chaos",
+		"1 Tank unit (≥ 500 cost) + 1 Anima + 500 cost", "1 Tank unit (≥ 500 cost) + 1 Anima + 500 cost",
+		_z([[0,2], [1,1], [1,2], [1,3], [2,2], [3,1], [3,2], [3,3], [4,2]]),
+		_conds([{"min_cost": 500, "name_contains": "tank"}, {"affinity": A.ANIMA}], 9))
+
+	_add("Titan Tank", A.ANIMA, 50, 60, 500, R.COMMON,
+		AB.IMMUNE_TO_TRAPS, {}, "This card is unaffected by trap cards", "This card is unaffected by ???",
+		"2 Tank unit + 500 cost", "2 Tank unit + 500 cost",
+		_z([[0,2], [0,3], [0,4], [1,2], [2,0], [2,1], [2,2], [2,3], [2,4]]),
+		_conds([{"name_contains": "tank"}, {"name_contains": "tank"}], 9))
+
+	_add("Atomic Tank", A.ANIMA, 100, 120, 1000, R.COMMON,
+		AB.POST_ATTACK_DESTROY_FIELD_ONCE, {"count": 1}, "Once after performed attack, destroy 1 card on the field.", "Once after performed attack, ???",
+		"1 Tank unit (≥ 800 cost) +1 Tank unit (≥ 500 cost) + 1000 cost", "1 Tank unit (≥ 800 cost) +1 Tank unit (≥ 500 cost) + 1000 cost",
+		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,1], [1,2], [1,3], [2,2], [3,1], [3,2], [3,3]]),
+		_conds([{"min_cost": 800, "name_contains": "tank"}, {"min_cost": 500, "name_contains": "tank"}], 12))
+
+	_add("Mutant Queen", A.BIO, 60, 180, 1500, R.COMMON,
+		AB.UNION_SUMMON_VENOM_ALL_FOE, {"mutagen": true}, "Summoned: put Mutagen Flag on up to 2 of your units", "Summoned: put Mutagen Flag on ???",
+		"1 Mutant + 1 Bio + 1500 cost", "1 Mutant + 1 Bio + 1500 cost",
+		_z([[0,0], [1,4], [2,0], [3,4], [4,0]]),
+		_conds([{"name_contains": "mutant"}, {"affinity": A.BIO}], 5))
+
+	_add("Battle Maid Ayumi", A.ANIMA, 40, 80, 1500, R.COMMON,
+		AB.UNION_ZONE_ALLY_DEF_AURA, {"def": 50}, "Ally units in this card’s union zone gain +50 DEF", "Ally units in this card’s union zone gain +50 DEF",
+		"2 Battle Maid unit + 1500 cost", "2 Battle Maid unit + 1500 cost",
+		_z([[0,0], [0,4], [1,0], [1,4], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"name_contains": "battle maid"}, {"name_contains": "battle maid"}], 10))
+
+	_add("Theo the Dragon Knight", A.ANIMA, 80, 95, 800, R.COMMON,
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"affinity": CharacterData.Affinity.ANIMA, "atk_bonus": 15, "def_bonus": 0, "field_scope": "owner"}, "+20 DEF for each Dragon card on the field. +15 ATK for each Anima card on your side", "+20 DEF for each Dragon card on the field. +15 ATK for each Anima card on your side",
+		"1 Dragon card + 1 Anima + 800 cost", "1 Dragon card + 1 Anima + 800 cost",
+		_z([[0,1], [1,1], [2,2], [2,3], [3,1], [4,0], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"name_contains": "dragon"}, {"affinity": A.ANIMA}], 10))
+
+	_add("War Empress", A.ANIMA, 125, 80, 1500, R.COMMON,
+		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"def_bonus": 50, "name_contains": "knight"}, "+50 DEF to ally “Knight” cards. This card is not destroyed while there is “Knight” card on your side", "+50 DEF to ally “Knight” cards. This card is not destroyed while there is “Knight” card on your side",
+		"War Queen + 1 Knight card + 1500 cost", "War Queen + 1 Knight card + 1500 cost",
+		_z([[0,0], [0,2], [0,4], [1,1], [1,2], [1,3]]),
+		_conds([{"card_name": "War Queen"}, {"name_contains": "knight"}], 6))
+
+	_add("Blood Moon Mage", A.ARCANE, 25, 50, 500, R.COMMON,
+		AB.UNION_SUMMON_AVERAGE_CRYSTALS, {}, "Summoned : Average both player’s crystal", "Summoned : Average both player’s crystal",
+		"1 Mage card + 1 Moon card + 500 cost", "1 Mage card + 1 Moon card + 500 cost",
+		_z([[1,1], [1,2], [1,3], [2,0], [2,4], [3,0], [3,4], [4,1], [4,2], [4,3]]),
+		_conds([{"name_contains": "mage"}, {"name_contains": "moon"}], 10))
+
+	_add("Moon Knight", A.ANIMA, 90, 50, 500, R.COMMON,
+		AB.NONE, {}, "None", "None",
+		"1 Moon card + 1 Anima + 500 cost", "1 Moon card + 1 Anima + 500 cost",
+		_z([[1,1], [1,2], [1,3], [1,4], [2,0], [2,2], [3,0], [3,2], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"name_contains": "moon"}, {"affinity": A.ANIMA}], 12))
+
+	_add("Priestess of the Moon", A.DIVINE, 0, 0, 500, R.COMMON,
+		AB.UNION_SUMMON_CRYSTAL_GAIN, {"per_exposed_divine": 300}, "Summoned : +300 crystals per exposed divine unit in your field", "Summoned : +300 crystals per exposed divine unit in your field",
+		"1 Moon card + 1 Divine + 500 cost", "1 Moon card + 1 Divine + 500 cost",
+		_z([[0,2], [1,1], [1,2], [1,3], [2,2], [3,1], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"name_contains": "moon"}, {"affinity": A.DIVINE}], 10))
+
+	_add("Moon Shifter", A.NATURE, 0, 70, 500, R.COMMON,
+		AB.AVERAGE_FOE_STATS_IN_RECKONING, {"until_turn_end": true}, "In Reckoning, average foe’s ATK and DEF until the end of your turn.", "In Reckoning, average foe’s ATK and DEF until the end of your turn.",
+		"1 Moon card + 1 Nature + 500 cost", "1 Moon card + 1 Nature + 500 cost",
+		_z([[0,2], [1,0], [1,4], [2,1], [2,3], [3,2], [4,1], [4,3]]),
+		_conds([{"name_contains": "moon"}, {"affinity": A.NATURE}], 8))
+
+	_add("Carbon Behemoth", A.COSMIC, 195, 100, 1000, R.COMMON,
+		AB.NONE, {}, "None", "None",
+		"3 Cosmic card (≥ 800 cost) + 1000 cost", "3 Cosmic card (≥ 800 cost) + 1000 cost",
+		_z([[2,0], [2,1], [2,3], [2,4], [3,1], [3,3], [4,0], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"affinity": A.COSMIC, "min_cost": 800}, {"affinity": A.COSMIC, "min_cost": 800}, {"affinity": A.COSMIC, "min_cost": 800}], 11))
+
+	_add("Nanomites Rafflesia", A.BIO, 30, 30, 1500, R.COMMON,
+		AB.UNION_SUMMON_CRYSTAL_GAIN, {"amount": 2000}, "Summoned : +2000 crystals", "Summoned : +2000 crystals",
+		"1 Nanomites card + 1 Bio (≥ 800 cost) + 1500 cost", "1 Nanomites card + 1 Bio (≥ 800 cost) + 1500 cost",
+		_z([[2,0], [2,4], [3,0], [3,4], [4,0], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"name_contains": "nanomites"}, {"affinity": A.BIO, "min_cost": 800}], 9))
+
+	_add("Gamma Kraken", A.BIO, 75, 50, 1000, R.COMMON,
+		AB.UNION_SUMMON_VENOM_ALL_FOE, {"mutagen": true}, "Summoned: gain 1 attack count for this turn. With Mutagen Flag: This card can attack twice.", "Summoned: gain 1 attack count for this turn. With Mutagen Flag: This card can attack twice.",
+		"1 Gamma cards + 2 Bio (≥ 500 cost) + 1000 cost", "1 Gamma cards + 2 Bio (≥ 500 cost) + 1000 cost",
+		_z([[1,1], [1,3], [2,1], [2,3], [3,1], [3,3], [4,2]]),
+		_conds([{"name_contains": "gamma"}, {"affinity": A.BIO, "min_cost": 500}, {"affinity": A.BIO, "min_cost": 500}], 7))
+
+	_add("Enormous Slime", A.BIO, 45, 45, 500, R.COMMON,
+		AB.ONE_USE_SURVIVE_DESTRUCTION, {"destroyer_affinity": "ANIMA", "permanent": true}, "This card is not destroyed by Anima or Bio card", "This card is not destroyed by Anima or Bio card",
+		"1 Slime + 1 Bio (≥ 500 cost) + 500 cost", "1 Slime + 1 Bio (≥ 500 cost) + 500 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,0], [3,1], [3,2], [3,3], [3,4]]),
+		_conds([{"name_contains": "slime"}, {"affinity": A.BIO, "min_cost": 500}], 11))
+
+	_add("Supreme Lich", A.CHAOS, 25, 25, 1000, R.COMMON,
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"per_revealed": true, "atk": 10, "def": 10}, "+10 ATK&DEF for each or your revealed cells", "+10 ATK&DEF for each or your revealed cells",
+		"1 Lich card + 1 Chaos + 1000 cost", "1 Lich card + 1 Chaos + 1000 cost",
+		_z([[0,1], [0,2], [0,3], [1,2], [1,3], [2,3], [3,3], [4,3]]),
+		_conds([{"name_contains": "lich"}, {"affinity": A.CHAOS}], 8))
+
+	_add("The Last Paladin", A.ANIMA, 10, 10, 0, R.COMMON,
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"min_revealed": 15, "atk": 150, "def": 150}, "+150 ATK&DEF if 15 or more cells on your side are revealed", "+150 ATK&DEF if 15 or more cells on your side are revealed",
+		"1 Knight card + 1 Anima Card + 0 cost", "1 Knight card + 1 Anima Card + 0 cost",
+		_z([[0,2], [1,2], [2,0], [2,1], [2,2], [2,3], [2,4], [3,2], [4,2]]),
+		_conds([{"name_contains": "knight"}, {"affinity": A.ANIMA}], 9))
+
+	_add("Desperado", A.ANIMA, 40, 30, 500, R.COMMON,
+		AB.PERM_ATK_BOOST_WHEN_EXPOSED, {"amount": 20}, "After it performed attack, flip a coin. Heads: +20 ATK permanently.", "After it performed attack, flip a coin. Heads: +20 ATK permanently.",
+		"Johnny the Most Wanted + 1 Anima + 500 cost", "Johnny the Most Wanted + 1 Anima + 500 cost",
+		_z([[1,0], [1,1], [1,2], [1,3], [1,4], [2,0], [2,1], [2,2], [2,3], [2,4], [3,0]]),
+		_conds([{"card_name": "Johnny the Most Wanted"}, {"affinity": A.ANIMA}], 11))
+
+	_add("Raijin Fujin and Suijin", A.DIVINE, 145, 145, 1200, R.COMMON,
+		AB.TURN_START_DESTROY_OR_LOSE_CRYSTALS, {"crystal_loss": 500}, "At ??? turn, they choose either destroy ??? or lose ???", "At the start of each player’s turn, they choose either destroy 1 of their unit or lose 500 crystals.",
+		"Raijin + Fujin + Suigin + 1200 cost", "1 ??? + 1 ??? + 800 cost",
+		_z([[0,0], [0,2], [0,4], [1,0], [1,2], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4], [4,0], [4,2], [4,4]]),
+		_conds([{"name_contains": "raijin"}, {"name_contains": "fujin"}, {"name_contains": "suigin"}], 15))
+
+	_add("Raijin Fujin and Suigin", A.DIVINE, 145, 145, 1200, R.COMMON,
+		AB.UNION_SUMMON_DESTROY_UNITS, {"both_players": true, "count": 3, "no_destroy_cost": true}, "Summoned : Both player destroy 3 of ???", "Summoned : Both player destroy 3 of their units. No need to pay cost.",
+		"Raijin + Fujin + Suigin + 1200 cost", "1 ??? + 1 ??? + 800 cost",
+		_z([[0,0], [0,2], [0,4], [1,0], [1,2], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4], [4,0], [4,2], [4,4]]),
+		_conds([{"name_contains": "raijin"}, {"name_contains": "fujin"}, {"name_contains": "suigin"}], 15))
+
+	_add("Death Parasite", A.BIO, 0, 0, 1000, R.COMMON,
+		AB.BOOST_PER_FIELD_UNIT, {"atk": 15, "def": 15, "field_scope": "all", "def_penalty_vs_affinity": "COSMIC", "def_penalty": 50}, "+15 ATK&DEF for each units on the field. In Reckoning with Cosmic unit, this card get -50 DEF", "+15 ATK&DEF for each ???. In Reckoning with Cosmic unit, this card get ???",
+		"2 Parasite card + 1000 cost", "2 ??? + 1000 cost",
+		_z([[0,4], [1,0], [1,1], [1,2], [1,3], [3,1], [3,2], [3,3], [3,4], [4,0]]),
+		_conds([{"name_contains": "parasite"}, {"name_contains": "parasite"}], 10))
+	# ── Full-release import (unions) ──
+	_add("Nanomites Dragon", A.BIO, 125, 100, 1000, R.COMMON,
+		AB.DESTROY_IF_OPPONENT_AFFINITY, {"affinity": CharacterData.Affinity.COSMIC}, "Destroy Cosmic card in Reckoning", "Destroy Cosmic card in Reckoning",
+		"1 Nanomites cards + 1 Bio card + 1000 cost", "1 Nanomites cards + 1 Bio card + 1000 cost",
+		_z([[0,0], [0,4], [1,1], [1,3], [2,1], [2,3], [3,2], [4,0], [4,4]]),
+		_conds([{"name_contains": "nanomites"}, {"affinity": A.BIO}], 9))
+
+	_add("Immortal Siegfried", A.ANIMA, 40, 60, 1000, R.COMMON,
+		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": CharacterData.Affinity.ANIMA, "union_zone": true}, "If there is Anima unit on this card’s Union Zone, this card is not destroyed", "If there is Anima on this card’s Union Zone, ???",
+		"2 Anima (DEF ≥ 100) + 1000 cost", "2 Anima (DEF ≥ 100) + 1000 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"affinity": A.ANIMA, "min_def": 100}, {"affinity": A.ANIMA, "min_def": 100}], 8))
+
+	_add("Dark Champion", A.CHAOS, 170, 150, 1000, R.COMMON,
+		AB.ONE_USE_DESTROY_BY_AFFINITY, {"cannot_target_zero_def": true, "zero_atk_destroy_self": true}, "Cannot select unit with 0 DEF as attack target. Destroy this card in Reckoning with 0 ATK unit", "Cannot select unit with ??? target. Destroy ??? with 0 ATK unit",
+		"1 Death Knight + 1 Chaos card + 1000 cost", "1 Death Knight + 1 Chaos card + 1000 cost",
+		_z([[0,4], [1,3], [2,0], [2,2], [3,1], [4,0], [4,2]]),
+		_conds([{"card_name": "Death Knight"}, {"affinity": A.CHAOS}], 7))
+
+	_add("Europan Emperor", A.COSMIC, 180, 80, 1000, R.COMMON,
+		AB.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, {"requires_flag": "Europa", "remove_flag_after_attack": true}, "This card cannot attack without Europa Flag. After attacked, remove Europa Flag from this card.", "This card cannot attack without Europa Flag. After attacked, remove Europa Flag from this card.",
+		"1 Europan card with Europa Flag+ 1 Cosmic + 1000 cost", "1 Europan card with Europa Flag+ 1 Cosmic + 1000 cost",
+		_z([[0,0], [0,4], [1,1], [1,3], [2,0], [2,4], [3,1], [3,3], [4,2]]),
+		_conds([{"name_contains": "europan"}, {"affinity": A.COSMIC}], 9))
+
+	_add("Solarflare Dragon", A.COSMIC, 140, 120, 1200, R.COMMON,
+		AB.UNION_SUMMON_REVEAL_FIELD, {"count": 3, "foe_choice": true, "crystal_per_dead_end": 500}, "Summoned : Foe choose and reveal 3 cards. You gain 500 crystals per Dead-End among them.", "Summoned : Foe choose and reveal 3 cards. You gain 500 crystals per Dead-End among them.",
+		"Solarling + 1 Cosmic card (≥ 800 cost) + 1200 cost", "Solarling + 1 Cosmic card (≥ 800 cost) + 1200 cost",
+		_z([[0,0], [0,2], [0,4], [1,1], [1,3], [2,0], [2,4], [3,1], [3,3], [4,0], [4,4]]),
+		_conds([{"name_contains": "solarling"}, {"affinity": A.COSMIC, "min_cost": 800}], 11))
+
+	_add("Mutant Soldier", A.BIO, 55, 65, 500, R.COMMON,
+		AB.MUTAGEN_ATK_BOOST_VS_AFFINITIES, {"bonus": 100, "requires_mutagen": true}, "With Mutagen Flag : +100 ATK", "With Mutagen Flag : +100 ATK",
+		"1 Mutant cards + 1 Bio (≥ 500 cost) + 500 cost", "1 Mutant cards + 1 Bio (≥ 500 cost) + 500 cost",
+		_z([[1,0], [1,2], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4]]),
+		_conds([{"name_contains": "mutant"}, {"affinity": A.BIO, "min_cost": 500}], 9))
+
+	_add("Mistress-001", A.BIO, 100, 50, 500, R.COMMON,
+		AB.UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE, {"atk": 50, "def": -50, "target_other": true, "split": true}, "Summoned: select 1 other face-up card on the field, it gain +50 ATK, but get -50 DEF", "Summoned: select 1 other face-up card on the field, it gain +50 ATK, but get -50 DEF",
+		"2 Bio cards with number in its name + 500 cost", "2 ??? + 500 cost",
+		_z([[0,0], [0,1], [0,2], [1,2], [2,2], [3,2], [4,2]]),
+		_conds([{"affinity": A.BIO}, {"affinity": A.BIO}], 7))
+
+	_add("House of Flesh", A.CHAOS, 0, 0, 1500, R.COMMON,
+		AB.IMMUNE_DESTROY_BY_NON_UNION, {"allowed_destroyer_affinities": [CharacterData.Affinity.CHAOS, CharacterData.Affinity.DIVINE]}, "This card can only be destroyed by Chaos or Divine unit", "This card can only be destroyed by Chaos or Divine unit",
+		"Red Closet + 1 Chaos (≥ 800 cost) + 1500 cost", "Red Closet + 1 Chaos (≥ 800 cost) + 1500 cost",
+		_z([[0,2], [1,1], [1,3], [2,0], [2,4], [4,0], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"card_name": "Red Closet"}, {"affinity": A.CHAOS, "min_cost": 800}], 10))
+
+	_add("Eye in the Sky", A.CHAOS, 0, 0, 500, R.COMMON,
+		AB.UNION_SUMMON_REVEAL_FIELD, {"count_per_void_unit": true}, "Summoned: Reveal 1 card per unit in your void", "Summoned: Reveal 1 card per unit in your void",
+		"Drifting Head + 1 Chaos + 500 cost", "Drifting Head + 1 Chaos + 500 cost",
+		_z([[0,1], [0,2], [0,3], [1,0], [1,4], [2,2], [3,0], [3,4], [4,1], [4,2], [4,3]]),
+		_conds([{"card_name": "Drifting Head"}, {"affinity": A.CHAOS}], 11))
+
+	_add("Bloody Mask", A.CHAOS, 55, 25, 200, R.COMMON,
+		AB.NONE, {}, "None", "None",
+		"Jacob the Ski Mask + Franky the Steel Claw + 200 cost", "Jacob the Ski Mask + Franky the Steel Claw + 200 cost",
+		_z([[0,0], [0,1], [0,3], [0,4], [1,0], [1,1], [1,3], [1,4], [3,0], [3,4], [4,1], [4,2], [4,3]]),
+		_conds([{"card_name": "Jacob the Ski Mask"}, {"card_name": "Franky the Steel Claw"}], 13))
+
+	_add("Cthulhu", A.CHAOS, 110, 150, 1000, R.COMMON,
+		AB.PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY, {"target": "union_zone_foe", "atk": 50, "def": 50}, "-50 ATK&DEF to foe unit in this card’s Union Zone pattern", "-50 ATK&DEF to foe unit in this card’s Union Zone pattern",
+		"Blood Mage + Chaos (≥ 1000 cost)  + 1200 cost)", "Blood Mage + Chaos (≥ 1000 cost)  + 1200 cost)",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,0], [3,2], [3,4], [4,2]]),
+		_conds([{"card_name": "Blood Mage"}, {"card_name": "Chaos (≥ 1000 cost)"}, {"card_name": "1200 cost)"}], 10))
+
+	_add("Siege Engine", A.ANIMA, 50, 55, 800, R.COMMON,
+		AB.ONE_USE_DESTROY_BY_AFFINITY, {"destroy_defender": true, "once": true}, "Once, destroy defending unit in Reckoning", "Once, destroy defending unit in Reckoning",
+		"1 Anima (≥ 800 cost) + 2 Anima (≥ 500 cost) + 800", "1 Anima (≥ 800 cost) + 2 Anima (≥ 500 cost) + 800",
+		_z([[0,0], [0,1], [1,0], [1,1], [3,4], [4,1], [4,2], [4,3], [4,4]]),
+		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"affinity": A.ANIMA, "min_cost": 500}, {"affinity": A.ANIMA, "min_cost": 500}, {"name_contains": "800"}], 9))
+
+	_add("Ultimate Railgun", A.ANIMA, 200, 150, 1000, R.COMMON,
+		AB.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, {"void_only": "Railgun Ammo"}, "Can only attack if there is only Railgun Ammo in your void", "Can only attack if there is only Railgun Ammo in your void",
+		"1 Railgun card + 1 Anima + 1000 cost", "1 Railgun card + 1 Anima + 1000 cost",
+		_z([[1,1], [2,2], [3,3], [4,0], [4,1], [4,2], [4,3]]),
+		_conds([{"name_contains": "railgun"}, {"affinity": A.ANIMA}], 7))
+
+	_add("Ultimate Zombie", A.BIO, 100, 65, 1000, R.COMMON,
+		AB.MUTAGEN_DESTROY_ATTACKER, {"destroy_foe_on_destroyed": true, "requires_mutagen": true}, "Mutagen Flag : If this card is destroyed, also destroy foe’s unit", "Mutagen Flag : If this card is destroyed, ???",
+		"2 Parasite card + 1000 cost", "2 ??? + 1000 cost",
+		_z([[0,4], [1,0], [1,1], [1,2], [1,3], [3,1], [3,2], [3,3], [3,4], [4,0]]),
+		_conds([{"name_contains": "parasite"}, {"name_contains": "parasite"}], 10))
+
+	_add("Dark Surgeon", A.CHAOS, 0, 50, 800, R.COMMON,
+		AB.UNION_SUMMON_REVIVE_MATCH, {"zero_def": true}, "Summoned : Revive 1 unit. Its DEF becomes 0", "Summoned : Revive ???",
+		"Mad Doctor + Wicked Nurse + 800 cost", "??? + ??? + 800 cost",
+		_z([[1,2], [2,1], [2,2], [2,3], [3,2]]),
+		_conds([{"card_name": "Mad Doctor"}, {"card_name": "Wicked Nurse"}], 5))
+
+	_add("Lady Long Leng", A.CHAOS, 75, 50, 800, R.COMMON,
+		AB.NONE, {}, "None", "None",
+		"1 Chaos (≥ 500 cost) + 1 Lady unit + 800 cost", "??? + ??? + 800 cost",
+		_z([[0,2], [1,0], [1,1], [1,3], [1,4], [2,0], [2,4], [3,0], [3,4], [4,0], [4,4]]),
+		_conds([{"affinity": A.CHAOS, "min_cost": 500}, {"name_contains": "lady"}], 11))
+
+	_add("White Ninja", A.ANIMA, 120, 90, 1000, R.COMMON,
+		AB.NEGATE_ZERO_COST_TRAPS_BOTH, {"nullify_foe_ability_in_reckoning": true, "until_turn_end": true}, "Effect of unit in Reckoning with this card becomes None until the end of your turn.", "Effect of unit in Reckoning with this card becomes None until the end of your turn.",
+		"1 Ninja + 1 Anima (≥ 800 cost) + 1000 cost", "??? + ??? + 1000 cost",
+		_z([[0,0], [0,3], [1,1], [1,2], [2,0], [2,3]]),
+		_conds([{"name_contains": "ninja"}, {"affinity": A.ANIMA, "min_cost": 800}], 6))
+
+	_add("Lab Abomination", A.BIO, 100, 100, 800, R.COMMON,
+		AB.NONE, {}, "None", "None",
+		"1 Lab card + 1 Bio card + 800 cost", "??? + ??? + 800 cost",
+		_z([[1,0], [1,2], [1,4], [2,0], [2,4], [3,1], [3,2], [3,3], [4,0], [4,2], [4,4]]),
+		_conds([{"name_contains": "lab"}, {"affinity": A.BIO}], 11))
+
+	_add("Elven King", A.NATURE, 80, 90, 1000, R.COMMON,
+		AB.DEF_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": CharacterData.Affinity.NATURE, "bonus": 100, "union_zone": true}, "If there is Nature unit on this card’s Union Zone, it gain +100 DEF", "If there is Nature unit on this card’s Union Zone, ???",
+		"2 Elven or Elf card + 1000 cost", "2 Elven or Elf card + 1000 cost",
+		_z([[0,0], [0,1], [0,3], [0,4], [1,0], [1,2], [1,4], [2,1], [2,2], [2,3], [3,2], [4,2]]),
+		_conds([{"name_contains_any": ["elven", "elf"]}, {"name_contains_any": ["elven", "elf"]}], 12))
 func _add(
 		name: String,
 		aff: CharacterData.Affinity,
@@ -822,9 +1242,24 @@ func _card_satisfies(card: GameState.CardInstance, cond: Dictionary) -> bool:
 	if nc is String and (nc as String) != "" and not card.card_name.to_lower().contains((nc as String)):
 		return false
 
+	var nca: Variant = cond.get("name_contains_any", [])
+	if nca is Array and not (nca as Array).is_empty():
+		var matched: bool = false
+		for token: Variant in (nca as Array):
+			if card.card_name.to_lower().contains(str(token).to_lower()):
+				matched = true
+				break
+		if not matched:
+			return false
+
 	var aff: Variant = cond.get("affinity", -1)
 	if aff is int and (aff as int) >= 0 and card.affinity != (aff as int):
 		return false
+
+	var affs: Variant = cond.get("affinities", [])
+	if affs is Array and not (affs as Array).is_empty():
+		if card.affinity not in (affs as Array):
+			return false
 
 	var mc: Variant = cond.get("min_cost", 0)
 	if mc is int and card.crystal_cost < (mc as int):
@@ -866,9 +1301,22 @@ func deck_char_satisfies(card_name: String, cond: Dictionary) -> bool:
 	var nc: Variant = cond.get("name_contains", "")
 	if nc is String and (nc as String) != "" and not data.card_name.to_lower().contains((nc as String).to_lower()):
 		return false
+	var nca: Variant = cond.get("name_contains_any", [])
+	if nca is Array and not (nca as Array).is_empty():
+		var matched: bool = false
+		for token: Variant in (nca as Array):
+			if data.card_name.to_lower().contains(str(token).to_lower()):
+				matched = true
+				break
+		if not matched:
+			return false
 	var aff: Variant = cond.get("affinity", -1)
 	if aff is int and (aff as int) >= 0 and int(data.affinity) != (aff as int):
 		return false
+	var affs: Variant = cond.get("affinities", [])
+	if affs is Array and not (affs as Array).is_empty():
+		if int(data.affinity) not in (affs as Array):
+			return false
 	var mc: Variant = cond.get("min_cost", 0)
 	if mc is int and (mc as int) > 0 and data.crystal_cost < (mc as int):
 		return false
@@ -887,6 +1335,8 @@ func condition_specificity(cond: Dictionary) -> int:
 		score += 100
 	if cond.has("name_contains") and not str(cond["name_contains"]).is_empty():
 		score += 50
+	if cond.has("name_contains_any"):
+		score += 45
 	if cond.has("has_flag") and not str(cond["has_flag"]).is_empty():
 		score += 40
 	if cond.has("min_cost"):
@@ -896,6 +1346,8 @@ func condition_specificity(cond: Dictionary) -> int:
 	if cond.has("min_def"):
 		score += 10
 	if cond.has("affinity") and int(cond.get("affinity", -1)) >= 0:
+		score += 5
+	if cond.has("affinities"):
 		score += 5
 	return score
 

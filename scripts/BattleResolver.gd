@@ -53,6 +53,16 @@ static var _battle_coin_results: Array = []
 # Pre-rolled coins from TurnManager (Reckoning visual runs before resolve_battle).
 static var _predetermined_coin_flips: Array = []
 static var _predetermined_coin_flip_index: int = 0
+static var _coin_flip_source_card: GameState.CardInstance = null
+static var _coin_flip_source_player: int = -1
+
+static func set_coin_flip_source(card: GameState.CardInstance, player_index: int) -> void:
+	_coin_flip_source_card = card
+	_coin_flip_source_player = player_index
+
+static func clear_coin_flip_source() -> void:
+	_coin_flip_source_card = null
+	_coin_flip_source_player = -1
 
 static func set_predetermined_coin_flips(flips: Array) -> void:
 	_predetermined_coin_flips = flips.duplicate()
@@ -70,6 +80,15 @@ static func _roll_battle_coin() -> bool:
 		var r: bool = bool(_predetermined_coin_flips[_predetermined_coin_flip_index])
 		_predetermined_coin_flip_index += 1
 		return r
+	if _coin_flip_source_card != null and _coin_flip_source_player >= 0:
+		var _cf_pos: Vector2i = GameState.find_card_position(
+			_coin_flip_source_player, _coin_flip_source_card)
+		if _cf_pos.x >= 0 \
+				and GameState.adjacent_force_coin_heads_active_for(
+					_coin_flip_source_player, _cf_pos.x, _cf_pos.y):
+			if not _silent_mode:
+				GameState.post_message("Maria the Battle Priest: Coin flip forced to heads!")
+			return true
 	return randf() >= 0.5
 
 # When true, suppress inline GameState.post_message() calls inside helpers.
@@ -194,8 +213,10 @@ static func _resolve_character_vs_character(
 	# COIN_FLIP_2_DESTROY_NON_AFFINITY: Bleacher Squad / Blue Mage
 	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_2_DESTROY_NON_AFFINITY:
 		if defender.affinity != attacker.ability_params.get("affinity", -1):
-			var h1: bool = randf() >= 0.5
-			var h2: bool = randf() >= 0.5
+			set_coin_flip_source(attacker, attacker_player)
+			var h1: bool = _roll_battle_coin()
+			var h2: bool = _roll_battle_coin()
+			clear_coin_flip_source()
 			_battle_coin_results.append(h1)
 			_battle_coin_results.append(h2)
 			result.ability_triggered_attacker = true
@@ -226,7 +247,9 @@ static func _resolve_character_vs_character(
 	# COIN_FLIP_NULLIFY_ON_DEFEND: Keeper of the Afterlife — flip coin; heads = nullify attack
 	if defender.ability_type == CharacterData.AbilityType.COIN_FLIP_NULLIFY_ON_DEFEND:
 		result.ability_triggered_defender = true
-		var _nullify_heads: bool = randf() >= 0.5
+		set_coin_flip_source(defender, defender_player)
+		var _nullify_heads: bool = _roll_battle_coin()
+		clear_coin_flip_source()
 		_battle_coin_results.append(_nullify_heads)
 		if _nullify_heads:
 			result.messages.append("%s coin flip: heads — attack nullified!" % defender.card_name)
@@ -319,9 +342,16 @@ static func _resolve_character_vs_character(
 					break
 
 	# Lab Bloater Mutagen effect (overrides normal if defender survives)
-	if not result.defender_destroyed and defender.has_mutagen_flag:
-		if defender.ability_type == CharacterData.AbilityType.MUTAGEN_DESTROY_ATTACKER:
-			result.ability_triggered_defender = true
+	if defender.has_mutagen_flag \
+			and defender.ability_type == CharacterData.AbilityType.MUTAGEN_DESTROY_ATTACKER:
+		result.ability_triggered_defender = true
+		if defender.ability_params.get("both_pay_no_cost", false):
+			result.attacker_destroyed = true
+			result.defender_destroyed = true
+			result.attacker_crystal_loss = 0
+			result.defender_crystal_loss = 0
+			result.messages.append("Lab Bloater Mutagen: Both units destroyed — no crystal cost!")
+		elif not result.defender_destroyed:
 			result.attacker_destroyed = true
 			result.attacker_crystal_loss = attacker.crystal_cost
 			result.defender_crystal_loss = 0  # no crystal loss for bloater
@@ -538,6 +568,21 @@ static func _resolve_trap(
 # ─────────────────────────────────────────────────────────────
 # ATK / DEF Calculation
 # ─────────────────────────────────────────────────────────────
+static func _average_field_atk_def(player: int) -> Dictionary:
+	var sum_atk: int = 0
+	var sum_def: int = 0
+	var count: int = 0
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character":
+				sum_atk += card.get_effective_atk()
+				sum_def += card.get_effective_def()
+				count += 1
+	if count <= 0:
+		return {"atk": 0, "def": 0}
+	return {"atk": int(sum_atk / count), "def": int(sum_def / count)}
+
 static func _populate_attacker_reckoning_fields(
 		attacker: GameState.CardInstance,
 		defender: GameState.CardInstance,
@@ -611,6 +656,7 @@ static func _get_effective_atk(
 		defender_was_exposed: bool = false
 ) -> int:
 	var atk: int = attacker.get_effective_atk()
+	set_coin_flip_source(attacker, attacker_player)
 
 	# Bare Hands Brawling: character abilities are cancelled
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
@@ -629,6 +675,11 @@ static func _get_effective_atk(
 				and attacker.affinity == CharacterData.Affinity.ARCANE \
 				and defender.affinity != CharacterData.Affinity.ARCANE:
 			atk = int(atk * 1.2)
+
+	if defender.ability_type == CharacterData.AbilityType.AVERAGE_FOE_STATS_IN_RECKONING \
+			and attacker_player >= 0:
+		var _avg_atk: Dictionary = _average_field_atk_def(attacker_player)
+		atk = int(_avg_atk.get("atk", atk))
 
 	match attacker.ability_type:
 		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
@@ -732,6 +783,38 @@ static func _get_effective_atk(
 			else:
 				GameState.post_message("%s coin flip: tails — no bonus." % attacker.card_name)
 
+		CharacterData.AbilityType.END_OF_TURN_COIN_FLIP_STAT_BOOST:
+			if attacker.ability_params.get("in_reckoning", false):
+				var _rc_flips: int = maxi(1, int(attacker.ability_params.get("coin_flips", 1)))
+				var _rc_heads: int = 0
+				var _rc_tails: int = 0
+				for _rc_i in range(_rc_flips):
+					var _rc_h: bool = _roll_battle_coin()
+					_battle_coin_results.append(_rc_h)
+					if _rc_h:
+						_rc_heads += 1
+					else:
+						_rc_tails += 1
+				if attacker.ability_params.get("per_head_atk", false):
+					var _rc_atk: int = int(attacker.ability_params.get("atk", 5)) * _rc_heads
+					atk += _rc_atk
+					if attacker.ability_params.get("per_tail_def", false):
+						var _rc_def: int = int(attacker.ability_params.get("def", 5)) * _rc_tails
+						if not _silent_mode:
+							attacker.temp_def_bonus += _rc_def
+						GameState.post_message("%s: %d heads +%d ATK, %d tails +%d DEF (Reckoning)!" % [
+							attacker.card_name, _rc_heads, _rc_atk, _rc_tails, _rc_def])
+				elif attacker.ability_params.get("all_tails_penalty", false) and _rc_tails == _rc_flips:
+					var _pen: int = int(attacker.ability_params.get("penalty_atk_def", 15))
+					atk = max(0, atk - _pen)
+					if not _silent_mode:
+						attacker.temp_def_bonus -= _pen
+					GameState.post_message("%s: All tails — -%d ATK&DEF!" % [attacker.card_name, _pen])
+				elif attacker.ability_params.get("heads_atk", false) and _rc_heads > 0:
+					var _ha: int = int(attacker.ability_params.get("atk", 50))
+					atk += _ha
+					GameState.post_message("%s: Heads — +%d ATK permanently!" % [attacker.card_name, _ha])
+
 		CharacterData.AbilityType.TEMP_ATK_HALF_TARGET:
 			var _half_atk: int = int(defender.get_effective_atk() / 2)
 			atk += _half_atk
@@ -775,8 +858,31 @@ static func _get_effective_atk(
 					var _cell: GameState.CardInstance = GameState.grids[attacker_player][_r][_c]
 					if _cell.face_up and _cell.card_type != "dead_end":
 						_rev_count += 1
-			if _rev_count >= attacker.ability_params.get("min_revealed", 15):
+			if attacker.ability_params.get("per_revealed", false):
+				atk += _rev_count * attacker.ability_params.get("atk", 10)
+			elif _rev_count >= attacker.ability_params.get("min_revealed", 15):
 				atk += attacker.ability_params.get("atk", 100)
+
+		CharacterData.AbilityType.ATK_BONUS_WHEN_CAN_DESTROY:
+			var _base_def: int = defender.get_effective_def()
+			if atk > _base_def:
+				atk += int(attacker.ability_params.get("bonus", 0))
+
+		CharacterData.AbilityType.ATK_BONUS_UNION_ZONE_PATTERN:
+			if target_pos.x >= 0 and attacker.is_union:
+				var _ud: UnionData = UnionDatabase.get_union(attacker.card_name)
+				if _ud != null and _target_in_union_zone(attacker.grid_row, attacker.grid_col, target_pos, _ud.union_zone):
+					atk += int(attacker.ability_params.get("bonus", 0))
+
+		CharacterData.AbilityType.BOOST_PER_FIELD_UNIT:
+			var _unit_count: int = 0
+			for _bp in range(2):
+				for _br in range(GameState.GRID_SIZE):
+					for _bc in range(GameState.GRID_SIZE):
+						if GameState.get_card(_bp, _br, _bc).card_type == "character":
+							_unit_count += 1
+			var _bpf_atk: int = int(attacker.ability_params.get("atk", 0)) * _unit_count
+			atk += _bpf_atk
 
 		CharacterData.AbilityType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + attacker.card_name)
@@ -798,6 +904,7 @@ static func _get_effective_atk(
 	if attacker.effect_nullified_until >= GameState.turn_number:
 		atk = attacker.get_effective_atk()
 
+	clear_coin_flip_source()
 	return atk
 
 static func _get_effective_def(
@@ -823,6 +930,11 @@ static func _get_effective_def(
 				and defender.affinity == CharacterData.Affinity.ARCANE \
 				and attacker.affinity != CharacterData.Affinity.ARCANE:
 			def_val = int(def_val * 1.2)
+
+	if attacker.ability_type == CharacterData.AbilityType.AVERAGE_FOE_STATS_IN_RECKONING \
+			and defender_player >= 0:
+		var _def_avg: Dictionary = _average_field_atk_def(defender_player)
+		def_val = int(_def_avg.get("def", def_val))
 
 	match defender.ability_type:
 		CharacterData.AbilityType.DEF_BONUS_VS_AFFINITY:
@@ -888,8 +1000,22 @@ static func _get_effective_def(
 						var _cell: GameState.CardInstance = GameState.grids[defender_player][_r][_c]
 						if _cell.face_up and _cell.card_type != "dead_end":
 							_rev_d += 1
-				if _rev_d >= defender.ability_params.get("min_revealed", 15):
+				if defender.ability_params.get("per_revealed", false):
+					def_val += _rev_d * defender.ability_params.get("def", 10)
+				elif _rev_d >= defender.ability_params.get("min_revealed", 15):
 					def_val += defender.ability_params.get("def", 100)
+
+		CharacterData.AbilityType.BOOST_PER_FIELD_UNIT:
+			var _unit_count_d: int = 0
+			for _bp in range(2):
+				for _br in range(GameState.GRID_SIZE):
+					for _bc in range(GameState.GRID_SIZE):
+						if GameState.get_card(_bp, _br, _bc).card_type == "character":
+							_unit_count_d += 1
+			def_val += int(defender.ability_params.get("def", 0)) * _unit_count_d
+			var _pen_aff_name: String = str(defender.ability_params.get("def_penalty_vs_affinity", ""))
+			if _pen_aff_name != "" and attacker.affinity == CharacterData.Affinity.get(_pen_aff_name, -99):
+				def_val = max(0, def_val - int(defender.ability_params.get("def_penalty", 0)))
 
 		CharacterData.AbilityType.COIN_FLIP_NULLIFY_ON_DEFEND:
 			# Handled directly in _resolve_character_vs_character before ATK vs DEF comparison
@@ -1156,6 +1282,19 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 							ally.field_aura_def_bonus += _moon_def
 				if _moon_ally_found:
 					source.field_aura_atk_bonus += _moon_self_atk
+			if source.ability_type == CharacterData.AbilityType.UNION_ZONE_ALLY_DEF_AURA and source.is_union:
+				var _ud: UnionData = UnionDatabase.get_union(source.card_name)
+				if _ud != null:
+					var _def_aura: int = int(source.ability_params.get("def", 0))
+					for off: Variant in _ud.union_zone:
+						var ov: Vector2i = off as Vector2i if off is Vector2i else Vector2i(int(off.x), int(off.y))
+						var _ar: int = source.grid_row + ov.x
+						var _ac: int = source.grid_col + ov.y
+						if _ar < 0 or _ar >= GameState.GRID_SIZE or _ac < 0 or _ac >= GameState.GRID_SIZE:
+							continue
+						var ally: GameState.CardInstance = GameState.grids[player_index][_ar][_ac]
+						if ally.card_type == "character" and ally != source:
+							ally.field_aura_def_bonus += _def_aura
 			if source.ability_type == CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY \
 					and source.has_mutagen_flag:
 				var party_atk: int = source.ability_params.get("mutagen_party_atk", 0)
@@ -1341,3 +1480,102 @@ static func _reckoning_overlay_combatant_line(
 		player, name_str, badge, atk_pill, def_pill,
 		_reckoning_mod_label(mod_stat, mod_delta),
 		verify_pill, mod_delta, badge, mismatch]
+
+
+static func _target_in_union_zone(anchor_r: int, anchor_c: int, target: Vector2i, zone: Array) -> bool:
+	if zone.is_empty() or anchor_r < 0 or anchor_c < 0:
+		return false
+	for off: Variant in zone:
+		var ov: Vector2i = off as Vector2i if off is Vector2i else Vector2i(int(off.x), int(off.y))
+		if Vector2i(anchor_r + ov.x, anchor_c + ov.y) == target:
+			return true
+	return false
+
+
+static func _union_zone_for_card(card: GameState.CardInstance) -> Array:
+	if not card.is_union:
+		return []
+	var u: UnionData = UnionDatabase.get_union(card.card_name)
+	return u.union_zone if u != null else []
+
+
+static func _is_taunt_non_arcane_card(card: GameState.CardInstance) -> bool:
+	return card.card_type == "character" \
+			and card.face_up \
+			and card.ability_type == CharacterData.AbilityType.TAUNT_NON_ARCANE
+
+
+static func opponent_has_taunt_non_arcane(defender_player: int) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if _is_taunt_non_arcane_card(GameState.get_card(defender_player, r, c)):
+				return true
+	return false
+
+
+## Returns {ok: bool, reason: String} for attack target legality (Magnet taunt, Death Colony pattern, etc.).
+static func validate_attack_target(
+		attacker_player: int,
+		attacker_pos: Vector2i,
+		attacker: GameState.CardInstance,
+		defender_player: int,
+		target_pos: Vector2i,
+		defender: GameState.CardInstance
+) -> Dictionary:
+	if defender.was_destroyed:
+		return {"ok": false, "reason": "Cannot target an empty cell."}
+	if target_pos in GameState.locked_attack_positions:
+		return {"ok": false, "reason": "That square is locked by a trap."}
+
+	if attacker.ability_type == CharacterData.AbilityType.ATTACK_ONLY_UNION_ZONE_PATTERN:
+		var zone: Array = _union_zone_for_card(attacker)
+		if zone.is_empty():
+			zone = attacker.ability_params.get("union_zone", [])
+		if not zone.is_empty() \
+				and not _target_in_union_zone(attacker_pos.x, attacker_pos.y, target_pos, zone):
+			return {
+				"ok": false,
+				"reason": "%s can only attack targets in its Union Zone pattern." % attacker.card_name,
+			}
+
+	if attacker.card_type == "character" \
+			and attacker.affinity != CharacterData.Affinity.ARCANE \
+			and opponent_has_taunt_non_arcane(defender_player):
+		if defender.card_type == "character" and defender.face_up \
+				and not _is_taunt_non_arcane_card(defender):
+			return {
+				"ok": false,
+				"reason": "Magnet Elemental: Non-Arcane units must target it instead of other exposed units.",
+			}
+
+	return {"ok": true, "reason": ""}
+
+
+static func is_attack_target_allowed(
+		attacker_player: int,
+		attacker_pos: Vector2i,
+		attacker: GameState.CardInstance,
+		defender_player: int,
+		target_pos: Vector2i,
+		defender: GameState.CardInstance
+) -> bool:
+	return bool(validate_attack_target(
+		attacker_player, attacker_pos, attacker, defender_player, target_pos, defender).get("ok", false))
+
+
+static func attacker_has_any_legal_target(
+		attacker_player: int,
+		attacker_pos: Vector2i,
+		attacker: GameState.CardInstance
+) -> bool:
+	var defender_player: int = GameState.get_opponent(attacker_player)
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var pos: Vector2i = Vector2i(r, c)
+			if pos in GameState.locked_attack_positions:
+				continue
+			var defender: GameState.CardInstance = GameState.get_card(defender_player, r, c)
+			if is_attack_target_allowed(
+					attacker_player, attacker_pos, attacker, defender_player, pos, defender):
+				return true
+	return false

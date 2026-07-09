@@ -37,6 +37,8 @@ enum TechEffectType {
 	TEMP_ATK_DEF_BOOST_ALL,          # +N ATK and +N DEF (temp) to all face-up characters until end of this turn
 	GUERRILLA_TACTICS,               # Until opponent turn ends: coin flip when they attack your dead end
 	DESTROY_VENOM_DOUBLE_COST,       # Select venom-flagged card; double its cost, then destroy it
+	LIMIT_FOE_ATTACKS_NEXT_TURN,     # Next turn, foe can attack only once
+	OPPONENT_CRYSTAL_GAIN_ON_DEAD_END, # This turn: foe gains N crystals per dead-end attack
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 }
 

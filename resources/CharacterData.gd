@@ -49,6 +49,7 @@ enum AbilityType {
 	MUTAGEN_ATK_BOOST_VS_AFFINITIES, # Bio: +N ATK vs affinities when Mutagen Flag active
 	MUTAGEN_DESTROY_ATTACKER,        # Bio: Destroy attacker + no crystal loss when Mutagen Flag active
 	MUTAGEN_IMMEDIATE_ATTACK,        # Bio: Can attack immediately once when Mutagen Flag obtained
+	LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE, # Once: at foe turn start, coin flip; heads → foe can only attack once
 	NOT_IMPLEMENTED,                 # Ability exists but has no engine implementation yet
 
 	# ── Combat stance ──
@@ -201,6 +202,29 @@ enum AbilityType {
 	UNION_SUMMON_COSMIC_ANIMA_IMMUNITY,  # Summoned: until foe turn end, own Cosmic+Anima allies not destroyed
 	UNION_SUMMON_REVEAL_FIELD,           # Summoned: reveal N cards on the field (any player)
 	UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE, # Summoned: choose permanent +N ATK or +N DEF
+	UNION_SUMMON_DESTROY_OTHER_EXPOSED_ALLIES, # Summoned: destroy other exposed ally units (no crystal cost)
+
+	# ── Xlsx drift sync (2026-07) ──
+	UNION_MATERIAL_ATK_DEF_BOOST,        # Used as union material: summoned union gains +N ATK&DEF
+	UNION_MATERIAL_CRYSTAL_GAIN,         # Used as union material: owner gains N crystals
+	ADJACENT_AFFINITY_COST_HALVED,       # Adjacent cells: placement cost halved for matching affinity
+	ADJACENT_FORCE_COIN_HEADS,           # Adjacent cells: coin-flip abilities always land heads
+	UNION_SUMMON_TEMP_STAT_BOOST,        # On union summon: +N ATK/DEF (temp until turn/foe turn end)
+	ATK_BONUS_WHEN_CAN_DESTROY,          # +N ATK when effective ATK exceeds defender DEF
+	ATTACK_ONLY_UNION_ZONE_PATTERN,      # May only attack targets in union-zone pattern from anchor
+	UNION_SUMMON_ACID_ALL_FOE,           # On union summon: acid debuff on all foe face-up characters
+	TAUNT_NON_ARCANE,                    # Non-Arcane attackers must target this card when able
+	UNION_SUMMON_DESTROY_FIELD,          # On union summon: destroy N cards on field (no destroy cost)
+	NULLIFY_FOE_ABILITY_IN_RECKONING,    # In reckoning: permanently nullify foe unit ability
+	ATK_BONUS_UNION_ZONE_PATTERN,        # +N ATK when attacking a target in union-zone pattern
+	POST_ATTACK_DESTROY_FIELD_ONCE,      # Once per turn after attack: destroy N field cards
+	UNION_ZONE_ALLY_DEF_AURA,            # Allies in union zone gain +N DEF aura
+	UNION_SUMMON_AVERAGE_CRYSTALS,       # On union summon: gain crystals = average of both players
+	UNION_SUMMON_CRYSTAL_GAIN,           # On union summon: gain N crystals (or per condition)
+	AVERAGE_FOE_STATS_IN_RECKONING,      # In reckoning vs this card: average all foe unit ATK/DEF
+	TURN_START_DESTROY_OR_LOSE_CRYSTALS, # Turn start: destroy self or lose N crystals
+	UNION_SUMMON_DESTROY_UNITS,          # On union summon: destroy N units per side (no destroy cost)
+	BOOST_PER_FIELD_UNIT,                # +N ATK&DEF per unit on field; optional affinity DEF penalty
 }
 
 @export var card_name: String = ""

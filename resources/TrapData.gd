@@ -33,6 +33,11 @@ enum TrapEffectType {
 	SELF_DESTROY_TEMP_ATK_BOOST,      # Choose 1 own character: +N ATK until end of next turn, destroyed at end (no crystal cost)
 	REVEAL_OWN_GAIN_CRYSTAL,          # Reveal 1 own face-down cell (choice); gain N crystals
 	NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE,  # Nullify + trapper reveals/locks 1 own cell until turn end
+
+	# ── Full-release trap effects ──
+	AFFINITY_COIN_FLIP_DESTROY_ATTACKER,  # If attacker matches affinity: coin flip destroy; auto-head if crystals <= threshold
+	END_ATTACKER_TURN_IF_AFFINITY,        # End attacker's turn if attacker matches affinity (optional clear flags)
+	DESTROY_ATTACKER_IF_FIRST_ATTACK,     # Destroy attacker if it is the first attack this turn
 }
 
 @export var card_name: String = ""

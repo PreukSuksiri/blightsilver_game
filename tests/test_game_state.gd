@@ -27,6 +27,10 @@ func assert_eq(a, b, msg: String) -> void:
 		failed += 1
 		printerr("  FAIL: %s (expected %s, got %s)" % [msg, str(b), str(a)])
 
+func _flush_crystal_anim() -> void:
+	while GameState._crystal_anim_pending > 0:
+		GameState.complete_crystal_animation()
+
 func run_all_tests() -> void:
 	test_new_game_initial_state()
 	test_crystal_loss()
@@ -58,11 +62,11 @@ func test_character_wipe_ends_game_immediately() -> void:
 	GameState.place_character(0, 0, 0, "Wandering Swordsman")
 	GameState.place_character(1, 1, 1, "Canyon Warg")
 	_start_play_phase()
-	var winner := -999
-	GameState.game_over.connect(func(w): winner = w, CONNECT_ONE_SHOT)
+	var winner: Array = [-999]
+	GameState.game_over.connect(func(w): winner[0] = w, CONNECT_ONE_SHOT)
 	GameState.destroy_card(0, 0, 0, false)
 	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "Board wipe triggers game over")
-	assert_eq(winner, 1, "Opponent wins when all characters destroyed")
+	assert_eq(winner[0], 1, "Opponent wins when all characters destroyed")
 	assert_eq(GameState.game_over_reason, "all_destroyed", "Reason is all_destroyed")
 
 func test_character_wipe_ignores_playable_tech() -> void:
@@ -114,8 +118,8 @@ func test_divine_protection_turn_timing() -> void:
 func test_new_game_initial_state() -> void:
 	print("-- test_new_game_initial_state")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	assert_eq(GameState.crystals[0], 3000, "P1 starts with 3000 crystals")
-	assert_eq(GameState.crystals[1], 3000, "P2 starts with 3000 crystals")
+	assert_eq(GameState.crystals[0], GameState.STARTING_CRYSTALS, "P1 starts with default crystals")
+	assert_eq(GameState.crystals[1], GameState.STARTING_CRYSTALS, "P2 starts with default crystals")
 	assert_eq(GameState.current_player, 0, "Current player is 0 initially")
 	assert_eq(GameState.current_phase, GameState.Phase.SETUP_P1, "Phase starts at SETUP_P1")
 
@@ -123,18 +127,18 @@ func test_crystal_loss() -> void:
 	print("-- test_crystal_loss")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.lose_crystals(0, 500)
-	assert_eq(GameState.crystals[0], 2500, "Player 0 loses 500 crystals")
+	assert_eq(GameState.crystals[0], GameState.STARTING_CRYSTALS - 500, "Player 0 loses 500 crystals")
 	GameState.lose_crystals(0, 2000)
-	assert_eq(GameState.crystals[0], 500, "Player 0 loses 2000 more crystals")
+	assert_eq(GameState.crystals[0], GameState.STARTING_CRYSTALS - 2500, "Player 0 loses 2000 more crystals")
 
 func test_melissa_recovers_on_large_battle_loss() -> void:
 	print("-- test_melissa_recovers_on_large_battle_loss")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.place_character(0, 0, 0, "Melissa the Healer")
 	GameState.get_card(0, 0, 0).face_up = true
-	GameState.crystals[0] = 3000
+	GameState.crystals[0] = GameState.STARTING_CRYSTALS
 	GameState.lose_crystals(0, 600, "battle")
-	assert_eq(GameState.crystals[0], 2700, "Melissa recovers 300 after 600 battle loss")
+	assert_eq(GameState.crystals[0], GameState.STARTING_CRYSTALS - 300, "Melissa recovers 300 after 600 battle loss")
 
 func test_melissa_skips_recovery_on_voluntary_costs() -> void:
 	print("-- test_melissa_skips_recovery_on_voluntary_costs")
@@ -150,21 +154,23 @@ func test_melissa_skips_recovery_on_voluntary_costs() -> void:
 func test_crystal_loss_to_zero_triggers_game_over() -> void:
 	print("-- test_crystal_loss_to_zero_triggers_game_over")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	GameState.lose_crystals(0, 3000)
+	GameState.lose_crystals(0, GameState.STARTING_CRYSTALS)
+	_flush_crystal_anim()
 	assert_eq(GameState.crystals[0], 0, "Player 0 at 0 crystals")
 	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "Game over triggered")
 
 func test_both_zero_crystals_is_tie() -> void:
 	print("-- test_both_zero_crystals_is_tie")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	var winner_result := -999
-	GameState.game_over.connect(func(w): winner_result = w, CONNECT_ONE_SHOT)
-	GameState.lose_crystals(0, 3000)
+	var winner_result: Array = [-999]
+	GameState.game_over.connect(func(w): winner_result[0] = w, CONNECT_ONE_SHOT)
+	GameState.lose_crystals(0, GameState.STARTING_CRYSTALS)
 	# Simulate both zeroing at same moment (set P1 already zero then P2)
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.crystals[0] = 0
 	GameState.crystals[1] = 100
 	GameState.lose_crystals(1, 100)
+	_flush_crystal_anim()
 	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "Game over on both zero")
 
 func test_place_and_get_character() -> void:
@@ -186,7 +192,7 @@ func test_place_and_get_trap() -> void:
 	var card := GameState.get_card(1, 2, 3)
 	assert_eq(card.card_type, "trap", "Card type is trap")
 	assert_eq(card.card_name, "Flame Trap", "Card name matches")
-	assert_eq(card.crystal_cost, 1000, "Flame Trap cost = 1000")
+	assert_eq(card.crystal_cost, 250, "Flame Trap cost = 250")
 
 func test_place_dead_end_overwrites() -> void:
 	print("-- test_place_dead_end_overwrites")
@@ -199,11 +205,11 @@ func test_place_dead_end_overwrites() -> void:
 func test_destroy_card_pays_cost() -> void:
 	print("-- test_destroy_card_pays_cost")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	GameState.place_character(0, 0, 0, "Canyon Warg")  # cost 500
+	GameState.place_character(0, 0, 0, "Canyon Warg")  # cost 750
 	GameState.place_character(1, 1, 1, "Wandering Swordsman")
 	_start_play_phase()
 	GameState.destroy_card(0, 0, 0, true)
-	assert_eq(GameState.crystals[0], 2500, "Player 0 loses 500 crystals on destroy")
+	assert_eq(GameState.crystals[0], GameState.STARTING_CRYSTALS - 750, "Player 0 loses 750 crystals on destroy")
 	var card := GameState.get_card(0, 0, 0)
 	assert_eq(card.card_type, "dead_end", "Square becomes dead end after destroy")
 
@@ -214,7 +220,7 @@ func test_destroy_card_no_cost() -> void:
 	GameState.place_character(1, 1, 1, "Wandering Swordsman")
 	_start_play_phase()
 	GameState.destroy_card(0, 0, 0, false)
-	assert_eq(GameState.crystals[0], 3000, "No crystal loss when pay_cost=false")
+	assert_eq(GameState.crystals[0], GameState.STARTING_CRYSTALS, "No crystal loss when pay_cost=false")
 
 func test_get_adjacent_positions_center() -> void:
 	print("-- test_get_adjacent_positions_center")
