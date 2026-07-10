@@ -25,6 +25,12 @@ const COLOR_PRESETS: Array = [
 	["Gr", "#AAAAAA"],
 ]
 const ASK_PLAYER_NAME_KEYS: Array = ["player1", "player2", "both"]
+const CHOICE_COND_TYPES: Array[String] = [
+	"has_item", "not_has_item", "var_equals", "var_not_equals",
+	"var_greater", "var_less", "at_node",
+	"flag_equals", "flag_not_equals"]
+const CHOICE_ACTION_TYPES: Array[String] = [
+	"set_var", "give_item", "remove_item", "set_flag", "show_message"]
 
 # ─────────────────────────────────────────────────────────────
 # State
@@ -70,6 +76,10 @@ var _speaker_tabs: Array = []        # Button per language
 var _text_tabs: Array = []           # Button per language
 var _speaker_area: VBoxContainer = null
 var _text_area: VBoxContainer = null
+var _choices_vbox: VBoxContainer = null
+var _exploration_actions_vbox: VBoxContainer = null
+var _f_choices_layout: OptionButton = null
+var _branch_bar: HBoxContainer = null
 var _lang_chips_hbox: HBoxContainer = null   # chip row in left panel
 var _lang_input: LineEdit = null
 
@@ -91,6 +101,8 @@ var _fields_scroll: ScrollContainer = null
 var _fields_vbox: VBoxContainer = null
 var _f_comment: LineEdit = null
 var _f_hidden: CheckBox = null
+var _f_group: SpinBox = null
+var _f_group_name: LineEdit = null
 var _f_background: LineEdit = null
 var _f_video: LineEdit = null
 var _chars_vbox: VBoxContainer = null
@@ -573,6 +585,15 @@ func _build_right_panel(parent: Control) -> void:
 	_fields_scroll.visible = false
 	right.add_child(_fields_scroll)
 
+	_branch_bar = HBoxContainer.new()
+	_branch_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	_branch_bar.offset_bottom = 28.0
+	_branch_bar.add_theme_constant_override("separation", 6)
+	_branch_bar.visible = false
+	right.add_child(_branch_bar)
+
+	_fields_scroll.offset_top = 32.0
+
 	_fields_vbox = VBoxContainer.new()
 	_fields_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fields_vbox.add_theme_constant_override("separation", 3)
@@ -587,6 +608,14 @@ func _build_fields() -> void:
 	_section(v, "DIALOGUE")
 	_f_comment = _row_le(v, "Comment", "Dev note (not shown in-game)")
 	_f_hidden  = _row_cb(v, "Hidden", "Skip this beat during playback (keeps it in the file)")
+	_f_group = _row_sb(v, "Group", 0.0, 999.0, 1.0,
+		"0 = mainline beat; N = only reachable via choice → group N")
+	_f_group.value_changed.connect(func(_v: float) -> void:
+		_refresh_group_name_field()
+		_on_field_changed())
+	_f_group_name = _row_le(v, "Group name", "Optional label for this group (editor display)")
+	_f_group_name.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	_refresh_group_name_field()
 
 	# Speaker area (dynamic — rebuilt by _rebuild_locale_ui)
 	_speaker_area = VBoxContainer.new()
@@ -599,6 +628,41 @@ func _build_fields() -> void:
 	v.add_child(_text_area)
 
 	_rebuild_locale_ui()
+
+	# ── Choices ─────────────────────────────────────────────
+	_section(v, "CHOICES")
+	_f_choices_layout = _row_opt(v, "Layout", ["Above dialog", "Inside dialog"],
+		"where choice buttons appear during playback")
+	_f_choices_layout.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	_choices_vbox = VBoxContainer.new()
+	_choices_vbox.add_theme_constant_override("separation", 6)
+	v.add_child(_choices_vbox)
+	var add_choice_btn := Button.new()
+	add_choice_btn.text = "+ Add Choice"
+	add_choice_btn.custom_minimum_size = Vector2(120, 28)
+	add_choice_btn.add_theme_font_size_override("font_size", 14)
+	add_choice_btn.pressed.connect(_add_choice_row)
+	v.add_child(add_choice_btn)
+
+	# ── Exploration actions (during active session) ───────────
+	_section(v, "EXPLORATION ACTIONS")
+	var expl_act_hint := Label.new()
+	expl_act_hint.text = "Runs when this beat is shown during an active exploration session (set_flag → SaveManager.exploration_flags)."
+	expl_act_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	expl_act_hint.add_theme_font_size_override("font_size", 12)
+	expl_act_hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
+	v.add_child(expl_act_hint)
+	_exploration_actions_vbox = VBoxContainer.new()
+	_exploration_actions_vbox.add_theme_constant_override("separation", 4)
+	v.add_child(_exploration_actions_vbox)
+	var add_expl_act_btn := Button.new()
+	add_expl_act_btn.text = "+ Add Action"
+	add_expl_act_btn.custom_minimum_size = Vector2(120, 28)
+	add_expl_act_btn.add_theme_font_size_override("font_size", 14)
+	add_expl_act_btn.pressed.connect(func() -> void:
+		_add_action_row(_exploration_actions_vbox)
+		_on_field_changed())
+	v.add_child(add_expl_act_btn)
 
 	# ── Visuals ───────────────────────────────────────────────
 	_section(v, "VISUALS")
@@ -2295,6 +2359,48 @@ func _refresh_beat_list() -> void:
 		_beat_list.add_item(_beat_summary(_beats[i], i))
 		if _beat_modified.get(i, false):
 			_beat_list.set_item_custom_bg_color(i, Color(0.5, 0.45, 0.0, 0.4))
+		var b_i: Dictionary = _beats[i] as Dictionary
+		var beat_group: int = int(b_i.get("group", 0))
+		if b_i.get("choices", []) is Array and not (b_i.get("choices", []) as Array).is_empty():
+			_beat_list.set_item_custom_fg_color(i, Color(0.55, 0.88, 1.0))
+			var tip_lines: PackedStringArray = PackedStringArray()
+			for ch: Variant in (b_i.get("choices", []) as Array):
+				if ch is Dictionary:
+					var cd: Dictionary = ch as Dictionary
+					var goto_group: int = int(cd.get("goto_group", 0))
+					if goto_group > 0:
+						tip_lines.append("%s → %s" % [
+							_choice_label_preview(cd),
+							_group_display_label(goto_group)])
+					else:
+						tip_lines.append("%s → #%d (legacy)" % [
+							_choice_label_preview(cd),
+							int(cd.get("goto_beat", -1)) + 1])
+			if not tip_lines.is_empty():
+				_beat_list.set_item_tooltip(i, "\n".join(tip_lines))
+		elif beat_group > 0:
+			_beat_list.set_item_custom_fg_color(i, Color(0.82, 0.78, 0.55))
+			var inc: Array = _incoming_branch_refs(i)
+			if not inc.is_empty():
+				var tip := "Activated by "
+				for ref: Dictionary in inc:
+					tip += "%s from #%d (%s)  " % [
+						_group_display_label(beat_group),
+						int(ref.get("from", 0)) + 1,
+						str(ref.get("label", ""))]
+				_beat_list.set_item_tooltip(i, tip.strip_edges())
+		elif _incoming_branch_refs(i).size() > 0:
+			var inc: Array = _incoming_branch_refs(i)
+			var tip := "Jumped to from "
+			for ref: Dictionary in inc:
+				if int(ref.get("group", 0)) > 0:
+					tip += "%s via #%d (%s)  " % [
+						_group_display_label(int(ref.get("group", 0))),
+						int(ref.get("from", 0)) + 1,
+						str(ref.get("label", ""))]
+				else:
+					tip += "#%d (%s)  " % [int(ref.get("from", 0)) + 1, str(ref.get("label", ""))]
+			_beat_list.set_item_tooltip(i, tip.strip_edges())
 		if tagged_beats.has(str(i)):
 			_beat_list.set_item_custom_fg_color(i, Color(1.0, 0.25, 0.25))
 			var note: String = str(tagged_beats[str(i)])
@@ -2308,7 +2414,13 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 	elif nsfw_v == "nsfw":
 		nsfw_tag = "[N] "
 	var hidden_tag: String = "[H] " if beat.get("hidden", false) else ""
-	var prefix: String = "#%d %s%s" % [idx + 1, hidden_tag, nsfw_tag]
+	var group_id: int = int(beat.get("group", 0))
+	var group_name: String = _group_name_for_id(group_id) if group_id > 0 else ""
+	var group_tag: String = ""
+	if group_id > 0:
+		group_tag = "[GROUP %d: %s] " % [group_id, group_name] if not group_name.is_empty() \
+			else "[GROUP %d] " % group_id
+	var prefix: String = "#%d %s%s%s" % [idx + 1, group_tag, hidden_tag, nsfw_tag]
 	if beat.has("comment"):
 		return prefix + "// " + str(beat["comment"]).left(42)
 	var tx: Variant = beat.get("text", "")
@@ -2318,6 +2430,9 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 	elif tx != null:
 		tx_str = str(tx)
 	if not tx_str.is_empty():
+		var choice_tag: String = _beat_choice_tag(beat)
+		if not choice_tag.is_empty():
+			return prefix + tx_str.left(36) + "  " + choice_tag
 		return prefix + tx_str.left(48)
 	if beat.has("video"):
 		return prefix + "[video: %s]" % str(beat["video"]).get_file()
@@ -2353,6 +2468,27 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		if beat.get("exploration_keep_vn_bgm", false):
 			expl_extra = " (vn bgm)"
 		return prefix + "[exploration: %s%s]" % [expl_call.get_file(), expl_extra]
+
+	var choices: Variant = beat.get("choices", null)
+	if choices is Array and not (choices as Array).is_empty():
+		var choice_tag: String = _beat_choice_tag(beat)
+		return prefix + choice_tag if choice_tag.begins_with("[") else prefix + "[choices]"
+
+	var incoming: Array = _incoming_branch_refs(idx)
+	if not incoming.is_empty():
+		var from_str := ""
+		for ref: Dictionary in incoming:
+			if int(ref.get("group", 0)) > 0:
+				from_str += ", %s←#%d" % [
+					_group_display_label(int(ref.get("group", 0))),
+					int(ref.get("from", 0)) + 1]
+			else:
+				from_str += ", #%d" % (int(ref.get("from", 0)) + 1)
+		var tx_in: String = _beat_dialogue_preview(beat)
+		if not tx_in.is_empty():
+			return prefix + "[←%s] " % from_str + tx_in.left(40)
+		return prefix + "[←%s] (branch target)" % from_str.strip_edges().trim_prefix(",")
+
 	if beat.get("go_to_campaign_gallery", false):
 		return prefix + "[campaign gallery]"
 	if beat.get("go_to_quick_duel", false):
@@ -2367,6 +2503,625 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[chapter end: %s]" % complete_vn.get_file()
 	return prefix + "(empty)"
 
+func _beat_dialogue_preview(beat: Dictionary) -> String:
+	var tx: Variant = beat.get("text", "")
+	if tx is Dictionary:
+		return str(tx.get("en", tx.get(_languages[0], "")))
+	elif tx != null:
+		return str(tx)
+	return ""
+
+func _beat_choice_tag(beat: Dictionary) -> String:
+	var choices: Variant = beat.get("choices", null)
+	if not choices is Array or (choices as Array).is_empty():
+		return ""
+	var targets: Array[int] = []
+	for ch: Variant in (choices as Array):
+		if ch is Dictionary:
+			var cd: Dictionary = ch as Dictionary
+			var goto_group: int = int(cd.get("goto_group", 0))
+			if goto_group > 0 and goto_group not in targets:
+				targets.append(goto_group)
+	targets.sort()
+	var tgt_str := ""
+	for t: int in targets:
+		tgt_str += ", %s" % _group_display_label(t)
+	return "[♦%d →%s]" % [(choices as Array).size(), tgt_str]
+
+func _group_name_for_id(group_id: int) -> String:
+	if group_id <= 0:
+		return ""
+	for i: int in range(_beats.size()):
+		if int((_beats[i] as Dictionary).get("group", 0)) != group_id:
+			continue
+		var name: String = str((_beats[i] as Dictionary).get("group_name", "")).strip_edges()
+		if not name.is_empty():
+			return name
+	return ""
+
+func _group_display_label(group_id: int) -> String:
+	if group_id <= 0:
+		return ""
+	var name: String = _group_name_for_id(group_id)
+	if name.is_empty():
+		return "G%d" % group_id
+	return "G%d: %s" % [group_id, name]
+
+func _refresh_group_name_field() -> void:
+	if _f_group_name == null or _f_group == null:
+		return
+	var show: bool = int(_f_group.value) > 0
+	var row: Node = _f_group_name.get_parent()
+	if row is CanvasItem:
+		(row as CanvasItem).visible = show
+	_f_group_name.editable = show
+
+func _sync_group_name_to_beats(group_id: int, group_name: String) -> void:
+	if group_id <= 0:
+		return
+	for i: int in range(_beats.size()):
+		var beat: Dictionary = _beats[i] as Dictionary
+		if int(beat.get("group", 0)) != group_id:
+			continue
+		if group_name.is_empty():
+			beat.erase("group_name")
+		else:
+			beat["group_name"] = group_name
+		if _beat_list.item_count > i:
+			_beat_list.set_item_text(i, _beat_summary(beat, i))
+
+func _populate_goto_group_option(opt: OptionButton, selected_group: int) -> void:
+	opt.clear()
+	var ids: Array[int] = _known_group_ids()
+	if selected_group > 0 and selected_group not in ids:
+		ids.append(selected_group)
+		ids.sort()
+	if ids.is_empty():
+		ids = [maxi(1, selected_group)]
+	for gid: int in ids:
+		opt.add_item(_group_display_label(gid))
+		opt.set_item_metadata(opt.item_count - 1, gid)
+	for i: int in range(opt.item_count):
+		if int(opt.get_item_metadata(i)) == selected_group:
+			opt.select(i)
+			return
+	if opt.item_count > 0:
+		opt.select(0)
+
+func _selected_goto_group(opt: OptionButton) -> int:
+	if opt == null or opt.item_count <= 0:
+		return 1
+	return int(opt.get_item_metadata(opt.selected))
+
+func _group_first_beat_index(group_id: int) -> int:
+	if group_id <= 0:
+		return -1
+	for i: int in range(_beats.size()):
+		if int((_beats[i] as Dictionary).get("group", 0)) == group_id:
+			return i
+	return -1
+
+func _known_group_ids() -> Array[int]:
+	var ids: Array[int] = []
+	for i: int in range(_beats.size()):
+		var gid: int = int((_beats[i] as Dictionary).get("group", 0))
+		if gid > 0 and gid not in ids:
+			ids.append(gid)
+	ids.sort()
+	return ids
+
+func _incoming_branch_refs(target_idx: int) -> Array:
+	var refs: Array = []
+	var target_group: int = int((_beats[target_idx] as Dictionary).get("group", 0))
+	for bi: int in range(_beats.size()):
+		var b: Dictionary = _beats[bi] as Dictionary
+		var choices: Variant = b.get("choices", null)
+		if not choices is Array:
+			continue
+		for ch: Variant in (choices as Array):
+			if not ch is Dictionary:
+				continue
+			var cd: Dictionary = ch as Dictionary
+			var goto_group: int = int(cd.get("goto_group", 0))
+			if goto_group > 0 and target_group > 0 and goto_group == target_group:
+				refs.append({
+					"from": bi,
+					"label": _choice_label_preview(cd),
+					"group": goto_group,
+				})
+			elif int(cd.get("goto_beat", -1)) == target_idx:
+				refs.append({
+					"from": bi,
+					"label": _choice_label_preview(cd),
+				})
+	return refs
+
+func _outgoing_branch_refs(beat: Dictionary) -> Array:
+	var refs: Array = []
+	var choices: Variant = beat.get("choices", null)
+	if not choices is Array:
+		return refs
+	for ch: Variant in (choices as Array):
+		if not ch is Dictionary:
+			continue
+		var cd: Dictionary = ch as Dictionary
+		var goto_group: int = int(cd.get("goto_group", 0))
+		refs.append({
+			"label": _choice_label_preview(cd),
+			"goto": int(cd.get("goto_beat", -1)),
+			"goto_group": goto_group,
+		})
+	return refs
+
+func _choice_label_preview(choice: Dictionary) -> String:
+	var label: Variant = choice.get("label", "")
+	if label is Dictionary:
+		return str(label.get("en", label.get(_languages[0], "")))
+	return str(label)
+
+func _add_choice_condition_row(parent: VBoxContainer, ctype: String = "has_item",
+		key: String = "", val: String = "") -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	parent.add_child(row)
+	var type_btn := OptionButton.new()
+	for t: String in CHOICE_COND_TYPES:
+		type_btn.add_item(t)
+	var type_idx: int = CHOICE_COND_TYPES.find(ctype)
+	type_btn.select(type_idx if type_idx >= 0 else 0)
+	type_btn.custom_minimum_size = Vector2(118.0, 0.0)
+	type_btn.add_theme_font_size_override("font_size", 12)
+	row.add_child(type_btn)
+	var key_le := LineEdit.new()
+	key_le.text = key
+	key_le.placeholder_text = "key"
+	key_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	key_le.add_theme_font_size_override("font_size", 12)
+	key_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	row.add_child(key_le)
+	var val_le := LineEdit.new()
+	val_le.text = val
+	val_le.placeholder_text = "value"
+	val_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	val_le.add_theme_font_size_override("font_size", 12)
+	val_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	row.add_child(val_le)
+	type_btn.item_selected.connect(func(_i: int) -> void:
+		_update_choice_condition_placeholders(type_btn, key_le, val_le)
+		_on_field_changed())
+	var del := Button.new()
+	del.text = "x"
+	del.pressed.connect(func() -> void:
+		row.queue_free()
+		_on_field_changed())
+	row.add_child(del)
+	row.set_meta("type_btn", type_btn)
+	row.set_meta("key_le", key_le)
+	row.set_meta("val_le", val_le)
+	_update_choice_condition_placeholders(type_btn, key_le, val_le)
+
+func _update_choice_condition_placeholders(
+		type_btn: OptionButton, key_le: LineEdit, val_le: LineEdit) -> void:
+	if type_btn == null or key_le == null or val_le == null:
+		return
+	var ctype: String = type_btn.get_item_text(type_btn.selected)
+	if ctype.begins_with("flag_"):
+		key_le.placeholder_text = "flag key"
+		val_le.placeholder_text = "expected value (e.g. 1)"
+	elif ctype == "at_node":
+		key_le.placeholder_text = "node id"
+		val_le.placeholder_text = "value (optional)"
+	elif ctype.begins_with("var_"):
+		key_le.placeholder_text = "var key"
+		val_le.placeholder_text = "value"
+	else:
+		key_le.placeholder_text = "key"
+		val_le.placeholder_text = "value"
+
+func _add_choice_action_row(parent: VBoxContainer, action: String = "set_var",
+		key: String = "", val: String = "") -> void:
+	_add_action_row(parent, action, key, val)
+
+func _add_action_row(parent: VBoxContainer, action: String = "set_var",
+		key: String = "", val: String = "") -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	parent.add_child(row)
+	var act_btn := OptionButton.new()
+	for a: String in CHOICE_ACTION_TYPES:
+		act_btn.add_item(a)
+	var act_idx: int = CHOICE_ACTION_TYPES.find(action)
+	act_btn.select(act_idx if act_idx >= 0 else 0)
+	act_btn.custom_minimum_size = Vector2(110.0, 0.0)
+	act_btn.add_theme_font_size_override("font_size", 12)
+	row.add_child(act_btn)
+	var key_le := LineEdit.new()
+	key_le.text = key
+	key_le.placeholder_text = "key"
+	key_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	key_le.add_theme_font_size_override("font_size", 12)
+	key_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	row.add_child(key_le)
+	var val_le := LineEdit.new()
+	val_le.text = val
+	val_le.placeholder_text = "value"
+	val_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	val_le.add_theme_font_size_override("font_size", 12)
+	val_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	row.add_child(val_le)
+	act_btn.item_selected.connect(func(_i: int) -> void:
+		_update_action_row_placeholders(act_btn, key_le, val_le)
+		_on_field_changed())
+	var del := Button.new()
+	del.text = "x"
+	del.pressed.connect(func() -> void:
+		row.queue_free()
+		_on_field_changed())
+	row.add_child(del)
+	row.set_meta("act_btn", act_btn)
+	row.set_meta("key_le", key_le)
+	row.set_meta("val_le", val_le)
+	_update_action_row_placeholders(act_btn, key_le, val_le)
+
+func _update_action_row_placeholders(
+		act_btn: OptionButton, key_le: LineEdit, val_le: LineEdit) -> void:
+	if act_btn == null or key_le == null or val_le == null:
+		return
+	var action: String = act_btn.get_item_text(act_btn.selected)
+	match action:
+		"set_flag":
+			key_le.placeholder_text = "flag key"
+			val_le.placeholder_text = "flag value (e.g. 1)"
+		"set_var":
+			key_le.placeholder_text = "var key"
+			val_le.placeholder_text = "value"
+		"give_item", "remove_item":
+			key_le.placeholder_text = "item id"
+			val_le.placeholder_text = "unused"
+		"show_message":
+			key_le.placeholder_text = "unused"
+			val_le.placeholder_text = "message text"
+		_:
+			key_le.placeholder_text = "key"
+			val_le.placeholder_text = "value"
+
+func _rebuild_exploration_action_rows(actions: Array) -> void:
+	_clear_vbox(_exploration_actions_vbox)
+	for a: Variant in actions:
+		if not a is Dictionary:
+			continue
+		var ad: Dictionary = a as Dictionary
+		_add_action_row(
+			_exploration_actions_vbox,
+			str(ad.get("action", "set_var")),
+			str(ad.get("key", "")),
+			str(ad.get("value", "")))
+
+func _add_choice_row_from(data: Dictionary = {}) -> void:
+	if _choices_vbox == null:
+		return
+	var frame := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.06, 0.10, 0.22, 0.95)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.35, 0.62, 1.0, 0.45)
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 8.0
+	sb.content_margin_right = 8.0
+	sb.content_margin_top = 6.0
+	sb.content_margin_bottom = 6.0
+	frame.add_theme_stylebox_override("panel", sb)
+	_choices_vbox.add_child(frame)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	frame.add_child(vb)
+
+	var hdr := HBoxContainer.new()
+	vb.add_child(hdr)
+	var hdr_lbl := Label.new()
+	hdr_lbl.text = "Choice"
+	hdr_lbl.add_theme_font_size_override("font_size", 13)
+	hdr_lbl.add_theme_color_override("font_color", Color(0.65, 0.88, 1.0))
+	hdr.add_child(hdr_lbl)
+	var hdr_spacer := Control.new()
+	hdr_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hdr.add_child(hdr_spacer)
+	var rem_btn := Button.new()
+	rem_btn.text = "Remove"
+	rem_btn.add_theme_font_size_override("font_size", 12)
+	rem_btn.pressed.connect(func() -> void:
+		frame.queue_free()
+		_on_field_changed())
+	hdr.add_child(rem_btn)
+
+	var label_le := LineEdit.new()
+	label_le.placeholder_text = "Choice label (en)"
+	label_le.text = _choice_label_preview(data)
+	label_le.add_theme_font_size_override("font_size", 13)
+	label_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	vb.add_child(label_le)
+
+	var goto_row := HBoxContainer.new()
+	vb.add_child(goto_row)
+	var goto_lbl := Label.new()
+	goto_lbl.text = "Goto group"
+	goto_lbl.add_theme_font_size_override("font_size", 13)
+	goto_row.add_child(goto_lbl)
+	var goto_opt := OptionButton.new()
+	goto_opt.add_theme_font_size_override("font_size", 13)
+	var goto_group: int = int(data.get("goto_group", 0))
+	if goto_group <= 0 and int(data.get("goto_beat", -1)) >= 0:
+		var legacy_beat: int = int(data.get("goto_beat", -1))
+		for bi: int in range(_beats.size()):
+			if int((_beats[bi] as Dictionary).get("group", 0)) > 0 and bi == legacy_beat:
+				goto_group = int((_beats[bi] as Dictionary).get("group", 0))
+				break
+	_populate_goto_group_option(goto_opt, maxi(1, goto_group))
+	goto_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	goto_row.add_child(goto_opt)
+
+	var lock_row := HBoxContainer.new()
+	vb.add_child(lock_row)
+	var lock_lbl := Label.new()
+	lock_lbl.text = "Locked"
+	lock_lbl.add_theme_font_size_override("font_size", 13)
+	lock_row.add_child(lock_lbl)
+	var lock_opt := OptionButton.new()
+	lock_opt.add_item("Hide")
+	lock_opt.add_item("Disable")
+	var lm: String = str(data.get("locked_mode", "hide")).to_lower()
+	lock_opt.selected = 1 if lm == "disable" else 0
+	lock_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	lock_row.add_child(lock_opt)
+
+	var dis_le := LineEdit.new()
+	dis_le.placeholder_text = "Disabled reason (optional — tooltip on hover when locked)"
+	var reason_src: Variant = data.get("disabled_reason", data.get("disabled_label", ""))
+	dis_le.text = _choice_label_preview({"label": reason_src})
+	dis_le.add_theme_font_size_override("font_size", 12)
+	dis_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	vb.add_child(dis_le)
+
+	var cond_lbl := Label.new()
+	cond_lbl.text = "Conditions (AND)"
+	cond_lbl.add_theme_font_size_override("font_size", 12)
+	vb.add_child(cond_lbl)
+	var cond_vbox := VBoxContainer.new()
+	cond_vbox.add_theme_constant_override("separation", 2)
+	vb.add_child(cond_vbox)
+	var add_cond := Button.new()
+	add_cond.text = "+ Condition"
+	add_cond.add_theme_font_size_override("font_size", 12)
+	add_cond.pressed.connect(func() -> void:
+		_add_choice_condition_row(cond_vbox)
+		_on_field_changed())
+	vb.add_child(add_cond)
+	var conds: Variant = data.get("conditions", [])
+	if conds is Array:
+		for c: Variant in (conds as Array):
+			if c is Dictionary:
+				var cd: Dictionary = c as Dictionary
+				_add_choice_condition_row(cond_vbox,
+					str(cd.get("type", "has_item")),
+					str(cd.get("key", "")),
+					str(cd.get("value", "")))
+
+	var act_lbl := Label.new()
+	act_lbl.text = "Actions on pick"
+	act_lbl.add_theme_font_size_override("font_size", 12)
+	vb.add_child(act_lbl)
+	var act_vbox := VBoxContainer.new()
+	act_vbox.add_theme_constant_override("separation", 2)
+	vb.add_child(act_vbox)
+	var add_act := Button.new()
+	add_act.text = "+ Action"
+	add_act.add_theme_font_size_override("font_size", 12)
+	add_act.pressed.connect(func() -> void:
+		_add_choice_action_row(act_vbox)
+		_on_field_changed())
+	vb.add_child(add_act)
+	var actions: Variant = data.get("actions", [])
+	if actions is Array:
+		for a: Variant in (actions as Array):
+			if a is Dictionary:
+				var ad: Dictionary = a as Dictionary
+				_add_choice_action_row(act_vbox,
+					str(ad.get("action", "set_var")),
+					str(ad.get("key", "")),
+					str(ad.get("value", "")))
+
+	frame.set_meta("label_le", label_le)
+	frame.set_meta("goto_opt", goto_opt)
+	frame.set_meta("lock_opt", lock_opt)
+	frame.set_meta("dis_le", dis_le)
+	frame.set_meta("cond_vbox", cond_vbox)
+	frame.set_meta("act_vbox", act_vbox)
+
+func _add_choice_row() -> void:
+	if _selected_idx < 0:
+		return
+	_add_choice_row_from({})
+	_on_field_changed()
+
+func _rebuild_choice_rows(choices: Array) -> void:
+	_clear_vbox(_choices_vbox)
+	for ch: Variant in choices:
+		if ch is Dictionary:
+			_add_choice_row_from(ch as Dictionary)
+
+func _collect_conditions_from_vbox(cond_vbox: VBoxContainer) -> Array:
+	var out: Array = []
+	if cond_vbox == null:
+		return out
+	for row: Node in cond_vbox.get_children():
+		if not row is HBoxContainer:
+			continue
+		var type_btn: OptionButton = row.get_meta("type_btn") as OptionButton
+		var key_le: LineEdit = row.get_meta("key_le") as LineEdit
+		var val_le: LineEdit = row.get_meta("val_le") as LineEdit
+		if type_btn == null or key_le == null:
+			continue
+		var ctype: String = type_btn.get_item_text(type_btn.selected)
+		var key: String = key_le.text.strip_edges()
+		if key.is_empty() and ctype != "at_node":
+			continue
+		out.append({
+			"type": ctype,
+			"key": key,
+			"value": val_le.text.strip_edges() if val_le != null else "",
+		})
+	return out
+
+func _collect_actions_from_vbox(act_vbox: VBoxContainer) -> Array:
+	var out: Array = []
+	if act_vbox == null:
+		return out
+	for row: Node in act_vbox.get_children():
+		if not row is HBoxContainer:
+			continue
+		var act_btn: OptionButton = row.get_meta("act_btn") as OptionButton
+		var key_le: LineEdit = row.get_meta("key_le") as LineEdit
+		var val_le: LineEdit = row.get_meta("val_le") as LineEdit
+		if act_btn == null:
+			continue
+		out.append({
+			"action": act_btn.get_item_text(act_btn.selected),
+			"key": key_le.text.strip_edges() if key_le != null else "",
+			"value": val_le.text.strip_edges() if val_le != null else "",
+		})
+	return out
+
+func _collect_choices() -> Array:
+	var choices: Array = []
+	if _choices_vbox == null:
+		return choices
+	for frame: Node in _choices_vbox.get_children():
+		if not frame is PanelContainer:
+			continue
+		var label_le: LineEdit = frame.get_meta("label_le") as LineEdit
+		var goto_opt: OptionButton = frame.get_meta("goto_opt") as OptionButton
+		var lock_opt: OptionButton = frame.get_meta("lock_opt") as OptionButton
+		var dis_le: LineEdit = frame.get_meta("dis_le") as LineEdit
+		var cond_vbox: VBoxContainer = frame.get_meta("cond_vbox") as VBoxContainer
+		var act_vbox: VBoxContainer = frame.get_meta("act_vbox") as VBoxContainer
+		if label_le == null or goto_opt == null:
+			continue
+		var label: String = label_le.text.strip_edges()
+		if label.is_empty():
+			continue
+		var cd: Dictionary = {
+			"label": label,
+			"goto_group": _selected_goto_group(goto_opt),
+		}
+		if lock_opt != null and lock_opt.selected == 1:
+			cd["locked_mode"] = "disable"
+			var reason: String = dis_le.text.strip_edges() if dis_le != null else ""
+			if not reason.is_empty():
+				cd["disabled_reason"] = reason
+		var conds: Array = _collect_conditions_from_vbox(cond_vbox)
+		if not conds.is_empty():
+			cd["conditions"] = conds
+		var acts: Array = _collect_actions_from_vbox(act_vbox)
+		if not acts.is_empty():
+			cd["actions"] = acts
+		choices.append(cd)
+	return choices
+
+func _update_branch_bar(idx: int) -> void:
+	if _branch_bar == null:
+		return
+	for child: Node in _branch_bar.get_children():
+		child.queue_free()
+	if idx < 0 or idx >= _beats.size():
+		_branch_bar.visible = false
+		return
+	var beat: Dictionary = _beats[idx] as Dictionary
+	var incoming: Array = _incoming_branch_refs(idx)
+	var outgoing: Array = _outgoing_branch_refs(beat)
+	if incoming.is_empty() and outgoing.is_empty():
+		_branch_bar.visible = false
+		return
+	_branch_bar.visible = true
+	var title := Label.new()
+	title.text = "Branches:"
+	title.add_theme_font_size_override("font_size", 13)
+	title.add_theme_color_override("font_color", Color(0.7, 0.9, 1.0))
+	_branch_bar.add_child(title)
+	for ref: Dictionary in incoming:
+		var from_i: int = int(ref.get("from", 0))
+		var btn := Button.new()
+		btn.text = "← #%d" % (from_i + 1)
+		btn.tooltip_text = str(ref.get("label", ""))
+		btn.add_theme_font_size_override("font_size", 12)
+		btn.pressed.connect(func() -> void: _jump_to_beat(from_i))
+		_branch_bar.add_child(btn)
+	if not incoming.is_empty() and not outgoing.is_empty():
+		var sep := Label.new()
+		sep.text = "|"
+		_branch_bar.add_child(sep)
+	for ref: Dictionary in outgoing:
+		var goto_group: int = int(ref.get("goto_group", 0))
+		if goto_group > 0:
+			var goto_i: int = _group_first_beat_index(goto_group)
+			if goto_i < 0:
+				continue
+			var btn := Button.new()
+			btn.text = "→ %s" % _group_display_label(goto_group)
+			btn.tooltip_text = str(ref.get("label", ""))
+			btn.add_theme_font_size_override("font_size", 12)
+			btn.pressed.connect(func() -> void: _jump_to_beat(goto_i))
+			_branch_bar.add_child(btn)
+			continue
+		var goto_i: int = int(ref.get("goto", -1))
+		if goto_i < 0:
+			continue
+		var btn := Button.new()
+		btn.text = "→ #%d" % (goto_i + 1)
+		btn.tooltip_text = str(ref.get("label", ""))
+		btn.add_theme_font_size_override("font_size", 12)
+		btn.pressed.connect(func() -> void: _jump_to_beat(goto_i))
+		_branch_bar.add_child(btn)
+
+func _jump_to_beat(idx: int) -> void:
+	if idx < 0 or idx >= _beats.size():
+		return
+	_flush_current_beat()
+	_selected_idx = idx
+	_beat_list.deselect_all()
+	_beat_list.select(idx)
+	_show_fields(true)
+	_populate_fields()
+
+func _validate_choice_beat(beat: Dictionary, idx: int) -> void:
+	if _status_lbl == null:
+		return
+	var warnings: Array[String] = []
+	var choices: Variant = beat.get("choices", null)
+	if not choices is Array or (choices as Array).is_empty():
+		return
+	if beat.get("start_battle", false) or str(beat.get("exploration_call", "")).strip_edges() != "":
+		warnings.append("choices conflict with battle/exploration handoff")
+	if (choices as Array).size() >= 8:
+		warnings.append("%d choices — consider splitting beat" % (choices as Array).size())
+	if int(beat.get("group", 0)) > 0:
+		warnings.append("choice beat should not belong to a group")
+	for ch: Variant in (choices as Array):
+		if not ch is Dictionary:
+			continue
+		var goto_group: int = int((ch as Dictionary).get("goto_group", 0))
+		if goto_group <= 0:
+			warnings.append("choice missing goto_group")
+		elif _group_first_beat_index(goto_group) < 0:
+			warnings.append("goto_group %s not defined" % _group_display_label(goto_group))
+		elif goto_group == int(beat.get("group", 0)) and int(beat.get("group", 0)) > 0:
+			warnings.append("choice loops to same group (%s)" % _group_display_label(goto_group))
+	var beat_group: int = int(beat.get("group", 0))
+	if beat_group > 0 and _incoming_branch_refs(idx).is_empty():
+		warnings.append("group %s has no incoming choice" % _group_display_label(beat_group))
+	if not warnings.is_empty():
+		_status_lbl.text = "Warning: " + ", ".join(warnings)
+
 # ─────────────────────────────────────────────────────────────
 # Beat selection / field display
 # ─────────────────────────────────────────────────────────────
@@ -2376,6 +3131,7 @@ func _on_beat_selected(idx: int) -> void:
 	_anchor_idx = idx
 	_populate_fields()
 	_show_fields(true)
+	_update_branch_bar(idx)
 
 func _update_bug_note_label() -> void:
 	if _bug_note_lbl == null:
@@ -2405,7 +3161,21 @@ func _populate_fields() -> void:
 
 	_f_comment.text = str(b.get("comment", ""))
 	_f_hidden.button_pressed = b.get("hidden", false)
+	if _f_group != null:
+		_f_group.value = float(int(b.get("group", 0)))
+	if _f_group_name != null:
+		var pop_group: int = int(b.get("group", 0))
+		_f_group_name.text = _group_name_for_id(pop_group) if pop_group > 0 else ""
+	_refresh_group_name_field()
 	_populate_locale_fields(b)
+
+	var layout: String = str(b.get("choices_layout", "above_dialog")).strip_edges()
+	if _f_choices_layout != null:
+		_f_choices_layout.selected = 1 if layout == "inside_dialog" else 0
+	var choices: Variant = b.get("choices", [])
+	_rebuild_choice_rows(choices if choices is Array else [])
+	var expl_actions: Variant = b.get("exploration_actions", [])
+	_rebuild_exploration_action_rows(expl_actions if expl_actions is Array else [])
 
 	var bg: Variant = b.get("background", "")
 	_f_background.text = "null" if bg == null else (str(bg) if bg != "" else "")
@@ -2639,6 +3409,8 @@ func _populate_fields() -> void:
 	_loading = false
 	_update_tab_colors()
 	_update_bug_note_label()
+	_update_branch_bar(_selected_idx)
+	_validate_choice_beat(b, _selected_idx)
 
 func _populate_locale_fields(b: Dictionary) -> void:
 	# Speaker
@@ -2676,6 +3448,12 @@ func _collect_beat() -> Dictionary:
 		b["comment"] = comment
 	if _f_hidden.button_pressed:
 		b["hidden"] = true
+	var group_id: int = int(_f_group.value) if _f_group != null else 0
+	if group_id > 0:
+		b["group"] = group_id
+		var group_name: String = _f_group_name.text.strip_edges() if _f_group_name != null else ""
+		if not group_name.is_empty():
+			b["group_name"] = group_name
 
 	# Speaker — build from UI + preserve removed-language data
 	var sp_dict: Dictionary = {}
@@ -2709,6 +3487,16 @@ func _collect_beat() -> Dictionary:
 			tx_dict[_languages[i]] = val
 	if not tx_dict.is_empty():
 		b["text"] = tx_dict["en"] if (tx_dict.size() == 1 and tx_dict.has("en")) else tx_dict
+
+	var choices: Array = _collect_choices()
+	if not choices.is_empty():
+		b["choices"] = choices
+		if _f_choices_layout != null and _f_choices_layout.selected == 1:
+			b["choices_layout"] = "inside_dialog"
+
+	var beat_expl_actions: Array = _collect_actions_from_vbox(_exploration_actions_vbox)
+	if not beat_expl_actions.is_empty():
+		b["exploration_actions"] = beat_expl_actions
 
 	# Background
 	var bg: String = _f_background.text.strip_edges()
@@ -3063,11 +3851,18 @@ func _on_field_changed() -> void:
 	if _loading or _selected_idx < 0:
 		return
 	_beats[_selected_idx] = _collect_beat()
+	var beat: Dictionary = _beats[_selected_idx] as Dictionary
+	var sync_group: int = int(beat.get("group", 0))
+	if sync_group > 0:
+		_sync_group_name_to_beats(sync_group, str(beat.get("group_name", "")).strip_edges())
 	_beat_list.set_item_text(_selected_idx, _beat_summary(_beats[_selected_idx], _selected_idx))
 	var was_dirty: bool = _dirty
 	_dirty = true
 	_beat_modified[_selected_idx] = true
 	_beat_list.set_item_custom_bg_color(_selected_idx, Color(0.5, 0.45, 0.0, 0.4))
+	if beat.get("choices", []) is Array and not (beat.get("choices", []) as Array).is_empty():
+		_beat_list.set_item_custom_fg_color(_selected_idx, Color(0.55, 0.88, 1.0))
+	_validate_choice_beat(beat, _selected_idx)
 	if not was_dirty:
 		_refresh_file_list_colors()
 

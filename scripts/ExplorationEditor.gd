@@ -64,6 +64,7 @@ var _props_panel: Control  = null
 # ── Properties panel fields ───────────────────────────────────
 var _prop_start_node_edit:  LineEdit    = null
 var _prop_start_cond_vbox:  VBoxContainer = null
+var _prop_initial_inv_vbox: VBoxContainer = null
 var _prop_id_edit:          LineEdit    = null
 var _prop_title_edit:       LineEdit    = null
 var _prop_title_cond_vbox:  VBoxContainer = null
@@ -287,6 +288,23 @@ func _build_props_panel() -> Control:
 	add_start_cond_btn.add_theme_font_size_override("font_size", 13)
 	add_start_cond_btn.pressed.connect(func() -> void: _add_node_id_cond_row(_prop_start_cond_vbox))
 	vbox.add_child(add_start_cond_btn)
+	_add_section_header(vbox, "INITIAL INVENTORY")
+	var graph_inv_hint := Label.new()
+	graph_inv_hint.text = "Items granted when a fresh session starts (graph default + any launch extras)."
+	graph_inv_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	graph_inv_hint.add_theme_font_size_override("font_size", 11)
+	graph_inv_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
+	vbox.add_child(graph_inv_hint)
+	_prop_initial_inv_vbox = VBoxContainer.new()
+	_prop_initial_inv_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_initial_inv_vbox)
+	var add_graph_inv_btn := Button.new()
+	add_graph_inv_btn.text = "+ Add Item"
+	add_graph_inv_btn.add_theme_font_size_override("font_size", 13)
+	add_graph_inv_btn.pressed.connect(func() -> void:
+		_add_graph_inv_row("")
+		_collect_graph_props())
+	vbox.add_child(add_graph_inv_btn)
 	vbox.add_child(HSeparator.new())
 
 	# Section: Node Identity
@@ -1255,7 +1273,7 @@ func _event_action_kv_hint(action: String) -> String:
 		"give_union_scroll":
 			return "key: optional mail subject override (or count if value empty). value: scroll count (integer, default 1)."
 		"set_flag":
-			return "key: carry-over flag name. value: flag value (saved on session end)."
+			return "key: exploration flag name (SaveManager.exploration_flags). value: flag value."
 		"show_message":
 			return "key: unused. value: toast message text shown to the player."
 		"play_sfx":
@@ -2829,12 +2847,75 @@ func _populate_graph_props() -> void:
 			var cd: Dictionary = cond as Dictionary
 			_add_node_id_cond_row(_prop_start_cond_vbox,
 				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("node_id", "")))
+	_rebuild_graph_inv_rows(_graph.initial_inventory)
+
+func _rebuild_graph_inv_rows(items: Array) -> void:
+	if _prop_initial_inv_vbox == null:
+		return
+	for child: Node in _prop_initial_inv_vbox.get_children():
+		child.queue_free()
+	for item_var: Variant in items:
+		_add_graph_inv_row(str(item_var))
+
+func _add_graph_inv_row(item_id: String) -> void:
+	if _prop_initial_inv_vbox == null:
+		return
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	_prop_initial_inv_vbox.add_child(row)
+	var opt := OptionButton.new()
+	opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	opt.add_theme_font_size_override("font_size", 13)
+	opt.item_selected.connect(func(_i: int) -> void: _collect_graph_props())
+	var all: Array = ExplorationItemDatabase.all_items()
+	var sel_idx := 0
+	for i: int in all.size():
+		var it: Dictionary = all[i] as Dictionary
+		var id: String = str(it.get("id", ""))
+		var name_str: String = str(it.get("name", id))
+		opt.add_item("%s  (%s)" % [name_str, id], i)
+		opt.set_item_metadata(i, id)
+		if id == item_id:
+			sel_idx = i
+	if all.is_empty():
+		opt.add_item("(no items)")
+	else:
+		opt.select(sel_idx)
+	row.add_child(opt)
+	var rem := Button.new()
+	rem.text = "✕"
+	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_font_override("font", FontManager.make_font("primary", 400))
+	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	rem.pressed.connect(func() -> void:
+		row.queue_free()
+		_collect_graph_props())
+	row.add_child(rem)
+
+func _collect_graph_initial_inventory() -> Array[String]:
+	var items: Array[String] = []
+	if _prop_initial_inv_vbox == null:
+		return items
+	for row_node: Node in _prop_initial_inv_vbox.get_children():
+		if not row_node is HBoxContainer:
+			continue
+		var children: Array = (row_node as HBoxContainer).get_children()
+		if children.is_empty():
+			continue
+		var opt := children[0] as OptionButton
+		if opt == null or opt.item_count <= 0 or opt.get_item_text(0) == "(no items)":
+			continue
+		var id: Variant = opt.get_item_metadata(opt.selected)
+		if id != null and str(id) != "":
+			items.append(str(id))
+	return items
 
 func _collect_graph_props() -> void:
 	if _prop_start_node_edit == null or _graph == null:
 		return
 	_graph.start_node_id = _prop_start_node_edit.text.strip_edges()
 	_graph.start_node_id_conditions = _collect_node_id_conds(_prop_start_cond_vbox)
+	_graph.initial_inventory = _collect_graph_initial_inventory()
 
 func _collect_node_id_conds(cond_vbox: VBoxContainer) -> Array:
 	var result: Array = []
@@ -3404,6 +3485,13 @@ func _on_test_play_pressed() -> void:
 	if _graph_path.is_empty():
 		_set_status("Save to a file before test play.")
 		return
+	_collect_graph_props()
+	for child: Node in _test_vars_vbox.get_children():
+		child.queue_free()
+	for child: Node in _test_inv_vbox.get_children():
+		child.queue_free()
+	for item_id: String in _graph.initial_inventory:
+		_test_add_inv_row(item_id)
 	# Show the params popup instead of launching immediately.
 	_test_params_popup.popup_centered(Vector2(420, 500))
 
@@ -3646,7 +3734,6 @@ func _on_test_launch_confirmed() -> void:
 	if _test_force_fresh_chk.button_pressed:
 		params["force_fresh"] = true
 
-	# Pre-seed inventory via launch_params special list
 	var inv_items: Array = []
 	for row_node: Node in _test_inv_vbox.get_children():
 		if not row_node is HBoxContainer:
@@ -3659,11 +3746,10 @@ func _on_test_launch_confirmed() -> void:
 			var id: Variant = opt.get_item_metadata(opt.selected)
 			if id != null and str(id) != "":
 				inv_items.append(str(id))
+	if not inv_items.is_empty():
+		params["initial_inventory"] = inv_items
+
 	ExplorationManager.launch(_graph_path, "res://scenes/exploration_editor.tscn", params)
-	# Seed inventory — launch calls start_session synchronously before the async
-	# scene transition, so add_item here lands in the correct active session.
-	for item_id: String in inv_items:
-		ExplorationManager.add_item(item_id)
 
 func _on_items_pressed() -> void:
 	# Prevent duplicate

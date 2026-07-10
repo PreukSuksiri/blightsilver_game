@@ -28,6 +28,9 @@ class_name ExplorationGraph
 ## If a match is found its "node_id" is used instead of `start_node_id`.
 @export var start_node_id_conditions: Array = []
 
+## Item ids granted when a fresh session starts (before any node events).
+var initial_inventory: Array[String] = []
+
 ## All nodes belonging to this graph.
 var nodes: Array[ExplorationNode] = []
 
@@ -73,13 +76,16 @@ func to_dict() -> Dictionary:
 	var nodes_arr: Array = []
 	for n: ExplorationNode in nodes:
 		nodes_arr.append(n.to_dict())
-	return {
+	var out: Dictionary = {
 		"graph_id":      graph_id,
 		"display_name":  display_name,
 		"start_node_id": start_node_id,
 		"start_node_id_conditions": start_node_id_conditions.duplicate(true),
 		"nodes":         nodes_arr,
 	}
+	if not initial_inventory.is_empty():
+		out["initial_inventory"] = initial_inventory.duplicate()
+	return out
 
 ## Create an ExplorationGraph from a plain Dictionary (as parsed from JSON).
 static func from_dict(d: Dictionary) -> ExplorationGraph:
@@ -89,6 +95,13 @@ static func from_dict(d: Dictionary) -> ExplorationGraph:
 	graph.start_node_id = str(d.get("start_node_id", ""))
 	var snc: Variant = d.get("start_node_id_conditions", [])
 	graph.start_node_id_conditions = snc if snc is Array else []
+	var inv: Variant = d.get("initial_inventory", [])
+	graph.initial_inventory = []
+	if inv is Array:
+		for item: Variant in (inv as Array):
+			var item_id: String = str(item).strip_edges()
+			if not item_id.is_empty():
+				graph.initial_inventory.append(item_id)
 	var nodes_arr: Variant = d.get("nodes", [])
 	if nodes_arr is Array:
 		for nd: Variant in (nodes_arr as Array):

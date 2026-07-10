@@ -8,6 +8,7 @@ class_name VNPlayer
 # ─────────────────────────────────────────────────────────────
 const SLOT_NAMES  := ["far_left", "left", "center", "right", "far_right"]
 const _ANIMATION_SCENE := preload("res://scripts/VellumCardCommenceAnimation.gd")
+const _VNChoiceConditions := preload("res://scripts/VNChoiceConditions.gd")
 const SLOT_X      := [0.0,        200.0,  640.0,    1080.0,  1280.0]
 const CHAR_W      := 320.0
 const CHAR_H      := 560.0
@@ -22,6 +23,16 @@ const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
 const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
 const TEXT_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 1.0)
 const TEXT_SHADOW_OFFSET := 2
+const CHOICE_PANEL_MAX_H := 300.0
+const CHOICE_PANEL_W := 1200.0
+const CHOICE_PANEL_MARGIN_X := 200.0
+const CHOICE_BTN_MIN_H := 52.0
+const CHOICE_INSIDE_SCROLL_MAX_H := 150.0
+const CHOICE_SCROLL_HINT_GAP := 8.0
+const CHOICE_SCROLL_HINT_H := 22.0
+const DIALOG_LBL_DEFAULT_POS := Vector2(50.0, 18.0)
+const DIALOG_LBL_DEFAULT_SIZE := Vector2(1460.0, 218.0)
+const DIALOG_TEXT_H_CHOICE_INSIDE := 90.0
 
 # ── Toggle dialog style ───────────────────────────────────────
 # true  = decorative windowskin (NinePatchRect)
@@ -54,6 +65,9 @@ var _preserve_bgm_for_exploration: bool = false
 var _beats: Array = []
 var _beat_index: int = 0
 var _beat_raw_indices: Array = []   # maps filtered index → raw JSON index
+var _group_first_index: Dictionary = {}   # group id → first filtered beat index
+var _active_group_id: int = 0             # group currently playing via choice (0 = mainline)
+var _group_return_index: int = -1         # filtered index to resume after group completes
 var _scene_path: String = ""
 var _on_complete: Callable = Callable()
 var _track_campaign_checkpoint: bool = false
@@ -78,6 +92,21 @@ var _speaker_lbl: Label = null
 var _dialog_lbl: RichTextLabel = null
 var _hint_icon: TextureRect = null
 var _hint_tween: Tween = null
+var _choices_above_group: Control = null
+var _choices_above_host: PanelContainer = null
+var _choices_above_scroll: ScrollContainer = null
+var _choices_above_vbox: VBoxContainer = null
+var _choices_above_hint: Label = null
+var _choices_inside_group: Control = null
+var _choices_inside_host: PanelContainer = null
+var _choices_inside_scroll: ScrollContainer = null
+var _choices_inside_vbox: VBoxContainer = null
+var _choices_inside_hint: Label = null
+var _choices_scroll_hint_tween: Tween = null
+var _choices_scrolled: bool = false
+var _choice_tooltip_box: PanelContainer = null
+var _choice_tooltip_lbl: Label = null
+const CHOICE_TOOLTIP_MOUSE_OFFSET := Vector2(58.0, 62.0)
 var _video_player: VideoStreamPlayer = null
 var _current_music_path: String = ""
 var _fade_rect: ColorRect = null
@@ -166,6 +195,7 @@ func _ready() -> void:
 	_cmd_input.add_theme_font_size_override("font_size", 16)
 	_cmd_input.text_submitted.connect(_handle_vn_command)
 	cmd_hbox.add_child(_cmd_input)
+	set_process(false)
 
 # ─────────────────────────────────────────────────────────────
 # Build UI
@@ -303,6 +333,8 @@ func _build_ui() -> void:
 		_hint_icon.texture = load(HINT_ICON_PATH) as Texture2D
 	_dialog_panel.add_child(_hint_icon)
 
+	_build_choice_hosts()
+
 	# Video player — full-screen, above bg/chars, below fade overlay
 	_video_player = VideoStreamPlayer.new()
 	_video_player.position     = Vector2.ZERO
@@ -321,6 +353,487 @@ func _build_ui() -> void:
 	_fade_rect.z_index      = 50
 	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_fade_rect)
+
+func _make_choice_panel_style() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+	sb.border_width_left = 1
+	sb.border_width_top = 1
+	sb.border_width_right = 1
+	sb.border_width_bottom = 1
+	sb.border_color = Color(0.38, 0.65, 1.0, 0.55)
+	sb.corner_radius_top_left = 6
+	sb.corner_radius_top_right = 6
+	sb.corner_radius_bottom_left = 6
+	sb.corner_radius_bottom_right = 6
+	sb.content_margin_left = 12.0
+	sb.content_margin_right = 12.0
+	sb.content_margin_top = 10.0
+	sb.content_margin_bottom = 10.0
+	return sb
+
+func _build_choice_hosts() -> void:
+	_choices_above_group = Control.new()
+	_choices_above_group.name = "ChoicesAboveGroup"
+	_choices_above_group.visible = false
+	_choices_above_group.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_choices_above_group.z_index = 3
+	_stage.add_child(_choices_above_group)
+
+	_choices_above_host = _create_choice_panel(true)
+	_choices_above_host.name = "ChoicesAbove"
+	_choices_above_group.add_child(_choices_above_host)
+	_choices_above_scroll = _choices_above_host.get_node("ChoiceScroll") as ScrollContainer
+	_choices_above_vbox = _choices_above_scroll.get_node("ChoiceVBox") as VBoxContainer
+	_choices_above_hint = _create_choice_scroll_hint()
+	_choices_above_group.add_child(_choices_above_hint)
+
+	_choices_inside_group = Control.new()
+	_choices_inside_group.name = "ChoicesInsideGroup"
+	_choices_inside_group.visible = false
+	_choices_inside_group.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_choices_inside_group.z_index = 5
+	_dialog_panel.add_child(_choices_inside_group)
+
+	_choices_inside_host = _create_choice_panel(false)
+	_choices_inside_host.name = "ChoicesInside"
+	_choices_inside_group.add_child(_choices_inside_host)
+	_choices_inside_scroll = _choices_inside_host.get_node("ChoiceScroll") as ScrollContainer
+	_choices_inside_vbox = _choices_inside_scroll.get_node("ChoiceVBox") as VBoxContainer
+	_choices_inside_hint = _create_choice_scroll_hint()
+	_choices_inside_group.add_child(_choices_inside_hint)
+	_layout_inside_choice_host()
+
+func _create_choice_panel(show_panel: bool) -> PanelContainer:
+	var host := PanelContainer.new()
+	host.mouse_filter = Control.MOUSE_FILTER_STOP
+	if show_panel:
+		host.add_theme_stylebox_override("panel", _make_choice_panel_style())
+	else:
+		host.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+
+	var scroll := ScrollContainer.new()
+	scroll.name = "ChoiceScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.get_v_scroll_bar().value_changed.connect(func(_v: float) -> void:
+		_choices_scrolled = true
+		_update_choice_scroll_hint())
+	host.add_child(scroll)
+
+	var vbox := VBoxContainer.new()
+	vbox.name = "ChoiceVBox"
+	vbox.add_theme_constant_override("separation", 8)
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(vbox)
+	return host
+
+func _create_choice_scroll_hint() -> Label:
+	var hint := Label.new()
+	hint.name = "ScrollHint"
+	hint.text = "▼"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hint.add_theme_font_size_override("font_size", 18)
+	hint.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0, 0.9))
+	_apply_text_shadow(hint)
+	hint.visible = false
+	return hint
+
+func _beat_has_choices(beat: Dictionary) -> bool:
+	if _beat_has_deferred_actions(beat):
+		return false
+	var choices: Variant = beat.get("choices", null)
+	return choices is Array and not (choices as Array).is_empty()
+
+func _build_choice_entries(choices: Array) -> Array:
+	var result: Array = []
+	for ch: Variant in choices:
+		if not ch is Dictionary:
+			continue
+		var cd: Dictionary = ch as Dictionary
+		var passes: bool = _VNChoiceConditions.choice_passes(cd)
+		var locked_mode: String = str(cd.get("locked_mode", "hide")).strip_edges().to_lower()
+		if passes:
+			result.append({
+				"choice": cd,
+				"disabled": false,
+				"label": _loc(cd.get("label", "")),
+			})
+		elif locked_mode == "disable":
+			var main_label: String = _loc(cd.get("label", ""))
+			var reason: String = _choice_disabled_reason(cd)
+			result.append({
+				"choice": cd,
+				"disabled": true,
+				"label": main_label,
+				"reason": reason,
+			})
+	return result
+
+func _choice_disabled_reason(choice: Dictionary) -> String:
+	var reason: String = _loc(choice.get("disabled_reason", ""))
+	if reason.is_empty():
+		reason = _loc(choice.get("disabled_label", ""))
+	return reason
+
+func _filtered_index_for_raw(raw_idx: int) -> int:
+	for i: int in range(_beat_raw_indices.size()):
+		if int(_beat_raw_indices[i]) == raw_idx:
+			return i
+	return -1
+
+func _clear_choices() -> void:
+	_hide_choice_scroll_hint()
+	_hide_choice_reason_tooltip()
+	for vbox: VBoxContainer in [_choices_above_vbox, _choices_inside_vbox]:
+		if vbox == null:
+			continue
+		for child: Node in vbox.get_children():
+			child.queue_free()
+	if _choices_above_group != null:
+		_choices_above_group.visible = false
+	if _choices_inside_group != null:
+		_choices_inside_group.visible = false
+
+func _restore_dialog_lbl_layout() -> void:
+	if _dialog_lbl == null:
+		return
+	_dialog_lbl.position = DIALOG_LBL_DEFAULT_POS
+	_dialog_lbl.size = DIALOG_LBL_DEFAULT_SIZE
+
+func _apply_choice_dialog_layout(beat: Dictionary) -> void:
+	var layout: String = str(beat.get("choices_layout", "above_dialog")).strip_edges()
+	if layout == "inside_dialog":
+		_dialog_lbl.position = DIALOG_LBL_DEFAULT_POS
+		_dialog_lbl.size = Vector2(DIALOG_LBL_DEFAULT_SIZE.x, DIALOG_TEXT_H_CHOICE_INSIDE)
+	else:
+		_restore_dialog_lbl_layout()
+
+func _hide_choice_scroll_hint() -> void:
+	if _choices_scroll_hint_tween != null:
+		_choices_scroll_hint_tween.kill()
+		_choices_scroll_hint_tween = null
+	for hint: Label in [_choices_above_hint, _choices_inside_hint]:
+		if hint != null:
+			hint.visible = false
+			if hint.has_meta("bounce_base_y"):
+				hint.position.y = float(hint.get_meta("bounce_base_y"))
+
+func _update_choice_scroll_hint() -> void:
+	var scroll: ScrollContainer = null
+	var hint: Label = null
+	if _choices_above_group != null and _choices_above_group.visible:
+		scroll = _choices_above_scroll
+		hint = _choices_above_hint
+	elif _choices_inside_group != null and _choices_inside_group.visible:
+		scroll = _choices_inside_scroll
+		hint = _choices_inside_hint
+	if scroll == null or hint == null:
+		return
+	var bar := scroll.get_v_scroll_bar()
+	var overflow: bool = bar.max_value > bar.page + 1.0
+	if not overflow or _choices_scrolled:
+		hint.visible = false
+		if _choices_scroll_hint_tween != null:
+			_choices_scroll_hint_tween.kill()
+			_choices_scroll_hint_tween = null
+		if hint.has_meta("bounce_base_y"):
+			hint.position.y = float(hint.get_meta("bounce_base_y"))
+		return
+	hint.visible = true
+	if _choices_scroll_hint_tween == null or not _choices_scroll_hint_tween.is_running():
+		var base_y: float = float(hint.get_meta("bounce_base_y", hint.position.y))
+		hint.position.y = base_y
+		_choices_scroll_hint_tween = create_tween()
+		_choices_scroll_hint_tween.set_loops()
+		_choices_scroll_hint_tween.tween_property(
+			hint, "position:y", base_y + 5.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_choices_scroll_hint_tween.tween_property(
+			hint, "position:y", base_y, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func _layout_choice_scroll_hint(hint: Label, panel_h: float, panel_w: float) -> void:
+	if hint == null:
+		return
+	var base_y: float = panel_h + CHOICE_SCROLL_HINT_GAP
+	hint.position = Vector2(0.0, base_y)
+	hint.size = Vector2(panel_w, CHOICE_SCROLL_HINT_H)
+	hint.set_meta("bounce_base_y", base_y)
+
+func _layout_above_choice_host(entries: Array) -> void:
+	var content_h: float = float(entries.size()) * (CHOICE_BTN_MIN_H + 8.0) + 20.0
+	var panel_h: float = minf(CHOICE_PANEL_MAX_H, content_h)
+	var group_h: float = panel_h + CHOICE_SCROLL_HINT_GAP + CHOICE_SCROLL_HINT_H
+	var zone_top: float = 0.0
+	var zone_bottom: float = DIALOG_Y
+	var group_y: float = zone_top + (zone_bottom - zone_top - group_h) * 0.5
+	_choices_above_group.position = Vector2(CHOICE_PANEL_MARGIN_X, group_y)
+	_choices_above_group.size = Vector2(CHOICE_PANEL_W, group_h)
+	_choices_above_host.position = Vector2.ZERO
+	_choices_above_host.size = Vector2(CHOICE_PANEL_W, panel_h)
+	_choices_above_scroll.position = Vector2(12.0, 10.0)
+	_choices_above_scroll.size = Vector2(CHOICE_PANEL_W - 24.0, panel_h - 20.0)
+	_layout_choice_scroll_hint(_choices_above_hint, panel_h, CHOICE_PANEL_W)
+
+func _layout_inside_choice_host() -> void:
+	var panel_w: float = DIALOG_LBL_DEFAULT_SIZE.x
+	var scroll_h: float = CHOICE_INSIDE_SCROLL_MAX_H
+	var group_h: float = scroll_h + CHOICE_SCROLL_HINT_GAP + CHOICE_SCROLL_HINT_H
+	_choices_inside_group.position = Vector2(
+		DIALOG_LBL_DEFAULT_POS.x,
+		DIALOG_LBL_DEFAULT_POS.y + DIALOG_TEXT_H_CHOICE_INSIDE + 8.0)
+	_choices_inside_group.size = Vector2(panel_w, group_h)
+	_choices_inside_host.position = Vector2.ZERO
+	_choices_inside_host.size = Vector2(panel_w, scroll_h)
+	_choices_inside_scroll.position = Vector2.ZERO
+	_choices_inside_scroll.size = Vector2(panel_w, scroll_h)
+	_layout_choice_scroll_hint(_choices_inside_hint, scroll_h, panel_w)
+
+func _run_choice_actions(choice: Dictionary) -> void:
+	var actions: Variant = choice.get("actions", null)
+	if not (actions is Array) or not ExplorationManager.is_session_active:
+		return
+	for ea: Variant in (actions as Array):
+		if ea is Dictionary:
+			var ead: Dictionary = ea as Dictionary
+			ExplorationManager.dispatch_event(
+				str(ead.get("action", "")),
+				str(ead.get("key", "")),
+				str(ead.get("value", "")))
+
+func _beat_group_id(beat: Dictionary) -> int:
+	if not beat.has("group"):
+		return 0
+	var group_id: int = int(beat.get("group", 0))
+	return group_id if group_id > 0 else 0
+
+func _build_group_maps() -> void:
+	_group_first_index.clear()
+	for i: int in range(_beats.size()):
+		var group_id: int = _beat_group_id(_beats[i] as Dictionary)
+		if group_id <= 0:
+			continue
+		if not _group_first_index.has(group_id):
+			_group_first_index[group_id] = i
+
+func _find_next_mainline_index(from_filtered: int) -> int:
+	for i: int in range(from_filtered + 1, _beats.size()):
+		if _beat_group_id(_beats[i] as Dictionary) == 0:
+			return i
+	return _beats.size()
+
+func _find_mainline_before_group(group_id: int) -> int:
+	var first: int = int(_group_first_index.get(group_id, -1))
+	if first <= 0:
+		return -1
+	for i: int in range(first - 1, -1, -1):
+		if _beat_group_id(_beats[i] as Dictionary) == 0:
+			return i
+	return -1
+
+func _restore_group_state_for_index(idx: int) -> void:
+	if idx < 0 or idx >= _beats.size():
+		_active_group_id = 0
+		_group_return_index = -1
+		return
+	var group_id: int = _beat_group_id(_beats[idx] as Dictionary)
+	if group_id <= 0:
+		_active_group_id = 0
+		_group_return_index = -1
+		return
+	_active_group_id = group_id
+	var mainline_before: int = _find_mainline_before_group(group_id)
+	_group_return_index = _find_next_mainline_index(mainline_before)
+
+func _advance_beat_cursor() -> void:
+	_beat_index += 1
+	if _active_group_id > 0:
+		if _beat_index >= _beats.size():
+			_beat_index = _group_return_index if _group_return_index >= 0 else _beats.size()
+			_active_group_id = 0
+			_group_return_index = -1
+		elif _beat_group_id(_beats[_beat_index] as Dictionary) != _active_group_id:
+			_beat_index = _group_return_index if _group_return_index >= 0 else _beats.size()
+			_active_group_id = 0
+			_group_return_index = -1
+	else:
+		while _beat_index < _beats.size() \
+				and _beat_group_id(_beats[_beat_index] as Dictionary) > 0:
+			_beat_index += 1
+
+func _resolve_choice_goto(choice: Dictionary) -> void:
+	var group_id: int = int(choice.get("goto_group", 0))
+	if group_id > 0:
+		if not _group_first_index.has(group_id):
+			push_warning("VNPlayer: goto_group %d not found — advancing" % group_id)
+			_advance_beat_cursor()
+		else:
+			_group_return_index = _find_next_mainline_index(_beat_index)
+			_active_group_id = group_id
+			_beat_index = int(_group_first_index[group_id])
+	elif int(choice.get("goto_beat", -1)) >= 0:
+		var raw_idx: int = int(choice.get("goto_beat", -1))
+		push_warning("VNPlayer: choice uses deprecated goto_beat — use goto_group")
+		var filtered: int = _filtered_index_for_raw(raw_idx)
+		if filtered < 0:
+			push_warning("VNPlayer: goto_beat %d not found — advancing" % raw_idx)
+			_advance_beat_cursor()
+		else:
+			_active_group_id = 0
+			_group_return_index = -1
+			_beat_index = filtered
+	else:
+		push_warning("VNPlayer: choice missing goto_group — advancing")
+		_advance_beat_cursor()
+	_persist_campaign_checkpoint()
+	_clear_choices()
+	_restore_dialog_lbl_layout()
+	_show_beat()
+
+func _build_choice_tooltip() -> void:
+	if _choice_tooltip_box != null:
+		return
+	var panel := PanelContainer.new()
+	panel.z_index = 220
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.visible = false
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.0, 0.0, 0.0, 0.72)
+	sb.border_width_left = 1
+	sb.border_width_right = 1
+	sb.border_width_top = 1
+	sb.border_width_bottom = 1
+	sb.border_color = Color(0.9, 0.85, 0.6, 0.85)
+	sb.corner_radius_top_left = 5
+	sb.corner_radius_top_right = 5
+	sb.corner_radius_bottom_right = 5
+	sb.corner_radius_bottom_left = 5
+	sb.content_margin_left = 10.0
+	sb.content_margin_right = 10.0
+	sb.content_margin_top = 6.0
+	sb.content_margin_bottom = 6.0
+	panel.add_theme_stylebox_override("panel", sb)
+	var lbl := Label.new()
+	lbl.add_theme_color_override("font_color", Color(1.0, 0.96, 0.75))
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.custom_minimum_size = Vector2(220.0, 0.0)
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tag_ui(lbl, "font", 400)
+	panel.add_child(lbl)
+	add_child(panel)
+	_choice_tooltip_box = panel
+	_choice_tooltip_lbl = lbl
+
+func _show_choice_reason_tooltip(text: String) -> void:
+	if text.strip_edges().is_empty():
+		return
+	_build_choice_tooltip()
+	_choice_tooltip_lbl.text = text
+	_choice_tooltip_box.reset_size()
+	_choice_tooltip_box.visible = true
+	_choice_tooltip_box.global_position = get_global_mouse_position() + CHOICE_TOOLTIP_MOUSE_OFFSET
+	set_process(true)
+
+func _hide_choice_reason_tooltip() -> void:
+	if _choice_tooltip_box != null:
+		_choice_tooltip_box.visible = false
+	set_process(false)
+
+func _apply_choice_button_metrics(btn: Button) -> void:
+	GameDialog.style_menu_button(btn)
+	btn.custom_minimum_size = Vector2(0.0, CHOICE_BTN_MIN_H)
+	_tag_ui(btn, "font", 500)
+	btn.add_theme_font_size_override("font_size", 22)
+
+func _apply_choice_button_greyed(btn: Button) -> void:
+	btn.modulate = Color(0.55, 0.55, 0.55, 0.85)
+	var normal_sb: StyleBox = btn.get_theme_stylebox("normal")
+	if normal_sb != null:
+		btn.add_theme_stylebox_override("disabled", normal_sb)
+		btn.add_theme_stylebox_override("hover", normal_sb)
+		btn.add_theme_stylebox_override("pressed", normal_sb)
+		btn.add_theme_stylebox_override("focus", normal_sb)
+
+func _make_choice_widget(label_text: String, disabled: bool, reason: String = "") -> Control:
+	var btn := Button.new()
+	btn.text = label_text
+	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_apply_choice_button_metrics(btn)
+	if disabled:
+		var needs_hover: bool = not reason.is_empty()
+		if needs_hover:
+			# Disabled buttons ignore mouse — stay enabled for hover tooltip only.
+			btn.disabled = false
+			btn.focus_mode = Control.FOCUS_NONE
+			_apply_choice_button_greyed(btn)
+			btn.mouse_entered.connect(func() -> void: _show_choice_reason_tooltip(reason))
+			btn.mouse_exited.connect(func() -> void: _hide_choice_reason_tooltip())
+			btn.pressed.connect(func() -> void: pass)
+		else:
+			btn.disabled = true
+			_apply_choice_button_greyed(btn)
+	return btn
+
+func _present_choices(beat: Dictionary) -> void:
+	_accepting_input = false
+	_hide_hint_icon()
+	_clear_choices()
+	_choices_scrolled = false
+
+	var layout: String = str(beat.get("choices_layout", "above_dialog")).strip_edges()
+	if layout != "inside_dialog":
+		layout = "above_dialog"
+
+	var entries: Array = _build_choice_entries(beat.get("choices", []) as Array)
+	if entries.is_empty():
+		push_warning("VNPlayer: choice beat has no visible options — advancing")
+		_advance_beat_cursor()
+		_persist_campaign_checkpoint()
+		_restore_dialog_lbl_layout()
+		_show_beat()
+		return
+
+	var vbox: VBoxContainer = _choices_above_vbox if layout == "above_dialog" else _choices_inside_vbox
+	if layout == "above_dialog":
+		_layout_above_choice_host(entries)
+	else:
+		_apply_choice_dialog_layout(beat)
+		_layout_inside_choice_host()
+
+	_choices_above_group.visible = layout == "above_dialog"
+	_choices_inside_group.visible = layout == "inside_dialog"
+
+	var picked: Array = [false]
+	for entry: Variant in entries:
+		if not entry is Dictionary:
+			continue
+		var ed: Dictionary = entry as Dictionary
+		var cd: Dictionary = ed.get("choice", {}) as Dictionary
+		var widget := _make_choice_widget(
+			str(ed.get("label", "")),
+			bool(ed.get("disabled", false)),
+			str(ed.get("reason", "")))
+		if widget is Button and not bool(ed.get("disabled", false)):
+			var btn := widget as Button
+			btn.pressed.connect(func() -> void:
+				if picked[0]:
+					return
+				picked[0] = true
+				SFXManager.play(SFXManager.SFX_EXPLORATION)
+				_run_choice_actions(cd)
+				_resolve_choice_goto(cd))
+		vbox.add_child(widget)
+
+	call_deferred("_deferred_update_choice_scroll_hint")
+
+	while not picked[0]:
+		await get_tree().process_frame
+
+func _deferred_update_choice_scroll_hint() -> void:
+	await get_tree().process_frame
+	_update_choice_scroll_hint()
 
 func _add_dialog_side_borders(panel: Panel) -> void:
 	var w := DIALOG_SIDE_BORDER_W
@@ -347,6 +860,10 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_WM_CLOSE_REQUEST \
 			or what == NOTIFICATION_APPLICATION_PAUSED:
 		_persist_campaign_checkpoint()
+
+func _process(_delta: float) -> void:
+	if _choice_tooltip_box != null and _choice_tooltip_box.visible:
+		_choice_tooltip_box.global_position = get_global_mouse_position() + CHOICE_TOOLTIP_MOUSE_OFFSET
 
 ## Scale the 1600×900 stage to fit inside the viewport (contain) and center it on screen.
 func _ensure_stage_layout() -> void:
@@ -605,6 +1122,9 @@ func play_scene(
 			continue
 		_beats.append(_rb)
 		_beat_raw_indices.append(_ri)
+	_build_group_maps()
+	_active_group_id = 0
+	_group_return_index = -1
 	_beat_index = 0
 	if _track_campaign_checkpoint:
 		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
@@ -614,6 +1134,7 @@ func play_scene(
 				resume_at = int(arc.get("vn_beat_index", 0))
 		if resume_at > 0 and resume_at < _beats.size():
 			_beat_index = resume_at
+			_restore_group_state_for_index(_beat_index)
 			# Campaign gallery fades BGM out before continue; replay music from skipped beats.
 			_apply_music_state(_music_state_before_beat(_beat_index), true)
 	call_deferred("_start_playback")
@@ -654,8 +1175,10 @@ func _show_beat() -> void:
 		return
 
 	var beat: Dictionary = _beats[_beat_index]
-	_beat_index += 1
-	_persist_campaign_checkpoint()
+	var has_choices: bool = _beat_has_choices(beat)
+	if not has_choices:
+		_advance_beat_cursor()
+		_persist_campaign_checkpoint()
 	_preserve_bgm_for_exploration = bool(beat.get("exploration_keep_vn_bgm", false)) \
 		and str(beat.get("exploration_call", "")).strip_edges() != ""
 
@@ -881,7 +1404,7 @@ func _show_beat() -> void:
 		_hide_hint_icon()
 		await get_tree().create_timer(wait_sec).timeout
 		_accepting_input = true
-		if not _beat_has_deferred_actions(beat):
+		if not _beat_has_deferred_actions(beat) and not has_choices:
 			_show_beat()
 			return
 
@@ -889,7 +1412,7 @@ func _show_beat() -> void:
 	# After a fade_out with no text the screen is black — hint icon is invisible,
 	# so waiting for a click makes no sense. Skip to the next beat automatically.
 	if beat.has("fade_out") and not beat.has("text") \
-			and not _beat_has_deferred_actions(beat):
+			and not _beat_has_deferred_actions(beat) and not has_choices:
 		_show_beat()
 		return
 
@@ -922,7 +1445,7 @@ func _show_beat() -> void:
 		await tw.finished
 		lbl.queue_free()
 		_accepting_input = true
-		if not _beat_has_deferred_actions(beat):
+		if not _beat_has_deferred_actions(beat) and not has_choices:
 			_show_beat()
 			return
 
@@ -1074,6 +1597,9 @@ func _show_beat() -> void:
 				params[str(k)] = (expl_params as Dictionary)[k]
 		if keep_vn_bgm:
 			params["keep_vn_bgm"] = true
+		var inv: Variant = beat.get("exploration_inventory", null)
+		if inv is Array and not (inv as Array).is_empty():
+			params["initial_inventory"] = (inv as Array).duplicate()
 		ExplorationManager.pending_return_vn = on_return
 		ExplorationManager.launch_source_vn = _scene_path
 		var return_scene: String = get_tree().current_scene.scene_file_path
@@ -1081,12 +1607,6 @@ func _show_beat() -> void:
 			return_scene = "res://scenes/main_menu.tscn"
 		await _prepare_scene_handoff()
 		ExplorationManager.launch(expl_graph, return_scene, params)
-		var inv: Variant = beat.get("exploration_inventory", null)
-		if inv is Array:
-			for item_var: Variant in (inv as Array):
-				var item_id: String = str(item_var).strip_edges()
-				if not item_id.is_empty():
-					ExplorationManager.add_item(item_id)
 		return
 
 	# ── Dungeon call ──
@@ -1189,7 +1709,13 @@ func _show_beat() -> void:
 					str(ead.get("key",    "")),
 					str(ead.get("value",  "")))
 
+	if has_choices:
+		_persist_campaign_checkpoint()
+		await _present_choices(beat)
+		return
+
 	# ── Continue hint icon ──
+	_accepting_input = true
 	_show_hint_icon()
 
 func _on_video_finished() -> void:
@@ -1259,7 +1785,7 @@ func _prepare_scene_handoff(fade_sec: float = 0.35) -> void:
 func _persist_campaign_checkpoint() -> void:
 	if not _track_campaign_checkpoint or _scene_path.is_empty():
 		return
-	if _beat_index <= 0:
+	if _beat_index < 0:
 		return
 	if not _chapter_arc_key.is_empty():
 		SaveManager.set_vn_checkpoint_for_chapter(_chapter_arc_key, _scene_path, _beat_index)
@@ -1524,6 +2050,10 @@ func _input(event: InputEvent) -> void:
 	if _cmd_panel != null and _cmd_panel.visible:
 		return
 	if not _accepting_input:
+		return
+	if _choices_above_group != null and _choices_above_group.visible:
+		return
+	if _choices_inside_group != null and _choices_inside_group.visible:
 		return
 	if _battle_handoff_started:
 		return

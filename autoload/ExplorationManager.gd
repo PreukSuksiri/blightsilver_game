@@ -31,6 +31,7 @@ extends Node
 ##   Reserved keys (not seeded as session vars):
 ##     "force_fresh"  bool   Skip auto-resume; always start fresh
 ##     "keep_vn_bgm"  bool   Keep VN music through exploration launch
+##     "initial_inventory"  Array  Item ids for this launch (overrides graph default)
 ##
 ##   Common launch params (seeded as session vars):
 ##     "flashlight"   "1"/"0"  Handheld flashlight cone in ExplorationPlayer
@@ -282,9 +283,10 @@ func start_session(graph_path: String, source_vn_scene: String = "") -> void:
 	_session_rewards = {"credits": 0, "flags": {}}
 	_session_active  = true
 	for k: String in launch_params:
-		if k in ["force_fresh", "keep_vn_bgm"]:
+		if k in ["force_fresh", "keep_vn_bgm", "initial_inventory"]:
 			continue
 		_vars[k] = resolve_launch_param_value(launch_params.get(k))
+	_seed_initial_inventory(graph.initial_inventory, launch_params.get("initial_inventory", null))
 	emit_signal("session_started", graph)
 	_navigate_to(graph.resolve_start_node_id(_vars), false)
 	_save_session_state(true)
@@ -904,6 +906,25 @@ func get_connection_lock_hint(conn: Dictionary) -> String:
 # Inventory — Public API
 # ─────────────────────────────────────────────────────────────
 
+func _seed_initial_inventory(graph_items: Array, launch_items: Variant) -> void:
+	var seed: Array[String] = []
+	if launch_items is Array and not (launch_items as Array).is_empty():
+		for item_var: Variant in (launch_items as Array):
+			var item_id: String = str(item_var).strip_edges()
+			if not item_id.is_empty():
+				seed.append(item_id)
+	else:
+		for item_var: Variant in graph_items:
+			var item_id: String = str(item_var).strip_edges()
+			if not item_id.is_empty():
+				seed.append(item_id)
+	if seed.is_empty():
+		return
+	for item_id: String in seed:
+		_inventory.append(item_id)
+	print("[Exploration] initial_inventory: %s (node: %s)" % [str(_inventory), current_node_id])
+	emit_signal("inventory_changed", _inventory.duplicate())
+
 ## Add one instance of an item to the session inventory.
 func add_item(item: String) -> void:
 	if item.is_empty():
@@ -945,6 +966,20 @@ func set_var(key: String, value: String) -> void:
 		key, value, prev, current_node_id])
 	emit_signal("var_changed", key, value)
 	_save_session_state()
+
+## Set a persistent exploration flag (SaveManager.exploration_flags + session rewards).
+func set_exploration_flag(key: String, value: String) -> void:
+	var flag_key: String = key.strip_edges()
+	if flag_key.is_empty():
+		return
+	SaveManager.exploration_flags[flag_key] = value
+	var flags: Variant = _session_rewards.get("flags", {})
+	if not flags is Dictionary:
+		flags = {}
+	(flags as Dictionary)[flag_key] = value
+	_session_rewards["flags"] = flags
+	SaveManager.save_data()
+	print("[Exploration] flag_set: %s = \"%s\" (node: %s)" % [flag_key, value, current_node_id])
 
 ## Public single-event dispatcher — called by VNPlayer for exploration_actions beats.
 ## Accepts the same action/key/value format as on_enter/on_exit events.
@@ -1022,10 +1057,7 @@ func _process_events(events: Array) -> void:
 				_grant_union_scroll_mail(scroll_amount, scroll_subject)
 
 			"set_flag":
-				var flags: Variant = _session_rewards.get("flags", {})
-				if flags is Dictionary:
-					(flags as Dictionary)[key] = value
-					_session_rewards["flags"] = flags
+				set_exploration_flag(key, value)
 
 			"show_message":
 				emit_signal("message_posted", value)

@@ -57,7 +57,14 @@ static func evaluate_condition(cd: Dictionary) -> bool:
 		"at_node":
 			var node_id: String = val if not val.is_empty() else key
 			return ExplorationManager.current_node_id == node_id
+		"flag_equals":
+			return get_exploration_flag(key) == val
+		"flag_not_equals":
+			return get_exploration_flag(key) != val
 	return true
+
+static func get_exploration_flag(key: String, default_val: String = "") -> String:
+	return str(SaveManager.exploration_flags.get(key, default_val))
 
 static func _compare_numeric(a: String, b: String, op: String) -> bool:
 	var fa: float

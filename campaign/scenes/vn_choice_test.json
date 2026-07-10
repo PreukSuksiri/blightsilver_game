@@ -1,0 +1,282 @@
+[
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"speaker": "Nex",
+		"text": "We're finally here. What should we do first?"
+	},
+	{
+		"choices": [
+			{
+				"goto_group": 1,
+				"label": "Go to Mayu's room"
+			},
+			{
+				"goto_group": 2,
+				"label": "Search around the house"
+			},
+			{
+				"goto_group": 3,
+				"label": "Sit and relax"
+			},
+			{
+				"goto_group": 8,
+				"label": "Leave"
+			}
+		],
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "We're finally here. What should we do first?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 1.0,
+		"group_name": "Mayu's room",
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"text": "Let's go to Mayu's room"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 1.0,
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"speaker": "Kelly",
+		"text": "Pervert"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 2.0,
+		"group_name": "Search house",
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"speaker": "Nex",
+		"text": "Let's search around the house"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 3.0,
+		"group_name": "Sit and relax",
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"speaker": "Nex",
+		"text": "Let's sit and settle down"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 3.0,
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"speaker": "Kelly",
+		"text": "We've no time for that."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 8,
+		"group_name": "Leave",
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"speaker": "Nex",
+		"text": "She's not here anyway... Let's just leave."
+	},
+	{
+		"choices": [
+			{
+				"actions": [
+					{
+						"action": "remove_item",
+						"key": "item_secluded_study_key",
+						"value": ""
+					},
+					{
+						"action": "set_var",
+						"key": "study_door_open",
+						"value": "1"
+					},
+					{
+						"action": "set_flag",
+						"key": "study_door_open",
+						"value": "1"
+					}
+				],
+				"conditions": [
+					{
+						"key": "item_secluded_study_key",
+						"type": "has_item",
+						"value": ""
+					}
+				],
+				"disabled_reason": "You don't have a study key",
+				"goto_group": 4.0,
+				"label": "Use the study key",
+				"locked_mode": "disable"
+			},
+			{
+				"conditions": [
+					{
+						"key": "study_door_open",
+						"type": "flag_equals",
+						"value": "1"
+					}
+				],
+				"disabled_reason": "The study door is still locked",
+				"goto_group": 4,
+				"label": "Return to the open study",
+				"locked_mode": "disable"
+			},
+			{
+				"goto_group": 5.0,
+				"label": "Walk away"
+			},
+			{
+				"goto_group": 5.0,
+				"label": "More options"
+			},
+			{
+				"goto_group": 5.0,
+				"label": "Another option"
+			},
+			{
+				"goto_group": 5.0,
+				"label": "Yet another"
+			}
+		],
+		"comment": "VN choice system test — run from vn_test or exploration overlay",
+		"speaker": "Nex",
+		"text": "You find a locked study door. What do you do?"
+	},
+	{
+		"group": 4.0,
+		"group_name": "Use study key",
+		"speaker": "Nex",
+		"text": {
+			"en": "The key turns. The door creaks open."
+		}
+	},
+	{
+		"group": 5.0,
+		"group_name": "Walk away",
+		"speaker": "Nex",
+		"text": {
+			"en": "You decide to leave it for now."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "What do you think?"
+	},
+	{
+		"choices": [
+			{
+				"goto_group": 6.0,
+				"label": "Agree"
+			},
+			{
+				"goto_group": 7.0,
+				"label": "Disagree"
+			}
+		],
+		"choices_layout": "inside_dialog",
+		"speaker": "Kelly",
+		"text": "Inside-dialog layout test."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 6.0,
+		"group_name": "Agree",
+		"speaker": "Kelly",
+		"text": "Glad we're on the same page."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_mayu_home_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 7.0,
+		"group_name": "Disagree",
+		"speaker": "Kelly",
+		"text": "Fair enough."
+	}
+]
