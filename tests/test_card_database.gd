@@ -66,8 +66,7 @@ func test_no_not_implemented_stubs() -> void:
 		if t.effect_type == TechCardData.TechEffectType.NOT_IMPLEMENTED:
 			ni_tech += 1
 	var ni_unions := 0
-	for uname in UnionDatabase.get_all_unions():
-		var u = UnionDatabase.get_union(uname)
+	for u: UnionData in UnionDatabase.get_all_unions():
 		if u != null and u.ability_type == CharacterData.AbilityType.NOT_IMPLEMENTED:
 			ni_unions += 1
 	assert_eq(ni_chars, 0, "No character NOT_IMPLEMENTED stubs")
@@ -77,11 +76,11 @@ func test_no_not_implemented_stubs() -> void:
 
 func test_exact_card_counts() -> void:
 	print("-- test_exact_card_counts")
-	assert_eq(CardDatabase.characters.size(), 504, "504 characters")
-	assert_eq(CardDatabase.traps.size(), 72, "72 traps")
-	assert_eq(CardDatabase.tech_cards.size(), 117, "117 tech cards")
+	assert_eq(CardDatabase.characters.size(), 508, "508 characters")
+	assert_eq(CardDatabase.traps.size(), 73, "73 traps")
+	assert_eq(CardDatabase.tech_cards.size(), 127, "127 tech cards")
 	UnionDatabase.bootstrap()
-	assert_eq(UnionDatabase.get_all_unions().size(), 131, "131 unions")
+	assert_eq(UnionDatabase.get_all_unions().size(), 132, "132 unions")
 
 func test_rename_cleanup() -> void:
 	print("-- test_rename_cleanup")

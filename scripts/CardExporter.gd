@@ -11,15 +11,15 @@ const VELLUM_FRAME    := preload("res://assets/textures/cards/frames/vellum_card
 const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")
 const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
-const EXPORT_W     := 819.0
-const EXPORT_H     := 1126.0
-const FRAME_ASPECT := 819.0 / 1126.0
+const EXPORT_W     := CardArtLayout.REF_WIDTH
+const EXPORT_H     := CardArtLayout.REF_HEIGHT
+const FRAME_ASPECT := CardArtLayout.FRAME_ASPECT
 
-const ART_L_PCT    := 0.051
-const ART_R_PCT    := 0.949
-const ART_T_PCT    := 0.096
-const ART_B_PCT    := 1.000
-const INFO_TOP_PCT := 0.520
+const ART_L_PCT    := CardArtLayout.ART_L_PCT
+const ART_R_PCT    := CardArtLayout.ART_R_PCT
+const ART_T_PCT    := CardArtLayout.ART_T_PCT
+const ART_B_PCT    := CardArtLayout.ART_B_PCT
+const INFO_TOP_PCT := CardArtLayout.INFO_TOP_PCT
 
 const TYPE_COLOR_CHARACTER := Color(1.0,   0.71,  0.2,   1.0)
 const TYPE_COLOR_TRAP      := Color(1.0, 0.263, 0.345, 1.0)
@@ -183,12 +183,12 @@ func _build_card_node() -> Control:
 	var card_w := EXPORT_W
 	var card_h := EXPORT_H
 
-	var al      := ART_L_PCT   * card_w
-	var ar      := ART_R_PCT   * card_w
-	var at      := ART_T_PCT   * card_h
-	var ab      := ART_B_PCT   * card_h
-	var aw      := ar - al
-	var ah      := ab - at
+	var art_rect := CardArtLayout.full_art_rect(card_w, card_h)
+	var al := art_rect.position.x
+	var at := art_rect.position.y
+	var aw := art_rect.size.x
+	var ah := art_rect.size.y
+	var ab := at + ah
 	var info_y  := INFO_TOP_PCT * card_h
 	var info_h  := card_h - info_y
 	var pad_x   := al + 15.0

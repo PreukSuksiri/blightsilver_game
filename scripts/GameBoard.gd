@@ -7165,6 +7165,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_tech_reveals_remaining = int(_gd_parts[-1]) if _gd_parts[-1].is_valid_int() else 5
 		_tech_reveals_total = _tech_reveals_remaining
 		_tech_reveal_picked.clear()
+	elif filter.begins_with("own_units_flag_up_to_"):
+		var _flag_parts := filter.split("_")
+		_tech_reveals_remaining = int(_flag_parts[-1]) if _flag_parts[-1].is_valid_int() else 1
+		_tech_reveals_total = _tech_reveals_remaining
+		_tech_reveal_picked.clear()
 	else:
 		_tech_reveals_total = 0
 	# Reset Rift Strike hover state when entering row_or_column targeting
@@ -7176,6 +7181,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if filter.begins_with("own_units_up_to_"):
 		_set_own_facedown_char_peek(true)
 		_show_guide("Great Diplomacy: select up to %d units (0/%d). CLOSE when done." % [_tech_reveals_total, _tech_reveals_total])
+	elif filter.begins_with("own_units_flag_up_to_"):
+		_show_guide("Select up to %d unit(s) for flag (0/%d). CLOSE when done." % [_tech_reveals_total, _tech_reveals_total])
 	elif _tech_reveals_total > 1:
 		_show_guide("Select %s card to reveal" % _ordinal(1))
 	else:
@@ -7222,6 +7229,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		if _wk17_sel >= 0:
 			_set_own_facedown_char_peek(true, _wk17_sel)
 
+	if filter == "rift_guardian_foe_pick":
+		var _rg_sel: int = turn_manager._pending_rg_attacker_player
+		if _rg_sel >= 0:
+			_set_own_facedown_char_peek(true, _rg_sel)
+
 	# No-valid-target guard: if the highlight pass found no cells to interact with,
 	# cancel the effect rather than leaving any player (human or AI) stuck.
 	if not _any_highlighted():
@@ -7235,7 +7247,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				and GameState.current_phase == GameState.Phase.BATTLE:
 			_clear_after_pre_battle_ability()
 		elif _is_post_attack_ability_filter(filter) \
-				or filter in ["ability_lockpicker_reveal", "wk17_foe_pick_character"]:
+				or filter in ["ability_lockpicker_reveal", "wk17_foe_pick_character", "rift_guardian_foe_pick"]:
 			_clear_after_ability()
 		elif filter in _defender_response_filters():
 			if pending_tech_name != "":
@@ -7271,7 +7283,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
 			"ability_plant29_venom", "ability_plant29_mutagen", "ability_death_cobra_venom",
-			"ability_lockpicker_reveal", "wk17_foe_pick_character", "opponent_any_hidden", "adjacent",
+			"ability_lockpicker_reveal", "wk17_foe_pick_character", "rift_guardian_foe_pick",
+			"opponent_any_hidden", "adjacent",
 			"any_field_card_destroy", "own_character_destroy_no_cost"]:
 		var _ai_responds: bool = _is_ai_turn()
 		if filter in ["ability_plant29_venom", "ability_plant29_mutagen"]:
@@ -7295,6 +7308,12 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
 					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
 					and _wk17_foe == ai_player.player_index)
+		if filter == "rift_guardian_foe_pick":
+			var _rg_att: int = turn_manager._pending_rg_attacker_player
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and _rg_att == ai_player.player_index)
 		if filter == "opponent_any_hidden":
 			var _rev_owner: int = turn_manager._pending_reveal_attacker_player
 			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
@@ -7363,6 +7382,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				_ab_player = turn_manager._pending_wk17_foe_player
 				_ab_target = _get_ai_for_player(_ab_player).decide_wk17_foe_pick(
 					turn_manager._pending_wk17_exclude_pick_pos)
+			elif filter == "rift_guardian_foe_pick":
+				_ab_player = turn_manager._pending_rg_attacker_player
+				_ab_target = _get_ai_for_player(_ab_player).decide_wk17_foe_pick(
+					turn_manager._pending_rg_exclude_pos)
 			else:
 				_ab_target = _active_ai.decide_target(filter)
 			if filter == "ability_rebel_king_swap":
@@ -7374,6 +7397,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
 			elif filter == "wk17_foe_pick_character":
+				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
+				_handle_tech_target(_ab_player, _ab_target)
+			elif filter == "rift_guardian_foe_pick":
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
 			else:
@@ -7394,6 +7420,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				_finish_tech_action(GameState.current_player)
 				return
 			_prompt_ai_diplomacy_pick()
+			return
+		if filter.begins_with("own_units_flag_up_to_"):
+			_prompt_ai_flag_pick()
 			return
 		if "opponent_squares" in filter:
 			_prompt_ai_radar_pick()
@@ -7481,6 +7510,9 @@ func _get_target_selecting_player(filter: String) -> int:
 	if filter == "wk17_foe_pick_character":
 		var _wk17_foe: int = turn_manager._pending_wk17_foe_player
 		return _wk17_foe if _wk17_foe >= 0 else GameState.current_player
+	if filter == "rift_guardian_foe_pick":
+		var _rg_att: int = turn_manager._pending_rg_attacker_player
+		return _rg_att if _rg_att >= 0 else GameState.current_player
 	if filter == "own_character_for_swap":
 		var _swap_owner: int = turn_manager._pending_swap_owner_player
 		return _swap_owner if _swap_owner >= 0 else GameState.current_player
@@ -7609,11 +7641,59 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_clear_after_ability()
 		return
 
+	if pending_tech_filter == "rift_guardian_foe_pick":
+		var _rg_att: int = turn_manager._pending_rg_attacker_player
+		if player == _rg_att and card.card_type == "character":
+			if pos == turn_manager._pending_rg_exclude_pos:
+				return
+			turn_manager._rg_friendly_fire = true
+			turn_manager._rg_friendly_fire_pos = pos
+			if not card.face_up:
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			var _rg_init: GameState.CardInstance = GameState.attacker_card
+			if _rg_init != null:
+				GameState.post_message("Rift Guardian: %s will fight in place of %s!" % [
+					card.card_name, _rg_init.card_name])
+			_clear_after_ability()
+		return
+
 	if pending_tech_filter == "any_field_card_destroy":
 		if card.card_type != "dead_end":
-			GameState.destroy_card(player, pos.x, pos.y, false)
+			var pay_cost := true
+			if pending_tech_name != "" and turn_manager._field_destroy_foe_no_cost:
+				pay_cost = player == current_player
+			if player != current_player:
+				GameState.mark_destroy_achievement_context(
+					"tech", current_player, player, pos.x, pos.y)
+			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
 			GameState.post_message("Destroyed %s." % card.card_name)
-		_clear_after_ability()
+		if pending_tech_name != "" and turn_manager._field_destroy_remaining > 1:
+			turn_manager._field_destroy_remaining -= 1
+			var _db_data: TechCardData = CardDatabase.get_tech(pending_tech_name)
+			var _db_total: int = 1
+			if _db_data != null:
+				_db_total = maxi(1, int(_db_data.effect_params.get("destroy_count", 1)))
+			var _db_idx: int = _db_total - turn_manager._field_destroy_remaining + 1
+			_show_guide("%s: Choose card %d of %d to destroy on the field." % [
+				pending_tech_name, _db_idx, _db_total])
+			_highlight_tech_targets(pending_tech_filter)
+			if _is_ai_turn():
+				await get_tree().create_timer(0.4).timeout
+				var _fd_target: Vector2i = _active_ai.decide_target("any_field_card_destroy")
+				var _fd_player: int = current_player
+				for _fd_p: int in range(2):
+					var _fd_card: GameState.CardInstance = GameState.get_card(
+						_fd_p, _fd_target.x, _fd_target.y)
+					if _fd_card.card_type != "dead_end":
+						_fd_player = _fd_p
+						break
+				_flash_target_card(_fd_player, _fd_target.x, _fd_target.y)
+				_handle_tech_target(_fd_player, _fd_target)
+			return
+		if pending_tech_name != "":
+			_finish_tech_action(current_player)
+		else:
+			_clear_after_ability()
 		return
 
 	if pending_tech_filter == "own_character_destroy_no_cost":
@@ -7766,6 +7846,67 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			GameState.gain_crystals(player, 700, "ability")
 			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter.begins_with("own_units_flag_up_to_"):
+		if player == current_player and card.card_type == "character":
+			if _tech_reveal_picked.has(pos):
+				return
+			var _flag_data: TechCardData = CardDatabase.get_tech(pending_tech_name)
+			var _flag_name: String = "princess"
+			if _flag_data != null:
+				_flag_name = str(_flag_data.effect_params.get("flag", "princess"))
+			GameState.apply_unit_effect_flag(player, pos.x, pos.y, _flag_name)
+			_tech_reveal_picked.append(pos)
+			_tech_reveals_remaining -= 1
+			var picked: int = _tech_reveal_picked.size()
+			if _tech_reveals_remaining <= 0:
+				GameState.post_message("Flag applied to %d unit(s)." % picked)
+				_finish_tech_action(current_player)
+			else:
+				_show_guide("Select up to %d unit(s) (%d/%d). CLOSE when done." % [
+					_tech_reveals_total, picked, _tech_reveals_total])
+				_highlight_tech_targets(pending_tech_filter)
+				if _is_ai_turn():
+					await get_tree().create_timer(0.4).timeout
+					_prompt_ai_flag_pick()
+		return
+
+	if pending_tech_filter == "own_cell_protect":
+		if player == current_player:
+			GameState.add_protected_cells(current_player, [pos])
+			GameState.post_message("Safe House protects cell [%d,%d] until foe's turn ends." % [pos.x, pos.y])
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "own_faceup_name_character":
+		var _name_data: TechCardData = CardDatabase.get_tech(pending_tech_name)
+		var _name_tokens: Array = TurnManager._tech_name_tokens(_name_data)
+		var _require_face_up: bool = true
+		if _name_data != null:
+			_require_face_up = bool(_name_data.effect_params.get("require_face_up", true))
+		if player == current_player and card.card_type == "character":
+			if _require_face_up and not card.face_up:
+				return
+			if not GameState.card_name_has_any_token(card.card_name, _name_tokens):
+				return
+			if not card.face_up:
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
+				card = GameState.get_card(player, pos.x, pos.y)
+			if _name_data:
+				match _name_data.effect_type:
+					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
+						var _wo_atk: int = GameState.scaled_tech_effect_for_unit(
+							card, _name_data.effect_params.get("atk", 0))
+						card.perm_atk_bonus += _wo_atk
+						GameState.post_message("%s: %s permanently gains +%d ATK." % [
+							_name_data.card_name, card.card_name, _wo_atk])
+					TechCardData.TechEffectType.DESTROY_OWN_NAME_FOR_CRYSTALS:
+						GameState.destroy_card(player, pos.x, pos.y, false)
+						var _er_gain: int = int(_name_data.effect_params.get("crystal_gain", 0))
+						GameState.gain_crystals(current_player, _er_gain, "tech")
+						GameState.post_message("%s: Gained %d Crystals!" % [_name_data.card_name, _er_gain])
 			_finish_tech_action(current_player)
 		return
 
@@ -8354,6 +8495,7 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"own_character_for_swap",
 		"ability_lockpicker_reveal",
 		"wk17_foe_pick_character",
+		"rift_guardian_foe_pick",
 	]
 
 
@@ -8457,6 +8599,20 @@ func _prompt_ai_diplomacy_pick() -> void:
 			GameState.post_message("Great Diplomacy: no face-down units to reveal.")
 		else:
 			GameState.post_message("Great Diplomacy: revealed %d unit(s)." % _tech_reveal_picked.size())
+		_finish_tech_action(player)
+		return
+	_active_ai.ai_target_chosen.emit(ai_target)
+	_handle_tech_target(player, ai_target)
+
+func _prompt_ai_flag_pick() -> void:
+	_restart_ai_watchdog()
+	var player: int = GameState.current_player
+	var ai_target: Vector2i = _active_ai.decide_target("own_faceup_character")
+	if ai_target.x < 0:
+		if _tech_reveal_picked.is_empty():
+			GameState.post_message("No valid units to flag.")
+		else:
+			GameState.post_message("Flag applied to %d unit(s)." % _tech_reveal_picked.size())
 		_finish_tech_action(player)
 		return
 	_active_ai.ai_target_chosen.emit(ai_target)
@@ -8663,15 +8819,20 @@ func _highlight_tech_targets(filter: String) -> void:
 				# dead_end slots are valid Radar targets — highlight any face-down cell
 				grid_nodes[opponent][r][c].set_highlighted(not opp_card.face_up)
 
-	elif "own_faceup_character" in filter or "own_bio_character" in filter:
+	elif "own_faceup_character" in filter or "own_bio_character" in filter \
+			or filter == "own_faceup_name_character":
 		var _tech_data: TechCardData = CardDatabase.get_tech(pending_tech_name) if pending_tech_name != "" else null
 		var _fd_ok: bool = _own_unit_target_allows_facedown(filter, _tech_data)
+		var _name_tokens: Array = TurnManager._tech_name_tokens(_tech_data)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
 				var ok := card.card_type == "character" and (card.face_up or _fd_ok)
 				if "own_bio_character" in filter:
 					ok = ok and card.affinity == CharacterData.Affinity.BIO
+				if filter == "own_faceup_name_character":
+					ok = ok and card.face_up \
+							and GameState.card_name_has_any_token(card.card_name, _name_tokens)
 				grid_nodes[player][r][c].set_highlighted(ok)
 
 	elif "any_faceup_card" in filter:
@@ -8755,6 +8916,31 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(_wk17_foe, r, c)
 				var ok: bool = card.card_type == "character" and pos != _exclude_pos
 				grid_nodes[_wk17_foe][r][c].set_highlighted(ok)
+
+	elif filter == "rift_guardian_foe_pick":
+		var _rg_att: int = turn_manager._pending_rg_attacker_player
+		if _rg_att < 0:
+			_rg_att = player
+		var _rg_exclude: Vector2i = turn_manager._pending_rg_exclude_pos
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var _rg_pos: Vector2i = Vector2i(r, c)
+				var _rg_card: GameState.CardInstance = GameState.get_card(_rg_att, r, c)
+				var _rg_ok: bool = _rg_card.card_type == "character" and _rg_pos != _rg_exclude
+				grid_nodes[_rg_att][r][c].set_highlighted(_rg_ok)
+
+	elif filter == "own_cell_protect":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				grid_nodes[player][r][c].set_highlighted(true)
+
+	elif filter.begins_with("own_units_flag_up_to_"):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var _flag_pos := Vector2i(r, c)
+				var _flag_card: GameState.CardInstance = GameState.get_card(player, r, c)
+				grid_nodes[player][r][c].set_highlighted(
+					_flag_card.card_type == "character" and not _tech_reveal_picked.has(_flag_pos))
 
 	elif filter == "any_field_card_destroy":
 		for p in range(2):
@@ -9400,6 +9586,8 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 		await get_tree().create_timer(0.55).timeout
 	_check_almost_win_bgm()
 	_refresh_card_node(player, row, col)
+	if not GameState._pending_ancestral_revive.is_empty():
+		await turn_manager.resolve_ancestral_spirit_revive()
 
 func _spawn_destroy_effect(card_node: Control) -> void:
 	SFXManager.play(SFXManager.SFX_DESTROY)

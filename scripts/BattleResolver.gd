@@ -1526,6 +1526,8 @@ static func validate_attack_target(
 		return {"ok": false, "reason": "Cannot target an empty cell."}
 	if target_pos in GameState.locked_attack_positions:
 		return {"ok": false, "reason": "That square is locked by a trap."}
+	if GameState.is_cell_protected_from_attack(defender_player, target_pos):
+		return {"ok": false, "reason": "That square is protected and cannot be targeted."}
 
 	if attacker.ability_type == CharacterData.AbilityType.ATTACK_ONLY_UNION_ZONE_PATTERN:
 		var zone: Array = _union_zone_for_card(attacker)
@@ -1573,6 +1575,8 @@ static func attacker_has_any_legal_target(
 		for c: int in range(GameState.GRID_SIZE):
 			var pos: Vector2i = Vector2i(r, c)
 			if pos in GameState.locked_attack_positions:
+				continue
+			if GameState.is_cell_protected_from_attack(defender_player, pos):
 				continue
 			var defender: GameState.CardInstance = GameState.get_card(defender_player, r, c)
 			if is_attack_target_allowed(

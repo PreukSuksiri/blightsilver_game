@@ -225,6 +225,7 @@ enum AbilityType {
 	TURN_START_DESTROY_OR_LOSE_CRYSTALS, # Turn start: destroy self or lose N crystals
 	UNION_SUMMON_DESTROY_UNITS,          # On union summon: destroy N units per side (no destroy cost)
 	BOOST_PER_FIELD_UNIT,                # +N ATK&DEF per unit on field; optional affinity DEF penalty
+	RECKONING_FOE_DEFENDER_SUBSTITUTE,   # Foe picks own unit to defend instead of this union (conditions apply)
 }
 
 @export var card_name: String = ""

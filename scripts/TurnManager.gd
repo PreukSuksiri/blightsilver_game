@@ -64,6 +64,13 @@ var _wk17_substitute_grid_player: int = -1
 var _wk17_substitute_attacker_pos: Vector2i = Vector2i(-1, -1)
 var _wk17_substitute_defender_pos: Vector2i = Vector2i(-1, -1)
 var _wk17_initiating_attacker_pos: Vector2i = Vector2i(-1, -1)
+var _field_destroy_remaining: int = 0
+var _field_destroy_foe_no_cost: bool = false
+var _pending_rg_attacker_player: int = -1
+var _pending_rg_exclude_pos: Vector2i = Vector2i(-1, -1)
+var _pending_rg_defender_pos: Vector2i = Vector2i(-1, -1)
+var _rg_friendly_fire: bool = false
+var _rg_friendly_fire_pos: Vector2i = Vector2i(-1, -1)
 
 ## Depth counter for async flows (target selection, brainwash, etc.) that must
 ## finish before turn/AI continuation is allowed.
@@ -322,7 +329,7 @@ func start_turn(player_index: int) -> void:
 						GameState.lose_crystals(player_index, _ts_loss, "ability")
 						GameState.post_message("%s: Lost %d crystals!" % [_ts_card.card_name, _ts_loss])
 
-	# Foe-turn-start abilities on opponent's field (e.g. Alluring Spellcaster)
+	# Foe-turn-start abilities on opponent's field (e.g. Alluring Witch)
 	var _opp_for_foe_start: int = GameState.get_opponent(player_index)
 	for _fs_r: int in range(GameState.GRID_SIZE):
 		for _fs_c: int in range(GameState.GRID_SIZE):
@@ -634,6 +641,18 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	defender_was_exposed = _wk17_out.get("defender_was_exposed", defender_was_exposed)
 	defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 
+	var _rg_out: Dictionary = await _apply_rift_guardian_pre_battle(
+		player, opponent, attacker, defender, attacker_pos, target_pos)
+	if _rg_out.get("abort", false):
+		emit_signal("attack_aborted")
+		return
+	if _rg_friendly_fire and _rg_friendly_fire_pos != Vector2i(-1, -1):
+		var _rg_ff_pos: Vector2i = _rg_friendly_fire_pos
+		_rg_friendly_fire = false
+		_rg_friendly_fire_pos = Vector2i(-1, -1)
+		await resolve_rift_guardian_substitute(player, _rg_ff_pos, target_pos)
+		return
+
 	if _wk17_friendly_fire and _wk17_friendly_fire_pos != Vector2i(-1, -1):
 		var _wk17_ff_pos: Vector2i = _wk17_friendly_fire_pos
 		_wk17_friendly_fire = false
@@ -827,6 +846,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		result.destruction_blocked_defender = true
 		GameState.divine_protection_active[opponent] = false
 		GameState.post_message("Prayer protected %s!" % defender.card_name)
+
+	_apply_princess_magic_reckoning(
+		player, opponent, attacker, defender, result)
 
 	_preview_destruction_survival(
 		result, attacker, defender, player, opponent, attacker_pos, target_pos)
@@ -1139,8 +1161,17 @@ func play_tech_card(tech_name: String) -> void:
 			emit_signal("awaiting_target_selection", "Release Mutagen: Choose 1 of your units to flag.", "own_faceup_character")
 
 		TechCardData.TechEffectType.DIVINE_PROTECTION:
-			GameState.divine_protection_active[player] = true
-			GameState.post_message("Prayer: Divine Units protected until opponent's turn ends.")
+			var _dp_tokens: Array = _tech_name_tokens(data)
+			if not _dp_tokens.is_empty():
+				GameState.destruction_immune_name_tokens.append({
+					"owner": player,
+					"tokens": _dp_tokens,
+				})
+				GameState.post_message(
+					"%s: Matching units cannot be destroyed until foe's turn ends." % data.card_name)
+			else:
+				GameState.divine_protection_active[player] = true
+				GameState.post_message("Prayer: Divine Units protected until opponent's turn ends.")
 			after_tech_resolved(player)
 			return
 
@@ -1195,7 +1226,11 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.PERM_ATK_BOOST_ONE, \
 		TechCardData.TechEffectType.PERM_DEF_BOOST_ONE, \
 		TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW:
-			emit_signal("awaiting_target_selection", "Choose 1 of your units to boost.", "own_faceup_character")
+			if not _tech_name_tokens(data).is_empty():
+				emit_signal("awaiting_target_selection",
+					"Choose 1 of your matching units.", "own_faceup_name_character")
+			else:
+				emit_signal("awaiting_target_selection", "Choose 1 of your units to boost.", "own_faceup_character")
 
 		TechCardData.TechEffectType.TEMP_DEF_BOOST_ALL:
 			var _garrison_def: int = data.effect_params.get("def", 0)
@@ -1301,6 +1336,71 @@ func play_tech_card(tech_name: String) -> void:
 			else:
 				GameState.reroll_dice_available[player] = true
 				GameState.post_message("Lucky Break: You may re-roll the dice once before your next attack.")
+			after_tech_resolved(player)
+			return
+
+		TechCardData.TechEffectType.CRYSTAL_GAIN_IF_OWN_NAME_FACE_UP:
+			var _med_tokens: Array = _tech_name_tokens(data)
+			if not GameState.has_face_up_name_on_field(player, _med_tokens):
+				GameState.post_message("%s: No matching face-up unit — no effect." % data.card_name)
+			else:
+				var _med_gain: int = int(data.effect_params.get("crystal_gain", 0))
+				GameState.gain_crystals(player, _med_gain, "tech")
+				GameState.post_message("%s: Gained %d Crystals!" % [data.card_name, _med_gain])
+				await _wait_crystal_animation()
+			after_tech_resolved(player)
+			return
+
+		TechCardData.TechEffectType.DESTROY_OWN_NAME_FOR_CRYSTALS:
+			emit_signal("awaiting_target_selection",
+				"Choose 1 of your face-up matching units to recycle.", "own_faceup_name_character")
+			return
+
+		TechCardData.TechEffectType.ADD_FLAG_UP_TO:
+			var _flag_cap: int = maxi(1, int(data.effect_params.get("count", 1)))
+			emit_signal("awaiting_target_selection",
+				"Put up to %d flag(s) on your units." % _flag_cap,
+				"own_units_flag_up_to_%d" % _flag_cap)
+			return
+
+		TechCardData.TechEffectType.CONDITIONAL_DESTROY_FIELD:
+			var _db_tokens: Array = _tech_name_tokens(data)
+			if not GameState.has_face_up_name_on_field(player, _db_tokens):
+				GameState.post_message("%s: No matching face-up unit — no effect." % data.card_name)
+				after_tech_resolved(player)
+				return
+			_field_destroy_remaining = maxi(1, int(data.effect_params.get("destroy_count", 1)))
+			_field_destroy_foe_no_cost = bool(data.effect_params.get("foe_no_cost", false))
+			emit_signal("awaiting_target_selection",
+				"%s: Choose card 1 of %d to destroy on the field." % [
+					data.card_name, _field_destroy_remaining],
+				"any_field_card_destroy")
+			return
+
+		TechCardData.TechEffectType.TEMP_ATK_DEF_BOOST_NAME_FILTER:
+			_apply_temp_name_buff_tech(player, data)
+			after_tech_resolved(player)
+			return
+
+		TechCardData.TechEffectType.PROTECT_CORNER_CELLS_UNTIL_FOE_TURN:
+			GameState.add_protected_cells(player, _corner_cells_for_player())
+			GameState.post_message("%s: Corner cells protected until foe's turn ends." % data.card_name)
+			after_tech_resolved(player)
+			return
+
+		TechCardData.TechEffectType.PROTECT_CELL_UNTIL_FOE_TURN:
+			emit_signal("awaiting_target_selection",
+				"Safe House: Choose 1 cell on your grid to protect.", "own_cell_protect")
+			return
+
+		TechCardData.TechEffectType.DESTROY_ALL_REVIVED_AND_TOKENS:
+			_destroy_all_revived_and_tokens()
+			after_tech_resolved(player)
+			return
+
+		TechCardData.TechEffectType.PRINCESS_MAGIC_RECKONING:
+			GameState.princess_magic_active[player] = true
+			GameState.post_message("Princess Magic active for one Reckoning!")
 			after_tech_resolved(player)
 			return
 
@@ -2536,6 +2636,9 @@ func _end_turn(player: int) -> void:
 
 	# Prayer: protection for the opponent of this player expires when this turn ends.
 	GameState.expire_divine_protection_at_turn_end(player)
+	GameState.clear_protected_cells_when_foe_turn_ends(player)
+	GameState.clear_tech_temp_name_buffs_when_foe_turn_ends(player)
+	GameState.clear_destruction_immune_when_foe_turn_ends(player)
 	# Clear berserk if it's now ending
 	if GameState.berserk_active[player] != null:
 		GameState.berserk_active[player] = null
@@ -3188,6 +3291,196 @@ func _apply_wk17_pre_battle(
 		_pending_wk17_defender_pos = Vector2i(-1, -1)
 
 	return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
+
+static func _tech_name_tokens(data: TechCardData) -> Array:
+	if data == null:
+		return []
+	if data.effect_params.has("name_tokens"):
+		return data.effect_params.get("name_tokens", [])
+	var _nc: String = str(data.effect_params.get("name_contains", "")).strip_edges()
+	if _nc.is_empty():
+		return []
+	return [_nc.to_lower()]
+
+static func _corner_cells_for_player() -> Array:
+	var _last: int = GameState.GRID_SIZE - 1
+	return [
+		Vector2i(0, 0),
+		Vector2i(0, _last),
+		Vector2i(_last, 0),
+		Vector2i(_last, _last),
+	]
+
+func _apply_temp_name_buff_tech(player: int, data: TechCardData) -> void:
+	var _tokens: Array = _tech_name_tokens(data)
+	var _atk: int = int(data.effect_params.get("atk", 0))
+	var _def: int = int(data.effect_params.get("def", 0))
+	var _buffed: int = 0
+	for _r: int in range(GameState.GRID_SIZE):
+		for _c: int in range(GameState.GRID_SIZE):
+			var _card: GameState.CardInstance = GameState.get_card(player, _r, _c)
+			if _card.card_type != "character" or not _card.face_up:
+				continue
+			if not GameState.card_name_has_any_token(_card.card_name, _tokens):
+				continue
+			_card.temp_atk_bonus += _atk
+			_card.temp_def_bonus += _def
+			_buffed += 1
+	if bool(data.effect_params.get("until_foe_turn_end", false)):
+		GameState.tech_temp_name_buffs.append({
+			"owner": player,
+			"tokens": _tokens,
+			"atk": _atk,
+			"def": _def,
+		})
+	GameState.post_message("%s: %d matching unit(s) gain +%d ATK & +%d DEF." % [
+		data.card_name, _buffed, _atk, _def])
+
+func _destroy_all_revived_and_tokens() -> void:
+	var _destroyed: int = 0
+	for _p: int in range(2):
+		for _r: int in range(GameState.GRID_SIZE):
+			for _c: int in range(GameState.GRID_SIZE):
+				var _card: GameState.CardInstance = GameState.get_card(_p, _r, _c)
+				if _card.card_type != "character":
+					continue
+				if not _card.is_revived and not _card.is_token:
+					continue
+				GameState.destroy_card(_p, _r, _c, false)
+				_destroyed += 1
+	GameState.post_message("Cremation: %d revived/token unit(s) destroyed." % _destroyed)
+
+func _apply_princess_magic_reckoning(
+		attacker_player: int,
+		defender_player: int,
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResolver.BattleResult
+) -> void:
+	for _pm_owner: int in range(2):
+		if not GameState.princess_magic_active[_pm_owner]:
+			continue
+		var _pm_foe: int = GameState.get_opponent(_pm_owner)
+		var _princess_card: GameState.CardInstance = null
+		if defender.card_type == "character" \
+				and defender_player == _pm_foe \
+				and "princess" in defender.flags:
+			_princess_card = defender
+		elif attacker.card_type == "character" \
+				and attacker_player == _pm_foe \
+				and "princess" in attacker.flags:
+			_princess_card = attacker
+		if _princess_card == null:
+			continue
+		if _princess_card == defender:
+			result.defender_destroyed = true
+			result.defender_crystal_loss = 0
+		else:
+			result.attacker_destroyed = true
+			result.attacker_crystal_loss = 0
+		GameState.princess_magic_active[_pm_owner] = false
+		GameState.post_message("Princess Magic: %s is destroyed!" % _princess_card.card_name)
+
+static func _has_rg_foe_pick_target(attacker_player: int, exclude_pos: Vector2i) -> bool:
+	for _r: int in range(GameState.GRID_SIZE):
+		for _c: int in range(GameState.GRID_SIZE):
+			var _pos: Vector2i = Vector2i(_r, _c)
+			if _pos == exclude_pos:
+				continue
+			var _card: GameState.CardInstance = GameState.get_card(attacker_player, _r, _c)
+			if _card.card_type == "character":
+				return true
+	return false
+
+func _apply_rift_guardian_pre_battle(
+		player: int,
+		opponent: int,
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		attacker_pos: Vector2i,
+		target_pos: Vector2i
+) -> Dictionary:
+	_rg_friendly_fire = false
+	_rg_friendly_fire_pos = Vector2i(-1, -1)
+	if defender.card_type != "character" or not defender.is_union:
+		return {"abort": false}
+	if defender.ability_type != CharacterData.AbilityType.RECKONING_FOE_DEFENDER_SUBSTITUTE:
+		return {"abort": false}
+	if defender.affinity != CharacterData.Affinity.ARCANE:
+		return {"abort": false}
+	if defender.ability_params.get("requires_revived_or_token", true) \
+			and not GameState.field_has_revived_or_token():
+		return {"abort": false}
+	await await_card_effect_flash(defender.card_name)
+	if not _has_rg_foe_pick_target(player, attacker_pos):
+		GameState.post_message("%s: No valid substitute — effect fizzles." % defender.card_name)
+		return {"abort": false}
+	_pending_rg_attacker_player = player
+	_pending_rg_exclude_pos = attacker_pos
+	_pending_rg_defender_pos = target_pos
+	var _saved_cp: int = GameState.current_player
+	GameState.current_player = player
+	await _prompt_and_await_target_selection(
+		"%s: Choose 1 of your units to fight in place of %s." % [
+			defender.card_name, defender.card_name],
+		"rift_guardian_foe_pick")
+	GameState.current_player = _saved_cp
+	_pending_rg_attacker_player = -1
+	_pending_rg_exclude_pos = Vector2i(-1, -1)
+	_pending_rg_defender_pos = Vector2i(-1, -1)
+	return {"abort": false}
+
+func resolve_rift_guardian_substitute(
+		attacker_player: int,
+		substitute_pos: Vector2i,
+		rg_defender_pos: Vector2i
+) -> void:
+	var _rg_name: String = "Rift Guardian"
+	var _rg_card: GameState.CardInstance = GameState.get_card(
+		GameState.get_opponent(attacker_player), rg_defender_pos.x, rg_defender_pos.y)
+	if _rg_card != null and _rg_card.card_type == "character":
+		_rg_name = _rg_card.card_name
+	GameState.post_message("%s: Substitute fights in place of %s!" % [_rg_name, _rg_name])
+	await resolve_brainwash_friendly_fire(attacker_player, substitute_pos)
+
+func resolve_ancestral_spirit_revive() -> void:
+	var pending: Dictionary = GameState._pending_ancestral_revive
+	if pending.is_empty():
+		return
+	var owner: int = int(pending.get("owner", -1))
+	var trap_row: int = int(pending.get("trap_row", -1))
+	var trap_col: int = int(pending.get("trap_col", -1))
+	var destroy_row: int = int(pending.get("destroy_row", -1))
+	var destroy_col: int = int(pending.get("destroy_col", -1))
+	var revived_src: GameState.CardInstance = pending.get("card", null)
+	GameState._pending_ancestral_revive = {}
+	if owner < 0 or revived_src == null:
+		return
+	var trap_data: TrapData = CardDatabase.get_trap("Ancestral Spirit")
+	emit_signal("awaiting_trap_choice",
+		"Ancestral Spirit: Revive %s?" % revived_src.card_name,
+		["Revive", "Decline"])
+	var _choice: int = await ability_choice_resolved
+	if _choice != 0:
+		return
+	if trap_row >= 0 and trap_col >= 0:
+		var trap_card: GameState.CardInstance = GameState.get_card(owner, trap_row, trap_col)
+		if trap_card.card_type == "trap":
+			GameState.reveal_card_by_ability(owner, trap_row, trap_col)
+			await await_card_effect_flash(trap_data.card_name if trap_data else trap_card.card_name, "trap")
+			GameState.void_trap(owner, trap_row, trap_col)
+	if not GameState.is_valid_revive_placement_cell(owner, destroy_row, destroy_col):
+		GameState.post_message("Ancestral Spirit: No valid cell to revive.")
+		return
+	var placed: GameState.CardInstance = GameState._clone_card_for_revive(revived_src)
+	placed.is_revived = true
+	placed.face_up = true
+	placed.revealed_on_turn = GameState.turn_number
+	placed.attacked_this_turn = false
+	GameState.grids[owner][destroy_row][destroy_col] = placed
+	GameState.emit_signal("card_revealed", owner, destroy_row, destroy_col)
+	BattleResolver.recalculate_all_field_bonuses()
+	GameState.post_message("Ancestral Spirit revived %s!" % placed.card_name)
 
 func _emit_post_attack_target_selections(
 		result: BattleResolver.BattleResult,

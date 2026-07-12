@@ -204,7 +204,7 @@ TRAP_MAPPINGS: dict[str, dict] = {
 # ── Characters (all NOT_IMPLEMENTED + drift cards) ─────────────────────────
 
 CHARACTER_MAPPINGS: dict[str, dict] = {
-    "Alluring Spellcaster": {
+    "Alluring Witch": {
         "ability_type": "LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE",
         "ability_params": {},
     },
@@ -464,7 +464,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY",
         "ability_params": {"def": 10, "target": "defender"},
     },
-    "Deep Tribe Axe Thrower": {
+    "Deep Tribe Axeman": {
         "ability_type": "ONE_USE_EXTRA_ATTACK_ON_KILL",
         "ability_params": {"vs_non_affinity": "NATURE", "per_turn": True},
     },
@@ -508,7 +508,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "DESTROY_IF_OPPONENT_AFFINITY",
         "ability_params": {"atk_exceeds_def_by": 30},
     },
-    "Lindsy the Brave Princess": {
+    "Chihako the Brave Princess": {
         "ability_type": "VENOM_FLAG_END_OF_TURN",
         "ability_params": {"flag": "princess", "turn_start": True, "ally_target": True},
     },
@@ -528,7 +528,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "ATK_BONUS_VS_AFFINITY",
         "ability_params": {"affinity": "ARCANE", "bonus": 10},
     },
-    "Gremlin Worker": {
+    "Hardworking Gremlin": {
         "ability_type": "IMMUNE_ZERO_COST_TRAPS",
         "ability_params": {},
     },
@@ -536,7 +536,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "PERM_BOOST_END_OF_TURN",
         "ability_params": {"atk": 10, "def": 10, "on_crystal_gain": True, "once": True},
     },
-    "Magical Smith": {
+    "Magical Craftsman": {
         "ability_type": "ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND",
         "ability_params": {"atk": 5, "def": 5, "temp": True},
     },
@@ -544,7 +544,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "ATK_DEF_BONUS_IF_UNION_ON_FIELD",
         "ability_params": {"affinity": "ARCANE", "atk": 5, "def": 5},
     },
-    "Ore Transporter": {
+    "Ore Eater": {
         "ability_type": "CRYSTAL_GAIN_ON_OPP_REVEAL",
         "ability_params": {"amount": 20, "on_own_tech": True},
     },
@@ -552,7 +552,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "DEF_BONUS_VS_AFFINITY",
         "ability_params": {"affinity": "COSMIC", "bonus": 15},
     },
-    "Freya the Rift Walker": {
+    "Freya the Rift Hunter": {
         "ability_type": "INTERCEPT_ALLY_ATTACK",
         "ability_params": {"affinity": "ARCANE", "swap_self": True, "face_down": True},
     },
@@ -905,7 +905,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "MUTAGEN_DESTROY_ATTACKER",
         "ability_params": {"both_pay_no_cost": True},
     },
-    "Library Critters": {
+    "Library Critter": {
         "ability_type": "NONE",
         "ability_params": {},
     },

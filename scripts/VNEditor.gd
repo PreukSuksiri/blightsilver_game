@@ -77,6 +77,7 @@ var _text_tabs: Array = []           # Button per language
 var _speaker_area: VBoxContainer = null
 var _text_area: VBoxContainer = null
 var _choices_vbox: VBoxContainer = null
+var _go_to_vbox: VBoxContainer = null
 var _exploration_actions_vbox: VBoxContainer = null
 var _f_choices_layout: OptionButton = null
 var _branch_bar: HBoxContainer = null
@@ -90,6 +91,7 @@ var _file_list: ItemList = null
 var _folder_lbl: Label = null
 var _folder_dialog: FileDialog = null
 var _beat_list: ItemList = null
+var _go_to_beat_input: LineEdit = null
 var _status_lbl: Label = null
 var _bug_note_lbl: Label = null
 
@@ -99,6 +101,7 @@ var _bug_note_lbl: Label = null
 var _no_beat_lbl: Label = null
 var _fields_scroll: ScrollContainer = null
 var _fields_vbox: VBoxContainer = null
+var _f_beat_name: LineEdit = null
 var _f_comment: LineEdit = null
 var _f_hidden: CheckBox = null
 var _f_group: SpinBox = null
@@ -112,6 +115,17 @@ var _f_kb_zoom: SpinBox = null
 var _f_kb_pan_x: SpinBox = null
 var _f_kb_pan_y: SpinBox = null
 var _f_kb_duration: SpinBox = null
+var _f_kb_delay: SpinBox = null
+var _f_kb_start_velocity_cb: CheckBox = null
+var _f_kb_start_velocity: SpinBox = null
+var _f_kb_stop_velocity_cb: CheckBox = null
+var _f_kb_stop_velocity: SpinBox = null
+var _f_kb_start_zoom_cb: CheckBox = null
+var _f_kb_start_zoom: SpinBox = null
+var _f_kb_start_pan_x_cb: CheckBox = null
+var _f_kb_start_pan_x: SpinBox = null
+var _f_kb_start_pan_y_cb: CheckBox = null
+var _f_kb_start_pan_y: SpinBox = null
 var _f_music: LineEdit = null
 var _f_music_fade_in: SpinBox = null
 var _f_music_fade_out: SpinBox = null
@@ -504,6 +518,21 @@ func _build_left_panel(parent: Control) -> void:
 
 	# Beat list
 	_left_hdr(left, "BEATS")
+	var go_row := HBoxContainer.new()
+	go_row.add_theme_constant_override("separation", 4)
+	left.add_child(go_row)
+	_go_to_beat_input = LineEdit.new()
+	_go_to_beat_input.placeholder_text = "Go to beat name…"
+	_go_to_beat_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_go_to_beat_input.add_theme_font_size_override("font_size", 13)
+	_go_to_beat_input.text_submitted.connect(_go_to_beat_by_name)
+	go_row.add_child(_go_to_beat_input)
+	var go_btn := Button.new()
+	go_btn.text = "Go"
+	go_btn.custom_minimum_size = Vector2(40, 26)
+	go_btn.add_theme_font_size_override("font_size", 13)
+	go_btn.pressed.connect(func() -> void: _go_to_beat_by_name(_go_to_beat_input.text))
+	go_row.add_child(go_btn)
 	_beat_list = ItemList.new()
 	_beat_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_beat_list.add_theme_font_size_override("font_size", 15)
@@ -606,6 +635,7 @@ func _build_fields() -> void:
 
 	# ── Dialogue ──────────────────────────────────────────────
 	_section(v, "DIALOGUE")
+	_f_beat_name = _row_le(v, "Beat name", "Unique ID within this file (e.g. intro_kelly_meet)")
 	_f_comment = _row_le(v, "Comment", "Dev note (not shown in-game)")
 	_f_hidden  = _row_cb(v, "Hidden", "Skip this beat during playback (keeps it in the file)")
 	_f_group = _row_sb(v, "Group", 0.0, 999.0, 1.0,
@@ -628,6 +658,24 @@ func _build_fields() -> void:
 	v.add_child(_text_area)
 
 	_rebuild_locale_ui()
+
+	# ── Go To (conditional beat jump) ─────────────────────────
+	_section(v, "GO TO  (auto-jump after this beat)")
+	var go_to_hint := Label.new()
+	go_to_hint.text = "Evaluated top-to-bottom when the player advances; first matching entry wins. Empty conditions = always. Uses exploration vars/items when in exploration."
+	go_to_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	go_to_hint.add_theme_font_size_override("font_size", 12)
+	go_to_hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
+	v.add_child(go_to_hint)
+	_go_to_vbox = VBoxContainer.new()
+	_go_to_vbox.add_theme_constant_override("separation", 6)
+	v.add_child(_go_to_vbox)
+	var add_go_to_btn := Button.new()
+	add_go_to_btn.text = "+ Add Go To"
+	add_go_to_btn.custom_minimum_size = Vector2(120, 28)
+	add_go_to_btn.add_theme_font_size_override("font_size", 14)
+	add_go_to_btn.pressed.connect(_add_go_to_row)
+	v.add_child(add_go_to_btn)
 
 	# ── Choices ─────────────────────────────────────────────
 	_section(v, "CHOICES")
@@ -840,10 +888,41 @@ func _build_fields() -> void:
 	# ── Ken Burns ─────────────────────────────────────────────
 	_section(v, "KEN BURNS  (zoom/pan on background)")
 	_f_kb_zoom     = _row_sb(v, "Zoom",     0.5,   5.0,   0.01,  "1.0 = no zoom")
-	_f_kb_pan_x    = _row_sb(v, "Pan X",  -800.0, 800.0,  1.0,   "pixels")
-	_f_kb_pan_y    = _row_sb(v, "Pan Y",  -800.0, 800.0,  1.0,   "pixels")
+	_f_kb_pan_x    = _row_sb(v, "Pan X",  -1600.0, 1600.0,  1.0,   "pixels")
+	_f_kb_pan_y    = _row_sb(v, "Pan Y",  -1600.0, 1600.0,  1.0,   "pixels")
 	_f_kb_duration = _row_sb(v, "Duration",  0.0,  60.0,  0.001, "seconds")
 	_f_kb_zoom.value = 1.0
+	_f_kb_delay = _row_sb(v, "Delay", 0.0, 60.0, 0.1, "seconds before motion starts (optional)")
+	var kb_timing_hint := Label.new()
+	kb_timing_hint.text = "Optional velocity ramps — seconds to ease in to / out from normal speed within Duration. Unchecked = legacy sine ease on the full move."
+	kb_timing_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	kb_timing_hint.add_theme_font_size_override("font_size", 12)
+	kb_timing_hint.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.55))
+	v.add_child(kb_timing_hint)
+	_f_kb_start_velocity_cb = _row_optional_sb(
+		v, "Start velocity", 0.0, 60.0, 0.1, "ramp-in time (s)")
+	_f_kb_start_velocity = _f_kb_start_velocity_cb.get_meta("spinbox") as SpinBox
+	_f_kb_start_velocity.value = 1.0
+	_f_kb_stop_velocity_cb = _row_optional_sb(
+		v, "Stop velocity", 0.0, 60.0, 0.1, "ramp-out time (s)")
+	_f_kb_stop_velocity = _f_kb_stop_velocity_cb.get_meta("spinbox") as SpinBox
+	_f_kb_stop_velocity.value = 1.0
+	var kb_start_hint := Label.new()
+	kb_start_hint.text = "Optional start transform — check a field to snap there before animating to the end values above. Unchecked = current behavior (animate from present position)."
+	kb_start_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	kb_start_hint.add_theme_font_size_override("font_size", 12)
+	kb_start_hint.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.55))
+	v.add_child(kb_start_hint)
+	_f_kb_start_zoom_cb = _row_optional_sb(
+		v, "Start zoom", 0.5, 5.0, 0.01, "initial scale")
+	_f_kb_start_zoom = _f_kb_start_zoom_cb.get_meta("spinbox") as SpinBox
+	_f_kb_start_zoom.value = 1.0
+	_f_kb_start_pan_x_cb = _row_optional_sb(
+		v, "Start pan X", -1600.0, 1600.0, 1.0, "initial X offset")
+	_f_kb_start_pan_x = _f_kb_start_pan_x_cb.get_meta("spinbox") as SpinBox
+	_f_kb_start_pan_y_cb = _row_optional_sb(
+		v, "Start pan Y", -1600.0, 1600.0, 1.0, "initial Y offset")
+	_f_kb_start_pan_y = _f_kb_start_pan_y_cb.get_meta("spinbox") as SpinBox
 	var kb_preview_row := HBoxContainer.new()
 	kb_preview_row.add_theme_constant_override("separation", 6)
 	v.add_child(kb_preview_row)
@@ -1259,6 +1338,7 @@ func _build_fields() -> void:
 
 func _connect_static_signals() -> void:
 	var ch := _on_field_changed
+	_f_beat_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_comment.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_background.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_video.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -1342,10 +1422,86 @@ func _connect_static_signals() -> void:
 		_f_wait, _f_fade_in, _f_fade_out,
 		_f_flash_count, _f_flash_duration, _f_flash_delay,
 		_f_shake_magnitude, _f_shake_screen,
-		_f_kb_zoom, _f_kb_pan_x, _f_kb_pan_y, _f_kb_duration,
+		_f_kb_zoom, _f_kb_pan_x, _f_kb_pan_y, _f_kb_duration, _f_kb_delay,
+		_f_kb_start_velocity, _f_kb_stop_velocity,
+		_f_kb_start_zoom, _f_kb_start_pan_x, _f_kb_start_pan_y,
 		_f_center_text_size, _f_center_text_fade_in, _f_center_text_hold, _f_center_text_fade_out,
 	]:
 		sp.value_changed.connect(func(_v: float) -> void: ch.call())
+
+	_f_kb_start_zoom_cb.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_kb_start_pan_x_cb.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_kb_start_pan_y_cb.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_kb_start_velocity_cb.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_kb_stop_velocity_cb.toggled.connect(func(_b: bool) -> void: ch.call())
+
+func _populate_optional_kb_spin(
+		kb: Dictionary, key: String, cb: CheckBox, sb: SpinBox, default_val: float) -> void:
+	if cb == null or sb == null:
+		return
+	cb.button_pressed = kb.has(key)
+	sb.editable = kb.has(key)
+	sb.value = float(kb[key]) if kb.has(key) else default_val
+
+func _reset_optional_kb_spin(cb: CheckBox, sb: SpinBox, default_val: float) -> void:
+	if cb == null or sb == null:
+		return
+	cb.button_pressed = false
+	sb.editable = false
+	sb.value = default_val
+
+func _ken_burns_dict_from_fields() -> Dictionary:
+	var dur: float = _f_kb_duration.value
+	if dur <= 0.0:
+		dur = 4.0
+	var kb: Dictionary = {
+		"zoom": _f_kb_zoom.value,
+		"pan_x": _f_kb_pan_x.value,
+		"pan_y": _f_kb_pan_y.value,
+		"duration": maxf(dur, 0.1),
+	}
+	if _f_kb_start_zoom_cb != null and _f_kb_start_zoom_cb.button_pressed:
+		kb["start_zoom"] = _f_kb_start_zoom.value
+	if _f_kb_start_pan_x_cb != null and _f_kb_start_pan_x_cb.button_pressed:
+		kb["start_pan_x"] = _f_kb_start_pan_x.value
+	if _f_kb_start_pan_y_cb != null and _f_kb_start_pan_y_cb.button_pressed:
+		kb["start_pan_y"] = _f_kb_start_pan_y.value
+	if _f_kb_delay != null and _f_kb_delay.value > 0.0:
+		kb["delay"] = _f_kb_delay.value
+	if _f_kb_start_velocity_cb != null and _f_kb_start_velocity_cb.button_pressed:
+		kb["start_velocity"] = maxf(_f_kb_start_velocity.value, 0.0)
+	if _f_kb_stop_velocity_cb != null and _f_kb_stop_velocity_cb.button_pressed:
+		kb["stop_velocity"] = maxf(_f_kb_stop_velocity.value, 0.0)
+	return kb
+
+func _run_ken_burns_tween_on(target: TextureRect, kb: Dictionary, tween_ref: Array) -> void:
+	if target == null:
+		return
+	_apply_ken_burns_start_transform(target, kb)
+	var from_scale: float = target.scale.x
+	var from_pos: Vector2 = target.position
+	var to_scale: float = float(kb.get("zoom", 1.0))
+	var to_pos: Vector2 = Vector2(float(kb.get("pan_x", 0.0)), float(kb.get("pan_y", 0.0)))
+	var total: float = KenBurnsUtil.total_time(kb)
+	if tween_ref.size() > 0 and tween_ref[0] is Tween:
+		(tween_ref[0] as Tween).kill()
+	var tw: Tween = create_tween()
+	tween_ref.clear()
+	tween_ref.append(tw)
+	tw.tween_method(
+		func(elapsed: float) -> void:
+			var p: float = KenBurnsUtil.sample_progress(elapsed, kb)
+			KenBurnsUtil.apply_transform(target, p, from_scale, to_scale, from_pos, to_pos),
+		0.0, total, total)
+
+func _apply_ken_burns_start_transform(target: TextureRect, kb: Dictionary) -> void:
+	if kb.has("start_zoom"):
+		var sz: float = float(kb["start_zoom"])
+		target.scale = Vector2(sz, sz)
+	if kb.has("start_pan_x"):
+		target.position.x = float(kb["start_pan_x"])
+	if kb.has("start_pan_y"):
+		target.position.y = float(kb["start_pan_y"])
 
 # ─────────────────────────────────────────────────────────────
 # Dungeon call picker
@@ -1802,6 +1958,39 @@ func _row_sb(parent: Control, label: String, mn: float, mx: float, step: float, 
 		hbox.add_child(hl)
 	return sb
 
+func _row_optional_sb(parent: Control, label: String, mn: float, mx: float, step: float,
+		hint: String) -> CheckBox:
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 6)
+	parent.add_child(hbox)
+	var cb := CheckBox.new()
+	cb.text = label
+	cb.custom_minimum_size.x = 140.0
+	cb.add_theme_font_size_override("font_size", 14)
+	cb.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.9))
+	hbox.add_child(cb)
+	var sb := SpinBox.new()
+	sb.min_value = mn
+	sb.max_value = mx
+	sb.step = step
+	sb.custom_minimum_size.x = 110.0
+	sb.editable = false
+	hbox.add_child(sb)
+	if not hint.is_empty():
+		var hl := Label.new()
+		hl.text = hint
+		hl.add_theme_font_size_override("font_size", 13)
+		hl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.55))
+		hl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		hbox.add_child(hl)
+	cb.toggled.connect(func(on: bool) -> void:
+		sb.editable = on
+		_on_field_changed())
+	sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
+	hbox.set_meta("spinbox", sb)
+	cb.set_meta("spinbox", sb)
+	return cb
+
 func _row_cb(parent: Control, label: String, hint: String) -> CheckBox:
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 6)
@@ -2106,15 +2295,7 @@ func _build_kb_preview_popup() -> void:
 	btn_row.add_child(stop_btn)
 
 func _ken_burns_preview_values() -> Dictionary:
-	var dur: float = _f_kb_duration.value
-	if dur <= 0.0:
-		dur = 4.0
-	return {
-		"zoom": _f_kb_zoom.value,
-		"pan_x": _f_kb_pan_x.value,
-		"pan_y": _f_kb_pan_y.value,
-		"duration": maxf(dur, 0.1),
-	}
+	return _ken_burns_dict_from_fields()
 
 func _stop_ken_burns_preview() -> void:
 	if _kb_preview_tween != null:
@@ -2129,14 +2310,9 @@ func _run_ken_burns_preview_tween() -> void:
 		return
 	_stop_ken_burns_preview()
 	var kb: Dictionary = _ken_burns_preview_values()
-	_kb_preview_tween = create_tween()
-	_kb_preview_tween.set_parallel(true)
-	_kb_preview_tween.tween_property(
-		_kb_preview_bg, "scale", Vector2(kb["zoom"], kb["zoom"]), kb["duration"]
-	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_kb_preview_tween.tween_property(
-		_kb_preview_bg, "position", Vector2(kb["pan_x"], kb["pan_y"]), kb["duration"]
-	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var tween_ref: Array = [_kb_preview_tween]
+	_run_ken_burns_tween_on(_kb_preview_bg, kb, tween_ref)
+	_kb_preview_tween = tween_ref[0] as Tween
 
 func _preview_ken_burns() -> void:
 	if _kb_preview_popup == null or _kb_preview_bg == null:
@@ -2420,7 +2596,9 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 	if group_id > 0:
 		group_tag = "[GROUP %d: %s] " % [group_id, group_name] if not group_name.is_empty() \
 			else "[GROUP %d] " % group_id
-	var prefix: String = "#%d %s%s%s" % [idx + 1, group_tag, hidden_tag, nsfw_tag]
+	var beat_name: String = str(beat.get("beat_name", "")).strip_edges()
+	var name_tag: String = ("[%s] " % beat_name) if not beat_name.is_empty() else ""
+	var prefix: String = "#%d %s%s%s%s" % [idx + 1, name_tag, group_tag, hidden_tag, nsfw_tag]
 	if beat.has("comment"):
 		return prefix + "// " + str(beat["comment"]).left(42)
 	var tx: Variant = beat.get("text", "")
@@ -2493,6 +2671,17 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[campaign gallery]"
 	if beat.get("go_to_quick_duel", false):
 		return prefix + "[quick duel]"
+	var go_to: Variant = beat.get("go_to", [])
+	if go_to is Array and not (go_to as Array).is_empty():
+		var names: PackedStringArray = PackedStringArray()
+		for entry: Variant in (go_to as Array):
+			if not entry is Dictionary:
+				continue
+			var target: String = str((entry as Dictionary).get("beat_name", "")).strip_edges()
+			if not target.is_empty():
+				names.append(target)
+		if not names.is_empty():
+			return prefix + "[go→%s]" % ", ".join(names)
 	if beat.get("complete_current_gallery_chapter", false) \
 			or beat.get("unlock_current_gallery_chapter", false):
 		return prefix + "[chapter end: current]"
@@ -2797,6 +2986,121 @@ func _rebuild_exploration_action_rows(actions: Array) -> void:
 			str(ad.get("key", "")),
 			str(ad.get("value", "")))
 
+func _add_go_to_row_from(data: Dictionary = {}) -> void:
+	if _go_to_vbox == null:
+		return
+	var frame := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.14, 0.10, 0.95)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.45, 0.85, 0.55, 0.45)
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 8.0
+	sb.content_margin_right = 8.0
+	sb.content_margin_top = 6.0
+	sb.content_margin_bottom = 6.0
+	frame.add_theme_stylebox_override("panel", sb)
+	_go_to_vbox.add_child(frame)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	frame.add_child(vb)
+
+	var hdr := HBoxContainer.new()
+	vb.add_child(hdr)
+	var hdr_lbl := Label.new()
+	hdr_lbl.text = "Go To"
+	hdr_lbl.add_theme_font_size_override("font_size", 13)
+	hdr_lbl.add_theme_color_override("font_color", Color(0.65, 1.0, 0.75))
+	hdr.add_child(hdr_lbl)
+	var hdr_spacer := Control.new()
+	hdr_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hdr.add_child(hdr_spacer)
+	var rem_btn := Button.new()
+	rem_btn.text = "Remove"
+	rem_btn.add_theme_font_size_override("font_size", 12)
+	rem_btn.pressed.connect(func() -> void:
+		frame.queue_free()
+		_on_field_changed())
+	hdr.add_child(rem_btn)
+
+	var name_row := HBoxContainer.new()
+	vb.add_child(name_row)
+	var name_lbl := Label.new()
+	name_lbl.text = "Beat name"
+	name_lbl.custom_minimum_size.x = 80.0
+	name_lbl.add_theme_font_size_override("font_size", 13)
+	name_row.add_child(name_lbl)
+	var name_le := LineEdit.new()
+	name_le.placeholder_text = "target beat_name"
+	name_le.text = str(data.get("beat_name", ""))
+	name_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_le.add_theme_font_size_override("font_size", 13)
+	name_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
+	name_row.add_child(name_le)
+
+	var cond_lbl := Label.new()
+	cond_lbl.text = "Conditions (AND) — empty = always"
+	cond_lbl.add_theme_font_size_override("font_size", 12)
+	vb.add_child(cond_lbl)
+	var cond_vbox := VBoxContainer.new()
+	cond_vbox.add_theme_constant_override("separation", 2)
+	vb.add_child(cond_vbox)
+	var add_cond := Button.new()
+	add_cond.text = "+ Condition"
+	add_cond.add_theme_font_size_override("font_size", 12)
+	add_cond.pressed.connect(func() -> void:
+		_add_choice_condition_row(cond_vbox)
+		_on_field_changed())
+	vb.add_child(add_cond)
+	var conds: Variant = data.get("conditions", [])
+	if conds is Array:
+		for c: Variant in (conds as Array):
+			if c is Dictionary:
+				var cd: Dictionary = c as Dictionary
+				_add_choice_condition_row(cond_vbox,
+					str(cd.get("type", "var_equals")),
+					str(cd.get("key", "")),
+					str(cd.get("value", "")))
+
+	frame.set_meta("name_le", name_le)
+	frame.set_meta("cond_vbox", cond_vbox)
+
+func _add_go_to_row() -> void:
+	if _selected_idx < 0:
+		return
+	_add_go_to_row_from({})
+	_on_field_changed()
+
+func _rebuild_go_to_rows(entries: Array) -> void:
+	if _go_to_vbox == null:
+		return
+	_clear_vbox(_go_to_vbox)
+	for entry: Variant in entries:
+		if entry is Dictionary:
+			_add_go_to_row_from(entry as Dictionary)
+
+func _collect_go_to() -> Array:
+	var out: Array = []
+	if _go_to_vbox == null:
+		return out
+	for frame: Node in _go_to_vbox.get_children():
+		if not frame is PanelContainer:
+			continue
+		var name_le: LineEdit = frame.get_meta("name_le") as LineEdit
+		var cond_vbox: VBoxContainer = frame.get_meta("cond_vbox") as VBoxContainer
+		if name_le == null:
+			continue
+		var beat_name: String = name_le.text.strip_edges()
+		if beat_name.is_empty():
+			continue
+		var entry: Dictionary = {"beat_name": beat_name}
+		var conds: Array = _collect_conditions_from_vbox(cond_vbox)
+		if not conds.is_empty():
+			entry["conditions"] = conds
+		out.append(entry)
+	return out
+
 func _add_choice_row_from(data: Dictionary = {}) -> void:
 	if _choices_vbox == null:
 		return
@@ -3050,8 +3354,9 @@ func _update_branch_bar(idx: int) -> void:
 	_branch_bar.add_child(title)
 	for ref: Dictionary in incoming:
 		var from_i: int = int(ref.get("from", 0))
+		var from_name: String = str((_beats[from_i] as Dictionary).get("beat_name", "")).strip_edges()
 		var btn := Button.new()
-		btn.text = "← #%d" % (from_i + 1)
+		btn.text = "← #%d%s" % [from_i + 1, (" [%s]" % from_name) if not from_name.is_empty() else ""]
 		btn.tooltip_text = str(ref.get("label", ""))
 		btn.add_theme_font_size_override("font_size", 12)
 		btn.pressed.connect(func() -> void: _jump_to_beat(from_i))
@@ -3066,8 +3371,12 @@ func _update_branch_bar(idx: int) -> void:
 			var goto_i: int = _group_first_beat_index(goto_group)
 			if goto_i < 0:
 				continue
+			var goto_name: String = str((_beats[goto_i] as Dictionary).get("beat_name", "")).strip_edges()
 			var btn := Button.new()
-			btn.text = "→ %s" % _group_display_label(goto_group)
+			var label: String = _group_display_label(goto_group)
+			if not goto_name.is_empty():
+				label += " [%s]" % goto_name
+			btn.text = "→ %s" % label
 			btn.tooltip_text = str(ref.get("label", ""))
 			btn.add_theme_font_size_override("font_size", 12)
 			btn.pressed.connect(func() -> void: _jump_to_beat(goto_i))
@@ -3076,8 +3385,9 @@ func _update_branch_bar(idx: int) -> void:
 		var goto_i: int = int(ref.get("goto", -1))
 		if goto_i < 0:
 			continue
+		var goto_name: String = str((_beats[goto_i] as Dictionary).get("beat_name", "")).strip_edges()
 		var btn := Button.new()
-		btn.text = "→ #%d" % (goto_i + 1)
+		btn.text = "→ #%d%s" % [goto_i + 1, (" [%s]" % goto_name) if not goto_name.is_empty() else ""]
 		btn.tooltip_text = str(ref.get("label", ""))
 		btn.add_theme_font_size_override("font_size", 12)
 		btn.pressed.connect(func() -> void: _jump_to_beat(goto_i))
@@ -3088,10 +3398,44 @@ func _jump_to_beat(idx: int) -> void:
 		return
 	_flush_current_beat()
 	_selected_idx = idx
+	_anchor_idx = idx
 	_beat_list.deselect_all()
 	_beat_list.select(idx)
 	_show_fields(true)
 	_populate_fields()
+	_update_branch_bar(idx)
+
+func _beat_index_for_name(beat_name: String) -> int:
+	var needle: String = beat_name.strip_edges()
+	if needle.is_empty():
+		return -1
+	for i: int in range(_beats.size()):
+		if str((_beats[i] as Dictionary).get("beat_name", "")).strip_edges() == needle:
+			return i
+	return -1
+
+func _go_to_beat_by_name(name: String) -> void:
+	var idx: int = _beat_index_for_name(name)
+	if idx < 0:
+		_status_lbl.text = "Beat name not found: %s" % name.strip_edges()
+		return
+	_jump_to_beat(idx)
+	var beat_name: String = str((_beats[idx] as Dictionary).get("beat_name", "")).strip_edges()
+	_status_lbl.text = "Jumped to #%d [%s]" % [idx + 1, beat_name]
+
+func _validate_beat_names() -> Array[String]:
+	var warnings: Array[String] = []
+	var seen: Dictionary = {}
+	for i: int in range(_beats.size()):
+		var name: String = str((_beats[i] as Dictionary).get("beat_name", "")).strip_edges()
+		if name.is_empty():
+			continue
+		if seen.has(name):
+			warnings.append("duplicate beat_name '%s' at #%d and #%d" % [
+				name, int(seen[name]) + 1, i + 1])
+		else:
+			seen[name] = i
+	return warnings
 
 func _validate_choice_beat(beat: Dictionary, idx: int) -> void:
 	if _status_lbl == null:
@@ -3119,6 +3463,18 @@ func _validate_choice_beat(beat: Dictionary, idx: int) -> void:
 	var beat_group: int = int(beat.get("group", 0))
 	if beat_group > 0 and _incoming_branch_refs(idx).is_empty():
 		warnings.append("group %s has no incoming choice" % _group_display_label(beat_group))
+	var go_to: Variant = beat.get("go_to", [])
+	if go_to is Array and not (go_to as Array).is_empty():
+		if beat.get("choices", []) is Array and not (beat.get("choices", []) as Array).is_empty():
+			warnings.append("go_to ignored when choices are present")
+		for entry: Variant in (go_to as Array):
+			if not entry is Dictionary:
+				continue
+			var target: String = str((entry as Dictionary).get("beat_name", "")).strip_edges()
+			if target.is_empty():
+				warnings.append("go_to entry missing beat_name")
+			elif _beat_index_for_name(target) < 0:
+				warnings.append("go_to target '%s' not found" % target)
 	if not warnings.is_empty():
 		_status_lbl.text = "Warning: " + ", ".join(warnings)
 
@@ -3159,6 +3515,7 @@ func _populate_fields() -> void:
 	_loading = true
 	var b: Dictionary = _beats[_selected_idx]
 
+	_f_beat_name.text = str(b.get("beat_name", ""))
 	_f_comment.text = str(b.get("comment", ""))
 	_f_hidden.button_pressed = b.get("hidden", false)
 	if _f_group != null:
@@ -3174,6 +3531,8 @@ func _populate_fields() -> void:
 		_f_choices_layout.selected = 1 if layout == "inside_dialog" else 0
 	var choices: Variant = b.get("choices", [])
 	_rebuild_choice_rows(choices if choices is Array else [])
+	var go_to: Variant = b.get("go_to", [])
+	_rebuild_go_to_rows(go_to if go_to is Array else [])
 	var expl_actions: Variant = b.get("exploration_actions", [])
 	_rebuild_exploration_action_rows(expl_actions if expl_actions is Array else [])
 
@@ -3197,9 +3556,50 @@ func _populate_fields() -> void:
 		_f_kb_pan_x.value    = float(kb.get("pan_x",    0.0))
 		_f_kb_pan_y.value    = float(kb.get("pan_y",    0.0))
 		_f_kb_duration.value = float(kb.get("duration", 4.0))
+		if _f_kb_delay != null:
+			_f_kb_delay.value = float(kb.get("delay", 0.0))
+		_populate_optional_kb_spin(kb, "start_velocity", _f_kb_start_velocity_cb, _f_kb_start_velocity, 1.0)
+		_populate_optional_kb_spin(kb, "stop_velocity", _f_kb_stop_velocity_cb, _f_kb_stop_velocity, 1.0)
+		if _f_kb_start_zoom_cb != null:
+			_f_kb_start_zoom_cb.button_pressed = kb.has("start_zoom")
+			_f_kb_start_zoom.editable = kb.has("start_zoom")
+			if kb.has("start_zoom"):
+				_f_kb_start_zoom.value = float(kb["start_zoom"])
+			else:
+				_f_kb_start_zoom.value = 1.0
+		if _f_kb_start_pan_x_cb != null:
+			_f_kb_start_pan_x_cb.button_pressed = kb.has("start_pan_x")
+			_f_kb_start_pan_x.editable = kb.has("start_pan_x")
+			if kb.has("start_pan_x"):
+				_f_kb_start_pan_x.value = float(kb["start_pan_x"])
+			else:
+				_f_kb_start_pan_x.value = 0.0
+		if _f_kb_start_pan_y_cb != null:
+			_f_kb_start_pan_y_cb.button_pressed = kb.has("start_pan_y")
+			_f_kb_start_pan_y.editable = kb.has("start_pan_y")
+			if kb.has("start_pan_y"):
+				_f_kb_start_pan_y.value = float(kb["start_pan_y"])
+			else:
+				_f_kb_start_pan_y.value = 0.0
 	else:
 		_f_kb_zoom.value = 1.0; _f_kb_pan_x.value = 0.0
 		_f_kb_pan_y.value = 0.0; _f_kb_duration.value = 0.0
+		if _f_kb_delay != null:
+			_f_kb_delay.value = 0.0
+		_reset_optional_kb_spin(_f_kb_start_velocity_cb, _f_kb_start_velocity, 1.0)
+		_reset_optional_kb_spin(_f_kb_stop_velocity_cb, _f_kb_stop_velocity, 1.0)
+		if _f_kb_start_zoom_cb != null:
+			_f_kb_start_zoom_cb.button_pressed = false
+			_f_kb_start_zoom.editable = false
+			_f_kb_start_zoom.value = 1.0
+		if _f_kb_start_pan_x_cb != null:
+			_f_kb_start_pan_x_cb.button_pressed = false
+			_f_kb_start_pan_x.editable = false
+			_f_kb_start_pan_x.value = 0.0
+		if _f_kb_start_pan_y_cb != null:
+			_f_kb_start_pan_y_cb.button_pressed = false
+			_f_kb_start_pan_y.editable = false
+			_f_kb_start_pan_y.value = 0.0
 
 	var music: Variant = b.get("music", "")
 	_f_music.text = "null" if music == null else (str(music) if music != "" else "")
@@ -3443,6 +3843,9 @@ func _populate_locale_fields(b: Dictionary) -> void:
 func _collect_beat() -> Dictionary:
 	var b: Dictionary = {}
 
+	var beat_name: String = _f_beat_name.text.strip_edges()
+	if not beat_name.is_empty():
+		b["beat_name"] = beat_name
 	var comment: String = _f_comment.text.strip_edges()
 	if not comment.is_empty():
 		b["comment"] = comment
@@ -3493,6 +3896,10 @@ func _collect_beat() -> Dictionary:
 		b["choices"] = choices
 		if _f_choices_layout != null and _f_choices_layout.selected == 1:
 			b["choices_layout"] = "inside_dialog"
+
+	var go_to: Array = _collect_go_to()
+	if not go_to.is_empty():
+		b["go_to"] = go_to
 
 	var beat_expl_actions: Array = _collect_actions_from_vbox(_exploration_actions_vbox)
 	if not beat_expl_actions.is_empty():
@@ -3560,8 +3967,14 @@ func _collect_beat() -> Dictionary:
 	var kb_px: float = _f_kb_pan_x.value
 	var kb_py: float = _f_kb_pan_y.value
 	var kb_d: float  = _f_kb_duration.value
-	if kb_z != 1.0 or kb_px != 0.0 or kb_py != 0.0 or kb_d > 0.0:
-		b["bg_ken_burns"] = {"zoom": kb_z, "pan_x": kb_px, "pan_y": kb_py, "duration": kb_d}
+	var kb_has_start: bool = (_f_kb_start_zoom_cb != null and _f_kb_start_zoom_cb.button_pressed) \
+		or (_f_kb_start_pan_x_cb != null and _f_kb_start_pan_x_cb.button_pressed) \
+		or (_f_kb_start_pan_y_cb != null and _f_kb_start_pan_y_cb.button_pressed) \
+		or (_f_kb_start_velocity_cb != null and _f_kb_start_velocity_cb.button_pressed) \
+		or (_f_kb_stop_velocity_cb != null and _f_kb_stop_velocity_cb.button_pressed)
+	if kb_z != 1.0 or kb_px != 0.0 or kb_py != 0.0 or kb_d > 0.0 or kb_has_start \
+			or (_f_kb_delay != null and _f_kb_delay.value > 0.0):
+		b["bg_ken_burns"] = _ken_burns_dict_from_fields()
 
 	var music: String = _f_music.text.strip_edges()
 	if music == "null":
@@ -3863,6 +4276,13 @@ func _on_field_changed() -> void:
 	if beat.get("choices", []) is Array and not (beat.get("choices", []) as Array).is_empty():
 		_beat_list.set_item_custom_fg_color(_selected_idx, Color(0.55, 0.88, 1.0))
 	_validate_choice_beat(beat, _selected_idx)
+	var all_warnings: Array[String] = []
+	var choice_status: String = _status_lbl.text
+	if choice_status.begins_with("Warning: "):
+		all_warnings.append_array(choice_status.substr(9).split(", "))
+	all_warnings.append_array(_validate_beat_names())
+	if not all_warnings.is_empty():
+		_status_lbl.text = "Warning: " + ", ".join(all_warnings)
 	if not was_dirty:
 		_refresh_file_list_colors()
 
@@ -4203,6 +4623,10 @@ func _save() -> void:
 		_status_lbl.text = "No file open — select a file first."
 		return
 	_flush_current_beat()
+	var name_warnings: Array[String] = _validate_beat_names()
+	if not name_warnings.is_empty():
+		_status_lbl.text = "Cannot save — " + ", ".join(name_warnings)
+		return
 	var f := FileAccess.open(_file_path, FileAccess.WRITE)
 	if f == null:
 		_status_lbl.text = "ERROR: could not write to " + _file_path.get_file()

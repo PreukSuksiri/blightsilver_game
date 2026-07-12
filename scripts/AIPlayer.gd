@@ -940,6 +940,31 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 		TechCardData.TechEffectType.TEMP_REROLL_DICE:
 			return 25
 
+		TechCardData.TechEffectType.CRYSTAL_GAIN_IF_OWN_NAME_FACE_UP:
+			return 40
+
+		TechCardData.TechEffectType.DESTROY_OWN_NAME_FOR_CRYSTALS:
+			return 35
+
+		TechCardData.TechEffectType.ADD_FLAG_UP_TO:
+			return 30
+
+		TechCardData.TechEffectType.CONDITIONAL_DESTROY_FIELD:
+			return 45
+
+		TechCardData.TechEffectType.TEMP_ATK_DEF_BOOST_NAME_FILTER:
+			return 40
+
+		TechCardData.TechEffectType.PROTECT_CORNER_CELLS_UNTIL_FOE_TURN, \
+		TechCardData.TechEffectType.PROTECT_CELL_UNTIL_FOE_TURN:
+			return 35
+
+		TechCardData.TechEffectType.DESTROY_ALL_REVIVED_AND_TOKENS:
+			return 50
+
+		TechCardData.TechEffectType.PRINCESS_MAGIC_RECKONING:
+			return 45
+
 	return 0
 
 # ─────────────────────────────────────────────────────────────
@@ -998,6 +1023,10 @@ func decide_target(filter: String) -> Vector2i:
 			return _best_field_destroy_target()
 		"own_character_destroy_no_cost":
 			return _weakest_own_character_pos()
+		"own_faceup_name_character":
+			return _best_own_name_match_faceup()
+		"own_cell_protect":
+			return _best_safe_house_cell()
 		"venom_flagged_card":
 			return _strongest_venom_flagged_pos()
 		"opponent_faceup_no_cost":
@@ -1010,6 +1039,33 @@ func decide_target(filter: String) -> Vector2i:
 
 func decide_wk17_foe_pick(exclude_pos: Vector2i) -> Vector2i:
 	return _worst_own_ally_excluding(exclude_pos)
+
+func _best_own_name_match_faceup() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -1
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type != "character" or not card.face_up:
+				continue
+			var low: String = card.card_name.to_lower()
+			if "warrior" not in low and "elemental" not in low:
+				continue
+			var score: int = card.get_effective_atk() + card.get_effective_def()
+			if score > best_score:
+				best_score = score
+				best_pos = Vector2i(r, c)
+	if best_pos == Vector2i(-1, -1):
+		return _best_own_faceup()
+	return best_pos
+
+func _best_safe_house_cell() -> Vector2i:
+	var last: int = GameState.GRID_SIZE - 1
+	for corner: Vector2i in [Vector2i(0, 0), Vector2i(0, last), Vector2i(last, 0), Vector2i(last, last)]:
+		var card: GameState.CardInstance = GameState.get_card(player_index, corner.x, corner.y)
+		if card.card_type == "character":
+			return corner
+	return _best_own_character()
 
 ## Plant-29 turn-start targeting after coin flip — venom on exposed ally/foe or mutagen on own unit.
 func decide_any_grid_target(filter: String) -> Dictionary:

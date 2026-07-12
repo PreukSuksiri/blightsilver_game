@@ -38,6 +38,7 @@ enum TrapEffectType {
 	AFFINITY_COIN_FLIP_DESTROY_ATTACKER,  # If attacker matches affinity: coin flip destroy; auto-head if crystals <= threshold
 	END_ATTACKER_TURN_IF_AFFINITY,        # End attacker's turn if attacker matches affinity (optional clear flags)
 	DESTROY_ATTACKER_IF_FIRST_ATTACK,     # Destroy attacker if it is the first attack this turn
+	REVIVE_DESTROYED_ALLY_OPTIONAL,       # When own matching ally destroyed: optional flip to revive that unit
 }
 
 @export var card_name: String = ""

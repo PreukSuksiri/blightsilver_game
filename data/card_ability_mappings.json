@@ -70,7 +70,7 @@
 			"ability_type": "LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE",
 			"ability_params": {}
 		},
-		"Chronoteleporter": {
+		"Chronomancer": {
 			"ability_type": "INTERCEPT_ALLY_ATTACK",
 			"ability_params": {
 				"affinity": "ARCANE",

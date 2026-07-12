@@ -20,6 +20,25 @@ NAME_ALIASES = {
     "Armored Money": "Armored Monkey",
 }
 
+# xlsx formula / legacy references → current in-game card name
+CARD_RENAMES = {
+    "Alluring Spellcaster": "Alluring Witch",
+    "Century Fortuneteller": "Uncanny Fortuneteller",
+    "Deep Tribe Axe Thrower": "Deep Tribe Axeman",
+    "Freya the Rift Walker": "Freya the Rift Hunter",
+    "Gremlin Worker": "Hardworking Gremlin",
+    "Library Critters": "Library Critter",
+    "Lindsy the Brave Princess": "Chihako the Brave Princess",
+    "Magical Smith": "Magical Craftsman",
+    "Mystic Dagger Dancer": "Mystic Dancer",
+    "Ore Transporter": "Ore Eater",
+    "Outpost Magician": "Outpost Mage",
+    "Psy Warrior": "Mystic Warrior",
+    "Rotten Dog": "Skeleton Dog",
+    "Spell Exile": "Spellcaster Exile",
+    "Chronoteleporter": "Chronomancer",
+}
+
 PACK_ID_BY_SHORT_NAME = {
     "Blightsilver": "booster_blightsilver",
     "Unseen Presence": "booster_unseen_presence",
@@ -125,7 +144,18 @@ def sheet_rows(wb, name: str) -> tuple[list[str], list[dict]]:
 
 
 def gd_name(name: str) -> str:
-    return NAME_ALIASES.get(name, name)
+    return CARD_RENAMES.get(name, NAME_ALIASES.get(name, name))
+
+
+def normalize_card_reference(name: str) -> str:
+    return gd_name(name.strip())
+
+
+def normalize_formula_text(formula: str) -> str:
+    text = str(formula or "")
+    for old, new in sorted(CARD_RENAMES.items(), key=lambda kv: -len(kv[0])):
+        text = text.replace(old, new)
+    return text
 
 
 def parse_zone(text) -> list[tuple[int, int]]:
@@ -356,7 +386,7 @@ def _parse_material_part(part: str) -> list[dict]:
             if aff and len(words) == 2 and words[1].lower() in ("card", "cards", "unit"):
                 return [{"affinity": aff}]
         if len(words) >= 2:
-            return [{"card_name": body}]
+            return [{"card_name": normalize_card_reference(body)}]
         return [{"name_contains": body.lower()}]
 
     aff = _affinity_word(part)
@@ -368,7 +398,7 @@ def _parse_material_part(part: str) -> list[dict]:
             return [{"name_contains": "princess"}]
 
     if len(part.split()) >= 2:
-        return [{"card_name": part}]
+        return [{"card_name": normalize_card_reference(part)}]
 
     return [{"name_contains": part.lower()}]
 
@@ -509,8 +539,8 @@ def sync_unions(text: str, unions: list[dict]) -> tuple[str, int]:
         def_ = int(card.get("DEF") or 0)
         full_ab = str(card.get("Full Ability") or "").strip().replace("\n", " ")
         part_ab = str(card.get("Partial Ability") or full_ab).strip().replace("\n", " ")
-        full_f = str(card.get("Full Formula") or "").strip().replace("\n", " ")
-        part_f = str(card.get("Partial Formula") or full_f).strip().replace("\n", " ")
+        full_f = normalize_formula_text(str(card.get("Full Formula") or "").strip().replace("\n", " "))
+        part_f = normalize_formula_text(str(card.get("Partial Formula") or full_f).strip().replace("\n", " "))
         summon = parse_summon_cost(full_f)
         zone_cells = parse_zone(card.get("Union Zone"))
 

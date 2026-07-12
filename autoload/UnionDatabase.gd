@@ -681,8 +681,8 @@ func _load_unions() -> void:
 	_add("Mass Extinction Dragon", A.NATURE, 250, 180, 3000, R.COMMON,
 		AB.UNION_SUMMON_DESTROY_OTHER_EXPOSED_ALLIES, {}, "Summoned: destroy all other exposed ally units. No paid cost.", "Summoned: destroy all ???",
 		"5 Nature cards + 3000 Crystals", "5 ??? + 3000 Crystals",
-		_z([[0,0], [0,4], [2,2], [3,3], [4,0], [4,4]]),
-		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}], 6))
+		_z([[0,0], [0,4], [2,2], [4,0], [4,4]]),
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}, {"affinity": A.NATURE}], 5))
 
 	_add("Beowolf", A.NATURE, 55, 50, 1000, R.COMMON,
 		AB.ATK_BONUS_WHEN_CAN_DESTROY, {"bonus": 25}, "+25 ATK when this card can destroy a unit card", "+?? ATK when this card can destroy ???",
@@ -752,15 +752,15 @@ func _load_unions() -> void:
 
 	_add("Charm Mistress", A.ARCANE, 30, 50, 1000, R.COMMON,
 		AB.LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE, {}, "Foe’s turn start: flip a coin. Head, foe can only attack once.", "Foe’s turn start: flip a coin. Head, ???",
-		"Alluring Spellcaster + 1 Arcane + 1000 cost", "Alluring Spellcaster + 1 Arcane + 1000 cost",
+		"Alluring Witch + 1 Arcane + 1000 cost", "Alluring Witch + 1 Arcane + 1000 cost",
 		_z([[1,1], [1,3], [2,1], [2,2], [2,3], [3,2]]),
-		_conds([{"card_name": "Alluring Spellcaster"}, {"affinity": A.ARCANE}], 6))
+		_conds([{"card_name": "Alluring Witch"}, {"affinity": A.ARCANE}], 6))
 
-	_add("Chronoteleporter", A.ARCANE, 60, 80, 1000, R.COMMON,
-		AB.INTERCEPT_ALLY_ATTACK, {"affinity": CharacterData.Affinity.ARCANE, "swap_self": true}, "When ally Arcane unit is targeted, you can swap its location with this card.", "When ??? is targeted, you can swap ???",
-		"Freya the Rift Walker + Bingo the Chrono Rabbit + 1000 cost.", "Freya the Rift Walker + Bingo the Chrono Rabbit + 1000 cost.",
+	_add("Chronomancer", A.ARCANE, 60, 80, 1000, R.COMMON,
+		AB.INTERCEPT_ALLY_ATTACK, {"affinity": CharacterData.Affinity.ARCANE, "swap_self": true}, "For cannot revive or create token copy a unit. Once, after Arcane unit is destroyed, revive it.", "For cannot revive or create token copy a unit. Once, after Arcane unit is destroyed, ???",
+		"Freya the Rift Hunter + Bingo the Chrono Rabbit + 1000 cost.", "Freya the Rift Hunter + Bingo the Chrono Rabbit + 1000 cost.",
 		_z([[0,3], [1,1], [2,3], [3,1], [4,4]]),
-		_conds([{"card_name": "Freya the Rift Walker"}, {"card_name": "Bingo the Chrono Rabbit"}], 5))
+		_conds([{"card_name": "Freya the Rift Hunter"}, {"card_name": "Bingo the Chrono Rabbit"}], 5))
 
 	_add("Death Colony", A.BIO, 180, 150, 1000, R.COMMON,
 		AB.ATTACK_ONLY_UNION_ZONE_PATTERN, {}, "This card can only choose attack target in the same pattern as its union zone", "This card can only choose attack target in the same pattern as ???",
@@ -967,13 +967,13 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Johnny the Most Wanted"}, {"affinity": A.ANIMA}], 11))
 
 	_add("Raijin Fujin and Suijin", A.DIVINE, 145, 145, 1200, R.COMMON,
-		AB.TURN_START_DESTROY_OR_LOSE_CRYSTALS, {"crystal_loss": 500}, "At ??? turn, they choose either destroy ??? or lose ???", "At the start of each player’s turn, they choose either destroy 1 of their unit or lose 500 crystals.",
+		AB.TURN_START_DESTROY_OR_LOSE_CRYSTALS, {"crystal_loss": 500}, "At ??? turn, they choose either destroy ??? or lose ???", "At the start of each player’s turn, they choose either destroy ??? or lose ??? crystals.",
 		"Raijin + Fujin + Suigin + 1200 cost", "1 ??? + 1 ??? + 800 cost",
 		_z([[0,0], [0,2], [0,4], [1,0], [1,2], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4], [4,0], [4,2], [4,4]]),
 		_conds([{"name_contains": "raijin"}, {"name_contains": "fujin"}, {"name_contains": "suigin"}], 15))
 
 	_add("Raijin Fujin and Suigin", A.DIVINE, 145, 145, 1200, R.COMMON,
-		AB.UNION_SUMMON_DESTROY_UNITS, {"both_players": true, "count": 3, "no_destroy_cost": true}, "Summoned : Both player destroy 3 of ???", "Summoned : Both player destroy 3 of their units. No need to pay cost.",
+		AB.UNION_SUMMON_DESTROY_UNITS, {"both_players": true, "count": 3, "no_destroy_cost": true}, "Summoned : Both player destroy 3 of ???", "Summoned : Both player destroy ???.",
 		"Raijin + Fujin + Suigin + 1200 cost", "1 ??? + 1 ??? + 800 cost",
 		_z([[0,0], [0,2], [0,4], [1,0], [1,2], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4], [4,0], [4,2], [4,4]]),
 		_conds([{"name_contains": "raijin"}, {"name_contains": "fujin"}, {"name_contains": "suigin"}], 15))
@@ -1081,7 +1081,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.CHAOS, "min_cost": 500}, {"name_contains": "lady"}], 11))
 
 	_add("White Ninja", A.ANIMA, 120, 90, 1000, R.COMMON,
-		AB.NEGATE_ZERO_COST_TRAPS_BOTH, {"nullify_foe_ability_in_reckoning": true, "until_turn_end": true}, "Effect of unit in Reckoning with this card becomes None until the end of your turn.", "Effect of unit in Reckoning with this card becomes None until the end of your turn.",
+		AB.NEGATE_ZERO_COST_TRAPS_BOTH, {"nullify_foe_ability_in_reckoning": true, "until_turn_end": true}, "Effect of unit in Reckoning with this card becomes None until the end of your turn.", "Effect of unit in Reckoning with this card becomes ???.",
 		"1 Ninja + 1 Anima (≥ 800 cost) + 1000 cost", "??? + ??? + 1000 cost",
 		_z([[0,0], [0,3], [1,1], [1,2], [2,0], [2,3]]),
 		_conds([{"name_contains": "ninja"}, {"affinity": A.ANIMA, "min_cost": 800}], 6))
@@ -1097,6 +1097,15 @@ func _load_unions() -> void:
 		"2 Elven or Elf card + 1000 cost", "2 Elven or Elf card + 1000 cost",
 		_z([[0,0], [0,1], [0,3], [0,4], [1,0], [1,2], [1,4], [2,1], [2,2], [2,3], [3,2], [4,2]]),
 		_conds([{"name_contains_any": ["elven", "elf"]}, {"name_contains_any": ["elven", "elf"]}], 12))
+	# ── Full-release import (unions) ──
+	_add("Rift Guardian", A.ARCANE, 95, 70, 1200, R.COMMON,
+		AB.RECKONING_FOE_DEFENDER_SUBSTITUTE,
+		{"requires_revived_or_token": true},
+		"If your Arcane unit is in Reckoning with revived units or copied token, your opponent choose 1 of their unit to fight in place of this card",
+		"If your Arcane unit is in Reckoning with revived units or copied token, your opponent choose 1 of their unit to fight in place of this card",
+		"Freya the Rift Hunter + Planewalker + 1200 cost.", "Freya the Rift Hunter + Planewalker + 1200 cost.",
+		_z([[0,3], [1,1], [2,3], [3,1], [4,4]]),
+		_conds([{"card_name": "Freya the Rift Hunter"}, {"name_contains": "planewalker"}], 5))
 func _add(
 		name: String,
 		aff: CharacterData.Affinity,

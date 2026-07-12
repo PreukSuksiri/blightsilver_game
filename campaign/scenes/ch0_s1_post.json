@@ -110,6 +110,39 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "And the card arts... They were all AI Slops..."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "I'm not the one who designed the card. Stop complaining."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,

@@ -27,6 +27,7 @@ signal crystal_animation_finished()
 signal card_placed(player_index: int, row: int, col: int)
 signal card_revealed(player_index: int, row: int, col: int)
 signal card_destroyed(player_index: int, row: int, col: int)
+signal character_destroyed(player_index: int, row: int, col: int, card: CardInstance)
 signal card_destruction_blocked(player_index: int, row: int, col: int)
 signal dice_rolled(result: int)
 signal game_over(winner: int)  # -1 = tie, 0 = player 1, 1 = player 2
@@ -394,6 +395,11 @@ var analytics_graph_path: String = ""
 var analytics_destroy_source: String = ""
 var analytics_destroy_by_player: int = -1
 var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
+var protected_defender_positions: Array = []        # {owner: int, positions: Array[Vector2i]}
+var destruction_immune_name_tokens: Array = []    # {owner: int, tokens: Array}
+var tech_temp_name_buffs: Array = []              # {owner: int, tokens: Array, atk: int, def: int}
+var princess_magic_active: Array = [false, false]
+var _pending_ancestral_revive: Dictionary = {}      # trap revive handoff to GameBoard
 
 var _cursor_tex: Texture2D = null
 var _cursor_layer: CanvasLayer = null
@@ -997,6 +1003,36 @@ func process_turn_end_material_revives(player_index: int) -> void:
 		post_message("%s revives at the end of your turn!" % revived.display_name)
 	turn_end_material_revives = kept
 
+func _offer_ancestral_spirit_if_applicable(
+		player_index: int,
+		row: int,
+		col: int,
+		card: CardInstance
+) -> void:
+	if card.card_type != "character" or not _pending_ancestral_revive.is_empty():
+		return
+	for _tr: int in range(GRID_SIZE):
+		for _tc: int in range(GRID_SIZE):
+			var trap_card: CardInstance = get_card(player_index, _tr, _tc)
+			if trap_card.card_type != "trap" or trap_card.face_up:
+				continue
+			var trap_data: TrapData = CardDatabase.get_trap(trap_card.card_name)
+			if trap_data == null \
+					or trap_data.effect_type != TrapData.TrapEffectType.REVIVE_DESTROYED_ALLY_OPTIONAL:
+				continue
+			var tokens: Array = trap_data.effect_params.get("name_tokens", [])
+			if not card_name_has_any_token(card.card_name, tokens):
+				continue
+			_pending_ancestral_revive = {
+				"owner": player_index,
+				"destroy_row": row,
+				"destroy_col": col,
+				"trap_row": _tr,
+				"trap_col": _tc,
+				"card": _clone_card_for_revive(card),
+			}
+			return
+
 func is_immune_to_tech_cards(card: CardInstance) -> bool:
 	if card == null or card.card_type != "character":
 		return false
@@ -1022,6 +1058,95 @@ func _clone_card_for_revive(source: CardInstance) -> CardInstance:
 	copy.flags = source.flags.duplicate()
 	return copy
 
+static func card_name_has_any_token(card_name: String, tokens: Array) -> bool:
+	var low: String = card_name.to_lower()
+	for token: Variant in tokens:
+		var part: String = str(token).to_lower()
+		if not part.is_empty() and low.contains(part):
+			return true
+	return false
+
+func has_face_up_name_on_field(player_index: int, tokens: Array, require_face_up: bool = true) -> bool:
+	for r: int in range(GRID_SIZE):
+		for c: int in range(GRID_SIZE):
+			var card: CardInstance = get_card(player_index, r, c)
+			if card.card_type != "character":
+				continue
+			if require_face_up and not card.face_up:
+				continue
+			if card_name_has_any_token(card.card_name, tokens):
+				return true
+	return false
+
+func field_has_revived_or_token() -> bool:
+	for p: int in range(2):
+		for r: int in range(GRID_SIZE):
+			for c: int in range(GRID_SIZE):
+				var card: CardInstance = get_card(p, r, c)
+				if card.card_type == "character" and (card.is_revived or card.is_token):
+					return true
+	return false
+
+func add_protected_cells(owner: int, positions: Array) -> void:
+	protected_defender_positions.append({"owner": owner, "positions": positions})
+
+func is_cell_protected_from_attack(defender_player: int, pos: Vector2i) -> bool:
+	for entry: Variant in protected_defender_positions:
+		if int(entry.get("owner", -1)) != defender_player:
+			continue
+		for cell: Variant in entry.get("positions", []):
+			if cell is Vector2i and cell == pos:
+				return true
+	return false
+
+func clear_protected_cells_when_foe_turn_ends(turn_ending_player: int) -> void:
+	var kept: Array = []
+	for entry: Variant in protected_defender_positions:
+		var owner: int = int(entry.get("owner", -1))
+		if get_opponent(owner) == turn_ending_player:
+			continue
+		kept.append(entry)
+	protected_defender_positions = kept
+
+func clear_tech_temp_name_buffs_when_foe_turn_ends(turn_ending_player: int) -> void:
+	var kept: Array = []
+	for entry: Variant in tech_temp_name_buffs:
+		var owner: int = int(entry.get("owner", -1))
+		if get_opponent(owner) == turn_ending_player:
+			for r: int in range(GRID_SIZE):
+				for c: int in range(GRID_SIZE):
+					var card: CardInstance = get_card(owner, r, c)
+					if card.card_type != "character":
+						continue
+					if not card_name_has_any_token(card.card_name, entry.get("tokens", [])):
+						continue
+					var atk: int = int(entry.get("atk", 0))
+					var def_bonus: int = int(entry.get("def", 0))
+					card.temp_atk_bonus = maxi(0, card.temp_atk_bonus - atk)
+					card.temp_def_bonus = maxi(0, card.temp_def_bonus - def_bonus)
+			continue
+		kept.append(entry)
+	tech_temp_name_buffs = kept
+
+func clear_destruction_immune_when_foe_turn_ends(turn_ending_player: int) -> void:
+	var kept: Array = []
+	for entry: Variant in destruction_immune_name_tokens:
+		var owner: int = int(entry.get("owner", -1))
+		if get_opponent(owner) == turn_ending_player:
+			continue
+		kept.append(entry)
+	destruction_immune_name_tokens = kept
+
+func _card_matches_destruction_immunity(card: CardInstance, player_index: int) -> bool:
+	if card.card_type != "character":
+		return false
+	for entry: Variant in destruction_immune_name_tokens:
+		if int(entry.get("owner", -1)) != player_index:
+			continue
+		if card_name_has_any_token(card.card_name, entry.get("tokens", [])):
+			return true
+	return false
+
 func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 	var card: CardInstance = get_card(player_index, row, col)
 	if card.card_type != "character":
@@ -1037,6 +1162,8 @@ func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 			return true
 	if galaxos_immunity_owner >= 0 and player_index == galaxos_immunity_owner \
 			and card.affinity in [CharacterData.Affinity.COSMIC, CharacterData.Affinity.ANIMA]:
+		return true
+	if _card_matches_destruction_immunity(card, player_index):
 		return true
 	return false
 
@@ -1067,6 +1194,10 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 			post_message("%s is protected by Team Galaxos!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
+		if _card_matches_destruction_immunity(card, player_index):
+			post_message("%s is protected from destruction!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
 		# Track destroyed characters in graveyard
 		if card.ability_type == CharacterData.AbilityType.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION \
 				and not destruction_from_tech_self_destruct \
@@ -1084,6 +1215,8 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 					"card_name": card.card_name,
 				})
 		graveyards[player_index].append(card)
+		_offer_ancestral_spirit_if_applicable(player_index, row, col, card)
+		emit_signal("character_destroyed", player_index, row, col, card)
 	if pay_cost and card.card_type != "dead_end":
 		var _dc_cost: int = card.crystal_cost
 		if game_mode == GameMode.DAILY_DUNGEON:
@@ -1361,6 +1494,11 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	reroll_dice_available = [false, false]
 	graveyards = [[], []]
 	locked_attack_positions = []
+	protected_defender_positions = []
+	destruction_immune_name_tokens = []
+	tech_temp_name_buffs = []
+	princess_magic_active = [false, false]
+	_pending_ancestral_revive = {}
 	attack_cost_block_max = -1
 	attack_cost_block_player = -1
 	echo_barrier_player = -1

@@ -66,6 +66,9 @@ var _beats: Array = []
 var _beat_index: int = 0
 var _beat_raw_indices: Array = []   # maps filtered index → raw JSON index
 var _group_first_index: Dictionary = {}   # group id → first filtered beat index
+var _beat_name_index: Dictionary = {}     # beat_name → filtered beat index
+var _last_shown_beat_index: int = -1      # beat just displayed; checked for go_to on advance
+var _skip_go_to_check: bool = false       # true after choice/goto_group jumps
 var _active_group_id: int = 0             # group currently playing via choice (0 = mainline)
 var _group_return_index: int = -1         # filtered index to resume after group completes
 var _scene_path: String = ""
@@ -277,7 +280,8 @@ func _build_ui() -> void:
 		_dialog_panel.add_child(nine)
 	else:
 		var sb_dlg := StyleBoxFlat.new()
-		sb_dlg.bg_color = Color(0.02, 0.04, 0.12, 0.93)
+		# Dialog box bg alpha was 0.93
+		sb_dlg.bg_color = Color(0.02, 0.04, 0.12, 1.0)
 		_dialog_panel.add_theme_stylebox_override("panel", sb_dlg)
 	_add_dialog_side_borders(_dialog_panel)
 	_dialog_panel.z_index = 1
@@ -287,7 +291,8 @@ func _build_ui() -> void:
 	_speaker_panel = PanelContainer.new()
 	_speaker_panel.position = Vector2(40.0, 0.0)
 	var sb_spk := StyleBoxFlat.new()
-	sb_spk.bg_color               = Color(0.08, 0.16, 0.38, 0.97)
+	# Speaker nameplate bg alpha was 0.97
+	sb_spk.bg_color               = Color(0.08, 0.16, 0.38, 1.0)
 	sb_spk.border_width_left      = 1
 	sb_spk.border_width_top       = 1
 	sb_spk.border_width_right     = 1
@@ -617,6 +622,32 @@ func _build_group_maps() -> void:
 		if not _group_first_index.has(group_id):
 			_group_first_index[group_id] = i
 
+func _build_beat_name_index() -> void:
+	_beat_name_index.clear()
+	for i: int in range(_beats.size()):
+		var name: String = str((_beats[i] as Dictionary).get("beat_name", "")).strip_edges()
+		if not name.is_empty():
+			_beat_name_index[name] = i
+
+func _resolve_go_to(beat: Dictionary) -> int:
+	var entries: Variant = beat.get("go_to", null)
+	if not entries is Array or (entries as Array).is_empty():
+		return -1
+	for entry: Variant in (entries as Array):
+		if not entry is Dictionary:
+			continue
+		var ed: Dictionary = entry as Dictionary
+		var target_name: String = str(ed.get("beat_name", "")).strip_edges()
+		if target_name.is_empty():
+			continue
+		if not VNChoiceConditions.choice_passes(ed):
+			continue
+		if not _beat_name_index.has(target_name):
+			push_warning("VNPlayer: go_to beat_name '%s' not found — skipping entry" % target_name)
+			continue
+		return int(_beat_name_index[target_name])
+	return -1
+
 func _find_next_mainline_index(from_filtered: int) -> int:
 	for i: int in range(from_filtered + 1, _beats.size()):
 		if _beat_group_id(_beats[i] as Dictionary) == 0:
@@ -689,6 +720,7 @@ func _resolve_choice_goto(choice: Dictionary) -> void:
 	_persist_campaign_checkpoint()
 	_clear_choices()
 	_restore_dialog_lbl_layout()
+	_skip_go_to_check = true
 	_show_beat()
 
 func _build_choice_tooltip() -> void:
@@ -1123,8 +1155,11 @@ func play_scene(
 		_beats.append(_rb)
 		_beat_raw_indices.append(_ri)
 	_build_group_maps()
+	_build_beat_name_index()
 	_active_group_id = 0
 	_group_return_index = -1
+	_last_shown_beat_index = -1
+	_skip_go_to_check = false
 	_beat_index = 0
 	if _track_campaign_checkpoint:
 		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
@@ -1170,11 +1205,22 @@ func _beat_has_deferred_actions(beat: Dictionary) -> bool:
 	return false
 
 func _show_beat() -> void:
+	if not _skip_go_to_check and _last_shown_beat_index >= 0 \
+			and _last_shown_beat_index < _beats.size():
+		var leaving: Dictionary = _beats[_last_shown_beat_index] as Dictionary
+		var goto_idx: int = _resolve_go_to(leaving)
+		if goto_idx >= 0:
+			_beat_index = goto_idx
+			_restore_group_state_for_index(_beat_index)
+			_persist_campaign_checkpoint()
+	_skip_go_to_check = false
+
 	if _beat_index >= _beats.size():
 		_finish()
 		return
 
 	var beat: Dictionary = _beats[_beat_index]
+	_last_shown_beat_index = _beat_index
 	var has_choices: bool = _beat_has_choices(beat)
 	if not has_choices:
 		_advance_beat_cursor()
@@ -1249,17 +1295,27 @@ func _show_beat() -> void:
 
 	# ── Ken Burns (slow zoom/pan on background) ──
 	if beat.has("bg_ken_burns"):
-		var kb = beat["bg_ken_burns"]
-		var zoom: float = float(kb.get("zoom", 1.05))
-		var pan_x: float = float(kb.get("pan_x", 0.0))
-		var pan_y: float = float(kb.get("pan_y", 0.0))
-		var dur: float  = maxf(float(kb.get("duration", 4.0)), 0.1)
+		var kb: Dictionary = beat["bg_ken_burns"] as Dictionary
+		if kb.has("start_zoom"):
+			var start_zoom: float = float(kb["start_zoom"])
+			_bg_rect.scale = Vector2(start_zoom, start_zoom)
+		if kb.has("start_pan_x"):
+			_bg_rect.position.x = float(kb["start_pan_x"])
+		if kb.has("start_pan_y"):
+			_bg_rect.position.y = float(kb["start_pan_y"])
 		if _kb_tween != null:
 			_kb_tween.kill()
+		var from_scale: float = _bg_rect.scale.x
+		var from_pos: Vector2 = _bg_rect.position
+		var to_scale: float = float(kb.get("zoom", 1.05))
+		var to_pos: Vector2 = Vector2(float(kb.get("pan_x", 0.0)), float(kb.get("pan_y", 0.0)))
+		var total: float = KenBurnsUtil.total_time(kb)
 		_kb_tween = create_tween()
-		_kb_tween.set_parallel(true)
-		_kb_tween.tween_property(_bg_rect, "scale",    Vector2(zoom, zoom),  dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		_kb_tween.tween_property(_bg_rect, "position", Vector2(pan_x, pan_y), dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_kb_tween.tween_method(
+			func(elapsed: float) -> void:
+				var p: float = KenBurnsUtil.sample_progress(elapsed, kb)
+				KenBurnsUtil.apply_transform(_bg_rect, p, from_scale, to_scale, from_pos, to_pos),
+			0.0, total, total)
 
 	# ── Characters ──
 	# Skip entirely when linger_characters is set — keep previous beat's sprites.

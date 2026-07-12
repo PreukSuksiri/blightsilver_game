@@ -140,6 +140,8 @@ const OUTLINE_SHADER: Shader    = preload("res://assets/shaders/logo_outline.gds
 # Cache so we don't reload the texture every frame
 var _last_loaded_art: String = ""
 var _last_rendered_key: String = ""
+var _artwork_offset: Vector2 = Vector2.ZERO
+var _art_clip: Control = null
 static var _invert_art_material: ShaderMaterial
 
 var _blank_found_icon: TextureRect
@@ -177,6 +179,7 @@ func _ready() -> void:
 	HudSkin.skin_changed.connect(_reload_hud_skin)
 	_setup_overlay_styles()
 	_build_flag_bar()
+	_setup_artwork_clip()
 
 	# Crystal icon left of the cost number — fits inside the CostLabel area
 	_crystal_cost_icon = TextureRect.new()
@@ -199,6 +202,8 @@ func _ready() -> void:
 	cost_label.offset_left  = -18
 	cost_label.offset_right = -10
 
+	call_deferred("_apply_artwork_layout")
+
 	var _wait_outline := ShaderMaterial.new()
 	_wait_outline.shader = OUTLINE_SHADER
 	_wait_outline.set_shader_parameter("outline_color", Color(0, 0, 0, 1))
@@ -212,6 +217,7 @@ func _ready() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
+		_apply_artwork_layout()
 		_layout_wait_icon_overlay()
 
 func _layout_wait_icon_overlay() -> void:
@@ -822,7 +828,12 @@ func _show_character_face_up() -> void:
 
 	if char_data:
 		ability_label.text = char_data.get_ability_description()
-		_load_artwork(char_data.artwork_path, card_data.card_name, "characters")
+		_load_artwork(
+			char_data.artwork_path,
+			card_data.card_name,
+			"characters",
+			char_data.artwork_offset
+		)
 	else:
 		ability_label.text = ""
 		_clear_art()
@@ -880,7 +891,12 @@ func _show_union_face_up() -> void:
 	if u:
 		ability_label.text = u.ability_description
 		var _found_path: String = CardDatabase.find_artwork(card_data.card_name, "union")
-		_load_artwork(_found_path if _found_path != "" else u.artwork_path, card_data.card_name, "unions")
+		_load_artwork(
+			_found_path if _found_path != "" else u.artwork_path,
+			card_data.card_name,
+			"unions",
+			Vector2.ZERO
+		)
 	else:
 		ability_label.text = ""
 		_clear_art()
@@ -925,7 +941,12 @@ func _show_trap_face_up() -> void:
 	var trap_data: TrapData = CardDatabase.get_trap(card_data.card_name)
 	if trap_data:
 		ability_label.text = trap_data.get_effect_description()
-		_load_artwork(trap_data.artwork_path, card_data.card_name, "traps")
+		_load_artwork(
+			trap_data.artwork_path,
+			card_data.card_name,
+			"traps",
+			trap_data.artwork_offset
+		)
 	else:
 		ability_label.text = ""
 		_clear_art()
@@ -963,7 +984,12 @@ func _show_tech_face_up() -> void:
 	var tech_data: TechCardData = CardDatabase.get_tech(card_data.card_name)
 	if tech_data:
 		ability_label.text = tech_data.get_effect_description()
-		_load_artwork(tech_data.artwork_path, card_data.card_name, "tech")
+		_load_artwork(
+			tech_data.artwork_path,
+			card_data.card_name,
+			"tech",
+			tech_data.artwork_offset
+		)
 	else:
 		ability_label.text = ""
 		_clear_art()
@@ -1078,9 +1104,58 @@ func _apply_rarity(accent_color: Color) -> void:
 				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 # ─────────────────────────────────────────────────────────────
+# Artwork layout (shared framing with full-card export)
+# ─────────────────────────────────────────────────────────────
+func _setup_artwork_clip() -> void:
+	if artwork_rect == null or _art_clip != null:
+		return
+	_art_clip = Control.new()
+	_art_clip.name = "ArtworkClip"
+	_art_clip.mouse_filter = MOUSE_FILTER_IGNORE
+	_art_clip.clip_contents = true
+	add_child(_art_clip)
+	move_child(_art_clip, artwork_rect.get_index())
+	artwork_rect.reparent(_art_clip)
+	artwork_rect.position = Vector2.ZERO
+	artwork_rect.clip_contents = false
+
+
+func _card_layout_size() -> Vector2:
+	var card_sz := size
+	if card_sz.x <= 0.0 or card_sz.y <= 0.0:
+		card_sz = custom_minimum_size
+	if card_sz.x <= 0.0 or card_sz.y <= 0.0:
+		card_sz = CardArtLayout.GRID_REF_SIZE
+	return card_sz
+
+
+func _apply_artwork_layout() -> void:
+	if artwork_rect == null or _art_clip == null:
+		return
+	var card_sz := _card_layout_size()
+	var grid_rect := CardArtLayout.grid_art_rect(card_sz.x, card_sz.y)
+	var full_rect := CardArtLayout.full_art_rect(card_sz.x, card_sz.y)
+	var offset := CardArtLayout.scale_artwork_offset(_artwork_offset, card_sz.x, card_sz.y)
+	# Clip to the on-board art window (above stats). Size the texture to the
+	# full overlay art rect so KEEP_ASPECT_COVERED uses the same scale/crop as
+	# CardDetailOverlay instead of re-centering in the shorter grid slot.
+	_art_clip.position = grid_rect.position + offset
+	_art_clip.size = grid_rect.size
+	artwork_rect.position = Vector2.ZERO
+	artwork_rect.size = full_rect.size
+
+
+# ─────────────────────────────────────────────────────────────
 # Artwork Loading
 # ─────────────────────────────────────────────────────────────
-func _load_artwork(explicit_path: String, card_name: String, subfolder: String) -> void:
+func _load_artwork(
+		explicit_path: String,
+		card_name: String,
+		subfolder: String,
+		artwork_offset: Vector2 = Vector2.ZERO
+) -> void:
+	_artwork_offset = artwork_offset
+	_apply_artwork_layout()
 	# 1. Try the explicit path set on the resource
 	if explicit_path != "":
 		if _can_reuse_loaded_art(explicit_path):

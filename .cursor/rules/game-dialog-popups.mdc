@@ -1,0 +1,40 @@
+---
+description: Use GameDialog autoload for all player-facing modal popups — never native dialogs or ad-hoc popup styling
+globs: blightsilver_game/**/*.gd
+alwaysApply: false
+---
+
+# Game dialog popups
+
+Full guide: `blightsilver_game/context/GAME_DIALOG_POPUP_GUIDE.md`
+
+## Required
+
+For **player-facing** confirmations, alerts, choice menus, and text prompts, use the `GameDialog` autoload (`autoload/GameDialog.gd`):
+
+- `GameDialog.confirmation_overlay()` — two buttons (confirm / Yes left, cancel right)
+- `GameDialog.accept_overlay()` — single OK
+- `GameDialog.choices_overlay()` — multiple actions
+- `GameDialog.prompt_overlay()` — text input
+
+Reuse styling helpers when needed: `make_panel_stylebox()`, `style_title_label()`, `style_body_label()`, `style_button()`.
+
+Guard with `GameDialog.has_open_overlay(parent)` and close with `GameDialog.close_overlay(parent)` before scene changes when appropriate.
+
+## Forbidden
+
+- Godot native dialogs: `AcceptDialog`, `ConfirmationDialog`, `Window` popups for gameplay UI
+- Hand-built modal UI with new `StyleBoxFlat` / unstyled `Button` per screen (like a one-off `PanelContainer` prompt)
+
+## Allowed exceptions
+
+- `FileDialog` / `EditorFileDialog` for import/export and admin file picking
+- Editor-only tools (`VNEditor`, builders, vault managers)
+- Dedicated full-screen overlays (VN, pack opening, battle overlays) — not generic confirm/alert boxes
+
+## Examples in repo
+
+- `DeckBuilder.gd` → `_confirm_high_cost_save()`
+- `QuickDuel.gd` → `_show_tutorial_prompt()`
+
+When adding a new popup type, extend `GameDialog.gd` once instead of styling a new popup in a feature script.

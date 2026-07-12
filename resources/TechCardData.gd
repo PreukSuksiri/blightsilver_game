@@ -40,6 +40,17 @@ enum TechEffectType {
 	LIMIT_FOE_ATTACKS_NEXT_TURN,     # Next turn, foe can attack only once
 	OPPONENT_CRYSTAL_GAIN_ON_DEAD_END, # This turn: foe gains N crystals per dead-end attack
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
+
+	# ── Full-release tech effects ──
+	CRYSTAL_GAIN_IF_OWN_NAME_FACE_UP,  # Gain crystals if own face-up card name matches tokens
+	DESTROY_OWN_NAME_FOR_CRYSTALS,     # Destroy own matching unit (no cost) and gain crystals
+	ADD_FLAG_UP_TO,                    # Add flag to up to N own units
+	CONDITIONAL_DESTROY_FIELD,         # If own face-up name match: destroy N field cards (no foe cost)
+	TEMP_ATK_DEF_BOOST_NAME_FILTER,    # Temp ATK/DEF to own units matching name tokens until foe turn end
+	PROTECT_CORNER_CELLS_UNTIL_FOE_TURN, # Own corner cells cannot be targeted until foe turn end
+	PROTECT_CELL_UNTIL_FOE_TURN,       # Choose own cell; cannot be targeted until foe turn end
+	DESTROY_ALL_REVIVED_AND_TOKENS,    # Destroy every revived unit and token copy on the field
+	PRINCESS_MAGIC_RECKONING,          # Once: in Reckoning vs a princess-flag unit, destroy that foe unit
 }
 
 @export var card_name: String = ""
