@@ -193,11 +193,11 @@
 			],
 			"participants": [
 				{
-					"avatar": "",
+					"avatar": "res://assets/textures/detective/ch0/npc/thumbnail_nex.png",
 					"name": "Crow Emperor"
 				},
 				{
-					"avatar": "",
+					"avatar": "res://assets/textures/detective/ch0/npc/thumbnail_alice.png",
 					"name": "Autumn ⭐ in-:-my-:-heart"
 				}
 			],
@@ -226,27 +226,106 @@
 				{
 					"from": "Michael_999",
 					"text": "Brahhh I have only one",
-					"time": ""
+					"time": "17:45"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "I'll kick you from The Inferno Brigade 😗",
+					"time": "17:47"
+				},
+				{
+					"from": "Michael_999",
+					"text": "You're such a tyrant guildmaster 🤨",
+					"time": "17:48"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "I'm kidding. I rather delete my account if you leave the guild",
+					"time": "17:50"
 				},
 				{
 					"from": "Michael_999",
 					"text": "Only 1 day ok? See you at town square. I'll log in 7PM",
-					"time": "17:45"
+					"time": "18:01"
 				}
 			],
 			"participants": [
 				{
-					"avatar": "",
+					"avatar": "res://assets/textures/detective/ch0/npc/thumbnail_nex.png",
 					"name": "Crow Emperor"
 				},
 				{
-					"avatar": "",
+					"avatar": "res://assets/textures/detective/ch0/npc/thumbnail_michael.png",
 					"name": "Michael_999"
 				}
 			],
 			"reveal_mode": "all",
 			"right_side": "Crow Emperor",
 			"title": "Michael_999"
+		},
+		{
+			"id": "msg_mayu_casual_talk_1",
+			"messages": [
+				{
+					"from": "マユネーズ",
+					"image": "res://assets/textures/detective/ch0/verdict2/nex_sleep_lecture.png",
+					"time": "14:40"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "What the hell lol",
+					"time": "15:50"
+				},
+				{
+					"from": "マユネーズ",
+					"text": "😆",
+					"time": ""
+				},
+				{
+					"from": "マユネーズ",
+					"text": "You're gonna get an F",
+					"time": "16:10"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "No way. I have your note.",
+					"time": "16:18"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Mayu I've found this from a thrift bookstore",
+					"time": ""
+				},
+				{
+					"from": "Crow Emperor",
+					"image": "res://assets/textures/detective/ch0/verdict2/manga_my_crush_is_a_duck.png",
+					"text": "You said you lost vol.1 long time ago.",
+					"time": "18:02"
+				},
+				{
+					"from": "マユネーズ",
+					"text": "🤩🤩🤩",
+					"time": ""
+				},
+				{
+					"from": "マユネーズ",
+					"text": "That's so rare thxx",
+					"time": "19.11"
+				}
+			],
+			"participants": [
+				{
+					"avatar": "res://assets/textures/detective/ch0/npc/thumbnail_nex.png",
+					"name": "Crow Emperor"
+				},
+				{
+					"avatar": "res://assets/textures/detective/ch0/npc/thumbnail_mayu.png",
+					"name": "マユネーズ"
+				}
+			],
+			"reveal_mode": "all",
+			"right_side": "Crow Emperor",
+			"title": "マユネーズ"
 		}
 	]
 }

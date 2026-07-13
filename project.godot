@@ -60,6 +60,9 @@ RewardGranter="*res://autoload/RewardGranter.gd"
 ProtagonistVault="*res://autoload/ProtagonistVault.gd"
 AIIdentityVault="*res://autoload/AIIdentityVault.gd"
 MessengerVault="*res://autoload/MessengerVault.gd"
+DetectiveNoteVault="*res://autoload/DetectiveNoteVault.gd"
+DetectiveNoteManager="*res://autoload/DetectiveNoteManager.gd"
+DetectiveNoteToaster="*res://autoload/DetectiveNoteToaster.gd"
 
 [display]
 

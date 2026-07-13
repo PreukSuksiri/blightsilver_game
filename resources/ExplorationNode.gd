@@ -46,6 +46,11 @@ extends Resource
 ##     "give_union_scroll" — send scroll(s) to mailbox (value = count, default 1;
 ##                           key = optional mail subject override)
 ##     "set_flag"    — set carry-over flag[key] = value (persisted to SaveManager)
+##     "note_add_clue"     — add clue key to the detective note (value = optional
+##                           chapter id; defaults to this graph's chapter)
+##     "note_unlock_topic" — unlock detective note topic key (value = optional chapter id)
+##     "note_upgrade_topic"— raise topic key's verdict map to level int(value)
+##                           (empty value = +1 level; chapter from context)
 ##     "show_message"— display value as a toast notification
 ##     "play_sfx"    — play audio at the path stored in value
 ##

@@ -35,6 +35,8 @@ const SFX_BATTLE_CALC := preload("res://assets/audio/sfx/chime_4.mp3")         #
 const SFX_MODIFIER_REVEAL := preload("res://assets/audio/sfx/scifi_ui_34.mp3") # wheel spin result reveal
 const SFX_FLIP := preload("res://assets/audio/sfx/flip3.mp3")                  # card flip / reveal
 const SFX_FLIP_VOLUME := 0.7
+const SFX_STAMP := preload("res://assets/audio/sfx/slam1.mp3")                 # detective note APPROVED stamp
+const SFX_STAMP_VOLUME := 0.88
 
 func play(stream: AudioStream, volume: float = 1.0) -> void:
 	if stream == null:

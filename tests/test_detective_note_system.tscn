@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://detective_note_test"]
+
+[ext_resource type="Script" path="res://tests/test_detective_note_system.gd" id="1"]
+
+[node name="DetectiveNoteTestRunner" type="Node"]
+script = ExtResource("1")

@@ -191,6 +191,12 @@ var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
 var _f_show_messenger: OptionButton = null
+var _detective_note_rows: Array = []
+var _detective_note_rows_vbox: VBoxContainer = null
+var _f_show_note_stamp: CheckBox = null
+var _f_note_stamp_chapter: OptionButton = null
+var _f_note_stamp_topic: OptionButton = null
+var _f_note_stamp_stamp: OptionButton = null
 var _f_go_to_campaign_gallery: CheckBox     = null
 var _f_go_to_quick_duel:       CheckBox     = null
 var _f_mark_chapter_end:       CheckBox     = null
@@ -665,7 +671,7 @@ func _build_fields() -> void:
 	# ── Go To (conditional beat jump) ─────────────────────────
 	_section(v, "GO TO  (auto-jump after this beat)")
 	var go_to_hint := Label.new()
-	go_to_hint.text = "Evaluated top-to-bottom when the player advances; first matching entry wins. Empty conditions = always. Uses exploration vars/items when in exploration."
+	go_to_hint.text = "Evaluated top-to-bottom when the player advances; first matching entry wins. Each entry can require all conditions (AND) or any condition (OR). Empty conditions = always. Uses exploration vars/items when in exploration."
 	go_to_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	go_to_hint.add_theme_font_size_override("font_size", 12)
 	go_to_hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
@@ -1235,6 +1241,53 @@ func _build_fields() -> void:
 			"Messenger Vault conversation shown by this beat")
 	MessengerVault.populate_conversation_option(_f_show_messenger)
 
+	# ── Detective Note ────────────────────────────────────────
+	_section(v, "DETECTIVE NOTE  (grant clues / topics when this beat is shown)")
+	var note_hint := Label.new()
+	note_hint.text = "Actions run as the beat appears (toasts for new clues/topics unless add_clue is marked Silent). Chapter defaults to this scene's mapped note chapter unless overridden. Author content via admin command: detective_note_vault."
+	note_hint.add_theme_font_size_override("font_size", 12)
+	note_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	note_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(note_hint)
+	var note_hdr := HBoxContainer.new()
+	note_hdr.add_theme_constant_override("separation", 6)
+	v.add_child(note_hdr)
+	var note_hdr_lbl := Label.new()
+	note_hdr_lbl.text = "Actions"
+	note_hdr_lbl.add_theme_font_size_override("font_size", 13)
+	note_hdr_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.8))
+	note_hdr_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	note_hdr_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	note_hdr.add_child(note_hdr_lbl)
+	var note_add_btn := Button.new()
+	note_add_btn.text = "+ Add Action"
+	note_add_btn.custom_minimum_size = Vector2(110, 26)
+	note_add_btn.add_theme_font_size_override("font_size", 13)
+	note_add_btn.pressed.connect(func() -> void:
+		if _selected_idx < 0:
+			return
+		_add_detective_note_row_from({})
+		_on_field_changed())
+	note_hdr.add_child(note_add_btn)
+	_detective_note_rows_vbox = VBoxContainer.new()
+	_detective_note_rows_vbox.add_theme_constant_override("separation", 3)
+	v.add_child(_detective_note_rows_vbox)
+
+	_section(v, "DETECTIVE NOTE STAMP  (APPROVED stamp animation; blocks until dismissed)")
+	var stamp_hint := Label.new()
+	stamp_hint.text = "Applies the stamp, then opens a read-only notebook view with the stamp animation. Click or press any key to dismiss."
+	stamp_hint.add_theme_font_size_override("font_size", 12)
+	stamp_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	stamp_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(stamp_hint)
+	_f_show_note_stamp = _row_cb(v, "Show APPROVED stamp", "Play the case-closed stamp on this beat")
+	_f_note_stamp_chapter = _row_opt(v, "Chapter", [], "note chapter containing the topic")
+	_populate_detective_chapter_option(_f_note_stamp_chapter, "", true)
+	_f_note_stamp_topic = _row_opt(v, "Topic", [], "stamped verdict topic")
+	_f_note_stamp_stamp = _row_opt(v, "Stamp", [], "stamp id from the vault")
+	_populate_detective_stamp_option(_f_note_stamp_stamp, "")
+	_sync_note_stamp_fields()
+
 	# ── Battle Reward ─────────────────────────────────────────
 	_section(v, "BATTLE REWARD  (on win)")
 	var rwd_hint := Label.new()
@@ -1403,6 +1456,21 @@ func _connect_static_signals() -> void:
 	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_show_messenger != null:
 		_f_show_messenger.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_show_note_stamp != null:
+		_f_show_note_stamp.toggled.connect(func(_on: bool) -> void:
+			_sync_note_stamp_fields()
+			ch.call())
+	if _f_note_stamp_chapter != null:
+		_f_note_stamp_chapter.item_selected.connect(func(_i: int) -> void:
+			_populate_detective_topic_option(
+				_f_note_stamp_topic,
+				_detective_chapter_from_option(_f_note_stamp_chapter),
+				"")
+			ch.call())
+	if _f_note_stamp_topic != null:
+		_f_note_stamp_topic.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_note_stamp_stamp != null:
+		_f_note_stamp_stamp.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_ai_pers_def.item_selected.connect(func(_i: int) -> void: ch.call())
@@ -2691,6 +2759,12 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		if beat.get("exploration_keep_vn_bgm", false):
 			expl_extra = " (vn bgm)"
 		return prefix + "[exploration: %s%s]" % [expl_call.get_file(), expl_extra]
+	var note_actions: Variant = beat.get("detective_note", null)
+	if note_actions is Array and not (note_actions as Array).is_empty():
+		return prefix + "[detective note: %d action(s)]" % (note_actions as Array).size()
+	if beat.get("show_note_stamp", null) is Dictionary:
+		var stamp_spec: Dictionary = beat["show_note_stamp"] as Dictionary
+		return prefix + "[note stamp: %s]" % str(stamp_spec.get("stamp", "?"))
 
 	var choices: Variant = beat.get("choices", null)
 	if choices is Array and not (choices as Array).is_empty():
@@ -3084,10 +3158,27 @@ func _add_go_to_row_from(data: Dictionary = {}) -> void:
 	name_le.text_changed.connect(func(_t: String) -> void: _on_field_changed())
 	name_row.add_child(name_le)
 
+	var cond_hdr := HBoxContainer.new()
+	cond_hdr.add_theme_constant_override("separation", 6)
+	vb.add_child(cond_hdr)
 	var cond_lbl := Label.new()
-	cond_lbl.text = "Conditions (AND) — empty = always"
+	cond_lbl.text = "Conditions"
 	cond_lbl.add_theme_font_size_override("font_size", 12)
-	vb.add_child(cond_lbl)
+	cond_hdr.add_child(cond_lbl)
+	var cond_mode_opt := OptionButton.new()
+	cond_mode_opt.add_item("AND")
+	cond_mode_opt.add_item("OR")
+	var cond_mode: String = str(data.get("conditions_mode", "and")).strip_edges().to_lower()
+	cond_mode_opt.selected = 1 if cond_mode == "or" else 0
+	cond_mode_opt.custom_minimum_size = Vector2(72.0, 0.0)
+	cond_mode_opt.add_theme_font_size_override("font_size", 12)
+	cond_mode_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	cond_hdr.add_child(cond_mode_opt)
+	var cond_hint := Label.new()
+	cond_hint.text = "— empty = always"
+	cond_hint.add_theme_font_size_override("font_size", 12)
+	cond_hint.add_theme_color_override("font_color", Color(0.65, 0.72, 0.82))
+	cond_hdr.add_child(cond_hint)
 	var cond_vbox := VBoxContainer.new()
 	cond_vbox.add_theme_constant_override("separation", 2)
 	vb.add_child(cond_vbox)
@@ -3110,6 +3201,7 @@ func _add_go_to_row_from(data: Dictionary = {}) -> void:
 
 	frame.set_meta("name_le", name_le)
 	frame.set_meta("cond_vbox", cond_vbox)
+	frame.set_meta("cond_mode_opt", cond_mode_opt)
 
 func _add_go_to_row() -> void:
 	if _selected_idx < 0:
@@ -3134,6 +3226,7 @@ func _collect_go_to() -> Array:
 			continue
 		var name_le: LineEdit = frame.get_meta("name_le") as LineEdit
 		var cond_vbox: VBoxContainer = frame.get_meta("cond_vbox") as VBoxContainer
+		var cond_mode_opt: OptionButton = frame.get_meta("cond_mode_opt") as OptionButton
 		if name_le == null:
 			continue
 		var beat_name: String = name_le.text.strip_edges()
@@ -3143,6 +3236,8 @@ func _collect_go_to() -> Array:
 		var conds: Array = _collect_conditions_from_vbox(cond_vbox)
 		if not conds.is_empty():
 			entry["conditions"] = conds
+			if cond_mode_opt != null and cond_mode_opt.selected == 1:
+				entry["conditions_mode"] = "or"
 		out.append(entry)
 	return out
 
@@ -3720,6 +3815,34 @@ func _populate_fields() -> void:
 		MessengerVault.populate_conversation_option(_f_show_messenger)
 		MessengerVault.select_conversation_option(
 			_f_show_messenger, str(b.get("show_messenger", "")).strip_edges())
+
+	var note_raw: Variant = b.get("detective_note", [])
+	_rebuild_detective_note_rows(note_raw if note_raw is Array else [])
+	var stamp_spec: Variant = b.get("show_note_stamp", null)
+	if stamp_spec is Dictionary:
+		var sd: Dictionary = stamp_spec as Dictionary
+		if _f_show_note_stamp != null:
+			_f_show_note_stamp.button_pressed = true
+		var stamp_ch: String = str(sd.get("chapter", "")).strip_edges()
+		var stamp_topic: String = str(sd.get("topic", "")).strip_edges()
+		if stamp_ch.is_empty() and not stamp_topic.is_empty():
+			stamp_ch = _find_chapter_for_topic(stamp_topic)
+		if _f_note_stamp_chapter != null:
+			_populate_detective_chapter_option(_f_note_stamp_chapter, stamp_ch, true)
+		if _f_note_stamp_topic != null:
+			_populate_detective_topic_option(_f_note_stamp_topic, stamp_ch, stamp_topic)
+		if _f_note_stamp_stamp != null:
+			_populate_detective_stamp_option(_f_note_stamp_stamp, str(sd.get("stamp", "")))
+	else:
+		if _f_show_note_stamp != null:
+			_f_show_note_stamp.button_pressed = false
+		if _f_note_stamp_chapter != null:
+			_populate_detective_chapter_option(_f_note_stamp_chapter, "", true)
+		if _f_note_stamp_topic != null:
+			_populate_detective_topic_option(_f_note_stamp_topic, "", "")
+		if _f_note_stamp_stamp != null:
+			_populate_detective_stamp_option(_f_note_stamp_stamp, "")
+	_sync_note_stamp_fields()
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
 	var ask_key: String = str(b.get("ask_player_name", "")).strip_edges().to_lower()
@@ -4119,6 +4242,20 @@ func _collect_beat() -> Dictionary:
 		var msgr_id: String = MessengerVault.option_conversation_id(_f_show_messenger)
 		if not msgr_id.is_empty():
 			b["show_messenger"] = msgr_id
+
+	var note_actions: Array = _collect_detective_note_actions()
+	if not note_actions.is_empty():
+		b["detective_note"] = note_actions
+	if _f_show_note_stamp != null and _f_show_note_stamp.button_pressed:
+		var stamp_id: String = _detective_stamp_from_option(_f_note_stamp_stamp)
+		var topic_id: String = _detective_topic_from_option(_f_note_stamp_topic)
+		if not stamp_id.is_empty() and not topic_id.is_empty():
+			var stamp_entry: Dictionary = {"topic": topic_id, "stamp": stamp_id}
+			var stamp_ch: String = _detective_chapter_from_option(_f_note_stamp_chapter)
+			if not stamp_ch.is_empty():
+				stamp_entry["chapter"] = stamp_ch
+			b["show_note_stamp"] = stamp_entry
+
 	var p1n: String = _f_player1_name.text.strip_edges()
 	if not p1n.is_empty():
 		b["player1_name"] = p1n
@@ -5429,3 +5566,288 @@ func _update_reward_row_visibility(row: Dictionary) -> void:
 	(row["credits_sb"] as SpinBox).visible   = (sel == 0 or sel == 3)
 	(row["card_opt"]   as OptionButton).visible = (sel == 1)
 	(row["pack_opt"]   as OptionButton).visible = (sel == 2)
+
+# ─────────────────────────────────────────────────────────────
+# Detective note beat fields
+# ─────────────────────────────────────────────────────────────
+const _DETECTIVE_NOTE_ACTIONS: Array = ["add_clue", "unlock_topic", "upgrade_topic"]
+
+func _sync_note_stamp_fields() -> void:
+	var on: bool = _f_show_note_stamp != null and _f_show_note_stamp.button_pressed
+	for f: OptionButton in [_f_note_stamp_chapter, _f_note_stamp_topic, _f_note_stamp_stamp]:
+		if f != null:
+			f.visible = on
+			f.get_parent().visible = on
+
+func _find_chapter_for_topic(topic_id: String) -> String:
+	var tid: String = topic_id.strip_edges()
+	if tid.is_empty():
+		return ""
+	for cid_v: Variant in DetectiveNoteVault.get_chapter_ids():
+		var ch_id: String = str(cid_v)
+		if DetectiveNoteVault.get_topic_ids(ch_id).has(tid):
+			return ch_id
+	return ""
+
+func _populate_detective_chapter_option(
+		opt: OptionButton, selected: String, include_default: bool) -> void:
+	if opt == null:
+		return
+	opt.clear()
+	var select_idx: int = 0
+	if include_default:
+		opt.add_item("(scene default)")
+		opt.set_item_metadata(0, "")
+		select_idx = 1
+	for cid_v: Variant in DetectiveNoteVault.get_chapter_ids():
+		var ch_id: String = str(cid_v)
+		var chapter: Dictionary = DetectiveNoteVault.get_chapter(ch_id)
+		var title: String = DetectiveNoteVault.loc_text(chapter.get("title", ""))
+		var label: String = "%s — %s" % [ch_id, title] if not title.is_empty() else ch_id
+		var idx: int = opt.item_count
+		opt.add_item(label)
+		opt.set_item_metadata(idx, ch_id)
+		if ch_id == selected.strip_edges():
+			select_idx = idx
+	opt.select(clampi(select_idx, 0, maxi(opt.item_count - 1, 0)))
+
+func _detective_chapter_from_option(opt: OptionButton) -> String:
+	if opt == null or opt.selected < 0:
+		return ""
+	return str(opt.get_item_metadata(opt.selected)).strip_edges()
+
+func _populate_detective_topic_option(
+		opt: OptionButton, chapter_id: String, selected_topic: String) -> void:
+	if opt == null:
+		return
+	opt.clear()
+	var wanted: String = selected_topic.strip_edges()
+	var select_idx: int = 0
+	var ch_filter: String = chapter_id.strip_edges()
+	if ch_filter.is_empty():
+		for cid_v: Variant in DetectiveNoteVault.get_chapter_ids():
+			select_idx = _append_detective_topic_items(opt, str(cid_v), wanted, select_idx)
+	else:
+		select_idx = _append_detective_topic_items(opt, ch_filter, wanted, 0)
+	opt.select(clampi(select_idx, 0, maxi(opt.item_count - 1, 0)))
+
+func _append_detective_topic_items(
+		opt: OptionButton, chapter_id: String, wanted_topic: String, select_idx: int) -> int:
+	for tid_v: Variant in DetectiveNoteVault.get_topic_ids(chapter_id):
+		var tid: String = str(tid_v)
+		var topic: Dictionary = DetectiveNoteVault.get_topic(chapter_id, tid)
+		var title: String = DetectiveNoteVault.loc_text(topic.get("title", ""))
+		var label: String = "%s / %s" % [chapter_id, tid]
+		if not title.is_empty():
+			label += " — " + title
+		var idx: int = opt.item_count
+		opt.add_item(label)
+		opt.set_item_metadata(idx, {"chapter": chapter_id, "topic": tid})
+		if tid == wanted_topic.strip_edges():
+			select_idx = idx
+	return select_idx
+
+func _detective_topic_from_option(opt: OptionButton) -> String:
+	if opt == null or opt.selected < 0:
+		return ""
+	var meta: Variant = opt.get_item_metadata(opt.selected)
+	if meta is Dictionary:
+		return str((meta as Dictionary).get("topic", "")).strip_edges()
+	return ""
+
+func _populate_detective_stamp_option(opt: OptionButton, selected_stamp: String) -> void:
+	if opt == null:
+		return
+	opt.clear()
+	var wanted: String = selected_stamp.strip_edges()
+	var select_idx: int = 0
+	for sid_v: Variant in DetectiveNoteVault.get_stamp_ids():
+		var sid: String = str(sid_v)
+		var stamp: Dictionary = DetectiveNoteVault.get_stamp(sid)
+		var approver: String = DetectiveNoteVault.loc_text(stamp.get("approver", ""))
+		var label: String = "%s — %s" % [sid, approver] if not approver.is_empty() else sid
+		var idx: int = opt.item_count
+		opt.add_item(label)
+		opt.set_item_metadata(idx, sid)
+		if sid == wanted:
+			select_idx = idx
+	opt.select(clampi(select_idx, 0, maxi(opt.item_count - 1, 0)))
+
+func _detective_stamp_from_option(opt: OptionButton) -> String:
+	if opt == null or opt.selected < 0:
+		return ""
+	return str(opt.get_item_metadata(opt.selected)).strip_edges()
+
+func _populate_detective_target_option(
+		opt: OptionButton, action: String, selected_chapter: String, selected_id: String) -> void:
+	if opt == null:
+		return
+	opt.clear()
+	var wanted_id: String = selected_id.strip_edges()
+	var wanted_ch: String = selected_chapter.strip_edges()
+	var select_idx: int = 0
+	if action == "add_clue":
+		for cid_v: Variant in DetectiveNoteVault.get_clue_ids():
+			var clue_id: String = str(cid_v)
+			var clue: Dictionary = DetectiveNoteVault.get_clue(clue_id)
+			var name: String = DetectiveNoteVault.clue_display_name(clue)
+			var kind: String = str(clue.get("kind", ""))
+			var label: String = clue_id
+			if not name.is_empty():
+				label += " — " + name
+			if not kind.is_empty():
+				label += " [%s]" % kind
+			var idx: int = opt.item_count
+			opt.add_item(label)
+			opt.set_item_metadata(idx, {"id": clue_id})
+			if clue_id == wanted_id:
+				select_idx = idx
+	else:
+		for cid_v: Variant in DetectiveNoteVault.get_chapter_ids():
+			var ch_id: String = str(cid_v)
+			for tid_v: Variant in DetectiveNoteVault.get_topic_ids(ch_id):
+				var tid: String = str(tid_v)
+				var topic: Dictionary = DetectiveNoteVault.get_topic(ch_id, tid)
+				var title: String = DetectiveNoteVault.loc_text(topic.get("title", ""))
+				var label: String = "%s / %s" % [ch_id, tid]
+				if not title.is_empty():
+					label += " — " + title
+				var idx: int = opt.item_count
+				opt.add_item(label)
+				opt.set_item_metadata(idx, {"id": tid, "chapter": ch_id})
+				if tid == wanted_id and (wanted_ch.is_empty() or ch_id == wanted_ch):
+					select_idx = idx
+	opt.select(clampi(select_idx, 0, maxi(opt.item_count - 1, 0)))
+
+func _rebuild_detective_note_rows(actions: Array) -> void:
+	if _detective_note_rows_vbox == null:
+		return
+	for child: Node in _detective_note_rows_vbox.get_children():
+		child.queue_free()
+	_detective_note_rows.clear()
+	for ad_v: Variant in actions:
+		if ad_v is Dictionary:
+			_add_detective_note_row_from(ad_v as Dictionary)
+
+func _add_detective_note_row_from(ad: Dictionary) -> void:
+	if _detective_note_rows_vbox == null:
+		return
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 4)
+	_detective_note_rows_vbox.add_child(hbox)
+
+	var action_opt := OptionButton.new()
+	action_opt.custom_minimum_size = Vector2(120, 26)
+	action_opt.add_theme_font_size_override("font_size", 13)
+	for act: String in _DETECTIVE_NOTE_ACTIONS:
+		action_opt.add_item(act)
+	var action: String = str(ad.get("action", "add_clue")).strip_edges()
+	var action_idx: int = _DETECTIVE_NOTE_ACTIONS.find(action)
+	action_opt.select(action_idx if action_idx >= 0 else 0)
+	hbox.add_child(action_opt)
+
+	var target_opt := OptionButton.new()
+	target_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	target_opt.add_theme_font_size_override("font_size", 13)
+	hbox.add_child(target_opt)
+
+	var chapter_opt := OptionButton.new()
+	chapter_opt.custom_minimum_size = Vector2(150, 26)
+	chapter_opt.add_theme_font_size_override("font_size", 13)
+	hbox.add_child(chapter_opt)
+
+	var level_sb := SpinBox.new()
+	level_sb.min_value = 0
+	level_sb.max_value = 9
+	level_sb.step = 1
+	level_sb.value = float(ad.get("level", 0))
+	level_sb.custom_minimum_size = Vector2(56, 26)
+	level_sb.tooltip_text = "upgrade_topic only: 0 = +1 level"
+	level_sb.add_theme_font_size_override("font_size", 13)
+	hbox.add_child(level_sb)
+
+	var silent_cb := CheckBox.new()
+	silent_cb.text = "Silent"
+	silent_cb.tooltip_text = "add_clue only — grant without discovery toast"
+	silent_cb.button_pressed = bool(ad.get("silent", false))
+	silent_cb.add_theme_font_size_override("font_size", 13)
+	hbox.add_child(silent_cb)
+
+	var rm := Button.new()
+	rm.text = "×"
+	rm.custom_minimum_size = Vector2(26, 26)
+	hbox.add_child(rm)
+
+	var row: Dictionary = {
+		"hbox": hbox,
+		"action_opt": action_opt,
+		"target_opt": target_opt,
+		"chapter_opt": chapter_opt,
+		"level_sb": level_sb,
+		"silent_cb": silent_cb,
+	}
+	var ref_ch: String = str(ad.get("chapter", "")).strip_edges()
+	var ref_id: String = str(ad.get("id", "")).strip_edges()
+	_populate_detective_chapter_option(chapter_opt, ref_ch, true)
+	_populate_detective_target_option(target_opt, action, ref_ch, ref_id)
+	_update_detective_note_row_visibility(row)
+
+	_detective_note_rows.append(row)
+
+	action_opt.item_selected.connect(func(_i: int) -> void:
+		var act: String = _DETECTIVE_NOTE_ACTIONS[action_opt.selected]
+		_populate_detective_target_option(target_opt, act, "", "")
+		_update_detective_note_row_visibility(row)
+		_on_field_changed())
+	target_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	chapter_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	level_sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
+	silent_cb.toggled.connect(func(_on: bool) -> void: _on_field_changed())
+	rm.pressed.connect(func() -> void:
+		hbox.queue_free()
+		_detective_note_rows.erase(row)
+		_on_field_changed())
+
+func _update_detective_note_row_visibility(row: Dictionary) -> void:
+	var action: String = _DETECTIVE_NOTE_ACTIONS[(row["action_opt"] as OptionButton).selected]
+	(row["level_sb"] as SpinBox).visible = action == "upgrade_topic"
+	var silent_cb: CheckBox = row.get("silent_cb") as CheckBox
+	if silent_cb != null:
+		silent_cb.visible = action == "add_clue"
+
+func _collect_detective_note_actions() -> Array:
+	var out: Array = []
+	for row_v: Variant in _detective_note_rows:
+		if not row_v is Dictionary:
+			continue
+		var row: Dictionary = row_v as Dictionary
+		var action_opt: OptionButton = row["action_opt"] as OptionButton
+		var target_opt: OptionButton = row["target_opt"] as OptionButton
+		if target_opt.item_count <= 0 or target_opt.selected < 0:
+			continue
+		var action: String = _DETECTIVE_NOTE_ACTIONS[action_opt.selected]
+		var meta: Variant = target_opt.get_item_metadata(target_opt.selected)
+		if not meta is Dictionary:
+			continue
+		var ref_id: String = str((meta as Dictionary).get("id", "")).strip_edges()
+		if ref_id.is_empty():
+			continue
+		var entry: Dictionary = {"action": action, "id": ref_id}
+		var chapter_opt: OptionButton = row["chapter_opt"] as OptionButton
+		var ch_override: String = _detective_chapter_from_option(chapter_opt)
+		if not ch_override.is_empty():
+			entry["chapter"] = ch_override
+		elif action != "add_clue":
+			var topic_ch: String = str((meta as Dictionary).get("chapter", "")).strip_edges()
+			if not topic_ch.is_empty():
+				entry["chapter"] = topic_ch
+		if action == "upgrade_topic":
+			var lvl: int = int((row["level_sb"] as SpinBox).value)
+			if lvl > 0:
+				entry["level"] = lvl
+		if action == "add_clue":
+			var silent_cb: CheckBox = row.get("silent_cb") as CheckBox
+			if silent_cb != null and silent_cb.button_pressed:
+				entry["silent"] = true
+		out.append(entry)
+	return out

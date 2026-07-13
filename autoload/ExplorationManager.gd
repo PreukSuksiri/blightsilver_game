@@ -290,6 +290,9 @@ func start_session(graph_path: String, source_vn_scene: String = "") -> void:
 	emit_signal("session_started", graph)
 	_navigate_to(graph.resolve_start_node_id(_vars), false)
 	_save_session_state(true)
+	var note_ch: String = DetectiveNoteManager.resolve_active_chapter(_source_vn_scene)
+	if not note_ch.is_empty():
+		DetectiveNoteManager.apply_start_clues(note_ch)
 
 ## Restart the current session from the start node, resetting all progress.
 ## return_scene is preserved. Emits session_started then node_entered for the start node.
@@ -1059,6 +1062,30 @@ func _process_events(events: Array) -> void:
 			"set_flag":
 				set_exploration_flag(key, value)
 
+			"note_add_clue":
+				var clue_ch: String = _note_chapter(value)
+				if clue_ch.is_empty():
+					push_warning("ExplorationManager: note_add_clue '%s' — no note chapter for this context." % key)
+				else:
+					DetectiveNoteManager.add_clue(clue_ch, key)
+
+			"note_unlock_topic":
+				var topic_ch: String = _note_chapter(value)
+				if topic_ch.is_empty():
+					push_warning("ExplorationManager: note_unlock_topic '%s' — no note chapter for this context." % key)
+				else:
+					DetectiveNoteManager.unlock_topic(topic_ch, key)
+
+			"note_upgrade_topic":
+				var up_ch: String = _note_chapter("")
+				if up_ch.is_empty():
+					push_warning("ExplorationManager: note_upgrade_topic '%s' — no note chapter for this context." % key)
+				else:
+					var lvl: int = int(value) if value.is_valid_int() else 0
+					if lvl <= 0:
+						lvl = DetectiveNoteManager.get_topic_level(up_ch, key) + 1
+					DetectiveNoteManager.upgrade_topic(up_ch, key, lvl)
+
 			"show_message":
 				emit_signal("message_posted", value)
 
@@ -1073,6 +1100,14 @@ func _process_events(events: Array) -> void:
 				var vn_path: String = value if not value.is_empty() else key
 				end_session(true)
 				emit_signal("end_exploration_vn_requested", vn_path)
+
+## Chapter for note_* actions: explicit chapter id when given (and known),
+## otherwise the chapter mapped to the active exploration graph / VN scene.
+func _note_chapter(explicit: String) -> String:
+	var ch: String = explicit.strip_edges()
+	if not ch.is_empty() and not DetectiveNoteVault.get_chapter(ch).is_empty():
+		return ch
+	return DetectiveNoteManager.resolve_active_chapter()
 
 ## Send exploration credits to the player's mailbox (claimable from Inventory).
 func _grant_credits(amount: int, subject_override: String = "") -> void:

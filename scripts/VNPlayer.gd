@@ -15,11 +15,16 @@ const CHAR_H      := 560.0
 const CHAR_Y      := 80.0
 const DIALOG_Y    := 640.0
 const DIALOG_H    := 260.0
+const DIALOG_TEXT_X := 50.0
+const NOTE_ICON_SIZE := 64.0
+const NOTE_ICON_RIGHT_MARGIN := 140.0
 const DIALOG_SIDE_BORDER_W := 3.0
 const DIALOG_BORDER_CYAN := Color(0.38, 0.65, 1.0, 0.35)
 const STAGE_DESIGN_SIZE := Vector2(1600.0, 900.0)
 
 const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
+const NOTE_ICON_PATH  := "res://assets/textures/detective/ui_detective_note_icon.png"
+const NOTE_HOVER_OPEN_SEC := 0.5
 const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
 const TEXT_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 1.0)
 const TEXT_SHADOW_OFFSET := 2
@@ -97,6 +102,10 @@ var _speaker_lbl: Label = null
 var _dialog_lbl: RichTextLabel = null
 var _hint_icon: TextureRect = null
 var _hint_tween: Tween = null
+var _note_icon: TextureRect = null            # detective note opener (bottom-right of dialog)
+var _note_chapter_id: String = ""             # chapter mapped to this scene; "" hides the icon
+var _note_hover_time: float = 0.0             # 0.5s hover-to-open accumulator
+var _note_overlay: DetectiveNoteOverlay = null
 var _choices_above_group: Control = null
 var _choices_above_host: PanelContainer = null
 var _choices_above_scroll: ScrollContainer = null
@@ -328,7 +337,7 @@ func _build_ui() -> void:
 
 	# Dialog text (inside panel) — RichTextLabel for BBCode color tag support
 	_dialog_lbl = RichTextLabel.new()
-	_dialog_lbl.position        = Vector2(50.0, 18.0)
+	_dialog_lbl.position        = Vector2(DIALOG_TEXT_X, 18.0)
 	_dialog_lbl.size            = Vector2(1460.0, 218.0)
 	_dialog_lbl.bbcode_enabled  = true
 	_dialog_lbl.scroll_active   = false
@@ -347,6 +356,22 @@ func _build_ui() -> void:
 	if ResourceLoader.exists(HINT_ICON_PATH):
 		_hint_icon.texture = load(HINT_ICON_PATH) as Texture2D
 	_dialog_panel.add_child(_hint_icon)
+
+	# Detective note icon (bottom-right of dialog panel).
+	# Taps are intercepted in _input (which runs before GUI input would reach
+	# this TextureRect); hover-to-open is polled in _process.
+	_note_icon = TextureRect.new()
+	_note_icon.position     = Vector2(
+		STAGE_DESIGN_SIZE.x - NOTE_ICON_SIZE - NOTE_ICON_RIGHT_MARGIN,
+		DIALOG_H - NOTE_ICON_SIZE - 10.0)
+	_note_icon.size         = Vector2(NOTE_ICON_SIZE, NOTE_ICON_SIZE)
+	_note_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_note_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_note_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if ResourceLoader.exists(NOTE_ICON_PATH):
+		_note_icon.texture = load(NOTE_ICON_PATH) as Texture2D
+	_note_icon.visible = false
+	_dialog_panel.add_child(_note_icon)
 
 	_build_choice_hosts()
 
@@ -909,9 +934,10 @@ func _notification(what: int) -> void:
 			or what == NOTIFICATION_APPLICATION_PAUSED:
 		_persist_campaign_checkpoint()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _choice_tooltip_box != null and _choice_tooltip_box.visible:
 		_choice_tooltip_box.global_position = get_global_mouse_position() + CHOICE_TOOLTIP_MOUSE_OFFSET
+	_update_note_icon_hover(delta)
 
 ## Scale the 1600×900 stage to fit inside the viewport (contain) and center it on screen.
 func _ensure_stage_layout() -> void:
@@ -1080,6 +1106,96 @@ func _hide_hint_icon() -> void:
 	_hint_icon.visible = false
 
 # ─────────────────────────────────────────────────────────────
+# Detective note (icon on the dialog box + beat commands)
+# ─────────────────────────────────────────────────────────────
+
+## Show the note icon only when this scene maps to a detective note chapter.
+func _refresh_note_icon() -> void:
+	_note_chapter_id = DetectiveNoteManager.resolve_active_chapter(_scene_path)
+	if _note_icon != null:
+		_note_icon.visible = not _note_chapter_id.is_empty()
+
+## Hovering the note icon for 0.5s opens the notebook (same as tapping).
+func _update_note_icon_hover(delta: float) -> void:
+	if _note_icon == null or not _note_icon.visible or not _note_icon.is_visible_in_tree():
+		_note_hover_time = 0.0
+		return
+	if _note_overlay != null or not _accepting_input or not _dialog_panel.visible:
+		_note_hover_time = 0.0
+		return
+	if (_choices_above_group != null and _choices_above_group.visible) \
+			or (_choices_inside_group != null and _choices_inside_group.visible):
+		_note_hover_time = 0.0
+		return
+	if _note_icon.get_global_rect().has_point(get_global_mouse_position()):
+		_note_hover_time += delta
+		if _note_hover_time >= NOTE_HOVER_OPEN_SEC:
+			_note_hover_time = 0.0
+			_open_detective_note()
+	else:
+		_note_hover_time = 0.0
+
+## Open the notebook for this scene's chapter; VN input stays blocked until closed.
+func _open_detective_note() -> void:
+	if _note_overlay != null and is_instance_valid(_note_overlay):
+		return
+	if _note_chapter_id.is_empty():
+		return
+	_note_hover_time = 0.0
+	_accepting_input = false
+	_note_overlay = DetectiveNoteOverlay.open_for_chapter(self, _note_chapter_id)
+	await _note_overlay.closed
+	_note_overlay = null
+	_accepting_input = true
+
+## Beat key "detective_note" — array of grant actions, applied when the beat shows.
+## Entry: { "action": "add_clue"|"unlock_topic"|"upgrade_topic",
+##          "id": clue/topic id, "level": int (upgrade only, 0 = +1),
+##          "silent": bool (add_clue only — no discovery toast),
+##          "chapter": optional chapter id (defaults to this scene's chapter) }
+func _apply_detective_note_actions(actions: Array) -> void:
+	for a: Variant in actions:
+		if not a is Dictionary:
+			continue
+		var ad: Dictionary = a as Dictionary
+		var chapter: String = str(ad.get("chapter", "")).strip_edges()
+		if chapter.is_empty():
+			chapter = DetectiveNoteManager.resolve_active_chapter(_scene_path)
+		var ref_id: String = str(ad.get("id", "")).strip_edges()
+		if chapter.is_empty() or ref_id.is_empty():
+			push_warning("VNPlayer: detective_note action needs an id and a resolvable chapter — skipped.")
+			continue
+		match str(ad.get("action", "")).strip_edges():
+			"add_clue":
+				DetectiveNoteManager.add_clue(chapter, ref_id, bool(ad.get("silent", false)))
+			"unlock_topic":
+				DetectiveNoteManager.unlock_topic(chapter, ref_id)
+			"upgrade_topic":
+				var lvl: int = int(ad.get("level", 0))
+				if lvl <= 0:
+					lvl = DetectiveNoteManager.get_topic_level(chapter, ref_id) + 1
+				DetectiveNoteManager.upgrade_topic(chapter, ref_id, lvl)
+			var other:
+				push_warning("VNPlayer: unknown detective_note action '%s' — skipped." % other)
+
+## Beat key "show_note_stamp" — apply the APPROVED stamp and play the animation
+## on a read-only notebook view. Blocks until the player dismisses it.
+## Spec: { "topic": topic id, "stamp": stamp id, "chapter": optional chapter id }
+func _run_note_stamp_beat(spec: Dictionary) -> void:
+	var topic: String = str(spec.get("topic", "")).strip_edges()
+	var stamp: String = str(spec.get("stamp", "")).strip_edges()
+	var chapter: String = str(spec.get("chapter", "")).strip_edges()
+	if chapter.is_empty():
+		chapter = DetectiveNoteManager.resolve_active_chapter(_scene_path)
+	if chapter.is_empty() or topic.is_empty() or stamp.is_empty():
+		push_warning("VNPlayer: show_note_stamp needs topic + stamp (and a resolvable chapter) — skipped.")
+		return
+	DetectiveNoteManager.apply_stamp(chapter, topic, stamp)
+	var view: DetectiveNoteOverlay = DetectiveNoteOverlay.open_stamp_view(self, chapter, topic)
+	if view != null and is_instance_valid(view):
+		await view.closed
+
+# ─────────────────────────────────────────────────────────────
 # Public API
 # ─────────────────────────────────────────────────────────────
 ## Play a VN on a top-level CanvasLayer so it renders above battle UI / fade overlays.
@@ -1159,6 +1275,9 @@ func play_scene(
 
 	# Filter beats by hidden/NSFW flags, tracking original JSON indices for bug tagging.
 	_scene_path = json_path
+	_refresh_note_icon()
+	if not _note_chapter_id.is_empty():
+		DetectiveNoteManager.apply_start_clues(_note_chapter_id)
 	_beats = []
 	_beat_raw_indices = []
 	var raw_beats: Array = parsed as Array
@@ -1222,6 +1341,8 @@ func _beat_has_deferred_actions(beat: Dictionary) -> bool:
 	if str(beat.get("call_scene", "")).strip_edges() != "":
 		return true
 	if str(beat.get("show_messenger", "")).strip_edges() != "":
+		return true
+	if beat.get("show_note_stamp", null) is Dictionary:
 		return true
 	return false
 
@@ -1800,6 +1921,20 @@ func _show_beat() -> void:
 			await msgr.closed
 		_accepting_input = true
 
+	# ── Detective note grants (clues / topic unlocks — toasts handle feedback) ──
+	var note_actions: Variant = beat.get("detective_note", null)
+	if note_actions is Array:
+		_apply_detective_note_actions(note_actions as Array)
+		_refresh_note_icon()
+
+	# ── Detective note stamp (APPROVED animation — blocks until dismissed) ──
+	var stamp_spec: Variant = beat.get("show_note_stamp", null)
+	if stamp_spec is Dictionary:
+		_accepting_input = false
+		_hide_hint_icon()
+		await _run_note_stamp_beat(stamp_spec as Dictionary)
+		_accepting_input = true
+
 	if has_choices:
 		_persist_campaign_checkpoint()
 		await _present_choices(beat)
@@ -2174,6 +2309,17 @@ func _input(event: InputEvent) -> void:
 		return
 	if _battle_handoff_started:
 		return
+	# Detective note icon — tap opens the notebook instead of advancing the beat.
+	# Checked here because Node._input runs before GUI input reaches the icon.
+	if event is InputEventMouseButton:
+		var note_mbe := event as InputEventMouseButton
+		if note_mbe.pressed and note_mbe.button_index == MOUSE_BUTTON_LEFT \
+				and _note_icon != null and _note_icon.visible and _note_icon.is_visible_in_tree() \
+				and _dialog_panel.visible \
+				and _note_icon.get_global_rect().has_point(note_mbe.global_position):
+			get_viewport().set_input_as_handled()
+			_open_detective_note()
+			return
 	var advance := false
 	if event is InputEventMouseButton:
 		var mbe := event as InputEventMouseButton

@@ -4,6 +4,8 @@ signal closed()
 
 var _tab_items_btn:   Button
 var _tab_mail_btn:    Button
+var _tab_note_btn:    Button
+var _note_overlay:    DetectiveNoteOverlay = null
 var _items_panel:     Control
 var _mail_panel:      Control
 var _mail_list:       VBoxContainer
@@ -85,10 +87,13 @@ func _build_ui() -> void:
 
 	_tab_items_btn = _make_tab_button("ITEMS")
 	_tab_mail_btn  = _make_tab_button("MAILBOX")
+	_tab_note_btn  = _make_tab_button("NOTE")
 	_tab_items_btn.pressed.connect(func() -> void: _switch_tab(true))
 	_tab_mail_btn.pressed.connect(func()  -> void: _switch_tab(false))
+	_tab_note_btn.pressed.connect(_on_note_tab)
 	tab_bar.add_child(_tab_items_btn)
 	tab_bar.add_child(_tab_mail_btn)
+	tab_bar.add_child(_tab_note_btn)
 
 	root_vbox.add_child(_make_separator())
 
@@ -143,6 +148,20 @@ func _switch_tab(items_active: bool) -> void:
 	_mail_panel.visible  = not items_active
 	_set_tab_active(_tab_items_btn, items_active)
 	_set_tab_active(_tab_mail_btn,  not items_active)
+	_set_tab_active(_tab_note_btn,  false)
+
+## NOTE tab — the detective notebook is a full-screen overlay (all chapters).
+## The inventory stays open beneath and regains focus when the note closes.
+func _on_note_tab() -> void:
+	if _note_overlay != null and is_instance_valid(_note_overlay):
+		return
+	_set_tab_active(_tab_note_btn, true)
+	_note_overlay = DetectiveNoteOverlay.open_all(get_tree().root)
+	_note_overlay.closed.connect(func() -> void:
+		_note_overlay = null
+		if is_instance_valid(self) and _tab_note_btn != null:
+			_set_tab_active(_tab_note_btn, false),
+		CONNECT_ONE_SHOT)
 
 # ─────────────────────────────────────────────────────────────
 # Items panel

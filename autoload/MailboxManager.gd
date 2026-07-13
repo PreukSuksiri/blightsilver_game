@@ -340,6 +340,7 @@ func admin_command(raw: String) -> String:
 				+ "  ai_deck_vault\n"
 				+ "  ai_identity_vault\n"
 				+ "  messenger_vault\n"
+				+ "  detective_note_vault\n"
 				+ "  achievement_manager\n"
 				+ "  global_stat_manager\n"
 				+ "  protagonist_manager\n"
@@ -1488,6 +1489,14 @@ func admin_command(raw: String) -> String:
 			_dismiss_admin_console(msgr_scene)
 			MessengerVaultManager.open(msgr_scene)
 			return "Messenger Vault opened."
+
+		"detective_note_vault":
+			var note_scene: Node = get_tree().current_scene
+			if note_scene.get_node_or_null("DetectiveNoteVaultManagerOverlay") != null:
+				return "Detective Note Vault is already open."
+			_dismiss_admin_console(note_scene)
+			DetectiveNoteVaultManager.open(note_scene)
+			return "Detective Note Vault opened."
 
 		"achievement_manager":
 			var ach_scene: Node = get_tree().current_scene

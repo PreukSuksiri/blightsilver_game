@@ -33,6 +33,16 @@ static func evaluate_all(conditions: Array) -> bool:
 			return false
 	return true
 
+static func evaluate_any(conditions: Array) -> bool:
+	if conditions.is_empty():
+		return true
+	for cond: Variant in conditions:
+		if not cond is Dictionary:
+			continue
+		if evaluate_condition(cond as Dictionary):
+			return true
+	return false
+
 static func evaluate_condition(cd: Dictionary) -> bool:
 	var ctype: String = str(cd.get("type", ""))
 	var key: String   = str(cd.get("key",   ""))

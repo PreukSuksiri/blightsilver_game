@@ -1274,6 +1274,12 @@ func _event_action_kv_hint(action: String) -> String:
 			return "key: optional mail subject override (or count if value empty). value: scroll count (integer, default 1)."
 		"set_flag":
 			return "key: exploration flag name (SaveManager.exploration_flags). value: flag value."
+		"note_add_clue":
+			return "key: detective note clue id. value: optional chapter id (defaults to this graph's chapter)."
+		"note_unlock_topic":
+			return "key: detective note topic id. value: optional chapter id (defaults to this graph's chapter)."
+		"note_upgrade_topic":
+			return "key: detective note topic id. value: target level (integer; empty = +1 level)."
 		"show_message":
 			return "key: unused. value: toast message text shown to the player."
 		"play_sfx":
@@ -1359,7 +1365,8 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 	var action_btn := OptionButton.new()
 	var _action_list: Array[String] = [
 		"give_item", "give_booster_pack", "give_union_scroll", "remove_item", "set_var",
-		"give_credits", "set_flag", "show_message", "play_sfx", "end_exploration", "end_exploration_vn"]
+		"give_credits", "set_flag", "note_add_clue", "note_unlock_topic", "note_upgrade_topic",
+		"show_message", "play_sfx", "end_exploration", "end_exploration_vn"]
 	for a: String in _action_list:
 		action_btn.add_item(a)
 	var _action_idx: int = _action_list.find(action)
@@ -2078,6 +2085,7 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	block.set_meta("spot_action_index", vbox.get_child_count() - 1)
 	var _spot_actions: Array[String] = [
 		"give_item", "give_booster_pack", "give_union_scroll", "remove_item", "set_var", "give_credits", "set_flag",
+		"note_add_clue", "note_unlock_topic", "note_upgrade_topic",
 		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle", "end_exploration", "end_exploration_vn"
 	]
 	var action_btn := OptionButton.new()

@@ -459,6 +459,7 @@ func save_data() -> void:
 	var progress: Dictionary = GlobalStatManager.to_save_dict()
 	data.merge(progress)
 	data.merge(AchievementManager.to_save_dict())
+	data.merge(DetectiveNoteManager.to_save_dict())
 	# Re-apply after merges so tutorial flag cannot be overwritten by stat payloads.
 	data["attack_tutorial_complete"] = attack_tutorial_complete
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -592,6 +593,7 @@ func load_data() -> void:
 		save_data()
 	GlobalStatManager.load_from_save(parsed as Dictionary)
 	AchievementManager.load_from_save(parsed as Dictionary)
+	DetectiveNoteManager.load_from_save(parsed as Dictionary)
 	if RewardGranter.reconcile_claimed_union_formula_rewards():
 		save_data()
 	_migrate_chapter_arc_from_legacy()

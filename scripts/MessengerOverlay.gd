@@ -144,7 +144,10 @@ func _build_ui() -> void:
 	var dim := ColorRect.new()
 	dim.color = COLOR_DIM_BG
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	dim.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			_close())
 	add_child(dim)
 
 	var phone := PanelContainer.new()

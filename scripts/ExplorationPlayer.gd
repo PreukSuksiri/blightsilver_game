@@ -156,6 +156,12 @@ var _info_panel_hovered: bool                = false   # polled each frame; guar
 var _info_wait_for_mouse: bool               = false   # true after auto-open: dismiss blocked until mouse moves
 var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dismiss mode even without mouse move
 
+# ── Info radial menu (Location Info / Detective Note) ────────────────────
+var _info_menu_open: bool          = false
+var _info_menu_animating: bool     = false
+var _info_radial_items: Array      = []
+var _note_overlay: DetectiveNoteOverlay = null
+
 # ── Item preview overlay (inventory tap-to-inspect) ──────────────────────
 var _item_preview: Control        = null
 var _settings_menu: Node          = null
@@ -964,7 +970,8 @@ func _dismiss_info_panel_for_hud() -> void:
 func _sync_radial_overlay_state() -> void:
 	if _radial_overlay == null:
 		return
-	var any_radial_menu: bool = _compass_open or _setting_open or _inv_open or _chat_open
+	var any_radial_menu: bool = _compass_open or _setting_open or _inv_open or _chat_open \
+		or _info_menu_open
 	if any_radial_menu:
 		_radial_overlay.visible = true
 		_radial_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -1013,8 +1020,11 @@ func _close_other_hud_menus(except_id: String) -> void:
 		_close_inventory_menu(false)
 	if except_id != "chat" and _chat_open:
 		_close_chat_menu(false)
-	if except_id != "info" and _is_info_panel_showing():
-		_close_info_panel(true, false)
+	if except_id != "info":
+		if _is_info_panel_showing():
+			_close_info_panel(true, false)
+		if _info_menu_open:
+			_close_info_radial_menu(false)
 
 func _on_compass_clicked() -> void:
 	if _enter_vn_hud_blocked:
@@ -1035,7 +1045,7 @@ func _is_hud_menu_active(which: String) -> bool:
 		"setting":   return _setting_open
 		"inventory": return _inv_open
 		"chat":      return _chat_open
-		"info":      return _is_info_panel_showing()
+		"info":      return _is_info_panel_showing() or _info_menu_open
 	return false
 
 func _is_any_other_hud_menu_active(which: String) -> bool:
@@ -1051,6 +1061,7 @@ func _dismiss_all_hud_menus(animated: bool = true) -> void:
 	_close_setting_menu(animated)
 	_close_inventory_menu(animated)
 	_close_chat_menu(animated)
+	_close_info_radial_menu(animated)
 	_close_info_panel(true, false)
 
 func _close_settings_menu_popup() -> void:
@@ -1338,6 +1349,114 @@ func _on_setting_action(action: String) -> void:
 			MainMenuReturnLoader.fade_out_to_main_menu()
 		"options":
 			_open_exploration_options_popup()
+
+# ─────────────────────────────────────────────────────────────
+# Info Radial Menu (Location Info / Detective Note)
+# ─────────────────────────────────────────────────────────────
+
+func _open_info_radial_menu() -> void:
+	if _enter_vn_hud_blocked:
+		return
+	if _info_menu_animating or _info_menu_open:
+		return
+	_info_menu_open      = true
+	_info_menu_animating = true
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
+
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp == Vector2.ZERO:
+		vp = Vector2(1600.0, 900.0)
+	var center_pos := Vector2(vp.x * 0.5 - INFO_ICON_SIZE * 0.5, vp.y * 0.5 - INFO_ICON_SIZE * 0.5)
+
+	var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_info_icon, "position", center_pos, 0.28)
+	tw.tween_property(_info_hit,  "position", center_pos, 0.28)
+	await tw.finished
+	_info_menu_animating = false
+
+	_spawn_info_radial_items(center_pos)
+	_sync_radial_overlay_state()
+
+func _close_info_radial_menu(animated: bool = true) -> void:
+	if _info_menu_animating and not _info_menu_open:
+		return
+	_info_menu_open = false
+	for item: Variant in _info_radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_info_radial_items.clear()
+	_sync_radial_overlay_state()
+	if not animated:
+		_info_icon.position = _info_idle_pos
+		_info_hit.position  = _info_idle_pos
+		return
+	_info_menu_animating = true
+	var tw := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_info_icon, "position", _info_idle_pos, 0.22)
+	tw.tween_property(_info_hit,  "position", _info_idle_pos, 0.22)
+	await tw.finished
+	_info_menu_animating = false
+	_sync_radial_overlay_state()
+
+func _spawn_info_radial_items(center: Vector2) -> void:
+	var cx: float  = center.x + INFO_ICON_SIZE * 0.5
+	var cy: float  = center.y + INFO_ICON_SIZE * 0.5
+	var vp: Vector2 = get_viewport_rect().size
+	var pad: float  = 8.0
+	var choices: Array = [
+		{"label": "Detective Note", "action": "detective_note"},
+		{"label": "Location Info",  "action": "location_info"},
+	]
+	var n: int = choices.size()
+	for i: int in range(n):
+		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
+		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
+		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
+		var panel: PanelContainer = _make_radial_panel(
+			Vector2(clampf(item_cx - RADIAL_ITEM_W * 0.5, pad, vp.x - RADIAL_ITEM_W - pad),
+					clampf(item_cy - RADIAL_ITEM_H * 0.5, pad, vp.y - RADIAL_ITEM_H - pad)),
+			Color(0.10, 0.07, 0.02, 0.94), Color(0.90, 0.72, 0.40, 0.85))
+		var lbl := Label.new()
+		lbl.text = str(choices[i].get("label", ""))
+		lbl.horizontal_alignment  = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment    = VERTICAL_ALIGNMENT_CENTER
+		lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
+		lbl.add_theme_font_size_override("font_size", 17)
+		lbl.add_theme_color_override("font_color", Color(1.0, 0.94, 0.82))
+		_tag_ui(lbl, "font", 500)
+		panel.add_child(lbl)
+		var action: String = str(choices[i].get("action", ""))
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if _is_press_event(ev):
+				_on_info_menu_action(action))
+		_add_radial_menu_panel(panel, _info_radial_items)
+		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		fade_tw.tween_interval(float(i) * 0.04)
+		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
+
+func _on_info_menu_action(action: String) -> void:
+	_register_exploration_activity()
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
+	_close_info_radial_menu()
+	match action:
+		"location_info":
+			_open_info_panel()
+		"detective_note":
+			_open_detective_note_overlay()
+
+func _open_detective_note_overlay() -> void:
+	if _note_overlay != null and is_instance_valid(_note_overlay):
+		return
+	var chapter: String = DetectiveNoteManager.resolve_active_chapter()
+	if chapter.is_empty():
+		return
+	DetectiveNoteManager.apply_start_clues(chapter)
+	_note_overlay = DetectiveNoteOverlay.open_for_chapter(self, chapter)
+	_note_overlay.closed.connect(func() -> void: _note_overlay = null, CONNECT_ONE_SHOT)
 
 # ─────────────────────────────────────────────────────────────
 # Inventory Radial Menu
@@ -1789,8 +1908,17 @@ func _on_info_clicked() -> void:
 	if _is_info_panel_showing():
 		_close_info_panel(true)
 		return
+	if _info_menu_animating:
+		return
+	if _info_menu_open:
+		_close_info_radial_menu()
+		return
 	_close_other_hud_menus("info")
-	_open_info_panel()
+	# No detective note authored for this location → open location info directly.
+	if DetectiveNoteManager.resolve_active_chapter().is_empty():
+		_open_info_panel()
+		return
+	_open_info_radial_menu()
 
 func _open_enter_info_then_vn(node: ExplorationNode, is_story: bool) -> void:
 	if _would_play_node_vn(node):
@@ -1811,6 +1939,7 @@ func _set_enter_vn_hud_blocked(blocked: bool) -> void:
 		_close_setting_menu(false)
 		_close_inventory_menu(false)
 		_close_chat_menu(false)
+		_close_info_radial_menu(false)
 		_close_settings_menu_popup()
 		_close_exploration_options_popup()
 	_sync_enter_vn_hud_hits()
@@ -4020,7 +4149,7 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 		"set_var":
 			ExplorationManager.set_var(key, value)
 			next.call()
-		"give_credits", "set_flag", "give_booster_pack", "give_union_scroll":
+		"give_credits", "set_flag", "give_booster_pack", "give_union_scroll", "note_add_clue", "note_unlock_topic", "note_upgrade_topic":
 			ExplorationManager.process_events([act])
 			next.call()
 		"show_message":
@@ -4206,7 +4335,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif ke.keycode == KEY_ESCAPE and not _is_modified_key(ke):
 			if _item_preview != null:
 				_close_item_preview()
-			elif _compass_open or _setting_open or _inv_open:
+			elif _compass_open or _setting_open or _inv_open or _info_menu_open:
 				_close_all_menus()
 			get_viewport().set_input_as_handled()
 

@@ -1,0 +1,586 @@
+{
+	"chapters": [
+		{
+			"graphs": [],
+			"id": "ch0_demo",
+			"start_clues": [
+				"info_blackout_schedule"
+			],
+			"title": {
+				"en": "Prologue — The Blackout",
+				"th": "บทนำ — ไฟดับ"
+			},
+			"topics": [
+				{
+					"edges": [
+						{
+							"arrow": "end",
+							"from": "culprit",
+							"label": {
+								"en": "Owned",
+								"th": "เป็นเจ้าของ"
+							},
+							"min_level": 1,
+							"to": "evidence"
+						},
+						{
+							"arrow": "end",
+							"from": "motive",
+							"label": {
+								"en": "Caused",
+								"th": "เป็นเหตุให้"
+							},
+							"min_level": 2,
+							"to": "culprit"
+						}
+					],
+					"id": "library_lights",
+					"nodes": [
+						{
+							"id": "culprit",
+							"kind": "individual",
+							"label": {
+								"en": "Individual #1",
+								"th": "บุคคล #1"
+							},
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								80,
+								120
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": ""
+						},
+						{
+							"id": "evidence",
+							"kind": "object",
+							"label": {
+								"en": "Object #1",
+								"th": "วัตถุ #1"
+							},
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								555,
+								123
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": ""
+						},
+						{
+							"id": "motive",
+							"kind": "information",
+							"label": {
+								"en": "Information #1",
+								"th": "ข้อมูล #1"
+							},
+							"label_side": "top",
+							"min_level": 2,
+							"pos": [
+								250,
+								380
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": ""
+						}
+					],
+					"title": {
+						"en": "Who turned the library lights on?",
+						"th": "ใครเปิดไฟห้องสมุด?"
+					}
+				}
+			],
+			"vn_scenes": []
+		},
+		{
+			"graphs": [],
+			"id": "ch0_prologue",
+			"start_clues": [],
+			"title": "Prologue - Flickering Midnight",
+			"topics": [
+				{
+					"edges": [
+						{
+							"arrow": "end",
+							"from": "node_individual_1",
+							"label": "Copied from",
+							"min_level": 1,
+							"to": "node_object_2"
+						}
+					],
+					"id": "topic_name_of_book_nex_copied_from",
+					"nodes": [
+						{
+							"id": "node_individual_1",
+							"kind": "individual",
+							"label": "Individual #1",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								56,
+								120
+							],
+							"prefill": "person_nex",
+							"size": [
+								140,
+								140
+							],
+							"var_key": ""
+						},
+						{
+							"id": "node_object_2",
+							"kind": "object",
+							"label": "Object #1",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								408,
+								115
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": "var_verdict_ch0_s1_topic_book_name"
+						}
+					],
+					"title": "What is the name of the book that Nex copied from?"
+				},
+				{
+					"edges": [
+						{
+							"arrow": "end",
+							"from": "node_individual_1",
+							"label": "Owned",
+							"min_level": 1,
+							"to": "node_object_1"
+						},
+						{
+							"arrow": "end",
+							"from": "node_object_1",
+							"label": "Has been lent to",
+							"min_level": 1,
+							"to": "node_individual_2"
+						},
+						{
+							"arrow": "end",
+							"from": "node_individual_2",
+							"label": "Lent Object #1 to",
+							"min_level": 1,
+							"to": "node_individual_3"
+						},
+						{
+							"arrow": "end",
+							"from": "node_individual_3",
+							"label": "Provided",
+							"min_level": 1,
+							"to": "node_information_1"
+						},
+						{
+							"arrow": "end",
+							"from": "node_information_1",
+							"label": "Motivated",
+							"min_level": 1,
+							"to": "node_individual_2"
+						}
+					],
+					"id": "topic_where_have_mayu_notebook_gone",
+					"nodes": [
+						{
+							"id": "node_individual_1",
+							"kind": "individual",
+							"label": "Individual #1",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								46,
+								46
+							],
+							"prefill": "person_mayu",
+							"size": [
+								140,
+								140
+							],
+							"var_key": ""
+						},
+						{
+							"id": "node_object_1",
+							"kind": "object",
+							"label": "Object #1",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								447,
+								40
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": "var_verdict_ch0_s1_topic_notebook_obj_1"
+						},
+						{
+							"id": "node_individual_2",
+							"kind": "individual",
+							"label": "Individual #2",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								31,
+								305
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_2"
+						},
+						{
+							"id": "node_individual_3",
+							"kind": "individual",
+							"label": "Individual #3",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								445,
+								306
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_3"
+						},
+						{
+							"id": "node_information_1",
+							"kind": "information",
+							"label": "Information #1",
+							"label_side": "bottom",
+							"min_level": 1,
+							"pos": [
+								238,
+								548
+							],
+							"prefill": "",
+							"size": [
+								140,
+								140
+							],
+							"var_key": "var_verdict_ch0_s1_topic_notebook_motiv_1"
+						}
+					],
+					"title": "Where is Mayu's notebook right now?"
+				}
+			],
+			"vn_scenes": [
+				"res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
+			]
+		},
+		{
+			"graphs": [],
+			"id": "x_ch0_prologue",
+			"start_clues": [
+				"person_nex",
+				"person_mayu",
+				"person_alice",
+				"person_michael",
+				"book_advanced_chinese",
+				"book_statistical",
+				"book_bird_watching"
+			],
+			"title": "XXX_Prologue - Flickering Midnight 2",
+			"topics": [
+				{
+					"edges": [],
+					"id": "topic_where_have_mayu_notebook_gone",
+					"nodes": [
+						{
+							"id": "node_individual_1",
+							"kind": "any",
+							"label": "Individual #1",
+							"min_level": 1.0,
+							"pos": [
+								0.0,
+								0.0
+							],
+							"prefill": "person_mayu",
+							"size": [
+								140.0,
+								140.0
+							],
+							"var_key": ""
+						},
+						{
+							"id": "node_object_1",
+							"kind": "any",
+							"label": "Object #1",
+							"min_level": 1.0,
+							"pos": [
+								0.0,
+								0.0
+							],
+							"prefill": "",
+							"size": [
+								140.0,
+								140.0
+							],
+							"var_key": ""
+						}
+					],
+					"title": "Where is Mayu's Notebook?"
+				}
+			],
+			"vn_scenes": []
+		}
+	],
+	"clues": [
+		{
+			"caption": "",
+			"id": "person_kelly",
+			"image": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly/profile_quick_duel_kelly_1.png",
+			"info": "Name : Kelly Lastochkina\nAge : 22",
+			"kind": "individual",
+			"name": {
+				"en": "Kelly",
+				"th": "เคลลี่"
+			},
+			"style": "image"
+		},
+		{
+			"caption": {
+				"en": "Classmate. First to report the lights.",
+				"th": "เพื่อนร่วมชั้น คนแรกที่รายงานเรื่องไฟ"
+			},
+			"id": "person_mayu",
+			"image": "res://assets/textures/vn/characters/vn_char_mayu_smile.png",
+			"info": "Name : Mayu Kokawa\nAge : 20",
+			"kind": "individual",
+			"name": {
+				"en": "Mayu",
+				"th": "มายุ"
+			},
+			"style": "image"
+		},
+		{
+			"caption": {
+				"en": "Sent to the study group at 21:03.",
+				"th": "ส่งเข้ากลุ่มติวตอน 21:03"
+			},
+			"id": "object_library_photo",
+			"image": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+			"info": {
+				"en": "The lights were supposed to be off for the blackout drill. Someone was inside.",
+				"th": "ไฟควรจะปิดตามแผนซ้อมไฟดับ แปลว่ามีคนอยู่ข้างใน"
+			},
+			"kind": "object",
+			"name": {
+				"en": "Photo of the lit library",
+				"th": "รูปห้องสมุดที่ไฟเปิด"
+			},
+			"style": "image"
+		},
+		{
+			"caption": {
+				"en": "Campus-wide lights-off from 21:00 to 22:00.",
+				"th": "ปิดไฟทั่วมหาวิทยาลัย 21:00 ถึง 22:00"
+			},
+			"id": "info_blackout_schedule",
+			"image": "",
+			"info": {
+				"en": "Posted a week in advance. Everyone on campus knew the library would be empty and dark.",
+				"th": "ประกาศล่วงหน้าหนึ่งสัปดาห์ ทุกคนรู้ว่าห้องสมุดจะมืดและว่าง"
+			},
+			"kind": "information",
+			"name": {
+				"en": "Blackout drill schedule",
+				"th": "ตารางซ้อมไฟดับ"
+			},
+			"style": "postit"
+		},
+		{
+			"caption": {
+				"en": "Hold to read the full conversation.",
+				"th": "กดค้างเพื่ออ่านแชททั้งหมด"
+			},
+			"conversation": "sample_chat",
+			"id": "chat_study_group",
+			"image": "",
+			"info": "",
+			"kind": "information",
+			"name": {
+				"en": "Study group chat",
+				"th": "แชทกลุ่มติว"
+			},
+			"style": "messenger"
+		},
+		{
+			"caption": "",
+			"id": "person_nex",
+			"image": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
+			"info": "",
+			"kind": "individual",
+			"name": "Nex Crowmont",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "book_statistical",
+			"image": "res://assets/textures/detective/ch0/verdict1/book_statistical.png",
+			"info": "Statistical Learning and Machine\nYear 1995",
+			"kind": "object",
+			"name": "Statistical Learning and Machine",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "book_bird_watching",
+			"image": "res://assets/textures/detective/ch0/verdict1/book_exotic_bird_watching.png",
+			"info": "Exotic Bird Watcing\nYear 2014",
+			"kind": "object",
+			"name": "Exotic Bird Watcing",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "book_advanced_chinese",
+			"image": "res://assets/textures/detective/ch0/verdict1/book_advanced_chinese.png",
+			"info": "Advanced Chinese\nYear 2020",
+			"kind": "object",
+			"name": "Advanced Chinese",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "person_michael",
+			"image": "res://assets/textures/detective/ch0/npc/char_michael.png",
+			"info": "Name : Michael Summerfield\nAge : 20",
+			"kind": "individual",
+			"name": "Michael",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "person_alice",
+			"image": "res://assets/textures/detective/ch0/npc/char_alice.png",
+			"info": "Name : Alice Sterling\nAge : 19",
+			"kind": "individual",
+			"name": "Alice",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"conversation": "msg_alice_show_cleavage",
+			"id": "msg_alice_show_cleavage",
+			"image": "",
+			"info": "",
+			"kind": "information",
+			"name": "Messenger : Alice",
+			"style": "messenger"
+		},
+		{
+			"caption": "",
+			"conversation": "msg_michael",
+			"id": "msg_michael_lend_mythril_dragon",
+			"image": "",
+			"info": "",
+			"kind": "information",
+			"name": "Messenger : Michael",
+			"style": "messenger"
+		},
+		{
+			"caption": "",
+			"conversation": "msg_mayu_casual_talk_1",
+			"id": "msg_mayu_casual_talk",
+			"image": "",
+			"info": "",
+			"kind": "information",
+			"name": "Messenger : Mayu",
+			"style": "messenger"
+		},
+		{
+			"caption": "",
+			"id": "notebook_colorful_bookmark",
+			"image": "res://assets/textures/detective/ch0/verdict2/colorful_bookmark_notebook.png",
+			"info": "",
+			"kind": "object",
+			"name": "Notebook with colorful bookmarks",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "notebook_blue_bookmark",
+			"image": "res://assets/textures/detective/ch0/verdict2/blue_bookmark_notebook.png",
+			"info": "",
+			"kind": "object",
+			"name": "Notebook with blue bookmarks",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "notebook_luxury",
+			"image": "res://assets/textures/detective/ch0/verdict2/plain_notebook.png",
+			"info": "",
+			"kind": "object",
+			"name": "Notebook with luxury cover",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "manga_my_crush_is_a_duck",
+			"image": "res://assets/textures/detective/ch0/verdict2/manga_my_crush_is_a_duck.png",
+			"info": "",
+			"kind": "object",
+			"name": "Manga : My Crush is a Duck",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"id": "manga_code_archangel",
+			"image": "res://assets/textures/detective/ch0/verdict2/manga_code_archangel.png",
+			"info": "",
+			"kind": "object",
+			"name": "Manga : Code Archangel",
+			"style": "image"
+		}
+	],
+	"stamps": [
+		{
+			"id": "stamp_kelly",
+			"image": "res://assets/textures/detective/stamps/stamp_compass_rose.png",
+			"name": {
+				"en": "Kelly Lastochkina",
+				"th": "เคลลี่ ลาสโทชกินา"
+			}
+		},
+		{
+			"id": "stamp_mayu",
+			"image": "res://assets/textures/detective/stamps/stamp_hanko_kokawa.png",
+			"name": {
+				"en": "Mayu Kokawa",
+				"th": "มายุ โคคาวะ"
+			}
+		},
+		{
+			"id": "stamp_nex",
+			"image": "",
+			"name": "Nex Crowmont"
+		}
+	]
+}

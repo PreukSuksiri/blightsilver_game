@@ -1,0 +1,29 @@
+[
+	{
+		"comment": "Detective note system test scene — grants clues, unlocks/upgrades the topic, then plays the APPROVED stamp. Chapter resolves from this scene path (registered in detective_note_vault.json).",
+		"text": "Detective note test. This beat granted two clues and unlocked the topic — watch for the toasts, then tap the notebook icon at the bottom right (or hover it for half a second).",
+		"detective_note": [
+			{"action": "add_clue", "id": "person_kelly"},
+			{"action": "add_clue", "id": "object_library_photo"},
+			{"action": "unlock_topic", "id": "library_lights"}
+		]
+	},
+	{
+		"text": "This beat granted the remaining clues and expanded the verdict map to level 2.",
+		"detective_note": [
+			{"action": "add_clue", "id": "person_mayu"},
+			{"action": "add_clue", "id": "info_blackout_schedule"},
+			{"action": "upgrade_topic", "id": "library_lights", "level": 2}
+		]
+	},
+	{
+		"text": "Next: the APPROVED stamp animation on the read-only verdict map. Tap anywhere to dismiss it once the animation finishes."
+	},
+	{
+		"text": "Case closed.",
+		"show_note_stamp": {"topic": "library_lights", "stamp": "stamp_kelly"}
+	},
+	{
+		"text": "The topic is now stamped and read-only. Opening the notebook again shows the stamp resting on the map. End of test."
+	}
+]

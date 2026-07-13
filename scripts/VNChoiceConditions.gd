@@ -9,6 +9,9 @@ static func choice_passes(choice: Dictionary) -> bool:
 		return _evaluate_expr(expr)
 	var conditions: Variant = choice.get("conditions", null)
 	if conditions is Array:
+		var mode: String = str(choice.get("conditions_mode", "and")).strip_edges().to_lower()
+		if mode == "or":
+			return _evaluate_any(conditions as Array)
 		return _evaluate_all(conditions as Array)
 	return true
 
@@ -23,6 +26,18 @@ static func _evaluate_all(conditions: Array) -> bool:
 				return false
 		return true
 	return ExplorationConditions.evaluate_all(conditions)
+
+static func _evaluate_any(conditions: Array) -> bool:
+	if conditions.is_empty():
+		return true
+	if not ExplorationManager.is_session_active:
+		for cond: Variant in conditions:
+			if not cond is Dictionary:
+				continue
+			if _evaluate_condition_offline(cond as Dictionary):
+				return true
+		return false
+	return ExplorationConditions.evaluate_any(conditions)
 
 static func _evaluate_expr(expr: String) -> bool:
 	if expr.strip_edges().is_empty():
