@@ -188,6 +188,7 @@ var _f_ai_pers_def: OptionButton = null
 var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
+var _f_show_messenger: OptionButton = null
 var _f_go_to_campaign_gallery: CheckBox     = null
 var _f_go_to_quick_duel:       CheckBox     = null
 var _f_mark_chapter_end:       CheckBox     = null
@@ -1220,6 +1221,18 @@ func _build_fields() -> void:
 			["(none)", "Credits", "Credits Demo", "Photo Scatter"],
 			"Change to this scene after the beat completes")
 
+	# ── Messenger (read-only chat evidence overlay) ───────────
+	_section(v, "MESSENGER  (show a chat conversation from the Messenger Vault)")
+	var msgr_hint := Label.new()
+	msgr_hint.text = "Opens a read-only chat overlay after the beat's text is shown; playback resumes when the player closes it. Author conversations via admin command: messenger_vault."
+	msgr_hint.add_theme_font_size_override("font_size", 12)
+	msgr_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	msgr_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(msgr_hint)
+	_f_show_messenger = _row_opt(v, "Conversation", [],
+			"Messenger Vault conversation shown by this beat")
+	MessengerVault.populate_conversation_option(_f_show_messenger)
+
 	# ── Battle Reward ─────────────────────────────────────────
 	_section(v, "BATTLE REWARD  (on win)")
 	var rwd_hint := Label.new()
@@ -1386,6 +1399,8 @@ func _connect_static_signals() -> void:
 				_f_mark_chapter_end.button_pressed = true
 			ch.call())
 	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_show_messenger != null:
+		_f_show_messenger.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_ai_pers_def.item_selected.connect(func(_i: int) -> void: ch.call())
@@ -3671,6 +3686,10 @@ func _populate_fields() -> void:
 	var _cs_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
 	var _cs_val: String = str(b.get("call_scene", ""))
 	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
+	if _f_show_messenger != null:
+		MessengerVault.populate_conversation_option(_f_show_messenger)
+		MessengerVault.select_conversation_option(
+			_f_show_messenger, str(b.get("show_messenger", "")).strip_edges())
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
 	var ask_key: String = str(b.get("ask_player_name", "")).strip_edges().to_lower()
@@ -4066,6 +4085,10 @@ func _collect_beat() -> Dictionary:
 	var _cs_idx: int = _f_call_scene.selected
 	if _cs_idx > 0:
 		b["call_scene"] = _cs_save_map[_cs_idx]
+	if _f_show_messenger != null:
+		var msgr_id: String = MessengerVault.option_conversation_id(_f_show_messenger)
+		if not msgr_id.is_empty():
+			b["show_messenger"] = msgr_id
 	var p1n: String = _f_player1_name.text.strip_edges()
 	if not p1n.is_empty():
 		b["player1_name"] = p1n

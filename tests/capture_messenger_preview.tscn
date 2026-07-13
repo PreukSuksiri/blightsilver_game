@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://messenger_capture"]
+
+[ext_resource type="Script" path="res://tests/capture_messenger_preview.gd" id="1"]
+
+[node name="MessengerCapture" type="Node"]
+script = ExtResource("1")

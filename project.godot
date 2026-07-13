@@ -59,6 +59,7 @@ AchievementToaster="*res://autoload/AchievementToaster.gd"
 RewardGranter="*res://autoload/RewardGranter.gd"
 ProtagonistVault="*res://autoload/ProtagonistVault.gd"
 AIIdentityVault="*res://autoload/AIIdentityVault.gd"
+MessengerVault="*res://autoload/MessengerVault.gd"
 
 [display]
 

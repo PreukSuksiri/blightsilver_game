@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://messenger_test_run"]
+
+[ext_resource type="Script" path="res://tests/test_messenger_system.gd" id="1"]
+
+[node name="MessengerTestRunner" type="Node"]
+script = ExtResource("1")

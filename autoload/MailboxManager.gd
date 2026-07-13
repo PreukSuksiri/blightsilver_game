@@ -339,6 +339,7 @@ func admin_command(raw: String) -> String:
 				+ "  manage_starting_deck\n"
 				+ "  ai_deck_vault\n"
 				+ "  ai_identity_vault\n"
+				+ "  messenger_vault\n"
 				+ "  achievement_manager\n"
 				+ "  global_stat_manager\n"
 				+ "  protagonist_manager\n"
@@ -1479,6 +1480,14 @@ func admin_command(raw: String) -> String:
 			id_mgr.name = "AIIdentityVaultManagerOverlay"
 			id_scene.add_child(id_mgr)
 			return "AI Bot Identity Vault opened."
+
+		"messenger_vault":
+			var msgr_scene: Node = get_tree().current_scene
+			if msgr_scene.get_node_or_null("MessengerVaultManagerOverlay") != null:
+				return "Messenger Vault is already open."
+			_dismiss_admin_console(msgr_scene)
+			MessengerVaultManager.open(msgr_scene)
+			return "Messenger Vault opened."
 
 		"achievement_manager":
 			var ach_scene: Node = get_tree().current_scene

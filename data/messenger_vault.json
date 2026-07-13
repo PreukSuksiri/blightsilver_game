@@ -1,0 +1,252 @@
+{
+	"conversations": [
+		{
+			"id": "sample_chat",
+			"messages": [
+				{
+					"from": "Kelly",
+					"text": "did you see this? 😨",
+					"time": "21:03"
+				},
+				{
+					"from": "Kelly",
+					"image": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+					"time": "21:03"
+				},
+				{
+					"from": "Nex",
+					"text": "wait... that's the library",
+					"time": "21:05"
+				},
+				{
+					"from": "Mayu",
+					"text": "the lights were supposed to be OFF tonight 😱",
+					"time": "21:06"
+				},
+				{
+					"from": "Nex",
+					"text": "stay where you are. I'm coming over 🏃",
+					"time": "21:07"
+				}
+			],
+			"participants": [
+				{
+					"avatar": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex/profile_quick_duel_nex_1.png",
+					"name": "Nex"
+				},
+				{
+					"avatar": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly/profile_quick_duel_kelly_1.png",
+					"name": "Kelly"
+				},
+				{
+					"avatar": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/mayu/profile_quick_duel_mayu_1.png",
+					"name": "Mayu"
+				}
+			],
+			"reveal_mode": "all",
+			"right_side": "Nex",
+			"title": "Study Group"
+		},
+		{
+			"id": "msg_alice_show_cleavage",
+			"messages": [
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "nex kun",
+					"time": ""
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "u awake?",
+					"time": "10:44"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Who's this lol",
+					"time": "11:15"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "alice",
+					"time": "11:19"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "What's up Alice",
+					"time": "11:25"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "can I borrow ur machine learning notebook please? 🙏",
+					"time": ""
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "I missed like 10 morning class in a row 🥲 I really need ur help",
+					"time": "11:26"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "I've never joined morning class at all. Shame on me.",
+					"time": ""
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Can't help ya, sorry",
+					"time": "11:36"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "🥺",
+					"time": ""
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "but I saw u photocopy it, which subject is that?",
+					"time": "11:37"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "That's not mine",
+					"time": ""
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Got it from Mayu",
+					"time": "11:39"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "I see, sry",
+					"time": "11:40"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "I guess I have to get along with my blank notebook for a while 🥺",
+					"time": ""
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"image": "res://assets/textures/vn/backgrounds/ch_0_1/vn_evidence_alice_notebook.png",
+					"time": "11:57"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Actually, I can lend you tomorrow. You are also her friend, she won't mind I guess.",
+					"time": "02:53"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "😘",
+					"time": ""
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "my hero",
+					"time": ""
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "thxxxx",
+					"time": "09:44"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Just awake... Are you going to the common room today?",
+					"time": "11:49"
+				},
+				{
+					"from": "Autumn ⭐ in-:-my-:-heart",
+					"text": "I'm on the 5th floor",
+					"time": "12:30"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Are you there already?",
+					"time": "13:11"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Found ya",
+					"time": "13:15"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "When are you going to return the notebook?",
+					"time": "16:00"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Alice",
+					"time": "16:25"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Where are you?",
+					"time": "17:00"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Please call back",
+					"time": "17:06"
+				}
+			],
+			"participants": [
+				{
+					"avatar": "",
+					"name": "Crow Emperor"
+				},
+				{
+					"avatar": "",
+					"name": "Autumn ⭐ in-:-my-:-heart"
+				}
+			],
+			"reveal_mode": "all",
+			"right_side": "Crow Emperor",
+			"title": "Autumn ⭐ in-:-my-:-heart"
+		},
+		{
+			"id": "msg_michael",
+			"messages": [
+				{
+					"from": "Crow Emperor",
+					"text": "Yo, I've got Turkish History homework. Wanna copy?",
+					"time": "17:05"
+				},
+				{
+					"from": "Michael_999",
+					"text": "Yesssss",
+					"time": "17:30"
+				},
+				{
+					"from": "Crow Emperor",
+					"text": "Lend me your Mythril Dragon mount, then we'll talk 😈",
+					"time": "17.35"
+				},
+				{
+					"from": "Michael_999",
+					"text": "Brahhh I have only one",
+					"time": ""
+				},
+				{
+					"from": "Michael_999",
+					"text": "Only 1 day ok? See you at town square. I'll log in 7PM",
+					"time": "17:45"
+				}
+			],
+			"participants": [
+				{
+					"avatar": "",
+					"name": "Crow Emperor"
+				},
+				{
+					"avatar": "",
+					"name": "Michael_999"
+				}
+			],
+			"reveal_mode": "all",
+			"right_side": "Crow Emperor",
+			"title": "Michael_999"
+		}
+	]
+}

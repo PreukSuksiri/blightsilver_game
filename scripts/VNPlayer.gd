@@ -1202,6 +1202,8 @@ func _beat_has_deferred_actions(beat: Dictionary) -> bool:
 		return true
 	if str(beat.get("call_scene", "")).strip_edges() != "":
 		return true
+	if str(beat.get("show_messenger", "")).strip_edges() != "":
+		return true
 	return false
 
 func _show_beat() -> void:
@@ -1764,6 +1766,16 @@ func _show_beat() -> void:
 					str(ead.get("action", "")),
 					str(ead.get("key",    "")),
 					str(ead.get("value",  "")))
+
+	# ── Messenger overlay (read-only chat evidence — blocks until closed) ──
+	var messenger_id: String = str(beat.get("show_messenger", "")).strip_edges()
+	if messenger_id != "":
+		_accepting_input = false
+		_hide_hint_icon()
+		var msgr: MessengerOverlay = MessengerOverlay.open(self, messenger_id)
+		if msgr != null and is_instance_valid(msgr):
+			await msgr.closed
+		_accepting_input = true
 
 	if has_choices:
 		_persist_campaign_checkpoint()
