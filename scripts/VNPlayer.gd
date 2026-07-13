@@ -66,6 +66,7 @@ var _beats: Array = []
 var _beat_index: int = 0
 var _beat_raw_indices: Array = []   # maps filtered index → raw JSON index
 var _group_first_index: Dictionary = {}   # group id → first filtered beat index
+var _group_last_index: Dictionary = {}    # group id → last filtered beat index
 var _beat_name_index: Dictionary = {}     # beat_name → filtered beat index
 var _last_shown_beat_index: int = -1      # beat just displayed; checked for go_to on advance
 var _skip_go_to_check: bool = false       # true after choice/goto_group jumps
@@ -86,6 +87,7 @@ var _cmd_input: LineEdit = null
 # ─────────────────────────────────────────────────────────────
 var _stage: Control = null          # 1600×900 content; shaken locally for screen shake
 var _stage_holder: Control = null   # scaled + centered; layout reflow only touches this
+var _bg_holder: Control = null      # Ken Burns expanded bg layer (behind stage, no clip)
 var _bg_rect:  TextureRect = null
 var _bg_base:  ColorRect   = null   # solid-colour base behind the background image
 var _char_slots: Dictionary = {}    # slot_name -> TextureRect
@@ -116,6 +118,8 @@ var _fade_rect: ColorRect = null
 var _backdrop: ColorRect = null
 var _letterbox_bars: Array[ColorRect] = []   # L, R, T, B gutters for exploration contain mode
 var _kb_tween: Tween = null      # Ken Burns background animation
+var _kb_expanded: bool = false   # true while bg_rect lives in _bg_holder
+var _kb_layout: Dictionary = {}  # cached fit-width layout for current Ken Burns texture
 var _stage_base_pos: Vector2 = Vector2.ZERO
 var _stage_layout_pending: bool = false
 var _screen_shake_tween: Tween = null
@@ -220,6 +224,12 @@ func _build_ui() -> void:
 		bar.z_index = 3   # above scaled stage — covers contain letterbox gutters
 		add_child(bar)
 		_letterbox_bars.append(bar)
+
+	# Background holder — expanded Ken Burns layer behind the stage (not clipped).
+	_bg_holder = Control.new()
+	_bg_holder.z_index = 1
+	_bg_holder.size = STAGE_DESIGN_SIZE
+	add_child(_bg_holder)
 
 	# Stage holder — scaled/centered by layout; _stage shakes locally inside it.
 	_stage_holder = Control.new()
@@ -615,12 +625,25 @@ func _beat_group_id(beat: Dictionary) -> int:
 
 func _build_group_maps() -> void:
 	_group_first_index.clear()
+	_group_last_index.clear()
 	for i: int in range(_beats.size()):
 		var group_id: int = _beat_group_id(_beats[i] as Dictionary)
 		if group_id <= 0:
 			continue
 		if not _group_first_index.has(group_id):
 			_group_first_index[group_id] = i
+		_group_last_index[group_id] = i
+
+## On an active choice branch: next beat may be mainline (group 0) or the same
+## group — including separated blocks later in the file. Other groups are skipped.
+func _find_next_playable_index_on_branch(from_idx: int) -> int:
+	if _active_group_id <= 0:
+		return from_idx
+	for i: int in range(from_idx, _beats.size()):
+		var gid: int = _beat_group_id(_beats[i] as Dictionary)
+		if gid == 0 or gid == _active_group_id:
+			return i
+	return _beats.size()
 
 func _build_beat_name_index() -> void:
 	_beat_name_index.clear()
@@ -680,14 +703,7 @@ func _restore_group_state_for_index(idx: int) -> void:
 func _advance_beat_cursor() -> void:
 	_beat_index += 1
 	if _active_group_id > 0:
-		if _beat_index >= _beats.size():
-			_beat_index = _group_return_index if _group_return_index >= 0 else _beats.size()
-			_active_group_id = 0
-			_group_return_index = -1
-		elif _beat_group_id(_beats[_beat_index] as Dictionary) != _active_group_id:
-			_beat_index = _group_return_index if _group_return_index >= 0 else _beats.size()
-			_active_group_id = 0
-			_group_return_index = -1
+		_beat_index = _find_next_playable_index_on_branch(_beat_index)
 	else:
 		while _beat_index < _beats.size() \
 				and _beat_group_id(_beats[_beat_index] as Dictionary) > 0:
@@ -939,6 +955,9 @@ func _apply_stage_layout(vp: Vector2, scale: float = -1.0) -> void:
 		_stage_holder.position = _stage_base_pos
 	if _stage != null:
 		_stage.position = Vector2.ZERO
+	if _bg_holder != null:
+		_bg_holder.scale = Vector2(scale, scale)
+		_bg_holder.position = _stage_base_pos
 	_sync_exploration_letterbox(vp, scaled, new_base)
 
 ## Black bars in the contain-scale gutters (exploration overlay + bg image).
@@ -1298,19 +1317,23 @@ func _show_beat() -> void:
 	# ── Ken Burns (slow zoom/pan on background) ──
 	if beat.has("bg_ken_burns"):
 		var kb: Dictionary = beat["bg_ken_burns"] as Dictionary
+		var tex := _bg_rect.texture as Texture2D
+		if tex != null:
+			_kb_layout = _kb_enter_expanded_mode(tex)
+		var base_pos: Vector2 = _kb_layout.get("base_position", Vector2.ZERO)
+		var from_scale: float = 1.0
 		if kb.has("start_zoom"):
-			var start_zoom: float = float(kb["start_zoom"])
-			_bg_rect.scale = Vector2(start_zoom, start_zoom)
-		if kb.has("start_pan_x"):
-			_bg_rect.position.x = float(kb["start_pan_x"])
-		if kb.has("start_pan_y"):
-			_bg_rect.position.y = float(kb["start_pan_y"])
+			from_scale = float(kb["start_zoom"])
+		var from_pos: Vector2 = KenBurnsUtil.effective_position(base_pos, kb, true)
+		if not (kb.has("start_pan_x") or kb.has("start_pan_y") or kb.has("start_zoom")):
+			from_pos = base_pos
+			from_scale = 1.0
+		_bg_rect.scale = Vector2(from_scale, from_scale)
+		_bg_rect.position = from_pos
 		if _kb_tween != null:
 			_kb_tween.kill()
-		var from_scale: float = _bg_rect.scale.x
-		var from_pos: Vector2 = _bg_rect.position
 		var to_scale: float = float(kb.get("zoom", 1.05))
-		var to_pos: Vector2 = Vector2(float(kb.get("pan_x", 0.0)), float(kb.get("pan_y", 0.0)))
+		var to_pos: Vector2 = KenBurnsUtil.effective_position(base_pos, kb, false)
 		var total: float = KenBurnsUtil.total_time(kb)
 		_kb_tween = create_tween()
 		_kb_tween.tween_method(
@@ -2037,14 +2060,40 @@ func _do_screen_shake(magnitude: float) -> void:
 	)
 
 # ─────────────────────────────────────────────────────────────
-# Ken Burns — stop animation and reset bg to neutral transform
+# Ken Burns — expanded viewport behind stage; reset to static COVER layout
 # ─────────────────────────────────────────────────────────────
+func _kb_enter_expanded_mode(tex: Texture2D) -> Dictionary:
+	if _bg_holder == null or _bg_rect == null:
+		return {}
+	if _bg_rect.get_parent() != _bg_holder:
+		var prev_parent: Node = _bg_rect.get_parent()
+		if prev_parent != null:
+			prev_parent.remove_child(_bg_rect)
+		_bg_holder.add_child(_bg_rect)
+	var layout: Dictionary = KenBurnsUtil.apply_expanded_layout(_bg_rect, tex, STAGE_DESIGN_SIZE)
+	if _bg_base != null:
+		_bg_base.visible = false
+	_kb_expanded = true
+	return layout
+
 func _kb_stop_reset() -> void:
 	if _kb_tween != null:
 		_kb_tween.kill()
 		_kb_tween = null
-	_bg_rect.scale    = Vector2(1.0, 1.0)
-	_bg_rect.position = Vector2(0.0, 0.0)
+	if _bg_rect == null:
+		return
+	KenBurnsUtil.restore_static_layout(_bg_rect, STAGE_DESIGN_SIZE)
+	if _kb_expanded and _stage != null:
+		if _bg_rect.get_parent() != _stage:
+			var prev_parent: Node = _bg_rect.get_parent()
+			if prev_parent != null:
+				prev_parent.remove_child(_bg_rect)
+			_stage.add_child(_bg_rect)
+			_stage.move_child(_bg_rect, 1)
+		_kb_expanded = false
+	if _bg_base != null:
+		_bg_base.visible = not transparent_bg
+	_kb_layout = {}
 
 # ─────────────────────────────────────────────────────────────
 # Flash — repeating overlay pulse (screen) or modulate pulse (characters)

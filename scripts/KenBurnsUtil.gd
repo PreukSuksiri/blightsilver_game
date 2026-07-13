@@ -59,3 +59,51 @@ static func apply_transform(
 	var scale_v: float = lerpf(from_scale, to_scale, p)
 	target.scale = Vector2(scale_v, scale_v)
 	target.position = from_pos.lerp(to_pos, p)
+
+
+static func fit_width_layout(texture: Texture2D, viewport: Vector2) -> Dictionary:
+	var tw: float = maxf(float(texture.get_width()), 1.0)
+	var th: float = maxf(float(texture.get_height()), 1.0)
+	var layout_w: float = viewport.x
+	var layout_h: float = th * (layout_w / tw)
+	var layout_size := Vector2(layout_w, layout_h)
+	var base_position := (viewport - layout_size) * 0.5
+	return {
+		"layout_size": layout_size,
+		"base_position": base_position,
+	}
+
+
+static func pan_offset(kb: Dictionary, is_start: bool = false) -> Vector2:
+	if is_start:
+		return Vector2(
+			float(kb.get("start_pan_x", 0.0)) if kb.has("start_pan_x") else 0.0,
+			float(kb.get("start_pan_y", 0.0)) if kb.has("start_pan_y") else 0.0)
+	return Vector2(float(kb.get("pan_x", 0.0)), float(kb.get("pan_y", 0.0)))
+
+
+static func apply_expanded_layout(
+		target: TextureRect,
+		texture: Texture2D,
+		viewport: Vector2) -> Dictionary:
+	var layout: Dictionary = fit_width_layout(texture, viewport)
+	var layout_size: Vector2 = layout["layout_size"]
+	target.texture = texture
+	target.stretch_mode = TextureRect.STRETCH_SCALE
+	target.size = layout_size
+	target.pivot_offset = layout_size * 0.5
+	target.position = layout["base_position"]
+	target.scale = Vector2.ONE
+	return layout
+
+
+static func restore_static_layout(target: TextureRect, viewport: Vector2) -> void:
+	target.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	target.size = viewport
+	target.pivot_offset = viewport * 0.5
+	target.position = Vector2.ZERO
+	target.scale = Vector2.ONE
+
+
+static func effective_position(base_position: Vector2, kb: Dictionary, is_start: bool) -> Vector2:
+	return base_position + pan_offset(kb, is_start)

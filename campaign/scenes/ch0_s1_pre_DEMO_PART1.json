@@ -552,22 +552,22 @@
 		"wait": 0.01
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_intro_mayu_lecture.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_intro_mayu_lecture2.png",
 		"bg_ken_burns": {
-			"delay": 0.8,
-			"duration": 3.0,
+			"delay": 0.1,
+			"duration": 1.4,
 			"pan_x": 0.0,
-			"pan_y": 100.0,
-			"start_pan_y": -720.0,
-			"start_velocity": 1.0,
-			"start_zoom": 2.0,
+			"pan_y": 320.0,
+			"start_pan_y": -700.0,
+			"start_velocity": 0.3,
+			"start_zoom": 1.6,
 			"zoom": 1.4
 		},
 		"comment": "Mayu Lecture Ken Burns",
 		"fade_in": 0.3,
 		"speaker": "Mayu",
 		"text": "Kernel is the way we calculate higer dimensions. It's like making a container to store... let's say... candies...\n",
-		"wait": 5.0
+		"wait": 4.0
 	},
 	{
 		"linger_characters": true,
@@ -827,9 +827,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "What??? Alice??? You've lent my notebook to other person??"
-		}
+		"text": "What??? Alice??? You've lent my notebook to someone else??"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -889,19 +887,81 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "You're so mean! I'll go sit somewhere else! Don't you dare follow!"
-		}
+		"text": "You're so mean!"
+	},
+	{
+		"fade_out": 0.3,
+		"linger_characters": true
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_intro_mayu_wear_shoe.png",
+		"bg_ken_burns": {
+			"delay": 0.1,
+			"duration": 1.2,
+			"pan_x": 0.0,
+			"pan_y": -300.0,
+			"start_pan_y": -60.0,
+			"start_zoom": 1.4,
+			"zoom": 1.4
+		},
+		"fade_in": 0.3,
+		"text": "(She shove her feet into her shoes, ready to trantrum)"
+	},
+	{
+		"fade_out": 0.3,
+		"linger_characters": true
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+			}
+		],
+		"fade_in": 0.3,
+		"speaker": "Mayu",
+		"text": "Are you just gonna let any chicks pull your strings around?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+			}
+		],
+		"fade_in": 0.3,
+		"speaker": "Mayu",
+		"text": "I'll go sit somewhere else! Don't you dare follow!"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+			}
+		],
+		"fade_in": 0.3,
+		"speaker": "Mayu",
+		"text": "** Swipe papers off the table **"
 	},
 	{
 		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"characters": [],
-		"text": {
-			"en": "Mayu stormed away to the back of the library floor"
-		}
+		"text": "Mayu stormed away to the back of the library floor"
 	},
 	{
 		"wait": 0.5
@@ -1010,7 +1070,21 @@
 		],
 		"group": 5.0,
 		"speaker": "Nex",
-		"text": "Yes... She must have gone home.... I was such a dick..."
+		"text": "Yes... She must have gone home.... "
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"group": 5.0,
+		"speaker": "Nex",
+		"text": "** Sigh** why am I such a dick..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1025,6 +1099,20 @@
 		"group": 6.0,
 		"speaker": "Nex",
 		"text": "Is she... Went crying in the back... And fell alseep?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"group": 6.0,
+		"speaker": "Nex",
+		"text": "** Sigh** why am I such a dick..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1069,36 +1157,21 @@
 		"text": "Is she still studying back there? I guess I'm no match for her when it comes to studying..."
 	},
 	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"group": 7.0,
+		"speaker": "Nex",
+		"text": "The only thing that I'm good at is being such a dick **Sigh**"
+	},
+	{
 		"wait": 1.0
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"characters": [
-			{
-				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			}
-		],
-		"speaker": "Nex",
-		"text": "She's always reached out her hand when I'm in trouble..."
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"characters": [
-			{
-				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			}
-		],
-		"speaker": "Nex",
-		"text": "And the only good thing I gave her in return, is being such a dick..."
-	},
-	{
-		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",

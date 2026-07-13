@@ -59,6 +59,8 @@ var _img_popup: PopupPanel = null
 var _img_popup_tex: TextureRect = null
 var _kb_preview_popup: PopupPanel = null
 var _kb_preview_bg: TextureRect = null
+var _kb_preview_clip: Control = null
+var _kb_preview_frame: ReferenceRect = null
 var _kb_preview_tween: Tween = null
 const _KB_PREVIEW_VIEW_W := 800.0
 const _KB_PREVIEW_VIEW_H := 450.0
@@ -640,7 +642,7 @@ func _build_fields() -> void:
 	_f_comment = _row_le(v, "Comment", "Dev note (not shown in-game)")
 	_f_hidden  = _row_cb(v, "Hidden", "Skip this beat during playback (keeps it in the file)")
 	_f_group = _row_sb(v, "Group", 0.0, 999.0, 1.0,
-		"0 = mainline beat; N = only reachable via choice → group N")
+		"0 = mainline; N = choice branch (may be separated — same N resumes later)")
 	_f_group.value_changed.connect(func(_v: float) -> void:
 		_refresh_group_name_field()
 		_on_field_changed())
@@ -889,8 +891,8 @@ func _build_fields() -> void:
 	# ── Ken Burns ─────────────────────────────────────────────
 	_section(v, "KEN BURNS  (zoom/pan on background)")
 	_f_kb_zoom     = _row_sb(v, "Zoom",     0.5,   5.0,   0.01,  "1.0 = no zoom")
-	_f_kb_pan_x    = _row_sb(v, "Pan X",  -1600.0, 1600.0,  1.0,   "pixels")
-	_f_kb_pan_y    = _row_sb(v, "Pan Y",  -1600.0, 1600.0,  1.0,   "pixels")
+	_f_kb_pan_x    = _row_sb(v, "Pan X",  -1600.0, 1600.0,  1.0,   "pixels offset from centered fit")
+	_f_kb_pan_y    = _row_sb(v, "Pan Y",  -1600.0, 1600.0,  1.0,   "pixels offset from centered fit")
 	_f_kb_duration = _row_sb(v, "Duration",  0.0,  60.0,  0.001, "seconds")
 	_f_kb_zoom.value = 1.0
 	_f_kb_delay = _row_sb(v, "Delay", 0.0, 60.0, 0.1, "seconds before motion starts (optional)")
@@ -1490,13 +1492,16 @@ func _ken_burns_dict_from_fields() -> Dictionary:
 	return kb
 
 func _run_ken_burns_tween_on(target: TextureRect, kb: Dictionary, tween_ref: Array) -> void:
-	if target == null:
+	if target == null or target.texture == null:
 		return
-	_apply_ken_burns_start_transform(target, kb)
+	var viewport := Vector2(_KB_BG_W, _KB_BG_H)
+	var layout: Dictionary = KenBurnsUtil.apply_expanded_layout(target, target.texture, viewport)
+	var base_pos: Vector2 = layout.get("base_position", Vector2.ZERO)
+	_apply_ken_burns_start_transform(target, kb, base_pos)
 	var from_scale: float = target.scale.x
 	var from_pos: Vector2 = target.position
 	var to_scale: float = float(kb.get("zoom", 1.0))
-	var to_pos: Vector2 = Vector2(float(kb.get("pan_x", 0.0)), float(kb.get("pan_y", 0.0)))
+	var to_pos: Vector2 = KenBurnsUtil.effective_position(base_pos, kb, false)
 	var total: float = KenBurnsUtil.total_time(kb)
 	if tween_ref.size() > 0 and tween_ref[0] is Tween:
 		(tween_ref[0] as Tween).kill()
@@ -1509,14 +1514,16 @@ func _run_ken_burns_tween_on(target: TextureRect, kb: Dictionary, tween_ref: Arr
 			KenBurnsUtil.apply_transform(target, p, from_scale, to_scale, from_pos, to_pos),
 		0.0, total, total)
 
-func _apply_ken_burns_start_transform(target: TextureRect, kb: Dictionary) -> void:
+func _apply_ken_burns_start_transform(target: TextureRect, kb: Dictionary, base_pos: Vector2) -> void:
+	var from_scale: float = 1.0
 	if kb.has("start_zoom"):
-		var sz: float = float(kb["start_zoom"])
-		target.scale = Vector2(sz, sz)
-	if kb.has("start_pan_x"):
-		target.position.x = float(kb["start_pan_x"])
-	if kb.has("start_pan_y"):
-		target.position.y = float(kb["start_pan_y"])
+		from_scale = float(kb["start_zoom"])
+	var from_pos: Vector2 = KenBurnsUtil.effective_position(base_pos, kb, true)
+	if not (kb.has("start_pan_x") or kb.has("start_pan_y") or kb.has("start_zoom")):
+		from_pos = base_pos
+		from_scale = 1.0
+	target.scale = Vector2(from_scale, from_scale)
+	target.position = from_pos
 
 # ─────────────────────────────────────────────────────────────
 # Dungeon call picker
@@ -2275,8 +2282,8 @@ func _build_kb_preview_popup() -> void:
 	vbox.add_child(title)
 
 	var clip := Control.new()
-	clip.custom_minimum_size = Vector2(_KB_PREVIEW_VIEW_W, _KB_PREVIEW_VIEW_H)
-	clip.clip_contents = true
+	clip.clip_contents = false
+	_kb_preview_clip = clip
 	vbox.add_child(clip)
 
 	var stage := Control.new()
@@ -2296,6 +2303,15 @@ func _build_kb_preview_popup() -> void:
 	_kb_preview_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_kb_preview_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	stage.add_child(_kb_preview_bg)
+
+	var frame := ReferenceRect.new()
+	frame.position = Vector2.ZERO
+	frame.size = Vector2(_KB_BG_W, _KB_BG_H)
+	frame.border_color = Color(1.0, 0.92, 0.35, 0.65)
+	frame.border_width = 3.0
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_kb_preview_frame = frame
+	stage.add_child(frame)
 
 	var btn_row := HBoxContainer.new()
 	btn_row.add_theme_constant_override("separation", 8)
@@ -2317,8 +2333,19 @@ func _stop_ken_burns_preview() -> void:
 		_kb_preview_tween.kill()
 		_kb_preview_tween = null
 	if _kb_preview_bg != null:
-		_kb_preview_bg.scale = Vector2.ONE
-		_kb_preview_bg.position = Vector2.ZERO
+		KenBurnsUtil.restore_static_layout(_kb_preview_bg, Vector2(_KB_BG_W, _KB_BG_H))
+	if _kb_preview_clip != null:
+		_kb_preview_clip.custom_minimum_size = Vector2(_KB_PREVIEW_VIEW_W, _KB_PREVIEW_VIEW_H)
+
+func _sync_kb_preview_clip_size(tex: Texture2D) -> void:
+	if _kb_preview_clip == null:
+		return
+	var layout: Dictionary = KenBurnsUtil.fit_width_layout(tex, Vector2(_KB_BG_W, _KB_BG_H))
+	var layout_size: Vector2 = layout.get("layout_size", Vector2(_KB_BG_W, _KB_BG_H))
+	var view_size: Vector2 = layout_size * 0.5
+	_kb_preview_clip.custom_minimum_size = Vector2(
+		maxf(view_size.x, _KB_PREVIEW_VIEW_W),
+		maxf(view_size.y, _KB_PREVIEW_VIEW_H))
 
 func _run_ken_burns_preview_tween() -> void:
 	if _kb_preview_bg == null:
@@ -2344,8 +2371,11 @@ func _preview_ken_burns() -> void:
 		_status_lbl.text = "Background is not an image: " + bg_path.get_file()
 		return
 	_kb_preview_bg.texture = tex as Texture2D
+	_sync_kb_preview_clip_size(tex as Texture2D)
 	_stop_ken_burns_preview()
-	_kb_preview_popup.popup_centered(Vector2(_KB_PREVIEW_VIEW_W + 48, _KB_PREVIEW_VIEW_H + 120))
+	var clip_size: Vector2 = _kb_preview_clip.custom_minimum_size if _kb_preview_clip != null \
+		else Vector2(_KB_PREVIEW_VIEW_W, _KB_PREVIEW_VIEW_H)
+	_kb_preview_popup.popup_centered(Vector2(clip_size.x + 48, clip_size.y + 120))
 	_run_ken_burns_preview_tween()
 	var kb: Dictionary = _ken_burns_preview_values()
 	_status_lbl.text = "Ken Burns preview: zoom %.2f  pan (%.0f, %.0f)  %.1fs" % [

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://vn_group_branch_test"]
+
+[ext_resource type="Script" path="res://tests/test_vn_group_branching.gd" id="1"]
+
+[node name="VNGroupBranchTestRunner" type="Node"]
+script = ExtResource("1")
