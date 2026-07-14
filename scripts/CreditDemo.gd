@@ -116,13 +116,16 @@ func _ready() -> void:
 	_build_shader_logo(vp_size)
 
 	# ── BGM ───────────────────────────────────────────────────────
-	# If PhotoScatter carried its BGM across the scene change, adopt it
+	# Prefer music already playing: PhotoScatter's carried player, then BGMManager.
+	# Only start the demo's own track when nothing is ongoing (e.g. title cheat).
 	var carried: Node = get_tree().root.get_node_or_null("PhotoScatterBGM")
 	if carried is AudioStreamPlayer:
 		_bgm = carried as AudioStreamPlayer
 		_bgm.reparent(self)
 		_bgm.bus = &"Music"
 		_set_bgm_loop(_bgm)
+	elif BGMManager.is_playing():
+		_bgm = null
 	else:
 		_bgm = AudioStreamPlayer.new()
 		_bgm.stream = BGM_STREAM
@@ -183,9 +186,11 @@ func _end_credits() -> void:
 	if _is_ending:
 		return
 	_is_ending = true
-	if _bgm:
+	if _bgm != null and is_instance_valid(_bgm):
 		var btween := create_tween()
 		btween.tween_property(_bgm, "volume_db", -40.0, FADE_DURATION)
+	elif BGMManager.is_playing():
+		BGMManager.stop(FADE_DURATION)
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 1.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(func() -> void:

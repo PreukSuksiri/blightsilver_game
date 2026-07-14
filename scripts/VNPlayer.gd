@@ -2110,7 +2110,9 @@ func _show_beat() -> void:
 	# ── Special Command / Call Scene ──
 	var _call_scene: String = str(beat.get("call_scene", ""))
 	if _call_scene != "":
-		_set_music("", 0.0, 0.0)
+		var keep_call_bgm: bool = bool(beat.get("call_scene_keep_bgm", false))
+		if not keep_call_bgm:
+			_set_music("", 0.0, 0.0)
 		_accepting_input = false
 		_fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
 		var _sc_tw := create_tween()
@@ -2123,6 +2125,8 @@ func _show_beat() -> void:
 		}
 		var _target: String = _scene_map.get(_call_scene, "")
 		if _target != "":
+			if _call_scene == "photo_scatter":
+				PhotoScatter.keep_ongoing_bgm = keep_call_bgm
 			queue_free()
 			get_tree().change_scene_to_file(_target)
 		return

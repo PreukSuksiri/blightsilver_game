@@ -191,6 +191,7 @@ var _f_ai_pers_def: OptionButton = null
 var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
+var _f_call_scene_keep_bgm: CheckBox = null
 var _f_show_messenger: OptionButton = null
 var _detective_note_rows: Array = []
 var _detective_note_rows_vbox: VBoxContainer = null
@@ -1278,6 +1279,9 @@ func _build_fields() -> void:
 	_f_call_scene = _row_opt(v, "Call scene",
 			["(none)", "Credits", "Credits Demo", "Photo Scatter"],
 			"Change to this scene after the beat completes")
+	_f_call_scene_keep_bgm = _row_cb(v, "Keep current BGM",
+			"Photo Scatter / Credit Demo: leave the current track playing instead of starting that scene's own BGM. Avoid a music_fade_out on prior beats if you want it continuous.")
+	_f_call_scene_keep_bgm.toggled.connect(func(_b: bool) -> void: _on_field_changed())
 
 	# ── Messenger (read-only chat evidence overlay) ───────────
 	_section(v, "MESSENGER  (show a chat conversation from the Messenger Vault)")
@@ -4128,6 +4132,8 @@ func _populate_fields() -> void:
 	var _cs_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
 	var _cs_val: String = str(b.get("call_scene", ""))
 	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
+	if _f_call_scene_keep_bgm != null:
+		_f_call_scene_keep_bgm.button_pressed = bool(b.get("call_scene_keep_bgm", false))
 	if _f_show_messenger != null:
 		MessengerVault.populate_conversation_option(_f_show_messenger)
 		MessengerVault.select_conversation_option(
@@ -4590,6 +4596,8 @@ func _collect_beat() -> Dictionary:
 	var _cs_idx: int = _f_call_scene.selected
 	if _cs_idx > 0:
 		b["call_scene"] = _cs_save_map[_cs_idx]
+	if _f_call_scene_keep_bgm != null and _f_call_scene_keep_bgm.button_pressed:
+		b["call_scene_keep_bgm"] = true
 	if _f_show_messenger != null:
 		var msgr_id: String = MessengerVault.option_conversation_id(_f_show_messenger)
 		if not msgr_id.is_empty():

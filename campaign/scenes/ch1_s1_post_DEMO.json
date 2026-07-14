@@ -473,21 +473,22 @@
 	},
 	{
 		"center_text": "And so their fateful story on this flawed world begins",
-		"center_text_fade_in": 3.0,
-		"center_text_fade_out": 3.0,
-		"center_text_hold": 3.0,
+		"center_text_fade_in": 2.0,
+		"center_text_fade_out": 1.0,
+		"center_text_hold": 2.0,
 		"comment": "And so their fateful story on this flawed world begins",
 		"hide_dialog": true,
-		"linger_characters": true
+		"linger_characters": true,
+		"wait": 0.01
 	},
 	{
 		"background": null,
 		"hide_dialog": true,
-		"music_fade_out": 10.0,
 		"wait": 0.5
 	},
 	{
 		"call_scene": "photo_scatter",
+		"call_scene_keep_bgm": true,
 		"comment": "Credit",
 		"complete_gallery_chapter": "res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
 		"hide_dialog": true,

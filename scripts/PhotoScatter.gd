@@ -16,6 +16,10 @@ const WISHLIST_MINI_MAX_WIDTH_RATIO: float = 0.11
 const WISHLIST_MINI_MARGIN: float = 28.0
 const WISHLIST_MINI_FADE_IN: float = 1.0
 
+## Set by VNPlayer before change_scene when call_scene_keep_bgm is true.
+## Consumed (cleared) in _ready so a later open uses Photo Scatter's own BGM again.
+static var keep_ongoing_bgm: bool = false
+
 # ── Final resting positions (offset from screen centre) ───────
 const OFFSET_X: PackedFloat32Array  = [-370.0,  170.0, -120.0,  350.0,  20.0]
 const OFFSET_Y: PackedFloat32Array  = [ -120.0, -230.0,  160.0,   90.0, 280.0]
@@ -39,7 +43,7 @@ const DROP_STAGGER: float   = 0.55   # delay between each photo drop
 const DROP_DURATION: float  = 0.60   # flight time per photo
 
 const HOLD_DURATION: float  = 3.5    # pause after all photos land
-const FADE_OUT: float       = 1.8    # screen + BGM fade-out duration
+const FADE_OUT: float       = 1.8    # screen fade-out duration (BGM is not faded here)
 
 # last photo lands at: (PHOTOS.size()-1)*DROP_STAGGER + DROP_DURATION
 # = 4*0.55 + 0.60 = 2.80 s
@@ -61,7 +65,13 @@ var _wishlist_mini: TextureRect      = null
 func _ready() -> void:
 	_build_background()
 	_build_content_layer()
-	_start_bgm()
+	var keep_current: bool = keep_ongoing_bgm
+	keep_ongoing_bgm = false
+	if keep_current:
+		# Leave BGMManager (or whatever was playing) alone — no local track.
+		_bgm = null
+	else:
+		_start_bgm()
 	_drop_photos()
 	_start_zoom_out()
 	_schedule_outro()
@@ -97,7 +107,7 @@ func _start_zoom_out() -> void:
 		.set_trans(Tween.TRANS_QUAD)
 
 
-# ── BGM: play immediately at full volume ──────────────────────
+# ── BGM: play immediately at full volume (no fade) ────────────
 func _start_bgm() -> void:
 	var stream: Variant = load(BGM_PATH)
 	_bgm = AudioStreamPlayer.new()
@@ -107,6 +117,11 @@ func _start_bgm() -> void:
 	_bgm.autoplay  = false
 	add_child(_bgm)
 	_bgm.play()
+	# Former BGM fade-in (kept for reference):
+	# _bgm.volume_db = -60.0
+	# var tw := create_tween()
+	# tw.tween_property(_bgm, "volume_db", 0.0, 2.0) \
+	# 	.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
 
 # ── Spawn and animate all 5 Polaroids ─────────────────────────
@@ -166,7 +181,7 @@ func _animate_drop(
 		.set_trans(Tween.TRANS_BACK)
 
 
-# ── Outro: hold → fade out BGM + screen → go to credits ───────
+# ── Outro: hold → fade out screen → go to credits (BGM stays up) ──
 func _schedule_outro() -> void:
 	_fade_in_wishlist_mini()
 
@@ -259,8 +274,10 @@ func _fade_in_wishlist_mini() -> void:
 
 
 func _go_to_credits() -> void:
-	# Reparent BGM to root so it survives the scene change
-	_bgm.reparent(get_tree().root)
+	# Reparent own BGM to root so it survives the scene change (credits may inherit it).
+	# When keep_ongoing_bgm was used, music already lives on BGMManager — leave it alone.
+	if _bgm != null and is_instance_valid(_bgm):
+		_bgm.reparent(get_tree().root)
 	get_tree().change_scene_to_file(CREDITS_SCENE)
 
 
