@@ -595,10 +595,12 @@ func _add_node_row(nd: Dictionary) -> void:
 	_mini_label(line1, "pos")
 	var px_sb := _spin(line1, float(pos[0]) if pos.size() > 0 else 0.0, -8192, 8192)
 	var py_sb := _spin(line1, float(pos[1]) if pos.size() > 1 else 0.0, -8192, 8192)
-	var size_arr: Array = nd.get("size", [140, 140]) if nd.get("size", null) is Array else [140, 140]
+	var def_w: float = DetectiveNoteVault.DEFAULT_NODE_SIZE.x
+	var def_h: float = DetectiveNoteVault.DEFAULT_NODE_SIZE.y
+	var size_arr: Array = nd.get("size", [def_w, def_h]) if nd.get("size", null) is Array else [def_w, def_h]
 	_mini_label(line1, "size")
-	var w_sb := _spin(line1, float(size_arr[0]) if size_arr.size() > 0 else 140.0, 20, 2048)
-	var h_sb := _spin(line1, float(size_arr[1]) if size_arr.size() > 1 else 140.0, 20, 2048)
+	var w_sb := _spin(line1, float(size_arr[0]) if size_arr.size() > 0 else def_w, 20, 2048)
+	var h_sb := _spin(line1, float(size_arr[1]) if size_arr.size() > 1 else def_h, 20, 2048)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	line1.add_child(spacer)

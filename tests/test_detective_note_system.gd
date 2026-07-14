@@ -41,7 +41,10 @@ func run_all_tests() -> void:
 	test_start_clues()
 	test_messenger_clues()
 	test_clue_progress()
+	test_clue_discovery_order()
+	test_clue_discovery_order_from_save()
 	test_topic_progress()
+	test_preferred_topic()
 	test_placements()
 	test_stamps()
 	test_save_roundtrip()
@@ -200,6 +203,32 @@ func test_clue_progress() -> void:
 	assert_true(not DetectiveNoteManager.chapter_has_content("other_ch"),
 		"untouched chapter has no content")
 
+func test_clue_discovery_order() -> void:
+	DetectiveNoteManager.reset_all()
+	# Grant in non-alphabetical order (ids would sort as chat_, object_, person_).
+	DetectiveNoteManager.add_clue("ch0_demo", "person_mayu")
+	DetectiveNoteManager.add_clue("ch0_demo", "chat_study_group")
+	DetectiveNoteManager.add_clue("ch0_demo", "object_library_photo")
+	assert_eq(DetectiveNoteManager.get_discovered_clues("ch0_demo"),
+		["person_mayu", "chat_study_group", "object_library_photo"],
+		"clues listed in discovery order, not alphabetically")
+	assert_eq(DetectiveNoteManager.get_discovered_clues_by_kind("ch0_demo", "individual"),
+		["person_mayu"], "kind filter keeps discovery order among matches")
+
+func test_clue_discovery_order_from_save() -> void:
+	DetectiveNoteManager.reset_all()
+	DetectiveNoteManager.load_from_save({
+		"detective_notes": {
+			"ch0_demo": {
+				"clues": ["object_library_photo", "person_mayu", "chat_study_group"],
+				"topics": {},
+			},
+		},
+	})
+	assert_eq(DetectiveNoteManager.get_discovered_clues("ch0_demo"),
+		["object_library_photo", "person_mayu", "chat_study_group"],
+		"legacy saves without clue_at keep clues-array order")
+
 func test_topic_progress() -> void:
 	assert_true(not DetectiveNoteManager.is_topic_unlocked("ch0_demo", "library_lights"),
 		"topic locked initially")
@@ -223,6 +252,24 @@ func test_topic_progress() -> void:
 		"unknown topic rejected")
 	assert_eq(DetectiveNoteManager.get_unlocked_topics("ch0_demo"), ["library_lights"],
 		"unlocked topic list correct")
+
+func test_preferred_topic() -> void:
+	DetectiveNoteManager.reset_all()
+	assert_eq(DetectiveNoteManager.get_preferred_topic("ch0_prologue"), "",
+		"no unlocked topics returns empty")
+	DetectiveNoteManager.unlock_topic("ch0_prologue", "topic_name_of_book_nex_copied_from")
+	DetectiveNoteManager.unlock_topic("ch0_prologue", "topic_where_have_mayu_notebook_gone")
+	assert_eq(DetectiveNoteManager.get_preferred_topic("ch0_prologue"),
+		"topic_where_have_mayu_notebook_gone",
+		"latest active topic preferred when multiple unlocked")
+	DetectiveNoteManager.apply_stamp("ch0_prologue", "topic_where_have_mayu_notebook_gone", "stamp_mayu")
+	assert_eq(DetectiveNoteManager.get_preferred_topic("ch0_prologue"),
+		"topic_name_of_book_nex_copied_from",
+		"stamped topics skipped when an active topic remains")
+	DetectiveNoteManager.apply_stamp("ch0_prologue", "topic_name_of_book_nex_copied_from", "stamp_mayu")
+	assert_eq(DetectiveNoteManager.get_preferred_topic("ch0_prologue"),
+		"topic_where_have_mayu_notebook_gone",
+		"when all stamped, latest unlocked overall is used")
 
 func test_placements() -> void:
 	SaveManager.exploration_flags.clear()
@@ -445,7 +492,7 @@ func test_note_overlay() -> void:
 	await get_tree().process_frame
 	assert_true(is_instance_valid(overlay), "note overlay opens for chapter")
 	assert_eq(overlay._selected_chapter, "ch0_demo", "active chapter selected")
-	assert_eq(overlay._selected_topic, "library_lights", "first unlocked topic selected")
+	assert_eq(overlay._selected_topic, "library_lights", "preferred unlocked topic selected")
 	assert_false(overlay._chapter_scroll.visible, "VN/exploration overlay hides chapter section")
 	assert_true(overlay._topic_header.visible, "topic section stays visible")
 	assert_eq(overlay._map.mode, DetectiveNoteVerdictMap.Mode.PLAYER,

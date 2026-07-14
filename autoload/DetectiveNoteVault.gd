@@ -22,7 +22,7 @@ extends Node
 #         "id": String,
 #         "label": String | {en, th},          — handwritten text above the frame
 #         "pos": [x, y],                        — top-left inside the notebook canvas
-#         "size": [w, h],                       — drop frame size (defaults 140x140)
+#         "size": [w, h],                       — drop frame size (defaults 200x128)
 #         "kind": "individual"|"object"|"information"|"any",
 #         "label_side": "top"|"bottom"|"left"|"right", — where the label sits (default top)
 #         "min_level": 1..5,                    — visible from this topic level up
@@ -67,7 +67,7 @@ const NODE_LABEL_SIDES := ["top", "bottom", "left", "right"]
 const MESSENGER_CLUE_ICON := "res://assets/textures/detective/icon_smart_phone.png"
 ## Optional texture for prefilled (locked) node badge; empty = drawn padlock.
 const PREFILL_LOCK_ICON := ""
-const DEFAULT_NODE_SIZE := Vector2(140.0, 140.0)
+const DEFAULT_NODE_SIZE := Vector2(200.0, 128.0)
 
 var _chapters: Array = []
 var _clues: Array = []

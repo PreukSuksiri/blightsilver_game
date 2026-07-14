@@ -20,10 +20,12 @@ signal placement_changed(chapter_id: String, topic_id: String, node_id: String, 
 signal topic_stamped(chapter_id: String, topic_id: String, stamp_id: String)
 
 # _progress[chapter_id] = {
-#   "clues":  [clue_id, ...],
+#   "clues":  [clue_id, ...],          — insertion list (legacy + save compat)
+#   "clue_at": { clue_id: int },        — unix-ms discovery time (+ seq for ties)
 #   "topics": { topic_id: {
 #     "level": int,
 #     "placements": { node_id: clue_id },
+#     "unlocked_at": int,       — discovery time (see clue_at)
 #     "stamp": stamp_id          — present once APPROVED; locks the topic
 #     "stamp_angle": float       — random tilt (degrees), fixed when stamped
 #   } }
@@ -31,6 +33,7 @@ signal topic_stamped(chapter_id: String, topic_id: String, stamp_id: String)
 const STAMP_TILT_MIN_DEG := -14.0
 const STAMP_TILT_MAX_DEG := 14.0
 var _progress: Dictionary = {}
+var _discover_seq: int = 0
 
 
 # ─────────────────────────────────────────────────────────────
@@ -48,6 +51,7 @@ func add_clue(chapter_id: String, clue_id: String, silent: bool = false) -> bool
 	if clue_list.has(cid):
 		return false
 	clue_list.append(cid)
+	_clue_at_map(ch)[cid] = _next_discovered_at()
 	SaveManager.save_data()
 	if not silent:
 		emit_signal("clue_added", ch, cid)
@@ -73,12 +77,20 @@ func has_clue(chapter_id: String, clue_id: String) -> bool:
 
 
 func get_discovered_clues(chapter_id: String) -> Array:
-	var entry: Dictionary = _progress.get(chapter_id.strip_edges(), {})
+	var ch := chapter_id.strip_edges()
+	var entry: Dictionary = _progress.get(ch, {})
 	var clue_list: Variant = entry.get("clues", [])
-	return (clue_list as Array).duplicate() if clue_list is Array else []
+	if not clue_list is Array:
+		return []
+	_migrate_clue_times(entry)
+	var sorted: Array = (clue_list as Array).duplicate()
+	sorted.sort_custom(func(a: Variant, b: Variant) -> bool:
+		return _clue_discovered_at(entry, str(a)) < _clue_discovered_at(entry, str(b)))
+	return sorted
 
 
 ## Discovered clues of one kind ("individual" | "object" | "information").
+## Sorted by discovery time (oldest first).
 func get_discovered_clues_by_kind(chapter_id: String, kind: String) -> Array:
 	var out: Array = []
 	for cid: Variant in get_discovered_clues(chapter_id):
@@ -101,7 +113,7 @@ func unlock_topic(chapter_id: String, topic_id: String) -> bool:
 	var topics: Dictionary = _chapter_entry(ch)["topics"]
 	if topics.has(tid):
 		return false
-	topics[tid] = {"level": 1, "placements": {}}
+	topics[tid] = {"level": 1, "placements": {}, "unlocked_at": _next_discovered_at()}
 	SaveManager.save_data()
 	emit_signal("topic_unlocked", ch, tid)
 	emit_signal("note_notification", "topic", ch, tid)
@@ -123,6 +135,34 @@ func get_unlocked_topics(chapter_id: String) -> Array:
 		if (topics as Dictionary).has(str(tid)):
 			out.append(str(tid))
 	return out
+
+
+## Topic to open first in the notebook: prefer unstamped (active) topics,
+## newest unlocked first; if every topic is stamped, use the newest overall.
+func get_preferred_topic(chapter_id: String) -> String:
+	var ch := chapter_id.strip_edges()
+	var unlocked: Array = get_unlocked_topics(ch)
+	if unlocked.is_empty():
+		return ""
+	var entry: Dictionary = _progress.get(ch, {})
+	if not entry.is_empty():
+		_migrate_topic_unlock_times(ch, entry)
+	var pool: Array = []
+	for tid_v: Variant in unlocked:
+		var tid: String = str(tid_v)
+		if not is_topic_stamped(ch, tid):
+			pool.append(tid)
+	if pool.is_empty():
+		pool = unlocked.duplicate()
+	var best: String = str(pool[0])
+	var best_at: int = _topic_unlocked_at(ch, best)
+	for tid_v: Variant in pool:
+		var tid: String = str(tid_v)
+		var at: int = _topic_unlocked_at(ch, tid)
+		if at > best_at:
+			best_at = at
+			best = tid
+	return best
 
 
 func get_topic_level(chapter_id: String, topic_id: String) -> int:
@@ -320,9 +360,15 @@ func to_save_dict() -> Dictionary:
 
 func load_from_save(data: Dictionary) -> void:
 	_progress.clear()
+	_discover_seq = 0
 	var raw: Variant = data.get("detective_notes", {})
 	if raw is Dictionary:
 		_progress = (raw as Dictionary).duplicate(true)
+		for entry_v: Variant in _progress.values():
+			if entry_v is Dictionary:
+				_migrate_clue_times(entry_v as Dictionary)
+		for ch_id: Variant in _progress.keys():
+			_migrate_topic_unlock_times(str(ch_id), _progress[ch_id] as Dictionary)
 
 
 func reset_all() -> void:
@@ -331,8 +377,67 @@ func reset_all() -> void:
 
 func _chapter_entry(chapter_id: String) -> Dictionary:
 	if not _progress.has(chapter_id):
-		_progress[chapter_id] = {"clues": [], "topics": {}}
+		_progress[chapter_id] = {"clues": [], "clue_at": {}, "topics": {}}
 	return _progress[chapter_id]
+
+
+func _clue_at_map(chapter_id: String) -> Dictionary:
+	var entry: Dictionary = _chapter_entry(chapter_id)
+	if not entry.get("clue_at", null) is Dictionary:
+		entry["clue_at"] = {}
+	return entry["clue_at"] as Dictionary
+
+
+## Monotonic discovery timestamp (unix ms + sub-ms sequence for ties).
+func _next_discovered_at() -> int:
+	_discover_seq += 1
+	return int(Time.get_unix_time_from_system() * 1000.0) * 1000 + _discover_seq
+
+
+func _clue_discovered_at(entry: Dictionary, clue_id: String) -> int:
+	var at_map: Variant = entry.get("clue_at", {})
+	if at_map is Dictionary and (at_map as Dictionary).has(clue_id):
+		return int((at_map as Dictionary)[clue_id])
+	return 0
+
+
+## Back-fill clue_at for legacy saves that only stored the clues array.
+func _migrate_clue_times(entry: Dictionary) -> void:
+	var clue_list: Variant = entry.get("clues", [])
+	if not clue_list is Array:
+		return
+	if not entry.get("clue_at", null) is Dictionary:
+		entry["clue_at"] = {}
+	var at_map: Dictionary = entry["clue_at"]
+	for i: int in range((clue_list as Array).size()):
+		var cid: String = str((clue_list as Array)[i])
+		if at_map.has(cid):
+			continue
+		var base_ms: int = int(Time.get_unix_time_from_system() * 1000.0)
+		at_map[cid] = base_ms * 1000 + i + 1
+
+
+## Back-fill unlocked_at for legacy saves that only stored topic progress.
+func _migrate_topic_unlock_times(chapter_id: String, entry: Dictionary) -> void:
+	var topics: Variant = entry.get("topics", {})
+	if not topics is Dictionary:
+		return
+	var topic_map: Dictionary = topics as Dictionary
+	var base_ms: int = int(Time.get_unix_time_from_system() * 1000.0)
+	for i: int in range(DetectiveNoteVault.get_topic_ids(chapter_id).size()):
+		var tid: String = str(DetectiveNoteVault.get_topic_ids(chapter_id)[i])
+		if not topic_map.has(tid):
+			continue
+		var topic_entry: Variant = topic_map[tid]
+		if topic_entry is Dictionary and not (topic_entry as Dictionary).has("unlocked_at"):
+			(topic_entry as Dictionary)["unlocked_at"] = base_ms * 1000 + i + 1
+
+
+func _topic_unlocked_at(chapter_id: String, topic_id: String) -> int:
+	var entry: Variant = _topic_entry(chapter_id, topic_id)
+	if entry == null:
+		return 0
+	return int((entry as Dictionary).get("unlocked_at", 0))
 
 
 ## Topic progress dict, or null when the topic is not unlocked.

@@ -14,6 +14,8 @@ const SFX_CARD_INFO   := preload("res://assets/audio/sfx/scifi_ui_18.mp3")  # Ru
 const SFX_CARD_DETAIL := preload("res://assets/audio/sfx/scifi_ui_15.mp3")  # Rule 11: battle info context menu
 const SFX_CRYSTAL_GAIN := preload("res://assets/audio/sfx/scifi_ui_24.mp3") # Rule 13: gain crystals
 const SFX_TICK         := preload("res://assets/audio/sfx/tick_1.mp3")      # crystal count tick
+const SFX_TYPEWRITER   := preload("res://assets/audio/sfx/tick_1.mp3")      # stamp approver name typing
+const SFX_TYPEWRITER_VOLUME := 0.62
 const SFX_PLACE       := preload("res://assets/audio/sfx/scifi_ui_9.mp3")   # Rule 14: setup card placed into grid
 const SFX_REMOVE      := preload("res://assets/audio/sfx/scifi_ui_8.mp3")   # Rule 15: setup card removed from grid
 const SFX_EXPLORATION := preload("res://assets/audio/sfx/scifi_ui_8.mp3")   # Exploration UI interactions
@@ -35,7 +37,7 @@ const SFX_BATTLE_CALC := preload("res://assets/audio/sfx/chime_4.mp3")         #
 const SFX_MODIFIER_REVEAL := preload("res://assets/audio/sfx/scifi_ui_34.mp3") # wheel spin result reveal
 const SFX_FLIP := preload("res://assets/audio/sfx/flip3.mp3")                  # card flip / reveal
 const SFX_FLIP_VOLUME := 0.7
-const SFX_STAMP := preload("res://assets/audio/sfx/slam1.mp3")                 # detective note APPROVED stamp
+const SFX_STAMP := preload("res://assets/audio/sfx/clash.mp3")                 # detective note logo + APPROVED stamp
 const SFX_STAMP_VOLUME := 0.88
 
 func play(stream: AudioStream, volume: float = 1.0) -> void:

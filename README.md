@@ -442,6 +442,117 @@ Key commands:
 
 ---
 
+## Visual Novel — exploration variables in dialogue
+
+Open **Admin Console → `vn_editor`**. In dialogue **text**, **speaker**, **choices**, and **center text**, you can insert exploration **session variables** with `#…#` placeholders.
+
+Values come from the active exploration session (`ExplorationManager` vars). Localisation runs first (en/th), then placeholders are substituted.
+
+### Basic insert
+
+```
+Look closer at #var_investigation_object#.
+```
+
+If `var_investigation_object` is `the ledger`, the player sees: `Look closer at the ledger.`
+
+- The name between `#` must match the **exact** session var key.
+- Missing vars become an empty string.
+- Accidental hashes that are not `#identifier#` are left alone.
+
+### Remap (translate) a value
+
+Use when the stored value should display differently for the speaker:
+
+```
+#var_person_name%translate?Nex=I#
+```
+
+| If var is | Shows |
+|-----------|--------|
+| `Nex` | `I` |
+| anything else | the raw var (unchanged) |
+
+Multiple mappings — separate each `From=To` with `&` (exact match on the var value):
+
+```
+#var_person_name%translate?Nex=ฉัน&Alice=นังตัวแสบ#
+```
+
+| If var is | Shows |
+|-----------|--------|
+| `Nex` | `ฉัน` |
+| `Alice` | `นังตัวแสบ` |
+| anything else | the raw var (unchanged) |
+
+English example:
+
+```
+#var_person_name%translate?Nex=I&Mayu=she#
+```
+
+Fallback for any unmatched value (`*`):
+
+```
+#var_person_name%translate?Nex=I&*=they#
+```
+
+Put **locale-specific** maps inside each language string (localisation runs before substitution):
+
+```json
+"en": "#var_person_name%translate?Nex=I# think it's odd.",
+"th": "#var_person_name%translate?Nex=ฉัน# คิดว่ามันแปลก."
+```
+
+### Clue display Name (Detective Note)
+
+Verdict vars store **clue ids** (e.g. `person_nex`). To show the authored clue **Name** in dialogue:
+
+```
+#var_verdict_ch0_s1_topic_notebook_indiv_2%clue_name=true#
+```
+
+| Var value (id) | Shows (clue Name) |
+|----------------|-------------------|
+| `person_nex` | `Nex` |
+| `notebook_colorful_bookmark` | that clue’s Name (en/th from vault) |
+
+Uses the current VN locale. If the id is unknown, the raw id is shown.
+
+Keep using the **id** (without `%clue_name`) in conditions / `%translate?person_nex=I#`.
+
+### Case transforms
+
+| Syntax | Effect |
+|--------|--------|
+| `#var_person_name%allcapitalize=true#` | `nex` → `NEX` |
+| `#var_person_name%firstcapitalize=true#` | `nex` → `Nex` |
+| `#var_person_name%decapitalize=true#` | `NEX` → `nex` |
+
+Flags are on when set to `true`, `1`, `yes`, or `on`.
+
+### Chaining modifiers
+
+Modifiers apply **left → right**:
+
+```
+#var_person_name%translate?Nex=i%firstcapitalize=true#
+```
+
+If the var is `Nex`, that becomes `i`, then `I`.
+
+### Related beat tools (VN Editor)
+
+| Section | What it does |
+|---------|----------------|
+| **GO TO** | After this beat, jump to a named beat if conditions pass (AND/OR). |
+| **PLAY GROUP** | After this beat, play a choice **group** branch if conditions pass (AND/OR); else continue mainline. |
+| **CHOICES** | Player picks a label → `goto_group`. |
+
+`play_group` / `go_to` conditions use exploration vars and items when an exploration session is active.
+
+---
+
 ## Tutorial Duel
 
 The Tutorial Duel mode lets you design guided battle scenarios. A "mission" appears at the start of each player turn; the screen dims and a spotlight highlights exactly what to interact with.
@@ -593,22 +704,22 @@ Tutorial configs are plain JSON stored in `res://data/tutorial_battles/`. You ca
 
   // Mission turns — keys are player-turn numbers (1 = player's first turn, ignoring AI turns)
   "turns": {
-    "1": [
+	"1": [
       {
-        "type": "attack",
-        "card_name": "Church Guard",
-        "instruction": "Tap Church Guard, then tap the ⚔ icon to attack!"
+		"type": "attack",
+		"card_name": "Church Guard",
+		"instruction": "Tap Church Guard, then tap the ⚔ icon to attack!"
       },
       {
-        "type": "end_turn",
-        "instruction": "Good — now end your turn."
+		"type": "end_turn",
+		"instruction": "Good — now end your turn."
       }
     ],
-    "2": [
+	"2": [
       {
-        "type": "use_tech",
-        "tech_name": "Radar",
-        "instruction": "Tap the TECH stack, then tap USE on Radar."
+		"type": "use_tech",
+		"tech_name": "Radar",
+		"instruction": "Tap the TECH stack, then tap USE on Radar."
       }
     ]
   }

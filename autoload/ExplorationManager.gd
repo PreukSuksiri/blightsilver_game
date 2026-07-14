@@ -990,8 +990,123 @@ func dispatch_event(action: String, key: String, value: String) -> void:
 	_process_events([{"action": action, "key": key, "value": value}])
 
 ## Get a session variable value, or default_val if not set.
+## Falls back to SaveManager.exploration_flags so detective-note /
+## set_flag values still work in VN when a session var was never set.
 func get_var(key: String, default_val: String = "") -> String:
-	return str(_vars.get(key, default_val))
+	var clean: String = key.strip_edges().trim_prefix("#").trim_suffix("#")
+	if clean.is_empty():
+		return default_val
+	if _vars.has(clean):
+		return str(_vars[clean])
+	if SaveManager.exploration_flags.has(clean):
+		return str(SaveManager.exploration_flags[clean])
+	return default_val
+
+## True when the session has the var key, or a persistent exploration flag exists.
+func has_var(key: String) -> bool:
+	var clean: String = key.strip_edges().trim_prefix("#").trim_suffix("#")
+	if clean.is_empty():
+		return false
+	return _vars.has(clean) or SaveManager.exploration_flags.has(clean)
+
+
+## Replace placeholders with current session var values.
+## Forms:
+##   #var_name#
+##   #var_name%translate?From=To&Other=Alt#
+##   #var_name%clue_name=true#          — clue id → Detective Note display Name
+##   #var_name%allcapitalize=true#
+##   #var_name%firstcapitalize=true#
+##   #var_name%decapitalize=true#
+## Modifiers can be chained, applied left→right:
+##   #var_name%clue_name=true%firstcapitalize=true#
+## Missing keys become empty string. Unmatched hashes are left as-is.
+func substitute_text_vars(text: String, locale: String = "en") -> String:
+	if text.is_empty() or text.find("#") < 0:
+		return text
+	var re := RegEx.new()
+	# Group 1 = var name; group 2 = optional %mod... chain (includes leading %)
+	if re.compile("#([A-Za-z_][A-Za-z0-9_]*)((?:%(?:translate\\?[^#%]*|(?:allcapitalize|firstcapitalize|decapitalize|clue_name)=[^#%]*))*)#") != OK:
+		return text
+	var matches: Array[RegExMatch] = re.search_all(text)
+	if matches.is_empty():
+		return text
+	var result: String = ""
+	var last_end: int = 0
+	for m: RegExMatch in matches:
+		result += text.substr(last_end, m.get_start() - last_end)
+		result += _resolve_var_placeholder(m.get_string(1), m.get_string(2), locale)
+		last_end = m.get_end()
+	result += text.substr(last_end)
+	return result
+
+
+func _resolve_var_placeholder(var_key: String, mods_raw: String, locale: String = "en") -> String:
+	var value: String = get_var(var_key, "")
+	if mods_raw.is_empty():
+		return value
+	for mod: String in mods_raw.split("%", false):
+		if mod.is_empty():
+			continue
+		if mod.begins_with("translate?"):
+			value = _apply_var_translate(value, mod.substr("translate?".length()))
+			continue
+		var eq: int = mod.find("=")
+		if eq < 0:
+			continue
+		var name: String = mod.substr(0, eq).strip_edges().to_lower()
+		var flag: String = mod.substr(eq + 1).strip_edges().to_lower()
+		if not _is_truthy_flag(flag):
+			continue
+		match name:
+			"allcapitalize":
+				value = value.to_upper()
+			"firstcapitalize":
+				value = _capitalize_first(value)
+			"decapitalize":
+				value = value.to_lower()
+			"clue_name":
+				value = _resolve_clue_display_name(value, locale)
+	return value
+
+
+func _resolve_clue_display_name(clue_id: String, locale: String) -> String:
+	var cid: String = clue_id.strip_edges()
+	if cid.is_empty():
+		return ""
+	var clue: Dictionary = DetectiveNoteVault.get_clue(cid)
+	if clue.is_empty():
+		return cid
+	var display: String = DetectiveNoteVault.clue_display_name(clue, locale)
+	return display if not display.is_empty() else cid
+
+
+func _is_truthy_flag(flag: String) -> bool:
+	return flag == "true" or flag == "1" or flag == "yes" or flag == "on"
+
+
+func _capitalize_first(s: String) -> String:
+	if s.is_empty():
+		return s
+	return s.substr(0, 1).to_upper() + s.substr(1)
+
+
+## Apply From=To&Other=Alt mapping to a raw var value.
+## Optional `*` maps any unmatched value: `Nex=I&*=they`
+func _apply_var_translate(raw: String, query: String) -> String:
+	var default_val: String = raw
+	for pair: String in query.split("&", false):
+		var eq: int = pair.find("=")
+		if eq < 0:
+			continue
+		var from_s: String = pair.substr(0, eq)
+		var to_s: String = pair.substr(eq + 1)
+		if from_s == "*":
+			default_val = to_s
+			continue
+		if from_s == raw:
+			return to_s
+	return default_val
 
 
 ## True when session var flashlight is enabled ("1", "true", etc.).
@@ -1000,10 +1115,6 @@ func is_flashlight_enabled() -> bool:
 		return false
 	var v: String = str(_vars.get("flashlight", "")).strip_edges().to_lower()
 	return v == "1" or v == "true" or v == "yes" or v == "on"
-
-## Returns true if the session variable is set (regardless of value).
-func has_var(key: String) -> bool:
-	return _vars.has(key)
 
 ## Returns a copy of all current session variables.
 func get_all_vars() -> Dictionary:

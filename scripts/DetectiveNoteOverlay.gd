@@ -28,7 +28,21 @@ const HOVER_OPEN_SEC := 1.0
 const HOVER_STEP_SEC := 0.25
 const HOVER_MOVE_THRESHOLD_PX := 16.0
 const KIND_TABS := ["individual", "object", "information"]
-const KIND_LABELS := {"individual": "PEOPLE", "object": "OBJECTS", "information": "INFO"}
+const KIND_LABELS := {"individual": "INDIVs.", "object": "OBJECTS", "information": "INFO"}
+const DONE_BTN_SIZE := Vector2(210.0, 96.0)
+const DONE_FONT_SIZE := 44
+const DONE_TILT_DEG := 20.0
+const DONE_PULSE_SCALE := 1.18
+const DONE_PULSE_HALF_SEC := 0.55
+const BTN_FILL := Color(0.20, 0.16, 0.12, 0.96)
+const BTN_FILL_HOVER := Color(0.28, 0.22, 0.16, 0.98)
+const BTN_FILL_SELECTED := Color(0.36, 0.26, 0.14, 0.98)
+const BTN_BORDER := Color(0.82, 0.66, 0.38, 0.95)
+const BTN_BORDER_SELECTED := Color(0.95, 0.82, 0.48, 1.0)
+const DONE_FILL := Color(0.52, 0.10, 0.10, 0.96)
+const DONE_FILL_HOVER := Color(0.66, 0.14, 0.14, 0.98)
+const DONE_FILL_PRESSED := Color(0.40, 0.07, 0.07, 0.98)
+const DONE_BORDER := Color(0.95, 0.78, 0.42, 1.0)
 
 var locale: String = "en"
 
@@ -56,6 +70,8 @@ var _clue_grid: GridContainer = null
 var _clue_scroll: ScrollContainer = null
 var _clue_kind: String = "individual"
 var _empty_lbl: Label = null
+var _done_btn: Button = null
+var _done_pulse_tween: Tween = null
 
 # Hover-hold (1s, deckbuilder-style) for clue tiles and filled frames
 var _hover_clue_id: String = ""
@@ -71,10 +87,15 @@ var _drag_ghost: Control = null
 var _drag_ghost_active: bool = false
 
 
-static func open_for_chapter(parent: Node, chapter_id: String) -> DetectiveNoteOverlay:
+static func open_for_chapter(
+		parent: Node, chapter_id: String, topic_id: String = "") -> DetectiveNoteOverlay:
 	var overlay := _make()
 	overlay._active_chapter = chapter_id.strip_edges()
 	overlay._all_chapters_mode = false
+	var tid: String = topic_id.strip_edges()
+	if not tid.is_empty():
+		overlay._selected_chapter = overlay._active_chapter
+		overlay._selected_topic = tid
 	parent.add_child(overlay)  # fields must be set before add_child (_ready)
 	return overlay
 
@@ -123,6 +144,9 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if _stamp_view_mode:
+		if not _stamp_view_dismissable:
+			get_viewport().set_input_as_handled()
+			return
 		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
 			_close()
 			get_viewport().set_input_as_handled()
@@ -138,9 +162,103 @@ func _input(event: InputEvent) -> void:
 
 
 func _close() -> void:
+	_stop_done_btn_pulse()
 	_hide_drag_ghost()
 	emit_signal("closed")
 	queue_free()
+
+
+func _make_done_button() -> Button:
+	var btn := Button.new()
+	btn.text = "Done"
+	btn.custom_minimum_size = DONE_BTN_SIZE
+	btn.focus_mode = Control.FOCUS_NONE
+	btn.add_theme_font_override("font", FontManager.make_font("handwritten", 700))
+	btn.add_theme_font_size_override("font_size", DONE_FONT_SIZE)
+	btn.add_theme_color_override("font_color", Color(0.97, 0.93, 0.86))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.98, 0.92))
+	btn.add_theme_color_override("font_pressed_color", Color(0.9, 0.85, 0.75))
+	_apply_note_button_skin(btn, DONE_FILL, DONE_FILL_HOVER, DONE_FILL_PRESSED, DONE_BORDER, DONE_BORDER, 3)
+	btn.rotation_degrees = DONE_TILT_DEG
+	btn.pressed.connect(_close)
+	btn.resized.connect(func() -> void:
+		btn.pivot_offset = btn.size * 0.5)
+	return btn
+
+
+## Flat fill + colored border for detective-note chrome (tabs / Done).
+func _apply_note_button_skin(
+		btn: Button,
+		fill: Color,
+		hover_fill: Color,
+		pressed_fill: Color,
+		border: Color,
+		pressed_border: Color,
+		border_w: int = 2) -> void:
+	var normal := _note_button_stylebox(fill, border, border_w)
+	var hover := _note_button_stylebox(hover_fill, border.lightened(0.12), border_w)
+	var pressed := _note_button_stylebox(pressed_fill, pressed_border, border_w + 1)
+	var hover_pressed := _note_button_stylebox(
+		pressed_fill.lightened(0.08), pressed_border.lightened(0.1), border_w + 1)
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	btn.add_theme_stylebox_override("hover_pressed", hover_pressed)
+	btn.add_theme_stylebox_override("focus", normal.duplicate())
+	btn.add_theme_stylebox_override("disabled", _note_button_stylebox(
+		Color(fill.r, fill.g, fill.b, 0.45),
+		Color(border.r, border.g, border.b, 0.35),
+		border_w))
+
+
+func _note_button_stylebox(fill: Color, border: Color, border_w: int) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = fill
+	sb.set_border_width_all(border_w)
+	sb.border_color = border
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 12.0
+	sb.content_margin_right = 12.0
+	sb.content_margin_top = 8.0
+	sb.content_margin_bottom = 8.0
+	return sb
+
+
+func _sync_done_btn_pulse() -> void:
+	if _done_btn == null or not is_instance_valid(_done_btn):
+		return
+	var complete: bool = _map != null and is_instance_valid(_map) \
+		and not _selected_topic.is_empty() and _map.is_map_fully_filled()
+	if complete:
+		_start_done_btn_pulse()
+	else:
+		_stop_done_btn_pulse()
+
+
+func _start_done_btn_pulse() -> void:
+	if _done_btn == null or not is_instance_valid(_done_btn):
+		return
+	if _done_pulse_tween != null and is_instance_valid(_done_pulse_tween) \
+			and _done_pulse_tween.is_running():
+		return
+	_stop_done_btn_pulse()
+	_done_btn.pivot_offset = _done_btn.size * 0.5
+	_done_btn.scale = Vector2.ONE
+	_done_pulse_tween = create_tween().set_loops()
+	_done_pulse_tween.tween_property(
+		_done_btn, "scale", Vector2.ONE * DONE_PULSE_SCALE, DONE_PULSE_HALF_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_done_pulse_tween.tween_property(
+		_done_btn, "scale", Vector2.ONE, DONE_PULSE_HALF_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _stop_done_btn_pulse() -> void:
+	if _done_pulse_tween != null and is_instance_valid(_done_pulse_tween):
+		_done_pulse_tween.kill()
+	_done_pulse_tween = null
+	if _done_btn != null and is_instance_valid(_done_btn):
+		_done_btn.scale = Vector2.ONE
 
 
 # ─────────────────────────────────────────────────────────────
@@ -153,6 +271,8 @@ func _build_ui() -> void:
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	dim.gui_input.connect(func(event: InputEvent) -> void:
 		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			if _stamp_view_mode and not _stamp_view_dismissable:
+				return
 			_close())
 	add_child(dim)
 
@@ -206,10 +326,8 @@ func _build_ui() -> void:
 	_topic_vbox.add_theme_constant_override("separation", 4)
 	_topic_scroll.add_child(_topic_vbox)
 
-	var close_btn := Button.new()
-	close_btn.text = "Close"
-	close_btn.pressed.connect(_close)
-	left.add_child(close_btn)
+	_done_btn = _make_done_button()
+	left.add_child(_done_btn)
 
 	# ── Center: notebook area ──
 	_notebook_area = PanelContainer.new()
@@ -220,6 +338,13 @@ func _build_ui() -> void:
 	_notebook_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_notebook_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_child(_notebook_area)
+	# Sidebar (and tilted/pulsing Done) must paint above the notebook; tree order
+	# alone draws the notebook on top and conceals Done when it scales out.
+	columns.clip_contents = false
+	left.clip_contents = false
+	left.z_index = 2
+	_notebook_area.z_index = 0
+	_notebook_area.clip_contents = false
 
 	_notebook_root = Control.new()
 	_notebook_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -295,7 +420,16 @@ func _build_ui() -> void:
 		var btn := Button.new()
 		btn.text = str(KIND_LABELS.get(kind, kind.to_upper()))
 		btn.toggle_mode = true
+		btn.focus_mode = Control.FOCUS_NONE
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.custom_minimum_size = Vector2(0, 40)
+		btn.add_theme_font_override("font", FontManager.make_font("handwritten", 700))
+		btn.add_theme_font_size_override("font_size", 15)
+		btn.add_theme_color_override("font_color", Color(0.90, 0.84, 0.72))
+		btn.add_theme_color_override("font_hover_color", Color(0.98, 0.94, 0.84))
+		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.96, 0.86))
+		_apply_note_button_skin(
+			btn, BTN_FILL, BTN_FILL_HOVER, BTN_FILL_SELECTED, BTN_BORDER, BTN_BORDER_SELECTED, 2)
 		btn.pressed.connect(_switch_clue_tab.bind(kind))
 		tab_bar.add_child(btn)
 		_clue_tab_buttons[kind] = btn
@@ -406,6 +540,7 @@ func _refresh_chapter_list() -> void:
 
 
 func _select_chapter(chapter_id: String) -> void:
+	var keep_topic: String = _selected_topic.strip_edges()
 	_selected_chapter = chapter_id
 	DetectiveNoteManager.apply_start_clues(chapter_id)
 	if _all_chapters_mode:
@@ -413,8 +548,11 @@ func _select_chapter(chapter_id: String) -> void:
 			if btn is Button:
 				(btn as Button).button_pressed = str(btn.get_meta("chapter_id", "")) == chapter_id
 	_refresh_topic_list()
-	var topics: Array = DetectiveNoteManager.get_unlocked_topics(chapter_id)
-	_select_topic(str(topics[0]) if not topics.is_empty() else "")
+	var unlocked: Array = DetectiveNoteManager.get_unlocked_topics(chapter_id)
+	if not keep_topic.is_empty() and unlocked.has(keep_topic):
+		_select_topic(keep_topic)
+	else:
+		_select_topic(DetectiveNoteManager.get_preferred_topic(chapter_id))
 	_switch_clue_tab(_clue_kind)
 
 
@@ -451,6 +589,7 @@ func _refresh_map() -> void:
 	if _selected_topic.is_empty():
 		_map.setup({}, 1, DetectiveNoteVerdictMap.Mode.READONLY)
 		_empty_lbl.visible = true
+		_sync_done_btn_pulse()
 		return
 	_empty_lbl.visible = false
 	var topic: Dictionary = DetectiveNoteVault.get_topic(_selected_chapter, _selected_topic)
@@ -465,6 +604,7 @@ func _refresh_map() -> void:
 			DetectiveNoteManager.get_topic_stamp(_selected_chapter, _selected_topic),
 			false,
 			DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic))
+	_sync_done_btn_pulse()
 
 
 func _refresh_topic_title() -> void:
@@ -581,6 +721,7 @@ func _on_map_drop_requested(node_id: String, clue_id: String, from_node: String)
 				DetectiveNoteManager.clear_placement(_selected_chapter, _selected_topic, from_node)
 			SFXManager.play(SFXManager.SFX_PLACE)
 	_map.set_placements(DetectiveNoteManager.get_placements(_selected_chapter, _selected_topic))
+	_sync_done_btn_pulse()
 
 
 func _clue_panel_can_accept_drag(data: Variant) -> bool:
@@ -819,11 +960,12 @@ func _show_messenger_for_clue(clue_id: String) -> void:
 func _show_stamp_view() -> void:
 	DetectiveNoteManager.apply_start_clues(_selected_chapter)
 	_refresh_map()
-	_stamp_view_dismissable = true
+	_stamp_view_dismissable = false
 	var stamp_id: String = DetectiveNoteManager.get_topic_stamp(_selected_chapter, _selected_topic)
 	if stamp_id.is_empty():
 		push_warning("DetectiveNoteOverlay: stamp view for unstamped topic '%s/%s'"
 			% [_selected_chapter, _selected_topic])
+		_stamp_view_dismissable = true
 		return
 	_map.stamp_animation_finished.connect(func() -> void:
 		_stamp_view_dismissable = true, CONNECT_ONE_SHOT)

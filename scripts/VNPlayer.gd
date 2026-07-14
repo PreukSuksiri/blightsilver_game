@@ -76,6 +76,7 @@ var _beat_name_index: Dictionary = {}     # beat_name → filtered beat index
 var _last_shown_beat_index: int = -1      # beat just displayed; checked for go_to on advance
 var _skip_go_to_check: bool = false       # true after choice/goto_group jumps
 var _active_group_id: int = 0             # group currently playing via choice (0 = mainline)
+var _group_stack: Array[int] = []           # parent groups when play_group nests (10→11→…)
 var _group_return_index: int = -1         # filtered index to resume after group completes
 var _scene_path: String = ""
 var _on_complete: Callable = Callable()
@@ -103,7 +104,8 @@ var _dialog_lbl: RichTextLabel = null
 var _hint_icon: TextureRect = null
 var _hint_tween: Tween = null
 var _note_icon: TextureRect = null            # detective note opener (bottom-right of dialog)
-var _note_chapter_id: String = ""             # chapter mapped to this scene; "" hides the icon
+var _note_chapter_id: String = ""             # chapter mapped to this scene; "" cannot show the icon
+var _note_icon_allowed: bool = false          # author must show via detective_note_icon beat
 var _note_hover_time: float = 0.0             # 0.5s hover-to-open accumulator
 var _note_overlay: DetectiveNoteOverlay = null
 var _choices_above_group: Control = null
@@ -147,6 +149,10 @@ func _loc(val) -> String:
 			return str(val.values()[0])
 		return ""
 	return str(val) if val != null else ""
+
+## Localise then substitute exploration `#var_name#` placeholders in player-facing text.
+func _loc_display(val) -> String:
+	return ExplorationManager.substitute_text_vars(_loc(val), locale)
 
 func _resolve_gallery_chapter_end(beat: Dictionary) -> String:
 	if beat.get("complete_current_gallery_chapter", false) \
@@ -482,10 +488,77 @@ func _create_choice_scroll_hint() -> Label:
 	return hint
 
 func _beat_has_choices(beat: Dictionary) -> bool:
-	if _beat_has_deferred_actions(beat):
+	# Blocking handoffs/overlays replace the beat end — don't also present choices.
+	# Side-effect deferred (grants, center_text, etc.) may coexist with choices.
+	if _beat_has_blocking_handoff(beat):
 		return false
 	var choices: Variant = beat.get("choices", null)
 	return choices is Array and not (choices as Array).is_empty()
+
+## Modal overlays / scene handoffs that replace normal beat completion.
+func _beat_has_blocking_handoff(beat: Dictionary) -> bool:
+	if beat.get("start_battle", false):
+		return true
+	if str(beat.get("tutorial_battle", "")).strip_edges() != "":
+		return true
+	if str(beat.get("exploration_call", "")).strip_edges() != "":
+		return true
+	if str(beat.get("dungeon_call", "")).strip_edges() != "":
+		return true
+	if beat.get("go_to_campaign_gallery", false):
+		return true
+	if beat.get("go_to_quick_duel", false):
+		return true
+	if beat.get("go_to_credits", false):
+		return true
+	if str(beat.get("call_scene", "")).strip_edges() != "":
+		return true
+	if str(beat.get("show_messenger", "")).strip_edges() != "":
+		return true
+	var open_note: Variant = beat.get("show_detective_note", null)
+	if open_note is Dictionary or open_note == true:
+		return true
+	if beat.get("show_note_stamp", null) is Dictionary:
+		return true
+	return false
+
+## Side-effect / title-card actions that must still run after wait (auto-play).
+func _beat_has_side_effect_deferred(beat: Dictionary, exclude_center_text: bool = false) -> bool:
+	var expl_actions: Variant = beat.get("exploration_actions", null)
+	if expl_actions is Array and not (expl_actions as Array).is_empty():
+		return true
+	if not _resolve_gallery_chapter_end(beat).is_empty():
+		return true
+	var note_actions: Variant = beat.get("detective_note", null)
+	if note_actions is Array and not (note_actions as Array).is_empty():
+		return true
+	if beat.has("detective_note_icon"):
+		var icon_mode: String = str(beat.get("detective_note_icon", "")).strip_edges().to_lower()
+		if icon_mode == "show" or icon_mode == "hide":
+			return true
+	if not exclude_center_text:
+		var center_raw: String = _loc(beat.get("center_text", "")).strip_edges()
+		if not center_raw.is_empty():
+			return true
+	return false
+
+## Scene-change / battle / side-effect actions that must run after wait (auto-play).
+## When true, wait holds the frame then falls through instead of skipping these.
+func _beat_has_deferred_actions(beat: Dictionary, exclude_center_text: bool = false) -> bool:
+	if _beat_has_blocking_handoff(beat):
+		return true
+	return _beat_has_side_effect_deferred(beat, exclude_center_text)
+
+## True when the player still needs a click after deferred side-effects / overlays.
+## center_text is excluded — it is its own auto-play title card.
+func _beat_needs_click_after_deferred(beat: Dictionary) -> bool:
+	if _beat_has_choices(beat):
+		return true
+	if beat.has("text") and not _loc(beat.get("text", "")).strip_edges().is_empty():
+		return true
+	if beat.has("video") and not str(beat.get("video", "")).strip_edges().is_empty():
+		return true
+	return false
 
 func _build_choice_entries(choices: Array) -> Array:
 	var result: Array = []
@@ -499,10 +572,10 @@ func _build_choice_entries(choices: Array) -> Array:
 			result.append({
 				"choice": cd,
 				"disabled": false,
-				"label": _loc(cd.get("label", "")),
+				"label": _loc_display(cd.get("label", "")),
 			})
 		elif locked_mode == "disable":
-			var main_label: String = _loc(cd.get("label", ""))
+			var main_label: String = _loc_display(cd.get("label", ""))
 			var reason: String = _choice_disabled_reason(cd)
 			result.append({
 				"choice": cd,
@@ -513,9 +586,9 @@ func _build_choice_entries(choices: Array) -> Array:
 	return result
 
 func _choice_disabled_reason(choice: Dictionary) -> String:
-	var reason: String = _loc(choice.get("disabled_reason", ""))
+	var reason: String = _loc_display(choice.get("disabled_reason", ""))
 	if reason.is_empty():
-		reason = _loc(choice.get("disabled_label", ""))
+		reason = _loc_display(choice.get("disabled_label", ""))
 	return reason
 
 func _filtered_index_for_raw(raw_idx: int) -> int:
@@ -661,14 +734,39 @@ func _build_group_maps() -> void:
 
 ## On an active choice branch: next beat may be mainline (group 0) or the same
 ## group — including separated blocks later in the file. Other groups are skipped.
+## Nested play_group (G10→G11): when the child group has no further beats, pop
+## back to the parent group before falling through to mainline.
+## Hidden beats are skipped in linear/branch advance but remain jumpable via go_to.
+func _beat_is_hidden(beat: Dictionary) -> bool:
+	return bool(beat.get("hidden", false))
+
 func _find_next_playable_index_on_branch(from_idx: int) -> int:
 	if _active_group_id <= 0:
 		return from_idx
+	var has_more_own: bool = false
 	for i: int in range(from_idx, _beats.size()):
-		var gid: int = _beat_group_id(_beats[i] as Dictionary)
+		var b: Dictionary = _beats[i] as Dictionary
+		if _beat_is_hidden(b):
+			continue
+		if _beat_group_id(b) == _active_group_id:
+			has_more_own = true
+			break
+	if not has_more_own and not _group_stack.is_empty():
+		_active_group_id = int(_group_stack.pop_back())
+		return _find_next_playable_index_on_branch(from_idx)
+	for i: int in range(from_idx, _beats.size()):
+		var b2: Dictionary = _beats[i] as Dictionary
+		if _beat_is_hidden(b2):
+			continue
+		var gid: int = _beat_group_id(b2)
 		if gid == 0 or gid == _active_group_id:
 			return i
 	return _beats.size()
+
+func _clear_group_branch_state() -> void:
+	_active_group_id = 0
+	_group_stack.clear()
+	_group_return_index = -1
 
 func _build_beat_name_index() -> void:
 	_beat_name_index.clear()
@@ -677,7 +775,7 @@ func _build_beat_name_index() -> void:
 		if not name.is_empty():
 			_beat_name_index[name] = i
 
-func _resolve_go_to(beat: Dictionary) -> int:
+func _resolve_go_to(beat: Dictionary, from_filtered_idx: int = -1) -> int:
 	var entries: Variant = beat.get("go_to", null)
 	if not entries is Array or (entries as Array).is_empty():
 		return -1
@@ -693,12 +791,61 @@ func _resolve_go_to(beat: Dictionary) -> int:
 		if not _beat_name_index.has(target_name):
 			push_warning("VNPlayer: go_to beat_name '%s' not found — skipping entry" % target_name)
 			continue
-		return int(_beat_name_index[target_name])
+		var target_idx: int = int(_beat_name_index[target_name])
+		print("[VNPlayer] go_to → '%s' (from beat %d → beat %d)" % [
+			target_name, from_filtered_idx, target_idx])
+		return target_idx
 	return -1
+
+func _resolve_play_group(beat: Dictionary) -> int:
+	var entries: Variant = beat.get("play_group", null)
+	if not entries is Array or (entries as Array).is_empty():
+		return -1
+	for entry: Variant in (entries as Array):
+		if not entry is Dictionary:
+			continue
+		var ed: Dictionary = entry as Dictionary
+		var group_id: int = int(ed.get("group", 0))
+		if group_id <= 0:
+			continue
+		if not VNChoiceConditions.choice_passes(ed):
+			continue
+		if not _group_first_index.has(group_id):
+			push_warning("VNPlayer: play_group %d not found — skipping entry" % group_id)
+			continue
+		return group_id
+	return -1
+
+func _enter_group_from_beat(group_id: int, from_filtered_idx: int, nest: bool = true) -> bool:
+	if group_id <= 0 or not _group_first_index.has(group_id):
+		push_warning("VNPlayer: play_group %d not found — continuing" % group_id)
+		return false
+	var prev_active: int = _active_group_id
+	# Nested branch (e.g. G10 play_group → G11): remember parent so we resume it.
+	if nest and _active_group_id > 0 and _active_group_id != group_id:
+		_group_stack.append(_active_group_id)
+	else:
+		_group_stack.clear()
+		_group_return_index = _find_next_mainline_index(from_filtered_idx)
+	_active_group_id = group_id
+	_beat_index = int(_group_first_index[group_id])
+	# Prefer the first non-hidden beat in the group for entry.
+	while _beat_index < _beats.size():
+		var b: Dictionary = _beats[_beat_index] as Dictionary
+		if _beat_group_id(b) != group_id:
+			break
+		if not _beat_is_hidden(b):
+			break
+		_beat_index += 1
+	var via: String = "play_group" if nest else "choice"
+	print("[VNPlayer] %s → enter group %d (from beat %d → beat %d, was active %d, stack=%s)" % [
+		via, group_id, from_filtered_idx, _beat_index, prev_active, str(_group_stack)])
+	return true
 
 func _find_next_mainline_index(from_filtered: int) -> int:
 	for i: int in range(from_filtered + 1, _beats.size()):
-		if _beat_group_id(_beats[i] as Dictionary) == 0:
+		var b: Dictionary = _beats[i] as Dictionary
+		if _beat_group_id(b) == 0 and not _beat_is_hidden(b):
 			return i
 	return _beats.size()
 
@@ -707,11 +854,13 @@ func _find_mainline_before_group(group_id: int) -> int:
 	if first <= 0:
 		return -1
 	for i: int in range(first - 1, -1, -1):
-		if _beat_group_id(_beats[i] as Dictionary) == 0:
+		var b: Dictionary = _beats[i] as Dictionary
+		if _beat_group_id(b) == 0 and not _beat_is_hidden(b):
 			return i
 	return -1
 
 func _restore_group_state_for_index(idx: int) -> void:
+	_group_stack.clear()
 	if idx < 0 or idx >= _beats.size():
 		_active_group_id = 0
 		_group_return_index = -1
@@ -730,9 +879,27 @@ func _advance_beat_cursor() -> void:
 	if _active_group_id > 0:
 		_beat_index = _find_next_playable_index_on_branch(_beat_index)
 	else:
-		while _beat_index < _beats.size() \
-				and _beat_group_id(_beats[_beat_index] as Dictionary) > 0:
+		while _beat_index < _beats.size():
+			var b: Dictionary = _beats[_beat_index] as Dictionary
+			if _beat_group_id(b) > 0:
+				_beat_index += 1
+				continue
+			if _beat_is_hidden(b):
+				_beat_index += 1
+				continue
+			break
+
+func _skip_leading_unplayable_beats() -> void:
+	## Start / resume helper: skip hidden & off-branch group beats in linear mode.
+	if _active_group_id > 0:
+		_beat_index = _find_next_playable_index_on_branch(_beat_index)
+		return
+	while _beat_index < _beats.size():
+		var b: Dictionary = _beats[_beat_index] as Dictionary
+		if _beat_group_id(b) > 0 or _beat_is_hidden(b):
 			_beat_index += 1
+			continue
+		break
 
 func _resolve_choice_goto(choice: Dictionary) -> void:
 	var group_id: int = int(choice.get("goto_group", 0))
@@ -741,9 +908,7 @@ func _resolve_choice_goto(choice: Dictionary) -> void:
 			push_warning("VNPlayer: goto_group %d not found — advancing" % group_id)
 			_advance_beat_cursor()
 		else:
-			_group_return_index = _find_next_mainline_index(_beat_index)
-			_active_group_id = group_id
-			_beat_index = int(_group_first_index[group_id])
+			_enter_group_from_beat(group_id, _beat_index, false)
 	elif int(choice.get("goto_beat", -1)) >= 0:
 		var raw_idx: int = int(choice.get("goto_beat", -1))
 		push_warning("VNPlayer: choice uses deprecated goto_beat — use goto_group")
@@ -752,8 +917,7 @@ func _resolve_choice_goto(choice: Dictionary) -> void:
 			push_warning("VNPlayer: goto_beat %d not found — advancing" % raw_idx)
 			_advance_beat_cursor()
 		else:
-			_active_group_id = 0
-			_group_return_index = -1
+			_clear_group_branch_state()
 			_beat_index = filtered
 	else:
 		push_warning("VNPlayer: choice missing goto_group — advancing")
@@ -884,8 +1048,9 @@ func _present_choices(beat: Dictionary) -> void:
 			continue
 		var ed: Dictionary = entry as Dictionary
 		var cd: Dictionary = ed.get("choice", {}) as Dictionary
+		var choice_label: String = str(ed.get("label", ""))
 		var widget := _make_choice_widget(
-			str(ed.get("label", "")),
+			choice_label,
 			bool(ed.get("disabled", false)),
 			str(ed.get("reason", "")))
 		if widget is Button and not bool(ed.get("disabled", false)):
@@ -894,6 +1059,8 @@ func _present_choices(beat: Dictionary) -> void:
 				if picked[0]:
 					return
 				picked[0] = true
+				print("[VNPlayer] choice made at beat %d — '%s' → goto_group %d" % [
+					_last_shown_beat_index, choice_label, int(cd.get("goto_group", 0))])
 				SFXManager.play(SFXManager.SFX_EXPLORATION)
 				_run_choice_actions(cd)
 				_resolve_choice_goto(cd))
@@ -1109,11 +1276,25 @@ func _hide_hint_icon() -> void:
 # Detective note (icon on the dialog box + beat commands)
 # ─────────────────────────────────────────────────────────────
 
-## Show the note icon only when this scene maps to a detective note chapter.
+## Show the note icon only when author-enabled and this scene maps to a chapter.
 func _refresh_note_icon() -> void:
 	_note_chapter_id = DetectiveNoteManager.resolve_active_chapter(_scene_path)
 	if _note_icon != null:
-		_note_icon.visible = not _note_chapter_id.is_empty()
+		_note_icon.visible = _note_icon_allowed and not _note_chapter_id.is_empty()
+
+## Beat key "detective_note_icon" — "show" | "hide" the dialog note icon.
+## Starts hidden for each scene; show only when a mapped note chapter exists.
+func _apply_detective_note_icon(spec: Variant) -> void:
+	var mode: String = str(spec).strip_edges().to_lower()
+	match mode:
+		"show":
+			_note_icon_allowed = true
+		"hide":
+			_note_icon_allowed = false
+		_:
+			push_warning("VNPlayer: detective_note_icon expects 'show' or 'hide' — skipped.")
+			return
+	_refresh_note_icon()
 
 ## Hovering the note icon for 0.5s opens the notebook (same as tapping).
 func _update_note_icon_hover(delta: float) -> void:
@@ -1147,6 +1328,31 @@ func _open_detective_note() -> void:
 	await _note_overlay.closed
 	_note_overlay = null
 	_accepting_input = true
+
+## Beat key "show_detective_note" — open the interactive notebook and block until closed.
+## Spec: true | { "chapter": optional chapter id, "topic": optional topic id }
+func _run_show_detective_note_beat(spec: Variant) -> void:
+	var chapter: String = ""
+	var topic: String = ""
+	if spec is Dictionary:
+		var sd: Dictionary = spec as Dictionary
+		chapter = str(sd.get("chapter", "")).strip_edges()
+		topic = str(sd.get("topic", "")).strip_edges()
+	elif not bool(spec):
+		return
+	if chapter.is_empty():
+		chapter = DetectiveNoteManager.resolve_active_chapter(_scene_path)
+	if chapter.is_empty():
+		push_warning("VNPlayer: show_detective_note needs a resolvable chapter — skipped.")
+		return
+	if _note_overlay != null and is_instance_valid(_note_overlay):
+		await _note_overlay.closed
+		_note_overlay = null
+	_note_hover_time = 0.0
+	_note_overlay = DetectiveNoteOverlay.open_for_chapter(self, chapter, topic)
+	if _note_overlay != null and is_instance_valid(_note_overlay):
+		await _note_overlay.closed
+	_note_overlay = null
 
 ## Beat key "detective_note" — array of grant actions, applied when the beat shows.
 ## Entry: { "action": "add_clue"|"unlock_topic"|"upgrade_topic",
@@ -1273,8 +1479,10 @@ func play_scene(
 		_finish()
 		return
 
-	# Filter beats by hidden/NSFW flags, tracking original JSON indices for bug tagging.
+	# NSFW-filter only. Hidden beats stay loaded so go_to can land on them;
+	# linear advance skips hidden. Track original JSON indices for bug tagging.
 	_scene_path = json_path
+	_note_icon_allowed = false
 	_refresh_note_icon()
 	if not _note_chapter_id.is_empty():
 		DetectiveNoteManager.apply_start_clues(_note_chapter_id)
@@ -1283,8 +1491,6 @@ func play_scene(
 	var raw_beats: Array = parsed as Array
 	for _ri: int in range(raw_beats.size()):
 		var _rb: Variant = raw_beats[_ri]
-		if (_rb as Dictionary).get("hidden", false):
-			continue
 		var _flag: String = str((_rb as Dictionary).get("nsfw", "both")).to_lower()
 		if _flag == "safe" and SaveManager.nsfw_enabled:
 			continue
@@ -1295,10 +1501,12 @@ func play_scene(
 	_build_group_maps()
 	_build_beat_name_index()
 	_active_group_id = 0
+	_group_stack.clear()
 	_group_return_index = -1
 	_last_shown_beat_index = -1
 	_skip_go_to_check = false
 	_beat_index = 0
+	var resumed_mid_scene: bool = false
 	if _track_campaign_checkpoint:
 		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
 		if resume_at <= 0 and not _chapter_arc_key.is_empty():
@@ -1306,10 +1514,13 @@ func play_scene(
 			if str(arc.get("vn_path", "")).strip_edges() == json_path.strip_edges():
 				resume_at = int(arc.get("vn_beat_index", 0))
 		if resume_at > 0 and resume_at < _beats.size():
+			resumed_mid_scene = true
 			_beat_index = resume_at
 			_restore_group_state_for_index(_beat_index)
 			# Campaign gallery fades BGM out before continue; replay music from skipped beats.
 			_apply_music_state(_music_state_before_beat(_beat_index), true)
+	if not resumed_mid_scene:
+		_skip_leading_unplayable_beats()
 	call_deferred("_start_playback")
 
 func _start_playback() -> void:
@@ -1322,40 +1533,55 @@ func _start_playback() -> void:
 # Beat rendering
 # ─────────────────────────────────────────────────────────────
 
-## Scene-change / battle actions that must run on the same beat after wait/center-text.
-func _beat_has_deferred_actions(beat: Dictionary) -> bool:
-	if beat.get("start_battle", false):
-		return true
-	if str(beat.get("tutorial_battle", "")).strip_edges() != "":
-		return true
-	if str(beat.get("exploration_call", "")).strip_edges() != "":
-		return true
-	if str(beat.get("dungeon_call", "")).strip_edges() != "":
-		return true
-	if beat.get("go_to_campaign_gallery", false):
-		return true
-	if beat.get("go_to_quick_duel", false):
-		return true
-	if beat.get("go_to_credits", false):
-		return true
-	if str(beat.get("call_scene", "")).strip_edges() != "":
-		return true
-	if str(beat.get("show_messenger", "")).strip_edges() != "":
-		return true
-	if beat.get("show_note_stamp", null) is Dictionary:
-		return true
-	return false
-
 func _show_beat() -> void:
 	if not _skip_go_to_check and _last_shown_beat_index >= 0 \
 			and _last_shown_beat_index < _beats.size():
 		var leaving: Dictionary = _beats[_last_shown_beat_index] as Dictionary
-		var goto_idx: int = _resolve_go_to(leaving)
-		if goto_idx >= 0:
-			_beat_index = goto_idx
-			_restore_group_state_for_index(_beat_index)
-			_persist_campaign_checkpoint()
+		var redirected: bool = false
+		var play_group_id: int = _resolve_play_group(leaving)
+		if play_group_id > 0:
+			redirected = _enter_group_from_beat(play_group_id, _last_shown_beat_index)
+			if redirected:
+				_persist_campaign_checkpoint()
+		if not redirected:
+			var goto_idx: int = _resolve_go_to(leaving, _last_shown_beat_index)
+			if goto_idx >= 0:
+				_beat_index = goto_idx
+				_restore_group_state_for_index(_beat_index)
+				_persist_campaign_checkpoint()
 	_skip_go_to_check = false
+
+	if _beat_index >= _beats.size():
+		_finish()
+		return
+
+	# Resolve silent redirect beats immediately when we land on them
+	# (empty play_group / go_to frames) so go_to cannot be skipped.
+	var redirect_hops: int = 0
+	while redirect_hops < 16 and _beat_index < _beats.size():
+		var candidate: Dictionary = _beats[_beat_index] as Dictionary
+		if not _is_silent_redirect_beat(candidate):
+			break
+		var hopped: bool = false
+		var pg_id: int = _resolve_play_group(candidate)
+		if pg_id > 0 and _enter_group_from_beat(pg_id, _beat_index):
+			hopped = true
+		else:
+			var g_idx: int = _resolve_go_to(candidate, _beat_index)
+			if g_idx >= 0:
+				_beat_index = g_idx
+				_restore_group_state_for_index(_beat_index)
+				hopped = true
+		if not hopped:
+			# No matching rule — treat as empty and advance on branch/mainline.
+			_advance_beat_cursor()
+			if _beat_index >= _beats.size():
+				_finish()
+				return
+			redirect_hops += 1
+			continue
+		_persist_campaign_checkpoint()
+		redirect_hops += 1
 
 	if _beat_index >= _beats.size():
 		_finish()
@@ -1516,7 +1742,7 @@ func _show_beat() -> void:
 					_char_slots[sn].modulate = Color(0.38, 0.38, 0.38, 1.0)
 
 	# ── Speaker ──
-	var speaker: String = _loc(beat.get("speaker", ""))
+	var speaker: String = _loc_display(beat.get("speaker", ""))
 	if speaker != "":
 		_speaker_lbl.text      = speaker
 		_speaker_panel.reset_size()
@@ -1528,7 +1754,7 @@ func _show_beat() -> void:
 
 	# ── Dialog text ──
 	_dialog_lbl.text = ""
-	_dialog_lbl.append_text(_loc(beat.get("text", "")))
+	_dialog_lbl.append_text(_loc_display(beat.get("text", "")))
 
 	# ── Hide messagebox ──
 	if beat.get("hide_dialog", false):
@@ -1619,7 +1845,7 @@ func _show_beat() -> void:
 		return
 
 	# ── Center text (title-card with fade in/hold/fade out) ──
-	var center_txt: String = str(beat.get("center_text", ""))
+	var center_txt: String = _loc_display(beat.get("center_text", ""))
 	if center_txt != "":
 		_dialog_panel.visible = false
 		_accepting_input = false
@@ -1647,7 +1873,9 @@ func _show_beat() -> void:
 		await tw.finished
 		lbl.queue_free()
 		_accepting_input = true
-		if not _beat_has_deferred_actions(beat) and not has_choices:
+		# center_text itself is deferred (so wait cannot skip it). After it finishes,
+		# auto-continue unless other post-wait handoffs / overlays remain.
+		if not _beat_has_deferred_actions(beat, true) and not has_choices:
 			_show_beat()
 			return
 
@@ -1833,10 +2061,12 @@ func _show_beat() -> void:
 		return
 
 	# ── Campaign gallery unlock + navigation ──
+	var ran_side_effects: bool = false
 	var complete_gallery: String = _resolve_gallery_chapter_end(beat)
 	if not complete_gallery.is_empty():
 		var card: Dictionary = SaveManager.get_gallery_card_for_chapter(complete_gallery)
 		SaveManager.finalize_chapter_arc(complete_gallery, card)
+		ran_side_effects = true
 
 	if beat.get("go_to_campaign_gallery", false):
 		_set_music("", 0.0, 0.0)
@@ -1902,14 +2132,16 @@ func _show_beat() -> void:
 	# ExplorationManager when a VN beat is displayed, only during an active session.
 	# Format: [{ "action": "give_item", "key": "rusty_key", "value": "" }, ...]
 	var expl_actions: Variant = beat.get("exploration_actions", null)
-	if expl_actions is Array and ExplorationManager.is_session_active:
-		for ea: Variant in (expl_actions as Array):
-			if ea is Dictionary:
-				var ead: Dictionary = ea as Dictionary
-				ExplorationManager.dispatch_event(
-					str(ead.get("action", "")),
-					str(ead.get("key",    "")),
-					str(ead.get("value",  "")))
+	if expl_actions is Array and not (expl_actions as Array).is_empty():
+		ran_side_effects = true
+		if ExplorationManager.is_session_active:
+			for ea: Variant in (expl_actions as Array):
+				if ea is Dictionary:
+					var ead: Dictionary = ea as Dictionary
+					ExplorationManager.dispatch_event(
+						str(ead.get("action", "")),
+						str(ead.get("key",    "")),
+						str(ead.get("value",  "")))
 
 	# ── Messenger overlay (read-only chat evidence — blocks until closed) ──
 	var messenger_id: String = str(beat.get("show_messenger", "")).strip_edges()
@@ -1922,10 +2154,28 @@ func _show_beat() -> void:
 		_accepting_input = true
 
 	# ── Detective note grants (clues / topic unlocks — toasts handle feedback) ──
+	var ran_note_commands: bool = false
 	var note_actions: Variant = beat.get("detective_note", null)
 	if note_actions is Array:
 		_apply_detective_note_actions(note_actions as Array)
 		_refresh_note_icon()
+		if not (note_actions as Array).is_empty():
+			ran_note_commands = true
+
+	# ── Detective note icon visibility (dialog bottom-right; starts hidden) ──
+	if beat.has("detective_note_icon"):
+		_apply_detective_note_icon(beat.get("detective_note_icon"))
+		ran_note_commands = true
+
+	# ── Open detective note (interactive notebook — blocks until closed) ──
+	var blocked_on_note_ui: bool = false
+	var open_note_spec: Variant = beat.get("show_detective_note", null)
+	if open_note_spec is Dictionary or open_note_spec == true:
+		_accepting_input = false
+		_hide_hint_icon()
+		await _run_show_detective_note_beat(open_note_spec)
+		_accepting_input = true
+		blocked_on_note_ui = true
 
 	# ── Detective note stamp (APPROVED animation — blocks until dismissed) ──
 	var stamp_spec: Variant = beat.get("show_note_stamp", null)
@@ -1934,15 +2184,55 @@ func _show_beat() -> void:
 		_hide_hint_icon()
 		await _run_note_stamp_beat(stamp_spec as Dictionary)
 		_accepting_input = true
+		blocked_on_note_ui = true
 
 	if has_choices:
 		_persist_campaign_checkpoint()
 		await _present_choices(beat)
 		return
 
+	# Wait + deferred side-effects / overlays: run them first; after they finish,
+	# continue without an extra click when there is nothing else to read.
+	if (blocked_on_note_ui or ran_note_commands or ran_side_effects) \
+			and float(beat.get("wait", 0.0)) > 0.0 \
+			and not _beat_needs_click_after_deferred(beat):
+		_show_beat()
+		return
+
 	# ── Continue hint icon ──
 	_accepting_input = true
 	_show_hint_icon()
+
+func _is_silent_redirect_beat(beat: Dictionary) -> bool:
+	var has_redirect: bool = false
+	var pg: Variant = beat.get("play_group", null)
+	if pg is Array and not (pg as Array).is_empty():
+		has_redirect = true
+	var gt: Variant = beat.get("go_to", null)
+	if gt is Array and not (gt as Array).is_empty():
+		has_redirect = true
+	if not has_redirect:
+		return false
+	if beat.has("text") and not _loc(beat.get("text", "")).strip_edges().is_empty():
+		return false
+	if beat.has("center_text") and not str(beat.get("center_text", "")).strip_edges().is_empty():
+		return false
+	if beat.has("video") and not str(beat.get("video", "")).strip_edges().is_empty():
+		return false
+	if float(beat.get("wait", 0.0)) > 0.0:
+		return false
+	if beat.has("fade_out") or beat.has("fade_in"):
+		return false
+	if beat.has("flash_count") or beat.has("flash_color"):
+		return false
+	if beat.has("show_messenger") and not str(beat.get("show_messenger", "")).strip_edges().is_empty():
+		return false
+	var open_note: Variant = beat.get("show_detective_note", null)
+	if open_note is Dictionary or open_note == true:
+		return false
+	if beat.get("show_note_stamp", null) is Dictionary:
+		return false
+	return true
 
 func _on_video_finished() -> void:
 	_video_player.visible  = false

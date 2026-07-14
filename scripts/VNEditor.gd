@@ -80,6 +80,7 @@ var _speaker_area: VBoxContainer = null
 var _text_area: VBoxContainer = null
 var _choices_vbox: VBoxContainer = null
 var _go_to_vbox: VBoxContainer = null
+var _play_group_vbox: VBoxContainer = null
 var _exploration_actions_vbox: VBoxContainer = null
 var _f_choices_layout: OptionButton = null
 var _branch_bar: HBoxContainer = null
@@ -193,6 +194,10 @@ var _f_call_scene:  OptionButton = null
 var _f_show_messenger: OptionButton = null
 var _detective_note_rows: Array = []
 var _detective_note_rows_vbox: VBoxContainer = null
+var _f_detective_note_icon: OptionButton = null
+var _f_show_detective_note: CheckBox = null
+var _f_open_note_chapter: OptionButton = null
+var _f_open_note_topic: OptionButton = null
 var _f_show_note_stamp: CheckBox = null
 var _f_note_stamp_chapter: OptionButton = null
 var _f_note_stamp_topic: OptionButton = null
@@ -441,6 +446,12 @@ func _build_header(parent: Control) -> void:
 	resolve_btn.custom_minimum_size = Vector2(110, 34)
 	resolve_btn.pressed.connect(_resolve_bug_tag)
 	hbox.add_child(resolve_btn)
+	var copy_ref_btn := Button.new()
+	copy_ref_btn.text = "Copy Ref"
+	copy_ref_btn.tooltip_text = "Copy file name + beat # + beat name (for bug reports)"
+	copy_ref_btn.custom_minimum_size = Vector2(100, 34)
+	copy_ref_btn.pressed.connect(_copy_bug_ref_to_clipboard)
+	hbox.add_child(copy_ref_btn)
 	_bug_note_lbl = Label.new()
 	_bug_note_lbl.add_theme_font_size_override("font_size", 14)
 	_bug_note_lbl.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25))
@@ -485,6 +496,13 @@ func _build_left_panel(parent: Control) -> void:
 	chg_folder_btn.add_theme_font_size_override("font_size", 14)
 	chg_folder_btn.pressed.connect(_on_change_folder_pressed)
 	files_hdr.add_child(chg_folder_btn)
+	var copy_file_btn := Button.new()
+	copy_file_btn.text = "Copy"
+	copy_file_btn.tooltip_text = "Copy current file name to clipboard"
+	copy_file_btn.custom_minimum_size = Vector2(52, 26)
+	copy_file_btn.add_theme_font_size_override("font_size", 12)
+	copy_file_btn.pressed.connect(_copy_file_name_to_clipboard)
+	files_hdr.add_child(copy_file_btn)
 	var new_file_btn := Button.new()
 	new_file_btn.text = "+"
 	new_file_btn.custom_minimum_size = Vector2(28, 26)
@@ -645,8 +663,15 @@ func _build_fields() -> void:
 	# ── Dialogue ──────────────────────────────────────────────
 	_section(v, "DIALOGUE")
 	_f_beat_name = _row_le(v, "Beat name", "Unique ID within this file (e.g. intro_kelly_meet)")
+	var copy_beat_name_btn := Button.new()
+	copy_beat_name_btn.text = "Copy"
+	copy_beat_name_btn.tooltip_text = "Copy beat name to clipboard"
+	copy_beat_name_btn.custom_minimum_size = Vector2(52, 0)
+	copy_beat_name_btn.add_theme_font_size_override("font_size", 12)
+	copy_beat_name_btn.pressed.connect(_copy_beat_name_to_clipboard)
+	_f_beat_name.get_parent().add_child(copy_beat_name_btn)
 	_f_comment = _row_le(v, "Comment", "Dev note (not shown in-game)")
-	_f_hidden  = _row_cb(v, "Hidden", "Skip this beat during playback (keeps it in the file)")
+	_f_hidden  = _row_cb(v, "Hidden", "Skip during linear playback (keeps it in the file; Go To can still jump here)")
 	_f_group = _row_sb(v, "Group", 0.0, 999.0, 1.0,
 		"0 = mainline; N = choice branch (may be separated — same N resumes later)")
 	_f_group.value_changed.connect(func(_v: float) -> void:
@@ -668,6 +693,13 @@ func _build_fields() -> void:
 
 	_rebuild_locale_ui()
 
+	var var_hint := Label.new()
+	var_hint.text = "Dialogue vars: #name# | #name%clue_name=true# (ID→clue Name) | #name%translate?Nex=I# | #name%firstcapitalize=true# | #name%allcapitalize=true# | #name%decapitalize=true# (chain left→right)."
+	var_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var_hint.add_theme_font_size_override("font_size", 12)
+	var_hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
+	v.add_child(var_hint)
+
 	# ── Go To (conditional beat jump) ─────────────────────────
 	_section(v, "GO TO  (auto-jump after this beat)")
 	var go_to_hint := Label.new()
@@ -685,6 +717,24 @@ func _build_fields() -> void:
 	add_go_to_btn.add_theme_font_size_override("font_size", 14)
 	add_go_to_btn.pressed.connect(_add_go_to_row)
 	v.add_child(add_go_to_btn)
+
+	# ── Play Group (conditional branch) ───────────────────────
+	_section(v, "PLAY GROUP  (auto-branch after this beat)")
+	var play_group_hint := Label.new()
+	play_group_hint.text = "Evaluated top-to-bottom when the player advances; first matching entry plays that group (like a choice goto_group). No match = continue mainline. Each entry supports AND/OR conditions. Uses exploration vars/items when in exploration."
+	play_group_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	play_group_hint.add_theme_font_size_override("font_size", 12)
+	play_group_hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
+	v.add_child(play_group_hint)
+	_play_group_vbox = VBoxContainer.new()
+	_play_group_vbox.add_theme_constant_override("separation", 6)
+	v.add_child(_play_group_vbox)
+	var add_play_group_btn := Button.new()
+	add_play_group_btn.text = "+ Add Play Group"
+	add_play_group_btn.custom_minimum_size = Vector2(140, 28)
+	add_play_group_btn.add_theme_font_size_override("font_size", 14)
+	add_play_group_btn.pressed.connect(_add_play_group_row)
+	v.add_child(add_play_group_btn)
 
 	# ── Choices ─────────────────────────────────────────────
 	_section(v, "CHOICES")
@@ -1273,6 +1323,30 @@ func _build_fields() -> void:
 	_detective_note_rows_vbox.add_theme_constant_override("separation", 3)
 	v.add_child(_detective_note_rows_vbox)
 
+	_section(v, "DETECTIVE NOTE ICON  (dialog bottom-right; starts hidden)")
+	var note_icon_hint := Label.new()
+	note_icon_hint.text = "The notebook icon is hidden at scene start. Use Show/Hide on a beat to toggle it. Show only works when this VN scene maps to a detective note chapter."
+	note_icon_hint.add_theme_font_size_override("font_size", 12)
+	note_icon_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	note_icon_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(note_icon_hint)
+	_f_detective_note_icon = _row_opt(v, "Icon", ["(no change)", "Show", "Hide"],
+			"show or hide the detective note icon on the dialog box")
+
+	_section(v, "OPEN DETECTIVE NOTE  (force-open notebook; blocks until closed)")
+	var open_note_hint := Label.new()
+	open_note_hint.text = "Opens the interactive detective notebook on this beat (same as tapping the note icon). Optional chapter/topic override; topic blank uses the preferred unlocked topic. Player dismisses with Escape or by clicking outside."
+	open_note_hint.add_theme_font_size_override("font_size", 12)
+	open_note_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	open_note_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(open_note_hint)
+	_f_show_detective_note = _row_cb(v, "Open detective note", "Force-open the notebook on this beat")
+	_f_open_note_chapter = _row_opt(v, "Chapter", [], "note chapter (blank = scene default)")
+	_populate_detective_chapter_option(_f_open_note_chapter, "", true)
+	_f_open_note_topic = _row_opt(v, "Topic", [], "topic to focus (blank = preferred)")
+	_populate_open_note_topic_option("", "")
+	_sync_open_detective_note_fields()
+
 	_section(v, "DETECTIVE NOTE STAMP  (APPROVED stamp animation; blocks until dismissed)")
 	var stamp_hint := Label.new()
 	stamp_hint.text = "Applies the stamp, then opens a read-only notebook view with the stamp animation. Click or press any key to dismiss."
@@ -1456,6 +1530,20 @@ func _connect_static_signals() -> void:
 	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_show_messenger != null:
 		_f_show_messenger.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_detective_note_icon != null:
+		_f_detective_note_icon.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_show_detective_note != null:
+		_f_show_detective_note.toggled.connect(func(_on: bool) -> void:
+			_sync_open_detective_note_fields()
+			ch.call())
+	if _f_open_note_chapter != null:
+		_f_open_note_chapter.item_selected.connect(func(_i: int) -> void:
+			_populate_open_note_topic_option(
+				_detective_chapter_from_option(_f_open_note_chapter),
+				"")
+			ch.call())
+	if _f_open_note_topic != null:
+		_f_open_note_topic.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_show_note_stamp != null:
 		_f_show_note_stamp.toggled.connect(func(_on: bool) -> void:
 			_sync_note_stamp_fields()
@@ -2581,6 +2669,54 @@ func _resolve_bug_tag() -> void:
 	_bug_note_lbl.text = ""
 	_status_lbl.text = "Bug resolved  —  beat #%d" % (_selected_idx + 1)
 
+func _copy_file_name_to_clipboard() -> void:
+	if _file_path.is_empty():
+		_status_lbl.text = "No file open."
+		return
+	var fname: String = _file_path.get_file()
+	DisplayServer.clipboard_set(fname)
+	_status_lbl.text = "Copied file name → %s" % fname
+
+func _copy_beat_name_to_clipboard() -> void:
+	if _selected_idx < 0:
+		_status_lbl.text = "Select a beat first."
+		return
+	var beat_name: String = ""
+	if _f_beat_name != null:
+		beat_name = _f_beat_name.text.strip_edges()
+	if beat_name.is_empty() and _selected_idx < _beats.size():
+		beat_name = str((_beats[_selected_idx] as Dictionary).get("beat_name", "")).strip_edges()
+	if beat_name.is_empty():
+		_status_lbl.text = "Beat has no name to copy."
+		return
+	DisplayServer.clipboard_set(beat_name)
+	_status_lbl.text = "Copied beat name → %s" % beat_name
+
+func _copy_bug_ref_to_clipboard() -> void:
+	if _file_path.is_empty():
+		_status_lbl.text = "No file open."
+		return
+	if _selected_idx < 0:
+		_status_lbl.text = "Select a beat first."
+		return
+	var fname: String = _file_path.get_file()
+	var beat_name: String = ""
+	if _f_beat_name != null:
+		beat_name = _f_beat_name.text.strip_edges()
+	if beat_name.is_empty() and _selected_idx < _beats.size():
+		beat_name = str((_beats[_selected_idx] as Dictionary).get("beat_name", "")).strip_edges()
+	var parts: PackedStringArray = PackedStringArray([
+		fname,
+		"beat #%d" % (_selected_idx + 1),
+	])
+	if beat_name.is_empty():
+		parts.append("(no beat_name)")
+	else:
+		parts.append("name=%s" % beat_name)
+	var text: String = " | ".join(parts)
+	DisplayServer.clipboard_set(text)
+	_status_lbl.text = "Copied bug ref → %s" % text
+
 func _refresh_file_list_colors() -> void:
 	for i: int in range(_file_list.item_count):
 		var fpath: String = _scenes_dir + _file_list.get_item_text(i)
@@ -2762,6 +2898,21 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 	var note_actions: Variant = beat.get("detective_note", null)
 	if note_actions is Array and not (note_actions as Array).is_empty():
 		return prefix + "[detective note: %d action(s)]" % (note_actions as Array).size()
+	var note_icon_mode: String = str(beat.get("detective_note_icon", "")).strip_edges().to_lower()
+	if note_icon_mode == "show" or note_icon_mode == "hide":
+		return prefix + "[note icon: %s]" % note_icon_mode
+	var open_note: Variant = beat.get("show_detective_note", null)
+	if open_note is Dictionary or open_note == true:
+		var open_label: String = "open note"
+		if open_note is Dictionary:
+			var od: Dictionary = open_note as Dictionary
+			var ot: String = str(od.get("topic", "")).strip_edges()
+			var oc: String = str(od.get("chapter", "")).strip_edges()
+			if not ot.is_empty():
+				open_label = "open note: %s" % ot
+			elif not oc.is_empty():
+				open_label = "open note: %s" % oc
+		return prefix + "[%s]" % open_label
 	if beat.get("show_note_stamp", null) is Dictionary:
 		var stamp_spec: Dictionary = beat["show_note_stamp"] as Dictionary
 		return prefix + "[note stamp: %s]" % str(stamp_spec.get("stamp", "?"))
@@ -2801,6 +2952,17 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 				names.append(target)
 		if not names.is_empty():
 			return prefix + "[go→%s]" % ", ".join(names)
+	var play_group: Variant = beat.get("play_group", [])
+	if play_group is Array and not (play_group as Array).is_empty():
+		var groups: PackedStringArray = PackedStringArray()
+		for entry: Variant in (play_group as Array):
+			if not entry is Dictionary:
+				continue
+			var gid: int = int((entry as Dictionary).get("group", 0))
+			if gid > 0:
+				groups.append(_group_display_label(gid))
+		if not groups.is_empty():
+			return prefix + "[play→%s]" % ", ".join(groups)
 	if beat.get("complete_current_gallery_chapter", false) \
 			or beat.get("unlock_current_gallery_chapter", false):
 		return prefix + "[chapter end: current]"
@@ -3241,6 +3403,141 @@ func _collect_go_to() -> Array:
 		out.append(entry)
 	return out
 
+func _add_play_group_row_from(data: Dictionary = {}) -> void:
+	if _play_group_vbox == null:
+		return
+	var frame := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.10, 0.12, 0.18, 0.95)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.55, 0.65, 1.0, 0.45)
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 8.0
+	sb.content_margin_right = 8.0
+	sb.content_margin_top = 6.0
+	sb.content_margin_bottom = 6.0
+	frame.add_theme_stylebox_override("panel", sb)
+	_play_group_vbox.add_child(frame)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	frame.add_child(vb)
+
+	var hdr := HBoxContainer.new()
+	vb.add_child(hdr)
+	var hdr_lbl := Label.new()
+	hdr_lbl.text = "Play Group"
+	hdr_lbl.add_theme_font_size_override("font_size", 13)
+	hdr_lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+	hdr.add_child(hdr_lbl)
+	var hdr_spacer := Control.new()
+	hdr_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hdr.add_child(hdr_spacer)
+	var rem_btn := Button.new()
+	rem_btn.text = "Remove"
+	rem_btn.add_theme_font_size_override("font_size", 12)
+	rem_btn.pressed.connect(func() -> void:
+		frame.queue_free()
+		_on_field_changed())
+	hdr.add_child(rem_btn)
+
+	var group_row := HBoxContainer.new()
+	vb.add_child(group_row)
+	var group_lbl := Label.new()
+	group_lbl.text = "Group"
+	group_lbl.custom_minimum_size.x = 80.0
+	group_lbl.add_theme_font_size_override("font_size", 13)
+	group_row.add_child(group_lbl)
+	var group_opt := OptionButton.new()
+	group_opt.add_theme_font_size_override("font_size", 13)
+	var target_group: int = int(data.get("group", 0))
+	_populate_goto_group_option(group_opt, maxi(1, target_group))
+	group_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	group_row.add_child(group_opt)
+
+	var cond_hdr := HBoxContainer.new()
+	cond_hdr.add_theme_constant_override("separation", 6)
+	vb.add_child(cond_hdr)
+	var cond_lbl := Label.new()
+	cond_lbl.text = "Conditions"
+	cond_lbl.add_theme_font_size_override("font_size", 12)
+	cond_hdr.add_child(cond_lbl)
+	var cond_mode_opt := OptionButton.new()
+	cond_mode_opt.add_item("AND")
+	cond_mode_opt.add_item("OR")
+	var cond_mode: String = str(data.get("conditions_mode", "and")).strip_edges().to_lower()
+	cond_mode_opt.selected = 1 if cond_mode == "or" else 0
+	cond_mode_opt.custom_minimum_size = Vector2(72.0, 0.0)
+	cond_mode_opt.add_theme_font_size_override("font_size", 12)
+	cond_mode_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	cond_hdr.add_child(cond_mode_opt)
+	var cond_hint := Label.new()
+	cond_hint.text = "— empty = always"
+	cond_hint.add_theme_font_size_override("font_size", 12)
+	cond_hint.add_theme_color_override("font_color", Color(0.65, 0.72, 0.82))
+	cond_hdr.add_child(cond_hint)
+	var cond_vbox := VBoxContainer.new()
+	cond_vbox.add_theme_constant_override("separation", 2)
+	vb.add_child(cond_vbox)
+	var add_cond := Button.new()
+	add_cond.text = "+ Condition"
+	add_cond.add_theme_font_size_override("font_size", 12)
+	add_cond.pressed.connect(func() -> void:
+		_add_choice_condition_row(cond_vbox)
+		_on_field_changed())
+	vb.add_child(add_cond)
+	var conds: Variant = data.get("conditions", [])
+	if conds is Array:
+		for c: Variant in (conds as Array):
+			if c is Dictionary:
+				var cd: Dictionary = c as Dictionary
+				_add_choice_condition_row(cond_vbox,
+					str(cd.get("type", "var_equals")),
+					str(cd.get("key", "")),
+					str(cd.get("value", "")))
+
+	frame.set_meta("group_opt", group_opt)
+	frame.set_meta("cond_vbox", cond_vbox)
+	frame.set_meta("cond_mode_opt", cond_mode_opt)
+
+func _add_play_group_row() -> void:
+	if _selected_idx < 0:
+		return
+	_add_play_group_row_from({})
+	_on_field_changed()
+
+func _rebuild_play_group_rows(entries: Array) -> void:
+	if _play_group_vbox == null:
+		return
+	_clear_vbox(_play_group_vbox)
+	for entry: Variant in entries:
+		if entry is Dictionary:
+			_add_play_group_row_from(entry as Dictionary)
+
+func _collect_play_group() -> Array:
+	var out: Array = []
+	if _play_group_vbox == null:
+		return out
+	for frame: Node in _play_group_vbox.get_children():
+		if not frame is PanelContainer:
+			continue
+		var group_opt: OptionButton = frame.get_meta("group_opt") as OptionButton
+		var cond_vbox: VBoxContainer = frame.get_meta("cond_vbox") as VBoxContainer
+		var cond_mode_opt: OptionButton = frame.get_meta("cond_mode_opt") as OptionButton
+		if group_opt == null:
+			continue
+		var group_id: int = _selected_goto_group(group_opt)
+		if group_id <= 0:
+			continue
+		var entry: Dictionary = {"group": group_id}
+		var conds: Array = _collect_conditions_from_vbox(cond_vbox)
+		if not conds.is_empty():
+			entry["conditions"] = conds
+			if cond_mode_opt != null and cond_mode_opt.selected == 1:
+				entry["conditions_mode"] = "or"
+		out.append(entry)
+	return out
+
 func _add_choice_row_from(data: Dictionary = {}) -> void:
 	if _choices_vbox == null:
 		return
@@ -3604,8 +3901,11 @@ func _validate_choice_beat(beat: Dictionary, idx: int) -> void:
 	if beat_group > 0 and _incoming_branch_refs(idx).is_empty():
 		warnings.append("group %s has no incoming choice" % _group_display_label(beat_group))
 	var go_to: Variant = beat.get("go_to", [])
+	var play_group: Variant = beat.get("play_group", [])
+	var has_choices: bool = beat.get("choices", []) is Array \
+			and not (beat.get("choices", []) as Array).is_empty()
 	if go_to is Array and not (go_to as Array).is_empty():
-		if beat.get("choices", []) is Array and not (beat.get("choices", []) as Array).is_empty():
+		if has_choices:
 			warnings.append("go_to ignored when choices are present")
 		for entry: Variant in (go_to as Array):
 			if not entry is Dictionary:
@@ -3615,6 +3915,21 @@ func _validate_choice_beat(beat: Dictionary, idx: int) -> void:
 				warnings.append("go_to entry missing beat_name")
 			elif _beat_index_for_name(target) < 0:
 				warnings.append("go_to target '%s' not found" % target)
+	if play_group is Array and not (play_group as Array).is_empty():
+		if has_choices:
+			warnings.append("play_group ignored when choices are present")
+		if go_to is Array and not (go_to as Array).is_empty():
+			warnings.append("play_group and go_to on same beat — play_group takes priority")
+		for entry: Variant in (play_group as Array):
+			if not entry is Dictionary:
+				continue
+			var pg_group: int = int((entry as Dictionary).get("group", 0))
+			if pg_group <= 0:
+				warnings.append("play_group entry missing group")
+			elif _group_first_beat_index(pg_group) < 0:
+				warnings.append("play_group %s not defined" % _group_display_label(pg_group))
+			elif pg_group == int(beat.get("group", 0)) and int(beat.get("group", 0)) > 0:
+				warnings.append("play_group loops to same group (%s)" % _group_display_label(pg_group))
 	if not warnings.is_empty():
 		_status_lbl.text = "Warning: " + ", ".join(warnings)
 
@@ -3673,6 +3988,8 @@ func _populate_fields() -> void:
 	_rebuild_choice_rows(choices if choices is Array else [])
 	var go_to: Variant = b.get("go_to", [])
 	_rebuild_go_to_rows(go_to if go_to is Array else [])
+	var play_group: Variant = b.get("play_group", [])
+	_rebuild_play_group_rows(play_group if play_group is Array else [])
 	var expl_actions: Variant = b.get("exploration_actions", [])
 	_rebuild_exploration_action_rows(expl_actions if expl_actions is Array else [])
 
@@ -3818,6 +4135,37 @@ func _populate_fields() -> void:
 
 	var note_raw: Variant = b.get("detective_note", [])
 	_rebuild_detective_note_rows(note_raw if note_raw is Array else [])
+	if _f_detective_note_icon != null:
+		var icon_mode: String = str(b.get("detective_note_icon", "")).strip_edges().to_lower()
+		match icon_mode:
+			"show":
+				_f_detective_note_icon.selected = 1
+			"hide":
+				_f_detective_note_icon.selected = 2
+			_:
+				_f_detective_note_icon.selected = 0
+	var open_note_spec: Variant = b.get("show_detective_note", null)
+	if open_note_spec is Dictionary or open_note_spec == true:
+		if _f_show_detective_note != null:
+			_f_show_detective_note.button_pressed = true
+		var open_ch: String = ""
+		var open_topic: String = ""
+		if open_note_spec is Dictionary:
+			var od: Dictionary = open_note_spec as Dictionary
+			open_ch = str(od.get("chapter", "")).strip_edges()
+			open_topic = str(od.get("topic", "")).strip_edges()
+			if open_ch.is_empty() and not open_topic.is_empty():
+				open_ch = _find_chapter_for_topic(open_topic)
+		if _f_open_note_chapter != null:
+			_populate_detective_chapter_option(_f_open_note_chapter, open_ch, true)
+		_populate_open_note_topic_option(open_ch, open_topic)
+	else:
+		if _f_show_detective_note != null:
+			_f_show_detective_note.button_pressed = false
+		if _f_open_note_chapter != null:
+			_populate_detective_chapter_option(_f_open_note_chapter, "", true)
+		_populate_open_note_topic_option("", "")
+	_sync_open_detective_note_fields()
 	var stamp_spec: Variant = b.get("show_note_stamp", null)
 	if stamp_spec is Dictionary:
 		var sd: Dictionary = stamp_spec as Dictionary
@@ -4073,6 +4421,10 @@ func _collect_beat() -> Dictionary:
 	if not go_to.is_empty():
 		b["go_to"] = go_to
 
+	var play_group: Array = _collect_play_group()
+	if not play_group.is_empty():
+		b["play_group"] = play_group
+
 	var beat_expl_actions: Array = _collect_actions_from_vbox(_exploration_actions_vbox)
 	if not beat_expl_actions.is_empty():
 		b["exploration_actions"] = beat_expl_actions
@@ -4246,6 +4598,21 @@ func _collect_beat() -> Dictionary:
 	var note_actions: Array = _collect_detective_note_actions()
 	if not note_actions.is_empty():
 		b["detective_note"] = note_actions
+	if _f_detective_note_icon != null:
+		match _f_detective_note_icon.selected:
+			1:
+				b["detective_note_icon"] = "show"
+			2:
+				b["detective_note_icon"] = "hide"
+	if _f_show_detective_note != null and _f_show_detective_note.button_pressed:
+		var open_entry: Dictionary = {}
+		var open_ch: String = _detective_chapter_from_option(_f_open_note_chapter)
+		var open_topic: String = _detective_topic_from_option(_f_open_note_topic)
+		if not open_ch.is_empty():
+			open_entry["chapter"] = open_ch
+		if not open_topic.is_empty():
+			open_entry["topic"] = open_topic
+		b["show_detective_note"] = open_entry
 	if _f_show_note_stamp != null and _f_show_note_stamp.button_pressed:
 		var stamp_id: String = _detective_stamp_from_option(_f_note_stamp_stamp)
 		var topic_id: String = _detective_topic_from_option(_f_note_stamp_topic)
@@ -5572,12 +5939,39 @@ func _update_reward_row_visibility(row: Dictionary) -> void:
 # ─────────────────────────────────────────────────────────────
 const _DETECTIVE_NOTE_ACTIONS: Array = ["add_clue", "unlock_topic", "upgrade_topic"]
 
+func _sync_open_detective_note_fields() -> void:
+	var on: bool = _f_show_detective_note != null and _f_show_detective_note.button_pressed
+	for f: OptionButton in [_f_open_note_chapter, _f_open_note_topic]:
+		if f != null:
+			f.visible = on
+			f.get_parent().visible = on
+
 func _sync_note_stamp_fields() -> void:
 	var on: bool = _f_show_note_stamp != null and _f_show_note_stamp.button_pressed
 	for f: OptionButton in [_f_note_stamp_chapter, _f_note_stamp_topic, _f_note_stamp_stamp]:
 		if f != null:
 			f.visible = on
 			f.get_parent().visible = on
+
+func _populate_open_note_topic_option(chapter_id: String, selected_topic: String) -> void:
+	if _f_open_note_topic == null:
+		return
+	_f_open_note_topic.clear()
+	_f_open_note_topic.add_item("(preferred)")
+	_f_open_note_topic.set_item_metadata(0, {"chapter": "", "topic": ""})
+	var wanted: String = selected_topic.strip_edges()
+	var select_idx: int = 0
+	var ch_filter: String = chapter_id.strip_edges()
+	if ch_filter.is_empty():
+		for cid_v: Variant in DetectiveNoteVault.get_chapter_ids():
+			select_idx = _append_detective_topic_items(
+				_f_open_note_topic, str(cid_v), wanted, select_idx)
+	else:
+		select_idx = _append_detective_topic_items(
+			_f_open_note_topic, ch_filter, wanted, 0)
+	if wanted.is_empty():
+		select_idx = 0
+	_f_open_note_topic.select(clampi(select_idx, 0, maxi(_f_open_note_topic.item_count - 1, 0)))
 
 func _find_chapter_for_topic(topic_id: String) -> String:
 	var tid: String = topic_id.strip_edges()

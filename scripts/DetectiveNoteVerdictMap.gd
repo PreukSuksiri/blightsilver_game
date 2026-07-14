@@ -31,23 +31,26 @@ const ARROW_LEN := 18.0
 const ARROW_SPREAD := 0.5
 const EDGE_GAP := 8.0
 const CONTENT_MARGIN := 90.0
-const NODE_LABEL_SIZE := 24
+const NODE_LABEL_SIZE := 23
 const NODE_LABEL_PAD_TOP := 4.0
 const NODE_LABEL_PAD_BOTTOM := 14.0
 const NODE_LABEL_PAD_SIDE := 8.0
 const EDGE_LABEL_SIZE := 21
-const CLUE_NAME_SIZE := 15
+const CLUE_NAME_SIZE := 14
 const POSTIT_COLOR := Color(0.99, 0.90, 0.45)
 const POSTIT_TEXT := Color(0.16, 0.13, 0.05)
 const APPROVED_COLOR := Color(0.72, 0.07, 0.07)
 const STAMP_SIZE := 150.0
 const STAMP_MARGIN := Vector2(46.0, 26.0)
 const STAMP_POP_SCALE := 1.35
-const STAMP_POP_GROW_SEC := 0.18
-const STAMP_POP_SHRINK_SEC := 0.22
-const STAMP_APPROVED_POP_GROW_SEC := 0.16
-const STAMP_APPROVED_POP_SHRINK_SEC := 0.20
-const NAME_TYPE_SEC := 0.028
+const STAMP_LOGO_FADE_SEC := 0.28
+const STAMP_POP_GROW_SEC := 0.38
+const STAMP_POP_SHRINK_SEC := 0.48
+const STAMP_APPROVED_POP_GROW_SEC := 0.34
+const STAMP_APPROVED_POP_SHRINK_SEC := 0.44
+const STAMP_BETWEEN_SEC := 0.28
+const STAMP_NAME_DELAY_SEC := 0.28
+const NAME_TYPE_SEC := 0.05
 const PREFILL_LOCK_SIZE := 22.0
 const PREFILL_LOCK_INSET := 5.0
 const DRAG_PREVIEW_SIZE := Vector2(120.0, 120.0)
@@ -202,6 +205,21 @@ func effective_clue(node_id: String) -> String:
 	if not prefill.is_empty():
 		return prefill
 	return str(_placements.get(node_id, ""))
+
+
+## True when every visible (level-unlocked) frame has a clue — prefill or placement.
+func is_map_fully_filled() -> bool:
+	if _nodes.is_empty():
+		return false
+	for node_v: Variant in _nodes:
+		if not node_v is Dictionary:
+			continue
+		var nid: String = str((node_v as Dictionary).get("id", "")).strip_edges()
+		if nid.is_empty():
+			continue
+		if effective_clue(nid).is_empty():
+			return false
+	return true
 
 
 func is_node_prefilled(node_id: String) -> bool:
@@ -727,33 +745,37 @@ func _play_stamp_animation() -> void:
 	_stamp_tex.scale = Vector2.ONE
 	_stamp_tex.modulate.a = 0.0
 	var logo_intro := create_tween()
-	logo_intro.tween_property(_stamp_tex, "modulate:a", 1.0, 0.10)
+	logo_intro.tween_property(_stamp_tex, "modulate:a", 1.0, STAMP_LOGO_FADE_SEC)
 	await logo_intro.finished
 	if _stamp_tex == null or not is_instance_valid(_stamp_tex):
 		return
-	SFXManager.play(SFXManager.SFX_STAMP, SFXManager.SFX_STAMP_VOLUME)
 
-	# 2) Logo enlarges, then settles back to normal.
+	# 2) Logo stamp impact — slam + enlarge, then settle.
+	SFXManager.play(SFXManager.SFX_STAMP, SFXManager.SFX_STAMP_VOLUME)
 	await _pulse_control_scale(_stamp_tex, STAMP_POP_SCALE, STAMP_POP_GROW_SEC, STAMP_POP_SHRINK_SEC)
 
-	await get_tree().create_timer(0.10).timeout
+	await get_tree().create_timer(STAMP_BETWEEN_SEC).timeout
 	if _approved_lbl == null or not is_instance_valid(_approved_lbl):
 		return
 
-	# 3) APPROVED appears, then pulses the same way.
+	# 3) APPROVED stamp impact — same slam + pulse.
 	_approved_lbl.pivot_offset = _approved_lbl.size * 0.5
 	_approved_lbl.scale = Vector2.ONE
 	_approved_lbl.modulate.a = 1.0
 	_approved_lbl.visible = true
+	SFXManager.play(SFXManager.SFX_STAMP, SFXManager.SFX_STAMP_VOLUME)
 	await _pulse_control_scale(
 		_approved_lbl, STAMP_POP_SCALE, STAMP_APPROVED_POP_GROW_SEC, STAMP_APPROVED_POP_SHRINK_SEC)
 
 	# 4) Approver name types in.
-	await get_tree().create_timer(0.12).timeout
+	await get_tree().create_timer(STAMP_NAME_DELAY_SEC).timeout
 	for i: int in range(full_name.length()):
 		if _stamp_name_lbl == null or not is_instance_valid(_stamp_name_lbl):
 			return
 		_stamp_name_lbl.text = full_name.substr(0, i + 1)
+		var ch: String = full_name.substr(i, 1)
+		if not ch.strip_edges().is_empty():
+			SFXManager.play(SFXManager.SFX_TYPEWRITER, SFXManager.SFX_TYPEWRITER_VOLUME)
 		await get_tree().create_timer(NAME_TYPE_SEC).timeout
 	emit_signal("stamp_animation_finished")
 

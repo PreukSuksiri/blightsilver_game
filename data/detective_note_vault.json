@@ -51,8 +51,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -71,8 +71,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -91,8 +91,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": ""
 						}
@@ -135,8 +135,8 @@
 							],
 							"prefill": "person_nex",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -152,8 +152,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_book_name"
 						}
@@ -212,8 +212,8 @@
 							],
 							"prefill": "person_mayu",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -229,8 +229,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_obj_1"
 						},
@@ -246,8 +246,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_2"
 						},
@@ -263,8 +263,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_3"
 						},
@@ -275,13 +275,13 @@
 							"label_side": "bottom",
 							"min_level": 1,
 							"pos": [
-								238,
-								548
+								231,
+								589
 							],
 							"prefill": "",
 							"size": [
-								140,
-								140
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_motiv_1"
 						}
@@ -322,8 +322,8 @@
 							],
 							"prefill": "person_mayu",
 							"size": [
-								140.0,
-								140.0
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						},
@@ -338,8 +338,8 @@
 							],
 							"prefill": "",
 							"size": [
-								140.0,
-								140.0
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						}
@@ -370,7 +370,7 @@
 			},
 			"id": "person_mayu",
 			"image": "res://assets/textures/vn/characters/vn_char_mayu_smile.png",
-			"info": "Name : Mayu Kokawa\nAge : 20",
+			"info": "Name : Mayu Kokawa\nAge : 20\nAffiliate : Department of Computer Science",
 			"kind": "individual",
 			"name": {
 				"en": "Mayu",
@@ -434,9 +434,9 @@
 			"caption": "",
 			"id": "person_nex",
 			"image": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
-			"info": "",
+			"info": "Name : Nex Crowmont\nAge : 20\nAffiliate : Department of Computer Science",
 			"kind": "individual",
-			"name": "Nex Crowmont",
+			"name": "Nex",
 			"style": "image"
 		},
 		{
@@ -470,7 +470,7 @@
 			"caption": "",
 			"id": "person_michael",
 			"image": "res://assets/textures/detective/ch0/npc/char_michael.png",
-			"info": "Name : Michael Summerfield\nAge : 20",
+			"info": "Name : Michael Summerfield\nAge : 20\nAffiliate : Department of Biotechnology",
 			"kind": "individual",
 			"name": "Michael",
 			"style": "image"
@@ -479,7 +479,7 @@
 			"caption": "",
 			"id": "person_alice",
 			"image": "res://assets/textures/detective/ch0/npc/char_alice.png",
-			"info": "Name : Alice Sterling\nAge : 19",
+			"info": "Name : Alice Sterling\nAge : 19\nAffiliate : Department of Computer Science",
 			"kind": "individual",
 			"name": "Alice",
 			"style": "image"
@@ -491,7 +491,7 @@
 			"image": "",
 			"info": "",
 			"kind": "information",
-			"name": "Messenger : Alice",
+			"name": "Chat history from Alice",
 			"style": "messenger"
 		},
 		{
@@ -501,7 +501,7 @@
 			"image": "",
 			"info": "",
 			"kind": "information",
-			"name": "Messenger : Michael",
+			"name": "Chat history from Michael",
 			"style": "messenger"
 		},
 		{
@@ -511,7 +511,7 @@
 			"image": "",
 			"info": "",
 			"kind": "information",
-			"name": "Messenger : Mayu",
+			"name": "Chat history from Mayu",
 			"style": "messenger"
 		},
 		{
@@ -547,7 +547,7 @@
 			"image": "res://assets/textures/detective/ch0/verdict2/manga_my_crush_is_a_duck.png",
 			"info": "",
 			"kind": "object",
-			"name": "Manga : My Crush is a Duck",
+			"name": "My Crush is a Duck",
 			"style": "image"
 		},
 		{
@@ -556,7 +556,7 @@
 			"image": "res://assets/textures/detective/ch0/verdict2/manga_code_archangel.png",
 			"info": "",
 			"kind": "object",
-			"name": "Manga : Code Archangel",
+			"name": "Code Archangel",
 			"style": "image"
 		}
 	],

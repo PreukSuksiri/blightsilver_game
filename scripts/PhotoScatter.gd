@@ -9,7 +9,7 @@ const PHOTOS: PackedStringArray = [
 	"res://assets/textures/demo_photo_scatter/scatter4.png",
 	"res://assets/textures/demo_photo_scatter/scatter5.png",
 ]
-const BGM_PATH:      String = "res://assets/audio/bgm_ost_blind_cross.mp3"
+const BGM_PATH:      String = "res://assets/audio/bgm_heroic.mp3"
 const CREDITS_SCENE: String = "res://scenes/credit_demo.tscn"
 const WISHLIST_MINI_PATH: String = "res://assets/textures/ui/decorations/wishlist_now_mini.png"
 const WISHLIST_MINI_MAX_WIDTH_RATIO: float = 0.11

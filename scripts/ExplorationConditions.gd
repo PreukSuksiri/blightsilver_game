@@ -45,8 +45,12 @@ static func evaluate_any(conditions: Array) -> bool:
 
 static func evaluate_condition(cd: Dictionary) -> bool:
 	var ctype: String = str(cd.get("type", ""))
-	var key: String   = str(cd.get("key",   ""))
+	var key: String   = str(cd.get("key",   "")).strip_edges()
 	var val: String   = str(cd.get("value", ""))
+	if key.begins_with("#") and key.ends_with("#") and key.length() >= 2:
+		key = key.substr(1, key.length() - 2).strip_edges()
+	elif key.begins_with("#"):
+		key = key.trim_prefix("#").strip_edges()
 	match ctype:
 		"has_item":
 			return ExplorationManager.has_item(key)

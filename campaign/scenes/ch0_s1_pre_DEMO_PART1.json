@@ -566,8 +566,7 @@
 		"comment": "Mayu Lecture Ken Burns",
 		"fade_in": 0.3,
 		"speaker": "Mayu",
-		"text": "Kernel is the way we calculate higer dimensions. It's like making a container to store... let's say... candies...\n",
-		"wait": 2.0
+		"text": "Kernel is the way we calculate higer dimensions. It's like making a container to store... let's say... candies...\n"
 	},
 	{
 		"linger_characters": true,
@@ -803,28 +802,28 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "Yeah let's do that... but um... eh..."
-		}
+		"text": "Yeah let's do that..."
 	},
 	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "(Shit... where is that notebook...)"
+	},
+	{
+		"comment": "Detective Note add clue",
 		"detective_note": [
 			{
 				"action": "unlock_topic",
 				"chapter": "ch0_prologue",
 				"id": "topic_where_have_mayu_notebook_gone"
-			},
-			{
-				"action": "add_clue",
-				"chapter": "ch0_prologue",
-				"id": "person_alice",
-				"silent": true
-			},
-			{
-				"action": "add_clue",
-				"chapter": "ch0_prologue",
-				"id": "person_michael",
-				"silent": true
 			},
 			{
 				"action": "add_clue",
@@ -836,18 +835,6 @@
 				"action": "add_clue",
 				"chapter": "ch0_prologue",
 				"id": "msg_michael_lend_mythril_dragon",
-				"silent": true
-			},
-			{
-				"action": "add_clue",
-				"chapter": "ch0_prologue",
-				"id": "notebook_colorful_bookmark",
-				"silent": true
-			},
-			{
-				"action": "add_clue",
-				"chapter": "ch0_prologue",
-				"id": "notebook_blue_bookmark",
 				"silent": true
 			},
 			{
@@ -885,39 +872,67 @@
 				"chapter": "ch0_prologue",
 				"id": "manga_code_archangel",
 				"silent": true
+			},
+			{
+				"action": "add_clue",
+				"chapter": "ch0_prologue",
+				"id": "person_alice",
+				"silent": true
+			},
+			{
+				"action": "add_clue",
+				"chapter": "ch0_prologue",
+				"id": "person_michael",
+				"silent": true
+			},
+			{
+				"action": "add_clue",
+				"chapter": "ch0_prologue",
+				"id": "notebook_colorful_bookmark",
+				"silent": true
+			},
+			{
+				"action": "add_clue",
+				"chapter": "ch0_prologue",
+				"id": "notebook_blue_bookmark",
+				"silent": true
 			}
 		],
-		"linger_characters": true
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"text": "(Let's help Nex recall his memory about \"Where have he lost Mayu's notebook\" using a \"Detective Note\")"
-	},
-	{
-		"wait": 0.5
+		"linger_characters": true,
+		"wait": 0.01
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
 		"beat_name": "beat_tutorial_tap_detective_note_2",
+		"text": "(Let's help Nex recall his memory about \"Where is Mayu's notebook\" using a \"Detective Note\")"
+	},
+	{
+		"comment": "Open Detective Note",
+		"show_detective_note": {
+			"chapter": "ch0_prologue",
+			"topic": "topic_where_have_mayu_notebook_gone"
+		},
+		"wait": 0.01
+	},
+	{
+		"hidden": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"hidden": true,
 		"text": "(Please tap on a notebook icon at the bottom-right of the screen to access \"Detective Note\")"
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"exploration_actions": [
+		"linger_characters": true,
+		"play_group": [
 			{
-				"action": "set_var",
-				"key": "",
-				"value": ""
-			}
-		],
-		"go_to": [
-			{
-				"beat_name": "beat_tutorial_tap_detective_note_2",
 				"conditions": [
 					{
-						"key": "var_verdict_ch0_s1_topic_mayu_notebook",
+						"key": "var_verdict_ch0_s1_topic_notebook_obj_1",
 						"type": "var_not_equals",
 						"value": "notebook_colorful_bookmark"
 					},
@@ -930,19 +945,312 @@
 						"key": "var_verdict_ch0_s1_topic_notebook_indiv_3",
 						"type": "var_not_equals",
 						"value": "person_alice"
+					}
+				],
+				"conditions_mode": "or",
+				"group": 10.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_motiv_1",
+						"type": "var_equals",
+						"value": "msg_mayu_casual_talk"
+					}
+				],
+				"group": 12.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_motiv_1",
+						"type": "var_equals",
+						"value": "msg_michael_lend_mythril_dragon"
+					}
+				],
+				"group": 13.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_obj_1",
+						"type": "var_equals",
+						"value": "notebook_colorful_bookmark"
+					},
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_indiv_2",
+						"type": "var_equals",
+						"value": "person_nex"
+					},
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_indiv_3",
+						"type": "var_equals",
+						"value": "person_alice"
 					},
 					{
 						"key": "var_verdict_ch0_s1_topic_notebook_motiv_1",
-						"type": "var_not_equals",
-						"value": "msg_alice_show_cleavage"
+						"type": "var_equals",
+						"value": ""
 					}
-				]
+				],
+				"group": 14.0
+			}
+		]
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
+		"group": 10.0,
+		"speaker": "Nex",
+		"text": "The #var_verdict_ch0_s1_topic_notebook_obj_1%clue_name=true%translate?=book# that #var_verdict_ch0_s1_topic_notebook_indiv_2%clue_name=true%translate?=they&Nex=I# got from you... #var_verdict_ch0_s1_topic_notebook_indiv_2%clue_name=true%translate?=that person&Nex=I've&Alice=She has&Michael=He has&Mayu=You've# lent to #var_verdict_ch0_s1_topic_notebook_indiv_3%clue_name=true%translate?=them&Nex=me&Mayu=you#."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+			}
+		],
+		"group": 10.0,
+		"speaker": "Mayu",
+		"text": "Have you gone out of your mind? That doesn't make sense at all."
+	},
+	{
+		"group": 10.0,
+		"linger_characters": true,
+		"play_group": [
+			{
+				"conditions": [
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_indiv_2",
+						"type": "var_equals",
+						"value": "person_alice"
+					},
+					{
+						"key": "var_verdict_ch0_s1_topic_notebook_indiv_3",
+						"type": "var_equals",
+						"value": "person_alice"
+					}
+				],
+				"conditions_mode": "or",
+				"group": 11.0
+			}
+		]
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+			}
+		],
+		"group": 11.0,
+		"speaker": "Mayu",
+		"text": "Did you just mentioned Alice? What's with Alice?"
+	},
+	{
+		"group": 10.0,
+		"speaker": "Nex",
+		"text": "(She's right... This doesn't make sense. I should recall my memory again...)"
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "",
+				"value": ""
+			}
+		],
+		"go_to": [
+			{
+				"beat_name": "beat_tutorial_tap_detective_note_2"
+			}
+		],
+		"group": 10.0,
 		"linger_characters": true
 	},
 	{
-		"comment": "After Detective Note",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 12.0,
+		"speaker": "Nex",
+		"text": "You've lost that manga... My Crush is a Duck... So I bought it from thrift bookstore for you..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+			}
+		],
+		"group": 12.0,
+		"speaker": "Mayu",
+		"text": "Thanks for that.... But we're not talking about manga, are we?"
+	},
+	{
+		"group": 12.0,
+		"speaker": "Nex",
+		"text": "(She's right... This doesn't make sense. I should recall my memory again...)"
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "",
+				"value": ""
+			}
+		],
+		"go_to": [
+			{
+				"beat_name": "beat_tutorial_tap_detective_note_2"
+			}
+		],
+		"group": 12.0,
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 13.0,
+		"speaker": "Nex",
+		"text": "I've lent my Turkish History worksheet to Michael..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+			}
+		],
+		"group": 13.0,
+		"speaker": "Mayu",
+		"text": "Turkish History?? Michael??"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+			}
+		],
+		"group": 13.0,
+		"speaker": "Mayu",
+		"text": "Did you two take that free-study class just for an easy grade? \nFinally, I've uncovered another one of you duo's dirty secrets!"
+	},
+	{
+		"group": 13.0,
+		"speaker": "Nex",
+		"text": "(She's right... This doesn't have anything to do with her. I should recall my memory again...)"
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "",
+				"value": ""
+			}
+		],
+		"go_to": [
+			{
+				"beat_name": "beat_tutorial_tap_detective_note_2"
+			}
+		],
+		"group": 13.0,
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 14.0,
+		"speaker": "Nex",
+		"text": "Because of that.... um.... Alice... She...."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+			}
+		],
+		"group": 14.0,
+		"speaker": "Mayu",
+		"text": "Is your brain dead already?"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+			}
+		],
+		"group": 14,
+		"speaker": "Mayu",
+		"text": "Did you just mentioned Alice? What's with Alice?"
+	},
+	{
+		"group": 14.0,
+		"speaker": "Nex",
+		"text": "(I should recall the right motivation behind this... Or I would not be able to tell the accurate story)"
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "",
+				"value": ""
+			}
+		],
+		"go_to": [
+			{
+				"beat_name": "beat_tutorial_tap_detective_note_2"
+			}
+		],
+		"group": 14.0,
 		"linger_characters": true
 	},
 	{
@@ -975,9 +1283,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "I've lent it to Alice"
-		}
+		"text": "I've lent your notebook to Alice"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1121,12 +1427,13 @@
 		"text": "** Swipe papers off the table **"
 	},
 	{
-		"linger_characters": true,
+		"comment": "Approve Detective Note",
 		"show_note_stamp": {
 			"chapter": "ch0_prologue",
 			"stamp": "stamp_mayu",
 			"topic": "topic_where_have_mayu_notebook_gone"
-		}
+		},
+		"wait": 0.01
 	},
 	{
 		"wait": 0.5
