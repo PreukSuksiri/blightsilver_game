@@ -22,6 +22,7 @@ signal topic_stamped(chapter_id: String, topic_id: String, stamp_id: String)
 # _progress[chapter_id] = {
 #   "clues":  [clue_id, ...],          — insertion list (legacy + save compat)
 #   "clue_at": { clue_id: int },        — unix-ms discovery time (+ seq for ties)
+#   "seen_clues": [clue_id, ...],     — dismissed "New" badge (VN/exploration note)
 #   "topics": { topic_id: {
 #     "level": int,
 #     "placements": { node_id: clue_id },
@@ -99,6 +100,53 @@ func get_discovered_clues_by_kind(chapter_id: String, kind: String) -> Array:
 	return out
 
 
+## True when a discovered clue still has its VN/exploration "New" badge.
+func is_clue_new(chapter_id: String, clue_id: String) -> bool:
+	var ch := chapter_id.strip_edges()
+	var cid := clue_id.strip_edges()
+	if not has_clue(ch, cid):
+		return false
+	var entry: Dictionary = _progress.get(ch, {})
+	_migrate_seen_clues(entry)
+	var seen: Variant = entry.get("seen_clues", [])
+	return not (seen is Array and (seen as Array).has(cid))
+
+
+## Dismiss the "New" badge for one clue (tap / open info).
+func mark_clue_seen(chapter_id: String, clue_id: String) -> bool:
+	var ch := chapter_id.strip_edges()
+	var cid := clue_id.strip_edges()
+	if not has_clue(ch, cid):
+		return false
+	var entry: Dictionary = _chapter_entry(ch)
+	_migrate_seen_clues(entry)
+	var seen: Array = entry["seen_clues"] as Array
+	if seen.has(cid):
+		return false
+	seen.append(cid)
+	SaveManager.save_data()
+	return true
+
+
+## Dismiss all "New" badges for discovered clues in the chapter (closing the note).
+func mark_all_clues_seen(chapter_id: String) -> void:
+	var ch := chapter_id.strip_edges()
+	if ch.is_empty():
+		return
+	var entry: Dictionary = _chapter_entry(ch)
+	_migrate_seen_clues(entry)
+	var seen: Array = entry["seen_clues"] as Array
+	var changed := false
+	for cid_v: Variant in get_discovered_clues(ch):
+		var cid: String = str(cid_v)
+		if seen.has(cid):
+			continue
+		seen.append(cid)
+		changed = true
+	if changed:
+		SaveManager.save_data()
+
+
 # ─────────────────────────────────────────────────────────────
 # Topics
 # ─────────────────────────────────────────────────────────────
@@ -125,15 +173,20 @@ func is_topic_unlocked(chapter_id: String, topic_id: String) -> bool:
 
 
 func get_unlocked_topics(chapter_id: String) -> Array:
-	var entry: Dictionary = _progress.get(chapter_id.strip_edges(), {})
+	var ch := chapter_id.strip_edges()
+	var entry: Dictionary = _progress.get(ch, {})
 	var topics: Variant = entry.get("topics", {})
 	if not topics is Dictionary:
 		return []
 	# Preserve authored ordering from the vault, not insertion order.
+	# Skip vault-hidden topics so they never appear in player topic lists.
 	var out: Array = []
-	for tid: Variant in DetectiveNoteVault.get_topic_ids(chapter_id):
-		if (topics as Dictionary).has(str(tid)):
-			out.append(str(tid))
+	for tid: Variant in DetectiveNoteVault.get_topic_ids(ch):
+		var tid_s: String = str(tid)
+		if DetectiveNoteVault.is_topic_hidden(ch, tid_s):
+			continue
+		if (topics as Dictionary).has(tid_s):
+			out.append(tid_s)
 	return out
 
 
@@ -367,6 +420,7 @@ func load_from_save(data: Dictionary) -> void:
 		for entry_v: Variant in _progress.values():
 			if entry_v is Dictionary:
 				_migrate_clue_times(entry_v as Dictionary)
+				_migrate_seen_clues(entry_v as Dictionary)
 		for ch_id: Variant in _progress.keys():
 			_migrate_topic_unlock_times(str(ch_id), _progress[ch_id] as Dictionary)
 
@@ -377,7 +431,7 @@ func reset_all() -> void:
 
 func _chapter_entry(chapter_id: String) -> Dictionary:
 	if not _progress.has(chapter_id):
-		_progress[chapter_id] = {"clues": [], "clue_at": {}, "topics": {}}
+		_progress[chapter_id] = {"clues": [], "clue_at": {}, "seen_clues": [], "topics": {}}
 	return _progress[chapter_id]
 
 
@@ -416,6 +470,20 @@ func _migrate_clue_times(entry: Dictionary) -> void:
 		var base_ms: int = int(Time.get_unix_time_from_system() * 1000.0)
 		at_map[cid] = base_ms * 1000 + i + 1
 
+
+## Legacy saves without seen_clues: treat every already-discovered clue as seen
+## so players are not flooded with "New" badges on first load after the update.
+func _migrate_seen_clues(entry: Dictionary) -> void:
+	if entry.has("seen_clues") and entry["seen_clues"] is Array:
+		return
+	var seen: Array = []
+	var clue_list: Variant = entry.get("clues", [])
+	if clue_list is Array:
+		for cid_v: Variant in (clue_list as Array):
+			var cid: String = str(cid_v).strip_edges()
+			if not cid.is_empty() and not seen.has(cid):
+				seen.append(cid)
+	entry["seen_clues"] = seen
 
 ## Back-fill unlocked_at for legacy saves that only stored topic progress.
 func _migrate_topic_unlock_times(chapter_id: String, entry: Dictionary) -> void:

@@ -7,7 +7,7 @@ class_name DetectiveNoteVaultManager
 ##   CHAPTERS — chapters with VN scene / exploration graph bindings and
 ##              topics (verdict maps: nodes + edges, levels 1..5)
 ##   CLUES    — the global clue pool (individuals / objects / information;
-##              styles: image, postit, messenger chat from Messenger Vault)
+##              styles: image, postit, messenger; optional editor-only group folders)
 ##   STAMPS   — APPROVED stamps (logo image + approver name)
 ##
 ## Localized fields have EN and TH inputs; TH left empty stores a plain string.
@@ -47,6 +47,7 @@ var _ch_fields: VBoxContainer = null
 var _ch_id: LineEdit = null
 var _ch_title_en: LineEdit = null
 var _ch_title_th: LineEdit = null
+var _ch_hidden: CheckBox = null
 var _ch_scenes_vbox: VBoxContainer = null
 var _ch_graphs_vbox: VBoxContainer = null
 var _ch_scene_rows: Array = []
@@ -58,14 +59,17 @@ var _topic_fields: VBoxContainer = null
 var _topic_id: LineEdit = null
 var _topic_title_en: LineEdit = null
 var _topic_title_th: LineEdit = null
+var _topic_hidden: CheckBox = null
 var _node_vbox: VBoxContainer = null
 var _edge_vbox: VBoxContainer = null
 var _node_rows: Array = []
 var _edge_rows: Array = []
 
 # Clues tab controls
-var _clue_list: ItemList = null
+var _clue_tree: Tree = null
 var _clue_id: LineEdit = null
+var _clue_group: LineEdit = null
+var _clue_group_pick: OptionButton = null
 var _clue_kind_opt: OptionButton = null
 var _clue_name_en: LineEdit = null
 var _clue_name_th: LineEdit = null
@@ -79,6 +83,8 @@ var _clue_image_row: HBoxContainer = null
 var _clue_conversation_row: HBoxContainer = null
 var _clue_conversation_opt: OptionButton = null
 var _clue_style_opt: OptionButton = null
+## group_label → collapsed state, preserved across list refreshes
+var _clue_group_collapsed: Dictionary = {}
 
 # Stamps tab controls
 var _stamp_list: ItemList = null
@@ -437,6 +443,11 @@ func _build_chapters_tab(body: HBoxContainer) -> void:
 	var title_pair: Array = _loc_pair(_ch_fields, "Chapter title")
 	_ch_title_en = title_pair[0]
 	_ch_title_th = title_pair[1]
+	_ch_hidden = CheckBox.new()
+	_ch_hidden.text = "Hide chapter from player inventory note"
+	_ch_hidden.tooltip_text = "Hidden chapters stay in the vault for editing / VN grants but do not appear in the inventory NOTE chapter list."
+	_ch_hidden.toggled.connect(func(_on: bool) -> void: _mark_dirty())
+	_ch_fields.add_child(_ch_hidden)
 
 	_section_label(_ch_fields, "VN SCENES  (campaign scene paths belonging to this chapter)")
 	_ch_scenes_vbox = VBoxContainer.new()
@@ -491,6 +502,11 @@ func _build_chapters_tab(body: HBoxContainer) -> void:
 	var tt_pair: Array = _loc_pair(_topic_fields, "Topic title")
 	_topic_title_en = tt_pair[0]
 	_topic_title_th = tt_pair[1]
+	_topic_hidden = CheckBox.new()
+	_topic_hidden.text = "Hide topic from player note"
+	_topic_hidden.tooltip_text = "Hidden topics stay in the vault for editing but do not appear in the player's topic list (inventory / VN / exploration)."
+	_topic_hidden.toggled.connect(func(_on: bool) -> void: _mark_dirty())
+	_topic_fields.add_child(_topic_hidden)
 
 	_section_label(_topic_fields, "VERDICT MAP — NODES  (drop frames; min level 1-%d reveals on upgrade)"
 		% DetectiveNoteVault.MAX_LEVEL)
@@ -815,7 +831,10 @@ func _refresh_chapter_list() -> void:
 		var cd: Dictionary = c as Dictionary if c is Dictionary else {}
 		var cid: String = str(cd.get("id", "?"))
 		var title: String = DetectiveNoteVault.loc_text(cd.get("title", ""))
-		_ch_list.add_item("%s  —  %s" % [cid, title] if not title.is_empty() else cid)
+		var label: String = "%s  —  %s" % [cid, title] if not title.is_empty() else cid
+		if DetectiveNoteVault.flag_true(cd.get("hidden", false)):
+			label += "  [hidden]"
+		_ch_list.add_item(label)
 
 
 func _select_chapter(idx: int) -> void:
@@ -832,6 +851,7 @@ func _populate_chapter_fields(ch: Dictionary) -> void:
 	_ch_id.text = str(ch.get("id", ""))
 	_ch_title_en.text = _loc_get(ch.get("title", ""), "en")
 	_ch_title_th.text = _loc_get(ch.get("title", ""), "th")
+	_ch_hidden.button_pressed = DetectiveNoteVault.flag_true(ch.get("hidden", false))
 
 	_clear_rows(_ch_scene_rows, "row")
 	var scenes: Variant = ch.get("vn_scenes", [])
@@ -870,7 +890,10 @@ func _refresh_topic_list(ch: Dictionary) -> void:
 		var td: Dictionary = t as Dictionary if t is Dictionary else {}
 		var tid: String = str(td.get("id", "?"))
 		var title: String = DetectiveNoteVault.loc_text(td.get("title", ""))
-		_topic_list.add_item("%s  —  %s" % [tid, title] if not title.is_empty() else tid)
+		var label: String = "%s  —  %s" % [tid, title] if not title.is_empty() else tid
+		if DetectiveNoteVault.flag_true(td.get("hidden", false)):
+			label += "  [hidden]"
+		_topic_list.add_item(label)
 
 
 func _select_topic(idx: int) -> void:
@@ -893,6 +916,7 @@ func _populate_topic_fields(topic: Dictionary) -> void:
 	_topic_id.text = str(topic.get("id", ""))
 	_topic_title_en.text = _loc_get(topic.get("title", ""), "en")
 	_topic_title_th.text = _loc_get(topic.get("title", ""), "th")
+	_topic_hidden.button_pressed = DetectiveNoteVault.flag_true(topic.get("hidden", false))
 	_clear_rows(_node_rows, "panel")
 	var nodes: Variant = topic.get("nodes", [])
 	if nodes is Array:
@@ -942,6 +966,7 @@ func _collect_topic() -> Dictionary:
 	return {
 		"id": _topic_id.text.strip_edges(),
 		"title": _loc_make(_topic_title_en.text, _topic_title_th.text),
+		"hidden": _topic_hidden.button_pressed,
 		"nodes": nodes,
 		"edges": edges,
 	}
@@ -967,6 +992,7 @@ func _flush_chapter() -> void:
 	_chapters[_chapter_idx] = {
 		"id": _ch_id.text.strip_edges(),
 		"title": _loc_make(_ch_title_en.text, _ch_title_th.text),
+		"hidden": _ch_hidden.button_pressed,
 		"vn_scenes": _collect_path_rows(_ch_scene_rows),
 		"graphs": _collect_path_rows(_ch_graph_rows),
 		"start_clues": _collect_start_clue_rows(),
@@ -981,6 +1007,7 @@ func _on_new_chapter() -> void:
 	_chapters.append({
 		"id": _unique_id(_chapters, "new_chapter"),
 		"title": "New Chapter",
+		"hidden": false,
 		"vn_scenes": [],
 		"graphs": [],
 		"start_clues": [],
@@ -1060,6 +1087,7 @@ func _on_new_topic() -> void:
 	topics.append({
 		"id": _unique_id(topics, "new_topic"),
 		"title": "New Topic",
+		"hidden": false,
 		"nodes": [],
 		"edges": [],
 	})
@@ -1233,17 +1261,19 @@ func _on_layout_edge_created(from_id: String, to_id: String) -> void:
 # ─────────────────────────────────────────────────────────────
 func _build_clues_tab(body: HBoxContainer) -> void:
 	var left := VBoxContainer.new()
-	left.custom_minimum_size = Vector2(260, 0)
+	left.custom_minimum_size = Vector2(300, 0)
 	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	left.add_theme_constant_override("separation", 6)
 	body.add_child(left)
 
-	_clue_list = ItemList.new()
-	_clue_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_clue_list.item_selected.connect(func(idx: int) -> void:
-		_flush_all()
-		_select_clue(idx))
-	left.add_child(_clue_list)
+	_mini_label(left, "Folders = clue.group (editor-only; empty = Ungrouped)")
+	_clue_tree = Tree.new()
+	_clue_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_clue_tree.hide_root = true
+	_clue_tree.allow_reselect = true
+	_clue_tree.item_selected.connect(_on_clue_tree_selected)
+	_clue_tree.item_collapsed.connect(_on_clue_tree_item_collapsed)
+	left.add_child(_clue_tree)
 
 	var row1 := HBoxContainer.new()
 	row1.add_theme_constant_override("separation", 6)
@@ -1263,6 +1293,26 @@ func _build_clues_tab(body: HBoxContainer) -> void:
 	right_scroll.add_child(fields)
 
 	_clue_id = _labeled_line_edit(fields, "Clue ID")
+
+	var group_row := HBoxContainer.new()
+	group_row.add_theme_constant_override("separation", 8)
+	fields.add_child(group_row)
+	var group_lbl := Label.new()
+	group_lbl.text = "Group (folder):"
+	group_lbl.custom_minimum_size = Vector2(200, 0)
+	group_row.add_child(group_lbl)
+	_clue_group = LineEdit.new()
+	_clue_group.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_clue_group.placeholder_text = "empty = Ungrouped"
+	_clue_group.tooltip_text = "Editor-only folder label. Changing this does not affect clue id, topics, or VN references."
+	_clue_group.text_changed.connect(func(_t: String) -> void: _mark_dirty())
+	group_row.add_child(_clue_group)
+	_clue_group_pick = OptionButton.new()
+	_clue_group_pick.custom_minimum_size = Vector2(140, 0)
+	_clue_group_pick.tooltip_text = "Fill Group from an existing folder name"
+	_clue_group_pick.item_selected.connect(_on_clue_group_pick)
+	group_row.add_child(_clue_group_pick)
+
 	var kind_row := HBoxContainer.new()
 	kind_row.add_theme_constant_override("separation", 8)
 	fields.add_child(kind_row)
@@ -1340,16 +1390,154 @@ func _sync_clue_style_fields() -> void:
 		_clue_image_row.visible = style == "image"
 
 
-func _refresh_clue_list() -> void:
-	_clue_list.clear()
+func _clue_groups_from_editor() -> Array:
+	var seen: Dictionary = {}
+	var out: Array = []
 	for c: Variant in _clues:
-		var cd: Dictionary = c as Dictionary if c is Dictionary else {}
-		var cid: String = str(cd.get("id", "?"))
-		var kind: String = str(cd.get("kind", "?"))
-		var style: String = str(cd.get("style", "image"))
-		var cname: String = DetectiveNoteVault.clue_display_name(cd)
-		var style_tag: String = " [%s]" % style if style != "image" else ""
-		_clue_list.add_item("[%s%s] %s  —  %s" % [kind, style_tag, cid, cname])
+		if not c is Dictionary:
+			continue
+		var g: String = DetectiveNoteVault.clue_group(c as Dictionary)
+		if g.is_empty() or seen.has(g):
+			continue
+		seen[g] = true
+		out.append(g)
+	out.sort()
+	return out
+
+
+func _refresh_clue_group_pick(selected: String = "") -> void:
+	if _clue_group_pick == null:
+		return
+	var items: Array = ["(pick existing…)"]
+	items.append_array(_clue_groups_from_editor())
+	var want: String = selected.strip_edges()
+	if not want.is_empty() and not items.has(want):
+		items.append(want)
+	_populate_option(_clue_group_pick, items, "(pick existing…)")
+
+
+func _on_clue_group_pick(idx: int) -> void:
+	if _loading or _clue_group == null or _clue_group_pick == null:
+		return
+	if idx <= 0:
+		return
+	_clue_group.text = _clue_group_pick.get_item_text(idx)
+	_mark_dirty()
+	_clue_group_pick.select(0)
+
+
+func _refresh_clue_list() -> void:
+	if _clue_tree == null or not is_instance_valid(_clue_tree):
+		return
+	# Preserve collapse state already captured via item_collapsed; also scan current tree.
+	var root_scan: TreeItem = _clue_tree.get_root()
+	if root_scan != null:
+		var gitem: TreeItem = root_scan.get_first_child()
+		while gitem != null:
+			var glabel: String = str(gitem.get_meta("group_label", ""))
+			if not glabel.is_empty():
+				_clue_group_collapsed[glabel] = gitem.collapsed
+			gitem = gitem.get_next()
+
+	_clue_tree.clear()
+	var root: TreeItem = _clue_tree.create_item()
+	if root == null:
+		return
+	# Bucket: display_label → Array of clue indices
+	var buckets: Dictionary = {}
+	var order: Array = []
+	for i: int in range(_clues.size()):
+		var cd: Dictionary = _clues[i] as Dictionary if _clues[i] is Dictionary else {}
+		var label: String = DetectiveNoteVault.clue_group_label(cd)
+		if not buckets.has(label):
+			buckets[label] = []
+			order.append(label)
+		(buckets[label] as Array).append(i)
+	# Named groups alphabetically, Ungrouped last
+	order.sort_custom(func(a: Variant, b: Variant) -> bool:
+		var sa: String = str(a)
+		var sb: String = str(b)
+		var ua: bool = sa == DetectiveNoteVault.CLUE_GROUP_UNGROUPED
+		var ub: bool = sb == DetectiveNoteVault.CLUE_GROUP_UNGROUPED
+		if ua != ub:
+			return not ua  # ungrouped after named
+		return sa.to_lower() < sb.to_lower())
+	for label_v: Variant in order:
+		var label: String = str(label_v)
+		var idxs: Array = buckets[label] as Array
+		var folder: TreeItem = _clue_tree.create_item(root)
+		if folder == null:
+			continue
+		folder.set_text(0, "%s  (%d)" % [label, idxs.size()])
+		folder.set_selectable(0, false)
+		folder.set_meta("group_label", label)
+		folder.collapsed = bool(_clue_group_collapsed.get(label, false))
+		for i_v: Variant in idxs:
+			var i: int = int(i_v)
+			var cd: Dictionary = _clues[i] as Dictionary if _clues[i] is Dictionary else {}
+			var cid: String = str(cd.get("id", "?"))
+			var kind: String = str(cd.get("kind", "?"))
+			var style: String = str(cd.get("style", "image"))
+			var cname: String = DetectiveNoteVault.clue_display_name(cd)
+			var style_tag: String = " [%s]" % style if style != "image" else ""
+			var leaf: TreeItem = _clue_tree.create_item(folder)
+			if leaf == null:
+				continue
+			leaf.set_text(0, "[%s%s] %s  —  %s" % [kind, style_tag, cid, cname])
+			leaf.set_meta("clue_idx", i)
+	_refresh_clue_group_pick(_clue_group.text if _clue_group != null else "")
+	if _clue_idx >= 0:
+		_select_clue_tree_item(_clue_idx)
+
+
+func _on_clue_tree_item_collapsed(item: TreeItem) -> void:
+	if item == null:
+		return
+	var glabel: String = str(item.get_meta("group_label", ""))
+	if glabel.is_empty():
+		return
+	_clue_group_collapsed[glabel] = item.collapsed
+
+
+func _on_clue_tree_selected() -> void:
+	if _clue_tree == null:
+		return
+	var item: TreeItem = _clue_tree.get_selected()
+	if item == null or not item.has_meta("clue_idx"):
+		return
+	var idx: int = int(item.get_meta("clue_idx"))
+	if idx == _clue_idx:
+		return
+	# Defer out of Tree selection / blocked state before flush → Tree.clear().
+	call_deferred("_apply_clue_tree_selection", idx)
+
+
+func _apply_clue_tree_selection(idx: int) -> void:
+	if idx < 0 or idx >= _clues.size():
+		return
+	if idx == _clue_idx:
+		return
+	_flush_all()
+	_select_clue(idx)
+
+
+func _select_clue_tree_item(idx: int) -> void:
+	if _clue_tree == null:
+		return
+	var root: TreeItem = _clue_tree.get_root()
+	if root == null:
+		return
+	var folder: TreeItem = root.get_first_child()
+	while folder != null:
+		var leaf: TreeItem = folder.get_first_child()
+		while leaf != null:
+			if int(leaf.get_meta("clue_idx", -1)) == idx:
+				folder.collapsed = false
+				leaf.select(0)
+				_clue_tree.scroll_to_item(leaf)
+				return
+			leaf = leaf.get_next()
+		folder = folder.get_next()
 
 
 func _select_clue(idx: int) -> void:
@@ -1357,10 +1545,12 @@ func _select_clue(idx: int) -> void:
 		_clue_idx = -1
 		return
 	_clue_idx = idx
-	_clue_list.select(idx)
+	_select_clue_tree_item(idx)
 	var cd: Dictionary = _clues[idx] as Dictionary
 	_loading = true
 	_clue_id.text = str(cd.get("id", ""))
+	_clue_group.text = DetectiveNoteVault.clue_group(cd)
+	_refresh_clue_group_pick(_clue_group.text)
 	_populate_option(_clue_kind_opt, CLUE_KINDS, str(cd.get("kind", "individual")))
 	_populate_option(_clue_style_opt, CLUE_STYLES, str(cd.get("style", "image")))
 	_clue_name_en.text = _loc_get(cd.get("name", ""), "en")
@@ -1385,6 +1575,7 @@ func _flush_clue() -> void:
 	var entry: Dictionary = {
 		"id": _clue_id.text.strip_edges(),
 		"kind": _option_value(_clue_kind_opt),
+		"group": _clue_group.text.strip_edges(),
 		"name": _loc_make(_clue_name_en.text, _clue_name_th.text),
 		"caption": _loc_make(_clue_caption_en.text, _clue_caption_th.text),
 		"info": _loc_make(_clue_info_en.text, _clue_info_th.text),
@@ -1400,14 +1591,17 @@ func _flush_clue() -> void:
 			entry["image"] = _clue_image.text.strip_edges()
 	_clues[_clue_idx] = entry
 	_refresh_clue_list()
-	_clue_list.select(_clue_idx)
 
 
 func _on_new_clue() -> void:
 	_flush_all()
+	var inherit_group: String = ""
+	if _clue_idx >= 0 and _clue_idx < _clues.size() and _clues[_clue_idx] is Dictionary:
+		inherit_group = DetectiveNoteVault.clue_group(_clues[_clue_idx] as Dictionary)
 	_clues.append({
 		"id": _unique_id(_clues, "new_clue"),
 		"kind": "information",
+		"group": inherit_group,
 		"name": "New Clue",
 		"caption": "",
 		"info": "",

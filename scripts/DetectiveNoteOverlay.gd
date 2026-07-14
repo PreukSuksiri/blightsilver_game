@@ -5,7 +5,9 @@ class_name DetectiveNoteOverlay
 ##
 ## Open modes:
 ##   open_for_chapter() — exploration / VN entry points; chapter list hidden, topics only
+##                        (Done button + bounce when the map is fully filled)
 ##   open_all()         — inventory NOTE tab; chapters + topics in the sidebar
+##                        (Close button, no bounce)
 ##   open_stamp_view()  — read-only notebook + verdict map only, plays the APPROVED
 ##                        stamp animation; click or press any key to dismiss
 ##
@@ -43,6 +45,12 @@ const DONE_FILL := Color(0.52, 0.10, 0.10, 0.96)
 const DONE_FILL_HOVER := Color(0.66, 0.14, 0.14, 0.98)
 const DONE_FILL_PRESSED := Color(0.40, 0.07, 0.07, 0.98)
 const DONE_BORDER := Color(0.95, 0.78, 0.42, 1.0)
+const NEW_BADGE_TILT_DEG := 14.0
+const NEW_BADGE_PULSE_SCALE := 1.22
+const NEW_BADGE_PULSE_HALF_SEC := 0.45
+const NEW_BADGE_FONT_SIZE := 13
+const NEW_BADGE_COLOR := Color(1.0, 1.0, 1.0, 1.0)
+const NEW_BADGE_SHADOW := Color(0.0, 0.0, 0.0, 1.0)
 
 var locale: String = "en"
 
@@ -132,12 +140,17 @@ func _ready() -> void:
 	if _stamp_view_mode:
 		_show_stamp_view()
 		return
-	var chapters: Array = DetectiveNoteVault.get_chapter_ids()
+	var chapters: Array = DetectiveNoteVault.get_visible_chapter_ids() \
+		if _all_chapters_mode else DetectiveNoteVault.get_chapter_ids()
 	if _selected_chapter.is_empty():
-		if not _active_chapter.is_empty() and chapters.has(_active_chapter):
+		if not _active_chapter.is_empty() and DetectiveNoteVault.get_chapter_ids().has(_active_chapter):
+			# VN / exploration may open a chapter even if it is inventory-hidden.
 			_selected_chapter = _active_chapter
 		elif not chapters.is_empty():
 			_selected_chapter = str(chapters[0])
+	# Inventory never starts on a vault-hidden chapter.
+	if _all_chapters_mode and DetectiveNoteVault.is_chapter_hidden(_selected_chapter):
+		_selected_chapter = str(chapters[0]) if not chapters.is_empty() else ""
 	_refresh_chapter_list()
 	_select_chapter(_selected_chapter)
 
@@ -164,13 +177,17 @@ func _input(event: InputEvent) -> void:
 func _close() -> void:
 	_stop_done_btn_pulse()
 	_hide_drag_ghost()
+	# VN / exploration: closing dismisses remaining "New" badges for this chapter.
+	if not _all_chapters_mode and not _stamp_view_mode and not _selected_chapter.is_empty():
+		DetectiveNoteManager.mark_all_clues_seen(_selected_chapter)
 	emit_signal("closed")
 	queue_free()
 
 
 func _make_done_button() -> Button:
 	var btn := Button.new()
-	btn.text = "Done"
+	# Inventory (all-chapters) uses Close with no bounce; VN/exploration keep Done + pulse.
+	btn.text = "Close" if _all_chapters_mode else "Done"
 	btn.custom_minimum_size = DONE_BTN_SIZE
 	btn.focus_mode = Control.FOCUS_NONE
 	btn.add_theme_font_override("font", FontManager.make_font("handwritten", 700))
@@ -186,7 +203,7 @@ func _make_done_button() -> Button:
 	return btn
 
 
-## Flat fill + colored border for detective-note chrome (tabs / Done).
+## Flat fill + colored border for detective-note chrome (tabs / Done / Close).
 func _apply_note_button_skin(
 		btn: Button,
 		fill: Color,
@@ -227,6 +244,10 @@ func _note_button_stylebox(fill: Color, border: Color, border_w: int) -> StyleBo
 func _sync_done_btn_pulse() -> void:
 	if _done_btn == null or not is_instance_valid(_done_btn):
 		return
+	# Inventory browse mode: never bounce the Close button.
+	if _all_chapters_mode:
+		_stop_done_btn_pulse()
+		return
 	var complete: bool = _map != null and is_instance_valid(_map) \
 		and not _selected_topic.is_empty() and _map.is_map_fully_filled()
 	if complete:
@@ -237,6 +258,9 @@ func _sync_done_btn_pulse() -> void:
 
 func _start_done_btn_pulse() -> void:
 	if _done_btn == null or not is_instance_valid(_done_btn):
+		return
+	if _all_chapters_mode:
+		_stop_done_btn_pulse()
 		return
 	if _done_pulse_tween != null and is_instance_valid(_done_pulse_tween) \
 			and _done_pulse_tween.is_running():
@@ -525,7 +549,7 @@ func _refresh_chapter_list() -> void:
 	_clear_children(_chapter_vbox)
 	if not _all_chapters_mode:
 		return
-	for cid_v: Variant in DetectiveNoteVault.get_chapter_ids():
+	for cid_v: Variant in DetectiveNoteVault.get_visible_chapter_ids():
 		var cid: String = str(cid_v)
 		var chapter: Dictionary = DetectiveNoteVault.get_chapter(cid)
 		var btn := Button.new()
@@ -642,9 +666,17 @@ func _make_clue_tile(clue_id: String) -> Control:
 	tile.custom_minimum_size = TILE_SIZE + Vector2(16.0, 30.0)
 	tile.mouse_filter = Control.MOUSE_FILTER_STOP
 
+	# PanelContainer only lays out one child — wrap vbox + optional New badge.
+	var body := Control.new()
+	body.custom_minimum_size = TILE_SIZE + Vector2(4.0, 18.0)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tile.add_child(body)
+
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 4)
-	tile.add_child(vbox)
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	body.add_child(vbox)
 
 	var clue_name: String = DetectiveNoteVault.clue_display_name(clue, locale)
 	if DetectiveNoteVault.clue_is_messenger(clue):
@@ -691,9 +723,17 @@ func _make_clue_tile(clue_id: String) -> Control:
 	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(name_lbl)
 
+	if _should_show_new_badge(clue_id):
+		body.add_child(_make_new_badge())
+
+	tile.set_meta("clue_id", clue_id)
 	tile.mouse_filter = Control.MOUSE_FILTER_STOP
+	tile.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			_dismiss_new_badge_for_clue(clue_id, tile))
 	tile.set_drag_forwarding(
 		func(_pos: Vector2) -> Variant:
+			_dismiss_new_badge_for_clue(clue_id, tile)
 			_hover_end()
 			tile.set_drag_preview(_map.make_drag_preview_stub())
 			_show_drag_ghost_for_clue(clue_id)
@@ -705,6 +745,78 @@ func _make_clue_tile(clue_id: String) -> Control:
 	tile.mouse_entered.connect(func() -> void: _hover_begin(clue_id, tile))
 	tile.mouse_exited.connect(func() -> void: _on_hover_control_exited())
 	return tile
+
+
+func _should_show_new_badge(clue_id: String) -> bool:
+	# Inventory / stamp view: no "New" badges.
+	if _all_chapters_mode or _stamp_view_mode:
+		return false
+	return DetectiveNoteManager.is_clue_new(_selected_chapter, clue_id)
+
+
+func _make_new_badge() -> Label:
+	var badge := Label.new()
+	badge.name = "NewBadge"
+	badge.text = "New"
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.add_theme_font_override("font", FontManager.make_font("handwritten", 700))
+	badge.add_theme_font_size_override("font_size", NEW_BADGE_FONT_SIZE)
+	badge.add_theme_color_override("font_color", NEW_BADGE_COLOR)
+	badge.add_theme_color_override("font_shadow_color", NEW_BADGE_SHADOW)
+	badge.add_theme_constant_override("shadow_offset_x", 2)
+	badge.add_theme_constant_override("shadow_offset_y", 2)
+	badge.add_theme_constant_override("shadow_outline_size", 2)
+	badge.add_theme_color_override("font_outline_color", NEW_BADGE_SHADOW)
+	badge.add_theme_constant_override("outline_size", 3)
+	badge.rotation_degrees = NEW_BADGE_TILT_DEG
+	badge.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	badge.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	badge.grow_vertical = Control.GROW_DIRECTION_END
+	badge.offset_left = -52.0
+	badge.offset_right = -2.0
+	badge.offset_top = -2.0
+	badge.offset_bottom = 22.0
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.resized.connect(func() -> void:
+		badge.pivot_offset = badge.size * 0.5)
+	# Pulse after enter tree so size/pivot are valid.
+	badge.ready.connect(func() -> void:
+		badge.pivot_offset = badge.size * 0.5
+		var tw := badge.create_tween().set_loops()
+		tw.tween_property(badge, "scale", Vector2.ONE * NEW_BADGE_PULSE_SCALE, NEW_BADGE_PULSE_HALF_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tw.tween_property(badge, "scale", Vector2.ONE, NEW_BADGE_PULSE_HALF_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT))
+	return badge
+
+
+func _dismiss_new_badge_for_clue(clue_id: String, tile: Control = null) -> void:
+	if _all_chapters_mode or _stamp_view_mode:
+		return
+	if not DetectiveNoteManager.mark_clue_seen(_selected_chapter, clue_id):
+		# Already seen — still strip any leftover badge node.
+		pass
+	var host: Control = tile
+	if host == null and _clue_grid != null:
+		for child: Node in _clue_grid.get_children():
+			if child is Control and str((child as Control).get_meta("clue_id", "")) == clue_id:
+				host = child as Control
+				break
+	if host == null or not is_instance_valid(host):
+		return
+	_remove_new_badge_from_tile(host)
+
+
+func _remove_new_badge_from_tile(tile: Control) -> void:
+	for child: Node in tile.get_children():
+		if child is Control:
+			var badge: Node = (child as Control).get_node_or_null("NewBadge")
+			if badge != null and is_instance_valid(badge):
+				badge.queue_free()
+				return
+		if child.name == "NewBadge":
+			child.queue_free()
+			return
 
 
 # ─────────────────────────────────────────────────────────────
@@ -867,6 +979,7 @@ func _open_clue_detail(clue_id: String) -> void:
 	var clue: Dictionary = DetectiveNoteVault.get_clue(clue_id)
 	if clue.is_empty():
 		return
+	_dismiss_new_badge_for_clue(clue_id)
 	if DetectiveNoteVault.clue_is_messenger(clue):
 		_show_messenger_for_clue(clue_id)
 		return

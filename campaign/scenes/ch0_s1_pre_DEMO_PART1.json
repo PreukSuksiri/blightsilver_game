@@ -58,8 +58,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_3.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -87,8 +87,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cheerful.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_cheer_2.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -159,8 +159,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cheerful.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_4.png"
 			}
 		],
 		"group": 1.0,
@@ -188,8 +188,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_4.png"
 			}
 		],
 		"group": 1.0,
@@ -231,8 +231,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_4.png"
 			}
 		],
 		"group": 2.0,
@@ -260,8 +260,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_4.png"
 			}
 		],
 		"group": 2.0,
@@ -289,13 +289,13 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_1.png"
 			}
 		],
 		"group": 3.0,
 		"speaker": "Mayu",
-		"text": "You're gonna discover a new way to cause cancer with that academic performance."
+		"text": "You're gonna discover a new way to get cancer with that academic performance."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -304,8 +304,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_4.png"
 			}
 		],
 		"group": 3.0,
@@ -361,8 +361,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_5.png"
 			}
 		],
 		"group": 4.0,
@@ -376,8 +376,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_5.png"
 			}
 		],
 		"group": 4.0,
@@ -403,10 +403,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 4.0,
@@ -418,10 +417,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 4.0,
@@ -480,14 +478,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_1.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "You didn't pay attention at all, aren't you?"
-		}
+		"text": "You didn't pay attention at all, aren't you?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -511,8 +507,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_1.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -525,8 +521,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_1.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -539,8 +535,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_neutral_2.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -566,7 +562,7 @@
 		"comment": "Mayu Lecture Ken Burns",
 		"fade_in": 0.3,
 		"speaker": "Mayu",
-		"text": "Kernel is the way we calculate higer dimensions. It's like making a container to store... let's say... candies...\n"
+		"text": "Kernel is the way we calculate higher dimensions. It's like making a container to store... let's say... candies...\n"
 	},
 	{
 		"linger_characters": true,
@@ -607,15 +603,13 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_1.png"
 			}
 		],
-		"shake_screen": 25.0,
+		"shake_screen": 10.0,
 		"speaker": "Mayu",
-		"text": {
-			"en": "Nex!!!"
-		}
+		"text": "Nex!!!"
 	},
 	{
 		"wait": 0.5
@@ -632,10 +626,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -730,8 +723,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cheerful.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_cheer_2.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -753,12 +746,26 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_2.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": "I suggest you copy the formula from my notebook instead. The one that you've borrowed from me. The one with a lot of bookmarks. Did you bring it?"
+		"text": "Anyway, you should copy the formula from my notebook instead."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_2.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "My notebook... [color=#FFEE44]The one with a lot of colorful bookmarks[/color]. Did you bring it?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -782,14 +789,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_2.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "Bring it on the table right now. I'll show you where the formula is"
-		}
+		"text": "Bring it on the table right now. I'll show you where the formula is"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1014,10 +1019,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 10.0,
@@ -1050,10 +1054,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 11.0,
@@ -1100,8 +1103,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_2.png"
 			}
 		],
 		"group": 12.0,
@@ -1146,10 +1149,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 13.0,
@@ -1160,10 +1162,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 13.0,
@@ -1208,10 +1209,9 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
 		"group": 14.0,
@@ -1222,13 +1222,12 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_pout_3.png"
 			}
 		],
-		"group": 14,
+		"group": 14.0,
 		"speaker": "Mayu",
 		"text": "Did you just mentioned Alice? What's with Alice?"
 	},
@@ -1292,8 +1291,15 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_scared_2.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_scared_6.png"
+			}
+		],
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "",
+				"value": ""
 			}
 		],
 		"speaker": "Mayu",
@@ -1321,14 +1327,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_3.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "That notebook were meant to be only for you! How dare you give it away to other girl!"
-		}
+		"text": "That notebook were meant to be only for you! How dare you give it away to other girl!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1341,9 +1345,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "But Alice is also our friend. So I think it's okay to..."
-		}
+		"text": "But Alice is also our friend. So I think it's okay to..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1352,8 +1354,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_3.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -1388,8 +1390,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_4.png"
 			}
 		],
 		"fade_in": 0.3,
@@ -1403,8 +1405,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_4.png"
 			}
 		],
 		"fade_in": 0.3,
@@ -1418,13 +1420,13 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_angry_4.png"
 			}
 		],
 		"fade_in": 0.3,
 		"speaker": "Mayu",
-		"text": "** Swipe papers off the table **"
+		"text": "** Swipe papers off the table ** "
 	},
 	{
 		"comment": "Approve Detective Note",
@@ -1578,20 +1580,6 @@
 		"group": 6.0,
 		"speaker": "Nex",
 		"text": "Is she... Went crying in the back... And fell alseep?"
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"characters": [
-			{
-				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
-			}
-		],
-		"group": 6.0,
-		"speaker": "Nex",
-		"text": "** Sigh** why am I such a dick..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",

@@ -40,11 +40,14 @@ func run_all_tests() -> void:
 	test_context_resolution()
 	test_start_clues()
 	test_messenger_clues()
+	test_clue_groups()
 	test_clue_progress()
+	test_clue_new_badge_tracking()
 	test_clue_discovery_order()
 	test_clue_discovery_order_from_save()
 	test_topic_progress()
 	test_preferred_topic()
+	test_hidden_chapter_and_topic()
 	test_placements()
 	test_stamps()
 	test_save_roundtrip()
@@ -185,6 +188,33 @@ func test_messenger_clues() -> void:
 		host.queue_free()
 	await get_tree().process_frame
 
+func test_clue_groups() -> void:
+	DetectiveNoteVault.reload()
+	var bare: Dictionary = {"id": "x", "kind": "object", "name": "X"}
+	assert_eq(DetectiveNoteVault.clue_group(bare), "",
+		"missing group field reads as empty")
+	assert_eq(DetectiveNoteVault.clue_group_label(bare),
+		DetectiveNoteVault.CLUE_GROUP_UNGROUPED,
+		"empty group displays as Ungrouped")
+	assert_eq(DetectiveNoteVault.clue_group({"group": "  Prologue  "}), "Prologue",
+		"group is stripped")
+	assert_eq(DetectiveNoteVault.clue_group_label({"group": "Prologue"}), "Prologue",
+		"named group label is itself")
+	# Mutate in-memory vault for get_clue_groups (restore via reload).
+	assert_true(not DetectiveNoteVault._clues.is_empty(), "vault has clues for group test")
+	var c0: Dictionary = DetectiveNoteVault._clues[0] as Dictionary
+	var orig: Variant = c0.get("group", null)
+	c0["group"] = "Z_TestFolder"
+	var groups: Array = DetectiveNoteVault.get_clue_groups()
+	assert_true(groups.has("Z_TestFolder"), "get_clue_groups includes authored group")
+	assert_true(not groups.has(DetectiveNoteVault.CLUE_GROUP_UNGROUPED),
+		"Ungrouped is not a persisted group name")
+	if orig == null:
+		c0.erase("group")
+	else:
+		c0["group"] = orig
+	DetectiveNoteVault.reload()
+
 func test_clue_progress() -> void:
 	DetectiveNoteManager.reset_all()
 	assert_true(DetectiveNoteManager.add_clue("ch0_demo", "person_kelly"),
@@ -229,6 +259,34 @@ func test_clue_discovery_order_from_save() -> void:
 		["object_library_photo", "person_mayu", "chat_study_group"],
 		"legacy saves without clue_at keep clues-array order")
 
+func test_clue_new_badge_tracking() -> void:
+	DetectiveNoteManager.reset_all()
+	DetectiveNoteManager.add_clue("ch0_demo", "person_kelly")
+	assert_true(DetectiveNoteManager.is_clue_new("ch0_demo", "person_kelly"),
+		"freshly added clue is marked New")
+	assert_true(DetectiveNoteManager.mark_clue_seen("ch0_demo", "person_kelly"),
+		"mark_clue_seen dismisses New")
+	assert_true(not DetectiveNoteManager.is_clue_new("ch0_demo", "person_kelly"),
+		"seen clue is no longer New")
+	assert_true(not DetectiveNoteManager.mark_clue_seen("ch0_demo", "person_kelly"),
+		"second mark_clue_seen is no-op")
+	DetectiveNoteManager.add_clue("ch0_demo", "object_library_photo")
+	DetectiveNoteManager.add_clue("ch0_demo", "info_blackout_schedule")
+	DetectiveNoteManager.mark_all_clues_seen("ch0_demo")
+	assert_true(not DetectiveNoteManager.is_clue_new("ch0_demo", "object_library_photo"),
+		"mark_all_clues_seen clears all New badges")
+	assert_true(not DetectiveNoteManager.is_clue_new("ch0_demo", "info_blackout_schedule"),
+		"mark_all_clues_seen clears leftover New badges")
+	# Legacy progress without seen_clues treats existing discoveries as already seen.
+	DetectiveNoteManager.reset_all()
+	DetectiveNoteManager.load_from_save({
+		"detective_notes": {
+			"ch0_demo": {"clues": ["person_kelly"], "topics": {}},
+		},
+	})
+	assert_true(not DetectiveNoteManager.is_clue_new("ch0_demo", "person_kelly"),
+		"legacy saves without seen_clues do not flood New badges")
+
 func test_topic_progress() -> void:
 	assert_true(not DetectiveNoteManager.is_topic_unlocked("ch0_demo", "library_lights"),
 		"topic locked initially")
@@ -270,6 +328,46 @@ func test_preferred_topic() -> void:
 	assert_eq(DetectiveNoteManager.get_preferred_topic("ch0_prologue"),
 		"topic_where_have_mayu_notebook_gone",
 		"when all stamped, latest unlocked overall is used")
+
+func test_hidden_chapter_and_topic() -> void:
+	DetectiveNoteVault.reload()
+	assert_true(not DetectiveNoteVault._chapters.is_empty(), "vault has chapters for hidden test")
+	var ch0: Dictionary = DetectiveNoteVault._chapters[0] as Dictionary
+	var ch_id: String = str(ch0.get("id", ""))
+	var orig_ch_hidden: Variant = ch0.get("hidden", false)
+	ch0["hidden"] = true
+	assert_true(DetectiveNoteVault.is_chapter_hidden(ch_id),
+		"chapter marked hidden is reported hidden")
+	assert_true(not DetectiveNoteVault.get_visible_chapter_ids().has(ch_id),
+		"hidden chapter omitted from visible chapter ids")
+	ch0["hidden"] = orig_ch_hidden
+
+	DetectiveNoteManager.reset_all()
+	DetectiveNoteManager.unlock_topic("ch0_prologue", "topic_name_of_book_nex_copied_from")
+	DetectiveNoteManager.unlock_topic("ch0_prologue", "topic_where_have_mayu_notebook_gone")
+	var prologue: Dictionary = {}
+	for ch_v: Variant in DetectiveNoteVault._chapters:
+		if ch_v is Dictionary and str((ch_v as Dictionary).get("id", "")) == "ch0_prologue":
+			prologue = ch_v as Dictionary
+			break
+	assert_true(not prologue.is_empty(), "ch0_prologue exists for hidden topic test")
+	var topics: Array = prologue.get("topics", []) as Array
+	assert_true(topics.size() >= 2, "ch0_prologue has topics for hidden test")
+	var t_hidden: Dictionary = topics[0] as Dictionary
+	var tid: String = str(t_hidden.get("id", ""))
+	var orig_t_hidden: Variant = t_hidden.get("hidden", false)
+	t_hidden["hidden"] = true
+	assert_true(DetectiveNoteVault.is_topic_hidden("ch0_prologue", tid),
+		"topic marked hidden is reported hidden")
+	assert_eq(DetectiveNoteManager.get_unlocked_topics("ch0_prologue"),
+		["topic_where_have_mayu_notebook_gone"],
+		"hidden topic filtered from unlocked list")
+	assert_eq(DetectiveNoteManager.get_preferred_topic("ch0_prologue"),
+		"topic_where_have_mayu_notebook_gone",
+		"preferred topic skips hidden")
+	t_hidden["hidden"] = orig_t_hidden
+	DetectiveNoteVault.reload()
+	DetectiveNoteManager.reset_all()
 
 func test_placements() -> void:
 	SaveManager.exploration_flags.clear()
@@ -366,7 +464,14 @@ func test_vault_manager_overlay() -> void:
 	assert_eq(overlay._node_rows.size(), 3, "topic editor shows 3 node rows")
 	assert_eq(overlay._edge_rows.size(), 2, "topic editor shows 2 edge rows")
 	overlay._switch_tab("clues")
-	assert_eq(overlay._clue_list.item_count, 11, "clues list shows 11 clues")
+	assert_eq(overlay._clues.size(), DetectiveNoteVault.get_clues().size(),
+		"clues tab loads all vault clues")
+	assert_true(overlay._clue_tree != null and is_instance_valid(overlay._clue_tree),
+		"clues tab uses a folder Tree")
+	assert_true(overlay._clue_group != null, "clue form has Group field")
+	assert_true(overlay._clue_tree.get_root() != null
+		and overlay._clue_tree.get_root().get_child_count() >= 1,
+		"clue Tree has at least one folder group")
 	overlay._switch_tab("stamps")
 	assert_eq(overlay._stamp_list.item_count, 3, "stamps list shows 3 stamps")
 

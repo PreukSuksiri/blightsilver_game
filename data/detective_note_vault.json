@@ -2,6 +2,7 @@
 	"chapters": [
 		{
 			"graphs": [],
+			"hidden": true,
 			"id": "ch0_demo",
 			"start_clues": [
 				"info_blackout_schedule"
@@ -34,6 +35,7 @@
 							"to": "culprit"
 						}
 					],
+					"hidden": false,
 					"id": "library_lights",
 					"nodes": [
 						{
@@ -117,7 +119,7 @@
 							"arrow": "end",
 							"from": "node_individual_1",
 							"label": "Copied from",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_object_2"
 						}
 					],
@@ -128,15 +130,15 @@
 							"kind": "individual",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								56,
-								120
+								56.0,
+								120.0
 							],
 							"prefill": "person_nex",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						},
@@ -145,15 +147,15 @@
 							"kind": "object",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								408,
-								115
+								408.0,
+								115.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_book_name"
 						}
@@ -166,35 +168,35 @@
 							"arrow": "end",
 							"from": "node_individual_1",
 							"label": "Owned",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_object_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_object_1",
 							"label": "Has been lent to",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_individual_2"
 						},
 						{
 							"arrow": "end",
 							"from": "node_individual_2",
 							"label": "Lent Object #1 to",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_individual_3"
 						},
 						{
 							"arrow": "end",
 							"from": "node_individual_3",
-							"label": "Provided",
-							"min_level": 1,
+							"label": "Produced",
+							"min_level": 1.0,
 							"to": "node_information_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_information_1",
 							"label": "Motivated",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_individual_2"
 						}
 					],
@@ -205,15 +207,15 @@
 							"kind": "individual",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								46,
-								46
+								46.0,
+								46.0
 							],
 							"prefill": "person_mayu",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						},
@@ -222,15 +224,15 @@
 							"kind": "object",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								447,
-								40
+								447.0,
+								40.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_obj_1"
 						},
@@ -239,15 +241,15 @@
 							"kind": "individual",
 							"label": "Individual #2",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								31,
-								305
+								31.0,
+								305.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_2"
 						},
@@ -256,15 +258,15 @@
 							"kind": "individual",
 							"label": "Individual #3",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								445,
-								306
+								445.0,
+								306.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_3"
 						},
@@ -273,15 +275,15 @@
 							"kind": "information",
 							"label": "Information #1",
 							"label_side": "bottom",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								231,
-								589
+								231.0,
+								589.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_motiv_1"
 						}
@@ -295,6 +297,7 @@
 		},
 		{
 			"graphs": [],
+			"hidden": true,
 			"id": "x_ch0_prologue",
 			"start_clues": [
 				"person_nex",
@@ -309,12 +312,14 @@
 			"topics": [
 				{
 					"edges": [],
+					"hidden": false,
 					"id": "topic_where_have_mayu_notebook_gone",
 					"nodes": [
 						{
 							"id": "node_individual_1",
 							"kind": "any",
 							"label": "Individual #1",
+							"label_side": "top",
 							"min_level": 1.0,
 							"pos": [
 								0.0,
@@ -331,6 +336,7 @@
 							"id": "node_object_1",
 							"kind": "any",
 							"label": "Object #1",
+							"label_side": "top",
 							"min_level": 1.0,
 							"pos": [
 								0.0,
@@ -353,9 +359,10 @@
 	"clues": [
 		{
 			"caption": "",
+			"group": "Common",
 			"id": "person_kelly",
 			"image": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly/profile_quick_duel_kelly_1.png",
-			"info": "Name : Kelly Lastochkina\nAge : 22",
+			"info": "Name : Kelly Lastochkina\nAge : 22\nAffiliate : The Order of High Gate",
 			"kind": "individual",
 			"name": {
 				"en": "Kelly",
@@ -364,12 +371,10 @@
 			"style": "image"
 		},
 		{
-			"caption": {
-				"en": "Classmate. First to report the lights.",
-				"th": "เพื่อนร่วมชั้น คนแรกที่รายงานเรื่องไฟ"
-			},
+			"caption": "",
+			"group": "Common",
 			"id": "person_mayu",
-			"image": "res://assets/textures/vn/characters/vn_char_mayu_smile.png",
+			"image": "res://assets/textures/vn/characters/mayu/vn_char_mayu_happy_2.png",
 			"info": "Name : Mayu Kokawa\nAge : 20\nAffiliate : Department of Computer Science",
 			"kind": "individual",
 			"name": {
@@ -383,6 +388,7 @@
 				"en": "Sent to the study group at 21:03.",
 				"th": "ส่งเข้ากลุ่มติวตอน 21:03"
 			},
+			"group": "Prologue",
 			"id": "object_library_photo",
 			"image": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
 			"info": {
@@ -401,6 +407,7 @@
 				"en": "Campus-wide lights-off from 21:00 to 22:00.",
 				"th": "ปิดไฟทั่วมหาวิทยาลัย 21:00 ถึง 22:00"
 			},
+			"group": "Prologue",
 			"id": "info_blackout_schedule",
 			"image": "",
 			"info": {
@@ -420,6 +427,7 @@
 				"th": "กดค้างเพื่ออ่านแชททั้งหมด"
 			},
 			"conversation": "sample_chat",
+			"group": "Prologue",
 			"id": "chat_study_group",
 			"image": "",
 			"info": "",
@@ -432,6 +440,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Common",
 			"id": "person_nex",
 			"image": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
 			"info": "Name : Nex Crowmont\nAge : 20\nAffiliate : Department of Computer Science",
@@ -441,6 +450,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "book_statistical",
 			"image": "res://assets/textures/detective/ch0/verdict1/book_statistical.png",
 			"info": "Statistical Learning and Machine\nYear 1995",
@@ -450,6 +460,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "book_bird_watching",
 			"image": "res://assets/textures/detective/ch0/verdict1/book_exotic_bird_watching.png",
 			"info": "Exotic Bird Watcing\nYear 2014",
@@ -459,6 +470,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "book_advanced_chinese",
 			"image": "res://assets/textures/detective/ch0/verdict1/book_advanced_chinese.png",
 			"info": "Advanced Chinese\nYear 2020",
@@ -468,6 +480,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Common",
 			"id": "person_michael",
 			"image": "res://assets/textures/detective/ch0/npc/char_michael.png",
 			"info": "Name : Michael Summerfield\nAge : 20\nAffiliate : Department of Biotechnology",
@@ -477,6 +490,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Common",
 			"id": "person_alice",
 			"image": "res://assets/textures/detective/ch0/npc/char_alice.png",
 			"info": "Name : Alice Sterling\nAge : 19\nAffiliate : Department of Computer Science",
@@ -487,6 +501,7 @@
 		{
 			"caption": "",
 			"conversation": "msg_alice_show_cleavage",
+			"group": "Prologue",
 			"id": "msg_alice_show_cleavage",
 			"image": "",
 			"info": "",
@@ -497,6 +512,7 @@
 		{
 			"caption": "",
 			"conversation": "msg_michael",
+			"group": "Prologue",
 			"id": "msg_michael_lend_mythril_dragon",
 			"image": "",
 			"info": "",
@@ -507,6 +523,7 @@
 		{
 			"caption": "",
 			"conversation": "msg_mayu_casual_talk_1",
+			"group": "Prologue",
 			"id": "msg_mayu_casual_talk",
 			"image": "",
 			"info": "",
@@ -516,6 +533,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "notebook_colorful_bookmark",
 			"image": "res://assets/textures/detective/ch0/verdict2/colorful_bookmark_notebook.png",
 			"info": "",
@@ -525,6 +543,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "notebook_blue_bookmark",
 			"image": "res://assets/textures/detective/ch0/verdict2/blue_bookmark_notebook.png",
 			"info": "",
@@ -534,6 +553,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "notebook_luxury",
 			"image": "res://assets/textures/detective/ch0/verdict2/plain_notebook.png",
 			"info": "",
@@ -543,6 +563,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "manga_my_crush_is_a_duck",
 			"image": "res://assets/textures/detective/ch0/verdict2/manga_my_crush_is_a_duck.png",
 			"info": "",
@@ -552,6 +573,7 @@
 		},
 		{
 			"caption": "",
+			"group": "Prologue",
 			"id": "manga_code_archangel",
 			"image": "res://assets/textures/detective/ch0/verdict2/manga_code_archangel.png",
 			"info": "",

@@ -11,6 +11,7 @@ extends Node
 #   "chapters": [{
 #     "id": String,
 #     "title": String | {"en": .., "th": ..},
+#     "hidden": bool,          — if true, omitted from the player inventory chapter list
 #     "vn_scenes": [String],   — campaign VN scene paths belonging to this chapter
 #     "graphs": [String],      — exploration graph paths belonging to this chapter
 #     "start_clues": [String], — clue ids pre-discovered when the player enters
@@ -18,6 +19,7 @@ extends Node
 #     "topics": [{
 #       "id": String,
 #       "title": String | {en, th},
+#       "hidden": bool,        — if true, omitted from the player topic list / preferred pick
 #       "nodes": [{
 #         "id": String,
 #         "label": String | {en, th},          — handwritten text above the frame
@@ -41,6 +43,8 @@ extends Node
 #   "clues": [{
 #     "id": String,
 #     "kind": "individual"|"object"|"information",
+#     "group": String,                          — vault-editor folder label (optional;
+#                                                 empty = Ungrouped in the CLUES list)
 #     "name": String | {en, th},
 #     "caption": String | {en, th},             — short caption under the image
 #     "info": String | {en, th},                — full text shown on hover-hold (image/postit)
@@ -64,6 +68,8 @@ const MAX_LEVEL := 5
 const CLUE_KINDS := ["individual", "object", "information"]
 const CLUE_STYLES := ["image", "postit", "messenger"]
 const NODE_LABEL_SIDES := ["top", "bottom", "left", "right"]
+## Vault-editor display label when clue.group is empty (not persisted as this string).
+const CLUE_GROUP_UNGROUPED := "Ungrouped"
 const MESSENGER_CLUE_ICON := "res://assets/textures/detective/icon_smart_phone.png"
 ## Optional texture for prefilled (locked) node badge; empty = drawn padlock.
 const PREFILL_LOCK_ICON := ""
@@ -149,6 +155,21 @@ func get_chapter_ids() -> Array:
 	return out
 
 
+## Chapter ids shown in the player inventory notebook (excludes vault "hidden").
+func get_visible_chapter_ids() -> Array:
+	var out: Array = []
+	for ch: Variant in _chapters:
+		if not ch is Dictionary:
+			continue
+		var cd: Dictionary = ch as Dictionary
+		if flag_true(cd.get("hidden", false)):
+			continue
+		var cid: String = str(cd.get("id", "")).strip_edges()
+		if not cid.is_empty():
+			out.append(cid)
+	return out
+
+
 func get_chapter(chapter_id: String) -> Dictionary:
 	var needle := chapter_id.strip_edges()
 	for ch: Variant in _chapters:
@@ -196,6 +217,24 @@ func get_topic_ids(chapter_id: String) -> Array:
 		if not tid.is_empty():
 			out.append(tid)
 	return out
+
+
+## True when a vault chapter or topic is marked hidden from player lists.
+static func flag_true(val: Variant) -> bool:
+	if val is bool:
+		return val as bool
+	if val is int or val is float:
+		return int(val) != 0
+	var s: String = str(val).strip_edges().to_lower()
+	return s == "true" or s == "1" or s == "yes"
+
+
+func is_chapter_hidden(chapter_id: String) -> bool:
+	return flag_true(get_chapter(chapter_id).get("hidden", false))
+
+
+func is_topic_hidden(chapter_id: String, topic_id: String) -> bool:
+	return flag_true(get_topic(chapter_id, topic_id).get("hidden", false))
 
 
 ## Highest level referenced by any node/edge of the topic (clamped 1..MAX_LEVEL).
@@ -282,6 +321,33 @@ func has_clue(clue_id: String) -> bool:
 
 func get_clue_kind(clue_id: String) -> String:
 	return str(get_clue(clue_id).get("kind", "")).strip_edges()
+
+
+## Raw vault group string (may be empty = ungrouped). Does not invent "Ungrouped".
+static func clue_group(clue: Dictionary) -> String:
+	return str(clue.get("group", "")).strip_edges()
+
+
+## Folder label for vault-editor lists (empty group → CLUE_GROUP_UNGROUPED).
+static func clue_group_label(clue: Dictionary) -> String:
+	var g: String = clue_group(clue)
+	return g if not g.is_empty() else CLUE_GROUP_UNGROUPED
+
+
+## Sorted unique non-empty group names currently authored on clues.
+func get_clue_groups() -> Array:
+	var seen: Dictionary = {}
+	var out: Array = []
+	for c: Variant in _clues:
+		if not c is Dictionary:
+			continue
+		var g: String = clue_group(c as Dictionary)
+		if g.is_empty() or seen.has(g):
+			continue
+		seen[g] = true
+		out.append(g)
+	out.sort()
+	return out
 
 
 static func clue_style(clue: Dictionary) -> String:

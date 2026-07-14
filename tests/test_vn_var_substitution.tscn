@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://vn_var_subst_test"]
+
+[ext_resource type="Script" path="res://tests/test_vn_var_substitution.gd" id="1"]
+
+[node name="VNVarSubstitutionTestRunner" type="Node"]
+script = ExtResource("1")

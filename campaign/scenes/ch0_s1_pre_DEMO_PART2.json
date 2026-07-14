@@ -94,14 +94,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_evil_5.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "(Sinister laugh)"
-		}
+		"text": "(Sinister laugh)"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
@@ -125,14 +123,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_evil_3.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "(Sinister laugh)"
-		}
+		"text": "(Sinister laugh)"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
@@ -141,8 +137,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_evil_3.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -155,8 +151,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_evil_3.png"
 			}
 		],
 		"speaker": "Mayu",
@@ -190,18 +186,94 @@
 		"wait": 0.5
 	},
 	{
+		"beat_name": "choice_break_free_of_grip",
+		"choices": [
+			{
+				"goto_group": 1.0,
+				"label": "Wrench her hands off"
+			},
+			{
+				"goto_group": 2.0,
+				"label": "Kick"
+			},
+			{
+				"goto_group": 3.0,
+				"label": "Slap"
+			},
+			{
+				"goto_group": 4.0,
+				"label": "Yell for help"
+			}
+		],
+		"linger_characters": true
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 1,
+		"shake_screen": 4.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 1,
+		"shake_screen": 10.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 1,
 		"text": "No matter how hard he tried, he cannot break free of her grip."
 	},
 	{
-		"wait": 0.5
-	},
-	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 2.0,
 		"sfx": "res://assets/audio/sfx/slam2.mp3",
 		"sfx_volume": 60.0,
 		"shake_screen": 10.0,
-		"text": "Nex kicked and knock the mad girl off-balance"
+		"text": "He kicked and knock the mad girl off-balance"
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "var_break_free_off_grip_quiet_study",
+				"value": "1"
+			}
+		],
+		"group": 2,
+		"linger_characters": true,
+		"wait": 0.01
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 3,
+		"sfx": "res://assets/audio/sound_axe1.mp3",
+		"sfx_volume": 60.0,
+		"shake_screen": 10.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 3,
+		"text": "He randomly slaps and hit the mad girl. But she doesn't seem to care.\nThe grip on his neck get even tighter."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"group": 4,
+		"shake_screen": 7.0,
+		"text": "No matter how much he tried to yell, his voice won't come out.\nThe grip on his neck get even tighter."
+	},
+	{
+		"go_to": [
+			{
+				"beat_name": "choice_break_free_of_grip",
+				"conditions": [
+					{
+						"key": "var_break_free_off_grip_quiet_study",
+						"type": "var_not_equals",
+						"value": "1"
+					}
+				]
+			}
+		],
+		"linger_characters": true
 	},
 	{
 		"wait": 0.5
@@ -238,14 +310,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/mayu/vn_char_mayu_evil_3.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "(Sinister laugh)"
-		}
+		"text": "(Sinister laugh)"
 	},
 	{
 		"wait": 0.5
@@ -874,6 +944,28 @@
 		}
 	},
 	{
+		"beat_name": "Choice_describe_mayu_glowing_eyes",
+		"choices": [
+			{
+				"goto_group": 1.0,
+				"label": "Blood all over her"
+			},
+			{
+				"goto_group": 1.0,
+				"label": "Purple glowing eyes"
+			},
+			{
+				"goto_group": 1.0,
+				"label": "Red glowing eyes"
+			},
+			{
+				"goto_group": 1.0,
+				"label": "Dark aura all over her"
+			}
+		],
+		"linger_characters": true
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [
 			{
@@ -883,6 +975,70 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
 			}
 		],
+		"group": 5.0,
+		"speaker": "Nex",
+		"text": "I don't know... there's a lot of blood. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 5.0,
+		"speaker": "Kelly",
+		"text": "A lot of blood? And she grabbed you? Why didn't your cloths get any bloodstain?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"group": 6.0,
+		"speaker": "Nex",
+		"text": "I don't know... but she looked like being crazy. Her eyes glowed purple. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 6.0,
+		"speaker": "Kelly",
+		"text": "Are you sure it's purple? If it's purple, you would've lose some fingers already"
+	},
+	{
+		"group": 6.0,
+		"linger_characters": true,
+		"text": "(Let's recall my memory again...)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"group": 7.0,
 		"speaker": "Nex",
 		"text": "I don't know... but she looked like being crazy. Her eyes glowed red. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
 	},
@@ -897,8 +1053,73 @@
 				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
+		"group": 7.0,
 		"speaker": "Kelly",
 		"text": "That's exactly what we were talking about."
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "var_describe_red_glowing_eyes_mayu",
+				"value": "1"
+			}
+		],
+		"group": 7.0,
+		"linger_characters": true
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"group": 8.0,
+		"speaker": "Nex",
+		"text": "I don't know... but she looked like being crazy. Her eyes glowed red. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 8.0,
+		"speaker": "Kelly",
+		"text": "Are you sure it's a dark aura? If it's really a dark aura, our whole Order must have get alerted already."
+	},
+	{
+		"group": 8.0,
+		"linger_characters": true,
+		"text": "(Let's recall my memory again...)"
+	},
+	{
+		"go_to": [
+			{
+				"beat_name": "Choice_describe_mayu_glowing_eyes",
+				"conditions": [
+					{
+						"key": "var_describe_red_glowing_eyes_mayu",
+						"type": "var_not_equals",
+						"value": "1"
+					}
+				]
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",

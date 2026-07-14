@@ -4087,11 +4087,13 @@ func _populate_fields() -> void:
 	_f_shake.text = ",".join(shk as Array) if shk is Array else (str(shk) if shk != null and shk != "" else "")
 	_f_shake_magnitude.value = float(b.get("shake_magnitude", 8.0))
 
+	# Do NOT use bool(ss) on numbers — bool(8.0) is true in GDScript and was
+	# forcing every non-zero magnitude to display as the legacy default 10.
 	var ss: Variant = b.get("shake_screen", null)
-	if ss == null or bool(ss) == false:
+	if ss == null:
 		_f_shake_screen.value = 0.0
-	elif bool(ss) == true:
-		_f_shake_screen.value = 10.0
+	elif typeof(ss) == TYPE_BOOL:
+		_f_shake_screen.value = 10.0 if bool(ss) else 0.0
 	else:
 		_f_shake_screen.value = float(ss)
 
@@ -4550,8 +4552,10 @@ func _collect_beat() -> Dictionary:
 	var shake: String = _f_shake.text.strip_edges()
 	if not shake.is_empty():
 		b["shake"] = _parse_multi(shake)
-		if _f_shake_magnitude.value != 8.0:
-			b["shake_magnitude"] = _f_shake_magnitude.value
+	# Persist magnitude independently (was only saved when Char Shake text was set,
+	# so the field always snapped back to the default 8 on reload).
+	if absf(_f_shake_magnitude.value - 8.0) > 0.001:
+		b["shake_magnitude"] = _f_shake_magnitude.value
 
 	if _f_shake_screen.value > 0.0:
 		b["shake_screen"] = _f_shake_screen.value

@@ -705,15 +705,32 @@ func _layout_inside_choice_host() -> void:
 
 func _run_choice_actions(choice: Dictionary) -> void:
 	var actions: Variant = choice.get("actions", null)
-	if not (actions is Array) or not ExplorationManager.is_session_active:
+	if not (actions is Array):
 		return
 	for ea: Variant in (actions as Array):
 		if ea is Dictionary:
-			var ead: Dictionary = ea as Dictionary
-			ExplorationManager.dispatch_event(
-				str(ead.get("action", "")),
-				str(ead.get("key", "")),
-				str(ead.get("value", "")))
+			_apply_vn_exploration_action(ea as Dictionary)
+
+
+## Apply a VN exploration_actions / choice action.
+## set_var / set_flag always run (so gallery & standalone VN can break go_to loops).
+## Item / credit / node actions still need an active exploration session.
+func _apply_vn_exploration_action(ead: Dictionary) -> void:
+	var action: String = str(ead.get("action", "")).strip_edges()
+	var key: String = str(ead.get("key", ""))
+	var value: String = str(ead.get("value", ""))
+	if action.is_empty():
+		return
+	if ExplorationManager.is_session_active:
+		ExplorationManager.dispatch_event(action, key, value)
+		return
+	match action:
+		"set_var":
+			ExplorationManager.set_var(key, value)
+		"set_flag":
+			ExplorationManager.set_exploration_flag(key, value)
+		_:
+			pass
 
 func _beat_group_id(beat: Dictionary) -> int:
 	if not beat.has("group"):
@@ -2132,20 +2149,15 @@ func _show_beat() -> void:
 		return
 
 	# ── Exploration session actions ──
-	# exploration_actions fires give_item / remove_item / set_var / etc. on
-	# ExplorationManager when a VN beat is displayed, only during an active session.
+	# exploration_actions: set_var / set_flag always apply (standalone VN / gallery).
+	# give_item / credits / node actions still need an active exploration session.
 	# Format: [{ "action": "give_item", "key": "rusty_key", "value": "" }, ...]
 	var expl_actions: Variant = beat.get("exploration_actions", null)
 	if expl_actions is Array and not (expl_actions as Array).is_empty():
 		ran_side_effects = true
-		if ExplorationManager.is_session_active:
-			for ea: Variant in (expl_actions as Array):
-				if ea is Dictionary:
-					var ead: Dictionary = ea as Dictionary
-					ExplorationManager.dispatch_event(
-						str(ead.get("action", "")),
-						str(ead.get("key",    "")),
-						str(ead.get("value",  "")))
+		for ea: Variant in (expl_actions as Array):
+			if ea is Dictionary:
+				_apply_vn_exploration_action(ea as Dictionary)
 
 	# ── Messenger overlay (read-only chat evidence — blocks until closed) ──
 	var messenger_id: String = str(beat.get("show_messenger", "")).strip_edges()
