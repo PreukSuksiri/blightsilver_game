@@ -409,6 +409,11 @@ var _app_focused: bool = true
 var _mouse_over_game: bool = true
 var _finger_cursor_active: bool = false
 var _popup_cursors: Dictionary = {}  # Window -> TextureRect
+# Optional cursor override (e.g. a held detective tool). When set, the main game
+# cursor sprite draws this texture/size/hotspot instead of the default finger.
+var _cursor_override_tex: Texture2D = null
+var _cursor_override_hotspot: Vector2 = Vector2.ZERO
+var _cursor_override_size: Vector2 = Vector2.ZERO
 var _crystal_anim_pending: int = 0
 var _crystal_anim_board_registered: bool = false
 var _pending_crystal_win_check: bool = false
@@ -636,7 +641,42 @@ func _process(_delta: float) -> void:
 	_refresh_cursor_mode()
 
 func _update_cursor_position() -> void:
-	_cursor_sprite.position = get_viewport().get_mouse_position() - CURSOR_HOTSPOT
+	var hotspot: Vector2 = _cursor_override_hotspot if _cursor_override_tex != null else CURSOR_HOTSPOT
+	_cursor_sprite.position = get_viewport().get_mouse_position() - hotspot
+
+## Swap the main game cursor to a custom texture (e.g. an active detective tool).
+## Only the main sprite is affected; popup/editor cursors keep the finger.
+func set_cursor_override(tex: Texture2D, hotspot: Vector2, size: Vector2) -> void:
+	if tex == null:
+		clear_cursor_override()
+		return
+	_cursor_override_tex     = tex
+	_cursor_override_hotspot = hotspot
+	_cursor_override_size    = size
+	_apply_main_cursor_appearance()
+	_refresh_cursor_mode()
+
+## Restore the default finger cursor.
+func clear_cursor_override() -> void:
+	if _cursor_override_tex == null:
+		return
+	_cursor_override_tex     = null
+	_cursor_override_hotspot = Vector2.ZERO
+	_cursor_override_size    = Vector2.ZERO
+	_apply_main_cursor_appearance()
+	_refresh_cursor_mode()
+
+func _apply_main_cursor_appearance() -> void:
+	if _cursor_sprite == null:
+		return
+	if _cursor_override_tex != null:
+		_cursor_sprite.texture            = _cursor_override_tex
+		_cursor_sprite.custom_minimum_size = _cursor_override_size
+		_cursor_sprite.size               = _cursor_override_size
+	else:
+		_cursor_sprite.texture            = _cursor_tex
+		_cursor_sprite.custom_minimum_size = Vector2(64.0, 64.0)
+		_cursor_sprite.size               = Vector2(64.0, 64.0)
 
 func _load_cursor_texture() -> void:
 	if _cursor_tex != null:

@@ -1,0 +1,641 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Have you pinpoint the type of anomaly? Is it [color=#FF4444]Ghost[/color] or [color=#FF4444]Demon[/color]?"
+	},
+	{
+		"choices": [
+			{
+				"goto_group": 1.0,
+				"label": "Ask for tips"
+			},
+			{
+				"goto_group": 2.0,
+				"label": "Use Detective Note to conclude your verdict"
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Kelly",
+		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras.\nIf [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Kelly",
+		"text": "[color=#FF4444]Demons[/color], usually will not cause any temperature change. And mostly, won't appear on cameras, unless they want to.\n[color=#FF4444]Demons[/color] speaks only in latin or demonic languages."
+	},
+	{
+		"group": 2.0,
+		"linger_characters": true,
+		"show_detective_note": {
+			"chapter": "ch1_s1",
+			"topic": "library_quiet_study_ghost_or_demon"
+		}
+	},
+	{
+		"linger_characters": true,
+		"play_group": [
+			{
+				"conditions": [
+					{
+						"key": "var_quiet_study_ghost_or_demon_individual_1",
+						"type": "var_equals",
+						"value": "anomaly_quiet_study_ghost"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_1",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_normal_temperature"
+					}
+				],
+				"group": 3.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_quiet_study_ghost_or_demon_individual_1",
+						"type": "var_equals",
+						"value": "anomaly_quiet_study_ghost"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_2",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_normal_temperature"
+					}
+				],
+				"group": 3.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_quiet_study_ghost_or_demon_individual_1",
+						"type": "var_equals",
+						"value": "anomaly_quiet_study_ghost"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_1",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_latin_translation"
+					}
+				],
+				"group": 4.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_quiet_study_ghost_or_demon_individual_1",
+						"type": "var_equals",
+						"value": "anomaly_quiet_study_ghost"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_2",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_latin_translation"
+					}
+				],
+				"group": 4.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_quiet_study_ghost_or_demon_individual_1",
+						"type": "var_equals",
+						"value": "anomaly_quiet_study_demon"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_1",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_latin_translation"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_2",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_emf_meter_high"
+					}
+				],
+				"group": 7.0
+			},
+			{
+				"conditions": [
+					{
+						"key": "var_quiet_study_ghost_or_demon_individual_1",
+						"type": "var_equals",
+						"value": "anomaly_quiet_study_demon"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_2",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_latin_translation"
+					},
+					{
+						"key": "var_quiet_study_ghost_or_demon_information_1",
+						"type": "var_equals",
+						"value": "measurement_quiet_study_emf_meter_high"
+					}
+				],
+				"group": 7.0
+			},
+			{
+				"group": 6.0
+			}
+		]
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Kelly",
+		"text": "Ghost? 25 degrees? That ghost must be cooked and ready to eat by now."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Kelly",
+		"text": "Ectoplasm can only survive in colder temperature."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Kelly",
+		"text": "Please revise your verdict, or gather more information from the tools I gave you."
+	},
+	{
+		"go_to": [
+			{
+				"beat_name": "end_beat"
+			}
+		],
+		"group": 3.0,
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 4.0,
+		"speaker": "Kelly",
+		"text": "Look... Ghost is just a dead human. They use the languages they knew.\nAnd no one on the earth speaks fluent Latin anymore."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 4.0,
+		"speaker": "Kelly",
+		"text": "Please revise your verdict, or gather more information from the tools I gave you."
+	},
+	{
+		"go_to": [
+			{
+				"beat_name": "end_beat"
+			}
+		],
+		"group": 4.0,
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 6.0,
+		"speaker": "Kelly",
+		"text": "Hmm... Some information is missing..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"group": 6.0,
+		"speaker": "Kelly",
+		"text": "Please revise your verdict, or gather more information from the tools I gave you."
+	},
+	{
+		"go_to": [
+			{
+				"beat_name": "end_beat"
+			}
+		],
+		"group": 6.0,
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"group": 7.0,
+		"speaker": "Kelly",
+		"text": "Finally, we have enough information to pinpoint that thing. Let me prepare the spell tome."
+	},
+	{
+		"linger_characters": true,
+		"show_note_stamp": {
+			"chapter": "ch1_s1",
+			"stamp": "stamp_kelly",
+			"topic": "library_quiet_study_ghost_or_demon"
+		}
+	},
+	{
+		"fade_out": 1.0,
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/kelly_preach.png",
+		"fade_in": 0.5,
+		"speaker": "Kelly",
+		"text": "Shatter the illusions that hold you bound… Kneel your flesh before this holy ground..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"sfx": "res://assets/audio/sfx/scifi_ui_36.mp3",
+		"shake_magnitude": 30.0,
+		"shake_screen": 6.0,
+		"speaker": "Kelly",
+		"text": "Ostende te!! Daemonium!!"
+	},
+	{
+		"fade_out": 1.0,
+		"linger_characters": true
+	},
+	{
+		"background": null,
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"fade_in": 1.0,
+		"linger_characters": true
+	},
+	{
+		"text": "**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"text": "Sound of spattered liquid is heard faintly"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "I heard something..."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"text": "**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"text": "The splatting voice is coming closer..."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 135.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"shake_screen": 10.0,
+		"text": "!!!",
+		"wait": 2.0
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"text": "Mayu's body is covered in blood. Even more gruesome smile."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Possessed Mayu",
+		"text": "(mumbles unrecognized words)"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Nex!! Use the Vellum Card!!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "May the silver path show your true sins!! Vellum cards commence!!"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"comment": "Animation",
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_forced_cells": [
+			{
+				"card_name": "Pit Lord",
+				"col": 2.0,
+				"row": 4.0
+			},
+			{
+				"card_name": "Death Knight",
+				"col": 2.0,
+				"row": 3.0
+			},
+			{
+				"card_name": "Ancient Lich",
+				"col": 1.0,
+				"row": 3.0
+			},
+			{
+				"card_name": "Vampire Servant",
+				"col": 2.0,
+				"row": 0.0
+			},
+			{
+				"card_name": "Succubus",
+				"col": 0.0,
+				"row": 2.0
+			},
+			{
+				"card_name": "Vampire Duchess",
+				"col": 2.0,
+				"row": 1.0
+			},
+			{
+				"card_name": "Void Stalker",
+				"col": 3.0,
+				"row": 3.0
+			},
+			{
+				"card_name": "Claw Mutant",
+				"col": 0.0,
+				"row": 0.0
+			},
+			{
+				"card_name": "Bladeshifter",
+				"col": 0.0,
+				"row": 4.0
+			},
+			{
+				"card_name": "Leech Man",
+				"col": 1.0,
+				"row": 1.0
+			},
+			{
+				"card_name": "Lab Crawler",
+				"col": 1.0,
+				"row": 2.0
+			},
+			{
+				"card_name": "Red Card",
+				"col": 4.0,
+				"row": 2.0
+			},
+			{
+				"card_name": "Cursed Reflection",
+				"col": 2.0,
+				"row": 2.0
+			},
+			{
+				"card_name": "Mana Drain",
+				"col": 3.0,
+				"row": 2.0
+			},
+			{
+				"card_name": "Acid Trap Hole",
+				"col": 3.0,
+				"row": 1.0
+			},
+			{
+				"card_name": "Explosive Barrels",
+				"col": 4.0,
+				"row": 0.0
+			},
+			{
+				"card_name": "Poltergeist",
+				"col": 4.0,
+				"row": 1.0
+			},
+			{
+				"card_name": "Decoy Puppet",
+				"col": 4.0,
+				"row": 4.0
+			}
+		],
+		"ai_forced_tech": [
+			"Release Mutagen",
+			"Accident",
+			"Illegal Steroid"
+		],
+		"ai_personality_defensive": "Tomb Trap (Hard)",
+		"ai_personality_social": "Vengeful",
+		"almost_win_bgm": "res://assets/audio/bgm_almost_win_3.mp3",
+		"almost_win_bgm_enabled": false,
+		"battle_bgm": "res://assets/audio/bgm_boss_2.mp3",
+		"battle_bgm_start_sec": 0.0,
+		"battle_reward": [
+			{
+				"amount": 50000.0,
+				"type": "credits"
+			},
+			{
+				"pack_name": "Booster Pack - Wind of Dominance",
+				"type": "booster_pack"
+			},
+			{
+				"pack_name": "Booster Pack - Wind of Dominance",
+				"type": "booster_pack"
+			}
+		],
+		"comment": "Battle - Mayu Kokawa",
+		"enemy_deck": {
+			"characters": [
+				"Vampire Duchess",
+				"Vampire Servant",
+				"Succubus",
+				"Bladeshifter",
+				"Claw Mutant",
+				"Death Knight",
+				"Pit Lord",
+				"Void Stalker",
+				"Ancient Lich",
+				"Lab Crawler",
+				"Leech Man",
+				"Poltergeist"
+			],
+			"tech": [
+				"Release Mutagen",
+				"Accident",
+				"Illegal Steroid"
+			],
+			"traps": [
+				"Mana Drain",
+				"Red Card",
+				"Cursed Reflection",
+				"Decoy Puppet",
+				"Acid Trap Hole",
+				"Explosive Barrels"
+			]
+		},
+		"on_lose": "game_over",
+		"on_win": "res://campaign/scenes/ch1_s1_post_DEMO.json",
+		"player1_name": "Nexus Crowmont",
+		"player2_name": "Mayu Kokawa",
+		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_possessed_mayu.png",
+		"start_battle": true
+	},
+	{
+		"beat_name": "end_beat",
+		"linger_characters": true,
+		"wait": 0.01
+	}
+]

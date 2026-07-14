@@ -109,6 +109,7 @@
 		},
 		{
 			"graphs": [],
+			"hidden": false,
 			"id": "ch0_prologue",
 			"start_clues": [],
 			"title": "Prologue - Flickering Midnight",
@@ -119,10 +120,11 @@
 							"arrow": "end",
 							"from": "node_individual_1",
 							"label": "Copied from",
-							"min_level": 1.0,
+							"min_level": 1,
 							"to": "node_object_2"
 						}
 					],
+					"hidden": false,
 					"id": "topic_name_of_book_nex_copied_from",
 					"nodes": [
 						{
@@ -130,15 +132,15 @@
 							"kind": "individual",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								56.0,
-								120.0
+								56,
+								120
 							],
 							"prefill": "person_nex",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -147,15 +149,15 @@
 							"kind": "object",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								408.0,
-								115.0
+								408,
+								115
 							],
 							"prefill": "",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_book_name"
 						}
@@ -168,38 +170,39 @@
 							"arrow": "end",
 							"from": "node_individual_1",
 							"label": "Owned",
-							"min_level": 1.0,
+							"min_level": 1,
 							"to": "node_object_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_object_1",
 							"label": "Has been lent to",
-							"min_level": 1.0,
+							"min_level": 1,
 							"to": "node_individual_2"
 						},
 						{
 							"arrow": "end",
 							"from": "node_individual_2",
 							"label": "Lent Object #1 to",
-							"min_level": 1.0,
+							"min_level": 1,
 							"to": "node_individual_3"
 						},
 						{
 							"arrow": "end",
 							"from": "node_individual_3",
-							"label": "Produced",
-							"min_level": 1.0,
+							"label": "Output",
+							"min_level": 1,
 							"to": "node_information_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_information_1",
 							"label": "Motivated",
-							"min_level": 1.0,
+							"min_level": 1,
 							"to": "node_individual_2"
 						}
 					],
+					"hidden": false,
 					"id": "topic_where_have_mayu_notebook_gone",
 					"nodes": [
 						{
@@ -207,15 +210,15 @@
 							"kind": "individual",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								46.0,
-								46.0
+								46,
+								46
 							],
 							"prefill": "person_mayu",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -224,15 +227,15 @@
 							"kind": "object",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								447.0,
-								40.0
+								447,
+								40
 							],
 							"prefill": "",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_obj_1"
 						},
@@ -241,15 +244,15 @@
 							"kind": "individual",
 							"label": "Individual #2",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								31.0,
-								305.0
+								31,
+								305
 							],
 							"prefill": "",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_2"
 						},
@@ -258,15 +261,15 @@
 							"kind": "individual",
 							"label": "Individual #3",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								445.0,
-								306.0
+								445,
+								306
 							],
 							"prefill": "",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_3"
 						},
@@ -275,15 +278,15 @@
 							"kind": "information",
 							"label": "Information #1",
 							"label_side": "bottom",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								231.0,
-								589.0
+								231,
+								589
 							],
 							"prefill": "",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_motiv_1"
 						}
@@ -320,15 +323,15 @@
 							"kind": "any",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								0.0,
-								0.0
+								0,
+								0
 							],
 							"prefill": "person_mayu",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": ""
 						},
@@ -337,20 +340,145 @@
 							"kind": "any",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1.0,
+							"min_level": 1,
 							"pos": [
-								0.0,
-								0.0
+								0,
+								0
 							],
 							"prefill": "",
 							"size": [
-								200.0,
-								128.0
+								200,
+								128
 							],
 							"var_key": ""
 						}
 					],
 					"title": "Where is Mayu's Notebook?"
+				}
+			],
+			"vn_scenes": []
+		},
+		{
+			"graphs": [],
+			"hidden": false,
+			"id": "ch1_s1",
+			"start_clues": [
+				"anomaly_quiet_study_ghost",
+				"anomaly_quiet_study_demon"
+			],
+			"title": "Chapter 1 - Silver Path",
+			"topics": [
+				{
+					"edges": [
+						{
+							"arrow": "end",
+							"from": "node_individual_1",
+							"label": "Possessed",
+							"min_level": 1,
+							"to": "node_individual_2"
+						},
+						{
+							"arrow": "end",
+							"from": "node_individual_2",
+							"label": "Output",
+							"min_level": 1,
+							"to": "node_information_1"
+						},
+						{
+							"arrow": "end",
+							"from": "node_individual_2",
+							"label": "Output",
+							"min_level": 1,
+							"to": "node_information_2"
+						},
+						{
+							"arrow": "end",
+							"from": "node_information_1",
+							"label": "Is a characteristic for",
+							"min_level": 1,
+							"to": "node_individual_1"
+						},
+						{
+							"arrow": "end",
+							"from": "node_information_2",
+							"label": "Is a characteristic for",
+							"min_level": 1,
+							"to": "node_individual_1"
+						}
+					],
+					"hidden": false,
+					"id": "library_quiet_study_ghost_or_demon",
+					"nodes": [
+						{
+							"id": "node_individual_1",
+							"kind": "individual",
+							"label": "Individual #1",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								15,
+								48
+							],
+							"prefill": "",
+							"size": [
+								200,
+								128
+							],
+							"var_key": "var_quiet_study_ghost_or_demon_individual_1"
+						},
+						{
+							"id": "node_individual_2",
+							"kind": "individual",
+							"label": "Individual #2",
+							"label_side": "top",
+							"min_level": 1,
+							"pos": [
+								794,
+								52
+							],
+							"prefill": "person_possessed_mayu",
+							"size": [
+								200,
+								128
+							],
+							"var_key": ""
+						},
+						{
+							"id": "node_information_1",
+							"kind": "information",
+							"label": "Information #1",
+							"label_side": "bottom",
+							"min_level": 1,
+							"pos": [
+								438,
+								294
+							],
+							"prefill": "",
+							"size": [
+								200,
+								128
+							],
+							"var_key": "var_quiet_study_ghost_or_demon_information_1"
+						},
+						{
+							"id": "node_information_2",
+							"kind": "information",
+							"label": "Information #2",
+							"label_side": "bottom",
+							"min_level": 1,
+							"pos": [
+								459,
+								643
+							],
+							"prefill": "",
+							"size": [
+								200,
+								128
+							],
+							"var_key": "var_quiet_study_ghost_or_demon_information_2"
+						}
+					],
+					"title": "A ghost or a demon?"
 				}
 			],
 			"vn_scenes": []
@@ -580,6 +708,96 @@
 			"kind": "object",
 			"name": "Code Archangel",
 			"style": "image"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "anomaly_quiet_study_ghost",
+			"image": "res://assets/textures/detective/ch1_s1/ghost.png",
+			"info": "A ghost-type anomaly",
+			"kind": "individual",
+			"name": "Ghost",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "anomaly_quiet_study_demon",
+			"image": "res://assets/textures/detective/ch1_s1/demon.png",
+			"info": "A demon-type anomaly",
+			"kind": "individual",
+			"name": "Demon",
+			"style": "image"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "measurement_quiet_study_normal_temperature",
+			"image": "",
+			"info": "The measurement from the thermometer resulted in 25 degree celcius.",
+			"kind": "information",
+			"name": "25 deg. Temperature",
+			"style": "postit"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "measurement_quiet_study_latin_translation",
+			"image": "",
+			"info": "The measurement from the translator resulted in clear, mysterious voice, speaking latin language.",
+			"kind": "information",
+			"name": "Latin Voice",
+			"style": "postit"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "measurement_quiet_study_polaroid_camera_bookshelf",
+			"image": "",
+			"info": "The measurement from the polaroid camera resulted in an image of a normal bookshelf.",
+			"kind": "information",
+			"name": "Picture of a bookshelf",
+			"style": "postit"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "measurement_quiet_study_polaroid_camera_desk",
+			"image": "",
+			"info": "The measurement from the polaroid camera resulted in an image of a normal desk with books.",
+			"kind": "information",
+			"name": "Picture of a desk",
+			"style": "postit"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "measurement_quiet_study_polaroid_camera_blood_stain",
+			"image": "",
+			"info": "The measurement from the polaroid camera resulted in an image of a blood stain on the floor.",
+			"kind": "information",
+			"name": "Picture of blood",
+			"style": "postit"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "measurement_quiet_study_emf_meter_high",
+			"image": "",
+			"info": "The measurement from the EMF meter resulted in 20 (High)",
+			"kind": "information",
+			"name": "EMF 20",
+			"style": "postit"
+		},
+		{
+			"caption": "",
+			"group": "Act 1 Chapter 1",
+			"id": "person_possessed_mayu",
+			"image": "res://assets/textures/vn/characters/mayu/vn_char_mayu_evil_5.png",
+			"info": "Name : Mayu Kokawa??\nAge : 20\nStatus : Possessed / Missing",
+			"kind": "information",
+			"name": "Mayu (Possessed)",
+			"style": "image"
 		}
 	],
 	"stamps": [
@@ -601,7 +819,7 @@
 		},
 		{
 			"id": "stamp_nex",
-			"image": "",
+			"image": "res://assets/textures/detective/stamps/stamp_infernal_brigade.png",
 			"name": "Nex Crowmont"
 		}
 	]

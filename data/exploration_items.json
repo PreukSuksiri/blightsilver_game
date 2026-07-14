@@ -65,5 +65,53 @@
 		"key_item": false,
 		"name": "Bootable Flash Drive",
 		"use_condition": ""
+	},
+	{
+		"big_image": "res://assets/textures/detective/detective_tool/icon_detective_polaroid_camera.png",
+		"description": "A polaroid camera. Its films are coated with silver halide crystals. Rumors said it can capture picture of spirits.",
+		"detective_tool": true,
+		"effects": [],
+		"icon": "res://assets/textures/detective/detective_tool/icon_detective_polaroid_camera.png",
+		"id": "tool_polaroid_camera",
+		"key_item": false,
+		"name": "Polaroid Camera",
+		"tool_cursor": "",
+		"use_condition": ""
+	},
+	{
+		"big_image": "res://assets/textures/detective/detective_tool/icon_detective_etf_meter.png",
+		"description": "An EMF meter for capturing unusual Electromagnetic Field. Very sensitive to any kind of anomaly.",
+		"detective_tool": true,
+		"effects": [],
+		"icon": "res://assets/textures/detective/detective_tool/icon_detective_etf_meter.png",
+		"id": "tool_etf_meter",
+		"key_item": false,
+		"name": "EMF Meter",
+		"tool_cursor": "",
+		"use_condition": ""
+	},
+	{
+		"big_image": "res://assets/textures/detective/detective_tool/icon_detective_thermometer.png",
+		"description": "An military grade thermometer. Can distinguish unusual tempurature change.",
+		"detective_tool": true,
+		"effects": [],
+		"icon": "res://assets/textures/detective/detective_tool/icon_detective_thermometer.png",
+		"id": "tool_thermometer",
+		"key_item": false,
+		"name": "Thermometer",
+		"tool_cursor": "",
+		"use_condition": ""
+	},
+	{
+		"big_image": "res://assets/textures/detective/detective_tool/icon_detective_translator.png",
+		"description": "A special-made translator. Two ways communication. Supports every human language in this world, including Latin and demonic languages.",
+		"detective_tool": true,
+		"effects": [],
+		"icon": "res://assets/textures/detective/detective_tool/icon_detective_translator.png",
+		"id": "tool_translator",
+		"key_item": false,
+		"name": "Translator",
+		"tool_cursor": "",
+		"use_condition": ""
 	}
 ]

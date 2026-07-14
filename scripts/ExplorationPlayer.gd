@@ -193,6 +193,15 @@ var _hovering_spot: bool           = false
 var _hovered_spot_hit: Control     = null   # the hit Control currently being hovered
 var _hovered_nav_panel: Control    = null   # nav-choice panel currently being hovered
 
+# ── Detective tool (active-cursor state) ──────────────────────────────────
+const TOOL_REVEAL_RADIUS: float = 90.0      # default proximity reveal radius (px)
+const TOOL_CURSOR_SIZE: Vector2 = Vector2(96.0, 96.0)
+var _active_tool_id: String        = ""     # empty = no tool active
+# Entries: { "hit": Control, "center": Vector2, "radius": float, "revealed": bool }
+var _tool_spots: Array             = []
+var _tool_dismiss_pending: bool    = false
+var _tool_banner: Label            = null    # top-right "<Tool> Activated" text
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
@@ -1651,6 +1660,10 @@ func _on_inventory_item_selected(item_id: String) -> void:
 	_register_exploration_activity()
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_inventory_menu()
+	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	if bool(item.get("detective_tool", false)):
+		_activate_tool(item_id)
+		return
 	_show_item_preview(item_id)
 
 # ─────────────────────────────────────────────────────────────
@@ -3638,6 +3651,7 @@ func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
 		on_done.call()
 		return
+	_deactivate_tool()   # never carry the tool cursor into a VN
 	ExplorationManager.snapshot_bgm_before_vn()
 	_vn_playing = true
 	_refresh_flashlight_state()
@@ -3843,6 +3857,99 @@ func _show_no_session_error() -> void:
 # Point-and-click hotspots
 # ─────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────
+# Detective Tool (active-cursor state)
+# ─────────────────────────────────────────────────────────────
+
+## Enter "tool active" state: swap the cursor to the tool image and rebuild
+## spots so tool-gated ones become discoverable by sweeping the cursor.
+func _activate_tool(item_id: String) -> void:
+	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	if item.is_empty() or not bool(item.get("detective_tool", false)):
+		return
+	var cursor_path: String = str(item.get("tool_cursor", "")).strip_edges()
+	if cursor_path.is_empty():
+		cursor_path = str(item.get("icon", "")).strip_edges()
+	var tex: Texture2D = null
+	if not cursor_path.is_empty() and ResourceLoader.exists(cursor_path):
+		tex = load(cursor_path) as Texture2D
+	if tex == null:
+		_show_toast("Tool has no usable image.")
+		return
+	_active_tool_id       = item_id
+	_tool_dismiss_pending = false
+	GameState.set_cursor_override(tex, TOOL_CURSOR_SIZE * 0.5, TOOL_CURSOR_SIZE)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
+	_show_tool_banner(str(item.get("name", item_id)))
+	if ExplorationManager.current_node != null:
+		_rebuild_spots(ExplorationManager.current_node)
+
+## Leave "tool active" state: restore the finger cursor and remove tool-gated spots.
+func _deactivate_tool() -> void:
+	_tool_dismiss_pending = false
+	if _active_tool_id.is_empty():
+		return
+	_active_tool_id = ""
+	_tool_spots.clear()
+	GameState.clear_cursor_override()
+	_hide_tool_banner()
+	if is_inside_tree() and ExplorationManager.current_node != null:
+		_rebuild_spots(ExplorationManager.current_node)
+
+## Top-right white banner naming the active tool, e.g. "Translator Activated".
+func _show_tool_banner(tool_name: String) -> void:
+	if _tool_banner == null or not is_instance_valid(_tool_banner):
+		_tool_banner = Label.new()
+		_tool_banner.name          = "ToolBanner"
+		_tool_banner.z_index       = 90   # above spots/tooltip, below item preview (50 is lower z-layer)
+		_tool_banner.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+		_tool_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		_tag_ui(_tool_banner, "font", 700)
+		_tool_banner.add_theme_font_size_override("font_size", 28)
+		_tool_banner.add_theme_color_override("font_color", Color.WHITE)
+		# Bold dark outline/shadow so the white text reads over any background.
+		_tool_banner.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+		_tool_banner.add_theme_constant_override("shadow_offset_x", 2)
+		_tool_banner.add_theme_constant_override("shadow_offset_y", 2)
+		_tool_banner.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.9))
+		_tool_banner.add_theme_constant_override("outline_size", 6)
+		add_child(_tool_banner)
+		_tool_banner.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		_tool_banner.offset_left   = -520.0
+		_tool_banner.offset_top    = 28.0
+		_tool_banner.offset_right  = -28.0
+		_tool_banner.offset_bottom = 72.0
+	_tool_banner.text    = "%s Activated" % tool_name
+	_tool_banner.visible = true
+
+func _hide_tool_banner() -> void:
+	if _tool_banner != null and is_instance_valid(_tool_banner):
+		_tool_banner.visible = false
+
+## Reveal tool-gated spots the cursor sweeps near; once found they stay revealed
+## until the tool is dismissed.
+func _update_tool_reveal() -> void:
+	var mouse: Vector2 = get_viewport().get_mouse_position()
+	for entry_var: Variant in _tool_spots:
+		if not entry_var is Dictionary:
+			continue
+		var entry: Dictionary = entry_var as Dictionary
+		if bool(entry.get("revealed", false)):
+			continue
+		var hit: Control = entry.get("hit")
+		if hit == null or not is_instance_valid(hit):
+			continue
+		var center: Vector2 = entry.get("center", Vector2.ZERO)
+		var radius: float   = float(entry.get("radius", TOOL_REVEAL_RADIUS))
+		if mouse.distance_to(center) <= radius:
+			entry["revealed"]   = true
+			hit.visible          = true
+			hit.mouse_filter     = Control.MOUSE_FILTER_STOP
+			var fade := create_tween()
+			hit.modulate.a = 0.0
+			fade.tween_property(hit, "modulate:a", 1.0, 0.18)
+			SFXManager.play(SFXManager.SFX_EXPLORATION)
+
 func _build_spots_layer() -> void:
 	_spots_layer = Control.new()
 	_spots_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -3900,6 +4007,7 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 		return
 	for child: Node in _spots_layer.get_children():
 		child.queue_free()
+	_tool_spots.clear()     # freed above; re-registered below for the active tool
 	_on_spot_hover_exit()   # ensure cursor + tooltip reset when node changes
 	if node.clickable_spots.is_empty():
 		return
@@ -3928,6 +4036,11 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	# Check conditions — reuse ExplorationManager's connection-unlock logic (reads "conditions" key)
 	if not ExplorationManager.is_connection_unlocked(spot):
 		_log_skipped_spot(spot, spot_index)
+		return
+	# Detective-tool gating: a spot that requires a tool only exists while that
+	# tool is active, and is then revealed by sweeping the cursor near it.
+	var required_tool: String = str(spot.get("requires_tool", "")).strip_edges()
+	if not required_tool.is_empty() and required_tool != _active_tool_id:
 		return
 	# Skip one-time spots already used or currently running an action queue
 	var spot_key_node: String = ExplorationManager.current_node_id
@@ -4008,6 +4121,20 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 						ExplorationManager.end_spot_interaction(cap_node, cap_index)
 						apply_hide.call()
 				_handle_spot_click(cap_acts, complete_cb, spot))
+
+	# Tool-gated spot: start hidden and reveal by proximity (see _process).
+	if not required_tool.is_empty():
+		hit.visible      = false
+		hit.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var radius: float = float(spot.get("reveal_radius", 0.0))
+		if radius <= 0.0:
+			radius = TOOL_REVEAL_RADIUS
+		_tool_spots.append({
+			"hit":      hit,
+			"center":   Vector2(xn * bg_w, yn * bg_h),
+			"radius":   radius,
+			"revealed": false,
+		})
 
 func _handle_spot_click(actions: Array, hide_on_success: Callable, spot: Dictionary = {}) -> void:
 	if _is_hidden_spot(spot):
@@ -4218,6 +4345,9 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			next.call()
 
 func _process(delta: float) -> void:
+	if not _active_tool_id.is_empty() and not _tool_spots.is_empty():
+		_update_tool_reveal()
+
 	if _flashlight_overlay != null and _flashlight_overlay.visible:
 		_flashlight_time += delta
 		_update_flashlight_shader()
@@ -4272,6 +4402,11 @@ func _process(delta: float) -> void:
 			clampf(ty, 4.0, vp.y - tp.y - 4.0))
 
 func _exit_tree() -> void:
+	# Never let the tool cursor leak outside exploration.
+	if not _active_tool_id.is_empty():
+		_active_tool_id = ""
+		_tool_spots.clear()
+		GameState.clear_cursor_override()
 	for tw: Variant in _hud_glow_tweens.values():
 		if tw is Tween and (tw as Tween).is_valid():
 			(tw as Tween).kill()
@@ -4293,6 +4428,12 @@ func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
 func _input(event: InputEvent) -> void:
+	# Detective tool active: any tap dismisses it. Deferred so a revealed spot's
+	# gui_input (and normal HUD clicks) still process this event first.
+	if _is_press_event(event) and not _active_tool_id.is_empty() and not _tool_dismiss_pending:
+		_tool_dismiss_pending = true
+		call_deferred("_deactivate_tool")
+
 	# HUD icons can sit under the info-only overlay; route taps explicitly while info is open.
 	if _is_press_event(event) and _is_info_panel_showing():
 		var hud_id: String = _hud_icon_at_point(_get_press_global_position(event))

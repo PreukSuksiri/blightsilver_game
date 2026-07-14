@@ -30,6 +30,8 @@ var _ef_icon:       LineEdit        = null
 var _ef_big_image:  LineEdit        = null
 var _ef_use_condition: LineEdit     = null
 var _ef_key_item_chk: CheckBox      = null
+var _ef_detective_tool_chk: CheckBox = null
+var _ef_tool_cursor:  LineEdit      = null
 var _ef_effects_vbox: VBoxContainer = null
 
 var _editing_id:    String          = ""   # empty = new item
@@ -245,6 +247,14 @@ func _build_edit_panel() -> void:
 	_ef_key_item_chk.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_ef_key_item_chk)
 
+	_ef_detective_tool_chk = CheckBox.new()
+	_ef_detective_tool_chk.text = "Detective Tool"
+	_ef_detective_tool_chk.tooltip_text = "Tapping this item in exploration swaps the cursor to the tool image (active state) instead of showing the use preview"
+	_ef_detective_tool_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_ef_detective_tool_chk)
+
+	_ef_tool_cursor = _make_image_field_row(vbox, "Tool Cursor (optional)", "res:// cursor image (defaults to Icon)")
+
 	# ── Effects ────────────────────────────────────────────
 	var eff_hdr_row := HBoxContainer.new()
 	eff_hdr_row.add_theme_constant_override("separation", 8)
@@ -325,6 +335,8 @@ func _start_edit_new() -> void:
 	_ef_big_image.text   = ""
 	_ef_use_condition.text = ""
 	_ef_key_item_chk.button_pressed = false
+	_ef_detective_tool_chk.button_pressed = false
+	_ef_tool_cursor.text = ""
 	_clear_effects()
 	_edit_panel.visible  = true
 
@@ -341,6 +353,8 @@ func _start_edit_existing(item_id: String) -> void:
 	_ef_big_image.text   = str(d.get("big_image",   ""))
 	_ef_use_condition.text = str(d.get("use_condition", ""))
 	_ef_key_item_chk.button_pressed = bool(d.get("key_item", false))
+	_ef_detective_tool_chk.button_pressed = bool(d.get("detective_tool", false))
+	_ef_tool_cursor.text = str(d.get("tool_cursor", ""))
 	_clear_effects()
 	var effs: Variant = d.get("effects", [])
 	if effs is Array:
@@ -485,6 +499,8 @@ func _commit_edit() -> void:
 		"big_image":      _ef_big_image.text.strip_edges(),
 		"use_condition":  _ef_use_condition.text.strip_edges(),
 		"key_item":      _ef_key_item_chk.button_pressed,
+		"detective_tool": _ef_detective_tool_chk.button_pressed,
+		"tool_cursor":    _ef_tool_cursor.text.strip_edges(),
 		"effects":        effects,
 	}
 	ExplorationItemDatabase.upsert_item(data)

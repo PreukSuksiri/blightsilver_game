@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://detective_tool_test"]
+
+[ext_resource type="Script" path="res://tests/test_detective_tool.gd" id="1"]
+
+[node name="DetectiveToolTestRunner" type="Node"]
+script = ExtResource("1")

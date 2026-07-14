@@ -1,0 +1,327 @@
+[
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"text": "The quiet study area has looked a little different this time."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"text": "There is broken windows, scattered stuffs, and some bloods."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "This look worse..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Where is she...?"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Mayu! It's me! Come and get the pretty stuffs!"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Here, look! My neck is really bright and clean!"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"text": "(It's all silence...)"
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "\"Pretty stuffs\" huh?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "I remembered some anomalies that loves talking about pretty stuffs..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "But I can't remember which... It's been a really long time..."
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "We might need to do some inspection. So we can pinpoint whether it is a [color=#FF4444]Ghost[/color] or a [color=#FF4444]Demon[/color]"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "With a correct pinpoint, I can [color=#44FF88]chant a code[/color] to \"summon\" it. So we can stop playing their hide and seek game."
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Nex... I want you to have these tools."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "give_item",
+				"key": "tool_polaroid_camera",
+				"value": ""
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "give_item",
+				"key": "tool_etf_meter",
+				"value": ""
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "give_item",
+				"key": "tool_thermometer",
+				"value": ""
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "give_item",
+				"key": "tool_translator",
+				"value": ""
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Wow... Such a bunch of gadgets you've got."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Don't ever call me a fake agent again."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "I want you to use these tools to collect some informations."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras.\nIf [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "[color=#FF4444]Demons[/color], usually will not cause any temperature change. And mostly, won't appear on cameras, unless they want to.\n[color=#FF4444]Demons[/color] speaks only in latin or demonic languages."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Go on and play with these tool. If you're finished, talk to me."
+	},
+	{
+		"linger_characters": true,
+		"text": "(Use different tools in your inventory to gather information. Then talk to Kelly for concluding your verdict)"
+	}
+]

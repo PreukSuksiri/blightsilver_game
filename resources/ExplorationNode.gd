@@ -198,6 +198,11 @@ enum NodeType {
 ##                                           play_puzzle: value = puzzle id, key = optional params (JSON or text)
 ##                                           actions run in list order; puzzle failure aborts remaining actions
 ##     "conditions": Array                 — condition dicts (same format as connection conditions)
+##     "requires_tool": String             — detective-tool item id; when set, the spot only exists
+##                                           while that tool is active and is revealed by sweeping the
+##                                           cursor near it (empty = normal always-checkable spot)
+##     "reveal_radius": float               — proximity reveal radius in px for tool-gated spots
+##                                           (0 = default TOOL_REVEAL_RADIUS in ExplorationPlayer)
 ##     "vn_scene": String                  — legacy field; treated as play_vn action if actions empty
 ##   }
 @export var clickable_spots: Array = []

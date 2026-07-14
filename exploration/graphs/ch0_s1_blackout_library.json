@@ -754,6 +754,19 @@
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_back_hallway"
+				},
+				{
+					"conditions": [
+						{
+							"key": "toilet_front_password_correct",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"label": "Go to node_quiet_study",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_quiet_study"
 				}
 			],
 			"description": "Some of the booths are pretty good. Some of them are just pretty.",
@@ -3400,6 +3413,64 @@
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
+			"almost_win_bgm": "",
+			"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
+			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
+			"characters": [
+				{
+					"canon_story": false,
+					"conditions": [],
+					"name": "Kelly",
+					"play_once": false,
+					"remove_after_talk": false,
+					"thumbnail": "res://assets/textures/exploration/thumbnail/thumbnail_kelly.png",
+					"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_char_kelly.json"
+				}
+			],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to node_exhibition",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_exhibition"
+				}
+			],
+			"description": "There's no one here. But gut feelings say otherwise.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": -220.0,
+				"y": -440.0
+			},
+			"id": "node_quiet_study",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"setup_bgm": "",
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Quiet Study Area",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_after_actions": [],
+			"vn_keep_bgm": true,
+			"vn_play_once": true,
+			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_main.json",
 			"vn_scene_conditions": [],
 			"vn_trigger": "on_enter",
 			"vn_trigger_equals": "",

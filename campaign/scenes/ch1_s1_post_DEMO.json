@@ -19,6 +19,13 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed.png",
+		"exploration_actions": [
+			{
+				"action": "set_var",
+				"key": "",
+				"value": ""
+			}
+		],
 		"fade_color": "#000000",
 		"text": "The possessed girl stopped and barely can stand."
 	},
@@ -92,18 +99,18 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_warning.png"
 			}
 		],
 		"fade_color": "#000000",
 		"speaker": "Kelly",
-		"text": "There it is!! It's a demon!!"
+		"text": "Checkmate!!"
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -118,7 +125,7 @@
 		"text": "** Angry Growl **"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -157,8 +164,7 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_shoot_midnight_shadow.png",
-		"characters": [],
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/kelly_shoot_midnight_shadow_2.png",
 		"fade_color": "#000000",
 		"flash_color": "#ffffff",
 		"flash_count": 3.0,
@@ -171,7 +177,7 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_shoot_midnight_shadow_mini.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/kelly_shoot_midnight_shadow_2.png",
 		"fade_color": "#000000",
 		"text": "Silver bullets blew through the demon and shreded it to mere pieces of black smokes"
 	},
@@ -179,7 +185,7 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -196,7 +202,7 @@
 		"text": "** Screech ***"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -210,7 +216,7 @@
 		"text": "The demon's shadowy body get torn like an old paper."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -223,7 +229,7 @@
 		"text": "It turned away and tried to escape."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -243,7 +249,7 @@
 		"text": "Not so fast!!"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -282,36 +288,7 @@
 		"text": "Like a hyena running away from a larger predator, the demon quickly slipped through the broken window glass."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
-		"characters": [
-			{
-				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
-			}
-		],
-		"fade_color": "#000000",
-		"flash_color": "#FFFFFF",
-		"flash_count": 2.0,
-		"flash_delay": 0.4,
-		"flash_duration": 0.2,
-		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
-		"text": "** Bang!! ** ** Bang!!**"
-	},
-	{
-		"characters": [
-			{
-				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
-			}
-		],
-		"wait": 0.5
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -336,7 +313,7 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -350,7 +327,7 @@
 		"text": "Damn... it escaped..."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -364,7 +341,7 @@
 		"text": "Demons love to possess human, so they can hide their name..."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -375,7 +352,7 @@
 		],
 		"fade_color": "#000000",
 		"speaker": "Kelly",
-		"text": "If only we had their name, it will be a lot easier to track them down..."
+		"text": "We need that demon's name to track it down. Let's search for its name at the headquarter."
 	},
 	{
 		"characters": [
@@ -389,7 +366,7 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -421,7 +398,7 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -438,7 +415,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "You're right. Take my car downstairs."
+		"text": "Hmph... You're right. Take my car downstairs."
 	},
 	{
 		"fade_color": "#000000",

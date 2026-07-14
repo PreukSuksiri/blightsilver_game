@@ -2066,6 +2066,60 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 					str(cd.get("key",   "")),
 					str(cd.get("value", "")))
 
+	# Detective-tool gating row (appended AFTER Remove so fixed-index reads in
+	# _collect_spots are not shifted; collected via frame meta instead of index).
+	var tool_row := HBoxContainer.new()
+	tool_row.add_theme_constant_override("separation", 4)
+	var tool_lbl := Label.new()
+	tool_lbl.text = "Requires tool"
+	tool_lbl.tooltip_text = "If set, this spot only appears while that detective tool is active, revealed by sweeping the cursor near it."
+	tool_lbl.add_theme_font_size_override("font_size", 12)
+	tool_row.add_child(tool_lbl)
+	var tool_opt := OptionButton.new()
+	tool_opt.add_theme_font_size_override("font_size", 12)
+	tool_opt.add_item("(none)")
+	tool_opt.set_item_metadata(0, "")
+	var cur_tool: String = str(spot_data.get("requires_tool", "")).strip_edges()
+	var sel_idx: int = 0
+	for it_var: Variant in ExplorationItemDatabase.all_items():
+		if not it_var is Dictionary:
+			continue
+		var it: Dictionary = it_var as Dictionary
+		if not bool(it.get("detective_tool", false)):
+			continue
+		var tid: String = str(it.get("id", ""))
+		if tid.is_empty():
+			continue
+		var new_idx: int = tool_opt.item_count
+		tool_opt.add_item("%s  [%s]" % [str(it.get("name", tid)), tid])
+		tool_opt.set_item_metadata(new_idx, tid)
+		if tid == cur_tool:
+			sel_idx = new_idx
+	# Preserve an unknown/legacy tool id even if it is not in the current DB.
+	if sel_idx == 0 and not cur_tool.is_empty():
+		var extra_idx: int = tool_opt.item_count
+		tool_opt.add_item("%s  [missing]" % cur_tool)
+		tool_opt.set_item_metadata(extra_idx, cur_tool)
+		sel_idx = extra_idx
+	tool_opt.select(sel_idx)
+	tool_row.add_child(tool_opt)
+	var radius_lbl := Label.new()
+	radius_lbl.text = "Reveal r"
+	radius_lbl.add_theme_font_size_override("font_size", 12)
+	tool_row.add_child(radius_lbl)
+	var radius_spin := SpinBox.new()
+	radius_spin.min_value = 0.0
+	radius_spin.max_value = 2048.0
+	radius_spin.step = 1.0
+	radius_spin.value = float(spot_data.get("reveal_radius", 0.0))
+	radius_spin.custom_minimum_size = Vector2(80, 0)
+	radius_spin.add_theme_font_size_override("font_size", 12)
+	radius_spin.tooltip_text = "Proximity reveal radius in px (0 = default)"
+	tool_row.add_child(radius_spin)
+	vb.add_child(tool_row)
+	frame.set_meta("requires_tool_opt", tool_opt)
+	frame.set_meta("reveal_radius_spin", radius_spin)
+
 	# Index 10: Remove button
 	var del_btn := Button.new()
 	del_btn.text = "Remove Point"
@@ -2276,6 +2330,17 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 			entry["hitbox_w"] = hitbox_w
 		if hitbox_h > 0.0:
 			entry["hitbox_h"] = hitbox_h
+		# Detective-tool gating (collected via meta so row order does not matter).
+		if frame.has_meta("requires_tool_opt"):
+			var tool_opt := frame.get_meta("requires_tool_opt") as OptionButton
+			if tool_opt != null and tool_opt.selected >= 0:
+				var tool_id: String = str(tool_opt.get_item_metadata(tool_opt.selected))
+				if not tool_id.is_empty():
+					entry["requires_tool"] = tool_id
+		if frame.has_meta("reveal_radius_spin"):
+			var radius_spin := frame.get_meta("reveal_radius_spin") as SpinBox
+			if radius_spin != null and radius_spin.value > 0.0:
+				entry["reveal_radius"] = radius_spin.value
 		result.append(entry)
 	return result
 
