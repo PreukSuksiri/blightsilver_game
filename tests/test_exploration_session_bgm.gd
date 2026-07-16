@@ -33,6 +33,7 @@ func _ready() -> void:
 func run_all_tests() -> void:
 	test_session_bgm_preserved_after_title_menu_audio()
 	test_restore_queues_saved_session_bgm()
+	test_saved_session_matches_launch_shared_graph()
 
 func _start_test_session() -> void:
 	ExplorationManager.launch_params = {"force_fresh": true}
@@ -84,3 +85,40 @@ func test_restore_queues_saved_session_bgm() -> void:
 		"restore queues saved exploration BGM path")
 	assert_eq(float(pending.get("position", -1.0)), 12.0,
 		"restore queues saved exploration BGM position")
+	if ExplorationManager.is_session_active:
+		ExplorationManager.end_session(false, true)
+
+func test_saved_session_matches_launch_shared_graph() -> void:
+	print("-- test_saved_session_matches_launch_shared_graph")
+	var act1_save := {
+		"active": true,
+		"graph_path": GRAPH_PATH,
+		"source_vn_scene": "res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
+		"vars": {"chapter": "act_1_ch_1"},
+	}
+	assert_true(not ExplorationManager._saved_session_matches_launch(
+			act1_save,
+			"res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json",
+			{}),
+		"prologue launch must not resume Act I snapshot on shared graph")
+	assert_true(ExplorationManager._saved_session_matches_launch(
+			act1_save,
+			"res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
+			{"chapter": "act_1_ch_1"}),
+		"Act I launch may resume Act I snapshot")
+	var prologue_save := {
+		"active": true,
+		"graph_path": GRAPH_PATH,
+		"source_vn_scene": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json",
+		"vars": {},
+	}
+	assert_true(ExplorationManager._saved_session_matches_launch(
+			prologue_save,
+			"res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json",
+			{}),
+		"prologue launch may resume prologue snapshot")
+	assert_true(not ExplorationManager._saved_session_matches_launch(
+			prologue_save,
+			"res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
+			{"chapter": "act_1_ch_1"}),
+		"Act I launch must not resume prologue snapshot")

@@ -234,12 +234,14 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 	keep_vn_bgm = bool(launch_params.get("keep_vn_bgm", false))
 	var force_fresh: bool = bool(launch_params.get("force_fresh", false))
 
-	# Resume saved session for the same graph (unless force_fresh is set)
+	# Resume saved session for the same graph (unless force_fresh is set).
+	# Shared maps (prologue + Act I) must not resume another chapter's snapshot.
 	if not force_fresh:
 		var saved: Dictionary = SaveManager.exploration_session
 		if saved.get("active", false) \
 				and normalize_graph_path(str(saved.get("graph_path", ""))) \
-				== normalize_graph_path(graph_path):
+				== normalize_graph_path(graph_path) \
+				and _saved_session_matches_launch(saved, launch_source_vn.strip_edges(), launch_params):
 			if restore_saved_session():
 				CheckerTransition.fade_out_to_battle(func() -> void:
 					get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
@@ -707,9 +709,37 @@ func has_saved_session_for_chapter(
 
 	return false
 
+
+## True when a mid-session snapshot belongs to this launch (shared-graph safe).
+func _saved_session_matches_launch(
+		saved: Dictionary, launch_source_vn_path: String, params: Dictionary) -> bool:
+	var saved_vn: String = str(saved.get("source_vn_scene", "")).strip_edges()
+	var want_vn: String = launch_source_vn_path.strip_edges()
+	if not want_vn.is_empty() and not saved_vn.is_empty() and saved_vn != want_vn:
+		return false
+	var want_chapter: String = str(params.get("chapter", "")).strip_edges()
+	var saved_vars: Variant = saved.get("vars", {})
+	var saved_chapter: String = ""
+	if saved_vars is Dictionary:
+		saved_chapter = str((saved_vars as Dictionary).get("chapter", "")).strip_edges()
+	# Prologue launches omit chapter; Act I sets chapter=act_1_ch_1.
+	if want_chapter != saved_chapter:
+		return false
+	return true
+
+
 ## Restore saved progress and open the exploration player (campaign gallery continue).
+## Explicit continue — always restore this graph's snapshot (skip launch ownership gate).
 func resume_saved_exploration(graph_path: String, fallback_return_scene: String = "res://scenes/main_menu.tscn") -> void:
-	launch(graph_path, fallback_return_scene, {})
+	return_scene = fallback_return_scene
+	launch_params.clear()
+	launch_source_vn = ""
+	if has_saved_session(graph_path) and restore_saved_session():
+		CheckerTransition.fade_out_to_battle(func() -> void:
+			get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
+		return
+	# No usable snapshot — start fresh on this graph.
+	launch(graph_path, fallback_return_scene, {"force_fresh": true})
 
 ## Clear any stored mid-session data from SaveManager.
 func _clear_saved_session() -> void:

@@ -2075,6 +2075,9 @@ func _show_beat() -> void:
 				params[str(k)] = (expl_params as Dictionary)[k]
 		if keep_vn_bgm:
 			params["keep_vn_bgm"] = true
+		# Authored on the beat (not inside exploration_params) — skip mid-session resume.
+		if bool(beat.get("exploration_force_fresh", false)):
+			params["force_fresh"] = true
 		var inv: Variant = beat.get("exploration_inventory", null)
 		if inv is Array and not (inv as Array).is_empty():
 			params["initial_inventory"] = (inv as Array).duplicate()
