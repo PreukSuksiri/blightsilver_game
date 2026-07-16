@@ -106,6 +106,9 @@ signal message_posted(text: String)
 ## Emitted when an item is added to the session inventory. UI shows the item-obtained overlay.
 signal item_obtained(item_id: String)
 
+## Emitted when ExplorationPlayer finishes the item-obtained overlay queue.
+signal item_obtained_overlay_idle
+
 ## Emitted when a reward is sent to the player's mailbox (booster pack, credits, etc.).
 ## info keys: image_path (String), display_name (String), type ("credits"|"booster_pack")
 signal mailbox_reward_granted(info: Dictionary)
@@ -181,6 +184,8 @@ var _source_vn_scene: String = ""
 var _pending_restored_bgm: Dictionary = {}
 ## BGM snapshot taken before an exploration VN; survives VN→battle handoff for post-battle resume.
 var _vn_resume_bgm: Dictionary = {}
+## True while ExplorationPlayer is showing (or queued) item-obtained overlays.
+var _item_obtained_overlay_busy: bool = false
 
 # ─────────────────────────────────────────────────────────────
 # Read-only properties
@@ -228,7 +233,9 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 	# Resume saved session for the same graph (unless force_fresh is set)
 	if not force_fresh:
 		var saved: Dictionary = SaveManager.exploration_session
-		if saved.get("active", false) and str(saved.get("graph_path", "")) == graph_path:
+		if saved.get("active", false) \
+				and normalize_graph_path(str(saved.get("graph_path", ""))) \
+				== normalize_graph_path(graph_path):
 			if restore_saved_session():
 				CheckerTransition.fade_out_to_battle(func() -> void:
 					get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
@@ -341,6 +348,7 @@ func _clear_session_memory() -> void:
 	_source_vn_scene   = ""
 	_pending_restored_bgm = {}
 	_vn_resume_bgm = {}
+	_item_obtained_overlay_busy = false
 	_pending_spot_action_resume = {}
 	pending_battle_result = {}
 	_exploration_checkpoint_pending = false
@@ -470,6 +478,55 @@ func is_battle_bgm_snapshot(path: String, context: String = "") -> bool:
 	return not almost_path.is_empty() and path == almost_path
 
 
+func _is_exploration_player_scene_active() -> bool:
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	if tree == null or tree.current_scene == null:
+		return false
+	return tree.current_scene.scene_file_path == EXPLORATION_PLAYER_SCENE
+
+
+func _is_exploration_ambient_bgm(path: String, context: String) -> bool:
+	path = path.strip_edges()
+	context = context.strip_edges()
+	if path.is_empty():
+		return false
+	if is_battle_bgm_snapshot(path, context):
+		return false
+	if context == BGMManager.CONTEXT_MAIN_MENU:
+		return false
+	return true
+
+
+func _bgm_snapshot_from_saved_session(sd: Dictionary) -> Dictionary:
+	return {
+		"bgm_path": str(sd.get("bgm_path", "")).strip_edges(),
+		"bgm_context": str(sd.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges(),
+		"bgm_position": float(sd.get("bgm_position", 0.0)),
+		"bgm_loop_from_sec": float(sd.get("bgm_loop_from_sec", -1.0)),
+	}
+
+
+func _empty_bgm_snapshot() -> Dictionary:
+	return {
+		"bgm_path": "",
+		"bgm_context": "",
+		"bgm_position": 0.0,
+		"bgm_loop_from_sec": -1.0,
+	}
+
+
+func _resolve_persisted_bgm_snapshot() -> Dictionary:
+	var prev: Dictionary = SaveManager.exploration_session
+	if not prev.get("active", false):
+		return _empty_bgm_snapshot()
+	var preserved: Dictionary = _bgm_snapshot_from_saved_session(prev)
+	var preserved_path: String = str(preserved.get("bgm_path", "")).strip_edges()
+	var preserved_context: String = str(preserved.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges()
+	if preserved_path.is_empty() or is_battle_bgm_snapshot(preserved_path, preserved_context):
+		return _empty_bgm_snapshot()
+	return preserved
+
+
 func _session_bgm_snapshot() -> Dictionary:
 	var path: String = BGMManager.get_current_path().strip_edges()
 	var context: String = BGMManager.get_current_context().strip_edges()
@@ -483,23 +540,15 @@ func _session_bgm_snapshot() -> Dictionary:
 			position = float(_vn_resume_bgm.get("position", 0.0))
 			loop_from_sec = float(_vn_resume_bgm.get("loop_from_sec", -1.0))
 		else:
-			var prev: Dictionary = SaveManager.exploration_session
-			if prev.get("active", false):
-				path = str(prev.get("bgm_path", "")).strip_edges()
-				context = str(prev.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges()
-				position = float(prev.get("bgm_position", 0.0))
-				loop_from_sec = float(prev.get("bgm_loop_from_sec", -1.0))
-			else:
-				path = ""
-				context = ""
-				position = 0.0
-				loop_from_sec = -1.0
+			return _resolve_persisted_bgm_snapshot()
+
+	# After Save and Exit the live session stays active while the title menu plays its
+	# own BGM — never overwrite the exploration snapshot with that audio.
+	if not _is_exploration_player_scene_active() or not _is_exploration_ambient_bgm(path, context):
+		return _resolve_persisted_bgm_snapshot()
 
 	if is_battle_bgm_snapshot(path, context):
-		path = ""
-		context = ""
-		position = 0.0
-		loop_from_sec = -1.0
+		return _empty_bgm_snapshot()
 
 	return {
 		"bgm_path": path,
@@ -721,6 +770,21 @@ func take_pending_restored_bgm() -> Dictionary:
 	var out: Dictionary = _pending_restored_bgm.duplicate()
 	_pending_restored_bgm = {}
 	return out
+
+
+func is_item_obtained_overlay_busy() -> bool:
+	return _item_obtained_overlay_busy
+
+
+func mark_item_obtained_overlay_busy() -> void:
+	_item_obtained_overlay_busy = true
+
+
+func mark_item_obtained_overlay_idle() -> void:
+	if not _item_obtained_overlay_busy:
+		return
+	_item_obtained_overlay_busy = false
+	emit_signal("item_obtained_overlay_idle")
 
 
 ## Capture ambient exploration BGM before an overlay VN (single-use resume after battle handoff).

@@ -48,6 +48,7 @@ func run_all_tests() -> void:
 	test_topic_progress()
 	test_preferred_topic()
 	test_hidden_chapter_and_topic()
+	test_chapter_unlock_for_inventory()
 	test_placements()
 	test_stamps()
 	test_save_roundtrip()
@@ -369,6 +370,24 @@ func test_hidden_chapter_and_topic() -> void:
 	DetectiveNoteVault.reload()
 	DetectiveNoteManager.reset_all()
 
+func test_chapter_unlock_for_inventory() -> void:
+	DetectiveNoteManager.reset_all()
+	assert_false(DetectiveNoteManager.is_chapter_unlocked("ch0_prologue"),
+		"chapter locked with no progress")
+	assert_eq(DetectiveNoteManager.get_unlocked_chapter_ids(), [],
+		"inventory chapter list empty with no progress")
+	DetectiveNoteManager.add_clue("ch0_prologue", "person_nex", true)
+	assert_true(DetectiveNoteManager.is_chapter_unlocked("ch0_prologue"),
+		"chapter unlocks after first discovered clue")
+	assert_true(DetectiveNoteManager.get_unlocked_chapter_ids().has("ch0_prologue"),
+		"inventory chapter list includes progressed chapter")
+	DetectiveNoteManager.reset_all()
+	DetectiveNoteManager.unlock_topic("ch0_prologue", "topic_name_of_book_nex_copied_from")
+	assert_true(DetectiveNoteManager.is_chapter_unlocked("ch0_prologue"),
+		"chapter unlocks after topic unlock")
+	assert_false(DetectiveNoteManager.get_unlocked_chapter_ids().has("ch1_s1"),
+		"future chapter stays hidden until progress")
+
 func test_placements() -> void:
 	SaveManager.exploration_flags.clear()
 	assert_true(DetectiveNoteManager.set_placement(
@@ -595,7 +614,11 @@ func test_note_overlay() -> void:
 	add_child(host)
 	var overlay: DetectiveNoteOverlay = DetectiveNoteOverlay.open_for_chapter(host, "ch0_demo")
 	await get_tree().process_frame
+	await get_tree().process_frame
 	assert_true(is_instance_valid(overlay), "note overlay opens for chapter")
+	assert_true(overlay.size.x > 400.0, "overlay fills viewport width")
+	assert_true(overlay._notebook_area.size.x > 200.0, "notebook column has usable width")
+	assert_true(overlay._root_panel.size.x > 500.0, "root panel expands across overlay")
 	assert_eq(overlay._selected_chapter, "ch0_demo", "active chapter selected")
 	assert_eq(overlay._selected_topic, "library_lights", "preferred unlocked topic selected")
 	assert_false(overlay._chapter_scroll.visible, "VN/exploration overlay hides chapter section")
@@ -804,6 +827,7 @@ func test_vn_note_beats() -> void:
 	vn_ui.free()
 
 func test_inventory_note_tab() -> void:
+	DetectiveNoteManager.reset_all()
 	var inv: Control = (load("res://scripts/InventoryMenu.gd") as GDScript).new()
 	add_child(inv)
 	await get_tree().process_frame
@@ -816,6 +840,17 @@ func test_inventory_note_tab() -> void:
 	if overlay != null and is_instance_valid(overlay):
 		assert_true(overlay._all_chapters_mode, "inventory note overlay shows all chapters")
 		assert_true(overlay._chapter_scroll.visible, "inventory note overlay shows chapter section")
+		assert_eq(overlay._chapter_vbox.get_child_count(), 0,
+			"inventory hides chapters until story progress")
+		overlay._close()
+		await get_tree().process_frame
+	DetectiveNoteManager.add_clue("ch0_prologue", "person_nex", true)
+	inv._on_note_tab()
+	await get_tree().process_frame
+	overlay = inv._note_overlay
+	if overlay != null and is_instance_valid(overlay):
+		assert_true(overlay._chapter_vbox.get_child_count() >= 1,
+			"inventory shows unlocked chapter after progress")
 		overlay._close()
 		await get_tree().process_frame
 		assert_true(inv._note_overlay == null, "closing note overlay clears inventory ref")

@@ -66,7 +66,7 @@ const RARITY_SHADOW: Dictionary = {
 # ─────────────────────────────────────────────────────────────
 const FLAG_DEFS: Dictionary = {
 	"mutagen": {"emoji": "🧬", "color": Color(0.55, 0.95, 0.55, 0.92)},
-	"venom":   {"emoji": "☣", "color": Color(0.55, 0.85, 0.30, 0.92), "icon_color": Color(0.15, 0.22, 0.05, 1.0)},
+	"venom":   {"emoji": "☣", "color": Color(0.55, 0.85, 0.30, 0.92), "icon_color": Color(0.15, 0.22, 0.05, 1.0), "font_scale": 1.2},
 	"berserk": {"emoji": "💢", "color": Color(0.95, 0.30, 0.25, 0.92)},
 }
 
@@ -156,12 +156,13 @@ const BADGE_POST_ANIM_DELAY: float = 0.5
 const WAIT_ICON_SIZE: float = 44.0
 const WAIT_GLOW_SIZE: float = 54.0
 const WAIT_ICON_SHADOW_DROP: float = 2.0
-const FLAG_BAR_HEIGHT: float = 30.0
+const FLAG_DESIGN_CARD_WIDTH: float = 110.0
+const FLAG_BAR_HEIGHT: float = 34.0
 const FLAG_BAR_SIDE_MARGIN: float = 6.0
-const FLAG_BADGE_HEIGHT: float = 28.0
-const FLAG_BADGE_FONT_SIZE: int = 16
-const FLAG_BADGE_MIN_WIDTH: float = 32.0
-const FLAG_BADGE_MAX_WIDTH: float = 50.0
+const FLAG_BADGE_HEIGHT: float = 32.0
+const FLAG_BADGE_MIN_WIDTH: float = 28.0
+const FLAG_BADGE_MAX_WIDTH: float = 44.0
+const FLAG_BADGE_WIDTH_HEIGHT_RATIO: float = 1.2
 const FLAG_BADGE_SEPARATION: int = 4
 
 func _ready() -> void:
@@ -219,6 +220,9 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_apply_artwork_layout()
 		_layout_wait_icon_overlay()
+		_layout_flag_bar()
+		if _flag_bar != null and _flag_bar.visible and card_data != null:
+			_refresh_flag_badges()
 
 func _layout_wait_icon_overlay() -> void:
 	if attacked_icon_rect == null or wait_glow_panel == null:
@@ -303,16 +307,51 @@ func _make_card_icon(tex: Texture2D) -> TextureRect:
 	add_child(icon)
 	return icon
 
+func _flag_ui_scale() -> float:
+	var card_w: float = size.x if size.x > 0.0 else custom_minimum_size.x
+	return maxf(0.72, card_w / FLAG_DESIGN_CARD_WIDTH)
+
+
+func _flag_badge_metrics(badge_count: int) -> Dictionary:
+	var scale: float = _flag_ui_scale()
+	var bar_h: float = FLAG_BAR_HEIGHT * scale
+	var badge_h: float = FLAG_BADGE_HEIGHT * scale
+	var min_w: float = FLAG_BADGE_MIN_WIDTH * scale
+	var max_w: float = FLAG_BADGE_MAX_WIDTH * scale
+	var sep: float = float(FLAG_BADGE_SEPARATION) * scale
+	var margin: float = FLAG_BAR_SIDE_MARGIN * scale
+	var card_w: float = size.x if size.x > 0.0 else custom_minimum_size.x
+	var avail_w: float = maxf(card_w - margin * 2.0, min_w)
+	var spread_w: float = (avail_w - sep * float(maxi(1, badge_count) - 1)) / float(maxi(1, badge_count))
+	var badge_w: float = clampf(spread_w, min_w, max_w)
+	badge_w = minf(badge_w, badge_h * FLAG_BADGE_WIDTH_HEIGHT_RATIO)
+	var font_size: int = maxi(12, int(round(badge_h * 0.68)))
+	return {
+		"bar_height": bar_h,
+		"badge_height": badge_h,
+		"badge_width": badge_w,
+		"font_size": font_size,
+		"separation": maxi(2, int(round(sep))),
+	}
+
+
+func _layout_flag_bar() -> void:
+	if _flag_bar == null:
+		return
+	var metrics: Dictionary = _flag_badge_metrics(1)
+	_flag_bar.offset_top = -metrics["bar_height"]
+	_flag_bar.add_theme_constant_override("separation", metrics["separation"])
+
+
 func _build_flag_bar() -> void:
 	_flag_bar = HBoxContainer.new()
 	# Anchor to the full bottom edge of the card; badges will be centred inside
 	_flag_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_flag_bar.offset_top    = -FLAG_BAR_HEIGHT
 	_flag_bar.offset_bottom = 0.0
 	_flag_bar.offset_left   = 0.0
 	_flag_bar.offset_right  = 0.0
+	_layout_flag_bar()
 	_flag_bar.alignment     = BoxContainer.ALIGNMENT_CENTER
-	_flag_bar.add_theme_constant_override("separation", FLAG_BADGE_SEPARATION)
 	_flag_bar.mouse_filter  = MOUSE_FILTER_IGNORE
 	_flag_bar.visible       = false
 	add_child(_flag_bar)
@@ -347,14 +386,12 @@ func _refresh_flag_badges() -> void:
 		_flag_bar.visible = false
 		return
 
-	var bar_w: float = size.x if size.x > 0.0 else custom_minimum_size.x
-	var avail_w: float = maxf(bar_w - FLAG_BAR_SIDE_MARGIN * 2.0, FLAG_BADGE_MIN_WIDTH)
 	var badge_count: int = defined_flags.size()
-	var badge_w: float = clampf(
-		(avail_w - FLAG_BADGE_SEPARATION * float(badge_count - 1)) / float(badge_count),
-		FLAG_BADGE_MIN_WIDTH,
-		FLAG_BADGE_MAX_WIDTH
-	)
+	_layout_flag_bar()
+	var metrics: Dictionary = _flag_badge_metrics(badge_count)
+	var badge_w: float = metrics["badge_width"]
+	var badge_h: float = metrics["badge_height"]
+	var font_size: int = metrics["font_size"]
 
 	for flag_name: String in defined_flags:
 		var def: Dictionary = FLAG_DEFS[flag_name]
@@ -379,7 +416,7 @@ func _refresh_flag_badges() -> void:
 		sb.border_width_top    = 2
 		sb.border_width_bottom = 2
 		panel.add_theme_stylebox_override("panel", sb)
-		panel.custom_minimum_size = Vector2(badge_w, FLAG_BADGE_HEIGHT)
+		panel.custom_minimum_size = Vector2(badge_w, badge_h)
 		panel.set_meta("flag_name", flag_name)
 
 		var lbl := Label.new()
@@ -387,7 +424,10 @@ func _refresh_flag_badges() -> void:
 		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-		lbl.add_theme_font_size_override("font_size", FLAG_BADGE_FONT_SIZE)
+		var flag_font_size: int = font_size
+		if def.has("font_scale"):
+			flag_font_size = maxi(12, int(round(float(font_size) * float(def["font_scale"]))))
+		lbl.add_theme_font_size_override("font_size", flag_font_size)
 		if def.has("icon_color"):
 			lbl.add_theme_color_override("font_color", def["icon_color"])
 		lbl.mouse_filter = MOUSE_FILTER_IGNORE
@@ -1085,12 +1125,13 @@ func _apply_rarity(accent_color: Color) -> void:
 			rarity_shimmer.size = Vector2(26, size.y)
 			rarity_shimmer.color = Color(1.0, 1.0, 1.0, 0.14)
 			rarity_shimmer.visible = true
-			var _shimmer_end: float = maxf(size.x - rarity_shimmer.size.x, 0.0)
+			rarity_shimmer.position.x = -30.0
+			var shimmer_end: float = maxf(size.x - rarity_shimmer.size.x, 0.0)
 			_rarity_tween = create_tween().set_loops()
 			_rarity_tween.tween_interval(1.5)
-			_rarity_tween.tween_property(rarity_shimmer, "position:x", _shimmer_end, 8.4) \
+			_rarity_tween.tween_property(rarity_shimmer, "position:x", shimmer_end, 8.4) \
+				.from(-30.0) \
 				.set_trans(Tween.TRANS_SINE)
-			_rarity_tween.tween_callback(func() -> void: rarity_shimmer.position.x = -30.0)
 		CharacterData.Rarity.EXOTIC:
 			# Full-card brightness pulse
 			rarity_shimmer.position = Vector2(0, 0)
@@ -1441,6 +1482,7 @@ func play_destroy_animation() -> void:
 	destroyed_overlay.color = Color(1, 0.45, 0.1, 0)
 
 	var saved_pos := position
+	var card_id := get_instance_id()
 	var tween := create_tween()
 
 	# Flash in
@@ -1456,11 +1498,15 @@ func play_destroy_animation() -> void:
 	# Fade out with flash
 	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.28)
 
-	tween.tween_callback(func():
-		_is_destroying = false
-		position = saved_pos
-		scale = Vector2(1.0, 1.0)
-		destroyed_overlay.visible = false
+	tween.tween_callback(func() -> void:
+		var node: Object = instance_from_id(card_id)
+		if node == null or not is_instance_valid(node):
+			return
+		var card := node as Card
+		card._is_destroying = false
+		card.position = saved_pos
+		card.scale = Vector2(1.0, 1.0)
+		card.destroyed_overlay.visible = false
 		# _on_card_destroyed() calls _refresh_card_node() 0.55s after the signal,
 		# which updates card_data and resets modulate via _clear_rarity().
 	)
@@ -1482,16 +1528,24 @@ func _play_peek_flip(show_face_up: bool) -> void:
 	_flip_tween = create_tween()
 	_flip_tween.tween_property(self, "scale", Vector2(0.05, 1.0), 0.14) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	var card_id := get_instance_id()
+	var peek_face_up := show_face_up
 	var show_fn := func() -> void:
-		if show_face_up:
-			match card_data.card_type:
-				"character": _show_character_face_up()
-				"trap":      _show_trap_face_up()
-				"tech":      _show_tech_face_up()
+		var node: Object = instance_from_id(card_id)
+		if node == null or not is_instance_valid(node):
+			return
+		var card := node as Card
+		if card.card_data == null:
+			return
+		if peek_face_up:
+			match card.card_data.card_type:
+				"character": card._show_character_face_up()
+				"trap":      card._show_trap_face_up()
+				"tech":      card._show_tech_face_up()
 		else:
-			_show_face_down()
-		if is_selected:
-			selection_border.visible = true
+			card._show_face_down()
+		if card.is_selected:
+			card.selection_border.visible = true
 	_flip_tween.tween_callback(show_fn)
 	_flip_tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.14) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)

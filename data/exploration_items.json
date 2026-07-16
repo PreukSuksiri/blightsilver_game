@@ -73,7 +73,7 @@
 		"effects": [],
 		"icon": "res://assets/textures/detective/detective_tool/icon_detective_polaroid_camera.png",
 		"id": "tool_polaroid_camera",
-		"key_item": false,
+		"key_item": true,
 		"name": "Polaroid Camera",
 		"tool_cursor": "",
 		"use_condition": ""
@@ -85,7 +85,7 @@
 		"effects": [],
 		"icon": "res://assets/textures/detective/detective_tool/icon_detective_etf_meter.png",
 		"id": "tool_etf_meter",
-		"key_item": false,
+		"key_item": true,
 		"name": "EMF Meter",
 		"tool_cursor": "",
 		"use_condition": ""
@@ -97,7 +97,7 @@
 		"effects": [],
 		"icon": "res://assets/textures/detective/detective_tool/icon_detective_thermometer.png",
 		"id": "tool_thermometer",
-		"key_item": false,
+		"key_item": true,
 		"name": "Thermometer",
 		"tool_cursor": "",
 		"use_condition": ""
@@ -109,7 +109,7 @@
 		"effects": [],
 		"icon": "res://assets/textures/detective/detective_tool/icon_detective_translator.png",
 		"id": "tool_translator",
-		"key_item": false,
+		"key_item": true,
 		"name": "Translator",
 		"tool_cursor": "",
 		"use_condition": ""

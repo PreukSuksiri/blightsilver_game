@@ -831,7 +831,17 @@ func _play_burst_ring(ctrl: Control) -> void:
 	var t := create_tween()
 	t.tween_property(ring, "scale", Vector2(1.6, 1.6), 0.45).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
 	t.parallel().tween_property(ring, "modulate:a", 0.0, 0.45).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	t.tween_callback(ring.queue_free)
+	_queue_tween_free(t, ring)
+
+func _queue_tween_free(tw: Tween, node: Node) -> void:
+	if node == null:
+		return
+	var node_id: int = node.get_instance_id()
+	tw.tween_callback(func() -> void:
+		var n: Node = instance_from_id(node_id) as Node
+		if n != null and is_instance_valid(n):
+			n.queue_free())
+
 
 func _flash_screen_white() -> void:
 	var flash := ColorRect.new()
@@ -843,7 +853,7 @@ func _flash_screen_white() -> void:
 	var t := create_tween()
 	t.tween_property(flash, "color:a", 0.65, 0.06).set_trans(Tween.TRANS_LINEAR)
 	t.tween_property(flash, "color:a", 0.0, 0.35).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	t.tween_callback(flash.queue_free)
+	_queue_tween_free(t, flash)
 
 func _bounce_forward(ctrl: Control, dx: float) -> void:
 	var t := create_tween()
@@ -1011,7 +1021,7 @@ func _shatter_triangles(ctrl: Control) -> void:
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 		tw.parallel().tween_property(poly, "rotation", poly.rotation + rot_delta, duration) \
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
-		tw.tween_callback(poly.queue_free)
+		_queue_tween_free(tw, poly)
 
 	await get_tree().create_timer(0.80).timeout  # covers max fly-apart duration (0.75) + buffer
 

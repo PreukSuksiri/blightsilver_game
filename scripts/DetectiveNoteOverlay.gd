@@ -25,7 +25,21 @@ const DIM_COLOR := Color(0.0, 0.0, 0.0, 0.60)
 const PAPER_FALLBACK := Color(0.93, 0.89, 0.80)
 const SIDEBAR_W := 250.0
 const CLUEBAR_W := 300.0
+## Shift empty-state copy left so it reads centered across the full three-column layout
+## (left topics sidebar is narrower than the right clue panel).
+const EMPTY_LBL_SHIFT_X := (CLUEBAR_W - SIDEBAR_W) * 0.5
+const EMPTY_LBL_W := 320.0
 const TILE_SIZE := DetectiveNoteVerdictMap.DRAG_PREVIEW_SIZE
+const CLUE_NAME_FONT_SIZE := 12
+const CLUE_NAME_MAX_LINES := 2
+const CLUE_NAME_LINE_H := 17.0
+## Space below the clue image: separator + up to two caption lines + padding.
+const CLUE_CAPTION_TEXT_H := CLUE_NAME_LINE_H * float(CLUE_NAME_MAX_LINES) + 6.0
+const CLUE_CAPTION_BLOCK_H := 4.0 + CLUE_CAPTION_TEXT_H + 4.0
+const CLUE_TILE_PAD_TOP := 14.0
+const CLUE_TILE_PAD_SIDE := 6.0
+const CLUE_TILE_PAD_BOTTOM := 6.0
+const CLUE_TILE_PANEL_MARGIN_V := CLUE_TILE_PAD_TOP + CLUE_TILE_PAD_BOTTOM
 const HOVER_OPEN_SEC := 1.0
 const HOVER_STEP_SEC := 0.25
 const HOVER_MOVE_THRESHOLD_PX := 16.0
@@ -69,6 +83,7 @@ var _topic_vbox: VBoxContainer = null
 var _topic_header: Label = null
 var _topic_scroll: ScrollContainer = null
 var _map: DetectiveNoteVerdictMap = null
+var _map_host: Control = null
 var _map_scroll: ScrollContainer = null
 var _notebook_area: Control = null
 var _notebook_root: Control = null
@@ -104,14 +119,14 @@ static func open_for_chapter(
 	if not tid.is_empty():
 		overlay._selected_chapter = overlay._active_chapter
 		overlay._selected_topic = tid
-	parent.add_child(overlay)  # fields must be set before add_child (_ready)
+	_attach_to_viewport(overlay, parent)  # fields must be set before add_child (_ready)
 	return overlay
 
 
 static func open_all(parent: Node) -> DetectiveNoteOverlay:
 	var overlay := _make()
 	overlay._all_chapters_mode = true
-	parent.add_child(overlay)
+	_attach_to_viewport(overlay, parent)
 	return overlay
 
 
@@ -122,8 +137,13 @@ static func open_stamp_view(parent: Node, chapter_id: String, topic_id: String) 
 	overlay._selected_chapter = chapter_id.strip_edges()
 	overlay._selected_topic = topic_id.strip_edges()
 	overlay._stamp_view_mode = true
-	parent.add_child(overlay)
+	_attach_to_viewport(overlay, parent)
 	return overlay
+
+
+## VN / exploration parents can be 0×0 on the first frame; mount on the viewport host instead.
+static func _attach_to_viewport(overlay: DetectiveNoteOverlay, requester: Node) -> void:
+	GameDialog.attach_viewport_overlay(overlay, requester)
 
 
 static func _make() -> DetectiveNoteOverlay:
@@ -139,8 +159,10 @@ func _ready() -> void:
 	_build_ui()
 	if _stamp_view_mode:
 		_show_stamp_view()
+		call_deferred("_sync_viewport_layout")
+		call_deferred("_fit_verdict_map")
 		return
-	var chapters: Array = DetectiveNoteVault.get_visible_chapter_ids() \
+	var chapters: Array = DetectiveNoteManager.get_unlocked_chapter_ids() \
 		if _all_chapters_mode else DetectiveNoteVault.get_chapter_ids()
 	if _selected_chapter.is_empty():
 		if not _active_chapter.is_empty() and DetectiveNoteVault.get_chapter_ids().has(_active_chapter):
@@ -148,11 +170,33 @@ func _ready() -> void:
 			_selected_chapter = _active_chapter
 		elif not chapters.is_empty():
 			_selected_chapter = str(chapters[0])
-	# Inventory never starts on a vault-hidden chapter.
-	if _all_chapters_mode and DetectiveNoteVault.is_chapter_hidden(_selected_chapter):
+	# Inventory never starts on a hidden or story-locked chapter.
+	if _all_chapters_mode and (
+			DetectiveNoteVault.is_chapter_hidden(_selected_chapter)
+			or not DetectiveNoteManager.is_chapter_unlocked(_selected_chapter)):
 		_selected_chapter = str(chapters[0]) if not chapters.is_empty() else ""
 	_refresh_chapter_list()
 	_select_chapter(_selected_chapter)
+	call_deferred("_sync_viewport_layout")
+	call_deferred("_fit_verdict_map")
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		call_deferred("_sync_viewport_layout")
+		call_deferred("_fit_verdict_map")
+
+
+func _sync_viewport_layout() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	if vp.x <= 0.0 or vp.y <= 0.0:
+		return
+	if size.x > 1.0 and size.y > 1.0:
+		return
+	# Fallback when the overlay host has not laid out yet (unit-test hosts, first frame).
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	offset_right = vp.x
+	offset_bottom = vp.y
 
 
 func _input(event: InputEvent) -> void:
@@ -315,11 +359,14 @@ func _build_ui() -> void:
 
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 12)
+	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_root_panel.add_child(columns)
 
 	# ── Left: chapters + topics ──
 	var left := VBoxContainer.new()
 	left.custom_minimum_size = Vector2(SIDEBAR_W, 0)
+	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	left.add_theme_constant_override("separation", 8)
 	columns.add_child(left)
 
@@ -364,16 +411,17 @@ func _build_ui() -> void:
 	columns.add_child(_notebook_area)
 	# Sidebar (and tilted/pulsing Done) must paint above the notebook; tree order
 	# alone draws the notebook on top and conceals Done when it scales out.
+	# Notebook itself must clip — wide verdict maps used to spill over the scene.
 	columns.clip_contents = false
 	left.clip_contents = false
 	left.z_index = 2
 	_notebook_area.z_index = 0
-	_notebook_area.clip_contents = false
+	_notebook_area.clip_contents = true
 
 	_notebook_root = Control.new()
 	_notebook_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_notebook_root.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_notebook_root.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_notebook_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_notebook_root.clip_contents = true
 	_notebook_area.add_child(_notebook_root)
 
 	if ResourceLoader.exists(NOTEPAPER):
@@ -390,21 +438,27 @@ func _build_ui() -> void:
 	_map_scroll.offset_top = 46.0
 	_map_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_map_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Notebook scrolls vertically only — maps are authored to fit the width.
+	# Vertical scroll only. Width is handled by _fit_verdict_map() scaling.
 	_map_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_map_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_map_scroll.clip_contents = true
 	_notebook_root.add_child(_map_scroll)
+	_map_scroll.resized.connect(_fit_verdict_map)
+
+	# Host reports the scaled layout size so horizontal_scroll DISABLED does not
+	# force a crushing min-width when the authored map is wider than the notebook.
+	_map_host = Control.new()
+	_map_host.mouse_filter = Control.MOUSE_FILTER_STOP
+	_map_scroll.add_child(_map_host)
 
 	_map = DetectiveNoteVerdictMap.new()
 	_map.locale = locale
-	_map.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_map.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_map.clue_drop_requested.connect(_on_map_drop_requested)
 	_map.node_hover_started.connect(_on_map_node_hover_started)
 	_map.node_hover_ended.connect(func() -> void: _on_hover_control_exited())
 	_map.drag_ghost_show = _show_drag_ghost_for_clue
 	_map.drag_ghost_hide = _hide_drag_ghost
-	_map_scroll.add_child(_map)
+	_map_host.add_child(_map)
 
 	_topic_title_lbl = Label.new()
 	_topic_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -415,7 +469,9 @@ func _build_ui() -> void:
 	_topic_title_lbl.add_theme_font_override("font", FontManager.make_font("handwritten", 700))
 	_topic_title_lbl.add_theme_font_size_override("font_size", 28)
 	_topic_title_lbl.add_theme_color_override("font_color", Color(0.28, 0.22, 0.16))
-	_topic_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_topic_title_lbl.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_topic_title_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_topic_title_lbl.clip_text = true
 	_topic_title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_topic_title_lbl.visible = false
 	_notebook_root.add_child(_topic_title_lbl)
@@ -423,10 +479,17 @@ func _build_ui() -> void:
 	_empty_lbl = Label.new()
 	_empty_lbl.text = "Nothing here yet.\nClues you discover will appear in this note."
 	_empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_empty_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_empty_lbl.custom_minimum_size = Vector2(EMPTY_LBL_W, 0.0)
 	_empty_lbl.add_theme_font_override("font", FontManager.make_font("handwritten", 400))
 	_empty_lbl.add_theme_font_size_override("font_size", 24)
 	_empty_lbl.add_theme_color_override("font_color", Color(0.35, 0.30, 0.25, 0.85))
-	_empty_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_empty_lbl.set_anchors_preset(Control.PRESET_CENTER)
+	_empty_lbl.offset_left = -EMPTY_LBL_W * 0.5 - EMPTY_LBL_SHIFT_X
+	_empty_lbl.offset_right = EMPTY_LBL_W * 0.5 - EMPTY_LBL_SHIFT_X
+	_empty_lbl.offset_top = -36.0
+	_empty_lbl.offset_bottom = 36.0
 	_empty_lbl.visible = false
 	_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_notebook_root.add_child(_empty_lbl)
@@ -434,6 +497,7 @@ func _build_ui() -> void:
 	# ── Right: clue panels ──
 	var right := VBoxContainer.new()
 	right.custom_minimum_size = Vector2(CLUEBAR_W, 0)
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation", 8)
 	columns.add_child(right)
 
@@ -460,6 +524,7 @@ func _build_ui() -> void:
 
 	var clue_scroll := ScrollContainer.new()
 	clue_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	clue_scroll.clip_contents = true
 	right.add_child(clue_scroll)
 	_clue_scroll = clue_scroll
 	_clue_grid = GridContainer.new()
@@ -549,7 +614,7 @@ func _refresh_chapter_list() -> void:
 	_clear_children(_chapter_vbox)
 	if not _all_chapters_mode:
 		return
-	for cid_v: Variant in DetectiveNoteVault.get_visible_chapter_ids():
+	for cid_v: Variant in DetectiveNoteManager.get_unlocked_chapter_ids():
 		var cid: String = str(cid_v)
 		var chapter: Dictionary = DetectiveNoteVault.get_chapter(cid)
 		var btn := Button.new()
@@ -613,6 +678,7 @@ func _refresh_map() -> void:
 	if _selected_topic.is_empty():
 		_map.setup({}, 1, DetectiveNoteVerdictMap.Mode.READONLY)
 		_empty_lbl.visible = true
+		_fit_verdict_map()
 		_sync_done_btn_pulse()
 		return
 	_empty_lbl.visible = false
@@ -628,7 +694,37 @@ func _refresh_map() -> void:
 			DetectiveNoteManager.get_topic_stamp(_selected_chapter, _selected_topic),
 			false,
 			DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic))
+	_fit_verdict_map()
+	call_deferred("_fit_verdict_map")
 	_sync_done_btn_pulse()
+
+
+## Scale the authored verdict map down when it is wider than the notebook column.
+## Horizontal scroll is disabled, so without this a wide map forces a huge min-width,
+## crushes the notebook, and (without clipping) paints over the exploration scene.
+func _fit_verdict_map() -> void:
+	if _map == null or not is_instance_valid(_map) \
+			or _map_host == null or not is_instance_valid(_map_host) \
+			or _map_scroll == null or not is_instance_valid(_map_scroll):
+		return
+	var extent: Vector2 = _map.content_extent()
+	extent.x = maxf(extent.x, 1.0)
+	extent.y = maxf(extent.y, 1.0)
+	var avail_w: float = _map_scroll.size.x
+	if avail_w < 64.0:
+		avail_w = _notebook_area.size.x if _notebook_area != null else 0.0
+	if avail_w < 64.0:
+		call_deferred("_fit_verdict_map")
+		return
+	var s: float = 1.0 if extent.x <= avail_w else avail_w / extent.x
+	_map.scale = Vector2(s, s)
+	_map.position = Vector2.ZERO
+	_map.size = extent
+	# Host owns scroll metrics; full authored extent as min-width crushes the HBox.
+	_map.custom_minimum_size = Vector2.ZERO
+	var scaled := Vector2(extent.x * s, extent.y * s)
+	_map_host.custom_minimum_size = scaled
+	_map_host.size = scaled
 
 
 func _refresh_topic_title() -> void:
@@ -655,28 +751,59 @@ func _switch_clue_tab(kind: String) -> void:
 		_clue_grid.add_child(_make_clue_tile(str(cid_v)))
 
 
+func _configure_clue_name_label(lbl: Label, max_lines: int = CLUE_NAME_MAX_LINES) -> void:
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.max_lines_visible = max_lines
+	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	lbl.clip_text = false
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+
+func _make_clue_caption_host(name_text: String) -> Control:
+	var host := Control.new()
+	host.custom_minimum_size = Vector2(TILE_SIZE.x, CLUE_CAPTION_TEXT_H)
+	host.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var name_lbl := Label.new()
+	name_lbl.text = name_text
+	name_lbl.add_theme_font_size_override("font_size", CLUE_NAME_FONT_SIZE)
+	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_configure_clue_name_label(name_lbl, CLUE_NAME_MAX_LINES)
+	name_lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	host.add_child(name_lbl)
+	return host
+
+
 func _make_clue_tile(clue_id: String) -> Control:
 	var clue: Dictionary = DetectiveNoteVault.get_clue(clue_id)
 	var tile := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.20, 0.17, 0.14)
 	sb.set_corner_radius_all(6)
-	sb.set_content_margin_all(6.0)
+	sb.content_margin_left = CLUE_TILE_PAD_SIDE
+	sb.content_margin_right = CLUE_TILE_PAD_SIDE
+	sb.content_margin_top = CLUE_TILE_PAD_TOP
+	sb.content_margin_bottom = CLUE_TILE_PAD_BOTTOM
 	tile.add_theme_stylebox_override("panel", sb)
-	tile.custom_minimum_size = TILE_SIZE + Vector2(16.0, 30.0)
+	tile.custom_minimum_size = Vector2(
+		TILE_SIZE.x + 16.0,
+		TILE_SIZE.y + CLUE_CAPTION_BLOCK_H + CLUE_TILE_PANEL_MARGIN_V)
+	tile.clip_contents = false
 	tile.mouse_filter = Control.MOUSE_FILTER_STOP
 
-	# PanelContainer only lays out one child — wrap vbox + optional New badge.
-	var body := Control.new()
-	body.custom_minimum_size = TILE_SIZE + Vector2(4.0, 18.0)
-	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tile.add_child(body)
+	var shell := Control.new()
+	shell.custom_minimum_size = Vector2(TILE_SIZE.x + 4.0, TILE_SIZE.y + CLUE_CAPTION_BLOCK_H)
+	shell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tile.add_child(shell)
 
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 4)
-	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	body.add_child(vbox)
+	var body := VBoxContainer.new()
+	body.add_theme_constant_override("separation", 4)
+	body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shell.add_child(body)
 
 	var clue_name: String = DetectiveNoteVault.clue_display_name(clue, locale)
 	if DetectiveNoteVault.clue_is_messenger(clue):
@@ -687,13 +814,14 @@ func _make_clue_tile(clue_id: String) -> Control:
 		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		tex_rect.custom_minimum_size = TILE_SIZE
 		tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		vbox.add_child(tex_rect)
+		body.add_child(tex_rect)
 	else:
 		var img_path: String = str(clue.get("image", "")).strip_edges()
 		if DetectiveNoteVault.clue_is_postit(clue):
 			var postit := ColorRect.new()
 			postit.color = DetectiveNoteVerdictMap.POSTIT_COLOR
 			postit.custom_minimum_size = TILE_SIZE
+			postit.clip_contents = true
 			var pl := Label.new()
 			pl.text = clue_name
 			pl.add_theme_font_override("font", FontManager.make_font("handwritten", 400))
@@ -702,9 +830,12 @@ func _make_clue_tile(clue_id: String) -> Control:
 			pl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			pl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
 			pl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			pl.clip_text = true
+			pl.max_lines_visible = 4
+			pl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			postit.add_child(pl)
 			postit.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			vbox.add_child(postit)
+			body.add_child(postit)
 		else:
 			var tex_rect := TextureRect.new()
 			if ResourceLoader.exists(img_path):
@@ -713,18 +844,12 @@ func _make_clue_tile(clue_id: String) -> Control:
 			tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			tex_rect.custom_minimum_size = TILE_SIZE
 			tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			vbox.add_child(tex_rect)
+			body.add_child(tex_rect)
 
-	var name_lbl := Label.new()
-	name_lbl.text = clue_name
-	name_lbl.add_theme_font_size_override("font_size", 12)
-	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.add_child(name_lbl)
+	body.add_child(_make_clue_caption_host(clue_name))
 
 	if _should_show_new_badge(clue_id):
-		body.add_child(_make_new_badge())
+		shell.add_child(_make_new_badge())
 
 	tile.set_meta("clue_id", clue_id)
 	tile.mouse_filter = Control.MOUSE_FILTER_STOP

@@ -190,6 +190,33 @@ func get_unlocked_topics(chapter_id: String) -> Array:
 	return out
 
 
+## True once the player has detective-note progress in this chapter (discovered
+## clues or unlocked topics from VN / exploration / story events).
+func is_chapter_unlocked(chapter_id: String) -> bool:
+	var ch := chapter_id.strip_edges()
+	if ch.is_empty() or not _progress.has(ch):
+		return false
+	var entry: Variant = _progress[ch]
+	if not entry is Dictionary:
+		return false
+	var ed: Dictionary = entry as Dictionary
+	var topics: Variant = ed.get("topics", {})
+	if topics is Dictionary and not (topics as Dictionary).is_empty():
+		return true
+	var clue_list: Variant = ed.get("clues", [])
+	return clue_list is Array and not (clue_list as Array).is_empty()
+
+
+## Vault-visible chapters the player has started — used by the inventory NOTE tab.
+func get_unlocked_chapter_ids() -> Array:
+	var out: Array = []
+	for cid_v: Variant in DetectiveNoteVault.get_visible_chapter_ids():
+		var cid: String = str(cid_v)
+		if is_chapter_unlocked(cid):
+			out.append(cid)
+	return out
+
+
 ## Topic to open first in the notebook: prefer unstamped (active) topics,
 ## newest unlocked first; if every topic is stamped, use the newest overall.
 func get_preferred_topic(chapter_id: String) -> String:

@@ -105,12 +105,12 @@ func _build_ui() -> void:
 
 
 func _make_reward_slot(reward: Dictionary, slot_h: float) -> Control:
-	var wrap := VBoxContainer.new()
-	wrap.alignment = BoxContainer.ALIGNMENT_CENTER
-	wrap.add_theme_constant_override("separation", 10)
+	var slot_vbox := VBoxContainer.new()
+	slot_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	slot_vbox.add_theme_constant_override("separation", 10)
 
 	var icon_area := _make_reward_icon(reward, slot_h)
-	wrap.add_child(icon_area)
+	slot_vbox.add_child(icon_area)
 
 	var caption := Label.new()
 	caption.text = _caption_for_reward(reward)
@@ -119,9 +119,9 @@ func _make_reward_slot(reward: Dictionary, slot_h: float) -> Control:
 	caption.custom_minimum_size = Vector2(slot_h * 1.1, 0.0)
 	caption.add_theme_font_size_override("font_size", 18)
 	caption.add_theme_color_override("font_color", Color(0.88, 0.94, 1.0))
-	wrap.add_child(caption)
+	slot_vbox.add_child(caption)
 
-	return wrap
+	return slot_vbox
 
 
 func _make_reward_icon(reward: Dictionary, slot_h: float) -> Control:

@@ -813,7 +813,6 @@ func _setup_buttons() -> void:
 		play_again_btn.offset_bottom = -50.0
 		_campaign_return_btn = Button.new()
 		_campaign_return_btn.text = "RETURN TO MAP"
-		_campaign_return_btn.layout_mode = 1
 		_campaign_return_btn.anchor_left   = 0.5
 		_campaign_return_btn.anchor_top    = 1.0
 		_campaign_return_btn.anchor_right  = 0.5
@@ -1188,7 +1187,6 @@ func _build_portraits() -> void:
 		var p1oy: float = GameState.portrait_p1_offset.y
 		_p1_portrait = TextureRect.new()
 		_p1_portrait.texture       = p1_tex
-		_p1_portrait.layout_mode   = 1
 		_p1_portrait.anchor_left   = 0.0
 		_p1_portrait.anchor_top    = 1.0
 		_p1_portrait.anchor_right  = 0.0
@@ -1227,7 +1225,6 @@ func _build_portraits() -> void:
 		var p2oy: float = GameState.portrait_p2_offset.y
 		_p2_portrait = TextureRect.new()
 		_p2_portrait.texture       = p2_tex
-		_p2_portrait.layout_mode   = 1
 		_p2_portrait.anchor_left   = 1.0
 		_p2_portrait.anchor_top    = 1.0
 		_p2_portrait.anchor_right  = 1.0
@@ -1806,7 +1803,6 @@ func _rebuild_tech_fan() -> void:
 func _add_fan_card(tech_name: String, player: int,
 		pos_x: float, pos_y: float, rot: float) -> void:
 	var card: Control = CARD_SCENE.instantiate()
-	card.layout_mode = 0
 	card.position = Vector2(pos_x, pos_y)
 	card.size = Vector2(_FAN_CARD_W, _FAN_CARD_H)
 	card.pivot_offset = Vector2(_FAN_CARD_W * 0.5, _FAN_CARD_H * 0.5)
@@ -1828,14 +1824,21 @@ func _add_fan_card(tech_name: String, player: int,
 
 	# Rise/lower on hover (tween position Y)
 	var base_y: float = pos_y
+	var card_id: int = card.get_instance_id()
 	card.mouse_entered.connect(func() -> void:
+		var fan_card: Node = instance_from_id(card_id)
+		if fan_card == null or not is_instance_valid(fan_card):
+			return
 		var tw := create_tween()
-		tw.tween_property(card, "position:y", base_y - _FAN_HOVER_RISE, 0.10) \
+		tw.tween_property(fan_card, "position:y", base_y - _FAN_HOVER_RISE, 0.10) \
 			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		_show_hover_info(tech_name, "tech"))
 	card.mouse_exited.connect(func() -> void:
+		var fan_card: Node = instance_from_id(card_id)
+		if fan_card == null or not is_instance_valid(fan_card):
+			return
 		var tw := create_tween()
-		tw.tween_property(card, "position:y", base_y, 0.10) \
+		tw.tween_property(fan_card, "position:y", base_y, 0.10) \
 			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		_hide_hover_info())
 
@@ -1851,7 +1854,6 @@ func _build_tech_stacks() -> void:
 
 	# Shared overlay panel — positioned when opened
 	var ovl := Panel.new()
-	ovl.layout_mode = 0
 	ovl.visible = false
 	ovl.z_index = 10
 	var sb := StyleBoxFlat.new()
@@ -1873,7 +1875,6 @@ func _build_tech_stacks() -> void:
 
 func _create_tech_stack_indicator(player: int) -> Control:
 	var container := Control.new()
-	container.layout_mode = 1
 	container.z_index = 4
 	container.mouse_filter = Control.MOUSE_FILTER_STOP
 	container.visible = false
@@ -1902,7 +1903,6 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	# 3 stacked card panels (back to front)
 	for i in range(3):
 		var cp := Panel.new()
-		cp.layout_mode = 0
 		var off: float = float(2 - i) * 3.0
 		cp.position = Vector2(off, off)
 		cp.size = Vector2(60.0, 82.0)
@@ -1922,7 +1922,6 @@ func _create_tech_stack_indicator(player: int) -> Control:
 		container.add_child(cp)
 
 	var tech_lbl := Label.new()
-	tech_lbl.layout_mode = 0
 	tech_lbl.position = Vector2(6.0, 28.0)
 	tech_lbl.size = Vector2(48.0, 20.0)
 	tech_lbl.text = "TECH"
@@ -1933,7 +1932,6 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	container.add_child(tech_lbl)
 
 	var count_lbl := Label.new()
-	count_lbl.layout_mode = 0
 	count_lbl.position = Vector2(46.0, 62.0)
 	count_lbl.size = Vector2(26.0, 26.0)
 	count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1989,7 +1987,6 @@ func _open_tech_overlay(player: int) -> void:
 	_tech_overlay_player = player
 	_rebuild_tech_overlay_content(player)
 	# Position below the stack, pinned to the correct screen edge
-	_tech_overlay_panel.layout_mode = 0
 	var vp_w := get_viewport().get_visible_rect().size.x
 	if player == 0:
 		_tech_overlay_panel.position = Vector2(8.0, 202.0)
@@ -2034,7 +2031,6 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 	_tech_overlay_panel.size = Vector2(240.0, maxf(total_h, TITLE_H + PAD))
 
 	var title := Label.new()
-	title.layout_mode = 0
 	title.position = Vector2(PAD, 6.0)
 	title.size = Vector2(224.0, 20.0)
 	title.text = "TECH HAND  (%d)" % n
@@ -2046,7 +2042,6 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 
 	if n == 0:
 		var empty := Label.new()
-		empty.layout_mode = 0
 		empty.position = Vector2(PAD, card_y)
 		empty.size = Vector2(224.0, 20.0)
 		empty.text = "No tech cards"
@@ -2065,7 +2060,6 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 
 		# Full card image
 		var img := TextureRect.new()
-		img.layout_mode = 0
 		img.position = Vector2(cx, card_y)
 		img.size = Vector2(CARD_W, CARD_H)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -2083,7 +2077,6 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 		# USE button — only in TECH mode
 		if is_tech_mode and data != null:
 			var use_btn := Button.new()
-			use_btn.layout_mode = 0
 			use_btn.position = Vector2(cx, btn_y)
 			use_btn.size = Vector2(CARD_W, BTN_H)
 			use_btn.text = "USE"
@@ -2105,7 +2098,6 @@ func _build_void_stacks() -> void:
 
 func _create_void_stack_indicator(player: int) -> Control:
 	var container := Control.new()
-	container.layout_mode = 1
 	container.z_index = 4
 	container.mouse_filter = Control.MOUSE_FILTER_STOP
 	container.visible = false
@@ -2134,7 +2126,6 @@ func _create_void_stack_indicator(player: int) -> Control:
 	# 3 stacked card backs (reddish tint)
 	for i in range(3):
 		var cp := Panel.new()
-		cp.layout_mode = 0
 		var off: float = float(2 - i) * 3.0
 		cp.position = Vector2(off, off)
 		cp.size = Vector2(60.0, 82.0)
@@ -2154,7 +2145,6 @@ func _create_void_stack_indicator(player: int) -> Control:
 		container.add_child(cp)
 
 	var dump_lbl := Label.new()
-	dump_lbl.layout_mode = 0
 	dump_lbl.position = Vector2(6.0, 28.0)
 	dump_lbl.size = Vector2(48.0, 20.0)
 	dump_lbl.text = "VOID"
@@ -2165,7 +2155,6 @@ func _create_void_stack_indicator(player: int) -> Control:
 	container.add_child(dump_lbl)
 
 	var count_lbl := Label.new()
-	count_lbl.layout_mode = 0
 	count_lbl.position = Vector2(46.0, 62.0)
 	count_lbl.size = Vector2(26.0, 26.0)
 	count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -2236,7 +2225,6 @@ func _open_void_modal(player: int) -> void:
 
 	# Panel with margin
 	var panel_c := PanelContainer.new()
-	panel_c.layout_mode = 1
 	panel_c.anchor_left   = 0.0
 	panel_c.anchor_top    = 0.0
 	panel_c.anchor_right  = 1.0
@@ -2365,7 +2353,6 @@ func _build_reveal_buttons() -> void:
 		btn.texture_normal = eye_tex
 		btn.ignore_texture_size = true
 		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		btn.layout_mode = 1
 		btn.z_index = 4
 		btn.visible = false
 		btn.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -2384,7 +2371,6 @@ func _build_reveal_buttons() -> void:
 
 		# Slash shadow (black, offset slightly) — shown only in "enemy view" icon state
 		var slash_shadow := ColorRect.new()
-		slash_shadow.layout_mode = 0
 		slash_shadow.color = Color(0.0, 0.0, 0.0, 0.70)
 		slash_shadow.position = Vector2(2.0, 33.0)
 		slash_shadow.size = Vector2(62.0, 5.0)
@@ -2396,7 +2382,6 @@ func _build_reveal_buttons() -> void:
 
 		# Slash (white line on top)
 		var slash := ColorRect.new()
-		slash.layout_mode = 0
 		slash.color = Color(1.0, 1.0, 1.0, 0.92)
 		slash.position = Vector2(0.0, 31.0)
 		slash.size = Vector2(62.0, 5.0)
@@ -2429,7 +2414,6 @@ func _build_reveal_buttons() -> void:
 func _build_observer_peek_panel() -> void:
 	# Floating panel at top-centre — observer only, no gameplay effect.
 	var panel := PanelContainer.new()
-	panel.layout_mode = 1
 	panel.z_index = 4
 	panel.anchor_left   = 0.5; panel.anchor_right  = 0.5
 	panel.anchor_top    = 0.0; panel.anchor_bottom = 0.0
@@ -2633,7 +2617,6 @@ func _build_end_turn_button() -> void:
 	_end_turn_btn.texture_normal = HudSkin.hud_tex("ui_end_turn.png")
 	_end_turn_btn.ignore_texture_size = true
 	_end_turn_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	_end_turn_btn.layout_mode = 1
 	_end_turn_btn.anchor_left   = 0.5
 	_end_turn_btn.anchor_top    = 0.0
 	_end_turn_btn.anchor_right  = 0.5
@@ -2659,7 +2642,6 @@ func _build_dungeon_modifier_panel() -> void:
 	const PANEL_HALF_W: float = 76.0  # matches center column / end-turn width (~152 px)
 
 	_dungeon_mod_panel = PanelContainer.new()
-	_dungeon_mod_panel.layout_mode = 1
 	_dungeon_mod_panel.anchor_left   = 0.5
 	_dungeon_mod_panel.anchor_top    = 0.0
 	_dungeon_mod_panel.anchor_right  = 0.5
@@ -2810,7 +2792,6 @@ func _update_dungeon_modifier_panel_visibility() -> void:
 
 func _build_attack_confirm_panel() -> void:
 	_attack_confirm_panel = Control.new()
-	_attack_confirm_panel.layout_mode = 1
 	_attack_confirm_panel.anchor_left   = 0.5
 	_attack_confirm_panel.anchor_top    = 0.5
 	_attack_confirm_panel.anchor_right  = 0.5
@@ -3004,7 +2985,6 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	_context_popup = popup
 
 	var hbox := HBoxContainer.new()
-	hbox.layout_mode = 1
 	hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	hbox.offset_left = CTX_PAD; hbox.offset_top    = CTX_PAD
 	hbox.offset_right = -CTX_PAD; hbox.offset_bottom = -CTX_PAD
@@ -3734,7 +3714,7 @@ func _spawn_union_shockwave(cell_center: Vector2) -> void:
 			.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 		t.parallel().tween_property(ring, "modulate:a", 0.0, 0.55) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-		t.tween_callback(ring.queue_free)
+		_queue_tween_free(t, ring)
 
 func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	_hide_card_context()
@@ -3766,7 +3746,6 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	_context_popup = popup
 
 	var hbox := HBoxContainer.new()
-	hbox.layout_mode = 1
 	hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	hbox.offset_left = CTX_PAD; hbox.offset_top    = CTX_PAD
 	hbox.offset_right = -CTX_PAD; hbox.offset_bottom = -CTX_PAD
@@ -3887,7 +3866,6 @@ func _build_bottom_crystal_labels() -> void:
 
 	# ── P1 — upper left ───────────────────────────────────────
 	var p1_vbox := VBoxContainer.new()
-	p1_vbox.layout_mode = 1
 	p1_vbox.anchor_left   = 0.0; p1_vbox.anchor_right  = 0.0
 	p1_vbox.anchor_top    = 0.0; p1_vbox.anchor_bottom = 0.0
 	p1_vbox.offset_left   = MARGIN; p1_vbox.offset_right  = MARGIN + COL_W
@@ -3937,7 +3915,6 @@ func _build_bottom_crystal_labels() -> void:
 
 	# ── P2 — upper right ──────────────────────────────────────
 	var p2_vbox := VBoxContainer.new()
-	p2_vbox.layout_mode = 1
 	p2_vbox.anchor_left   = 1.0; p2_vbox.anchor_right  = 1.0
 	p2_vbox.anchor_top    = 0.0; p2_vbox.anchor_bottom = 0.0
 	p2_vbox.offset_left   = -(MARGIN + COL_W); p2_vbox.offset_right  = -MARGIN
@@ -3991,7 +3968,6 @@ func _build_bottom_crystal_labels() -> void:
 ## Hidden by default; shown via _show_thinking_bubble() after a 0.5s delay.
 func _build_thinking_bubble() -> void:
 	_thinking_bubble = Control.new()
-	_thinking_bubble.layout_mode = 1
 	_thinking_bubble.z_index       = 8
 	_thinking_bubble.visible       = false
 	_thinking_bubble.mouse_filter  = Control.MOUSE_FILTER_IGNORE
@@ -4197,7 +4173,6 @@ func _build_attack_count_indicators() -> void:
 	const GAP: float       = 22.0    # offset from turn number panel
 
 	var p1_container: Control = _build_attack_count_icon()
-	p1_container.layout_mode = 1
 	p1_container.anchor_left   = 0.5
 	p1_container.anchor_right  = 0.5
 	p1_container.anchor_top    = 0.0
@@ -4214,7 +4189,6 @@ func _build_attack_count_indicators() -> void:
 	p1_container.mouse_exited.connect(func(): _restore_game_guide())
 
 	var p2_container: Control = _build_attack_count_icon()
-	p2_container.layout_mode = 1
 	p2_container.anchor_left   = 0.5
 	p2_container.anchor_right  = 0.5
 	p2_container.anchor_top    = 0.0
@@ -4240,7 +4214,6 @@ func _build_turn_number_label() -> void:
 	bg.ignore_texture_size = true
 	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.layout_mode = 1
 	bg.anchor_left   = 0.5; bg.anchor_right  = 0.5
 	bg.anchor_top    = 0.0; bg.anchor_bottom = 0.0
 	bg.offset_left   = -(MED_SIZE * 0.5)
@@ -4254,7 +4227,6 @@ func _build_turn_number_label() -> void:
 	_turn_number_bg = bg
 
 	var hit := Control.new()
-	hit.layout_mode = 1
 	hit.anchor_left   = 0.5; hit.anchor_right  = 0.5
 	hit.anchor_top    = 0.0; hit.anchor_bottom = 0.0
 	hit.offset_left   = -(HIT_W * 0.5)
@@ -4270,7 +4242,6 @@ func _build_turn_number_label() -> void:
 	hit.mouse_exited.connect(func(): _restore_game_guide())
 
 	var lbl := Label.new()
-	lbl.layout_mode = 1
 	lbl.anchor_left   = 0.5; lbl.anchor_right  = 0.5
 	lbl.anchor_top    = 0.0; lbl.anchor_bottom = 0.0
 	lbl.offset_left   = -160.0; lbl.offset_right  = 160.0
@@ -4300,7 +4271,6 @@ func _build_options_button() -> void:
 	const HIT_H  : float = 107.0   # 70 % of 153 px visible height
 
 	var root := Control.new()
-	root.layout_mode = 1
 	root.anchor_left   = 0.5;  root.anchor_right  = 0.5
 	root.anchor_top    = 1.0;  root.anchor_bottom = 1.0
 	root.offset_left   = -(BTN_W * 0.5)
@@ -4324,7 +4294,6 @@ func _build_options_button() -> void:
 	_options_btn_art = art
 
 	var hit := Control.new()
-	hit.layout_mode = 1
 	hit.anchor_left   = 0.5;  hit.anchor_right  = 0.5
 	hit.anchor_top    = 0.0;  hit.anchor_bottom = 0.0
 	hit.offset_left   = -(HIT_W * 0.5)
@@ -4342,7 +4311,6 @@ func _build_options_button() -> void:
 
 	var opts_lbl := Label.new()
 	opts_lbl.text = "OPTIONS"
-	opts_lbl.layout_mode = 1
 	opts_lbl.anchor_left   = 0.5
 	opts_lbl.anchor_right  = 0.5
 	opts_lbl.anchor_top    = 0.0
@@ -4410,7 +4378,6 @@ void fragment() {
 	var fog_clip := Control.new()
 	fog_clip.name = "PlaymatFog"
 	fog_clip.clip_contents = true
-	fog_clip.layout_mode = 1
 	fog_clip.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fog_clip.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	add_child(fog_clip)
@@ -4444,7 +4411,6 @@ func _make_fog_layer(fog_tex: Texture2D, mat: ShaderMaterial) -> TextureRect:
 	var tr := TextureRect.new()
 	tr.texture = fog_tex
 	tr.material = mat
-	tr.layout_mode = 1
 	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_SCALE
@@ -4491,7 +4457,6 @@ func _build_union_suggest_button() -> void:
 	glow.ignore_texture_size = true
 	glow.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	glow.layout_mode  = 1
 	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
 	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
 	glow.offset_left   = -(GLOW_SIZE * 0.5); glow.offset_right  =  (GLOW_SIZE * 0.5)
@@ -4508,7 +4473,6 @@ func _build_union_suggest_button() -> void:
 	btn.texture_normal   = HudSkin.hud_tex("ui_icon_union.png")
 	btn.ignore_texture_size = true
 	btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	btn.layout_mode  = 1
 	btn.anchor_left   = 0.5; btn.anchor_right  = 0.5
 	btn.anchor_top    = 0.5; btn.anchor_bottom = 0.5
 	btn.offset_left   = -(BTN_SIZE * 0.5); btn.offset_right  =  (BTN_SIZE * 0.5)
@@ -4910,7 +4874,6 @@ func _show_surrender_confirm() -> void:
 
 func _build_hover_panel() -> void:
 	_hover_panel = Panel.new()
-	_hover_panel.layout_mode = 1
 	_hover_panel.anchor_left = 0.5
 	_hover_panel.anchor_right = 0.5
 	_hover_panel.anchor_top = 0.0
@@ -4937,7 +4900,6 @@ func _build_hover_panel() -> void:
 	add_child(_hover_panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.layout_mode = 1
 	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vbox.offset_left = 8.0
 	vbox.offset_top = 8.0
@@ -5293,7 +5255,6 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		var _p1ox: float = GameState.portrait_p1_offset.x
 		coin_p1_port = TextureRect.new()
 		coin_p1_port.texture       = _p1_tex
-		coin_p1_port.layout_mode   = 1
 		coin_p1_port.anchor_left   = 0.0
 		coin_p1_port.anchor_top    = 0.0
 		coin_p1_port.anchor_right  = 0.0
@@ -5315,7 +5276,6 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		var _p2ox: float = GameState.portrait_p2_offset.x
 		coin_p2_port = TextureRect.new()
 		coin_p2_port.texture       = _p2_tex
-		coin_p2_port.layout_mode   = 1
 		coin_p2_port.anchor_left   = 1.0
 		coin_p2_port.anchor_top    = 0.0
 		coin_p2_port.anchor_right  = 1.0
@@ -5649,7 +5609,6 @@ func _on_center_message_requested(text: String) -> void:
 	lbl.add_theme_constant_override("shadow_offset_y", 2)
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.layout_mode = 1
 	lbl.anchor_left = 0.1; lbl.anchor_right  = 0.9
 	lbl.anchor_top  = 0.4; lbl.anchor_bottom = 0.6
 	lbl.z_index = 200
@@ -5658,7 +5617,7 @@ func _on_center_message_requested(text: String) -> void:
 	var tw := create_tween()
 	tw.tween_interval(2.0)
 	tw.tween_property(lbl, "modulate:a", 0.0, 0.5)
-	tw.tween_callback(lbl.queue_free)
+	_queue_tween_free(tw, lbl)
 
 func _update_portrait_dims() -> void:
 	if _p1_portrait == null or _p2_portrait == null:
@@ -5715,7 +5674,6 @@ func _refresh_tech_hand() -> void:
 
 	# ── Panel filling screen (with small margin) ─────────────────
 	var panel_c := PanelContainer.new()
-	panel_c.layout_mode = 1
 	panel_c.anchor_left   = 0.0
 	panel_c.anchor_top    = 0.0
 	panel_c.anchor_right  = 1.0
@@ -5924,7 +5882,6 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 	_tech_hand_overlay.add_child(dimmer)
 
 	var panel_c := PanelContainer.new()
-	panel_c.layout_mode = 1
 	panel_c.anchor_left = 0.0
 	panel_c.anchor_top = 0.0
 	panel_c.anchor_right = 1.0
@@ -6255,7 +6212,6 @@ func _show_tax_confirm(player: int) -> void:
 	sb.content_margin_left = 28; sb.content_margin_right  = 28
 	sb.content_margin_top  = 22; sb.content_margin_bottom = 22
 	panel.add_theme_stylebox_override("panel", sb)
-	panel.layout_mode = 1
 	panel.anchor_left   = 0.5; panel.anchor_right  = 0.5
 	panel.anchor_top    = 0.5; panel.anchor_bottom = 0.5
 	var h_half: float = 130.0 + (40.0 if is_consecutive else 0.0)
@@ -6718,7 +6674,6 @@ func _show_turn_banner(player: int) -> void:
 	lbl.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.75))
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lbl.layout_mode = 0
 	lbl.size = Vector2(vp.x, BANNER_H)
 	lbl.position = Vector2(-vp.x, (vp.y - BANNER_H) * 0.5)
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -6734,7 +6689,7 @@ func _show_turn_banner(player: int) -> void:
 	# Fly out to right
 	tw.tween_property(lbl, "position:x", vp.x, 0.35) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	tw.tween_callback(lbl.queue_free)
+	_queue_tween_free(tw, lbl)
 
 # ─────────────────────────────────────────────────────────────
 # Card Click Handling
@@ -6882,6 +6837,7 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 	var target_node: Control = grid_nodes[target_player][target_pos.x][target_pos.y]
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
+	target_node.modulate = Color.WHITE
 	_blink_tween = create_tween().set_loops()
 	_blink_tween.tween_property(target_node, "modulate",
 		Color(1.8, 0.4, 0.4, 1.0), 0.35)
@@ -9264,7 +9220,6 @@ func _build_debug_alignment() -> void:
 	# White vertical center line (1 px wide)
 	var line := ColorRect.new()
 	line.color = Color(1, 1, 1, 1)
-	line.layout_mode = 1
 	line.anchor_left   = 0.5; line.anchor_right  = 0.5
 	line.anchor_top    = 0.0; line.anchor_bottom = 1.0
 	line.offset_left   = 0.0; line.offset_right  = 1.0
@@ -9280,7 +9235,6 @@ func _build_debug_alignment() -> void:
 		if portrait == null or not is_instance_valid(portrait):
 			continue
 		var border := Panel.new()
-		border.layout_mode = 0
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(0, 0, 0, 0)
 		sb.border_color = Color(1, 1, 1, 1)
@@ -9589,6 +9543,16 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	if not GameState._pending_ancestral_revive.is_empty():
 		await turn_manager.resolve_ancestral_spirit_revive()
 
+func _queue_tween_free(tw: Tween, node: Node) -> void:
+	if node == null:
+		return
+	var node_id: int = node.get_instance_id()
+	tw.tween_callback(func() -> void:
+		var n: Node = instance_from_id(node_id) as Node
+		if n != null and is_instance_valid(n):
+			n.queue_free())
+
+
 func _spawn_destroy_effect(card_node: Control) -> void:
 	SFXManager.play(SFXManager.SFX_DESTROY)
 	var card_rect := card_node.get_global_rect()
@@ -9605,7 +9569,7 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 
 	var fw := create_tween()
 	fw.tween_property(flash, "color:a", 0.0, 0.22).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
-	fw.tween_callback(flash.queue_free)
+	_queue_tween_free(fw, flash)
 
 	# Expanding ring centred on the card
 	var ring := Panel.new()
@@ -9631,7 +9595,7 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	rw.parallel().tween_property(ring, "modulate:a", 0.0, 0.42) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	rw.tween_callback(ring.queue_free)
+	_queue_tween_free(rw, ring)
 
 	# Fire friction sparks — large burst in all directions from card centre
 	var origin: Vector2 = local_pos + card_size * 0.5
@@ -9669,7 +9633,7 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		ts.parallel().tween_property(spark, "modulate:a", 0.0, duration) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-		ts.tween_callback(spark.queue_free)
+		_queue_tween_free(ts, spark)
 
 func _spawn_dissolve_effect(card_node: Control) -> void:
 	SFXManager.play(SFXManager.SFX_DISSOLVE)
@@ -9722,7 +9686,7 @@ func _spawn_dissolve_effect(card_node: Control) -> void:
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		tp.parallel().tween_property(puff, "modulate:a", 0.0, duration) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-		tp.tween_callback(puff.queue_free)
+		_queue_tween_free(tp, puff)
 
 # ─────────────────────────────────────────────────────────────
 # AI
@@ -10079,7 +10043,7 @@ func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		t.parallel().tween_property(spark, "modulate:a", 0.0, duration) \
 			.set_ease(Tween.EASE_IN)
-		t.tween_callback(spark.queue_free)
+		_queue_tween_free(t, spark)
 
 ## Dust clouds rising from the card base on landing.
 func _spawn_union_landing_dust(overlay: Control, origin: Vector2) -> void:
@@ -10112,7 +10076,7 @@ func _spawn_union_landing_dust(overlay: Control, origin: Vector2) -> void:
 		t.parallel().tween_property(dust, "position", end_pos, duration).set_ease(Tween.EASE_OUT)
 		t.parallel().tween_property(dust, "scale", Vector2(2.8, 2.8), duration).set_ease(Tween.EASE_OUT)
 		t.parallel().tween_property(dust, "modulate:a", 0.0, duration).set_ease(Tween.EASE_IN)
-		t.tween_callback(dust.queue_free)
+		_queue_tween_free(t, dust)
 
 # ─────────────────────────────────────────────────────────────
 # Game Over

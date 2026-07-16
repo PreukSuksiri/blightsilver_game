@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://davqtrbwn5ecb"
-path="res://.godot/imported/battler_green_wisp.png-96371c6b8f05b1fb428671fc714497ca.ctex"
+uid="uid://c8cjoalwe2bq5"
+path="res://.godot/imported/detective_clue_polaroid3.png-28fe0138d0eeab050196f69c89a2cdf1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/unused/monsters/battler_green_wisp.png"
-dest_files=["res://.godot/imported/battler_green_wisp.png-96371c6b8f05b1fb428671fc714497ca.ctex"]
+source_file="res://assets/textures/detective/ch1_s1/detective_clue_polaroid3.png"
+dest_files=["res://.godot/imported/detective_clue_polaroid3.png-28fe0138d0eeab050196f69c89a2cdf1.ctex"]
 
 [params]
 

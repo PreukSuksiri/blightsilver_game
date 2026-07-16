@@ -132,6 +132,7 @@ var _f_kb_start_pan_y: SpinBox = null
 var _f_music: LineEdit = null
 var _f_music_fade_in: SpinBox = null
 var _f_music_fade_out: SpinBox = null
+var _f_music_force: CheckBox = null
 var _f_sfx: LineEdit = null
 var _f_sfx_volume: SpinBox = null
 var _f_wait: SpinBox = null
@@ -912,6 +913,9 @@ func _build_fields() -> void:
 	_add_audio_preview(_f_music)
 	_f_music_fade_in  = _row_sb(v, "Music Fade In",  0.0, 30.0, 0.001, "seconds  (0 = instant)")
 	_f_music_fade_out = _row_sb(v, "Music Fade Out", 0.0, 30.0, 0.001, "seconds  (0 = instant)")
+	_f_music_force = _row_cb(v, "Force music change",
+			"Override Keep Exploration BGM for this beat: play a new track, OR fade-out/stop (leave Music blank or set to null + Music Fade Out)")
+	_f_music_force.toggled.connect(func(_b: bool) -> void: _on_field_changed())
 	_f_sfx = _row_le(v, "SFX", "res://path")
 	_add_browse(_f_sfx,
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]),
@@ -4066,6 +4070,8 @@ func _populate_fields() -> void:
 	_f_music.text = "null" if music == null else (str(music) if music != "" else "")
 	_f_music_fade_in.value  = float(b.get("music_fade_in",  0.0))
 	_f_music_fade_out.value = float(b.get("music_fade_out", 0.0))
+	if _f_music_force != null:
+		_f_music_force.button_pressed = bool(b.get("music_force", false))
 
 	var sfx_val: Variant = b.get("sfx", b.get("sound", ""))
 	_f_sfx.text = str(sfx_val) if sfx_val != null and sfx_val != "" else ""
@@ -4517,6 +4523,8 @@ func _collect_beat() -> Dictionary:
 		b["music_fade_in"] = _f_music_fade_in.value
 	if _f_music_fade_out.value > 0.0:
 		b["music_fade_out"] = _f_music_fade_out.value
+	if _f_music_force != null and _f_music_force.button_pressed:
+		b["music_force"] = true
 
 	var sfx: String = _f_sfx.text.strip_edges()
 	if not sfx.is_empty():

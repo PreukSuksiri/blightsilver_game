@@ -200,7 +200,8 @@ enum NodeType {
 ##     "conditions": Array                 — condition dicts (same format as connection conditions)
 ##     "requires_tool": String             — detective-tool item id; when set, the spot only exists
 ##                                           while that tool is active and is revealed by sweeping the
-##                                           cursor near it (empty = normal always-checkable spot)
+##                                           cursor near it. While any tool is active, normal spots
+##                                           (no requires_tool) are temporarily hidden.
 ##     "reveal_radius": float               — proximity reveal radius in px for tool-gated spots
 ##                                           (0 = default TOOL_REVEAL_RADIUS in ExplorationPlayer)
 ##     "vn_scene": String                  — legacy field; treated as play_vn action if actions empty

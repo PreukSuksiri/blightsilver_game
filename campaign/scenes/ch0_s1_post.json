@@ -115,10 +115,12 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
 			}
 		],
+		"hidden": true,
 		"speaker": "Nex",
 		"text": "And the card arts... They were all AI Slops..."
 	},
 	{
+		"hidden": true,
 		"wait": 0.5
 	},
 	{
@@ -132,10 +134,12 @@
 				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
+		"hidden": true,
 		"speaker": "Kelly",
 		"text": "I'm not the one who designed the card. Stop complaining."
 	},
 	{
+		"hidden": true,
 		"wait": 0.5
 	},
 	{
@@ -273,7 +277,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "That is... kinda... too much..."
+		"text": "Are you serious...? I'm still new to this... Give me a break..."
 	},
 	{
 		"wait": 0.5

@@ -36,7 +36,17 @@ const NODE_LABEL_PAD_TOP := 4.0
 const NODE_LABEL_PAD_BOTTOM := 14.0
 const NODE_LABEL_PAD_SIDE := 8.0
 const EDGE_LABEL_SIZE := 21
-const CLUE_NAME_SIZE := 14
+const CLUE_NAME_SIZE := 15
+const CLUE_NAME_MAX_LINES := 2
+const CLUE_NAME_LINE_H := 18.0
+const CLUE_NAME_CAPTION_H := CLUE_NAME_LINE_H * float(CLUE_NAME_MAX_LINES) + 6.0
+const CLUE_NAME_CAPTION_GAP := 10.0
+const CLUE_NAME_CAPTION_PAD_BOTTOM := 4.0
+const CLUE_NAME_TEXT_BAND_H := CLUE_NAME_CAPTION_H + CLUE_NAME_CAPTION_PAD_BOTTOM
+const MIN_NODE_FRAME_H := 164.0
+const FRAME_PAD_TOP := 18.0
+const FRAME_PAD_SIDE := 10.0
+const FRAME_PAD_BOTTOM := 10.0
 const POSTIT_COLOR := Color(0.99, 0.90, 0.45)
 const POSTIT_TEXT := Color(0.16, 0.13, 0.05)
 const APPROVED_COLOR := Color(0.72, 0.07, 0.07)
@@ -187,8 +197,17 @@ func _node_rect(node: Dictionary) -> Rect2:
 	var sz: Array = node.get("size", []) as Array if node.get("size", null) is Array else []
 	var w: float = float(sz[0]) if sz.size() > 0 else DetectiveNoteVault.DEFAULT_NODE_SIZE.x
 	var h: float = float(sz[1]) if sz.size() > 1 else DetectiveNoteVault.DEFAULT_NODE_SIZE.y
+	h = maxf(h, MIN_NODE_FRAME_H)
 	return Rect2(float(pos[0]) if pos.size() > 0 else 0.0,
 		float(pos[1]) if pos.size() > 1 else 0.0, w, h)
+
+
+func _node_inner_rect(rect: Rect2) -> Rect2:
+	return Rect2(
+		rect.position + Vector2(FRAME_PAD_SIDE, FRAME_PAD_TOP),
+		Vector2(
+			maxf(0.0, rect.size.x - FRAME_PAD_SIDE * 2.0),
+			maxf(0.0, rect.size.y - FRAME_PAD_TOP - FRAME_PAD_BOTTOM)))
 
 
 func _find_node(node_id: String) -> Dictionary:
@@ -249,6 +268,65 @@ func _draw() -> void:
 				Color(MARKER_COLOR, 0.5), MARKER_WIDTH * 0.7, true)
 
 
+func _fit_text_ellipsis(text: String, max_width: float, font_size: int) -> String:
+	if text.is_empty() or _hand_font == null or max_width <= 1.0:
+		return text
+	if _hand_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x <= max_width:
+		return text
+	const ELLIPSIS := "..."
+	var trimmed := text
+	while not trimmed.is_empty():
+		var trial := trimmed + ELLIPSIS
+		if _hand_font.get_string_size(trial, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x <= max_width:
+			return trial
+		trimmed = trimmed.substr(0, trimmed.length() - 1)
+	return ELLIPSIS
+
+
+func _fit_text_lines_ellipsis(text: String, max_width: float, font_size: int, max_lines: int) -> String:
+	if text.is_empty() or _hand_font == null or max_width <= 1.0:
+		return text
+	const ELLIPSIS := "..."
+	var line_h: float = _hand_font.get_height(font_size)
+	var max_h: float = line_h * float(max_lines)
+	if _hand_font.get_multiline_string_size(
+			text, HORIZONTAL_ALIGNMENT_CENTER, max_width, font_size, -1).y <= max_h:
+		return text
+	var trimmed := text
+	while not trimmed.is_empty():
+		var trial := trimmed.strip_edges() + ELLIPSIS
+		if _hand_font.get_multiline_string_size(
+				trial, HORIZONTAL_ALIGNMENT_CENTER, max_width, font_size, max_lines).y <= max_h:
+			return trial
+		trimmed = trimmed.substr(0, trimmed.length() - 1)
+	return ELLIPSIS
+
+
+func _clue_layout_rects(inner: Rect2) -> Dictionary:
+	var caption_rect := Rect2(
+		Vector2(inner.position.x, inner.end.y - CLUE_NAME_TEXT_BAND_H),
+		Vector2(inner.size.x, CLUE_NAME_TEXT_BAND_H))
+	var image_h: float = maxf(0.0, caption_rect.position.y - inner.position.y - CLUE_NAME_CAPTION_GAP)
+	var image_rect := Rect2(inner.position, Vector2(inner.size.x, image_h))
+	return {"image": image_rect, "caption": caption_rect}
+
+
+func _draw_clue_name_caption(caption_rect: Rect2, name_text: String, color: Color = MARKER_COLOR) -> void:
+	if name_text.is_empty() or _hand_font == null:
+		return
+	var fit_name := _fit_text_lines_ellipsis(
+		name_text, caption_rect.size.x, CLUE_NAME_SIZE, CLUE_NAME_MAX_LINES)
+	var name_size := _hand_font.get_multiline_string_size(
+		fit_name, HORIZONTAL_ALIGNMENT_CENTER, caption_rect.size.x,
+		CLUE_NAME_SIZE, CLUE_NAME_MAX_LINES)
+	var name_pos := Vector2(
+		caption_rect.position.x,
+		caption_rect.position.y + maxf(0.0, (caption_rect.size.y - name_size.y) * 0.5))
+	draw_multiline_string(_hand_font, name_pos, fit_name,
+		HORIZONTAL_ALIGNMENT_CENTER, caption_rect.size.x, CLUE_NAME_SIZE,
+		CLUE_NAME_MAX_LINES, color)
+
+
 func _draw_node(node: Dictionary) -> void:
 	var nid: String = str(node.get("id", ""))
 	var rect := _node_rect(node)
@@ -262,18 +340,16 @@ func _draw_node(node: Dictionary) -> void:
 	if not clue_id.is_empty():
 		var clue: Dictionary = DetectiveNoteVault.get_clue(clue_id)
 		if not clue.is_empty():
-			var inner := rect.grow(-10.0)
+			var inner := _node_inner_rect(rect)
 			var name_text: String = DetectiveNoteVault.clue_display_name(clue, locale)
+			var layout: Dictionary = _clue_layout_rects(inner)
+			var image_rect: Rect2 = layout["image"]
+			var caption_rect: Rect2 = layout["caption"]
 			if DetectiveNoteVault.clue_is_messenger(clue):
 				var icon_tex: Texture2D = _get_texture(DetectiveNoteVault.MESSENGER_CLUE_ICON)
 				if icon_tex != null:
-					var icon_area := Rect2(inner.position, Vector2(inner.size.x, inner.size.y - 22.0))
-					draw_texture_rect(icon_tex, _fit_rect(icon_tex.get_size(), icon_area), false)
-				if _hand_font != null and not name_text.is_empty():
-					draw_string(_hand_font,
-						Vector2(inner.position.x, inner.end.y - 4.0),
-						name_text, HORIZONTAL_ALIGNMENT_CENTER, inner.size.x,
-						CLUE_NAME_SIZE, MARKER_COLOR)
+					draw_texture_rect(icon_tex, _fit_rect(icon_tex.get_size(), image_rect), false)
+				_draw_clue_name_caption(caption_rect, name_text)
 			elif DetectiveNoteVault.clue_is_postit(clue):
 				draw_rect(Rect2(inner.position, inner.size), POSTIT_COLOR)
 				if _hand_font != null:
@@ -285,13 +361,8 @@ func _draw_node(node: Dictionary) -> void:
 				var img_path: String = str(clue.get("image", "")).strip_edges()
 				var tex: Texture2D = _get_texture(img_path)
 				if tex != null:
-					var img_area := Rect2(inner.position, Vector2(inner.size.x, inner.size.y - 22.0))
-					draw_texture_rect(tex, _fit_rect(tex.get_size(), img_area), false)
-				if _hand_font != null and not name_text.is_empty():
-					draw_string(_hand_font,
-						Vector2(inner.position.x, inner.end.y - 4.0),
-						name_text, HORIZONTAL_ALIGNMENT_CENTER, inner.size.x,
-						CLUE_NAME_SIZE, MARKER_COLOR)
+					draw_texture_rect(tex, _fit_rect(tex.get_size(), image_rect), false)
+				_draw_clue_name_caption(caption_rect, name_text)
 
 	if is_node_prefilled(nid):
 		_draw_prefill_lock(rect)

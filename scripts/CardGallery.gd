@@ -81,6 +81,8 @@ func _ready() -> void:
 	_badge_font.base_font = preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 	_badge_font.variation_opentype = {"wght": 1200}
 	Collection.collection_changed.connect(_on_collection_changed)
+	if not SaveManager.demo_mode_changed.is_connected(_on_demo_mode_changed):
+		SaveManager.demo_mode_changed.connect(_on_demo_mode_changed)
 	var header_rebuild: Dictionary = MenuScreenHeader.rebuild_panel_header(
 		$Panel/VBox/Header,
 		$Panel/VBox/Header/TitleLabel,
@@ -210,6 +212,25 @@ func _set_filter(fid: String) -> void:
 		_filter_btns[k].button_pressed = (k == fid)
 	_apply_filter()
 
+func _entry_include_in_demo(kind: String, data: Variant) -> bool:
+	match kind:
+		"character":
+			return (data as CharacterData).include_in_demo
+		"trap":
+			return (data as TrapData).include_in_demo
+		"tech":
+			return (data as TechCardData).include_in_demo
+		"union":
+			return (data as UnionData).include_in_demo
+	return false
+
+
+func _should_build_tile(kind: String, data: Variant) -> bool:
+	if SaveManager.demo_mode and not _entry_include_in_demo(kind, data):
+		return false
+	return true
+
+
 func _apply_filter() -> void:
 	var use_aff: bool = _filter_affinity >= 0
 	var use_atk: bool = _filter_atk_min > 0 or _filter_atk_max < 9999
@@ -326,8 +347,11 @@ func _build_all_cards_async(gen: int) -> void:
 	for entry: Dictionary in entries:
 		if gen != _build_gen or not is_inside_tree():
 			return
+		var kind: String = str(entry.get("kind", ""))
+		if not _should_build_tile(kind, entry.get("data")):
+			continue
 		var tile: Control = null
-		match str(entry.get("kind", "")):
+		match kind:
 			"character":
 				var data: CharacterData = entry["data"] as CharacterData
 				tile = _make_char_tile(data)
@@ -368,6 +392,7 @@ func _build_all_cards_async(gen: int) -> void:
 		batch += 1
 		if batch >= _tiles_per_frame():
 			batch = 0
+			_apply_filter()
 			await get_tree().process_frame
 
 	_apply_filter()
@@ -553,6 +578,11 @@ func _start_tex_load(path: String, art: TextureRect) -> void:
 func _on_collection_changed() -> void:
 	_begin_gallery_build()
 	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
+
+
+func _on_demo_mode_changed(_enabled: bool) -> void:
+	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
+	_begin_gallery_build()
 
 func _on_union_mechanism_changed(unlocked: bool) -> void:
 	if _filter_btns.has("union"):

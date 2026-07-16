@@ -707,9 +707,33 @@ func _run_choice_actions(choice: Dictionary) -> void:
 	var actions: Variant = choice.get("actions", null)
 	if not (actions is Array):
 		return
-	for ea: Variant in (actions as Array):
-		if ea is Dictionary:
-			_apply_vn_exploration_action(ea as Dictionary)
+	var gave_item: bool = _apply_exploration_actions(actions as Array)
+	if gave_item:
+		_accepting_input = false
+		_hide_hint_icon()
+		await _wait_for_item_obtained_overlays()
+		_accepting_input = true
+
+
+func _apply_exploration_actions(actions: Array) -> bool:
+	var gave_item: bool = false
+	for ea: Variant in actions:
+		if not ea is Dictionary:
+			continue
+		var ead: Dictionary = ea as Dictionary
+		if str(ead.get("action", "")).strip_edges() == "give_item":
+			gave_item = true
+		_apply_vn_exploration_action(ead)
+	return gave_item
+
+
+func _wait_for_item_obtained_overlays() -> void:
+	if not ExplorationManager.is_session_active:
+		return
+	await get_tree().process_frame
+	while ExplorationManager.is_item_obtained_overlay_busy():
+		await ExplorationManager.item_obtained_overlay_idle
+		await get_tree().process_frame
 
 
 ## Apply a VN exploration_actions / choice action.
@@ -918,6 +942,11 @@ func _skip_leading_unplayable_beats() -> void:
 			continue
 		break
 
+func _finish_choice_pick(choice: Dictionary) -> void:
+	await _run_choice_actions(choice)
+	_resolve_choice_goto(choice)
+
+
 func _resolve_choice_goto(choice: Dictionary) -> void:
 	var group_id: int = int(choice.get("goto_group", 0))
 	if group_id > 0:
@@ -1079,8 +1108,7 @@ func _present_choices(beat: Dictionary) -> void:
 				print("[VNPlayer] choice made at beat %d — '%s' → goto_group %d" % [
 					_last_shown_beat_index, choice_label, int(cd.get("goto_group", 0))])
 				SFXManager.play(SFXManager.SFX_EXPLORATION)
-				_run_choice_actions(cd)
-				_resolve_choice_goto(cd))
+				_finish_choice_pick(cd))
 		vbox.add_child(widget)
 
 	call_deferred("_deferred_update_choice_scroll_hint")
@@ -1258,13 +1286,13 @@ func _update_backdrop_visibility() -> void:
 func _apply_backdrop_geometry() -> void:
 	if _backdrop == null:
 		return
-	_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_backdrop.position = Vector2.ZERO
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	var fill: Vector2 = size
 	if fill.x <= 0.0 or fill.y <= 0.0:
 		fill = vp
-	_backdrop.size = fill
+	_backdrop.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_backdrop.position = Vector2.ZERO
+	_backdrop.set_deferred("size", fill)
 
 ## Keep the black letterbox backdrop covering the full overlay area (export-safe).
 func _sync_viewport_backdrop(vp: Vector2) -> void:
@@ -1778,14 +1806,17 @@ func _show_beat() -> void:
 		_dialog_panel.visible = false
 
 	# ── Music ──
+	# music_force overrides exploration Keep Exploration BGM for play AND fade-out/stop.
+	var force_music: bool = bool(beat.get("music_force", false))
+	var fade_out_sec: float = float(beat.get("music_fade_out", 0.0))
+	var fade_in_sec: float = float(beat.get("music_fade_in", 0.0))
 	if beat.has("music"):
 		var music_val = beat["music"]
-		var music_path: String = music_val if music_val != null else ""
-		_set_music(music_path,
-			beat.get("music_fade_out", 0.0),
-			beat.get("music_fade_in",  0.0))
+		var music_path: String = str(music_val).strip_edges() if music_val != null else ""
+		_set_music(music_path, fade_out_sec, fade_in_sec, force_music)
 	elif beat.has("music_fade_out"):
-		_set_music("", beat.get("music_fade_out", 0.0), 0.0)
+		# Fade/stop current BGM with no new track (blank Music + Fade Out + optional Force).
+		_set_music("", fade_out_sec, 0.0, force_music)
 
 	# ── Sound effect ──
 	var sfx_path: String = beat.get("sfx", beat.get("sound", ""))
@@ -2155,9 +2186,12 @@ func _show_beat() -> void:
 	var expl_actions: Variant = beat.get("exploration_actions", null)
 	if expl_actions is Array and not (expl_actions as Array).is_empty():
 		ran_side_effects = true
-		for ea: Variant in (expl_actions as Array):
-			if ea is Dictionary:
-				_apply_vn_exploration_action(ea as Dictionary)
+		var gave_item: bool = _apply_exploration_actions(expl_actions as Array)
+		if gave_item:
+			_accepting_input = false
+			_hide_hint_icon()
+			await _wait_for_item_obtained_overlays()
+			_accepting_input = true
 
 	# ── Messenger overlay (read-only chat evidence — blocks until closed) ──
 	var messenger_id: String = str(beat.get("show_messenger", "")).strip_edges()
@@ -2436,18 +2470,21 @@ func _apply_music_state(state: Dictionary, skip_fade_out: bool = false) -> void:
 	_set_music(str(state.get("path", "")).strip_edges(), fade_out, float(state.get("fade_in", 0.0)))
 
 
-func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0) -> void:
-	if keep_bgm or _preserve_bgm_for_exploration:
+func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0, force: bool = false) -> void:
+	# keep_bgm (exploration "Keep Exploration BGM") suppresses VN music unless
+	# the beat sets music_force — covers scare stings AND forced fade-out/stop.
+	if not force and (keep_bgm or _preserve_bgm_for_exploration):
 		return
 	var normalized := path.strip_edges()
+	# Empty path = fade/stop current track. Do this before the same-path check so
+	# Music Fade Out + music_force still works under Keep Exploration BGM.
+	if normalized.is_empty():
+		_current_music_path = ""
+		BGMManager.stop(fade_out)
+		return
 	if normalized == BGMManager.get_current_path():
 		return
 	_current_music_path = normalized
-
-	if normalized.is_empty():
-		BGMManager.stop(fade_out)
-		return
-
 	BGMManager.play_path(normalized, fade_in, fade_out, 100.0, BGMManager.CONTEXT_VN)
 
 # ─────────────────────────────────────────────────────────────

@@ -18,21 +18,18 @@ func _ready() -> void:
 			_close())
 	add_child(dimmer)
 
-	# ── Centered panel ───────────────────────────────────────────
-	var panel := Panel.new()
+	# ── Centered panel (sizes to content) ────────────────────────
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(center)
+
+	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left   = -210
-	panel.offset_top    = -130
-	panel.offset_right  = 222
-	panel.offset_bottom = 130
-	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(panel)
+	panel.custom_minimum_size.x = 400.0
+	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 20; vbox.offset_top    = 16
-	vbox.offset_right = -32; vbox.offset_bottom = -16
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
 

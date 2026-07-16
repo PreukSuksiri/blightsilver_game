@@ -78,12 +78,11 @@ func test_cursor_override_toggle() -> void:
 	GameState.set_cursor_override(null, Vector2.ZERO, Vector2.ZERO)
 	assert_true(GameState._cursor_override_tex == null, "null override stays cleared")
 
-# Mirror of the gating rule in ExplorationPlayer._spawn_spot: a spot with a
-# non-empty requires_tool is only shown when the active tool id matches.
+# Mirror of the gating rule in ExplorationPlayer._spawn_spot.
 func _spot_shown(spot: Dictionary, active_tool_id: String) -> bool:
 	var required: String = str(spot.get("requires_tool", "")).strip_edges()
-	if required.is_empty():
-		return true
+	if active_tool_id.is_empty():
+		return required.is_empty()
 	return required == active_tool_id
 
 func test_requires_tool_gating() -> void:
@@ -91,7 +90,7 @@ func test_requires_tool_gating() -> void:
 	var normal_spot: Dictionary = {"x_norm": 0.5, "y_norm": 0.5}
 	var gated_spot: Dictionary = {"x_norm": 0.5, "y_norm": 0.5, "requires_tool": "tool_thermometer"}
 	assert_true(_spot_shown(normal_spot, ""), "normal spot shown with no tool")
-	assert_true(_spot_shown(normal_spot, "tool_thermometer"), "normal spot shown with a tool")
+	assert_false(_spot_shown(normal_spot, "tool_thermometer"), "normal spot hidden while tool active")
 	assert_false(_spot_shown(gated_spot, ""), "gated spot hidden with no tool")
 	assert_false(_spot_shown(gated_spot, "tool_translator"), "gated spot hidden with wrong tool")
 	assert_true(_spot_shown(gated_spot, "tool_thermometer"), "gated spot shown with matching tool")

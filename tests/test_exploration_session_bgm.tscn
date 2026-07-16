@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://exploration_session_bgm_test"]
+
+[ext_resource type="Script" path="res://tests/test_exploration_session_bgm.gd" id="1"]
+
+[node name="ExplorationSessionBgmTestRunner" type="Node"]
+script = ExtResource("1")

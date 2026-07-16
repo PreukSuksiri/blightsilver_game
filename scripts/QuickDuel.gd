@@ -126,7 +126,6 @@ func _build_player_portrait_zone() -> void:
 
 	_player_portrait = TextureRect.new()
 	_player_portrait.texture = tex
-	_player_portrait.layout_mode = 1
 	_player_portrait.anchor_left = 0.0
 	_player_portrait.anchor_top = 1.0
 	_player_portrait.anchor_right = 0.0

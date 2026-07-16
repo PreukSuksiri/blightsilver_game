@@ -73,7 +73,7 @@ const CLUE_GROUP_UNGROUPED := "Ungrouped"
 const MESSENGER_CLUE_ICON := "res://assets/textures/detective/icon_smart_phone.png"
 ## Optional texture for prefilled (locked) node badge; empty = drawn padlock.
 const PREFILL_LOCK_ICON := ""
-const DEFAULT_NODE_SIZE := Vector2(200.0, 128.0)
+const DEFAULT_NODE_SIZE := Vector2(200.0, 164.0)
 
 var _chapters: Array = []
 var _clues: Array = []
@@ -155,7 +155,8 @@ func get_chapter_ids() -> Array:
 	return out
 
 
-## Chapter ids shown in the player inventory notebook (excludes vault "hidden").
+## Chapter ids eligible for the inventory notebook list (excludes vault "hidden").
+## DetectiveNoteManager.get_unlocked_chapter_ids() further filters by player progress.
 func get_visible_chapter_ids() -> Array:
 	var out: Array = []
 	for ch: Variant in _chapters:

@@ -1,6 +1,5 @@
 [
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"music": "res://assets/audio/bgm_horror_1.mp3",
 		"text": "The quiet study area has looked a little different this time."
 	},
@@ -8,7 +7,6 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"music": "res://assets/audio/bgm_horror_1.mp3",
 		"text": "There is broken windows, scattered stuffs, and some bloods."
 	},
@@ -16,7 +14,6 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -26,12 +23,9 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "This look worse..."
-		}
+		"text": "This look worse..."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -41,15 +35,12 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "Where is she...?"
-		}
+		"text": "Where is she...?"
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -62,7 +53,9 @@
 		"text": "Mayu! It's me! Come and get the pretty stuffs!"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"wait": 0.5
+	},
+	{
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -72,20 +65,33 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "Here, look! My neck is really bright and clean!"
+		"text": "Hey!! Mayu-naise...!!"
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Here, look! My neck is really bright and clean! Don't you want pretty stuffs?"
+	},
+	{
+		"wait": 0.5
+	},
+	{
 		"text": "(It's all silence...)"
 	},
 	{
 		"wait": 1.0
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -99,7 +105,6 @@
 		"text": "\"Pretty stuffs\" huh?"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -113,7 +118,6 @@
 		"text": "I remembered some anomalies that loves talking about pretty stuffs..."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -130,7 +134,6 @@
 		"wait": 1.0
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -144,7 +147,6 @@
 		"text": "We might need to do some inspection. So we can pinpoint whether it is a [color=#FF4444]Ghost[/color] or a [color=#FF4444]Demon[/color]"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -161,7 +163,6 @@
 		"wait": 1.0
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -189,10 +190,6 @@
 		"linger_characters": true
 	},
 	{
-		"linger_characters": true,
-		"wait": 0.5
-	},
-	{
 		"exploration_actions": [
 			{
 				"action": "give_item",
@@ -201,10 +198,6 @@
 			}
 		],
 		"linger_characters": true
-	},
-	{
-		"linger_characters": true,
-		"wait": 0.5
 	},
 	{
 		"exploration_actions": [
@@ -217,10 +210,6 @@
 		"linger_characters": true
 	},
 	{
-		"linger_characters": true,
-		"wait": 0.5
-	},
-	{
 		"exploration_actions": [
 			{
 				"action": "give_item",
@@ -229,10 +218,6 @@
 			}
 		],
 		"linger_characters": true
-	},
-	{
-		"linger_characters": true,
-		"wait": 0.5
 	},
 	{
 		"characters": [
@@ -247,7 +232,6 @@
 		"text": "Wow... Such a bunch of gadgets you've got."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -265,7 +249,6 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -279,7 +262,6 @@
 		"text": "I want you to use these tools to collect some informations."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -290,10 +272,9 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras.\nIf [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
+		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras. If [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -304,10 +285,9 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "[color=#FF4444]Demons[/color], usually will not cause any temperature change. And mostly, won't appear on cameras, unless they want to.\n[color=#FF4444]Demons[/color] speaks only in latin or demonic languages."
+		"text": "[color=#FF4444]Demons[/color], usually will not cause any temperature change. And mostly, won't appear on cameras, unless they want to. [color=#FF4444]Demons[/color] prefer speaking in Latin or demonic languages. But some of them can also speak the host's language."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
@@ -318,10 +298,33 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Go on and play with these tool. If you're finished, talk to me."
+		"text": "Go on and play with these tool. You might start from using \"Thermometer\" in your inventory and scan the window."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "If you're finished, talk to me."
 	},
 	{
 		"linger_characters": true,
 		"text": "(Use different tools in your inventory to gather information. Then talk to Kelly for concluding your verdict)"
+	},
+	{
+		"detective_note": [
+			{
+				"action": "unlock_topic",
+				"chapter": "ch1_s1",
+				"id": "library_quiet_study_ghost_or_demon"
+			}
+		],
+		"linger_characters": true
 	}
 ]

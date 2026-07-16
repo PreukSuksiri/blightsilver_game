@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://vn_item_overlay_test"]
+
+[ext_resource type="Script" path="res://tests/test_vn_item_overlay.gd" id="1"]
+
+[node name="VNItemOverlayTestRunner" type="Node"]
+script = ExtResource("1")

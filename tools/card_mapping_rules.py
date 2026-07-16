@@ -199,11 +199,37 @@ TRAP_MAPPINGS: dict[str, dict] = {
         "effect_type": "NULLIFY_ATTACKER_EFFECT",
         "effect_params": {"trigger_on_foe_coin_flip": True, "coin_manipulation": "force_tails"},
     },
+    # ── 2026-07 xlsx import (high-confidence, existing TrapEffectTypes) ──
+    "Midlife Crisis": {
+        "effect_type": "NULLIFY_ATTACKER_EFFECT",
+        "effect_params": {"until_turn_end": True},
+    },
+    "Inferno Trap": {
+        "effect_type": "PERMANENT_ATK_DEBUFF",
+        "effect_params": {"amount": 25},
+    },
+    "Taser": {
+        "effect_type": "PERMANENT_ATK_DEBUFF",
+        "effect_params": {"amount": 0, "def_debuff_temp": 10, "coin_count": 2, "per_head": True},
+    },
 }
 
 # ── Characters (all NOT_IMPLEMENTED + drift cards) ─────────────────────────
 
 CHARACTER_MAPPINGS: dict[str, dict] = {
+    # ── 2026-07 xlsx import (Nobleman line) ──
+    "Unholy Nobleman": {
+        "ability_type": "CRYSTAL_GAIN_ON_DESTROY",
+        "ability_params": {"amount": 300},
+    },
+    "Nobleman Wizard": {
+        "ability_type": "FIELD_ATK_BOOST_OWN_AFFINITY",
+        "ability_params": {"affinity": "ARCANE", "atk": 10, "def": 10, "atk_bonus": 10, "def_bonus": 10},
+    },
+    "Shining Nobleman": {
+        "ability_type": "DESTROY_IF_OPPONENT_AFFINITY",
+        "ability_params": {"affinity": "DIVINE"},
+    },
     "Alluring Witch": {
         "ability_type": "LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE",
         "ability_params": {},
@@ -1351,6 +1377,15 @@ AFFINITY_WORDS = {
 # ── Unions (19 NOT_IMPLEMENTED + drift updates) ──────────────────────────────
 
 UNION_MAPPINGS: dict[str, dict] = {
+    # Keep new complex unions stubbed until dedicated AbilityTypes exist
+    "Mother Nature": {
+        "ability_type": "NOT_IMPLEMENTED",
+        "ability_params": {},
+    },
+    "Orzolos the Sinister King": {
+        "ability_type": "NOT_IMPLEMENTED",
+        "ability_params": {},
+    },
     "Nanomites Dragon": {
         "ability_type": "DESTROY_IF_OPPONENT_AFFINITY",
         "ability_params": {"affinity": "COSMIC"},

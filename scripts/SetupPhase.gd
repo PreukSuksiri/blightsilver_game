@@ -346,7 +346,6 @@ func _build_ui() -> void:
 
 	# ── Black margin strips ───────────────────────────────────
 	var lm := ColorRect.new()
-	lm.layout_mode    = 1
 	lm.anchor_left    = 0.0;  lm.anchor_top    = 0.0
 	lm.anchor_right   = 0.0;  lm.anchor_bottom = 1.0
 	lm.offset_left    = 0.0;  lm.offset_top    = 0.0
@@ -355,7 +354,6 @@ func _build_ui() -> void:
 	add_child(lm)
 
 	var rm := ColorRect.new()
-	rm.layout_mode    = 1
 	rm.anchor_left    = 1.0;  rm.anchor_top    = 0.0
 	rm.anchor_right   = 1.0;  rm.anchor_bottom = 1.0
 	rm.offset_left    = -160.0; rm.offset_top  = 0.0
@@ -410,7 +408,6 @@ func _build_ui() -> void:
 
 	# ── Formation selector bar (above Random / Confirm) ─────
 	_formation_bar = HBoxContainer.new()
-	_formation_bar.layout_mode    = 1
 	_formation_bar.anchor_left    = 0.0; _formation_bar.anchor_right   = 0.0
 	_formation_bar.anchor_top     = 1.0; _formation_bar.anchor_bottom  = 1.0
 	_formation_bar.offset_left    = 172.0; _formation_bar.offset_right  = 476.0
@@ -421,7 +418,6 @@ func _build_ui() -> void:
 
 	# ── Bottom bar: Random + Confirm ─────────────────────────
 	_random_btn = Button.new()
-	_random_btn.layout_mode    = 1
 	_random_btn.anchor_left    = 0.0;  _random_btn.anchor_top    = 1.0
 	_random_btn.anchor_right   = 0.0;  _random_btn.anchor_bottom = 1.0
 	_random_btn.offset_left    = 172.0; _random_btn.offset_top   = -54.0
@@ -434,7 +430,6 @@ func _build_ui() -> void:
 	add_child(_random_btn)
 
 	_confirm_btn = Button.new()
-	_confirm_btn.layout_mode    = 1
 	_confirm_btn.anchor_left    = 0.0;  _confirm_btn.anchor_top    = 1.0
 	_confirm_btn.anchor_right   = 1.0;  _confirm_btn.anchor_bottom = 1.0
 	_confirm_btn.offset_left    = 484.0; _confirm_btn.offset_top   = -54.0
@@ -454,7 +449,6 @@ func _build_ui() -> void:
 		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
 		var _p1p := TextureRect.new()
 		_p1p.texture       = _sp_p1_tex
-		_p1p.layout_mode   = 1
 		_p1p.anchor_left   = 0.0;  _p1p.anchor_top    = 1.0
 		_p1p.anchor_right  = 0.0;  _p1p.anchor_bottom = 1.0
 		_p1p.offset_left   = -_pw * 0.4; _p1p.offset_top    = -SP_PORTRAIT_REF_H
@@ -473,7 +467,6 @@ func _build_ui() -> void:
 		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
 		var _p2p := TextureRect.new()
 		_p2p.texture       = _sp_p2_tex
-		_p2p.layout_mode   = 1
 		_p2p.anchor_left   = 1.0;  _p2p.anchor_top    = 1.0
 		_p2p.anchor_right  = 1.0;  _p2p.anchor_bottom = 1.0
 		_p2p.offset_left   = -_pw * 0.6; _p2p.offset_top    = -SP_PORTRAIT_REF_H

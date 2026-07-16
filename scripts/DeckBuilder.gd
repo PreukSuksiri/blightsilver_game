@@ -2893,7 +2893,7 @@ func _remove_card_gallery(card_name: String, card_type: String) -> void:
 		"tech":      current_deck.techs.erase(card_name)
 	_rebuild_deck_lists()
 
-func _load_full_card_tex(card_name: String, card_type: String) -> Texture2D:
+func _load_full_card_tex(card_name: String, _card_type: String) -> Texture2D:
 	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
 	if SaveManager.nsfw_enabled:
 		var nsfw_path: String = FULL_CARDS_DIR + snake + "_nsfw.png"

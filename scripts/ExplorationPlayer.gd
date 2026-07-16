@@ -195,7 +195,7 @@ var _hovered_nav_panel: Control    = null   # nav-choice panel currently being h
 
 # ── Detective tool (active-cursor state) ──────────────────────────────────
 const TOOL_REVEAL_RADIUS: float = 90.0      # default proximity reveal radius (px)
-const TOOL_CURSOR_SIZE: Vector2 = Vector2(96.0, 96.0)
+const TOOL_CURSOR_SIZE: Vector2 = Vector2(40.0, 40.0)
 var _active_tool_id: String        = ""     # empty = no tool active
 # Entries: { "hit": Control, "center": Vector2, "radius": float, "revealed": bool }
 var _tool_spots: Array             = []
@@ -272,7 +272,6 @@ func _build_ui() -> void:
 	add_child(_bg_base)
 
 	_bg_rect = TextureRect.new()
-	_bg_rect.layout_mode  = 0
 	_bg_rect.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	_bg_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_bg_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -399,7 +398,6 @@ func _build_ui() -> void:
 		# ── Debug button (top-right corner) ───────────────────────
 		var dbg_btn := Button.new()
 		dbg_btn.text         = "DBG"
-		dbg_btn.layout_mode  = 1
 		dbg_btn.anchor_left  = 1.0; dbg_btn.anchor_right  = 1.0
 		dbg_btn.anchor_top   = 0.0; dbg_btn.anchor_bottom = 0.0
 		dbg_btn.offset_left  = -58.0; dbg_btn.offset_right  = -6.0
@@ -412,7 +410,6 @@ func _build_ui() -> void:
 		_debug_panel = PanelContainer.new()
 		_debug_panel.visible    = false
 		_debug_panel.z_index    = 200
-		_debug_panel.layout_mode = 1
 		_debug_panel.anchor_left   = 0.0; _debug_panel.anchor_right  = 0.52
 		_debug_panel.anchor_top    = 0.0; _debug_panel.anchor_bottom = 1.0
 		_debug_panel.offset_left   = 8.0; _debug_panel.offset_top    = 8.0
@@ -441,7 +438,6 @@ func _build_ui() -> void:
 
 	# ── Toast label ───────────────────────────────────────────
 	_toast_lbl = Label.new()
-	_toast_lbl.layout_mode  = 1
 	_toast_lbl.anchor_left  = 0.0;  _toast_lbl.anchor_right  = 1.0
 	_toast_lbl.anchor_top   = 0.0;  _toast_lbl.anchor_bottom = 0.0
 	_toast_lbl.offset_left  = 16.0; _toast_lbl.offset_right  = -16.0
@@ -692,7 +688,6 @@ func _build_compass_system() -> void:
 
 	# Empty-chat overlay label
 	_chat_empty_lbl = Label.new()
-	_chat_empty_lbl.layout_mode = 0
 	var chat_lbl_w: float = CHAT_ICON_SIZE + 120.0
 	_chat_empty_lbl.position = Vector2(
 		_chat_idle_pos.x + CHAT_ICON_SIZE * 0.5 - chat_lbl_w * 0.5,
@@ -715,7 +710,6 @@ func _build_compass_system() -> void:
 
 	# Empty-inventory overlay label — positioned directly over the inventory icon
 	_inv_empty_lbl = Label.new()
-	_inv_empty_lbl.layout_mode = 0   # manual position
 	var lbl_w: float = COMPASS_SIZE + 120.0
 	_inv_empty_lbl.position = Vector2(
 		_inv_idle_pos.x + COMPASS_SIZE * 0.5 - lbl_w * 0.5,
@@ -1115,6 +1109,7 @@ func _dismiss_all_popups() -> void:
 	if _obtained_overlay != null and is_instance_valid(_obtained_overlay):
 		_obtained_overlay.queue_free()
 	_obtained_overlay = null
+	_notify_item_obtained_overlay_idle()
 
 func _close_all_menus(animated: bool = true) -> void:
 	_dismiss_all_hud_menus(animated)
@@ -2247,6 +2242,7 @@ func _close_item_preview() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_item_obtained(item_id: String) -> void:
+	ExplorationManager.mark_item_obtained_overlay_busy()
 	_obtained_queue.append(item_id)
 	if _obtained_overlay == null:
 		_show_next_obtained()
@@ -2260,6 +2256,7 @@ func _on_mailbox_reward_granted(info: Dictionary) -> void:
 
 func _show_next_obtained() -> void:
 	if _obtained_queue.is_empty():
+		_notify_item_obtained_overlay_idle()
 		return
 	var entry: Variant = _obtained_queue[0]
 	_obtained_queue.remove_at(0)
@@ -2392,6 +2389,17 @@ func _dismiss_obtained_overlay() -> void:
 	tw.tween_callback(func() -> void:
 		_obtained_dismissing = false
 		_show_next_obtained())
+
+func _is_item_obtained_overlay_active() -> bool:
+	return not _obtained_queue.is_empty() \
+		or (_obtained_overlay != null and is_instance_valid(_obtained_overlay)) \
+		or _obtained_dismissing
+
+
+func _notify_item_obtained_overlay_idle() -> void:
+	if _is_item_obtained_overlay_active():
+		return
+	ExplorationManager.mark_item_obtained_overlay_idle()
 
 # ─────────────────────────────────────────────────────────────
 # Mailbox Reward Overlay
@@ -2644,7 +2652,7 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 			(child as Control).visible = false
 
 	var vp: Vector2 = get_viewport_rect().size
-	var dismissed := false
+	var dismissed := [false]
 	var hold_tween: Tween = null
 	var overlay_id: int = overlay.get_instance_id()
 
@@ -2662,9 +2670,9 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 		tw.tween_callback(on_done)
 
 	var dismiss := func() -> void:
-		if dismissed:
+		if dismissed[0]:
 			return
-		dismissed = true
+		dismissed[0] = true
 		finish.call()
 
 	var center := CenterContainer.new()
@@ -3066,26 +3074,25 @@ func _open_exploration_options_popup() -> void:
 	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.add_child(dimmer)
 
-	var panel := Panel.new()
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(center)
+
+	var panel := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.04, 0.06, 0.14, 0.97)
 	sb.set_border_width_all(2)
 	sb.border_color = Color(0.38, 0.65, 1.0, 0.5)
 	sb.set_corner_radius_all(8)
+	sb.set_content_margin_all(16.0)
 	panel.add_theme_stylebox_override("panel", sb)
-	var dlg_size := Vector2(420.0, 260.0)
-	panel.size = dlg_size
-	panel.position = (vp_sz - dlg_size) * 0.5
+	panel.custom_minimum_size.x = 420.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	overlay.add_child(panel)
+	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 12)
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 20
-	vbox.offset_top = 16
-	vbox.offset_right = -20
-	vbox.offset_bottom = -16
 	panel.add_child(vbox)
 
 	var title := Label.new()
@@ -3112,6 +3119,7 @@ func _open_exploration_options_popup() -> void:
 
 	var auto_hint := Label.new()
 	auto_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	auto_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	auto_hint.add_theme_font_size_override("font_size", 11)
 	auto_hint.add_theme_color_override("font_color", Color(0.62, 0.66, 0.74))
 	_tag_ui(auto_hint, "font", 500)
@@ -3227,8 +3235,10 @@ func _is_active_battle_bgm() -> bool:
 
 
 func _restore_node_bgm(node: ExplorationNode, after_battle: bool = false) -> void:
-	if after_battle or _is_active_battle_bgm():
-		BGMManager.stop(0.8)
+	if after_battle or _is_active_battle_bgm() \
+			or BGMManager.get_current_context() == BGMManager.CONTEXT_MAIN_MENU:
+		BGMManager.stop(0.5)
+	# One-shot resume/hand-off only — normal navigation must use the node's music.
 	if not _try_apply_restored_bgm() and not _try_apply_vn_resume_bgm():
 		_apply_node_music(node)
 
@@ -4037,10 +4047,14 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	if not ExplorationManager.is_connection_unlocked(spot):
 		_log_skipped_spot(spot, spot_index)
 		return
-	# Detective-tool gating: a spot that requires a tool only exists while that
-	# tool is active, and is then revealed by sweeping the cursor near it.
+	# Detective-tool gating:
+	#   • No tool active → normal spots only (requires_tool empty).
+	#   • Tool active → matching tool-gated spots only; normal spots hidden.
 	var required_tool: String = str(spot.get("requires_tool", "")).strip_edges()
-	if not required_tool.is_empty() and required_tool != _active_tool_id:
+	if _active_tool_id.is_empty():
+		if not required_tool.is_empty():
+			return
+	elif required_tool != _active_tool_id:
 		return
 	# Skip one-time spots already used or currently running an action queue
 	var spot_key_node: String = ExplorationManager.current_node_id

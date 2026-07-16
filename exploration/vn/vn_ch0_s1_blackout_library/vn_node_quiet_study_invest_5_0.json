@@ -1,0 +1,290 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "So... I must speak into this translator, huh...?"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Ahem..."
+	},
+	{
+		"choices": [
+			{
+				"actions": [
+					{
+						"action": "set_var",
+						"key": "",
+						"value": ""
+					}
+				],
+				"goto_group": 1,
+				"label": "Hello"
+			},
+			{
+				"goto_group": 2,
+				"label": "Show yourself!!"
+			},
+			{
+				"goto_group": 3,
+				"label": "(Random swear)"
+			},
+			{
+				"goto_group": 4,
+				"label": "(Sing)"
+			}
+		],
+		"linger_characters": true
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Nex",
+		"text": "Hello"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Nex",
+		"text": "My name is Nex"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Nex",
+		"text": "We are not here to hurt you"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Nex",
+		"text": "Return our friend"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 2.0,
+		"speaker": "Nex",
+		"text": "Whatever you are... Show yourself!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 2.0,
+		"speaker": "Nex",
+		"text": "We are not afraid of you!!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 2.0,
+		"speaker": "Nex",
+		"text": "You're just a coward!!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Nex",
+		"text": "Hey!!!!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Nex",
+		"text": "Show yourself!! You're sucking your mom's toes?"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Nex",
+		"text": "Come out bitch! Fuck you!!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 3.0,
+		"speaker": "Nex",
+		"text": "Hmm.... What is this satisfying feeling...?"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 4.0,
+		"speaker": "Nex",
+		"text": "An empty streeeett..... An empty houses..... A whole inside my heaaart....."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"group": 4.0,
+		"speaker": "Nex",
+		"text": "I'm all alooone..... The rooom are getting smalller......"
+	},
+	{
+		"linger_characters": true,
+		"wait": 1.0
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "............"
+	},
+	{
+		"linger_characters": true,
+		"wait": 1.0
+	},
+	{
+		"comment": "Sound",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/scifi_ui_15.mp3"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "The translator shows something..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 1.0
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Latin...?"
+	},
+	{
+		"detective_note": [
+			{
+				"action": "add_clue",
+				"chapter": "ch1_s1",
+				"id": "measurement_quiet_study_latin_translation"
+			}
+		],
+		"linger_characters": true
+	}
+]

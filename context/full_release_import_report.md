@@ -6,13 +6,13 @@ Source: `context/card_data.xlsx`
 
 | Sheet | Added | Already in game | Skipped (incomplete xlsx) | In-game now |
 |-------|------:|----------------:|------------------------:|------------:|
-| Unit | 0 | 509 | 0 | 509 |
-| Trap | 1 | 72 | 0 | 73 |
-| Tech | 10 | 117 | 0 | 127 |
-| Union | 1 | 131 | 0 | 132 |
+| Unit | 3 | 508 | 0 | 511 |
+| Trap | 40 | 73 | 0 | 113 |
+| Tech | 3 | 127 | 0 | 130 |
+| Union | 2 | 132 | 0 | 134 |
 
-**Total added this run:** 12
-**In-game total:** 841 / 770 xlsx rows (0 skipped)
+**Total added this run:** 48
+**In-game total:** 888 / 770 xlsx rows (0 skipped)
 
 ## Validation
 

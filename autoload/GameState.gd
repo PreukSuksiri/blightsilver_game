@@ -433,7 +433,7 @@ func mark_destroy_achievement_context(
 	analytics_destroy_source = source
 	analytics_destroy_by_player = destroyer_player
 
-static func load_portrait_texture(path: String) -> Texture2D:
+func load_portrait_texture(path: String) -> Texture2D:
 	if path.is_empty():
 		return null
 	if path.begins_with("res://"):
@@ -443,7 +443,7 @@ static func load_portrait_texture(path: String) -> Texture2D:
 		return null
 	return ImageTexture.create_from_image(img)
 
-static func is_unit_effect_flag(flag: String) -> bool:
+func is_unit_effect_flag(flag: String) -> bool:
 	return flag in UNIT_EFFECT_FLAGS
 
 ## Apply battle audio paths from a VN beat dict or exploration BATTLE node dict.
@@ -566,6 +566,9 @@ func _make_cursor_sprite() -> TextureRect:
 	var sprite := TextureRect.new()
 	sprite.texture = _cursor_tex
 	sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Ignore texture pixel size so overrides (e.g. 1024 detective tools) can scale down.
+	sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	sprite.custom_minimum_size = Vector2(64.0, 64.0)
 	sprite.size = Vector2(64.0, 64.0)
 	return sprite
@@ -669,14 +672,16 @@ func clear_cursor_override() -> void:
 func _apply_main_cursor_appearance() -> void:
 	if _cursor_sprite == null:
 		return
+	_cursor_sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_cursor_sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	if _cursor_override_tex != null:
-		_cursor_sprite.texture            = _cursor_override_tex
+		_cursor_sprite.texture             = _cursor_override_tex
 		_cursor_sprite.custom_minimum_size = _cursor_override_size
-		_cursor_sprite.size               = _cursor_override_size
+		_cursor_sprite.size                = _cursor_override_size
 	else:
-		_cursor_sprite.texture            = _cursor_tex
+		_cursor_sprite.texture             = _cursor_tex
 		_cursor_sprite.custom_minimum_size = Vector2(64.0, 64.0)
-		_cursor_sprite.size               = Vector2(64.0, 64.0)
+		_cursor_sprite.size                = Vector2(64.0, 64.0)
 
 func _load_cursor_texture() -> void:
 	if _cursor_tex != null:
@@ -1098,7 +1103,7 @@ func _clone_card_for_revive(source: CardInstance) -> CardInstance:
 	copy.flags = source.flags.duplicate()
 	return copy
 
-static func card_name_has_any_token(card_name: String, tokens: Array) -> bool:
+func card_name_has_any_token(card_name: String, tokens: Array) -> bool:
 	var low: String = card_name.to_lower()
 	for token: Variant in tokens:
 		var part: String = str(token).to_lower()

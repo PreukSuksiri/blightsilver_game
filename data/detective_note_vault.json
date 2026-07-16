@@ -246,8 +246,8 @@
 							"label_side": "top",
 							"min_level": 1,
 							"pos": [
-								31,
-								305
+								50,
+								274
 							],
 							"prefill": "",
 							"size": [
@@ -263,8 +263,8 @@
 							"label_side": "top",
 							"min_level": 1,
 							"pos": [
-								445,
-								306
+								467,
+								272
 							],
 							"prefill": "",
 							"size": [
@@ -280,8 +280,8 @@
 							"label_side": "bottom",
 							"min_level": 1,
 							"pos": [
-								231,
-								589
+								247,
+								596
 							],
 							"prefill": "",
 							"size": [
@@ -323,15 +323,15 @@
 							"kind": "any",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								0,
-								0
+								0.0,
+								0.0
 							],
 							"prefill": "person_mayu",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						},
@@ -340,15 +340,15 @@
 							"kind": "any",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								0,
-								0
+								0.0,
+								0.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						}
@@ -359,7 +359,9 @@
 			"vn_scenes": []
 		},
 		{
-			"graphs": [],
+			"graphs": [
+				"res://exploration/graphs/ch0_s1_blackout_library.json"
+			],
 			"hidden": false,
 			"id": "ch1_s1",
 			"start_clues": [
@@ -394,14 +396,14 @@
 						{
 							"arrow": "end",
 							"from": "node_information_1",
-							"label": "Is a characteristic for",
+							"label": "Characterized",
 							"min_level": 1,
 							"to": "node_individual_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_information_2",
-							"label": "Is a characteristic for",
+							"label": "Characterized",
 							"min_level": 1,
 							"to": "node_individual_1"
 						}
@@ -416,8 +418,8 @@
 							"label_side": "top",
 							"min_level": 1,
 							"pos": [
-								15,
-								48
+								31,
+								67
 							],
 							"prefill": "",
 							"size": [
@@ -433,8 +435,8 @@
 							"label_side": "top",
 							"min_level": 1,
 							"pos": [
-								794,
-								52
+								743,
+								134
 							],
 							"prefill": "person_possessed_mayu",
 							"size": [
@@ -450,8 +452,8 @@
 							"label_side": "bottom",
 							"min_level": 1,
 							"pos": [
-								438,
-								294
+								359,
+								278
 							],
 							"prefill": "",
 							"size": [
@@ -467,8 +469,8 @@
 							"label_side": "bottom",
 							"min_level": 1,
 							"pos": [
-								459,
-								643
+								339,
+								584
 							],
 							"prefill": "",
 							"size": [
@@ -481,7 +483,11 @@
 					"title": "A ghost or a demon?"
 				}
 			],
-			"vn_scenes": []
+			"vn_scenes": [
+				"res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_main.json",
+				"res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_char_kelly.json",
+				"res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_invest_5_0.json"
+			]
 		}
 	],
 	"clues": [
@@ -734,50 +740,50 @@
 			"group": "Act 1 Chapter 1",
 			"id": "measurement_quiet_study_normal_temperature",
 			"image": "",
-			"info": "The measurement from the thermometer resulted in 25 degree celcius.",
+			"info": "The measurement from the thermometer resulted in 25 degrees celcius.",
 			"kind": "information",
-			"name": "25 deg. Temperature",
+			"name": "Temperature - 25 degrees",
 			"style": "postit"
 		},
 		{
-			"caption": "",
+			"caption": "Latin language detected",
 			"group": "Act 1 Chapter 1",
 			"id": "measurement_quiet_study_latin_translation",
 			"image": "",
-			"info": "The measurement from the translator resulted in clear, mysterious voice, speaking latin language.",
+			"info": "Original : Bella... bella... meliora cum sanguine, sic, omnia sanguine... Tam clara... Lucida... Locus amoenus... locus cruentus...\nTranslated : Pretty... pretty... better with blood, yes, all with blood... So bright... Luminous... A pleasant place... a bloody place...",
 			"kind": "information",
-			"name": "Latin Voice",
+			"name": "Translation - Latin Voice",
 			"style": "postit"
 		},
 		{
 			"caption": "",
 			"group": "Act 1 Chapter 1",
 			"id": "measurement_quiet_study_polaroid_camera_bookshelf",
-			"image": "",
-			"info": "The measurement from the polaroid camera resulted in an image of a normal bookshelf.",
+			"image": "res://assets/textures/detective/ch1_s1/detective_clue_polaroid1.png",
+			"info": "Image from the polaroid camera resulted in an image of a normal bookshelf.",
 			"kind": "information",
-			"name": "Picture of a bookshelf",
-			"style": "postit"
+			"name": "Picture - Bookshelf",
+			"style": "image"
 		},
 		{
 			"caption": "",
 			"group": "Act 1 Chapter 1",
 			"id": "measurement_quiet_study_polaroid_camera_desk",
-			"image": "",
-			"info": "The measurement from the polaroid camera resulted in an image of a normal desk with books.",
+			"image": "res://assets/textures/detective/ch1_s1/detective_clue_polaroid3.png",
+			"info": "Image from the polaroid camera resulted in an image of a normal desk with books.",
 			"kind": "information",
-			"name": "Picture of a desk",
-			"style": "postit"
+			"name": "Picture - Desk",
+			"style": "image"
 		},
 		{
 			"caption": "",
 			"group": "Act 1 Chapter 1",
 			"id": "measurement_quiet_study_polaroid_camera_blood_stain",
-			"image": "",
-			"info": "The measurement from the polaroid camera resulted in an image of a blood stain on the floor.",
+			"image": "res://assets/textures/detective/ch1_s1/detective_clue_polaroid2.png",
+			"info": "Image from the polaroid camera resulted in an image of a blood stain on the floor.",
 			"kind": "information",
-			"name": "Picture of blood",
-			"style": "postit"
+			"name": "Picture - Blood",
+			"style": "image"
 		},
 		{
 			"caption": "",
@@ -786,7 +792,7 @@
 			"image": "",
 			"info": "The measurement from the EMF meter resulted in 20 (High)",
 			"kind": "information",
-			"name": "EMF 20",
+			"name": "EMF - 20",
 			"style": "postit"
 		},
 		{

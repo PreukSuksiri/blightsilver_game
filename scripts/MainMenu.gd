@@ -308,11 +308,11 @@ func _set_main_menu_btn(btn: BaseButton, key: String) -> void:
 
 func _sync_corner_icon(btn: BaseButton, shadow: Control, key: String,
 		obscured: bool = false) -> void:
-	var visible := not obscured and MenuButtonConfig.is_main_visible(key)
-	btn.visible = visible
+	var show_icon := not obscured and MenuButtonConfig.is_main_visible(key)
+	btn.visible = show_icon
 	btn.disabled = not MenuButtonConfig.is_main_enabled(key)
 	if shadow != null:
-		shadow.visible = visible
+		shadow.visible = show_icon
 
 
 func _apply_menu_button_labels() -> void:

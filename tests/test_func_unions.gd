@@ -100,7 +100,7 @@ func _run_summon_manual_tests() -> void:
 
 func _run_full_release_summon_tests() -> void:
 	print("-- Full-release union summon material tests")
-	_assert_deck_can_form_union("Mass Extinction Dragon", ["Nuki the Tanuki", "Wood Wisp", "Elegant Butterfly", "Armored Monkey", "Magical Butterfly"], "TC-FUNC-Mass-Extinction-Dragon-summon")
+	_assert_deck_can_form_union("Big Bang Dragon", ["Asteroid Trooper", "Echo Bringer", "Electrogazer", "Laser Walker", "Lunar Wraith"], "TC-FUNC-Big-Bang-Dragon-summon")
 	_assert_deck_can_form_union("Beowolf", ["Kulu the Alpha Leader", "Mina the Chemist"], "TC-FUNC-Beowolf-summon")
 	_assert_deck_can_form_union("Dew the Heroic Prince", ["Dew the Frog Knight", "Wendella the Wise Princess"], "TC-FUNC-Dew-the-Heroic-Prince-summon")
 	_assert_deck_can_form_union("Gemina the Supreme Queen", ["Wendella the Wise Princess", "Fern the Mermaid Princess", "Rena the Space Princess"], "TC-FUNC-Gemina-the-Supreme-Queen-summon")

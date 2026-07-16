@@ -209,17 +209,17 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
-		"group": 1,
+		"group": 1.0,
 		"shake_screen": 4.0
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
-		"group": 1,
+		"group": 1.0,
 		"shake_screen": 10.0
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
-		"group": 1,
+		"group": 1.0,
 		"text": "No matter how hard he tried, he cannot break free of her grip."
 	},
 	{
@@ -238,25 +238,25 @@
 				"value": "1"
 			}
 		],
-		"group": 2,
+		"group": 2.0,
 		"linger_characters": true,
 		"wait": 0.01
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
-		"group": 3,
+		"group": 3.0,
 		"sfx": "res://assets/audio/sound_axe1.mp3",
 		"sfx_volume": 60.0,
 		"shake_screen": 10.0
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
-		"group": 3,
+		"group": 3.0,
 		"text": "He randomly slaps and hit the mad girl. But she doesn't seem to care.\nThe grip on his neck get even tighter."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
-		"group": 4,
+		"group": 4.0,
 		"shake_screen": 7.0,
 		"text": "No matter how much he tried to yell, his voice won't come out.\nThe grip on his neck get even tighter."
 	},
@@ -947,20 +947,24 @@
 		"beat_name": "Choice_describe_mayu_glowing_eyes",
 		"choices": [
 			{
-				"goto_group": 1.0,
+				"goto_group": 5,
 				"label": "Blood all over her"
 			},
 			{
-				"goto_group": 1.0,
+				"goto_group": 6,
 				"label": "Purple glowing eyes"
 			},
 			{
-				"goto_group": 1.0,
+				"goto_group": 7,
 				"label": "Red glowing eyes"
 			},
 			{
-				"goto_group": 1.0,
+				"goto_group": 8,
 				"label": "Dark aura all over her"
+			},
+			{
+				"goto_group": 9,
+				"label": "Nothing happened at all. It was just misunderstanding."
 			}
 		],
 		"linger_characters": true
@@ -990,9 +994,13 @@
 				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
-		"group": 5.0,
+		"group": 5,
 		"speaker": "Kelly",
-		"text": "A lot of blood? And she grabbed you? Why didn't your cloths get any bloodstain?"
+		"text": "A lot of blood? And she grabbed you? Why didn't your clothes get any bloodstain?"
+	},
+	{
+		"group": 5,
+		"text": "(Let's recall my memory again...)"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1024,8 +1032,7 @@
 		"text": "Are you sure it's purple? If it's purple, you would've lose some fingers already"
 	},
 	{
-		"group": 6.0,
-		"linger_characters": true,
+		"group": 6,
 		"text": "(Let's recall my memory again...)"
 	},
 	{
@@ -1078,9 +1085,9 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
 			}
 		],
-		"group": 8.0,
+		"group": 8,
 		"speaker": "Nex",
-		"text": "I don't know... but she looked like being crazy. Her eyes glowed red. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+		"text": "I don't know... but she looked like being crazy. There was dark aura everywhere. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1098,9 +1105,70 @@
 		"text": "Are you sure it's a dark aura? If it's really a dark aura, our whole Order must have get alerted already."
 	},
 	{
-		"group": 8.0,
-		"linger_characters": true,
+		"group": 8,
 		"text": "(Let's recall my memory again...)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"group": 9,
+		"speaker": "Nex",
+		"text": "Nothing... My friend, she just... went home... It's too late, so I was in hurry..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"group": 9,
+		"speaker": "Kelly",
+		"text": "You ran that fast just because you missed your home? Or were you trying fall into my hugs on purpose?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"group": 9,
+		"speaker": "Nex",
+		"text": "I'm... I'm sorry... That really was an accident!!"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"group": 9,
+		"speaker": "Kelly",
+		"text": "Damn.... I was hoping a little that you're just a pervert trying to sink your face into people's boob.\nI love to play games with these kind of people."
+	},
+	{
+		"group": 9,
+		"text": "(I was almost excused of being a pervert... Let's recall my memory again...)"
 	},
 	{
 		"go_to": [
@@ -1178,7 +1246,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "The glowing red eyes told us that it's probably a high-level anomaly."
+		"text": "The glowing red eyes told us that it's probably a stronger anomaly. But not what we cannot handle."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1208,9 +1276,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "That couldn't be! There must be someway to help her! Please help her, Ms.Kelly! "
-		}
+		"text": "That couldn't be! There must be someway to help her! Please help her, Ms.Kelly! "
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",

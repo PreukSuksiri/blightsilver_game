@@ -36,7 +36,7 @@
 		],
 		"group": 1.0,
 		"speaker": "Kelly",
-		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras.\nIf [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
+		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras. If [color=#FF4444]Ghosts[/color] could speak, they will always speak with human languages."
 	},
 	{
 		"characters": [
@@ -50,7 +50,30 @@
 		],
 		"group": 1.0,
 		"speaker": "Kelly",
-		"text": "[color=#FF4444]Demons[/color], usually will not cause any temperature change. And mostly, won't appear on cameras, unless they want to.\n[color=#FF4444]Demons[/color] speaks only in latin or demonic languages."
+		"text": "[color=#FF4444]Demons[/color], usually will not cause any temperature change. And mostly, won't appear on cameras, unless they want to. [color=#FF4444]Demons[/color] prefer speaking in Latin or demonic languages. But some of them can also speak the host's language."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"group": 1.0,
+		"speaker": "Kelly",
+		"text": "Please gather more information from the tools I gave you. You might start from using \"Thermometer\" in your inventory and scan the window."
+	},
+	{
+		"go_to": [
+			{
+				"beat_name": "end_beat"
+			}
+		],
+		"group": 1.0,
+		"linger_characters": true
 	},
 	{
 		"group": 2.0,
@@ -309,7 +332,9 @@
 	},
 	{
 		"fade_out": 1.0,
-		"linger_characters": true
+		"linger_characters": true,
+		"music_fade_out": 3.0,
+		"music_force": true
 	},
 	{
 		"linger_characters": true,
@@ -389,11 +414,12 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "far_left",
-				"scale": 135.0,
+				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
 		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"music_force": true,
 		"shake_screen": 10.0,
 		"text": "!!!",
 		"wait": 2.0
