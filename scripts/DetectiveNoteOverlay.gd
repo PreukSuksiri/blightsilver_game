@@ -8,8 +8,8 @@ class_name DetectiveNoteOverlay
 ##                        (Done button + bounce when the map is fully filled)
 ##   open_all()         — inventory NOTE tab; chapters + topics in the sidebar
 ##                        (Close button, no bounce)
-##   open_stamp_view()  — read-only notebook + verdict map only, plays the APPROVED
-##                        stamp animation; click or press any key to dismiss
+##   open_stamp_view()  — pack-style flat notebook + verdict map (no ScrollContainer);
+##                        plays the APPROVED stamp animation; click/key to dismiss
 ##
 ## Tap the dimmed margin outside the notebook panel (or Escape) to close in normal mode.
 ## Player interactions on the verdict map (delegated to DetectiveNoteVerdictMap):
@@ -95,6 +95,13 @@ var _clue_kind: String = "individual"
 var _empty_lbl: Label = null
 var _done_btn: Button = null
 var _done_pulse_tween: Tween = null
+## Guards _fit_verdict_map against ScrollContainer.resized → fit → resized recursion
+## (export hard-freeze / crash on stamp view).
+var _fitting_map: bool = false
+var _last_fit_avail_w: float = -1.0
+var _fit_call_count: int = 0  # tests / diagnostics only
+## Stored so stamp mode can disconnect resized→fit (deferred scrollbar oscillation).
+var _map_scroll_fit_cb: Callable = Callable()
 
 # Hover-hold (1s, deckbuilder-style) for clue tiles and filled frames
 var _hover_clue_id: String = ""
@@ -137,6 +144,8 @@ static func open_stamp_view(parent: Node, chapter_id: String, topic_id: String) 
 	overlay._selected_chapter = chapter_id.strip_edges()
 	overlay._selected_topic = topic_id.strip_edges()
 	overlay._stamp_view_mode = true
+	# Stamp must keep running even if the VN / tree is paused.
+	overlay.process_mode = Node.PROCESS_MODE_ALWAYS
 	_attach_to_viewport(overlay, parent)
 	return overlay
 
@@ -156,12 +165,14 @@ static func _make() -> DetectiveNoteOverlay:
 
 
 func _ready() -> void:
-	_build_ui()
 	if _stamp_view_mode:
+		# Pack-style flat UI — never build ScrollContainer / fit machinery (export hang).
+		_build_stamp_ui()
 		_show_stamp_view()
 		call_deferred("_sync_viewport_layout")
-		call_deferred("_fit_verdict_map")
+		call_deferred("_layout_stamp_map")
 		return
+	_build_ui()
 	var chapters: Array = DetectiveNoteManager.get_unlocked_chapter_ids() \
 		if _all_chapters_mode else DetectiveNoteVault.get_chapter_ids()
 	if _selected_chapter.is_empty():
@@ -184,7 +195,11 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		call_deferred("_sync_viewport_layout")
-		call_deferred("_fit_verdict_map")
+		# Stamp: re-layout once host has a real size (no scroll fit).
+		if _stamp_view_mode:
+			call_deferred("_layout_stamp_map")
+		else:
+			call_deferred("_fit_verdict_map")
 
 
 func _sync_viewport_layout() -> void:
@@ -219,6 +234,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _close() -> void:
+	if not is_inside_tree() or is_queued_for_deletion():
+		return
 	_stop_done_btn_pulse()
 	_hide_drag_ghost()
 	# VN / exploration: closing dismisses remaining "New" badges for this chapter.
@@ -332,6 +349,94 @@ func _stop_done_btn_pulse() -> void:
 # ─────────────────────────────────────────────────────────────
 # UI construction
 # ─────────────────────────────────────────────────────────────
+## Stamp-only UI: pack-style flat overlay. No ScrollContainer, no HBox min-size
+## fight, no `_fit_verdict_map` — those hang Godot's layout solver in export.
+func _build_stamp_ui() -> void:
+	var dim := ColorRect.new()
+	dim.color = DIM_COLOR
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	dim.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			if not _stamp_view_dismissable:
+				return
+			_close())
+	add_child(dim)
+
+	_root_panel = PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.13, 0.11, 0.09)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(12.0)
+	_root_panel.add_theme_stylebox_override("panel", sb)
+	_root_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	# Same gutter as play-mode notebook (sidebar + clue bar reserved visually).
+	_root_panel.offset_left = 60.0 + SIDEBAR_W
+	_root_panel.offset_right = -(60.0 + CLUEBAR_W)
+	_root_panel.offset_top = 30.0
+	_root_panel.offset_bottom = -30.0
+	_root_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(_root_panel)
+
+	_notebook_area = PanelContainer.new()
+	var paper_sb := StyleBoxFlat.new()
+	paper_sb.bg_color = PAPER_FALLBACK
+	paper_sb.set_corner_radius_all(4)
+	_notebook_area.add_theme_stylebox_override("panel", paper_sb)
+	_notebook_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_notebook_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# Stamp sits on the paper’s right; don’t clip it off the map host.
+	_notebook_area.clip_contents = false
+	_root_panel.add_child(_notebook_area)
+
+	_notebook_root = Control.new()
+	_notebook_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_notebook_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_notebook_root.clip_contents = false
+	_notebook_area.add_child(_notebook_root)
+
+	if ResourceLoader.exists(NOTEPAPER):
+		var paper := TextureRect.new()
+		paper.texture = load(NOTEPAPER) as Texture2D
+		paper.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		paper.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		paper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		paper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_notebook_root.add_child(paper)
+
+	# Map host stays clipped; stamp is parented to notebook_root (right of paper).
+	_map_host = Control.new()
+	_map_host.mouse_filter = Control.MOUSE_FILTER_STOP
+	_map_host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_map_host.offset_top = 46.0
+	_map_host.offset_right = -(DetectiveNoteVerdictMap.STAMP_SIZE + 100.0)
+	_map_host.clip_contents = true
+	_notebook_root.add_child(_map_host)
+
+	_map = DetectiveNoteVerdictMap.new()
+	_map.locale = locale
+	_map.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_map_host.add_child(_map)
+
+	_topic_title_lbl = Label.new()
+	_topic_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_topic_title_lbl.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	_topic_title_lbl.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	_topic_title_lbl.offset_top = 10.0
+	_topic_title_lbl.offset_bottom = 46.0
+	_topic_title_lbl.add_theme_font_override("font", FontManager.make_font("handwritten", 700))
+	_topic_title_lbl.add_theme_font_size_override("font_size", 28)
+	_topic_title_lbl.add_theme_color_override("font_color", Color(0.28, 0.22, 0.16))
+	_topic_title_lbl.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_topic_title_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_topic_title_lbl.clip_text = true
+	_topic_title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_topic_title_lbl.visible = false
+	_notebook_root.add_child(_topic_title_lbl)
+
+	set_process(false)
+
+
 func _build_ui() -> void:
 	var dim := ColorRect.new()
 	dim.color = DIM_COLOR
@@ -421,7 +526,8 @@ func _build_ui() -> void:
 	_notebook_root = Control.new()
 	_notebook_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_notebook_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_notebook_root.clip_contents = true
+	# Stamp overlays the paper’s right edge (sibling of map_scroll).
+	_notebook_root.clip_contents = false
 	_notebook_area.add_child(_notebook_root)
 
 	if ResourceLoader.exists(NOTEPAPER):
@@ -439,11 +545,15 @@ func _build_ui() -> void:
 	_map_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_map_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	# Vertical scroll only. Width is handled by _fit_verdict_map() scaling.
+	# SHOW_ALWAYS: reserved scrollbar width so fit → scrollbar toggle cannot oscillate avail_w.
 	_map_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_map_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_map_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
 	_map_scroll.clip_contents = true
 	_notebook_root.add_child(_map_scroll)
-	_map_scroll.resized.connect(_fit_verdict_map)
+	# Deferred: writing map_host size can emit resized synchronously and hard-freeze
+	# exports via fit → resized → fit recursion. Stamp mode disconnects this entirely.
+	_map_scroll_fit_cb = Callable(self, "_on_map_scroll_resized_fit")
+	_map_scroll.resized.connect(_map_scroll_fit_cb)
 
 	# Host reports the scaled layout size so horizontal_scroll DISABLED does not
 	# force a crushing min-width when the authored map is wider than the notebook.
@@ -598,6 +708,21 @@ func _apply_stamp_view_layout(columns: HBoxContainer, left: Control, right: Cont
 	pad_r.custom_minimum_size = Vector2(CLUEBAR_W, 0)
 	pad_r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	columns.add_child(pad_r)
+	# No resized→fit loop during stamp — layout once, then animate (pack-style).
+	_disconnect_map_scroll_fit()
+
+
+func _on_map_scroll_resized_fit() -> void:
+	if _stamp_view_mode:
+		return
+	call_deferred("_fit_verdict_map")
+
+
+func _disconnect_map_scroll_fit() -> void:
+	if _map_scroll == null or not is_instance_valid(_map_scroll):
+		return
+	if _map_scroll_fit_cb.is_valid() and _map_scroll.resized.is_connected(_map_scroll_fit_cb):
+		_map_scroll.resized.disconnect(_map_scroll_fit_cb)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -690,11 +815,16 @@ func _refresh_map() -> void:
 	_map.setup(topic, maxi(level, 1), map_mode,
 		DetectiveNoteManager.get_placements(_selected_chapter, _selected_topic))
 	if stamped and not _stamp_view_mode:
+		# Same as approval overlay: stamp on notebook paper’s right, not on the
+		# scaled verdict map (which looked centered / over the nodes).
 		_map.show_stamp(
 			DetectiveNoteManager.get_topic_stamp(_selected_chapter, _selected_topic),
 			false,
-			DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic))
+			DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic),
+			_notebook_root)
 	_fit_verdict_map()
+	# Stamp: one deferred fit after first layout frame only (no resize re-arm).
+	# Play mode: deferred catches late ScrollContainer size.
 	call_deferred("_fit_verdict_map")
 	_sync_done_btn_pulse()
 
@@ -703,30 +833,43 @@ func _refresh_map() -> void:
 ## Horizontal scroll is disabled, so without this a wide map forces a huge min-width,
 ## crushes the notebook, and (without clipping) paints over the exploration scene.
 func _fit_verdict_map() -> void:
+	if _stamp_view_mode:
+		return
+	if _fitting_map:
+		return
 	if _map == null or not is_instance_valid(_map) \
 			or _map_host == null or not is_instance_valid(_map_host) \
 			or _map_scroll == null or not is_instance_valid(_map_scroll):
 		return
+	_fitting_map = true
+	_fit_call_count += 1
 	var extent: Vector2 = _map.content_extent()
 	extent.x = maxf(extent.x, 1.0)
 	extent.y = maxf(extent.y, 1.0)
 	var avail_w: float = _map_scroll.size.x
 	if avail_w < 64.0 and _notebook_area != null:
 		avail_w = _notebook_area.size.x
-	# Export / first-frame layout can leave children at 0×0. Never spin forever on
-	# call_deferred — that starves tweens (stamp animation freezes the game).
+	# Export / first-frame layout can leave children at 0×0 — use viewport fallback.
 	if avail_w < 64.0:
 		var vp_w: float = get_viewport().get_visible_rect().size.x
 		avail_w = maxf(vp_w - SIDEBAR_W - CLUEBAR_W - 160.0, 320.0)
 	var s: float = 1.0 if extent.x <= avail_w else avail_w / extent.x
+	var scaled := Vector2(extent.x * s, extent.y * s)
+	# Skip no-op writes so resized feedback cannot churn forever.
+	if absf(avail_w - _last_fit_avail_w) < 0.5 \
+			and _map_host.size.distance_to(scaled) < 0.5 \
+			and _map_host.custom_minimum_size.distance_to(scaled) < 0.5:
+		_fitting_map = false
+		return
+	_last_fit_avail_w = avail_w
 	_map.scale = Vector2(s, s)
 	_map.position = Vector2.ZERO
 	_map.size = extent
 	# Host owns scroll metrics; full authored extent as min-width crushes the HBox.
 	_map.custom_minimum_size = Vector2.ZERO
-	var scaled := Vector2(extent.x * s, extent.y * s)
 	_map_host.custom_minimum_size = scaled
 	_map_host.size = scaled
+	_fitting_map = false
 
 
 func _refresh_topic_title() -> void:
@@ -1199,8 +1342,19 @@ func _show_messenger_for_clue(clue_id: String) -> void:
 # ─────────────────────────────────────────────────────────────
 func _show_stamp_view() -> void:
 	DetectiveNoteManager.apply_start_clues(_selected_chapter)
-	_refresh_map()
 	_stamp_view_dismissable = false
+	# process_always: still fires if the tree is paused.
+	var safety: SceneTreeTimer = get_tree().create_timer(8.0, true, false, true)
+	safety.timeout.connect(func() -> void:
+		if is_instance_valid(self) and not _stamp_view_dismissable:
+			_stamp_view_dismissable = true, CONNECT_ONE_SHOT)
+	# Auto-dismiss so VN await view.closed cannot soft-dead forever.
+	var auto_close: SceneTreeTimer = get_tree().create_timer(12.0, true, false, true)
+	auto_close.timeout.connect(func() -> void:
+		if is_instance_valid(self) and _stamp_view_mode:
+			_close(), CONNECT_ONE_SHOT)
+	_stamp_setup_map()
+	_layout_stamp_map()
 	var stamp_id: String = DetectiveNoteManager.get_topic_stamp(_selected_chapter, _selected_topic)
 	if stamp_id.is_empty():
 		push_warning("DetectiveNoteOverlay: stamp view for unstamped topic '%s/%s'"
@@ -1209,11 +1363,53 @@ func _show_stamp_view() -> void:
 		return
 	_map.stamp_animation_finished.connect(func() -> void:
 		_stamp_view_dismissable = true, CONNECT_ONE_SHOT)
+	# Parent stamp to the notebook paper (right side), not the scaled verdict map.
 	_map.show_stamp(
 		stamp_id,
 		true,
-		DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic))
-	# Safety net: never leave the player stuck if the animation path stalls.
-	get_tree().create_timer(8.0).timeout.connect(func() -> void:
-		if is_instance_valid(self) and not _stamp_view_dismissable:
-			_stamp_view_dismissable = true, CONNECT_ONE_SHOT)
+		DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic),
+		_notebook_root)
+
+
+## Load topic onto the map without ScrollContainer fit (stamp path only).
+func _stamp_setup_map() -> void:
+	if _map == null:
+		return
+	_refresh_topic_title()
+	if _selected_topic.is_empty():
+		_map.setup({}, 1, DetectiveNoteVerdictMap.Mode.READONLY)
+		return
+	var topic: Dictionary = DetectiveNoteVault.get_topic(_selected_chapter, _selected_topic)
+	var level: int = DetectiveNoteManager.get_topic_level(_selected_chapter, _selected_topic)
+	_map.setup(topic, maxi(level, 1), DetectiveNoteVerdictMap.Mode.READONLY,
+		DetectiveNoteManager.get_placements(_selected_chapter, _selected_topic))
+
+
+## Scale map to the real notebook host (same idea as play-mode width-fit).
+## Never invent host sizes or write `_map_host.size` — that fought anchors and made
+## the map oversized so it bled bottom-right of the paper.
+func _layout_stamp_map() -> void:
+	if not _stamp_view_mode:
+		return
+	if _map == null or not is_instance_valid(_map) \
+			or _map_host == null or not is_instance_valid(_map_host):
+		return
+	var extent: Vector2 = _map.content_extent()
+	extent.x = maxf(extent.x, 1.0)
+	extent.y = maxf(extent.y, 1.0)
+	var avail: Vector2 = _map_host.size
+	# Host still 0×0 on the open frame — deferred / RESIZED will retry.
+	if avail.x < 64.0 or avail.y < 64.0:
+		if _notebook_area != null and _notebook_area.size.x >= 64.0:
+			avail = Vector2(
+				_notebook_area.size.x,
+				maxf(_notebook_area.size.y - 46.0, 64.0))
+		else:
+			return
+	# Contain in both axes (no vertical scroll in stamp view).
+	var s: float = minf(1.0, minf(avail.x / extent.x, avail.y / extent.y))
+	_map.custom_minimum_size = Vector2.ZERO
+	_map.size = extent
+	_map.scale = Vector2(s, s)
+	# Top-left like play notebook — centering + bad avail looked like BR bleed.
+	_map.position = Vector2.ZERO

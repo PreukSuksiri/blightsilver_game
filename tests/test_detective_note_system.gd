@@ -38,6 +38,7 @@ func run_all_tests() -> void:
 	test_level_filtering()
 	test_loc_text()
 	test_context_resolution()
+	test_exploration_note_chapter_session_gate()
 	test_start_clues()
 	test_messenger_clues()
 	test_clue_groups()
@@ -132,12 +133,42 @@ func test_loc_text() -> void:
 func test_context_resolution() -> void:
 	assert_eq(DetectiveNoteVault.resolve_chapter_for_context(
 		"res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json", ""),
-		"ch0_demo", "VN scene resolves to ch0_demo")
+		"ch0_prologue", "VN scene resolves to ch0_prologue")
 	assert_eq(DetectiveNoteVault.resolve_chapter_for_context(
 		"", "res://exploration/graphs/ch0_s1_blackout_library.json"),
-		"ch0_demo", "exploration graph resolves to ch0_demo")
+		"ch1_s1", "exploration graph resolves to ch1_s1")
 	assert_eq(DetectiveNoteVault.resolve_chapter_for_context("res://nope.json", ""),
 		"", "unknown context resolves to empty")
+
+func test_exploration_note_chapter_session_gate() -> void:
+	DetectiveNoteVault.reload()
+	DetectiveNoteManager.reset_all()
+	assert_eq(DetectiveNoteVault.get_exploration_session_chapter("ch1_s1"), "act_1_ch_1",
+		"ch1_s1 maps exploration session chapter act_1_ch_1")
+	assert_eq(DetectiveNoteVault.resolve_chapter_for_session_chapter("act_1_ch_1"), "ch1_s1",
+		"session chapter act_1_ch_1 resolves to ch1_s1")
+	DetectiveNoteManager.unlock_topic(
+		"ch0_prologue", "topic_where_have_mayu_notebook_gone")
+	if ExplorationManager.is_session_active:
+		ExplorationManager.end_session(false, true)
+	# Prologue: no session chapter var → source VN → ch0_prologue only.
+	ExplorationManager.start_session(
+		"res://exploration/graphs/ch0_s1_blackout_library.json",
+		"res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json")
+	assert_eq(ExplorationManager.get_var("chapter", ""), "",
+		"prologue session leaves chapter var empty")
+	assert_eq(DetectiveNoteManager.resolve_exploration_note_chapter(), "ch0_prologue",
+		"prologue exploration HUD opens ch0_prologue only")
+	ExplorationManager.end_session(false, true)
+	# Act I: session chapter act_1_ch_1 → ch1_s1 only (not prologue).
+	ExplorationManager.start_session(
+		"res://exploration/graphs/ch0_s1_blackout_library.json",
+		"res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json")
+	ExplorationManager.set_var("chapter", "act_1_ch_1")
+	assert_eq(DetectiveNoteManager.resolve_exploration_note_chapter(), "ch1_s1",
+		"Act I exploration HUD opens ch1_s1 only")
+	ExplorationManager.end_session(false, true)
+	DetectiveNoteManager.reset_all()
 
 func test_start_clues() -> void:
 	DetectiveNoteVault.reload()

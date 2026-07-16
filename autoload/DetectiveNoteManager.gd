@@ -431,6 +431,29 @@ func resolve_active_chapter(vn_scene: String = "") -> String:
 	return DetectiveNoteVault.resolve_chapter_for_context(vn_scene, graph_path)
 
 
+## Single note chapter for the exploration HUD (design rule: never another chapter).
+## 1) session var "chapter" → vault exploration_session_chapter
+## 2) source VN → vn_scenes
+## 3) active graph → graphs
+func resolve_exploration_note_chapter() -> String:
+	if not ExplorationManager.is_session_active:
+		return ""
+	var session_ch: String = ExplorationManager.get_var("chapter", "").strip_edges()
+	if not session_ch.is_empty():
+		var by_session: String = DetectiveNoteVault.resolve_chapter_for_session_chapter(session_ch)
+		if not by_session.is_empty():
+			return by_session
+	var src_vn: String = ExplorationManager.get_source_vn_scene()
+	if not src_vn.is_empty():
+		var by_vn: String = DetectiveNoteVault.resolve_chapter_for_context(src_vn, "")
+		if not by_vn.is_empty():
+			return by_vn
+	if ExplorationManager.current_graph != null:
+		return DetectiveNoteVault.resolve_chapter_for_context(
+			"", str(ExplorationManager.current_graph._source_path))
+	return ""
+
+
 # ─────────────────────────────────────────────────────────────
 # Persistence — merged into SaveManager.save_data() / load_data()
 # ─────────────────────────────────────────────────────────────

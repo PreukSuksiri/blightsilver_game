@@ -48,6 +48,7 @@ var _ch_id: LineEdit = null
 var _ch_title_en: LineEdit = null
 var _ch_title_th: LineEdit = null
 var _ch_hidden: CheckBox = null
+var _ch_session_chapter: LineEdit = null
 var _ch_scenes_vbox: VBoxContainer = null
 var _ch_graphs_vbox: VBoxContainer = null
 var _ch_scene_rows: Array = []
@@ -448,6 +449,12 @@ func _build_chapters_tab(body: HBoxContainer) -> void:
 	_ch_hidden.tooltip_text = "Hidden chapters stay in the vault for editing / VN grants but do not appear in the inventory NOTE chapter list."
 	_ch_hidden.toggled.connect(func(_on: bool) -> void: _mark_dirty())
 	_ch_fields.add_child(_ch_hidden)
+
+	_ch_session_chapter = _labeled_line_edit(_ch_fields,
+		"Exploration session chapter  (matches ExplorationManager var \"chapter\")")
+	_ch_session_chapter.placeholder_text = "e.g. act_1_ch_1 — leave empty for VN/graph fallback"
+	_mini_label(_ch_fields,
+		"When set, exploration HUD opens this note only if session var chapter equals this value.")
 
 	_section_label(_ch_fields, "VN SCENES  (campaign scene paths belonging to this chapter)")
 	_ch_scenes_vbox = VBoxContainer.new()
@@ -852,6 +859,7 @@ func _populate_chapter_fields(ch: Dictionary) -> void:
 	_ch_title_en.text = _loc_get(ch.get("title", ""), "en")
 	_ch_title_th.text = _loc_get(ch.get("title", ""), "th")
 	_ch_hidden.button_pressed = DetectiveNoteVault.flag_true(ch.get("hidden", false))
+	_ch_session_chapter.text = str(ch.get("exploration_session_chapter", "")).strip_edges()
 
 	_clear_rows(_ch_scene_rows, "row")
 	var scenes: Variant = ch.get("vn_scenes", [])
@@ -993,6 +1001,7 @@ func _flush_chapter() -> void:
 		"id": _ch_id.text.strip_edges(),
 		"title": _loc_make(_ch_title_en.text, _ch_title_th.text),
 		"hidden": _ch_hidden.button_pressed,
+		"exploration_session_chapter": _ch_session_chapter.text.strip_edges(),
 		"vn_scenes": _collect_path_rows(_ch_scene_rows),
 		"graphs": _collect_path_rows(_ch_graph_rows),
 		"start_clues": _collect_start_clue_rows(),
@@ -1008,6 +1017,7 @@ func _on_new_chapter() -> void:
 		"id": _unique_id(_chapters, "new_chapter"),
 		"title": "New Chapter",
 		"hidden": false,
+		"exploration_session_chapter": "",
 		"vn_scenes": [],
 		"graphs": [],
 		"start_clues": [],

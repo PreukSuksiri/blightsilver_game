@@ -210,6 +210,10 @@ var current_node: ExplorationNode:
 var current_node_id: String:
 	get: return _current_node_id
 
+## Campaign / gallery VN that launched this exploration (empty if none).
+func get_source_vn_scene() -> String:
+	return _source_vn_scene
+
 # ─────────────────────────────────────────────────────────────
 # Session Control — Public API
 # ─────────────────────────────────────────────────────────────

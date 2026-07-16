@@ -1455,7 +1455,9 @@ func _on_info_menu_action(action: String) -> void:
 func _open_detective_note_overlay() -> void:
 	if _note_overlay != null and is_instance_valid(_note_overlay):
 		return
-	var chapter: String = DetectiveNoteManager.resolve_active_chapter()
+	var chapter: String = DetectiveNoteManager.resolve_exploration_note_chapter()
+	if chapter.is_empty():
+		chapter = DetectiveNoteManager.resolve_active_chapter()
 	if chapter.is_empty():
 		return
 	DetectiveNoteManager.apply_start_clues(chapter)

@@ -14,6 +14,9 @@ extends Node
 #     "hidden": bool,          — if true, omitted from the player inventory chapter list
 #     "vn_scenes": [String],   — campaign VN scene paths belonging to this chapter
 #     "graphs": [String],      — exploration graph paths belonging to this chapter
+#     "exploration_session_chapter": String — ExplorationManager session var "chapter"
+#                              value that opens this note in exploration HUD
+#                              (e.g. "act_1_ch_1"); empty = not matched by session var
 #     "start_clues": [String], — clue ids pre-discovered when the player enters
 #                              this chapter (silent, no toast; see apply_start_clues)
 #     "topics": [{
@@ -452,6 +455,24 @@ func resolve_chapter_for_context(vn_scene: String = "", graph_path: String = "")
 			if graphs is Array and (graphs as Array).has(graph):
 				return str(cd.get("id", ""))
 	return ""
+
+
+## Note chapter whose exploration_session_chapter matches the session var value.
+func resolve_chapter_for_session_chapter(session_chapter: String) -> String:
+	var key := session_chapter.strip_edges()
+	if key.is_empty():
+		return ""
+	for ch: Variant in _chapters:
+		if not ch is Dictionary:
+			continue
+		var cd: Dictionary = ch as Dictionary
+		if str(cd.get("exploration_session_chapter", "")).strip_edges() == key:
+			return str(cd.get("id", ""))
+	return ""
+
+
+func get_exploration_session_chapter(chapter_id: String) -> String:
+	return str(get_chapter(chapter_id).get("exploration_session_chapter", "")).strip_edges()
 
 
 # ─────────────────────────────────────────────────────────────

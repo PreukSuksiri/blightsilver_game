@@ -52,6 +52,9 @@ const POSTIT_TEXT := Color(0.16, 0.13, 0.05)
 const APPROVED_COLOR := Color(0.72, 0.07, 0.07)
 const STAMP_SIZE := 150.0
 const STAMP_MARGIN := Vector2(46.0, 26.0)
+## Extra inset when the stamp is parented to the notebook (approval overlay),
+## keeping it on the paper’s right side instead of over the verdict map.
+const STAMP_NOTEBOOK_MARGIN := Vector2(28.0, 56.0)
 const STAMP_POP_SCALE := 1.35
 const STAMP_LOGO_FADE_SEC := 0.28
 const STAMP_POP_GROW_SEC := 0.38
@@ -157,7 +160,9 @@ func _rebuild() -> void:
 		add_child(hit)
 		_hit_areas[nid] = hit
 	var extent := content_extent()
-	custom_minimum_size = extent
+	# Host / overlay fit owns scroll metrics — claiming full extent as min-size
+	# inside a horizontally locked ScrollContainer can hang the layout solver.
+	custom_minimum_size = Vector2.ZERO
 	size = extent
 	queue_redraw()
 
@@ -694,7 +699,18 @@ func _node_gui_input(node_id: String, hit: Control, event: InputEvent) -> void:
 				new_pos.x = minf(new_pos.x, size.x - hit.size.x)
 			hit.position = new_pos
 			_set_node_pos(node_id, new_pos)
-			custom_minimum_size = content_extent()
+			var extent := content_extent()
+			custom_minimum_size = Vector2.ZERO
+			size = extent
+			# Expand scroll host to scaled content (overlay fit owns min-width; we
+			# only grow height as nodes are dragged).
+			var host := get_parent() as Control
+			if host != null:
+				var sx: float = scale.x if absf(scale.x) > 0.001 else 1.0
+				var sy: float = scale.y if absf(scale.y) > 0.001 else 1.0
+				var scaled := Vector2(extent.x * sx, extent.y * sy)
+				host.custom_minimum_size = scaled
+				host.size = scaled
 			queue_redraw()
 		elif _edge_drag_from == node_id:
 			_edge_drag_pos = hit.position + mme.position
@@ -735,21 +751,33 @@ func add_edge(edge: Dictionary) -> void:
 # ─────────────────────────────────────────────────────────────
 # Stamp (APPROVED) — permanent display + one-shot animation
 # ─────────────────────────────────────────────────────────────
-func show_stamp(stamp_id: String, animate: bool = false, angle_deg: float = 0.0) -> void:
+## host: optional parent (e.g. notebook paper). When null, stamp anchors to this
+## map’s top-right. Approval overlay passes the notebook so the stamp sits on
+## the right of the paper and does not cover the verdict map.
+func show_stamp(
+		stamp_id: String,
+		animate: bool = false,
+		angle_deg: float = 0.0,
+		host: Control = null) -> void:
 	clear_stamp()
 	var stamp: Dictionary = DetectiveNoteVault.get_stamp(stamp_id)
 	if stamp.is_empty():
 		return
+	var parent_ctrl: Control = host if host != null else self
+	var margin: Vector2 = STAMP_NOTEBOOK_MARGIN if host != null else STAMP_MARGIN
 	_stamp_root = Control.new()
 	_stamp_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Anchored to the top-right of the note content.
+	# Anchored to the top-right of the host (notebook paper or map content).
 	_stamp_root.anchor_left = 1.0
 	_stamp_root.anchor_right = 1.0
-	_stamp_root.offset_left = -(STAMP_SIZE + STAMP_MARGIN.x)
-	_stamp_root.offset_right = -STAMP_MARGIN.x
-	_stamp_root.offset_top = STAMP_MARGIN.y
-	_stamp_root.offset_bottom = STAMP_MARGIN.y + STAMP_SIZE + 96.0
-	add_child(_stamp_root)
+	_stamp_root.anchor_top = 0.0
+	_stamp_root.anchor_bottom = 0.0
+	_stamp_root.offset_left = -(STAMP_SIZE + margin.x + 40.0)  # room for APPROVED label width
+	_stamp_root.offset_right = -margin.x
+	_stamp_root.offset_top = margin.y
+	_stamp_root.offset_bottom = margin.y + STAMP_SIZE + 96.0
+	_stamp_root.z_index = 20
+	parent_ctrl.add_child(_stamp_root)
 
 	_stamp_cluster = Control.new()
 	_stamp_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -763,6 +791,7 @@ func show_stamp(stamp_id: String, animate: bool = false, angle_deg: float = 0.0)
 	_stamp_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_stamp_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_stamp_tex.size = Vector2(STAMP_SIZE, STAMP_SIZE)
+	_stamp_tex.position = Vector2(40.0, 0.0)  # center logo over label width
 	_stamp_tex.pivot_offset = _stamp_tex.size * 0.5
 	_stamp_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stamp_cluster.add_child(_stamp_tex)
@@ -773,7 +802,7 @@ func show_stamp(stamp_id: String, animate: bool = false, angle_deg: float = 0.0)
 	_approved_lbl.add_theme_font_size_override("font_size", 30)
 	_approved_lbl.add_theme_color_override("font_color", APPROVED_COLOR)
 	_approved_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_approved_lbl.position = Vector2(-40.0, STAMP_SIZE - 26.0)  # overlaps stamp bottom
+	_approved_lbl.position = Vector2(0.0, STAMP_SIZE - 26.0)  # overlaps stamp bottom
 	_approved_lbl.size = Vector2(STAMP_SIZE + 80.0, 36.0)
 	_approved_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stamp_cluster.add_child(_approved_lbl)
@@ -784,7 +813,7 @@ func show_stamp(stamp_id: String, animate: bool = false, angle_deg: float = 0.0)
 	_stamp_name_lbl.add_theme_font_size_override("font_size", 20)
 	_stamp_name_lbl.add_theme_color_override("font_color", MARKER_COLOR)
 	_stamp_name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_stamp_name_lbl.position = Vector2(-40.0, STAMP_SIZE + 10.0)
+	_stamp_name_lbl.position = Vector2(0.0, STAMP_SIZE + 10.0)
 	_stamp_name_lbl.size = Vector2(STAMP_SIZE + 80.0, 28.0)
 	_stamp_name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stamp_cluster.add_child(_stamp_name_lbl)
@@ -828,6 +857,7 @@ func _run_stamp_animation_steps() -> void:
 	_stamp_tex.scale = Vector2.ONE
 	_stamp_tex.modulate.a = 0.0
 	var logo_intro := create_tween()
+	logo_intro.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	logo_intro.tween_property(_stamp_tex, "modulate:a", 1.0, STAMP_LOGO_FADE_SEC)
 	await logo_intro.finished
 	if _stamp_tex == null or not is_instance_valid(_stamp_tex):
@@ -839,7 +869,7 @@ func _run_stamp_animation_steps() -> void:
 
 	if not is_inside_tree():
 		return
-	await get_tree().create_timer(STAMP_BETWEEN_SEC).timeout
+	await get_tree().create_timer(STAMP_BETWEEN_SEC, true, false, true).timeout
 	if _approved_lbl == null or not is_instance_valid(_approved_lbl):
 		return
 
@@ -855,7 +885,7 @@ func _run_stamp_animation_steps() -> void:
 	# 4) Approver name types in.
 	if not is_inside_tree():
 		return
-	await get_tree().create_timer(STAMP_NAME_DELAY_SEC).timeout
+	await get_tree().create_timer(STAMP_NAME_DELAY_SEC, true, false, true).timeout
 	for i: int in range(full_name.length()):
 		if _stamp_name_lbl == null or not is_instance_valid(_stamp_name_lbl):
 			return
@@ -865,7 +895,7 @@ func _run_stamp_animation_steps() -> void:
 			SFXManager.play(SFXManager.SFX_TYPEWRITER, SFXManager.SFX_TYPEWRITER_VOLUME)
 		if not is_inside_tree():
 			return
-		await get_tree().create_timer(NAME_TYPE_SEC).timeout
+		await get_tree().create_timer(NAME_TYPE_SEC, true, false, true).timeout
 
 
 func _pulse_control_scale(ctrl: Control, peak_scale: float, grow_sec: float, shrink_sec: float) -> void:
@@ -873,6 +903,7 @@ func _pulse_control_scale(ctrl: Control, peak_scale: float, grow_sec: float, shr
 		return
 	ctrl.scale = Vector2.ONE
 	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(ctrl, "scale", Vector2.ONE * peak_scale, grow_sec) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_property(ctrl, "scale", Vector2.ONE, shrink_sec) \
