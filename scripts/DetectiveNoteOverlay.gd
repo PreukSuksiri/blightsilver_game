@@ -711,11 +711,13 @@ func _fit_verdict_map() -> void:
 	extent.x = maxf(extent.x, 1.0)
 	extent.y = maxf(extent.y, 1.0)
 	var avail_w: float = _map_scroll.size.x
+	if avail_w < 64.0 and _notebook_area != null:
+		avail_w = _notebook_area.size.x
+	# Export / first-frame layout can leave children at 0×0. Never spin forever on
+	# call_deferred — that starves tweens (stamp animation freezes the game).
 	if avail_w < 64.0:
-		avail_w = _notebook_area.size.x if _notebook_area != null else 0.0
-	if avail_w < 64.0:
-		call_deferred("_fit_verdict_map")
-		return
+		var vp_w: float = get_viewport().get_visible_rect().size.x
+		avail_w = maxf(vp_w - SIDEBAR_W - CLUEBAR_W - 160.0, 320.0)
 	var s: float = 1.0 if extent.x <= avail_w else avail_w / extent.x
 	_map.scale = Vector2(s, s)
 	_map.position = Vector2.ZERO
@@ -1211,3 +1213,7 @@ func _show_stamp_view() -> void:
 		stamp_id,
 		true,
 		DetectiveNoteManager.get_topic_stamp_angle(_selected_chapter, _selected_topic))
+	# Safety net: never leave the player stuck if the animation path stalls.
+	get_tree().create_timer(8.0).timeout.connect(func() -> void:
+		if is_instance_valid(self) and not _stamp_view_dismissable:
+			_stamp_view_dismissable = true, CONNECT_ONE_SHOT)

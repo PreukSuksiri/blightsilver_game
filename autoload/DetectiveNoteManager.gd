@@ -456,6 +456,51 @@ func reset_all() -> void:
 	_progress.clear()
 
 
+## Wipe one vault chapter's note progress and its placement-written exploration
+## flags / live session vars. Used by gallery Restart Chapter and chapter-end.
+func reset_chapter(chapter_id: String) -> void:
+	var ch := chapter_id.strip_edges()
+	if ch.is_empty():
+		return
+	_clear_chapter_placement_vars(ch)
+	_progress.erase(ch)
+	SaveManager.save_data()
+
+
+## Resolve the vault note chapter for a gallery entry (VN path + optional card)
+## and wipe it. No-op when the gallery chapter has no note mapping.
+func reset_chapter_for_gallery(chapter_key: String, card: Dictionary = {}) -> void:
+	var key := chapter_key.strip_edges()
+	if key.is_empty():
+		return
+	# Prefer VN path so shared exploration graphs (prologue vs Act I) do not collide.
+	var note_ch: String = DetectiveNoteVault.resolve_chapter_for_context(key, "")
+	if note_ch.is_empty():
+		var graph_path: String = ExplorationManager.resolve_chapter_exploration_graph(card, key)
+		note_ch = DetectiveNoteVault.resolve_chapter_for_context("", graph_path)
+	if note_ch.is_empty():
+		return
+	reset_chapter(note_ch)
+
+
+func _clear_chapter_placement_vars(chapter_id: String) -> void:
+	for tid_v: Variant in DetectiveNoteVault.get_topic_ids(chapter_id):
+		var tid: String = str(tid_v)
+		var topic: Dictionary = DetectiveNoteVault.get_topic(chapter_id, tid)
+		var nodes: Variant = topic.get("nodes", [])
+		if not nodes is Array:
+			continue
+		for node_v: Variant in (nodes as Array):
+			if not node_v is Dictionary:
+				continue
+			var key: String = DetectiveNoteVault.node_var_key(tid, node_v as Dictionary)
+			if key.is_empty():
+				continue
+			SaveManager.exploration_flags.erase(key)
+			if ExplorationManager.is_session_active:
+				ExplorationManager.clear_var(key)
+
+
 func _chapter_entry(chapter_id: String) -> Dictionary:
 	if not _progress.has(chapter_id):
 		_progress[chapter_id] = {"clues": [], "clue_at": {}, "seen_clues": [], "topics": {}}

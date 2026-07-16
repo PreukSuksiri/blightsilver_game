@@ -1034,6 +1034,16 @@ func set_var(key: String, value: String) -> void:
 	emit_signal("var_changed", key, value)
 	_save_session_state()
 
+
+## Remove a session variable (no-op if unset). Does not persist by itself.
+func clear_var(key: String) -> void:
+	var clean: String = key.strip_edges()
+	if clean.is_empty() or not _vars.has(clean):
+		return
+	_vars.erase(clean)
+	emit_signal("var_changed", clean, "")
+
+
 ## Set a persistent exploration flag (SaveManager.exploration_flags + session rewards).
 func set_exploration_flag(key: String, value: String) -> void:
 	var flag_key: String = key.strip_edges()

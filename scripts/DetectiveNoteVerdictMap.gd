@@ -808,6 +808,18 @@ func has_stamp_visible() -> bool:
 
 
 func _play_stamp_animation() -> void:
+	await _run_stamp_animation_steps()
+	# Always unlock dismiss — early exits (freed nodes / interrupted tweens) used to
+	# skip this and leave stamp view permanently blocking input (export freeze).
+	if is_inside_tree():
+		emit_signal("stamp_animation_finished")
+
+
+func _run_stamp_animation_steps() -> void:
+	if _stamp_tex == null or not is_instance_valid(_stamp_tex) \
+			or _approved_lbl == null or not is_instance_valid(_approved_lbl) \
+			or _stamp_name_lbl == null or not is_instance_valid(_stamp_name_lbl):
+		return
 	_approved_lbl.visible = false
 	var full_name: String = _stamp_name_lbl.text
 	_stamp_name_lbl.text = ""
@@ -825,6 +837,8 @@ func _play_stamp_animation() -> void:
 	SFXManager.play(SFXManager.SFX_STAMP, SFXManager.SFX_STAMP_VOLUME)
 	await _pulse_control_scale(_stamp_tex, STAMP_POP_SCALE, STAMP_POP_GROW_SEC, STAMP_POP_SHRINK_SEC)
 
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(STAMP_BETWEEN_SEC).timeout
 	if _approved_lbl == null or not is_instance_valid(_approved_lbl):
 		return
@@ -839,6 +853,8 @@ func _play_stamp_animation() -> void:
 		_approved_lbl, STAMP_POP_SCALE, STAMP_APPROVED_POP_GROW_SEC, STAMP_APPROVED_POP_SHRINK_SEC)
 
 	# 4) Approver name types in.
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(STAMP_NAME_DELAY_SEC).timeout
 	for i: int in range(full_name.length()):
 		if _stamp_name_lbl == null or not is_instance_valid(_stamp_name_lbl):
@@ -847,8 +863,9 @@ func _play_stamp_animation() -> void:
 		var ch: String = full_name.substr(i, 1)
 		if not ch.strip_edges().is_empty():
 			SFXManager.play(SFXManager.SFX_TYPEWRITER, SFXManager.SFX_TYPEWRITER_VOLUME)
+		if not is_inside_tree():
+			return
 		await get_tree().create_timer(NAME_TYPE_SEC).timeout
-	emit_signal("stamp_animation_finished")
 
 
 func _pulse_control_scale(ctrl: Control, peak_scale: float, grow_sec: float, shrink_sec: float) -> void:

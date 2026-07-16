@@ -34,6 +34,9 @@ func fade_out_to_battle(on_black: Callable) -> void:
 	await _animate(true)
 	if not on_black.is_valid():
 		push_warning("CheckerTransition: fade_out callback is invalid — scene change skipped.")
+		# Never leave the cover stuck (would freeze the game on a black checkerboard).
+		_clear_tiles()
+		layer = DEFAULT_LAYER
 		return
 	on_black.call()
 

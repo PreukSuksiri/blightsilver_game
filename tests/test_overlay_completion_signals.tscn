@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://overlay_completion_test"]
+
+[ext_resource type="Script" path="res://tests/test_overlay_completion_signals.gd" id="1"]
+
+[node name="OverlayCompletionTestRunner" type="Node"]
+script = ExtResource("1")

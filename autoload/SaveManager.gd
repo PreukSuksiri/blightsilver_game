@@ -1036,6 +1036,7 @@ func reset_chapter_arc_progress(chapter_key: String, card: Dictionary = {}) -> v
 	var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
 	if not dungeon_id.is_empty():
 		DailyDungeonManager.reset_story_dungeon_chapter(dungeon_id)
+	DetectiveNoteManager.reset_chapter_for_gallery(key, card)
 
 
 ## Mark chapter complete and remove all arc / mid-progress saves.

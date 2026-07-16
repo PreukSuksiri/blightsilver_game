@@ -52,6 +52,7 @@ func run_all_tests() -> void:
 	test_placements()
 	test_stamps()
 	test_save_roundtrip()
+	test_reset_chapter_with_gallery()
 	await test_vault_manager_overlay()
 	test_admin_command_registered()
 	await test_verdict_map_renderer()
@@ -466,6 +467,80 @@ func test_save_roundtrip() -> void:
 		"stamp_kelly", "load_from_save restores stamp")
 	assert_eq(DetectiveNoteManager.get_topic_stamp_angle("ch0_demo", "library_lights"),
 		expected_stamp_angle, "load_from_save restores stamp tilt angle")
+
+func test_reset_chapter_with_gallery() -> void:
+	DetectiveNoteVault.reload()
+	DetectiveNoteManager.reset_all()
+	SaveManager.exploration_flags.clear()
+
+	# Seed ch1_s1 (notes + placement flag) and ch0_prologue (notes only).
+	DetectiveNoteManager.add_clue("ch1_s1", "anomaly_quiet_study_ghost", true)
+	DetectiveNoteManager.unlock_topic("ch1_s1", "library_quiet_study_ghost_or_demon")
+	assert_true(DetectiveNoteManager.set_placement(
+		"ch1_s1", "library_quiet_study_ghost_or_demon",
+		"node_individual_1", "anomaly_quiet_study_ghost"),
+		"seed ch1 placement for reset test")
+	var quiet_flag: String = "var_quiet_study_ghost_or_demon_individual_1"
+	assert_eq(str(SaveManager.exploration_flags.get(quiet_flag, "")),
+		"anomaly_quiet_study_ghost", "placement wrote quiet-study flag")
+	DetectiveNoteManager.add_clue("ch0_prologue", "person_nex", true)
+	DetectiveNoteManager.unlock_topic("ch0_prologue", "topic_name_of_book_nex_copied_from")
+
+	DetectiveNoteManager.reset_chapter("ch1_s1")
+	assert_false(DetectiveNoteManager.has_clue("ch1_s1", "anomaly_quiet_study_ghost"),
+		"reset_chapter clears ch1 clues")
+	assert_false(DetectiveNoteManager.is_topic_unlocked(
+		"ch1_s1", "library_quiet_study_ghost_or_demon"),
+		"reset_chapter clears ch1 topics")
+	assert_false(SaveManager.exploration_flags.has(quiet_flag),
+		"reset_chapter erases placement exploration flag")
+	assert_true(DetectiveNoteManager.has_clue("ch0_prologue", "person_nex"),
+		"reset_chapter leaves other chapters intact")
+	assert_true(DetectiveNoteManager.is_topic_unlocked(
+		"ch0_prologue", "topic_name_of_book_nex_copied_from"),
+		"reset_chapter leaves other chapter topics intact")
+
+	# Re-seed both; gallery prologue restart clears only ch0_prologue notes.
+	DetectiveNoteManager.add_clue("ch1_s1", "anomaly_quiet_study_ghost", true)
+	DetectiveNoteManager.unlock_topic("ch1_s1", "library_quiet_study_ghost_or_demon")
+	var prologue_card := {
+		"vn_scene": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json",
+		"exploration_graph": "res://exploration/graphs/ch0_s1_blackout_library.json",
+	}
+	SaveManager.reset_chapter_arc_progress(
+		"res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json", prologue_card)
+	assert_false(DetectiveNoteManager.has_clue("ch0_prologue", "person_nex"),
+		"gallery prologue reset clears ch0_prologue notes")
+	assert_true(DetectiveNoteManager.has_clue("ch1_s1", "anomaly_quiet_study_ghost"),
+		"gallery prologue reset leaves ch1_s1 notes")
+
+	# Re-seed prologue; gallery Act I restart clears only ch1_s1 notes.
+	DetectiveNoteManager.add_clue("ch0_prologue", "person_nex", true)
+	DetectiveNoteManager.set_placement(
+		"ch1_s1", "library_quiet_study_ghost_or_demon",
+		"node_individual_1", "anomaly_quiet_study_ghost")
+	var ch1_card := {
+		"vn_scene": "res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
+		"exploration_graph": "res://exploration/graphs/ch0_s1_blackout_library.json",
+		"exploration_save_var": "chapter",
+		"exploration_save_value": "act_1_ch_1",
+	}
+	SaveManager.reset_chapter_arc_progress(
+		"res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json", ch1_card)
+	assert_false(DetectiveNoteManager.has_clue("ch1_s1", "anomaly_quiet_study_ghost"),
+		"gallery ch1 reset clears ch1_s1 notes")
+	assert_false(SaveManager.exploration_flags.has(quiet_flag),
+		"gallery ch1 reset clears placement flags")
+	assert_true(DetectiveNoteManager.has_clue("ch0_prologue", "person_nex"),
+		"gallery ch1 reset leaves ch0_prologue notes")
+
+	# Gallery entry VN maps to ch1_s1 after vault authoring.
+	assert_eq(DetectiveNoteVault.resolve_chapter_for_context(
+		"res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json", ""),
+		"ch1_s1", "ch1 gallery VN resolves to ch1_s1 note chapter")
+
+	DetectiveNoteManager.reset_all()
+	SaveManager.exploration_flags.clear()
 
 func test_vault_manager_overlay() -> void:
 	var host := Control.new()

@@ -514,6 +514,15 @@ func _finish_reveal() -> void:
 	_anim_done = true
 	reveal_finished.emit()
 	queue_free()
+
+
+## Release awaiters (InventoryMenu / AchievementCelebrationRunner) without freeing.
+## Used when replacing this overlay via re-roll.
+func _emit_reveal_finished_once() -> void:
+	if _anim_done:
+		return
+	_anim_done = true
+	reveal_finished.emit()
 # ──────────────────────────────────────────────────────────────────────────────
 func _make_reroll_btn(cx: float, card_y: float) -> Button:
 	var btn := Button.new()
@@ -550,6 +559,8 @@ func _on_reroll_pressed(btn: Button) -> void:
 	var pack_dict: Dictionary = ShopManager.get_pack_by_name(_reroll_pack_name)
 	var pack_img: String = str(pack_dict.get("pack_image", ""))
 	var parent: Node = get_parent()
+	# Unlock awaiters before freeing — otherwise InventoryMenu hangs on reveal_finished.
+	_emit_reveal_finished_once()
 	queue_free()
 	PackOpeningOverlay.open(parent, pack_img, c1, c2, c3, true, _reroll_pack_name)
 

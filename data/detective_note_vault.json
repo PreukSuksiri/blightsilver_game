@@ -484,6 +484,7 @@
 				}
 			],
 			"vn_scenes": [
+				"res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
 				"res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_main.json",
 				"res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_char_kelly.json",
 				"res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_invest_5_0.json"
