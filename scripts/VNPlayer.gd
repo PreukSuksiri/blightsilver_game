@@ -80,7 +80,9 @@ var _group_stack: Array[int] = []           # parent groups when play_group nest
 var _group_return_index: int = -1         # filtered index to resume after group completes
 var _scene_path: String = ""
 var _on_complete: Callable = Callable()
-var _track_campaign_checkpoint: bool = false
+## True when launched from Campaign Gallery; retained for chapter/battle handoffs only.
+## It does not enable per-beat VN saving.
+var _campaign_chapter_context: bool = false
 var _chapter_arc_key: String = ""
 var _current_bg_path: String = ""
 var _accepting_input: bool = true
@@ -968,7 +970,6 @@ func _resolve_choice_goto(choice: Dictionary) -> void:
 	else:
 		push_warning("VNPlayer: choice missing goto_group — advancing")
 		_advance_beat_cursor()
-	_persist_campaign_checkpoint()
 	_clear_choices()
 	_restore_dialog_lbl_layout()
 	_skip_go_to_check = true
@@ -1073,7 +1074,6 @@ func _present_choices(beat: Dictionary) -> void:
 	if entries.is_empty():
 		push_warning("VNPlayer: choice beat has no visible options — advancing")
 		_advance_beat_cursor()
-		_persist_campaign_checkpoint()
 		_restore_dialog_lbl_layout()
 		_show_beat()
 		return
@@ -1142,9 +1142,6 @@ func _add_dialog_side_borders(panel: Panel) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_ensure_stage_layout()
-	elif what == NOTIFICATION_WM_CLOSE_REQUEST \
-			or what == NOTIFICATION_APPLICATION_PAUSED:
-		_persist_campaign_checkpoint()
 
 func _process(delta: float) -> void:
 	if _choice_tooltip_box != null and _choice_tooltip_box.visible:
@@ -1501,12 +1498,12 @@ func _spawn_vn_animation(anim_key: String) -> void:
 func play_scene(
 		json_path: String,
 		on_complete: Callable,
-		track_checkpoint: bool = false,
+		campaign_chapter_context: bool = false,
 		chapter_arc_key: String = "") -> void:
 	_on_complete = on_complete
-	_track_campaign_checkpoint = track_checkpoint
+	_campaign_chapter_context = campaign_chapter_context
 	_chapter_arc_key = chapter_arc_key.strip_edges()
-	if _chapter_arc_key.is_empty() and track_checkpoint:
+	if _chapter_arc_key.is_empty() and campaign_chapter_context:
 		_chapter_arc_key = SaveManager.resolve_chapter_key_for_vn(json_path)
 
 	var file := FileAccess.open(json_path, FileAccess.READ)
@@ -1551,21 +1548,9 @@ func play_scene(
 	_last_shown_beat_index = -1
 	_skip_go_to_check = false
 	_beat_index = 0
-	var resumed_mid_scene: bool = false
-	if _track_campaign_checkpoint:
-		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
-		if resume_at <= 0 and not _chapter_arc_key.is_empty():
-			var arc: Dictionary = SaveManager.get_chapter_arc(_chapter_arc_key)
-			if str(arc.get("vn_path", "")).strip_edges() == json_path.strip_edges():
-				resume_at = int(arc.get("vn_beat_index", 0))
-		if resume_at > 0 and resume_at < _beats.size():
-			resumed_mid_scene = true
-			_beat_index = resume_at
-			_restore_group_state_for_index(_beat_index)
-			# Campaign gallery fades BGM out before continue; replay music from skipped beats.
-			_apply_music_state(_music_state_before_beat(_beat_index), true)
-	if not resumed_mid_scene:
-		_skip_leading_unplayable_beats()
+	# Campaign VN beat checkpoints were intentionally removed. A VN segment always
+	# starts at its beginning; exploration and dungeon sessions still save normally.
+	_skip_leading_unplayable_beats()
 	call_deferred("_start_playback")
 
 func _start_playback() -> void:
@@ -1586,14 +1571,11 @@ func _show_beat() -> void:
 		var play_group_id: int = _resolve_play_group(leaving)
 		if play_group_id > 0:
 			redirected = _enter_group_from_beat(play_group_id, _last_shown_beat_index)
-			if redirected:
-				_persist_campaign_checkpoint()
 		if not redirected:
 			var goto_idx: int = _resolve_go_to(leaving, _last_shown_beat_index)
 			if goto_idx >= 0:
 				_beat_index = goto_idx
 				_restore_group_state_for_index(_beat_index)
-				_persist_campaign_checkpoint()
 	_skip_go_to_check = false
 
 	if _beat_index >= _beats.size():
@@ -1625,7 +1607,6 @@ func _show_beat() -> void:
 				return
 			redirect_hops += 1
 			continue
-		_persist_campaign_checkpoint()
 		redirect_hops += 1
 
 	if _beat_index >= _beats.size():
@@ -1637,7 +1618,6 @@ func _show_beat() -> void:
 	var has_choices: bool = _beat_has_choices(beat)
 	if not has_choices:
 		_advance_beat_cursor()
-		_persist_campaign_checkpoint()
 	_preserve_bgm_for_exploration = bool(beat.get("exploration_keep_vn_bgm", false)) \
 		and str(beat.get("exploration_call", "")).strip_edges() != ""
 
@@ -2240,7 +2220,6 @@ func _show_beat() -> void:
 		blocked_on_note_ui = true
 
 	if has_choices:
-		_persist_campaign_checkpoint()
 		await _present_choices(beat)
 		return
 
@@ -2328,7 +2307,7 @@ func _skip_completed_tutorial_battle(beat: Dictionary) -> void:
 		_accepting_input = true
 		_show_beat()
 		return
-	play_scene(on_win, _on_complete, _track_campaign_checkpoint, _chapter_arc_key)
+	play_scene(on_win, _on_complete, _campaign_chapter_context, _chapter_arc_key)
 
 
 ## Fade to black and hide campaign-gallery chrome before scene handoffs.
@@ -2350,16 +2329,6 @@ func _prepare_scene_handoff(fade_sec: float = 0.35) -> void:
 		var tw := create_tween()
 		tw.tween_property(_fade_rect, "color:a", 1.0, maxf(fade_sec, 0.01))
 		await tw.finished
-
-func _persist_campaign_checkpoint() -> void:
-	if not _track_campaign_checkpoint or _scene_path.is_empty():
-		return
-	if _beat_index < 0:
-		return
-	if not _chapter_arc_key.is_empty():
-		SaveManager.set_vn_checkpoint_for_chapter(_chapter_arc_key, _scene_path, _beat_index)
-	else:
-		SaveManager.set_vn_checkpoint(_scene_path, _beat_index)
 
 # ─────────────────────────────────────────────────────────────
 # Bug tagging (Ctrl+Shift+A → "tag_bug")
@@ -2449,30 +2418,6 @@ func _play_sfx(path: String, vol_db: float = 0.0) -> void:
 # ─────────────────────────────────────────────────────────────
 # Music — looping BGM, one track at a time, with fade in/out
 # ─────────────────────────────────────────────────────────────
-## Effective music after beats [0, up_to_index) — used when resuming a saved checkpoint.
-func _music_state_before_beat(up_to_index: int) -> Dictionary:
-	var path: String = ""
-	var fade_out: float = 0.0
-	var fade_in: float = 0.0
-	for i: int in range(mini(up_to_index, _beats.size())):
-		var beat: Dictionary = _beats[i]
-		if beat.has("music"):
-			var music_val = beat["music"]
-			path = str(music_val).strip_edges() if music_val != null else ""
-			fade_out = float(beat.get("music_fade_out", 0.0))
-			fade_in = float(beat.get("music_fade_in", 0.0))
-		elif beat.has("music_fade_out"):
-			path = ""
-			fade_out = float(beat.get("music_fade_out", 0.0))
-			fade_in = 0.0
-	return {"path": path, "fade_out": fade_out, "fade_in": fade_in}
-
-
-func _apply_music_state(state: Dictionary, skip_fade_out: bool = false) -> void:
-	var fade_out: float = 0.0 if skip_fade_out else float(state.get("fade_out", 0.0))
-	_set_music(str(state.get("path", "")).strip_edges(), fade_out, float(state.get("fade_in", 0.0)))
-
-
 func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0, force: bool = false) -> void:
 	# keep_bgm (exploration "Keep Exploration BGM") suppresses VN music unless
 	# the beat sets music_force — covers scare stings AND forced fade-out/stop.

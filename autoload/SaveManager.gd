@@ -26,7 +26,6 @@ var deckbuilding_admin_locked: bool = false  # hard admin lock — overrides eve
 var exploration_flags: Dictionary = {}       # flags written by ExplorationManager.end_session()
 var exploration_session: Dictionary = {}    # mid-session snapshot; cleared on end_session()
 var exploration_auto_save: bool = true      # when false, only Save and Exit writes exploration_session
-var campaign_vn_checkpoints: Dictionary = {}  # vn_scene path → filtered beat index to resume
 var chapter_arc_progress: Dictionary = {}   # gallery chapter vn_scene → active arc segment
 const GALLERY_DATA_PATH: String = "res://campaign/gallery_data.json"
 var _gallery_entries_cache: Array = []
@@ -439,7 +438,6 @@ func save_data() -> void:
 		"exploration_flags":       exploration_flags,
 		"exploration_session":     exploration_session,
 		"exploration_auto_save":   exploration_auto_save,
-		"campaign_vn_checkpoints": campaign_vn_checkpoints,
 		"chapter_arc_progress":    chapter_arc_progress,
 		"onboarding_complete":     onboarding_complete,
 		"title_cheat_apartment_claimed": title_cheat_apartment_claimed,
@@ -548,10 +546,6 @@ func load_data() -> void:
 
 	exploration_auto_save = bool(parsed.get("exploration_auto_save", true))
 
-	var vc: Variant = parsed.get("campaign_vn_checkpoints", {})
-	if vc is Dictionary:
-		campaign_vn_checkpoints = vc as Dictionary
-
 	var cap: Variant = parsed.get("chapter_arc_progress", {})
 	if cap is Dictionary:
 		chapter_arc_progress = cap as Dictionary
@@ -599,42 +593,6 @@ func load_data() -> void:
 	_migrate_chapter_arc_from_legacy()
 	DisplayManager.apply_saved_setting()
 	DailyDungeonManager.apply_daily_reset_after_load()
-
-# ─────────────────────────────────────────────────────────────
-# Campaign gallery VN beat checkpoints (pre-exploration progress)
-# ─────────────────────────────────────────────────────────────
-func set_vn_checkpoint(vn_scene: String, beat_index: int) -> void:
-	var key: String = vn_scene.strip_edges()
-	if key.is_empty() or beat_index <= 0:
-		return
-	campaign_vn_checkpoints[key] = beat_index
-	save_data()
-
-func set_vn_checkpoint_for_chapter(
-		chapter_key: String,
-		vn_scene: String,
-		beat_index: int) -> void:
-	set_vn_checkpoint(vn_scene, beat_index)
-	var ck: String = chapter_key.strip_edges()
-	if ck.is_empty():
-		return
-	update_chapter_arc_vn(ck, vn_scene, beat_index)
-
-func get_vn_checkpoint(vn_scene: String) -> int:
-	var key: String = vn_scene.strip_edges()
-	if key.is_empty():
-		return -1
-	return int(campaign_vn_checkpoints.get(key, -1))
-
-func has_vn_checkpoint(vn_scene: String) -> bool:
-	return get_vn_checkpoint(vn_scene) > 0
-
-func clear_vn_checkpoint(vn_scene: String) -> void:
-	var key: String = vn_scene.strip_edges()
-	if key.is_empty() or not campaign_vn_checkpoints.has(key):
-		return
-	campaign_vn_checkpoints.erase(key)
-	save_data()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery chapter progress
@@ -957,7 +915,9 @@ func _write_chapter_arc(chapter_key: String, arc: Dictionary) -> void:
 	save_data()
 
 
-func update_chapter_arc_vn(chapter_key: String, vn_path: String, beat_index: int) -> void:
+## Records which VN segment follows exploration/dungeon, but never a beat position.
+## Campaign VN always starts that segment from its beginning.
+func update_chapter_arc_vn(chapter_key: String, vn_path: String) -> void:
 	var key: String = chapter_key.strip_edges()
 	var vp: String = vn_path.strip_edges()
 	if key.is_empty() or vp.is_empty():
@@ -965,7 +925,7 @@ func update_chapter_arc_vn(chapter_key: String, vn_path: String, beat_index: int
 	var arc: Dictionary = get_chapter_arc(key)
 	arc["segment"] = "vn"
 	arc["vn_path"] = vp
-	arc["vn_beat_index"] = beat_index
+	arc.erase("vn_beat_index") # Remove legacy per-beat checkpoint data.
 	_write_chapter_arc(key, arc)
 
 
@@ -1009,27 +969,11 @@ func clear_chapter_arc_progress(chapter_key: String) -> void:
 	save_data()
 
 
-func clear_chapter_arc_vn_checkpoints(chapter_key: String) -> void:
-	var key: String = chapter_key.strip_edges()
-	if key.is_empty():
-		return
-	clear_vn_checkpoint(key)
-	var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(key)
-	var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
-	if not on_return.is_empty():
-		clear_vn_checkpoint(on_return)
-	var arc: Dictionary = get_chapter_arc(key)
-	var arc_vn: String = str(arc.get("vn_path", "")).strip_edges()
-	if not arc_vn.is_empty() and arc_vn != key and arc_vn != on_return:
-		clear_vn_checkpoint(arc_vn)
-
-
 ## Wipe all in-progress data for a gallery chapter (Restart Chapter).
 func reset_chapter_arc_progress(chapter_key: String, card: Dictionary = {}) -> void:
 	var key: String = chapter_key.strip_edges()
 	if key.is_empty():
 		return
-	clear_chapter_arc_vn_checkpoints(key)
 	clear_chapter_arc_progress(key)
 	ExplorationManager.clear_saved_session_for_chapter(key, card)
 	var dungeon_info: Dictionary = DailyDungeonManager.find_dungeon_call_in_vn(key)
@@ -1073,22 +1017,9 @@ func _migrate_chapter_arc_from_legacy() -> void:
 				graph_path,
 				on_return,
 				chapter_key,
-				get_vn_checkpoint(chapter_key))
+				0)
 			migrated = true
 			continue
-
-		# Return VN checkpoint (e.g. PART2 mid-play).
-		if not on_return.is_empty() and has_vn_checkpoint(on_return):
-			var beat: int = get_vn_checkpoint(on_return)
-			update_chapter_arc_vn(chapter_key, on_return, beat)
-			migrated = true
-			continue
-
-		# Entry VN checkpoint (e.g. PART1 mid-play).
-		if has_vn_checkpoint(chapter_key):
-			var beat: int = get_vn_checkpoint(chapter_key)
-			update_chapter_arc_vn(chapter_key, chapter_key, beat)
-			migrated = true
 
 	if migrated:
 		save_data()

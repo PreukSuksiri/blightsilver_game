@@ -210,12 +210,6 @@ func _get_chapter_save_kind(card: Dictionary, vn_path: String) -> String:
 	var graph_path: String = str(expl_info.get("graph_path", "")).strip_edges()
 	if graph_path != "" and ExplorationManager.has_saved_session_for_chapter(vn_path, graph_path, card):
 		return "exploration"
-	if SaveManager.has_vn_checkpoint(vn_path):
-		return "vn"
-	var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(vn_path)
-	var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
-	if not on_return.is_empty() and SaveManager.has_vn_checkpoint(on_return):
-		return "vn"
 	if SaveManager.is_gallery_chapter_completed(vn_path):
 		return ""
 	return ""
@@ -364,19 +358,15 @@ func _continue_chapter_arc(card: Dictionary, chapter_key: String) -> void:
 				play_path = chapter_key
 			_play_vn(play_path, false, card, chapter_key)
 		_:
-			var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
-			if SaveManager.has_vn_checkpoint(entry_vn):
-				_play_vn(entry_vn, false, card, chapter_key)
+			var expl_info: Dictionary = _resolve_chapter_exploration(card, chapter_key)
+			var graph_path: String = str(expl_info.get("graph_path", "")).strip_edges()
+			if not graph_path.is_empty() \
+					and ExplorationManager.has_saved_session_for_chapter(
+						chapter_key, graph_path, card):
+				_resume_exploration(graph_path)
 			else:
-				var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(chapter_key)
-				var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
-				if not on_return.is_empty() and SaveManager.has_vn_checkpoint(on_return):
-					_play_vn(on_return, false, card, chapter_key)
-				else:
-					var expl_info: Dictionary = _resolve_chapter_exploration(card, chapter_key)
-					var graph_path: String = str(expl_info.get("graph_path", "")).strip_edges()
-					if not graph_path.is_empty():
-						_resume_exploration(graph_path)
+				var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
+				_play_vn(entry_vn, true, card, chapter_key)
 
 
 func _show_continue_or_restart_vn_dialog(card: Dictionary, vn_path: String) -> void:

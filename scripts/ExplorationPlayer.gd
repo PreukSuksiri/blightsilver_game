@@ -3804,10 +3804,8 @@ func _do_end_exploration_with_vn(vn_path: String) -> void:
 	if chapter_key.is_empty():
 		chapter_key = SaveManager.resolve_chapter_key_for_vn(vn_target)
 	ExplorationManager.detach_session_keep_save(true)
-	var resume_beat: int = SaveManager.get_vn_checkpoint(vn_target)
-	if resume_beat < 0:
-		resume_beat = 0
-	SaveManager.update_chapter_arc_vn(chapter_key, vn_target, resume_beat)
+	# Remember the post-exploration VN segment, not a per-beat position.
+	SaveManager.update_chapter_arc_vn(chapter_key, vn_target)
 	var dest: String = ExplorationManager.return_scene
 	var vn: Control = VN_PLAYER_SCENE.instantiate() as Control
 	vn.keep_bgm = false
