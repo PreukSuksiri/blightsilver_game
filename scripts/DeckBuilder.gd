@@ -48,6 +48,15 @@ const COLOR_DECK_COST_WARN := Color(1.0, 0.35, 0.35)
 @onready var status_label:      Label       = $MainLayout/RightPanel/Inner/StatusLabel
 @onready var formations_btn:    Button      = $MainLayout/RightPanel/Inner/BottomBar/FormationsBtn
 @onready var save_btn:          Button      = $MainLayout/RightPanel/Inner/BottomBar/SaveBtn
+@onready var save_and_exit_btn: Button      = $MainLayout/RightPanel/Inner/BottomBar/SaveAndExitBtn
+@onready var right_top_bar:     HBoxContainer = $MainLayout/RightPanel/Inner/TopBar
+
+var _protagonist_bar = null
+var _switch_deck_btn: Button = null
+var _featured_star_btn: Button = null
+var _featured_pick_mode: bool = false
+const _ProtagonistEquipBar := preload("res://scripts/ProtagonistEquipBar.gd")
+const _DeckSwitchGallery := preload("res://scripts/DeckSwitchGallery.gd")
 @onready var import_btn:        Button      = $PageHeaderActions/ImportBtn
 @onready var export_btn:        Button      = $PageHeaderActions/ExportBtn
 @onready var close_btn:         Button      = $PageHeaderActions/CloseBtn
@@ -93,9 +102,9 @@ var _trunk_gallery_flow:   HFlowContainer  = null
 var _deck_chars_scroll_gal: ScrollContainer = null
 var _deck_traps_scroll_gal: ScrollContainer = null
 var _deck_tech_scroll_gal:  ScrollContainer = null
-var _deck_chars_flow: HFlowContainer = null
-var _deck_traps_flow: HFlowContainer = null
-var _deck_tech_flow:  HFlowContainer = null
+var _deck_chars_flow: HBoxContainer = null
+var _deck_traps_flow: HBoxContainer = null
+var _deck_tech_flow:  HBoxContainer = null
 var _view_toggle_btn: Button = null
 var _gallery_selected_name: String = ""
 var _gallery_selected_type: String = ""
@@ -116,6 +125,7 @@ const LOADING_DIM_COLOR := Color(0.03, 0.05, 0.08, 0.36)
 var _union_section: VBoxContainer = null
 var _union_list: ItemList = null
 var _union_header_label: Label = null
+var _union_scroll: ScrollContainer = null
 var _import_dialog: FileDialog = null
 var _export_dialog: FileDialog = null
 
@@ -320,6 +330,7 @@ func _ready() -> void:
 	_show_loading_blocker()
 	MenuScreenHeader.style_title(get_node("TitleLabel") as Label)
 	MenuScreenHeader.style_close_button(close_btn)
+	_skin_text_fields()
 	_connect_buttons()
 	_refresh_tutorial_locked_controls()
 	_setup_status_row()
@@ -353,6 +364,8 @@ func _ready() -> void:
 	right_inner.add_child(spacer)
 	right_inner.move_child(spacer, bottom_bar.get_index())
 
+	_setup_multi_protagonist_ui()
+	_refresh_tutorial_locked_controls()
 	_setup_deck_file_dialogs()
 
 	# Prologue lock check — show overlay if deckbuilding not yet unlocked
@@ -391,11 +404,17 @@ func _connect_buttons() -> void:
 	delete_deck_btn.pressed.connect(_on_delete_deck)
 	duplicate_btn.pressed.connect(_on_duplicate_deck)
 	deck_name_field.text_changed.connect(_on_deck_name_changed)
+	# Top-bar New/Dup/Delete/Select are replaced by Switch Deck gallery (kept for API compat).
+	deck_select.visible = false
+	new_deck_btn.visible = false
+	duplicate_btn.visible = false
+	delete_deck_btn.visible = false
 	import_btn.pressed.connect(_on_import_decks)
 	export_btn.pressed.connect(_on_export_decks)
 	close_btn.pressed.connect(_on_back)
 	formations_btn.pressed.connect(_open_formation_editor)
 	save_btn.pressed.connect(_on_save)
+	save_and_exit_btn.pressed.connect(_on_save_and_exit)
 	remove_char_btn.disabled = true
 	remove_trap_btn.disabled = true
 	remove_tech_btn.disabled = true
@@ -409,10 +428,20 @@ func _connect_buttons() -> void:
 
 
 func _refresh_tutorial_locked_controls() -> void:
-	var tutorial_done: bool = SaveManager.is_attack_tutorial_complete()
-	new_deck_btn.visible = tutorial_done
-	duplicate_btn.visible = tutorial_done
-	delete_deck_btn.visible = tutorial_done
+	var tutorial_done: bool = ShopManager.is_tutorial_requirement_met()
+	# Top-bar New / Duplicate / Delete stay hidden — Switch Deck gallery owns those actions.
+	new_deck_btn.visible = false
+	duplicate_btn.visible = false
+	delete_deck_btn.visible = false
+	if _switch_deck_btn != null:
+		_switch_deck_btn.disabled = not tutorial_done
+		_switch_deck_btn.tooltip_text = "" if tutorial_done else ShopManager.get_tutorial_unlock_hint()
+
+
+func _skin_text_fields() -> void:
+	GameDialog.style_line_edit(search_field)
+	GameDialog.style_line_edit(deck_name_field)
+
 
 # ── Deck selector ─────────────────────────────────────────────
 func _deck_status_message(deck: DeckData) -> String:
@@ -517,13 +546,19 @@ func _apply_deck_state(index: int) -> bool:
 	var deck: DeckData = SaveManager.get_active_deck()
 	if deck == null:
 		return false
-	current_deck = deck.duplicate_deck()
+	current_deck = deck.clone_for_edit()
 	deck_name_field.text = current_deck.deck_name
+	_refresh_protagonist_capsules()
+	_update_limited_edit_ui()
 	return true
 
 func _on_new_deck() -> void:
+	if not SaveManager.can_create_free_deck():
+		status_label.text = "Free deck slots full (max %d)." % SaveManager.MAX_FREE_DECK_SLOTS
+		return
 	var deck := DeckData.new()
-	deck.deck_name = "New Deck %d" % (SaveManager.decks.size() + 1)
+	deck.ensure_identity()
+	deck.deck_name = "New Deck %d" % (SaveManager.count_free_decks() + 1)
 	SaveManager.save_deck(deck)
 	_refresh_deck_select()
 	_load_deck(SaveManager.active_deck_index)
@@ -532,9 +567,12 @@ func _on_delete_deck() -> void:
 	if SaveManager.decks.size() <= 1:
 		status_label.text = "Cannot delete the last deck."
 		return
+	var deck: DeckData = SaveManager.get_active_deck()
+	if deck != null and (deck.limited or deck.reserved_slot != 0):
+		status_label.text = "Cannot delete a Limited / reserved protagonist deck."
+		return
 	if GameDialog.has_open_overlay(self):
 		return
-	var deck: DeckData = SaveManager.get_active_deck()
 	var deck_name: String = deck.deck_name if deck != null else "this deck"
 	GameDialog.confirmation_overlay_delayed(
 		self,
@@ -548,6 +586,9 @@ func _on_delete_deck() -> void:
 			_load_deck(SaveManager.active_deck_index))
 
 func _on_duplicate_deck() -> void:
+	if not SaveManager.can_create_free_deck():
+		status_label.text = "Free deck slots full (max %d)." % SaveManager.MAX_FREE_DECK_SLOTS
+		return
 	SaveManager.duplicate_deck(SaveManager.active_deck_index)
 	_refresh_deck_select()
 	_load_deck(SaveManager.active_deck_index)
@@ -756,14 +797,18 @@ func _add_selected_trunk_card() -> void:
 func _add_card_to_deck(card_type: String, card_name: String) -> void:
 	if current_deck == null:
 		return
+	# Featured pick is right-panel only; ignore pool adds while pick mode is on.
+	if _featured_pick_mode:
+		return
 	var grid_cards: int = current_deck.characters.size() + current_deck.traps.size()
 	match card_type:
 		"character":
 			if card_name in current_deck.characters:
 				status_label.text = "Duplicate: %s is already in the deck." % card_name
 				return
-			if current_deck.characters.size() >= DeckData.MAX_CHARACTERS:
-				status_label.text = "Unit limit reached (%d max)." % DeckData.MAX_CHARACTERS
+			var char_cap: int = current_deck.get_limited_cap("characters")
+			if current_deck.characters.size() >= mini(DeckData.MAX_CHARACTERS, char_cap):
+				status_label.text = "Unit limit reached (%d)." % char_cap
 				return
 			if grid_cards >= DeckData.TOTAL_SLOTS:
 				status_label.text = "Grid deck is full (25 cards max)."
@@ -773,8 +818,9 @@ func _add_card_to_deck(card_type: String, card_name: String) -> void:
 			if card_name in current_deck.traps:
 				status_label.text = "Duplicate: %s is already in the deck." % card_name
 				return
-			if current_deck.traps.size() >= DeckData.MAX_TRAPS:
-				status_label.text = "Trap limit reached (%d max)." % DeckData.MAX_TRAPS
+			var trap_cap: int = current_deck.get_limited_cap("traps")
+			if current_deck.traps.size() >= mini(DeckData.MAX_TRAPS, trap_cap):
+				status_label.text = "Trap limit reached (%d)." % trap_cap
 				return
 			if grid_cards >= DeckData.TOTAL_SLOTS:
 				status_label.text = "Grid deck is full (25 cards max)."
@@ -784,8 +830,9 @@ func _add_card_to_deck(card_type: String, card_name: String) -> void:
 			if card_name in current_deck.techs:
 				status_label.text = "Duplicate: %s is already in the deck." % card_name
 				return
-			if current_deck.techs.size() >= DeckData.TECH_COUNT:
-				status_label.text = "Tech limit reached (exactly %d required)." % DeckData.TECH_COUNT
+			var tech_cap: int = current_deck.get_limited_cap("techs")
+			if current_deck.techs.size() >= mini(DeckData.TECH_COUNT, tech_cap):
+				status_label.text = "Tech limit reached (%d)." % tech_cap
 				return
 			current_deck.techs.append(card_name)
 		"union":
@@ -797,6 +844,9 @@ func _add_card_to_deck(card_type: String, card_name: String) -> void:
 func _on_remove_char() -> void:
 	var selected: PackedInt32Array = char_list.get_selected_items()
 	if selected.is_empty():
+		return
+	if _featured_pick_mode:
+		_set_featured_card(str(current_deck.characters[selected[0]]), "character")
 		return
 	var removed_name: String = current_deck.characters[selected[0]]
 	current_deck.characters.remove_at(selected[0])
@@ -810,6 +860,9 @@ func _on_remove_trap() -> void:
 	var selected: PackedInt32Array = trap_list.get_selected_items()
 	if selected.is_empty():
 		return
+	if _featured_pick_mode:
+		_set_featured_card(str(current_deck.traps[selected[0]]), "trap")
+		return
 	var removed_name: String = current_deck.traps[selected[0]]
 	current_deck.traps.remove_at(selected[0])
 	remove_trap_btn.disabled = true
@@ -821,6 +874,9 @@ func _on_remove_trap() -> void:
 func _on_remove_tech() -> void:
 	var selected: PackedInt32Array = tech_list.get_selected_items()
 	if selected.is_empty():
+		return
+	if _featured_pick_mode:
+		_set_featured_card(str(current_deck.techs[selected[0]]), "tech")
 		return
 	current_deck.techs.remove_at(selected[0])
 	remove_tech_btn.disabled = true
@@ -890,7 +946,10 @@ func _rebuild_deck_lists(refresh_gallery: bool = true, refresh_union: bool = tru
 	# Status & save button
 	status_label.text = _deck_status_message(current_deck)
 	_update_cost_summary(current_deck)
-	save_btn.disabled = not current_deck.is_valid()
+	var save_disabled: bool = not current_deck.is_valid()
+	save_btn.disabled = save_disabled
+	# During tutorial, Save and Exit stays enabled so the player can leave without saving.
+	save_and_exit_btn.disabled = save_disabled and SaveManager.is_attack_tutorial_complete()
 
 	remove_char_btn.disabled = true
 	remove_trap_btn.disabled = true
@@ -1118,8 +1177,8 @@ func _setup_union_section() -> void:
 	trap_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	tech_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	# Guarantee a visible minimum height for the ItemLists in list mode.
-	if char_list.custom_minimum_size.y < 211:
-		char_list.custom_minimum_size = Vector2(char_list.custom_minimum_size.x, 211)
+	if char_list.custom_minimum_size.y < 104:
+		char_list.custom_minimum_size = Vector2(char_list.custom_minimum_size.x, 104)
 	if trap_list.custom_minimum_size.y < 104:
 		trap_list.custom_minimum_size = Vector2(trap_list.custom_minimum_size.x, 104)
 	if tech_list.custom_minimum_size.y < 104:
@@ -1138,21 +1197,11 @@ func _setup_union_section() -> void:
 	header_row.add_child(_union_header_label)
 	_union_section.add_child(header_row)
 
-	var union_scroll := ScrollContainer.new()
-	union_scroll.custom_minimum_size = Vector2(0, 110)
-	union_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	union_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	union_scroll.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_DISABLED
-	_union_section.add_child(union_scroll)
-
 	_union_list = null  # no longer used
-	var union_flow := HBoxContainer.new()
-	union_flow.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	union_flow.add_theme_constant_override("separation", 3)
-	union_scroll.add_child(union_flow)
-
-	# Store the flow reference in _union_list's place (reuse var with different type note)
-	# We use _union_header_label's parent as the scroll, flow is accessed via it
+	var union_gal: Dictionary = _make_hscroll_gallery_row()
+	_union_scroll = union_gal["scroll"] as ScrollContainer
+	var union_flow: HBoxContainer = union_gal["flow"] as HBoxContainer
+	_union_section.add_child(union_gal["wrap"] as Control)
 	_union_section.set_meta("_union_flow", union_flow)
 
 	right_inner.add_child(_union_section)
@@ -1194,6 +1243,7 @@ func _chunked_union_section_rebuild_task(gen: int) -> void:
 	if achievable.is_empty():
 		if gen == _union_rebuild_gen and is_inside_tree():
 			_union_header_label.text = "Union (0 achievable)"
+			call_deferred("_refresh_all_hscroll_hints")
 		return
 	var batch := 0
 	for u: UnionData in achievable:
@@ -1206,6 +1256,7 @@ func _chunked_union_section_rebuild_task(gen: int) -> void:
 			await get_tree().process_frame
 	if gen == _union_rebuild_gen and is_inside_tree():
 		_union_header_label.text = "Union (%d achievable)" % achievable.size()
+		call_deferred("_refresh_all_hscroll_hints")
 
 func _make_union_right_tile(u: UnionData) -> Control:
 	var tile := Control.new()
@@ -1462,6 +1513,7 @@ func _open_formation_editor() -> void:
 	_fe_name_edit = LineEdit.new()
 	_fe_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fe_name_edit.placeholder_text = "Formation name"
+	GameDialog.style_line_edit(_fe_name_edit)
 	_fe_name_edit.text_changed.connect(_fe_on_name_changed)
 	name_row.add_child(_fe_name_edit)
 
@@ -2237,8 +2289,163 @@ func _on_export_file_selected(path: String) -> void:
 	file.close()
 	status_label.text = "Exported %d deck(s) to %s" % [SaveManager.decks.size(), export_path.get_file()]
 
+# ── Multi-protagonist UI ──────────────────────────────────────
+func _setup_multi_protagonist_ui() -> void:
+	_switch_deck_btn = Button.new()
+	_switch_deck_btn.text = "Switch Deck"
+	GameDialog.style_button(_switch_deck_btn)
+	_switch_deck_btn.custom_minimum_size = Vector2(120, GameDialog.BTN_MIN_SIZE.y)
+	_switch_deck_btn.pressed.connect(_open_deck_switch_gallery)
+	right_top_bar.add_child(_switch_deck_btn)
+	right_top_bar.move_child(_switch_deck_btn, 0)
+
+	_featured_star_btn = Button.new()
+	_featured_star_btn.text = "★"
+	_featured_star_btn.tooltip_text = "Mark featured card"
+	GameDialog.style_button(_featured_star_btn)
+	_featured_star_btn.custom_minimum_size = Vector2(GameDialog.BTN_MIN_SIZE.y, GameDialog.BTN_MIN_SIZE.y)
+	_featured_star_btn.toggle_mode = true
+	_featured_star_btn.toggled.connect(_on_featured_star_toggled)
+	right_top_bar.add_child(_featured_star_btn)
+	right_top_bar.move_child(_featured_star_btn, 1)
+
+	var bottom_bar: Node = save_btn.get_parent()
+	var right_inner: Node = bottom_bar.get_parent()
+	_protagonist_bar = _ProtagonistEquipBar.new()
+	_protagonist_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_protagonist_bar.equip_requested.connect(_on_protagonist_equip_requested)
+	right_inner.add_child(_protagonist_bar)
+	right_inner.move_child(_protagonist_bar, bottom_bar.get_index())
+
+
+func _refresh_protagonist_capsules() -> void:
+	if _protagonist_bar != null and current_deck != null:
+		_protagonist_bar.call("set_open_deck_id", current_deck.deck_id)
+
+
+func _update_limited_edit_ui() -> void:
+	if current_deck == null:
+		return
+	var limited: bool = current_deck.limited
+	deck_name_field.editable = not limited
+	if limited:
+		status_label.text = "Limited deck — usable slots: Units %d / Traps %d / Tech %d" % [
+			current_deck.get_limited_cap("characters"),
+			current_deck.get_limited_cap("traps"),
+			current_deck.get_limited_cap("techs"),
+		]
+
+
+func _open_deck_switch_gallery() -> void:
+	if not ShopManager.is_tutorial_requirement_met():
+		GameDialog.accept_overlay(
+			self,
+			"Switch Deck Unavailable",
+			ShopManager.get_tutorial_unlock_hint())
+		return
+	_persist_featured_to_save()
+	var gal: Node = _DeckSwitchGallery.open(self)
+	if gal == null:
+		return
+	gal.deck_selected.connect(func(idx: int) -> void:
+		_load_deck(idx)
+		_refresh_deck_select())
+	gal.request_new.connect(_on_new_deck)
+	gal.decks_changed.connect(func() -> void:
+		_refresh_deck_select()
+		_load_deck(SaveManager.active_deck_index))
+
+
+func _on_protagonist_equip_requested(pid: String) -> void:
+	if current_deck == null:
+		return
+	if current_deck.limited and current_deck.reserved_slot != 0:
+		var owner: String = SaveManager.reserved_slot_protagonist(current_deck.reserved_slot)
+		if owner != pid:
+			status_label.text = "This Limited deck belongs to %s." % ProtagonistVault.get_display_name(owner)
+			return
+	var cur: DeckData = SaveManager.get_equipped_deck(pid)
+	var cur_name: String = cur.deck_name if cur != null else "(None)"
+	if cur != null and cur.deck_id == current_deck.deck_id:
+		status_label.text = "Already equipped to %s." % ProtagonistVault.get_display_name(pid)
+		return
+	GameDialog.confirmation_overlay(
+		self,
+		"Equip Deck",
+		"%s\n\nCurrently equipped: %s\nWill equip instead: %s\n\nSwitch?" % [
+			ProtagonistVault.get_display_name(pid), cur_name, current_deck.deck_name
+		],
+		"Equip",
+		"Cancel",
+		func() -> void:
+			# Persist open deck first so equip targets saved identity.
+			SaveManager.save_deck(current_deck)
+			if SaveManager.set_equipped_deck(pid, current_deck):
+				status_label.text = "Equipped to %s." % ProtagonistVault.get_display_name(pid)
+				_refresh_protagonist_capsules()
+			else:
+				status_label.text = "Could not equip (Limited rules)."
+	)
+
+
+func _on_featured_star_toggled(on: bool) -> void:
+	_featured_pick_mode = on
+	if on:
+		status_label.text = "Featured pick: tap a card in this deck."
+	else:
+		status_label.text = ""
+	_rebuild_deck_lists()
+
+
+func _set_featured_card(card_name: String, card_type: String) -> void:
+	if current_deck == null:
+		return
+	current_deck.featured_card_name = card_name
+	current_deck.featured_card_type = card_type
+	_featured_pick_mode = false
+	if _featured_star_btn != null:
+		_featured_star_btn.set_pressed_no_signal(false)
+	status_label.text = "Featured: %s" % card_name
+	_persist_featured_to_save()
+	_rebuild_deck_lists()
+
+
+func _persist_featured_to_save() -> void:
+	## Keep Switch Deck gallery in sync without requiring a full Save click.
+	if current_deck == null:
+		return
+	current_deck.ensure_identity()
+	var idx: int = SaveManager.find_deck_index_by_id(current_deck.deck_id)
+	if idx < 0:
+		idx = SaveManager.active_deck_index
+	if idx < 0 or idx >= SaveManager.decks.size():
+		return
+	var stored: DeckData = SaveManager.decks[idx] as DeckData
+	if stored == null:
+		return
+	stored.featured_card_name = current_deck.featured_card_name
+	stored.featured_card_type = current_deck.featured_card_type
+	SaveManager.save_data()
+
+
+func _is_featured_card(card_name: String) -> bool:
+	return current_deck != null and current_deck.featured_card_name == card_name
+
+
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:
+	_try_save(false)
+
+
+func _on_save_and_exit() -> void:
+	# Tutorial lock: exit without saving (plain Save still shows the block dialog).
+	if not SaveManager.is_attack_tutorial_complete():
+		_on_back()
+		return
+	_try_save(true)
+
+
+func _try_save(exit_after: bool) -> void:
 	if not SaveManager.is_attack_tutorial_complete():
 		GameDialog.accept_overlay(
 			self,
@@ -2248,22 +2455,22 @@ func _on_save() -> void:
 	if current_deck == null or not current_deck.is_valid():
 		return
 	if _deck_cost_is_high(current_deck):
-		_confirm_high_cost_save()
+		_confirm_high_cost_save(exit_after)
 		return
-	_perform_save()
+	_perform_save(exit_after)
 
 
-func _confirm_high_cost_save() -> void:
+func _confirm_high_cost_save(exit_after: bool = false) -> void:
 	GameDialog.confirmation_overlay(
 		self,
 		"High Deck Cost",
 		"The unit and trap costs in this deck are too high. Consider replacing some cards with lower-cost options.",
 		"Save",
 		"Edit Deck",
-		func() -> void: _perform_save())
+		func() -> void: _perform_save(exit_after))
 
 
-func _perform_save() -> void:
+func _perform_save(exit_after: bool = false) -> void:
 	if current_deck == null or not current_deck.is_valid():
 		return
 	current_deck.deck_name = deck_name_field.text.strip_edges()
@@ -2275,6 +2482,8 @@ func _perform_save() -> void:
 	SaveManager.save_deck(current_deck)
 	_refresh_deck_select()
 	status_label.text = "Deck saved!"
+	if exit_after:
+		_on_back()
 
 func _on_back() -> void:
 	if _deferring_initial_load:
@@ -2417,7 +2626,7 @@ func _build_advanced_filters() -> void:
 	_adv_ability = LineEdit.new()
 	_adv_ability.placeholder_text = "contains..."
 	_adv_ability.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_adv_ability.add_theme_font_size_override("font_size", 13)
+	GameDialog.style_line_edit(_adv_ability)
 	_adv_ability.text_changed.connect(func(t: String) -> void: _filter_ability = t)
 	abil_row.add_child(_adv_ability)
 	body.add_child(abil_row)
@@ -2459,6 +2668,7 @@ func _make_range_row(parent: VBoxContainer, lbl_text: String,
 	s_min.value = spin_min
 	s_min.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	s_min.suffix = "min"
+	GameDialog.style_spin_box(s_min)
 	row.add_child(s_min)
 	var s_max := SpinBox.new()
 	s_max.min_value = spin_min
@@ -2466,6 +2676,7 @@ func _make_range_row(parent: VBoxContainer, lbl_text: String,
 	s_max.value = default_max
 	s_max.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	s_max.suffix = "max"
+	GameDialog.style_spin_box(s_max)
 	row.add_child(s_max)
 	parent.add_child(row)
 	return [s_min, s_max]
@@ -2534,46 +2745,30 @@ func _setup_gallery_containers() -> void:
 
 	# Deck section galleries (each replaces its ItemList sibling).
 	# Tile size: 76×104 px, gap 3 px.
-	# Characters: 2 rows visible (2×104 + 3 = 211 px), no vertical scroll.
-	# Traps / Tech: 1 row visible (104 px), no vertical scroll.
+	# Characters / Traps / Tech: 1 row, horizontally scrollable (same as Union).
 	var char_section: Control = char_list.get_parent()
-	_deck_chars_scroll_gal = ScrollContainer.new()
-	_deck_chars_scroll_gal.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	_deck_chars_scroll_gal.custom_minimum_size = Vector2(0, 211)
-	_deck_chars_scroll_gal.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_deck_chars_flow = HFlowContainer.new()
-	_deck_chars_flow.add_theme_constant_override("h_separation", 3)
-	_deck_chars_flow.add_theme_constant_override("v_separation", 3)
-	_deck_chars_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_deck_chars_scroll_gal.add_child(_deck_chars_flow)
-	char_section.add_child(_deck_chars_scroll_gal)
-	char_section.move_child(_deck_chars_scroll_gal, char_list.get_index())
+	var char_gal: Dictionary = _make_hscroll_gallery_row()
+	_deck_chars_scroll_gal = char_gal["scroll"] as ScrollContainer
+	_deck_chars_flow = char_gal["flow"] as HBoxContainer
+	var char_wrap: Control = char_gal["wrap"] as Control
+	char_section.add_child(char_wrap)
+	char_section.move_child(char_wrap, char_list.get_index())
 
 	var trap_section: Control = trap_list.get_parent()
-	_deck_traps_scroll_gal = ScrollContainer.new()
-	_deck_traps_scroll_gal.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	_deck_traps_scroll_gal.custom_minimum_size = Vector2(0, 104)
-	_deck_traps_scroll_gal.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_deck_traps_flow = HFlowContainer.new()
-	_deck_traps_flow.add_theme_constant_override("h_separation", 3)
-	_deck_traps_flow.add_theme_constant_override("v_separation", 3)
-	_deck_traps_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_deck_traps_scroll_gal.add_child(_deck_traps_flow)
-	trap_section.add_child(_deck_traps_scroll_gal)
-	trap_section.move_child(_deck_traps_scroll_gal, trap_list.get_index())
+	var trap_gal: Dictionary = _make_hscroll_gallery_row()
+	_deck_traps_scroll_gal = trap_gal["scroll"] as ScrollContainer
+	_deck_traps_flow = trap_gal["flow"] as HBoxContainer
+	var trap_wrap: Control = trap_gal["wrap"] as Control
+	trap_section.add_child(trap_wrap)
+	trap_section.move_child(trap_wrap, trap_list.get_index())
 
 	var tech_section: Control = tech_list.get_parent()
-	_deck_tech_scroll_gal = ScrollContainer.new()
-	_deck_tech_scroll_gal.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	_deck_tech_scroll_gal.custom_minimum_size = Vector2(0, 104)
-	_deck_tech_scroll_gal.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_deck_tech_flow = HFlowContainer.new()
-	_deck_tech_flow.add_theme_constant_override("h_separation", 3)
-	_deck_tech_flow.add_theme_constant_override("v_separation", 3)
-	_deck_tech_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_deck_tech_scroll_gal.add_child(_deck_tech_flow)
-	tech_section.add_child(_deck_tech_scroll_gal)
-	tech_section.move_child(_deck_tech_scroll_gal, tech_list.get_index())
+	var tech_gal: Dictionary = _make_hscroll_gallery_row()
+	_deck_tech_scroll_gal = tech_gal["scroll"] as ScrollContainer
+	_deck_tech_flow = tech_gal["flow"] as HBoxContainer
+	var tech_wrap: Control = tech_gal["wrap"] as Control
+	tech_section.add_child(tech_wrap)
+	tech_section.move_child(tech_wrap, tech_list.get_index())
 
 	# Drop targets: deck scroll containers accept drags from pool tiles.
 	for flow_scroll: ScrollContainer in [_deck_chars_scroll_gal, _deck_traps_scroll_gal, _deck_tech_scroll_gal]:
@@ -2658,13 +2853,14 @@ func _apply_view_mode() -> void:
 	char_list.visible               = not _gallery_mode
 	trap_list.visible               = not _gallery_mode
 	tech_list.visible               = not _gallery_mode
-	_deck_chars_scroll_gal.visible  = _gallery_mode
-	_deck_traps_scroll_gal.visible  = _gallery_mode
-	_deck_tech_scroll_gal.visible   = _gallery_mode
+	_set_hscroll_gallery_visible(_deck_chars_scroll_gal, _gallery_mode)
+	_set_hscroll_gallery_visible(_deck_traps_scroll_gal, _gallery_mode)
+	_set_hscroll_gallery_visible(_deck_tech_scroll_gal, _gallery_mode)
 	remove_char_btn.visible         = not _gallery_mode
 	remove_trap_btn.visible         = not _gallery_mode
 	remove_tech_btn.visible         = not _gallery_mode
 	_view_toggle_btn.text = "≡ List" if _gallery_mode else "⊞ Gallery"
+	call_deferred("_refresh_all_hscroll_hints")
 
 func _rebuild_trunk_gallery() -> void:
 	_gallery_rebuild_gen += 1
@@ -2703,12 +2899,13 @@ func _rebuild_deck_galleries() -> void:
 		_deck_traps_flow.add_child(_make_deck_tile(card_name, "trap"))
 	for card_name: String in current_deck.techs:
 		_deck_tech_flow.add_child(_make_deck_tile(card_name, "tech"))
+	call_deferred("_refresh_all_hscroll_hints")
 
 
 func _chunked_deck_galleries_rebuild_async(gen: int) -> void:
 	if current_deck == null:
 		return
-	for flow: HFlowContainer in [_deck_chars_flow, _deck_traps_flow, _deck_tech_flow]:
+	for flow: HBoxContainer in [_deck_chars_flow, _deck_traps_flow, _deck_tech_flow]:
 		if flow == null:
 			continue
 		for child in flow.get_children():
@@ -2724,7 +2921,7 @@ func _chunked_deck_galleries_rebuild_async(gen: int) -> void:
 	for entry: Dictionary in entries:
 		if gen != _gallery_rebuild_gen or not is_inside_tree():
 			return
-		var flow: HFlowContainer = entry["flow"]
+		var flow: HBoxContainer = entry["flow"]
 		if flow == null:
 			continue
 		flow.add_child(_make_deck_tile(entry["name"], entry["type"]))
@@ -2732,6 +2929,122 @@ func _chunked_deck_galleries_rebuild_async(gen: int) -> void:
 		if batch >= GALLERY_TILES_PER_FRAME:
 			batch = 0
 			await get_tree().process_frame
+	if gen == _gallery_rebuild_gen and is_inside_tree():
+		call_deferred("_refresh_all_hscroll_hints")
+
+
+func _make_hscroll_gallery_row() -> Dictionary:
+	var wrap := Control.new()
+	wrap.custom_minimum_size = Vector2(0, 110)
+	wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	wrap.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+
+	var flow := HBoxContainer.new()
+	flow.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	flow.add_theme_constant_override("separation", 3)
+	scroll.add_child(flow)
+	wrap.add_child(scroll)
+
+	var hint := _make_hscroll_hint_label()
+	wrap.add_child(hint)
+	scroll.set_meta("scroll_hint", hint)
+
+	var bar := scroll.get_h_scroll_bar()
+	bar.changed.connect(func() -> void: _update_hscroll_hint(scroll, hint))
+	bar.value_changed.connect(func(_v: float) -> void: _update_hscroll_hint(scroll, hint))
+	wrap.resized.connect(func() -> void: _update_hscroll_hint(scroll, hint))
+
+	return {"wrap": wrap, "scroll": scroll, "flow": flow}
+
+
+func _make_hscroll_hint_label() -> Label:
+	var hint := Label.new()
+	hint.name = "HScrollHint"
+	hint.text = "▸"
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hint.anchor_left = 1.0
+	hint.anchor_top = 0.5
+	hint.anchor_right = 1.0
+	hint.anchor_bottom = 0.5
+	hint.offset_left = -20.0
+	hint.offset_top = -14.0
+	hint.offset_right = -2.0
+	hint.offset_bottom = 14.0
+	hint.add_theme_font_size_override("font_size", 18)
+	hint.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0, 1.0))
+	hint.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.75))
+	hint.add_theme_constant_override("shadow_offset_x", 1)
+	hint.add_theme_constant_override("shadow_offset_y", 1)
+	hint.visible = false
+	hint.modulate.a = 0.8
+	return hint
+
+
+func _set_hscroll_gallery_visible(scroll: ScrollContainer, vis: bool) -> void:
+	if scroll == null:
+		return
+	var wrap: Node = scroll.get_parent()
+	if wrap is Control:
+		(wrap as Control).visible = vis
+	else:
+		scroll.visible = vis
+
+
+func _refresh_all_hscroll_hints() -> void:
+	for scroll: ScrollContainer in [
+		_deck_chars_scroll_gal, _deck_traps_scroll_gal, _deck_tech_scroll_gal, _union_scroll
+	]:
+		if scroll == null or not is_instance_valid(scroll):
+			continue
+		if not scroll.has_meta("scroll_hint"):
+			continue
+		var hint: Label = scroll.get_meta("scroll_hint") as Label
+		_update_hscroll_hint(scroll, hint)
+
+
+func _update_hscroll_hint(scroll: ScrollContainer, hint: Label) -> void:
+	if scroll == null or hint == null or not is_instance_valid(hint):
+		return
+	var wrap: Control = scroll.get_parent() as Control
+	var row_visible: bool = scroll.is_visible_in_tree() and (wrap == null or wrap.visible)
+	var bar := scroll.get_h_scroll_bar()
+	var overflow: bool = bar.max_value > bar.page + 1.0
+	var more_right: bool = overflow and bar.value < bar.max_value - bar.page - 1.0
+	if not row_visible or not more_right:
+		hint.visible = false
+		_stop_hscroll_hint_pulse(hint)
+		return
+	hint.visible = true
+	_start_hscroll_hint_pulse(hint)
+
+
+func _start_hscroll_hint_pulse(hint: Label) -> void:
+	if hint.has_meta("pulse_running") and bool(hint.get_meta("pulse_running")):
+		return
+	hint.set_meta("pulse_running", true)
+	hint.modulate.a = 0.85
+	var tw := create_tween().set_loops()
+	tw.tween_property(hint, "modulate:a", 0.28, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(hint, "modulate:a", 0.85, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	hint.set_meta("pulse_tween", tw)
+
+
+func _stop_hscroll_hint_pulse(hint: Label) -> void:
+	if hint.has_meta("pulse_tween"):
+		var tw: Variant = hint.get_meta("pulse_tween")
+		if tw is Tween and is_instance_valid(tw):
+			(tw as Tween).kill()
+		hint.remove_meta("pulse_tween")
+	hint.set_meta("pulse_running", false)
+	hint.modulate.a = 1.0
+
 
 func _make_pool_tile(card_name: String, card_type: String) -> Control:
 	var tile := Control.new()
@@ -2840,7 +3153,7 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
-	# × remove badge top-right
+	# × remove badge (top-right)
 	var rm := Label.new()
 	rm.text = "×"
 	rm.layout_mode = 1
@@ -2852,6 +3165,30 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 	rm.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 0.9))
 	rm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tile.add_child(rm)
+	# Featured star (bottom-right) — persists on the selected deck card only.
+	if _is_featured_card(card_name):
+		var star := Label.new()
+		star.text = "★"
+		star.layout_mode = 1
+		star.anchor_left = 1.0
+		star.anchor_right = 1.0
+		star.anchor_top = 1.0
+		star.anchor_bottom = 1.0
+		star.offset_left = -18.0
+		star.offset_right = -1.0
+		star.offset_top = -18.0
+		star.offset_bottom = -1.0
+		star.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		star.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		star.add_theme_font_size_override("font_size", 14)
+		star.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2, 1.0))
+		star.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		star.add_theme_constant_override("outline_size", 3)
+		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tile.add_child(star)
+	# Temporary yellow only while choosing a featured card.
+	if _featured_pick_mode:
+		tile.modulate = Color(1.2, 1.15, 0.55, 1.0)
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -2859,7 +3196,9 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 		if mb.button_index != MOUSE_BUTTON_LEFT:
 			return
 		if mb.pressed:
-			if mb.double_click:
+			if _featured_pick_mode:
+				_set_featured_card(card_name, card_type)
+			elif mb.double_click:
 				_remove_card_gallery(card_name, card_type)
 			else:
 				_show_preview(card_type, card_name))

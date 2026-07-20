@@ -65,6 +65,7 @@ var _props_panel: Control  = null
 var _prop_start_node_edit:  LineEdit    = null
 var _prop_start_cond_vbox:  VBoxContainer = null
 var _prop_initial_inv_vbox: VBoxContainer = null
+var _prop_playable_protagonists_edit: LineEdit = null
 var _prop_id_edit:          LineEdit    = null
 var _prop_title_edit:       LineEdit    = null
 var _prop_title_cond_vbox:  VBoxContainer = null
@@ -305,6 +306,15 @@ func _build_props_panel() -> Control:
 		_add_graph_inv_row("")
 		_collect_graph_props())
 	vbox.add_child(add_graph_inv_btn)
+	_add_section_header(vbox, "PLAYABLE PROTAGONISTS")
+	var pp_hint := Label.new()
+	pp_hint.text = "Comma-separated ids (max 3): nex, mayu, kelly. Empty = all."
+	pp_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pp_hint.add_theme_font_size_override("font_size", 11)
+	pp_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
+	vbox.add_child(pp_hint)
+	_prop_playable_protagonists_edit = _add_field(vbox, "Playable", "nex")
+	_prop_playable_protagonists_edit.text_changed.connect(func(_t: String) -> void: _collect_graph_props())
 	vbox.add_child(HSeparator.new())
 
 	# Section: Node Identity
@@ -1317,6 +1327,10 @@ func _condition_kv_hint(ctype: String) -> String:
 			return "key: session variable name. value: numeric threshold (var < value)."
 		"at_node":
 			return "key: node id (fallback). value: node id player must be at (preferred)."
+		"protagonist_equals":
+			return "key or value: protagonist id (nex / mayu / kelly) that must be current."
+		"protagonist_not_equals":
+			return "key or value: protagonist id that must NOT be current."
 		_:
 			return ""
 
@@ -1552,7 +1566,8 @@ func _add_condition_row(cond_vbox: VBoxContainer, ctype: String = "has_item",
 	var type_btn := OptionButton.new()
 	var _cond_list: Array[String] = [
 		"has_item", "not_has_item", "var_equals", "var_not_equals",
-		"var_greater", "var_less", "at_node"]
+		"var_greater", "var_less", "at_node",
+		"protagonist_equals", "protagonist_not_equals"]
 	for t: String in _cond_list:
 		type_btn.add_item(t)
 	var _cond_idx: int = _cond_list.find(ctype)
@@ -2921,6 +2936,8 @@ func _populate_graph_props() -> void:
 			_add_node_id_cond_row(_prop_start_cond_vbox,
 				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("node_id", "")))
 	_rebuild_graph_inv_rows(_graph.initial_inventory)
+	if _prop_playable_protagonists_edit != null:
+		_prop_playable_protagonists_edit.text = ", ".join(_graph.playable_protagonists)
 
 func _rebuild_graph_inv_rows(items: Array) -> void:
 	if _prop_initial_inv_vbox == null:
@@ -2989,6 +3006,14 @@ func _collect_graph_props() -> void:
 	_graph.start_node_id = _prop_start_node_edit.text.strip_edges()
 	_graph.start_node_id_conditions = _collect_node_id_conds(_prop_start_cond_vbox)
 	_graph.initial_inventory = _collect_graph_initial_inventory()
+	_graph.playable_protagonists = []
+	if _prop_playable_protagonists_edit != null:
+		for part: String in _prop_playable_protagonists_edit.text.split(","):
+			var pid: String = ProtagonistVault.normalize_id(part.strip_edges())
+			if ProtagonistVault.is_valid_id(pid) and pid not in _graph.playable_protagonists:
+				_graph.playable_protagonists.append(pid)
+			if _graph.playable_protagonists.size() >= 3:
+				break
 
 func _collect_node_id_conds(cond_vbox: VBoxContainer) -> Array:
 	var result: Array = []

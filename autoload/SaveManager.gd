@@ -44,6 +44,17 @@ var quick_duel_protagonist_id: String = "nex"
 var quick_duel_protagonist_portrait: String = ""
 var quick_duel_tier_identities: Dictionary = {}
 
+# Multi-protagonist
+const MAX_FREE_DECK_SLOTS: int = 10
+const MAX_DECK_SLOTS: int = 12
+const RESERVED_SLOT_MAYU: int = 11
+const RESERVED_SLOT_KELLY: int = 12
+var unlocked_protagonists: Array = ["nex"]  # Array[String]
+## Global current hero (story / exploration / battle deck). Synced with quick_duel when set.
+var current_protagonist_id: String = "nex"
+## protagonist_id → deck_id
+var equipped_deck_id_by_protagonist: Dictionary = {}
+
 var _bootstrapped := false
 var _save_enabled := false
 
@@ -118,15 +129,374 @@ func get_active_deck() -> DeckData:
 		return null
 	return decks[clampi(active_deck_index, 0, decks.size() - 1)] as DeckData
 
+## Deck used for story / exploration / Quick Duel battles (equipped to current protagonist).
+func get_battle_deck() -> DeckData:
+	var equipped: DeckData = get_equipped_deck(current_protagonist_id)
+	if equipped != null:
+		return equipped
+	equipped = get_equipped_deck("nex")
+	if equipped != null:
+		return equipped
+	return get_active_deck()
+
 func is_active_deck_ready() -> bool:
-	var deck := get_active_deck()
+	var deck := get_battle_deck()
+	if deck == null:
+		deck = get_active_deck()
 	return deck != null and deck.is_valid()
 
 func get_active_deck_warning_message() -> String:
-	var deck := get_active_deck()
+	var deck := get_battle_deck()
+	if deck == null:
+		deck = get_active_deck()
 	if deck == null:
 		return "No deck saved. Please build a deck first."
 	return deck.validation_message()
+
+
+# ── Multi-protagonist helpers ─────────────────────────────────
+func is_protagonist_unlocked(protagonist_id: String) -> bool:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	return pid in unlocked_protagonists
+
+
+func get_unlocked_protagonists() -> Array:
+	return unlocked_protagonists.duplicate()
+
+
+func set_current_protagonist(protagonist_id: String, sync_quick_duel: bool = true) -> bool:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	if not is_protagonist_unlocked(pid):
+		return false
+	current_protagonist_id = pid
+	if sync_quick_duel:
+		quick_duel_protagonist_id = pid
+		if quick_duel_protagonist_portrait.is_empty() \
+				or not ProtagonistVault.is_pose_portrait_unlocked(pid, quick_duel_protagonist_portrait):
+			quick_duel_protagonist_portrait = ProtagonistVault.get_first_unlocked_portrait(pid)
+	save_data()
+	return true
+
+
+func get_deck_by_id(deck_id: String) -> DeckData:
+	var want: String = deck_id.strip_edges()
+	if want.is_empty():
+		return null
+	for d: Variant in decks:
+		if d is DeckData and (d as DeckData).deck_id == want:
+			return d as DeckData
+	return null
+
+
+func get_deck_by_name(deck_name: String) -> DeckData:
+	var want: String = deck_name.strip_edges()
+	for d: Variant in decks:
+		if d is DeckData and (d as DeckData).deck_name == want:
+			return d as DeckData
+	return null
+
+
+func find_deck_index_by_id(deck_id: String) -> int:
+	var want: String = deck_id.strip_edges()
+	for i in range(decks.size()):
+		if decks[i] is DeckData and (decks[i] as DeckData).deck_id == want:
+			return i
+	return -1
+
+
+func get_equipped_deck(protagonist_id: String) -> DeckData:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	var did: String = str(equipped_deck_id_by_protagonist.get(pid, "")).strip_edges()
+	return get_deck_by_id(did)
+
+
+func set_equipped_deck(protagonist_id: String, deck: DeckData) -> bool:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	if not is_protagonist_unlocked(pid):
+		return false
+	if deck == null:
+		return false
+	deck.ensure_identity()
+	# While Limited, this hero may only keep their reserved deck equipped.
+	var reserved: DeckData = get_deck_for_reserved_protagonist(pid)
+	if reserved != null and reserved.limited and deck.deck_id != reserved.deck_id:
+		return false
+	# Limited reserved decks cannot be equipped onto other heroes.
+	if deck.limited and deck.reserved_slot != 0:
+		var owner_pid: String = reserved_slot_protagonist(deck.reserved_slot)
+		if owner_pid != "" and owner_pid != pid:
+			return false
+	equipped_deck_id_by_protagonist[pid] = deck.deck_id
+	save_data()
+	return true
+
+
+func reserved_slot_protagonist(slot: int) -> String:
+	if slot == RESERVED_SLOT_MAYU:
+		return "mayu"
+	if slot == RESERVED_SLOT_KELLY:
+		return "kelly"
+	return ""
+
+
+func reserved_slot_for_protagonist(protagonist_id: String) -> int:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	if pid == "mayu":
+		return RESERVED_SLOT_MAYU
+	if pid == "kelly":
+		return RESERVED_SLOT_KELLY
+	return 0
+
+
+func get_deck_for_reserved_protagonist(protagonist_id: String) -> DeckData:
+	var slot: int = reserved_slot_for_protagonist(protagonist_id)
+	if slot == 0:
+		return null
+	for d: Variant in decks:
+		if d is DeckData and (d as DeckData).reserved_slot == slot:
+			return d as DeckData
+	return null
+
+
+func is_protagonist_limited(protagonist_id: String) -> bool:
+	var d: DeckData = get_deck_for_reserved_protagonist(protagonist_id)
+	if d == null:
+		d = get_equipped_deck(protagonist_id)
+	return d != null and d.limited
+
+
+func count_free_decks() -> int:
+	var n: int = 0
+	for d: Variant in decks:
+		if d is DeckData and (d as DeckData).reserved_slot == 0:
+			n += 1
+	return n
+
+
+func can_create_free_deck() -> bool:
+	return count_free_decks() < MAX_FREE_DECK_SLOTS
+
+
+func get_free_deck_at_gallery_slot(slot: int) -> DeckData:
+	if slot < 0 or slot >= MAX_FREE_DECK_SLOTS:
+		return null
+	for d: Variant in decks:
+		if d is DeckData:
+			var deck: DeckData = d as DeckData
+			if deck.reserved_slot == 0 and deck.gallery_slot == slot:
+				return deck
+	return null
+
+
+func find_deck_index_at_gallery_slot(slot: int) -> int:
+	if slot < 0 or slot >= MAX_FREE_DECK_SLOTS:
+		return -1
+	for i in range(decks.size()):
+		var deck: DeckData = decks[i] as DeckData
+		if deck != null and deck.reserved_slot == 0 and deck.gallery_slot == slot:
+			return i
+	return -1
+
+
+## Assign the first free gallery slot (0..9). Returns slot or -1 if full.
+func allocate_gallery_slot(deck: DeckData) -> int:
+	if deck == null or deck.reserved_slot != 0:
+		return -1
+	if deck.gallery_slot >= 0 and deck.gallery_slot < MAX_FREE_DECK_SLOTS:
+		var occupant: DeckData = get_free_deck_at_gallery_slot(deck.gallery_slot)
+		if occupant == null or occupant == deck:
+			return deck.gallery_slot
+	var occupied: Dictionary = {}
+	for d: Variant in decks:
+		if d is DeckData:
+			var other: DeckData = d as DeckData
+			if other.reserved_slot == 0 and other != deck \
+					and other.gallery_slot >= 0 and other.gallery_slot < MAX_FREE_DECK_SLOTS:
+				occupied[other.gallery_slot] = true
+	for i in range(MAX_FREE_DECK_SLOTS):
+		if not occupied.has(i):
+			deck.gallery_slot = i
+			return i
+	return -1
+
+
+## Swap/move a free deck between gallery slots. Locked/reserved slots are never involved.
+func move_free_deck_gallery_slot(from_slot: int, to_slot: int) -> bool:
+	if from_slot == to_slot:
+		return false
+	if from_slot < 0 or from_slot >= MAX_FREE_DECK_SLOTS:
+		return false
+	if to_slot < 0 or to_slot >= MAX_FREE_DECK_SLOTS:
+		return false
+	var from_deck: DeckData = get_free_deck_at_gallery_slot(from_slot)
+	if from_deck == null:
+		return false
+	var to_deck: DeckData = get_free_deck_at_gallery_slot(to_slot)
+	if to_deck == null:
+		from_deck.gallery_slot = to_slot
+	else:
+		from_deck.gallery_slot = to_slot
+		to_deck.gallery_slot = from_slot
+	save_data()
+	return true
+
+
+func set_limited_caps(protagonist_id: String, units: int, traps_n: int, techs_n: int) -> bool:
+	var d: DeckData = get_deck_for_reserved_protagonist(protagonist_id)
+	if d == null or not d.limited:
+		return false
+	d.limited_caps = {
+		"characters": maxi(0, units),
+		"traps": maxi(0, traps_n),
+		"techs": maxi(0, techs_n),
+	}
+	save_data()
+	return true
+
+
+func clear_limited(protagonist_id: String) -> bool:
+	var d: DeckData = get_deck_for_reserved_protagonist(protagonist_id)
+	if d == null:
+		return false
+	d.limited = false
+	d.limited_caps = {}
+	save_data()
+	return true
+
+
+func unlock_protagonist_with_vault(protagonist_id: String, vault_id: String) -> String:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	if pid == "nex":
+		if pid not in unlocked_protagonists:
+			unlocked_protagonists.append(pid)
+			save_data()
+		return "ok"
+	if pid not in ["mayu", "kelly"]:
+		return "Unknown protagonist id."
+	if is_protagonist_unlocked(pid):
+		return "Already unlocked."
+	var slot: int = reserved_slot_for_protagonist(pid)
+	if get_deck_for_reserved_protagonist(pid) != null:
+		return "Reserved deck already exists."
+	var template: DeckData = StarterDeckVault.get_deck(vault_id)
+	if template == null:
+		return "Starter vault entry not found: %s" % vault_id
+	var deck: DeckData = template.duplicate_deck() as DeckData
+	deck.ensure_identity()
+	deck.limited = true
+	deck.reserved_slot = slot
+	deck.limited_caps = {
+		"characters": deck.characters.size(),
+		"traps": deck.traps.size(),
+		"techs": deck.techs.size(),
+	}
+	if deck.deck_name.strip_edges().is_empty():
+		deck.deck_name = "%s Bound Deck" % ProtagonistVault.get_display_name(pid)
+	Collection.grant_cards_from_deck(deck, "Protagonist Unlock")
+	decks.append(deck)
+	if pid not in unlocked_protagonists:
+		unlocked_protagonists.append(pid)
+	equipped_deck_id_by_protagonist[pid] = deck.deck_id
+	save_data()
+	Collection.emit_signal("collection_changed")
+	return "ok"
+
+
+func lock_protagonist(protagonist_id: String) -> String:
+	var pid: String = ProtagonistVault.normalize_id(protagonist_id)
+	if pid == "nex":
+		return "Cannot lock Nex (would soft-lock the save)."
+	if pid not in unlocked_protagonists:
+		return "Already locked."
+	var reserved: DeckData = get_deck_for_reserved_protagonist(pid)
+	if reserved != null:
+		var idx: int = find_deck_index_by_id(reserved.deck_id)
+		if idx >= 0:
+			decks.remove_at(idx)
+	equipped_deck_id_by_protagonist.erase(pid)
+	unlocked_protagonists.erase(pid)
+	if current_protagonist_id == pid:
+		current_protagonist_id = "nex"
+		quick_duel_protagonist_id = "nex"
+	active_deck_index = clampi(active_deck_index, 0, maxi(0, decks.size() - 1))
+	save_data()
+	return "ok"
+
+
+func _migrate_multi_protagonist() -> bool:
+	var changed: bool = false
+	for d: Variant in decks:
+		if d is DeckData:
+			var before: String = (d as DeckData).deck_id
+			(d as DeckData).ensure_identity()
+			if (d as DeckData).deck_id != before or (d as DeckData).created_at <= 0:
+				changed = true
+	if unlocked_protagonists.is_empty():
+		unlocked_protagonists = ["nex"]
+		changed = true
+	elif "nex" not in unlocked_protagonists:
+		unlocked_protagonists.insert(0, "nex")
+		changed = true
+	current_protagonist_id = ProtagonistVault.normalize_id(current_protagonist_id)
+	if current_protagonist_id.strip_edges().is_empty():
+		current_protagonist_id = quick_duel_protagonist_id if not quick_duel_protagonist_id.is_empty() else "nex"
+		changed = true
+	if not is_protagonist_unlocked(current_protagonist_id):
+		current_protagonist_id = "nex"
+		changed = true
+	# Equip Nex to first free deck if missing.
+	var nex_equip: String = str(equipped_deck_id_by_protagonist.get("nex", "")).strip_edges()
+	if nex_equip.is_empty() or get_deck_by_id(nex_equip) == null:
+		for d: Variant in decks:
+			if d is DeckData and (d as DeckData).reserved_slot == 0:
+				equipped_deck_id_by_protagonist["nex"] = (d as DeckData).deck_id
+				changed = true
+				break
+		if str(equipped_deck_id_by_protagonist.get("nex", "")).is_empty() and not decks.is_empty():
+			equipped_deck_id_by_protagonist["nex"] = (decks[0] as DeckData).deck_id
+			changed = true
+	if _migrate_gallery_slots():
+		changed = true
+	return changed
+
+
+func ensure_gallery_slots() -> void:
+	if _migrate_gallery_slots():
+		save_data()
+
+
+## Ensure free decks have unique gallery_slot values in 0..9.
+func _migrate_gallery_slots() -> bool:
+	var changed: bool = false
+	var occupied: Dictionary = {}
+	var needs_reassign: Array[DeckData] = []
+	for d: Variant in decks:
+		if not (d is DeckData):
+			continue
+		var deck: DeckData = d as DeckData
+		if deck.reserved_slot != 0:
+			if deck.gallery_slot != -1:
+				deck.gallery_slot = -1
+				changed = true
+			continue
+		var slot: int = deck.gallery_slot
+		if slot < 0 or slot >= MAX_FREE_DECK_SLOTS or occupied.has(slot):
+			needs_reassign.append(deck)
+		else:
+			occupied[slot] = true
+	if needs_reassign.is_empty():
+		return changed
+	var next_slot: int = 0
+	for deck: DeckData in needs_reassign:
+		while next_slot < MAX_FREE_DECK_SLOTS and occupied.has(next_slot):
+			next_slot += 1
+		if next_slot >= MAX_FREE_DECK_SLOTS:
+			break
+		deck.gallery_slot = next_slot
+		occupied[next_slot] = true
+		changed = true
+		next_slot += 1
+	return changed
 
 func show_deck_not_ready_overlay(parent: Node) -> void:
 	if GameDialog.has_open_overlay(parent):
@@ -313,12 +683,28 @@ func reset_title_cheats() -> void:
 # ── CRUD ─────────────────────────────────────────────────────
 func save_deck(deck: DeckData) -> void:
 	sanitize_deck_for_collection(deck)
+	deck.ensure_identity()
 	for i in range(decks.size()):
-		if decks[i].deck_name == deck.deck_name:
+		var existing: DeckData = decks[i] as DeckData
+		if existing != null and (
+				(not deck.deck_id.is_empty() and existing.deck_id == deck.deck_id)
+				or existing.deck_name == deck.deck_name):
+			# Preserve reserved/limited identity when saving edits.
+			if existing.reserved_slot != 0:
+				deck.reserved_slot = existing.reserved_slot
+			if existing.limited:
+				deck.limited = true
+				if deck.limited_caps.is_empty():
+					deck.limited_caps = existing.limited_caps.duplicate(true)
 			decks[i] = deck
 			active_deck_index = i
 			save_data()
 			return
+	if deck.reserved_slot == 0 and not can_create_free_deck():
+		push_warning("SaveManager.save_deck: free deck slot limit reached.")
+		return
+	if deck.reserved_slot == 0:
+		allocate_gallery_slot(deck)
 	decks.append(deck)
 	active_deck_index = decks.size() - 1
 	save_data()
@@ -327,20 +713,36 @@ func save_deck(deck: DeckData) -> void:
 func delete_deck(index: int) -> void:
 	if index < 0 or index >= decks.size():
 		return
+	var victim: DeckData = decks[index] as DeckData
+	if victim != null and (victim.limited or victim.reserved_slot != 0):
+		push_warning("SaveManager.delete_deck: cannot delete Limited/reserved deck.")
+		return
+	var removed_id: String = victim.deck_id if victim != null else ""
 	decks.remove_at(index)
+	if not removed_id.is_empty():
+		for pid: Variant in equipped_deck_id_by_protagonist.keys():
+			if str(equipped_deck_id_by_protagonist[pid]) == removed_id:
+				equipped_deck_id_by_protagonist.erase(pid)
 	if decks.is_empty():
 		var blank := DeckData.new()
 		blank.deck_name = "My Deck"
+		blank.ensure_identity()
+		allocate_gallery_slot(blank)
 		decks.append(blank)
+		equipped_deck_id_by_protagonist["nex"] = blank.deck_id
 	active_deck_index = clampi(active_deck_index, 0, decks.size() - 1)
 	save_data()
 
 func duplicate_deck(index: int) -> void:
 	if index < 0 or index >= decks.size():
 		return
+	if not can_create_free_deck():
+		push_warning("SaveManager.duplicate_deck: free deck slot limit reached.")
+		return
 	var copy: DeckData = decks[index].duplicate_deck()
 	sanitize_deck_for_collection(copy)
 	copy.deck_name = decks[index].deck_name + " (Copy)"
+	allocate_gallery_slot(copy)
 	decks.append(copy)
 	active_deck_index = decks.size() - 1
 	save_data()
@@ -453,6 +855,9 @@ func save_data() -> void:
 		"quick_duel_protagonist_id":     quick_duel_protagonist_id,
 		"quick_duel_protagonist_portrait": quick_duel_protagonist_portrait,
 		"quick_duel_tier_identities":    quick_duel_tier_identities.duplicate(true),
+		"unlocked_protagonists":         unlocked_protagonists.duplicate(),
+		"current_protagonist_id":        current_protagonist_id,
+		"equipped_deck_id_by_protagonist": equipped_deck_id_by_protagonist.duplicate(true),
 	}
 	var progress: Dictionary = GlobalStatManager.to_save_dict()
 	data.merge(progress)
@@ -565,6 +970,16 @@ func load_data() -> void:
 	quick_duel_protagonist_portrait = str(
 		parsed.get("quick_duel_protagonist_portrait", "")).strip_edges()
 
+	var up: Variant = parsed.get("unlocked_protagonists", ["nex"])
+	if up is Array and not (up as Array).is_empty():
+		unlocked_protagonists = (up as Array).duplicate()
+	else:
+		unlocked_protagonists = ["nex"]
+	current_protagonist_id = ProtagonistVault.normalize_id(
+		str(parsed.get("current_protagonist_id", quick_duel_protagonist_id)))
+	var eq: Variant = parsed.get("equipped_deck_id_by_protagonist", {})
+	equipped_deck_id_by_protagonist = eq.duplicate(true) if eq is Dictionary else {}
+
 	var qdi: Variant = parsed.get("quick_duel_tier_identities", {})
 	quick_duel_tier_identities = qdi as Dictionary if qdi is Dictionary else {}
 
@@ -583,7 +998,8 @@ func load_data() -> void:
 				quick_duel_tier_rewards[tier] = [((val as Dictionary).duplicate(true))]
 
 	_migrate_quick_duel_offers()
-	if decks_sanitized or reconcile_protagonist_selection():
+	var mp_changed: bool = _migrate_multi_protagonist()
+	if decks_sanitized or reconcile_protagonist_selection() or mp_changed:
 		save_data()
 	GlobalStatManager.load_from_save(parsed as Dictionary)
 	AchievementManager.load_from_save(parsed as Dictionary)
@@ -722,6 +1138,8 @@ func set_protagonist(protagonist_id: String, portrait_path: String) -> void:
 	if quick_duel_protagonist_portrait.is_empty():
 		quick_duel_protagonist_portrait = ProtagonistVault.get_default_portrait(
 			quick_duel_protagonist_id)
+	if is_protagonist_unlocked(new_id):
+		current_protagonist_id = new_id
 	if prev_id != new_id and ProtagonistVault.is_valid_id(prev_id):
 		GlobalStatManager.on_protagonist_switched()
 	save_data()

@@ -12,6 +12,9 @@ Use this guide whenever you add or change **in-game modal prompts** (confirmatio
 |------|----------|
 | Autoload API | `autoload/GameDialog.gd` |
 | Registered in | `project.godot` → `GameDialog="*res://autoload/GameDialog.gd"` |
+| Magitech skin (target) | [MAGITECH_UI_THEME.md](MAGITECH_UI_THEME.md) · `MagitechTheme.gd` · `resources/themes/magitech_ui.tres` |
+
+Dialog chrome should converge on the Magitech kit above — do not invent a second VN-navy skin for new prompts.
 
 Reference implementations:
 

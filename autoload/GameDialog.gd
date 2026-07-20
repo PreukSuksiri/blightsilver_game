@@ -68,6 +68,7 @@ func style_button(btn: Button) -> void:
 	btn.add_theme_stylebox_override("hover", _make_button_style(BTN_HOVER))
 	btn.add_theme_stylebox_override("pressed", _make_button_style(BTN_PRESSED))
 	btn.add_theme_stylebox_override("focus", _make_button_style(BTN_HOVER))
+	_apply_disabled_button_style(btn)
 	SFXManager.wire_prompt_button(btn)
 
 
@@ -90,6 +91,45 @@ func style_body_label(lbl: Label) -> void:
 	lbl.add_theme_color_override("font_color", BODY_COLOR)
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+
+func style_line_edit(line: LineEdit) -> void:
+	if line == null:
+		return
+	FontManager.tag_font(line, "font", "primary", 400)
+	line.add_theme_font_size_override("font_size", BODY_FONT_SIZE)
+	line.add_theme_color_override("font_color", BODY_COLOR)
+	line.add_theme_color_override("font_uneditable_color", Color(0.62, 0.68, 0.78, 0.9))
+	line.add_theme_color_override("font_placeholder_color", Color(0.55, 0.62, 0.72, 0.85))
+	line.add_theme_color_override("caret_color", TITLE_COLOR)
+	line.add_theme_color_override("selection_color", Color(0.25, 0.45, 0.75, 0.55))
+	var normal := _make_line_edit_style(
+		Color(0.08, 0.10, 0.18, 1.0), Color(0.35, 0.55, 0.85, 0.55))
+	var focus := _make_line_edit_style(
+		Color(0.10, 0.14, 0.24, 1.0), Color(0.55, 0.78, 1.0, 0.8))
+	var read_only := _make_line_edit_style(
+		Color(0.06, 0.08, 0.14, 0.95), Color(0.28, 0.38, 0.55, 0.45))
+	line.add_theme_stylebox_override("normal", normal)
+	line.add_theme_stylebox_override("focus", focus)
+	line.add_theme_stylebox_override("read_only", read_only)
+
+
+func style_spin_box(spin: SpinBox) -> void:
+	if spin == null:
+		return
+	var line: LineEdit = spin.get_line_edit()
+	if line != null:
+		style_line_edit(line)
+
+
+func _make_line_edit_style(bg: Color, border: Color) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(6)
+	sb.set_content_margin_all(8)
+	return sb
 
 
 func accept_overlay(
@@ -323,18 +363,7 @@ func prompt_overlay(
 	line.placeholder_text = placeholder
 	line.custom_minimum_size = Vector2(360.0, 36.0)
 	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	FontManager.tag_font(line, "font", "primary", 400)
-	line.add_theme_font_size_override("font_size", BODY_FONT_SIZE)
-	line.add_theme_color_override("font_color", BODY_COLOR)
-	line.add_theme_color_override("font_placeholder_color", Color(0.55, 0.62, 0.72, 0.85))
-	var line_sb := StyleBoxFlat.new()
-	line_sb.bg_color = Color(0.08, 0.10, 0.18, 1.0)
-	line_sb.border_color = Color(0.35, 0.55, 0.85, 0.55)
-	line_sb.set_border_width_all(1)
-	line_sb.set_corner_radius_all(4)
-	line_sb.set_content_margin_all(8)
-	line.add_theme_stylebox_override("normal", line_sb)
-	line.add_theme_stylebox_override("focus", line_sb)
+	style_line_edit(line)
 	vbox.add_child(line)
 
 	var btn_row := HBoxContainer.new()

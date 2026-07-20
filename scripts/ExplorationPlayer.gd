@@ -234,7 +234,28 @@ func _ready() -> void:
 
 	CheckerTransition.fade_in()
 	call_deferred("_refresh_contextual_hud_glows")
+	call_deferred("_maybe_prompt_protagonist_select")
 	_refresh_flashlight_state()
+
+
+func _maybe_prompt_protagonist_select() -> void:
+	if not ExplorationManager.is_session_active:
+		return
+	var graph = ExplorationManager.current_graph
+	if graph == null:
+		return
+	var playable: Array = []
+	for pid: Variant in graph.playable_protagonists:
+		var s: String = ProtagonistVault.normalize_id(str(pid))
+		if SaveManager.is_protagonist_unlocked(s):
+			playable.append(s)
+	if playable.size() < 2:
+		if playable.size() == 1:
+			SaveManager.set_current_protagonist(str(playable[0]), true)
+		return
+	if SaveManager.current_protagonist_id in playable:
+		return
+	await ExplorationProtagonistSelect.await_selection(self, playable)
 
 func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)

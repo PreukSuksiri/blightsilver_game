@@ -1,0 +1,109 @@
+{
+	"entries": [
+		{
+			"id": "nex_starter",
+			"label": "Nex Starter Deck",
+			"protagonist_hint": "nex",
+			"deck": {
+				"deck_name": "Starter Deck",
+				"characters": [
+					"Choir Lady Abigail",
+					"Choir Lady Alice",
+					"Choir Lady Anna",
+					"Ponycorn",
+					"Grand Fort Archer",
+					"Grand Fort Footsoldier",
+					"Golden Senju",
+					"Witchhunter",
+					"Silver Spearman",
+					"Magical Butterfly"
+				],
+				"traps": [
+					"Hard Scale",
+					"Pepper Spray",
+					"Decoy Puppet",
+					"Trap Hole"
+				],
+				"techs": [
+					"Spy",
+					"Tease",
+					"Prayer"
+				],
+				"formations": [],
+				"preferred_formation_index": 0
+			}
+		},
+		{
+			"id": "mayu_arcane",
+			"label": "Mayu Arcane Bound Deck",
+			"protagonist_hint": "mayu",
+			"deck": {
+				"deck_name": "Mayu Arcane Bound",
+				"characters": [
+					"Tower Guard",
+					"Gem Turtle",
+					"Hardworking Gremlin",
+					"Apprentice Mage",
+					"Outpost Mage",
+					"Ice Mage",
+					"Fire Elemental",
+					"Mad Wyvern",
+					"Aerial the Battlemage",
+					"Blue Mage"
+				],
+				"traps": [
+					"Mana Drain",
+					"Hypnosis",
+					"Cursed Reflection",
+					"Echo Barrier",
+					"Flame Trap"
+				],
+				"techs": [
+					"Arcane Duplication",
+					"Essence Transfer",
+					"Harsh Training"
+				],
+				"formations": [],
+				"preferred_formation_index": 0,
+				"featured_card_name": "Blue Mage",
+				"featured_card_type": "character"
+			}
+		},
+		{
+			"id": "kelly_nature",
+			"label": "Kelly Nature Bound Deck",
+			"protagonist_hint": "kelly",
+			"deck": {
+				"deck_name": "Kelly Nature Bound",
+				"characters": [
+					"Magical Butterfly",
+					"Nuki the Tanuki",
+					"Needle Porcupine",
+					"Armored Monkey",
+					"Hare Soldier",
+					"Flame Lizard",
+					"Mad Raccoon",
+					"Armored Bee",
+					"Armored Rhino",
+					"Kulu the Alpha Leader"
+				],
+				"traps": [
+					"Defensive Pheromone",
+					"Hard Scale",
+					"Pepper Spray",
+					"Trap Hole",
+					"Snare Trap"
+				],
+				"techs": [
+					"Potent Poison",
+					"Harsh Training",
+					"War Supply"
+				],
+				"formations": [],
+				"preferred_formation_index": 0,
+				"featured_card_name": "Kulu the Alpha Leader",
+				"featured_card_type": "character"
+			}
+		}
+	]
+}

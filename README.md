@@ -783,3 +783,44 @@ P1 is **mirrored** (`flip_h`); P2 is not. Compose for this crop, not a full-body
 6. **VN Editor tuning:** set **Portrait P1 / P2** on the `start_battle` beat. For bosses, start from `portrait_p2_offset_x: -160`, `portrait_p2_offset_y: 70` (see `ch1_s1_pre_DEMO.json`) and adjust until the face reads clearly. Use **Portrait size** `0.85–0.95` if the art crowds the grid.
 
 **Visible width is narrow** (~200–300 px at size 1.0) — keep the face **large** in the inner-facing safe zone.
+
+---
+
+## Multi-protagonist system (developer note)
+
+Global hero identity + per-hero equipped decks. Story / exploration / Quick Duel battles use **`SaveManager.get_battle_deck()`** (equipped deck of `current_protagonist_id`), not merely `active_deck_index`.
+
+### Save model
+
+| Field | Meaning |
+|-------|---------|
+| `unlocked_protagonists` | Starts `["nex"]`. Mayu/Kelly unlocked via VN/admin. |
+| `current_protagonist_id` | Global current hero (default `nex`). Synced with Quick Duel when set. |
+| `equipped_deck_id_by_protagonist` | Map hero id → `deck_id`. Heroes may share one deck. |
+| `DeckData.deck_id` / `created_at` | Stable id + gallery sort key |
+| `DeckData.featured_card_*` | Gallery face-up card; else strongest formable union / character |
+| `DeckData.limited` + `limited_caps` | Bound decks: absolute usable counts for characters/traps/techs |
+| `DeckData.reserved_slot` | `0` free; `11` Mayu; `12` Kelly |
+
+Gallery: slots **1–10** free (max 10 free decks). Slot **11/12** reserved for Mayu/Kelly Limited decks when unlocked.
+
+### Key files
+
+- `autoload/SaveManager.gd` — unlock/equip/limited APIs + migration
+- `autoload/StarterDeckVault.gd` + `data/starter_deck_vault.json` — Nex / Mayu Arcane / Kelly Nature templates
+- `scripts/DeckBuilder.gd`, `ProtagonistEquipBar.gd`, `DeckSwitchGallery.gd`
+- `scripts/ExplorationProtagonistSelect.gd` — exploration / VN picker
+- Eye strips: `assets/textures/profile/eyes/eyes_{nex,mayu,kelly}.png`
+
+### Mailbox admin
+
+`manage_starter_deck_vault`, `unlock_protagonist`, `lock_protagonist`, `set_protagonist`, `set_limited_caps`, `clear_limited`, `equip_deck`, `list_protagonists`
+
+### Quick Duel
+
+- **Demo ON:** unchanged (all heroes shown).
+- **Demo OFF:** Switch Character only if **2+ unlocked**; overlay hides locked heroes.
+
+### Migration
+
+Old saves get `deck_id`/`created_at`, unlock Nex, equip Nex to the first free deck.

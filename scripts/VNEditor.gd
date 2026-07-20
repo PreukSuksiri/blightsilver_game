@@ -209,6 +209,16 @@ var _f_go_to_quick_duel:       CheckBox     = null
 var _f_mark_chapter_end:       CheckBox     = null
 var _f_unlock_gallery_opt:    OptionButton = null
 var _gallery_unlock_paths:    PackedStringArray = PackedStringArray()
+# Multi-protagonist
+var _f_unlock_protagonist: OptionButton = null
+var _f_unlock_protagonist_vault: OptionButton = null
+var _f_silent_switch_protagonist: OptionButton = null
+var _f_show_protagonist_select: CheckBox = null
+var _f_clear_limited_protagonist: OptionButton = null
+var _f_set_limited_caps_id: OptionButton = null
+var _f_set_limited_units: SpinBox = null
+var _f_set_limited_traps: SpinBox = null
+var _f_set_limited_techs: SpinBox = null
 
 # Battle deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
@@ -1277,6 +1287,32 @@ func _build_fields() -> void:
 			"Which gallery chapter to mark complete when this beat finishes")
 	_rebuild_gallery_unlock_options()
 	_sync_chapter_end_fields()
+
+	# ── Multi-protagonist ─────────────────────────────────────
+	_section(v, "MULTI-PROTAGONIST")
+	_f_unlock_protagonist = _row_opt(v, "Unlock protagonist",
+			["(none)", "mayu", "kelly"], "Unlock hero + Limited starter from vault")
+	_f_unlock_protagonist_vault = OptionButton.new()
+	StarterDeckVault.populate_vault_option(_f_unlock_protagonist_vault, "(default vault)")
+	_f_unlock_protagonist_vault.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	var vault_row := HBoxContainer.new()
+	var vault_lbl := Label.new()
+	vault_lbl.text = "Starter vault"
+	vault_lbl.custom_minimum_size = Vector2(160, 0)
+	vault_row.add_child(vault_lbl)
+	vault_row.add_child(_f_unlock_protagonist_vault)
+	v.add_child(vault_row)
+	_f_silent_switch_protagonist = _row_opt(v, "Silent switch protagonist",
+			["(none)", "nex", "mayu", "kelly"], "Set global current hero with no UI")
+	_f_show_protagonist_select = _row_cb(v, "Show protagonist select",
+			"Open exploration-style protagonist selection overlay")
+	_f_clear_limited_protagonist = _row_opt(v, "Clear Limited",
+			["(none)", "mayu", "kelly"], "Remove Limited status from reserved deck")
+	_f_set_limited_caps_id = _row_opt(v, "Set Limited caps for",
+			["(none)", "mayu", "kelly"], "Absolute usable slot counts")
+	_f_set_limited_units = _row_sb(v, "Limited units", 0, 12, 1, "Absolute unit cap")
+	_f_set_limited_traps = _row_sb(v, "Limited traps", 0, 6, 1, "Absolute trap cap")
+	_f_set_limited_techs = _row_sb(v, "Limited techs", 0, 3, 1, "Absolute tech cap")
 
 	# ── Special Command ───────────────────────────────────────
 	_section(v, "SPECIAL COMMAND")
@@ -4122,6 +4158,22 @@ func _populate_fields() -> void:
 	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
 	_f_go_to_campaign_gallery.button_pressed = b.get("go_to_campaign_gallery", false)
 	_f_go_to_quick_duel.button_pressed = b.get("go_to_quick_duel", false)
+	_select_opt(_f_unlock_protagonist, str(b.get("unlock_protagonist", "")))
+	_select_opt(_f_unlock_protagonist_vault, str(b.get("unlock_protagonist_vault", "")))
+	_select_opt(_f_silent_switch_protagonist, str(b.get("silent_switch_protagonist", "")))
+	_f_show_protagonist_select.button_pressed = bool(b.get("show_protagonist_select", false))
+	_select_opt(_f_clear_limited_protagonist, str(b.get("clear_limited_protagonist", "")))
+	_select_opt(_f_set_limited_caps_id, str(b.get("set_limited_caps_protagonist", "")))
+	if _f_set_limited_units != null:
+		var caps: Variant = b.get("set_limited_caps", {})
+		if caps is Dictionary:
+			_f_set_limited_units.value = int((caps as Dictionary).get("characters", 0))
+			_f_set_limited_traps.value = int((caps as Dictionary).get("traps", 0))
+			_f_set_limited_techs.value = int((caps as Dictionary).get("techs", 0))
+		else:
+			_f_set_limited_units.value = 0
+			_f_set_limited_traps.value = 0
+			_f_set_limited_techs.value = 0
 	_f_mark_chapter_end.button_pressed = _beat_has_chapter_end(b)
 	_f_unlock_gallery_opt.selected = 0
 	if b.get("complete_current_gallery_chapter", false) \
@@ -4595,6 +4647,34 @@ func _collect_beat() -> Dictionary:
 		b["go_to_campaign_gallery"] = true
 	if _f_go_to_quick_duel.button_pressed:
 		b["go_to_quick_duel"] = true
+	var upid: String = _f_unlock_protagonist.get_item_text(_f_unlock_protagonist.selected) \
+			if _f_unlock_protagonist != null else "(none)"
+	if not upid.is_empty() and upid != "(none)":
+		b["unlock_protagonist"] = upid
+		var uvid: String = ""
+		if _f_unlock_protagonist_vault != null and _f_unlock_protagonist_vault.selected >= 0:
+			uvid = str(_f_unlock_protagonist_vault.get_item_metadata(_f_unlock_protagonist_vault.selected))
+		if not uvid.is_empty():
+			b["unlock_protagonist_vault"] = uvid
+	var ssp: String = _f_silent_switch_protagonist.get_item_text(_f_silent_switch_protagonist.selected) \
+			if _f_silent_switch_protagonist != null else "(none)"
+	if not ssp.is_empty() and ssp != "(none)":
+		b["silent_switch_protagonist"] = ssp
+	if _f_show_protagonist_select.button_pressed:
+		b["show_protagonist_select"] = true
+	var clp: String = _f_clear_limited_protagonist.get_item_text(_f_clear_limited_protagonist.selected) \
+			if _f_clear_limited_protagonist != null else "(none)"
+	if not clp.is_empty() and clp != "(none)":
+		b["clear_limited_protagonist"] = clp
+	var caps_id: String = _f_set_limited_caps_id.get_item_text(_f_set_limited_caps_id.selected) \
+			if _f_set_limited_caps_id != null else "(none)"
+	if not caps_id.is_empty() and caps_id != "(none)":
+		b["set_limited_caps_protagonist"] = caps_id
+		b["set_limited_caps"] = {
+			"characters": int(_f_set_limited_units.value),
+			"traps": int(_f_set_limited_traps.value),
+			"techs": int(_f_set_limited_techs.value),
+		}
 	if _f_mark_chapter_end != null and _f_mark_chapter_end.button_pressed \
 			and _f_unlock_gallery_opt != null \
 			and _f_unlock_gallery_opt.selected > 0 \

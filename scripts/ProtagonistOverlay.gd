@@ -118,6 +118,9 @@ func _build_ui() -> void:
 	root.add_child(hero_row)
 
 	for protagonist_id: String in ProtagonistVault.get_protagonist_ids():
+		# Demo OFF: only unlocked protagonists. Demo ON: keep showing all (existing behavior).
+		if not SaveManager.demo_mode and not SaveManager.is_protagonist_unlocked(protagonist_id):
+			continue
 		var capsule := _build_protagonist_capsule(protagonist_id)
 		hero_row.add_child(capsule["root"])
 		_capsules[protagonist_id] = capsule

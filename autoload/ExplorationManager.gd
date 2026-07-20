@@ -1444,7 +1444,7 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 		GameState.battle_ai_forced_tech.clear()
 		GameState.battle_ai_featured_union = ""
 	GameState.new_game(GameState.GameMode.EXPLORATION)
-	GameState.quick_duel_protagonist_id = "nex"
+	GameState.quick_duel_protagonist_id = SaveManager.current_protagonist_id
 	if _current_graph != null:
 		GameState.analytics_graph_path = str(_current_graph._source_path)
 	GlobalStatManager.on_duel_started({"is_quick_duel": false, "is_tutorial": false})

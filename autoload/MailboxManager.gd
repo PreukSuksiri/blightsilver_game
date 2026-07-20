@@ -337,6 +337,14 @@ func admin_command(raw: String) -> String:
 				+ "  unlock_deckbuilding\n"
 				+ "  lock_deckbuilding\n"
 				+ "  manage_starting_deck\n"
+				+ "  manage_starter_deck_vault\n"
+				+ "  unlock_protagonist <id> [vault_id]\n"
+				+ "  lock_protagonist <id>\n"
+				+ "  set_protagonist <id>\n"
+				+ "  set_limited_caps <id> <units> <traps> <techs>\n"
+				+ "  clear_limited <id>\n"
+				+ "  equip_deck <id> <deck_id_or_name>\n"
+				+ "  list_protagonists\n"
 				+ "  ai_deck_vault\n"
 				+ "  ai_identity_vault\n"
 				+ "  messenger_vault\n"
@@ -1461,6 +1469,90 @@ func admin_command(raw: String) -> String:
 			mgr.name = "StartingDeckManagerOverlay"
 			scene.add_child(mgr)
 			return "Starting Deck Manager opened."
+
+		"manage_starter_deck_vault":
+			var sdv_scene: Node = get_tree().current_scene
+			if sdv_scene.get_node_or_null("StarterDeckVaultManager") != null:
+				return "Starter Deck Vault is already open."
+			_dismiss_admin_console(sdv_scene)
+			var sdv_script = load("res://scripts/StarterDeckVaultManager.gd")
+			sdv_script.open(sdv_scene)
+			return "Starter Deck Vault opened."
+
+		"unlock_protagonist":
+			if parts.size() < 2:
+				return "Usage: unlock_protagonist <nex|mayu|kelly> [vault_id]"
+			var up_id: String = str(parts[1]).strip_edges().to_lower()
+			var vault_id: String = str(parts[2]).strip_edges() if parts.size() >= 3 else \
+					StarterDeckVault.default_vault_id_for_protagonist(up_id)
+			if vault_id.is_empty():
+				return "No default vault for %s — pass vault_id." % up_id
+			var up_msg: String = SaveManager.unlock_protagonist_with_vault(up_id, vault_id)
+			return up_msg if up_msg != "ok" else "Unlocked %s with vault '%s'." % [up_id, vault_id]
+
+		"lock_protagonist":
+			if parts.size() < 2:
+				return "Usage: lock_protagonist <mayu|kelly>"
+			return SaveManager.lock_protagonist(str(parts[1]).strip_edges().to_lower())
+
+		"set_protagonist":
+			if parts.size() < 2:
+				return "Usage: set_protagonist <nex|mayu|kelly>"
+			var sp_id: String = str(parts[1]).strip_edges().to_lower()
+			if not SaveManager.set_current_protagonist(sp_id, true):
+				return "Failed — unlock the protagonist first."
+			return "Current protagonist set to %s." % sp_id
+
+		"set_limited_caps":
+			if parts.size() < 5:
+				return "Usage: set_limited_caps <id> <units> <traps> <techs>"
+			var cap_id: String = str(parts[1]).strip_edges().to_lower()
+			if not SaveManager.set_limited_caps(cap_id, int(parts[2]), int(parts[3]), int(parts[4])):
+				return "Failed — need a Limited reserved deck for %s." % cap_id
+			return "Limited caps for %s → units=%s traps=%s techs=%s" % [
+				cap_id, parts[2], parts[3], parts[4]]
+
+		"clear_limited":
+			if parts.size() < 2:
+				return "Usage: clear_limited <id>"
+			var cl_id: String = str(parts[1]).strip_edges().to_lower()
+			if not SaveManager.clear_limited(cl_id):
+				return "Failed — no reserved deck for %s." % cl_id
+			return "Limited cleared for %s." % cl_id
+
+		"equip_deck":
+			if parts.size() < 3:
+				return "Usage: equip_deck <protagonist_id> <deck_id_or_name>"
+			var eq_pid: String = str(parts[1]).strip_edges().to_lower()
+			var eq_key: String = str(parts[2]).strip_edges()
+			var eq_deck: DeckData = SaveManager.get_deck_by_id(eq_key)
+			if eq_deck == null:
+				eq_deck = SaveManager.get_deck_by_name(eq_key)
+			if eq_deck == null:
+				return "Deck not found: %s" % eq_key
+			if not SaveManager.set_equipped_deck(eq_pid, eq_deck):
+				return "Equip failed (unlock/Limited rules)."
+			return "Equipped '%s' to %s." % [eq_deck.deck_name, eq_pid]
+
+		"list_protagonists":
+			var lines: PackedStringArray = PackedStringArray()
+			lines.append("current=%s" % SaveManager.current_protagonist_id)
+			for pid: String in ["nex", "mayu", "kelly"]:
+				var unlocked: bool = SaveManager.is_protagonist_unlocked(pid)
+				var eqd: DeckData = SaveManager.get_equipped_deck(pid)
+				var reserved: DeckData = SaveManager.get_deck_for_reserved_protagonist(pid)
+				var lim: bool = reserved != null and reserved.limited
+				var caps: String = ""
+				if lim:
+					caps = " caps=%s" % str(reserved.limited_caps)
+				lines.append("%s unlocked=%s equipped=%s limited=%s%s" % [
+					pid,
+					unlocked,
+					eqd.deck_name if eqd != null else "-",
+					lim,
+					caps,
+				])
+			return "\n".join(lines)
 
 		"ai_deck_vault":
 			var vault_scene: Node = get_tree().current_scene

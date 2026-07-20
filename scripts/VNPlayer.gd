@@ -1954,7 +1954,7 @@ func _show_beat() -> void:
 		if _scene_path.find("ch1_s1_pre_DEMO_PART2") >= 0:
 			GameState.analytics_battle_tag = "ch1_stage1_boss"
 			GlobalStatManager.on_chapter1_boss_reached()
-		GameState.quick_duel_protagonist_id = "nex"
+		GameState.quick_duel_protagonist_id = SaveManager.current_protagonist_id
 		GlobalStatManager.on_duel_started({"is_quick_duel": false, "is_tutorial": false})
 		if exploration_overlay and ExplorationManager.is_session_active:
 			ExplorationManager.snapshot_bgm_before_vn()
@@ -2090,6 +2090,33 @@ func _show_beat() -> void:
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file(DailyDungeonManager.DUNGEON_MAP_SCENE))
 		return
+
+	# ── Multi-protagonist beat side-effects ──
+	var unlock_pid: String = str(beat.get("unlock_protagonist", "")).strip_edges().to_lower()
+	if not unlock_pid.is_empty():
+		var vault_id: String = str(beat.get("unlock_protagonist_vault", "")).strip_edges()
+		if vault_id.is_empty():
+			vault_id = StarterDeckVault.default_vault_id_for_protagonist(unlock_pid)
+		var umsg: String = SaveManager.unlock_protagonist_with_vault(unlock_pid, vault_id)
+		if umsg != "ok":
+			push_warning("VN unlock_protagonist: %s" % umsg)
+	var silent_pid: String = str(beat.get("silent_switch_protagonist", "")).strip_edges().to_lower()
+	if not silent_pid.is_empty():
+		SaveManager.set_current_protagonist(silent_pid, true)
+	var clear_lim: String = str(beat.get("clear_limited_protagonist", "")).strip_edges().to_lower()
+	if not clear_lim.is_empty():
+		SaveManager.clear_limited(clear_lim)
+	var caps_pid: String = str(beat.get("set_limited_caps_protagonist", "")).strip_edges().to_lower()
+	if not caps_pid.is_empty():
+		var caps: Variant = beat.get("set_limited_caps", {})
+		if caps is Dictionary:
+			SaveManager.set_limited_caps(
+				caps_pid,
+				int((caps as Dictionary).get("characters", 0)),
+				int((caps as Dictionary).get("traps", 0)),
+				int((caps as Dictionary).get("techs", 0)))
+	if beat.get("show_protagonist_select", false):
+		await ExplorationProtagonistSelect.await_selection(self, [])
 
 	# ── Campaign gallery unlock + navigation ──
 	var ran_side_effects: bool = false

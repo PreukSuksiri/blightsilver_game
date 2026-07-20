@@ -1236,3 +1236,44 @@ Click **RESET** to snap all nodes back to the positions defined in `CampaignMana
 | Export a single card as PNG | Admin Console → `export_card <name> <type>` |
 | Export all cards as PNG | Admin Console → `export_all_cards` |
 | Reposition campaign map nodes visually | Admin Console → `map_editor` |
+
+---
+
+## Author’s note: Multi-protagonist
+
+### Defaults
+
+- **Nex** starts unlocked (not Limited).
+- **Mayu** and **Kelly** start locked until a VN beat unlocks them.
+
+### Unlocking a hero (VN Editor → MULTI-PROTAGONIST)
+
+1. Set **Unlock protagonist** to `mayu` or `kelly`.
+2. Optionally pick a **Starter vault** entry (`mayu_arcane` / `kelly_nature` by default).
+3. On that beat, the game unlocks the hero, creates their **Limited** deck in reserved gallery slot **11** (Mayu) or **12** (Kelly), equips it, and grants collection cards.
+
+**Why Limited?** So players who already opened strong packs as Nex cannot immediately slap that OP deck onto Mayu/Kelly and skip the “new to Vellum” narrative. While Limited, that hero’s capsule cannot reassign decks, and the reserved deck cannot be equipped on anyone else.
+
+### Limited caps
+
+Use **Set Limited caps for** + absolute **units / traps / techs** counts (e.g. after a story “unseal” moment). Players may add/replace/remove only within those counts. Use **Clear Limited** when the hero is free to use any deck.
+
+### Switching heroes
+
+- **Silent switch protagonist** — no UI; sets global current hero (must be unlocked). Battles use that hero’s equipped deck.
+- **Show protagonist select** — full-bleed picker (also used in exploration when the graph lists multiple playable heroes).
+
+### Exploration
+
+- Graph field **Playable** (comma-separated, max 3): e.g. `nex, mayu`.
+- Conditions: `protagonist_equals` / `protagonist_not_equals` (key or value = `nex` / `mayu` / `kelly`).
+
+### Deck builder (player)
+
+- **Switch Deck** — 4×3 gallery (sort by creation date).
+- Capsule bar above Save — equip the open deck to a hero (confirm dialog). Disabled while that hero is Limited.
+- **★** — mark a featured card for gallery previews (yellow highlight on the trunk).
+
+### Starter vault admin
+
+`manage_starter_deck_vault` — inspect/reload `data/starter_deck_vault.json` (edit JSON in the project for card lists).

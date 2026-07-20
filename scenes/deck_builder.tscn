@@ -296,7 +296,8 @@ theme_override_constants/separation = 12
 
 [node name="LeftPanel" type="Panel" parent="MainLayout"]
 layout_mode = 2
-size_flags_horizontal = 3
+custom_minimum_size = Vector2(600, 0)
+size_flags_horizontal = 0
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("SBF_left_panel")
 
@@ -495,6 +496,7 @@ theme_override_styles/disabled = SubResource("SBF_add_n")
 [node name="RightPanel" type="Panel" parent="MainLayout"]
 layout_mode = 2
 custom_minimum_size = Vector2(640, 0)
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("SBF_right_panel")
 
@@ -684,6 +686,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 46)
 text = "Save"
+disabled = true
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.302, 1.0, 0.502, 1)
+theme_override_styles/normal = SubResource("SBF_save_n")
+theme_override_styles/hover = SubResource("SBF_save_h")
+theme_override_styles/pressed = SubResource("SBF_save_n")
+theme_override_styles/focus = SubResource("SBF_save_n")
+theme_override_styles/disabled = SubResource("SBF_save_n")
+
+[node name="SaveAndExitBtn" type="Button" parent="MainLayout/RightPanel/Inner/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 46)
+text = "Save and Exit"
 disabled = true
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.302, 1.0, 0.502, 1)

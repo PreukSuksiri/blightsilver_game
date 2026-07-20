@@ -31,6 +31,9 @@ class_name ExplorationGraph
 ## Item ids granted when a fresh session starts (before any node events).
 var initial_inventory: Array[String] = []
 
+## Up to 3 protagonist ids selectable for this exploration (nex/mayu/kelly).
+var playable_protagonists: Array[String] = []
+
 ## All nodes belonging to this graph.
 var nodes: Array[ExplorationNode] = []
 
@@ -85,6 +88,8 @@ func to_dict() -> Dictionary:
 	}
 	if not initial_inventory.is_empty():
 		out["initial_inventory"] = initial_inventory.duplicate()
+	if not playable_protagonists.is_empty():
+		out["playable_protagonists"] = playable_protagonists.duplicate()
 	return out
 
 ## Create an ExplorationGraph from a plain Dictionary (as parsed from JSON).
@@ -102,6 +107,15 @@ static func from_dict(d: Dictionary) -> ExplorationGraph:
 			var item_id: String = str(item).strip_edges()
 			if not item_id.is_empty():
 				graph.initial_inventory.append(item_id)
+	graph.playable_protagonists = []
+	var pp: Variant = d.get("playable_protagonists", [])
+	if pp is Array:
+		for pid: Variant in (pp as Array):
+			var s: String = ProtagonistVault.normalize_id(str(pid))
+			if ProtagonistVault.is_valid_id(s) and s not in graph.playable_protagonists:
+				graph.playable_protagonists.append(s)
+			if graph.playable_protagonists.size() >= 3:
+				break
 	var nodes_arr: Variant = d.get("nodes", [])
 	if nodes_arr is Array:
 		for nd: Variant in (nodes_arr as Array):

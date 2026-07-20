@@ -101,8 +101,16 @@ func install_starter_deck(clear_collection: bool = false, replace_decks: bool = 
 	if replace_decks:
 		SaveManager.decks.clear()
 	var new_deck: DeckData = starter.duplicate_deck() as DeckData
+	new_deck.ensure_identity()
+	new_deck.limited = false
+	new_deck.reserved_slot = 0
+	SaveManager.allocate_gallery_slot(new_deck)
 	SaveManager.decks.append(new_deck)
 	SaveManager.active_deck_index = 0
+	if "nex" not in SaveManager.unlocked_protagonists:
+		SaveManager.unlocked_protagonists = ["nex"]
+	SaveManager.equipped_deck_id_by_protagonist["nex"] = new_deck.deck_id
+	SaveManager.current_protagonist_id = "nex"
 	return true
 
 func _apply_first_run_onboarding() -> void:

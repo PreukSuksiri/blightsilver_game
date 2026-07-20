@@ -75,6 +75,12 @@ static func evaluate_condition(cd: Dictionary) -> bool:
 			return get_exploration_flag(key) == val
 		"flag_not_equals":
 			return get_exploration_flag(key) != val
+		"protagonist_equals":
+			var want: String = val if not val.is_empty() else key
+			return SaveManager.current_protagonist_id == ProtagonistVault.normalize_id(want)
+		"protagonist_not_equals":
+			var want_ne: String = val if not val.is_empty() else key
+			return SaveManager.current_protagonist_id != ProtagonistVault.normalize_id(want_ne)
 	return true
 
 static func get_exploration_flag(key: String, default_val: String = "") -> String:

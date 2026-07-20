@@ -186,11 +186,17 @@ func _open_protagonist_overlay() -> void:
 	add_child(overlay)
 
 
+func _should_show_switch_character() -> bool:
+	if SaveManager.demo_mode:
+		return true
+	return SaveManager.get_unlocked_protagonists().size() >= 2
+
+
 func _set_protagonist_zone_visible(visible: bool) -> void:
 	if _player_portrait != null:
 		_player_portrait.visible = visible
 	if _switch_char_btn != null:
-		_switch_char_btn.visible = visible
+		_switch_char_btn.visible = visible and _should_show_switch_character()
 
 
 func _show_tutorial_prompt() -> void:

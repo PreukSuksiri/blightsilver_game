@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Blightsilver"
 config/description="Hidden Grid Strategy Card Game"
-config/version="0.6"
+config/version="0.11"
 run/main_scene="res://scenes/splash_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="uid://khpmar2d5oyw"
@@ -52,6 +52,7 @@ GameDialog="*res://autoload/GameDialog.gd"
 TutorialBattleManager="*res://autoload/TutorialBattleManager.gd"
 OnboardingManager="*res://autoload/OnboardingManager.gd"
 AIDeckVault="*res://autoload/AIDeckVault.gd"
+StarterDeckVault="*res://autoload/StarterDeckVault.gd"
 QuickDuelRewards="*res://autoload/QuickDuelRewards.gd"
 GlobalStatManager="*res://autoload/GlobalStatManager.gd"
 AchievementManager="*res://autoload/AchievementManager.gd"

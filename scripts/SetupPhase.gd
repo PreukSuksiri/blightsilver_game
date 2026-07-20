@@ -278,9 +278,9 @@ func start_setup(player_index: int) -> void:
 
 	var deck: DeckData = null
 	if _uses_player_collection_deck():
-		var active: DeckData = SaveManager.get_active_deck()
+		var active: DeckData = SaveManager.get_battle_deck()
 		if active != null:
-			_setup_working_deck = active.duplicate_deck() as DeckData
+			_setup_working_deck = active.clone_for_edit()
 			SaveManager.sanitize_deck_for_collection(_setup_working_deck)
 			deck = _setup_working_deck
 	else:
@@ -1146,7 +1146,7 @@ func _active_setup_deck() -> DeckData:
 		return GameState.battle_player_deck as DeckData
 	if _setup_working_deck != null:
 		return _setup_working_deck
-	return SaveManager.get_active_deck()
+	return SaveManager.get_battle_deck()
 
 func _uses_player_collection_deck() -> bool:
 	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 1 \

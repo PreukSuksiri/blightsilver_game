@@ -20,6 +20,49 @@ const MAX_FORMATIONS: int = 5
 ## Last formation saved/selected in the deckbuilder (used for battle setup).
 @export var preferred_formation_index: int = 0
 
+## Stable identity for equip / gallery (UUID string).
+@export var deck_id: String = ""
+## Unix timestamp used for gallery sort.
+@export var created_at: int = 0
+@export var featured_card_name: String = ""
+@export var featured_card_type: String = ""  # character | trap | tech | union
+## Limited (bound) starter decks for Mayu/Kelly — caps gate editable category sizes.
+@export var limited: bool = false
+@export var limited_caps: Dictionary = {}  # {characters, traps, techs}
+## 0 = free gallery slot; 11 = Mayu reserved; 12 = Kelly reserved.
+@export var reserved_slot: int = 0
+## Free Switch-Deck gallery position 0..9; -1 = unassigned / reserved.
+@export var gallery_slot: int = -1
+
+
+static func make_deck_id() -> String:
+	return str(Time.get_unix_time_from_system()) + "_" + str(randi())
+
+
+func ensure_identity() -> void:
+	if deck_id.strip_edges().is_empty():
+		deck_id = make_deck_id()
+	if created_at <= 0:
+		created_at = int(Time.get_unix_time_from_system())
+
+
+func get_limited_cap(category: String) -> int:
+	if not limited:
+		match category:
+			"characters":
+				return MAX_CHARACTERS
+			"traps":
+				return MAX_TRAPS
+			"techs":
+				return TECH_COUNT
+			_:
+				return 99
+	return int(limited_caps.get(category, 0))
+
+
+func is_limited_for_protagonist_equip() -> bool:
+	return limited and reserved_slot in [11, 12]
+
 # ── Derived ───────────────────────────────────────────────────
 func dead_end_count() -> int:
 	return TOTAL_SLOTS - characters.size() - traps.size()
@@ -57,14 +100,24 @@ func validation_message() -> String:
 
 # ── Serialisation ─────────────────────────────────────────────
 func to_dict() -> Dictionary:
-	return {
+	ensure_identity()
+	var out: Dictionary = {
 		"deck_name":  deck_name,
 		"characters": characters.duplicate(),
 		"traps":      traps.duplicate(),
 		"techs":      techs.duplicate(),
 		"formations": formations.duplicate(true),
 		"preferred_formation_index": preferred_formation_index,
+		"deck_id": deck_id,
+		"created_at": created_at,
+		"featured_card_name": featured_card_name,
+		"featured_card_type": featured_card_type,
+		"limited": limited,
+		"limited_caps": limited_caps.duplicate(true),
+		"reserved_slot": reserved_slot,
+		"gallery_slot": gallery_slot,
 	}
+	return out
 
 func load_from_dict(d: Dictionary) -> void:
 	deck_name  = d.get("deck_name", "My Deck")
@@ -74,6 +127,16 @@ func load_from_dict(d: Dictionary) -> void:
 	var fv: Variant = d.get("formations", [])
 	formations = (fv as Array).duplicate(true) if fv is Array else []
 	preferred_formation_index = int(d.get("preferred_formation_index", 0))
+	deck_id = str(d.get("deck_id", "")).strip_edges()
+	created_at = int(d.get("created_at", 0))
+	featured_card_name = str(d.get("featured_card_name", "")).strip_edges()
+	featured_card_type = str(d.get("featured_card_type", "")).strip_edges()
+	limited = bool(d.get("limited", false))
+	var caps_raw: Variant = d.get("limited_caps", {})
+	limited_caps = (caps_raw as Dictionary).duplicate(true) if caps_raw is Dictionary else {}
+	reserved_slot = int(d.get("reserved_slot", 0))
+	gallery_slot = int(d.get("gallery_slot", -1))
+	ensure_identity()
 
 func _formation_has_placements(formation_idx: int) -> bool:
 	if formation_idx < 0 or formation_idx >= formations.size():
@@ -96,10 +159,96 @@ func get_preferred_formation_index() -> int:
 			return i
 	return 0
 
-func duplicate_deck() -> Resource:
-	var copy: Resource = get_script().new()
+## Working copy for the deck builder — keeps the same deck_id / limited flags.
+func clone_for_edit() -> DeckData:
+	var copy: DeckData = get_script().new() as DeckData
 	copy.load_from_dict(to_dict())
 	return copy
+
+
+func duplicate_deck() -> Resource:
+	var copy: DeckData = clone_for_edit()
+	# Fresh identity for copied decks (not a second reference to the same equip target).
+	copy.deck_id = make_deck_id()
+	copy.created_at = int(Time.get_unix_time_from_system())
+	copy.limited = false
+	copy.limited_caps = {}
+	copy.reserved_slot = 0
+	copy.gallery_slot = -1
+	return copy
+
+
+## Featured card name for gallery previews (explicit featured, else AI-vault-style strongest).
+func resolve_featured_preview_name() -> String:
+	var featured: String = featured_card_name.strip_edges()
+	if not featured.is_empty() and _gallery_preview_art_exists(featured):
+		return featured
+	var char_names: Array = characters.duplicate()
+	var best_union: UnionData = null
+	for u: UnionData in UnionDatabase.get_all_unions():
+		if u == null:
+			continue
+		if SaveManager.demo_mode and not UnionDatabase.is_playable_in_demo(u):
+			continue
+		if not UnionDatabase.deck_can_form_union(char_names, u):
+			continue
+		if not _gallery_preview_art_exists(u.card_name):
+			continue
+		if best_union == null or u.summon_cost > best_union.summon_cost:
+			best_union = u
+	if best_union != null:
+		return best_union.card_name
+	var best_char: String = ""
+	var best_cost: int = -1
+	for cname: Variant in char_names:
+		var cd: CharacterData = CardDatabase.get_character(str(cname))
+		if cd == null:
+			continue
+		if not _gallery_preview_art_exists(str(cname)):
+			continue
+		if cd.crystal_cost > best_cost:
+			best_cost = cd.crystal_cost
+			best_char = str(cname)
+	if not best_char.is_empty():
+		return best_char
+	for tname: Variant in traps:
+		if _gallery_preview_art_exists(str(tname)):
+			return str(tname)
+	for tech_name: Variant in techs:
+		if _gallery_preview_art_exists(str(tech_name)):
+			return str(tech_name)
+	# Last resort: names even without resolved art (caller may still find a face).
+	if not featured.is_empty():
+		return featured
+	if not char_names.is_empty():
+		return str(char_names[0])
+	if not traps.is_empty():
+		return str(traps[0])
+	if not techs.is_empty():
+		return str(techs[0])
+	return ""
+
+
+func _gallery_preview_art_exists(card_name: String) -> bool:
+	if card_name.strip_edges().is_empty():
+		return false
+	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	for candidate: String in [
+		"res://assets/textures/cards/full_cards/" + snake + ".png",
+		"res://assets/textures/cards/full_cards/character_" + snake + ".png",
+	]:
+		if ResourceLoader.exists(candidate):
+			return true
+	var subfolder: String = "characters"
+	if CardDatabase.get_trap(card_name) != null:
+		subfolder = "traps"
+	elif CardDatabase.get_tech(card_name) != null:
+		subfolder = "tech"
+	elif UnionDatabase.get_union(card_name) != null:
+		subfolder = "union"
+	var art_path: String = CardDatabase.find_artwork(
+		card_name, subfolder, SaveManager.nsfw_enabled)
+	return not art_path.is_empty() and ResourceLoader.exists(art_path)
 
 ## Remove placements that reference cards no longer in the deck (or exceed deck copies).
 func purge_stale_formation_placements() -> int:

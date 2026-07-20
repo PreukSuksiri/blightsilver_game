@@ -1,5 +1,7 @@
 # Blightsilver — Battle HUD God Mode Prompts (Magitech / Hextech Style)
 
+**UI chrome (menus / dialogs / overlays):** locked Magitech kit — [MAGITECH_UI_THEME.md](MAGITECH_UI_THEME.md) · Theme `res://resources/themes/magitech_ui.tres`. This brief is for **textured battle HUD assets** (`v2_magitech/`); shared Control chrome uses the Theme / `MagitechTheme` tokens.
+
 **Style name:** **Magitech HUD** (also called *Hextech UI*, *Aether-tech*, *Cyber-Fantasy Premium UI*)  
 **Look:** **Hybrid** — charcoal mausoleum slate **playmat floor** + polished chrome HUD/icons with electric cyan inner glow (premium MOBA / gacha RPG interface art).
 
