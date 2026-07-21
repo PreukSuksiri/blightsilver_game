@@ -1,9 +1,11 @@
 # Magitech UI Theme (locked)
 
-**Authority:** This document + `scripts/theme/MagitechTheme.gd` + `resources/themes/magitech_ui.tres` define the **one** Magitech UI language for all player-facing pages.
+**Authority:** This document + `scripts/theme/MagitechTheme.gd` define the **one** Magitech UI language for all player-facing pages. Apply via `GameDialog` / shared helpers — **no** Godot Theme `.tres` (store Themes and project Theme defaults are out of scope).
 
-**Sibling:** Battle textured HUD assets — [PLAYMAT_V2_EXTRA_WIDTH.md](PLAYMAT_V2_EXTRA_WIDTH.md)  
-**Dialogs:** Must migrate toward this kit — [GAME_DIALOG_POPUP_GUIDE.md](GAME_DIALOG_POPUP_GUIDE.md)
+**Textured HUD tool:** [ForgeGUI](https://forgegui.com/) (style-lock) — **not** God Mode.  
+**Sibling:** Magitech **v3** prompts [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) · pipeline [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) · style guide + v2 archive [PLAYMAT_V2_EXTRA_WIDTH.md](PLAYMAT_V2_EXTRA_WIDTH.md)  
+**Dialogs:** Must migrate toward this kit — [GAME_DIALOG_POPUP_GUIDE.md](GAME_DIALOG_POPUP_GUIDE.md)  
+**Skin switch:** `hud_skin v1|v2|v3` via `HudSkin` (v3 ↔ v2 easily revertible).
 
 ---
 
@@ -16,13 +18,13 @@ Every surface shares the same:
 3. Chrome recipe (panel, button, LineEdit, modal dim, **radius 8**)  
 4. Hierarchy (primary / secondary / destructive / locked)
 
-**If you need a new color or radius, update this doc + `MagitechTheme.gd` + the Theme `.tres` — do not invent a local `StyleBoxFlat`.**
+**If you need a new color or radius, update this doc + `MagitechTheme.gd` — do not invent a local `StyleBoxFlat`.**
 
 ### Allowed exceptions
 
 | Exception | Where | Notes |
 |-----------|--------|------|
-| HudSkin `v2_magitech/` PNGs | Battle HUD | Same Magitech materials, textured medium |
+| HudSkin `v2_magitech/` / `v3_magitech/` PNGs | Battle HUD | Textured skins; switch via `hud_skin v2\|v3` |
 | Slate `#12141a` | Playmat floor only | Never dialog/menu panel fill |
 | Amber / gold | Economy, cost warn, featured star | Not a second metal on every frame |
 
@@ -129,20 +131,14 @@ Per-surface **layout** may differ; **chrome tokens must not**.
 
 ---
 
-## Theme resource
+## Implementation path
 
 | Item | Path |
 |------|------|
-| Theme | `res://resources/themes/magitech_ui.tres` |
-| Constants | `res://scripts/theme/MagitechTheme.gd` |
+| Constants + StyleBox helpers | `res://scripts/theme/MagitechTheme.gd` |
+| Shared dialog / button skin | `res://autoload/GameDialog.gd` |
 
-**Not** set as project default yet. Apply by assigning Theme on roots or migrating `GameDialog` to `MagitechTheme` helpers.
-
-### How to preview in Godot
-
-1. Open any Control scene  
-2. Select root → Theme → Load `magitech_ui.tres`  
-3. Or: Project Settings → GUI → Theme (only when ready to go global)
+**No** `Theme` resource and **no** Project Settings → GUI → Theme. Iterate by retargeting helpers and screen-local StyleBoxes to `MagitechTheme` tokens.
 
 ---
 
@@ -151,8 +147,8 @@ Per-surface **layout** may differ; **chrome tokens must not**.
 | Area | Today | Target owner |
 |------|--------|----------------|
 | `GameDialog.gd` | VN navy blue | Retarget constants → MagitechTheme |
-| Main menu buttons | StyleBoxFlat Material-lite | Theme / MagitechTheme |
-| Deck builder scene | Cold cyan flats + green CTAs | Theme + Magitech hierarchy |
+| Main menu buttons | StyleBoxFlat Material-lite | MagitechTheme helpers |
+| Deck builder scene | Cold cyan flats + green CTAs | MagitechTheme hierarchy |
 | GameBoard overlays | Per-overlay navy flats | Shared Magitech panel helper |
 | HudSkin gaps | TECH/VOID flat colors | `v2_magitech` chips |
 

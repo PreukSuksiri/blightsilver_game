@@ -358,7 +358,7 @@ func admin_command(raw: String) -> String:
 			+ "  exploration_editor\n"
 			+ "  exploration_play\n"
 			+ "  tutorial_battle\n"
-			+ "  hud_skin v1|v2"
+			+ "  hud_skin v1|v2|v3"
 			)
 
 		"tts":
@@ -427,8 +427,8 @@ func admin_command(raw: String) -> String:
 			return "Tutorial Battle Builder opened."
 
 		"hud_skin":
-			if parts.size() < 2 or parts[1] not in ["v1", "v2"]:
-				return "hud_skin: current=%s  —  use 'hud_skin v1' or 'hud_skin v2'" % HudSkin.version
+			if parts.size() < 2 or parts[1] not in ["v1", "v2", "v3"]:
+				return "hud_skin: current=%s  —  use 'hud_skin v1', 'hud_skin v2', or 'hud_skin v3'" % HudSkin.version
 			HudSkin.set_version(parts[1])
 			return "HUD skin switched to %s." % parts[1]
 

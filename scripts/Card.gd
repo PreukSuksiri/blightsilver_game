@@ -212,6 +212,9 @@ func _ready() -> void:
 	_wait_outline.set_shader_parameter("outline_fade_with_modulate", false)
 	_layout_wait_icon_overlay()
 	attacked_icon_rect.material = _wait_outline
+	var wait_tex: Texture2D = HudSkin.hud_tex("ui_icon_wait_2.png")
+	if wait_tex:
+		attacked_icon_rect.texture = wait_tex
 	_setup_wait_icon_shadow()
 
 	_refresh_display()
@@ -294,6 +297,13 @@ func _reload_hud_skin(_new_version: String = "") -> void:
 		_blank_found_icon.texture = ICON_BLANK_FOUND
 	if is_instance_valid(_trap_icon):
 		_trap_icon.texture = ICON_TRAP
+	var wait_tex: Texture2D = HudSkin.hud_tex("ui_icon_wait_2.png")
+	if wait_tex and is_instance_valid(attacked_icon_rect):
+		attacked_icon_rect.texture = wait_tex
+	if wait_tex and is_instance_valid(_wait_icon_shadow):
+		_wait_icon_shadow.texture = wait_tex
+	if is_instance_valid(_crystal_cost_icon):
+		_crystal_cost_icon.texture = HudSkin.hud_tex("ui_crystal_indicator.png")
 
 func _make_card_icon(tex: Texture2D) -> TextureRect:
 	var icon := TextureRect.new()

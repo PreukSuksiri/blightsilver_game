@@ -2,9 +2,8 @@ class_name MagitechTheme
 extends RefCounted
 ## Locked Magitech UI tokens — single source of truth for colors / radii.
 ## Spec: res://context/MAGITECH_UI_THEME.md
-## Theme resource: res://resources/themes/magitech_ui.tres
 ##
-## Preload only — not an autoload. Does not change runtime UI until screens opt in.
+## Preload only — not an autoload. Apply via GameDialog / helpers; no Theme .tres.
 
 # ── Palette ───────────────────────────────────────────────────
 const VOID := Color("#060810")

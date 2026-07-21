@@ -1,80 +1,64 @@
-# Blightsilver — Battle HUD God Mode Prompts (Magitech / Hextech Style)
+# Blightsilver — Battle HUD Style Guide (Magitech)
 
-**UI chrome (menus / dialogs / overlays):** locked Magitech kit — [MAGITECH_UI_THEME.md](MAGITECH_UI_THEME.md) · Theme `res://resources/themes/magitech_ui.tres`. This brief is for **textured battle HUD assets** (`v2_magitech/`); shared Control chrome uses the Theme / `MagitechTheme` tokens.
+**Current tool for new textured UI:** [ForgeGUI](https://forgegui.com/) with **style-lock images** (not God Mode).
 
-**Style name:** **Magitech HUD** (also called *Hextech UI*, *Aether-tech*, *Cyber-Fantasy Premium UI*)  
-**Look:** **Hybrid** — charcoal mausoleum slate **playmat floor** + polished chrome HUD/icons with electric cyan inner glow (premium MOBA / gacha RPG interface art).
+| Doc | Role |
+|-----|------|
+| **[MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md)** | **Active** Holy Tech / Witchhunter Corp prompts → `battle/v3_magitech/` |
+| **[MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md)** | Style refs, `hud_skin v3` / revert `v2` |
+| [MAGITECH_UI_THEME.md](MAGITECH_UI_THEME.md) | Flat chrome tokens (`MagitechTheme.gd` / GameDialog) |
+| This file (below) | **Legacy Magitech v2** asset checklist + old prompt archive for `battle/v2_magitech/` |
+
+**Skin switch:** admin `hud_skin v1|v2|v3` (`HudSkin.gd`).
+
+---
+
+## Active workflow (ForgeGUI) — use this
+
+1. Open [ForgeGUI](https://forgegui.com/)  
+2. Attach style refs from `assets/textures/ui/magitech_v3/_style_refs/` (holytech kit board + approved #20 panel + approved plaques)  
+3. Paste **only** the **Copy this** block from [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md)  
+4. Save PNGs to `assets/textures/ui/battle/v3_magitech/` with the listed filenames  
+5. In game: `hud_skin v3` (revert: `hud_skin v2`)  
+
+**Consistency:** same uploaded refs every gen — ForgeGUI has no documented seed. Do not name other assets in the prompt (“match End Turn”); attach them as style images instead.  
+**No baked branding** on frames (no faction names/logos) except required labels: END TURN, OPTIONS, TECH, VOID.
+
+---
+
+## Legacy archive — Magitech v2 (cyan / hextech)
+
+> Historical God Mode prompt pack for `v2_magitech/`. **Do not use God Mode for new work.** Kept for shape notes and v2 asset checklist only.
+
+**Style name (v2):** Magitech HUD / Hextech-like chrome + cyan  
+**Look:** charcoal mausoleum slate **playmat floor** + polished chrome HUD/icons with electric cyan inner glow.
 
 **Playmat vs HUD split:**
 
 - **Playmat (#1):** cool charcoal stone / mausoleum slate plaza — stone surface, magitech silver+cyan **border frame only**
-- **All other assets:** magitech chrome + cyan energy (match your coin, crystal, dagger, compass outputs)
+- **All other assets:** magitech chrome + cyan energy
 
-**Approved outputs (use as style references — match silhouette to target):**
+**Approved v2 outputs (shape / finish reference for archive):**
 
+| Asset | Status | Use as reference for |
+|-------|--------|----------------------|
+| `#8 ui_icon_union.png` | ✓ Approved | Round medallions; chrome + cyan finish |
+| `#4 ui_end_turn.png` | ✓ Approved | Chamfered plaques |
+| `#5 ui_battle_options.png` | ✓ Approved | Freeform object icons (v2 used a book) |
+| `#3 ui_turn_number_panel.png` | ✓ Approved | Rounded-hex plates |
 
-| Asset                         | Status                         | Use as reference for                                                                                                                              |
-| ----------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `#8 ui_icon_union.png`        | **✓ Approved — gold standard** | **Primary kit reference:** chrome finish, cyan-only glow, filled dark interior, no pink. Also for **intentional round medallions** (coins, etc.). |
-| `#4 ui_end_turn.png`          | **✓ Approved**                 | **Freeform plaques / chamfered buttons** (END TURN shape)                                                                                         |
-| `#5 ui_battle_options.png`    | **✓ Approved**                 | **Freeform object icons** (spell book, sigils, standalone silhouettes)                                                                            |
-| `#3 ui_turn_number_panel.png` | ✓ Approved (hex frame)         | **Shaped plates / badges** (rounded hex, non-circle frames)                                                                                       |
+Legacy save path: `assets/textures/ui/battle/v2_magitech/`.
 
+**Sibling legacy docs:** [BATTLE_HUD_GODMODE_PROMPTS.md](BATTLE_HUD_GODMODE_PROMPTS.md) · [BATTLE_HUD_GODMODE_PROMPTS_TOMBSTONE.md](BATTLE_HUD_GODMODE_PROMPTS_TOMBSTONE.md)
 
-Save approved PNGs to `assets/textures/ui/battle/v2_magitech/`. When generating remaining assets, upload the **approved output whose shape + finish best matches** the next target — not the coin unless you are making a coin.
+**Former tool (legacy only):** God Mode AI — superseded by ForgeGUI for Magitech v3.
 
-**Other reference targets (not yet approved):**
+### Legacy style-reference rules (still useful)
 
-- `#11 ui_context_menu_attack` — diagonal chrome **dagger blade** (sub-menu; not moon-in-ring)
-- `#12 ui_context_menu_info` — magitech **letter "i"** on hextech-filled face
-- `ui_coin_front` / `ui_coin_back` — use **only** when generating coins (#22/#23)
-
-**Hero HUD concepts (locked for this kit):**
-
-- `ui_turn_number_panel` — **rounded-hexagon plate** with filled cyan hextech interior
-- `ui_battle_options` — **magitech spell book** (standalone codex — **✓ approved**)
-- `ui_crystal_indicator` — **compact crystal pylon in claw ring** (chrome prong ring holds gem — moderate height)
-- `ui_icon_union` — **round medallion, two merging souls** (**✓ approved — gold-standard reference**)
-- `ui_end_turn` — **chamfered chrome plaque button** (**✓ approved**)
-
-**Sibling docs:**
-
-- `[BATTLE_HUD_GODMODE_PROMPTS.md](BATTLE_HUD_GODMODE_PROMPTS.md)` — flat sci-fi cyan
-- `[BATTLE_HUD_GODMODE_PROMPTS_TOMBSTONE.md](BATTLE_HUD_GODMODE_PROMPTS_TOMBSTONE.md)` — noble necropolis stone
-
-**Tool:** [God Mode AI](https://www.godmodeai.co/) → Game UI Generator  
-**Viewport:** 1280×720  
-**Save exports to:** `assets/textures/ui/battle/v2_magitech/`
-
-### God Mode style preset (UI only — do not paste into prompts)
-
-When God Mode AI offers a **style** or **overlay** picker, select:
-
-**Neon Cyberwave Stream Overlay**
-
-Use it for **HUD icons and chrome** (#3–#25) — not the playmat stone floor (#1). It aligns well with this kit: polished chrome, electric cyan edge glow, dark cracked insets, premium streamer/cyberwave energy lines.
-
-**Important:** Set the preset in God Mode's style UI only. **Do not** include `Neon Cyberwave Stream Overlay` (or any preset name) inside the copy-paste prompts below.
-
-**Workflow with preset:**
-
-1. Set style to **Neon Cyberwave Stream Overlay** in the God Mode UI
-2. Paste the asset prompt + shared style suffix (preset name omitted from text)
-3. **Style reference — match the silhouette you want (use approved outputs first):**
-  - **Default kit reference:** `#8 ui_icon_union` — best chrome + cyan finish, filled interior, no pink. Safe for material/finish even when shape differs.
-  - **Freeform icons** (dagger, mask, shield, hourglass, crystal, book): `#5 OPTIONS` book or `#4 END TURN` plaque — **not** the coin.
-  - **Shaped plates** (turn counter): `#3 rounded-hex` panel.
-  - **Intentional round medallions** only (coins #22/#23): `#8 Union` or coin reference is fine.
-  - Do **NOT** upload coin/crystal-in-ring as reference for freeform icons — causes "everything is a circle."
-4. For **playmat (#1)** only: prompt already specifies charcoal mausoleum slate floor — keep neon/cyberwave energy on **border frame** only, not the floor fill
-
-If results are too neon on stone assets, refine with:
-
-```
-Reduce background neon. Keep cyan glow on chrome borders and icon edges only. Stone floor stays charcoal slate #12141a.
-```
-
-**ORDER:** Generate #1 playmat first. For each later asset, pick a style reference whose **shape matches the target** (freeform ref for freeform icons, round ref only for round assets) — never force a circular ref onto a freeform icon.
+- Freeform icons: lock a freeform approved plaque — **not** a coin (coins force circles onto everything).  
+- Round medallions / coins: lock a round ref only.  
+- Generate one asset at a time; prompts are self-contained.  
+- Fill opaque interiors on plates (hollow centers look like cutouts).  
 
 ### Labeled HUD assets (text required on art)
 
@@ -97,7 +81,7 @@ All other icons stay text-free — numbers/labels rendered in Godot.
 
 The kit was generating the **same chrome ring** on almost every asset. Each icon should read as its **own object silhouette**, not a coin in a ring.
 
-> **#1 fix — the style reference image.** If you upload the coin or crystal-in-ring as the style reference, God Mode copies that **circle** onto every icon no matter what the text says. For freeform icons, upload a **freeform reference (the dagger)** or **none**. This matters more than any wording below.
+> **#1 fix — the style reference image.** If you upload the coin or crystal-in-ring as the style reference, the generator copies that **circle** onto every icon no matter what the text says. For freeform icons, upload a **freeform reference (the dagger)** or **none**. This matters more than any wording below.
 
 > **#2 fix — generate freeform icons with NO reference first.** Get the bare silhouette right (dagger, mask, shield…), then optionally upload *that* approved freeform icon as the reference for the next freeform icon — so the kit propagates a *shape-correct* look instead of a ring.
 
@@ -132,7 +116,7 @@ Remove the circular chrome frame and ring completely. Output ONLY the object —
 
 ## Shared style suffix (append to every prompt)
 
-God Mode **style preset** is selected in the generator UI — not in this text. The suffix describes **material and finish only** — it intentionally does **not** specify a frame or silhouette, so each asset keeps its own shape.
+*(Legacy note: God Mode style presets are obsolete; Magitech v3 uses ForgeGUI style-lock images.)* The suffix describes **material and finish only** — it intentionally does **not** specify a frame or silhouette, so each asset keeps its own shape.
 
 ```
 Style: magitech hextech premium game UI icon, polished chrome silver #c0c8d8 and #e8eef5, electric cyan inner glow #00e5ff and #2ebfff in seams and grooves, dark cracked charcoal metal #141820, beveled metallic edges, subtle arcane runes optional, high-fidelity 3D game asset render, isolated on transparent background, crisp highlights, no watermark, production-ready. Only the object itself — NO enclosing circle, ring, disc, or medallion frame around the icon unless the asset description explicitly asks for a frame. Text only where asset prompt requires END TURN, OPTIONS, TECH, or VOID.
@@ -189,7 +173,7 @@ FLOOR (dominant — 80% of image):
 No text, no logo, no watermark, no skulls, no horror gore. Production-ready game playmat PNG.
 ```
 
-**If God Mode tints stone blue or brown, refine with:**
+**If the generator tints stone blue or brown, refine with:**
 
 ```
 Cool neutral charcoal slate stone only #12141a, mausoleum floor, no blue tint, no brown dirt. Keep magitech silver cyan border frame unchanged.
@@ -215,7 +199,7 @@ Style: magitech hextech premium game UI icon, polished chrome silver #c0c8d8 and
 
 **Concept:** magitech **rounded-hexagon plate** — a horizontal hex badge with softly rounded corners (not a circle, not a sharp hex). Displays top-center with the **upper portion clipped**, so weight the detail in the lower half.
 
-> **Fill the interior!** A plain black center gets auto-removed by God Mode (read as background → transparent hole). Give the face a **subtle cyan hextech interface** (circuit traces, rune ticks, hex grid) so it stays a filled, opaque screen.
+> **Fill the interior!** A plain black center may be auto-removed by some generators (read as background → transparent hole). Give the face a **subtle cyan hextech interface** (circuit traces, rune ticks, hex grid) so it stays a filled, opaque screen.
 
 ```
 Turn counter HUD plate, magitech hextech style. Canvas exactly 512x512, transparent PNG.
@@ -344,7 +328,7 @@ Style: magitech hextech premium game UI icon, polished chrome silver #c0c8d8 and
 
 ## C. Tech & Void stack chips
 
-Generate **#9 and #10 separately** — each prompt is **self-contained**. Do **not** paste "match TECH" or reference another asset in God Mode; it cannot see other prompts.
+Generate **#9 and #10 separately** — each prompt is **self-contained**. Do **not** paste "match TECH" as if the tool can see other assets — attach style refs as images instead.
 
 ### 9. `ui_tech_stack_chip.png`
 
@@ -386,7 +370,7 @@ Fill the circle with a solid opaque dark screen and subtle cyan hextech detail �
 
 ## D. Card context menu icons (display 52×52)
 
-Small **freeform cutouts** in the card sub-menu strip — each icon is **only the object** (blade, **"i"**, smiley…), **no circular frame**. Generate each prompt **alone**; do not reference other assets in God Mode.
+Small **freeform cutouts** in the card sub-menu strip — each icon is **only the object** (blade, **"i"**, smiley…), **no circular frame**. Generate each prompt **alone**; do not rely on naming other assets in text — attach style-ref images.
 
 ### 11. `ui_context_menu_attack.png`
 

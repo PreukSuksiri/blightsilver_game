@@ -1295,13 +1295,13 @@ func _build_fields() -> void:
 	_f_unlock_protagonist_vault = OptionButton.new()
 	StarterDeckVault.populate_vault_option(_f_unlock_protagonist_vault, "(default vault)")
 	_f_unlock_protagonist_vault.item_selected.connect(func(_i: int) -> void: _on_field_changed())
-	var vault_row := HBoxContainer.new()
-	var vault_lbl := Label.new()
-	vault_lbl.text = "Starter vault"
-	vault_lbl.custom_minimum_size = Vector2(160, 0)
-	vault_row.add_child(vault_lbl)
-	vault_row.add_child(_f_unlock_protagonist_vault)
-	v.add_child(vault_row)
+	var unlock_vault_row := HBoxContainer.new()
+	var unlock_vault_lbl := Label.new()
+	unlock_vault_lbl.text = "Starter vault"
+	unlock_vault_lbl.custom_minimum_size = Vector2(160, 0)
+	unlock_vault_row.add_child(unlock_vault_lbl)
+	unlock_vault_row.add_child(_f_unlock_protagonist_vault)
+	v.add_child(unlock_vault_row)
 	_f_silent_switch_protagonist = _row_opt(v, "Silent switch protagonist",
 			["(none)", "nex", "mayu", "kelly"], "Set global current hero with no UI")
 	_f_show_protagonist_select = _row_cb(v, "Show protagonist select",

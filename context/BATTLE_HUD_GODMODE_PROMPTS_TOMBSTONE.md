@@ -1,4 +1,6 @@
-# Blightsilver — Battle HUD God Mode Prompts (Tombstone / Necropolis Style)
+# Blightsilver — Battle HUD Prompts (Tombstone / Necropolis Style) — LEGACY
+
+> **Archive only.** New UI chrome uses **ForgeGUI** + [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md). Former tool was God Mode.
 
 **Variant:** Noble cemetery · aristocratic necropolis · polished silver metallic  
 **Sibling docs:**
