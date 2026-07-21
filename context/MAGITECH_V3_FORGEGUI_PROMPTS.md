@@ -9,6 +9,7 @@ Human workflow (do **not** paste into ForgeGUI):
 - **Save to:** `assets/textures/ui/battle/v3_magitech/`  
 - **Switch:** `hud_skin v3` · revert `hud_skin v2`  
 - **Order:** Phase A core wired (`HudSkin` default `v3`). #27 ✓ top dashboard + #28 ✓ bottom vault wired (v3 only).  
+- **Phase E (clockwork playmat):** see **Phase E** section below → save under `battle/v3_magitech/clockwork/`.  
 
 - **If gen ignores the kit** (e.g. cartoon wood UI): style refs failed to upload — re-attach and confirm they are active. Do not “fix” with long negative prompts.
 
@@ -611,3 +612,194 @@ Same bottom vault strip, but widen the center transparent notch and keep the met
 - Purple plate flood or orange neon  
 - Gibberish mock labels  
 - Whole inventory grid instead of one isolated asset  
+
+---
+
+# Phase E — Clockwork playmat pieces
+
+**Goal:** Castlevania-style clocktower depth via **modular** gears / pistons (Godot spins them). Not one animated full-screen background.
+
+**Save to:** `assets/textures/ui/battle/v3_magitech/clockwork/`  
+**Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → Phase E  
+**Order:** E00 underlay (optional) → E01–E03 face gears → E05 piston → then E04 / E06–E08 if needed.
+
+**Style lock:** blank `#20` `ui_magitech_panel_9slice.png` + logo-free silver refs (playmat / end-turn).  
+**Remove** `style_ref_holytech_kit_board.png` for these gens (crests stick to cog hubs).
+
+**Hard rules (every piece):**
+
+- Isolated single object · transparent outside · centered · no text · no logos · no crests · no watermark  
+- Magitech brushed sacred silver + thin sanctified cyan seam accents only  
+- Not Castlevania purple stone copy, not rust-only brown, not mecha robot plating, not cyberpunk neon  
+- Quiet enough that cards stay readable when many are layered behind the grid  
+
+**Refine — strip branding (any piece):**
+
+```
+Identical metal gear or machine part, but DELETE every logo, crest, emblem, seal, medallion, letter, and rune-word. Plain brushed sacred silver only with thin cyan seam accents. Transparent outside. No watermark.
+```
+
+---
+
+## E00 — `ui_magitech_clockwork_underlay.png` · 1280×720
+
+Far static wall behind spinning pieces. Optional — you may keep existing `#1` playmat instead.
+
+**Copy this:**
+
+```
+Card game battle playmat underlay, landscape canvas 1280x720, full-bleed image.
+
+Deep clocktower machine-room wall for a holy-tech card game: dark charcoal stone masonry recesses with brushed sacred-silver machine housings in the FAR background only — large soft-focus gear silhouettes, axle tunnels, and bolted plates sunk into the wall. Thin sanctified cyan light only in distant seams at very low opacity.
+
+Center stays quieter and darker for card readability — no sharp foreground props, no platforms for a platformer character, no stairs, no railings in the play area. Soft vignette at edges.
+
+Blank chrome — no text, no logos, no crests, no characters, no watermark. Match silver-and-cyan materials of the uploaded style references. Not purple gothic flood, not mecha cockpit, not outdoor landscape.
+```
+
+**E00 refine — quieter center:**
+
+```
+Same clocktower underlay, but darken and simplify the center third so cards stay readable. Keep machinery detail toward the outer edges and deep background only. No text, no logos.
+```
+
+---
+
+## E01 — `ui_magitech_gear_face_lg.png` · 512×512
+
+Large face-on cog (Godot will rotate).
+
+**Copy this:**
+
+```
+Game UI isolated prop, square canvas 512x512, transparent background outside the object.
+
+ONE large face-on clockwork cogwheel / gear, centered, full circle visible. Brushed sacred-silver metal teeth and rim, dark charcoal recessed face, thin sanctified cyan light only in inner ring seams and bolt recesses. Ceremonial holy-tech machine part — solid opaque gear body, clean silhouette for rotation around center.
+
+No hub logo, no crest, no letters, no runes-as-words, no second gear, no shafts sticking out. Not a button plaque. Not mecha. No watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+## E02 — `ui_magitech_gear_face_md.png` · 512×512
+
+**Copy this:**
+
+```
+Game UI isolated prop, square canvas 512x512, transparent background outside the object.
+
+ONE medium face-on clockwork cogwheel, centered, full circle. Same holy-tech materials: brushed sacred silver teeth, dark recessed face, thin sanctified cyan seam glow. Slightly more teeth detail than a tiny icon, still one solid gear for spinning.
+
+No logo, no crest, no text, no extra parts. Transparent outside. Match uploaded style references. No watermark.
+```
+
+---
+
+## E03 — `ui_magitech_gear_face_sm.png` · 256×256
+
+**Copy this:**
+
+```
+Game UI isolated prop, square canvas 256x256, transparent background outside the object.
+
+ONE small face-on cogwheel, centered, full circle, readable teeth at small size. Brushed sacred silver with a thin cyan inner seam. Simple clean silhouette for reuse at many positions.
+
+No logo, no crest, no text. Transparent outside. Match uploaded silver-cyan references. No watermark.
+```
+
+---
+
+## E04 — `ui_magitech_gear_side.png` · 512×512
+
+Thick roller / side-perspective gear (Castlevania clocktower “cylinder cog” look).
+
+**Copy this:**
+
+```
+Game UI isolated prop, square canvas 512x512, transparent background outside the object.
+
+ONE thick clockwork gear seen from the SIDE / three-quarter view — a short toothed cylinder / roller cog showing depth, not a flat face-on disc. Brushed sacred-silver rim and teeth, dark recesses, thin sanctified cyan seam accents. Holy-tech machine part, centered, opaque metal.
+
+No logos, no crests, no text, no attached pistons, no second gear. Transparent outside. Match uploaded silver-cyan style references. Not mecha. No watermark.
+```
+
+---
+
+## E05 — `ui_magitech_piston.png` · 256×512
+
+Piston head + short rod (Godot pumps vertically). Prefer portrait canvas so the stroke reads clearly.
+
+**Copy this:**
+
+```
+Game UI isolated prop, portrait canvas 256x512, transparent background outside the object.
+
+ONE holy-tech piston assembly centered vertically: a short sacred-silver rod with a thicker piston head / plate at the top (or bottom), dark charcoal recesses, thin sanctified cyan seam rings on the head. Clean silhouette for up-down animation — no long infinite shaft filling the whole canvas; leave transparent padding above and below.
+
+No logos, no crests, no text, no steam clouds, no extra machinery. Transparent outside. Match uploaded silver-cyan style references. No watermark.
+```
+
+**E05 refine — clearer head:**
+
+```
+Same piston, but make the head blockier and more readable at small size, keep the rod shorter, transparent padding top and bottom. No text, no logos.
+```
+
+---
+
+## E06 — `ui_magitech_shaft.png` · 512×128
+
+Straight axle / shaft segment.
+
+**Copy this:**
+
+```
+Game UI isolated prop, landscape canvas 512x128, transparent background outside the object.
+
+ONE straight horizontal sacred-silver machine shaft / axle, centered, cylindrical metal with soft highlight and thin cyan seam rings at the ends only. Clean bar for layering behind gears.
+
+No logos, no text, no gears attached. Transparent outside. Match uploaded style references. No watermark.
+```
+
+---
+
+## E07 — `ui_magitech_chain_seg.png` · 128×256
+
+One chain link (optional; scroll later).
+
+**Copy this:**
+
+```
+Game UI isolated prop, portrait canvas 128x256, transparent background outside the object.
+
+ONE thick metal chain link for a holy-tech hoist, brushed sacred silver with dark inner recess and a faint cyan edge highlight. Vertical oval link, centered, clean silhouette for stacking into a chain.
+
+No logos, no text, no second link. Transparent outside. Match uploaded style references. No watermark.
+```
+
+---
+
+## E08 — `ui_magitech_belt_strip.png` · 512×128
+
+Short ridged belt tile (optional; scroll later). Should tile horizontally.
+
+**Copy this:**
+
+```
+Game UI isolated prop, landscape canvas 512x128, transparent background outside the object.
+
+ONE short horizontal ridged conveyor / drive-belt strip, tileable left-to-right. Dark charcoal belt with brushed sacred-silver ridge teeth / cleats and a thin sanctified cyan edge glint. Flat strip only — no rollers, no gears, no frame.
+
+No logos, no text. Transparent above and below the strip. Match uploaded silver-cyan style references. No watermark.
+```
+
+---
+
+## Phase E — Reject if
+
+- Full clocktower stage baked into one “gear” asset  
+- Platformer ledges, stairs, Alucard-like character, purple SotN palette flood  
+- Hub crests / faction logos on cog centers  
+- Mecha robot limbs, cyberpunk neon tubes, hologram gears  
+- Photoreal photo scrap / watermark  
+- Motion already baked as frames (we animate in Godot — deliver still PNGs only)  

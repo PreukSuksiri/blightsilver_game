@@ -9,7 +9,8 @@
 **Style refs:** `assets/textures/ui/magitech_v3/_style_refs/`  
 **Phase B exports:** `assets/textures/ui/magitech_v3/chrome/` (then wire in code)  
 **Phase C:** Hover shaders — circuit patrol on chrome + once-per-hover metal sheen on context icons (see below)  
-**Phase D:** Gradient / circulating borders on dialogs & buttons + animated battle 5×5 grid lines (see below)
+**Phase D:** Gradient / circulating borders on dialogs & buttons + animated battle 5×5 grid lines (see below)  
+**Phase E:** Clockwork playmat — modular gears/pistons (ForgeGUI pieces + Godot spin/pump). Prompts in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase E**
 
 ## Revertible battle skins
 
@@ -228,6 +229,71 @@ No 9-slice texture, no ForgeGUI re-bake for dialogs.
 - [ ] 5×5 grid lines: visible gradient + slow seamless loop on both boards  
 - [ ] `hud_skin v1|v2` unchanged (unless explicitly enabled)  
 - [ ] No ForgeGUI re-gen / no `#20` on dialogs  
+
+---
+
+## Phase E — Clockwork playmat (planned)
+
+**Gate:** Phase A playmat + chrome approved in-game. Can run in parallel with B/C/D.
+
+**Approach (locked):** modular ForgeGUI **pieces** + Godot rotation / piston tweens.  
+**Not:** one full animated 1280×720 GIF/video, not AI-video of the whole stage.
+
+Castlevania clocktower feel = layered depth + independent RPM. Keep motion **slow and sparse** behind the card grids so boards stay readable.
+
+### E1 — Asset kit (ForgeGUI → PNG + alpha)
+
+Save under `assets/textures/ui/battle/v3_magitech/clockwork/`.  
+Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → Phase E.
+
+| ID | Save as | Role | Animate in Godot |
+|----|---------|------|------------------|
+| E00 | `ui_magitech_clockwork_underlay.png` | Far stone / machine wall (static) | No (optional; else keep current playmat) |
+| E01 | `ui_magitech_gear_face_lg.png` | Large face-on cog | Spin |
+| E02 | `ui_magitech_gear_face_md.png` | Medium face-on cog | Spin |
+| E03 | `ui_magitech_gear_face_sm.png` | Small face-on cog | Spin |
+| E04 | `ui_magitech_gear_side.png` | Thick side-view / roller gear | Spin on local axis (or fake with scale) |
+| E05 | `ui_magitech_piston.png` | Piston head + short rod (isolated) | Vertical pump |
+| E06 | `ui_magitech_shaft.png` | Straight sacred-silver shaft / axle | Optional slow drift |
+| E07 | `ui_magitech_chain_seg.png` | One chain link / short segment | Optional scroll (later) |
+| E08 | `ui_magitech_belt_strip.png` | Short ridged belt tile (tileable X) | Optional scroll (later) |
+
+**Ship-first subset:** E00 (or reuse #1 playmat) + E01–E03 + E05. Add E04/E06–E08 if depth still feels thin.
+
+### E2 — Godot wiring (after assets land)
+
+1. Under `Background` / playmat: a `ClockworkLayer` `Control` with `clip_contents`, z below cards/grids/fog.  
+2. Instance ~8–15 gear `TextureRect`s (reuse E01–E03 at different scales/modulate).  
+3. Per gear: continuous `rotation` at different RPM (e.g. ±4°/s … ±18°/s).  
+4. 1–2 pistons: slow Y ping-pong (1.5–3s).  
+5. Far pieces darker / lower alpha; near pieces slightly brighter — fake depth, no camera parallax required.  
+6. Mute or pause motion when full-info / reckoning overlays are up (optional polish).  
+7. `hud_skin v3` only; v1/v2 keep static playmat.
+
+### Style lock for Phase E
+
+- Materials: blank `#20` panel + approved playmat / end-turn silver (logo-free).  
+- Prefer **remove** holytech kit board (crests leak onto gears).  
+- No text, logos, crests on any clockwork piece.  
+- Magitech silver + thin cyan seams — **not** SotN purple stone flood, not rust-brown only, not mecha.
+
+### Out of scope for Phase E
+
+| Skip | Why |
+|------|-----|
+| Full-screen loop video / GIF | Size, style drift, unreadable under cards |
+| Animated whole-stage AI video | Loses style lock + independent RPM |
+| Dense foreground gears over card cells | Cards must stay readable |
+| Fast / seizure-risk spin | Keep slow ceremonial grind |
+| Replacing top dashboard / bottom vault | Separate chrome; playmat mid only |
+
+### Acceptance
+
+- [ ] Modular PNGs with clean alpha (no baked full stage)  
+- [ ] In-game: gears spin, ≥1 piston pumps, cards remain readable  
+- [ ] Motion stays behind grids; overlays still above smoke/VFX as today  
+- [ ] `hud_skin v1|v2` unchanged  
+- [ ] No GIF / full playmat video required for ship  
 
 ## Privacy
 

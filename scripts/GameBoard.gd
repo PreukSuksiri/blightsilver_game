@@ -164,10 +164,12 @@ const _V3_ZONE_ATTACK_W := 0.088
 const _V3_ZONE_ATTACK_Y := 0.008
 const _V3_ZONE_ATTACK_H := 0.092
 ## VOID / TECH chips (pink circular ports)
-const _V3_ZONE_CHIP_Y := 0.055
+const _V3_ZONE_CHIP_Y := 0.051#0.055
 const _V3_ZONE_CHIP_S := 0.062
-const _V3_ZONE_VOID_X := 0.022
-const _V3_ZONE_TECH_X := 0.080
+const _V3_ZONE_VOID_X := 0.025#0.022
+const _V3_ZONE_TECH_X := 0.0805
+## Extra nudge for P2 chips only (px). +x = toward screen center after mirror; +y = down.
+const _V3_CHIP_P2_NUDGE := Vector2(-6.0, 0.0)
 var _v3_hover_scale_tweens: Dictionary = {}  # instance_id -> Tween
 var _p1_crystal_sheen_mat: ShaderMaterial = null
 var _p2_crystal_sheen_mat: ShaderMaterial = null
@@ -5551,6 +5553,8 @@ func _apply_tech_void_stack_layout() -> void:
 		_place_v3_chip(_p1_tech_stack, _V3_ZONE_TECH_X, chip_y, chip_s, false)
 		_place_v3_chip(_p2_void_stack, _V3_ZONE_VOID_X, chip_y, chip_s, true)
 		_place_v3_chip(_p2_tech_stack, _V3_ZONE_TECH_X, chip_y, chip_s, true)
+		_nudge_v3_chip(_p2_void_stack, _V3_CHIP_P2_NUDGE)
+		_nudge_v3_chip(_p2_tech_stack, _V3_CHIP_P2_NUDGE)
 		return
 	# Restore v1/v2 corner stack geometry.
 	_layout_legacy_stack(_p1_void_stack, true, 8.0, 84.0)
@@ -5599,6 +5603,17 @@ func _place_v3_chip(stack: Control, x_frac: float, y: float, side: float, mirror
 	var count := stack.get_node_or_null("CountLabel") as Label
 	if count:
 		_layout_stack_count_label(count)
+
+
+func _nudge_v3_chip(stack: Control, nudge: Vector2) -> void:
+	if stack == null or not is_instance_valid(stack):
+		return
+	if is_zero_approx(nudge.x) and is_zero_approx(nudge.y):
+		return
+	stack.offset_left += nudge.x
+	stack.offset_right += nudge.x
+	stack.offset_top += nudge.y
+	stack.offset_bottom += nudge.y
 
 
 func _apply_reveal_eye_layout() -> void:
