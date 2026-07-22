@@ -24,19 +24,22 @@ Missing v3 files fall back to v2 → v1 (`HudSkin.gd`). **Default boot is `"v3"`
 
 ---
 
-## Phase A — Battle HUD (wired)
+## Phase A — Battle HUD (approved ✓)
 
 Core kit in `battle/v3_magitech/` + `HudSkin` / `GameBoard` / `Card` / `BattleCalculationOverlay`.  
 Skipped leftovers (fall back): #2 game over, #15 context panel, #17 exposed, #21 options row, #22–23 coins, #25–26 eyes (open is present; closed defers).  
-Do **not** expand into Phase B until A is approved in-game.
+**In-game approved** — proceed to Phase B.
 
 ---
 
-## Phase B — Game-wide chrome actions (planned)
+## Phase B — Game-wide chrome actions (in progress)
 
 Replace **player-facing** unicode/emoji control icons with holytech PNGs.  
 Keep **bluff reaction emojis** as unicode.  
-Skip **editor-only** tools (VNEditor, ExplorationEditor, builders) unless you later want a “dev skin.”
+Skip **editor-only** tools (VNEditor, ExplorationEditor, builders) unless you later want a “dev skin.”  
+**Prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase B**.  
+**Quick-win silhouettes (wired):** `assets/textures/ui/silhouettes/` via `ChromeIcon` autoload.  
+**Future Magitech chrome (optional):** `assets/textures/ui/magitech_v3/chrome/`
 
 ### B1 — High priority (menus players hit often)
 
@@ -56,30 +59,37 @@ Skip **editor-only** tools (VNEditor, ExplorationEditor, builders) unless you la
 | ID | Save as | Replaces / reskins | Where |
 |----|---------|-------------------|--------|
 | B09 | `ui_v3_icon_setting.png` | `ui_icon_setting.png` | Main menu / settings |
-| B10 | `ui_v3_icon_exit.png` | `ui_icon_exit.png` | Main menu exit |
 | B11 | `ui_v3_mailbox.png` | `ui_mailbox.png` | Mail |
-| B12 | `ui_v3_icon_credit.png` | `ui_icon_credit.png` | Economy / inventory |
-| B13 | `ui_v3_icon_compass.png` | `ui_icon_compass.png` | Exploration |
-| B14 | `ui_v3_icon_exploration_setting.png` | exploration settings | Exploration HUD |
-| B15 | `ui_v3_icon_exploration_info.png` | exploration info | Exploration HUD |
-| B16 | `ui_v3_icon_exploration_chat.png` | exploration chat | Exploration HUD |
-| B17 | `ui_v3_exploration_inventory.png` | inventory button | Exploration |
-| B18 | `ui_v3_icon_magnifier.png` | magnifier | Search / inspect |
-| B19 | `ui_v3_campaign_platform_normal.png` | campaign node | Campaign map |
-| B20 | `ui_v3_campaign_platform_boss.png` | boss node | Campaign map |
+
+### B2 deferred / skipped this pass
+
+| ID | Save as | Why |
+|----|---------|-----|
+| B10 | `ui_v3_icon_exit.png` | Unused — skip |
+| B12 | `ui_v3_icon_credit.png` | Skip this pass |
+| B13 | `ui_v3_icon_compass.png` | Exploration HUD — later |
+| B14 | `ui_v3_icon_exploration_setting.png` | Exploration HUD — later |
+| B15 | `ui_v3_icon_exploration_info.png` | Exploration HUD — later |
+| B16 | `ui_v3_icon_exploration_chat.png` | Exploration HUD — later |
+| B17 | `ui_v3_exploration_inventory.png` | Exploration HUD — later |
+| B18 | `ui_v3_icon_magnifier.png` | Skip this pass |
+| B19 | `ui_v3_campaign_platform_normal.png` | Campaign map — skip this pass |
+| B20 | `ui_v3_campaign_platform_boss.png` | Campaign map — skip this pass |
+| B26 | `ui_v3_icon_mail_badge.png` | Exploration mail — later |
 
 ### B3 — Secondary chrome (do after B1–B2)
 
 | ID | Save as | Replaces | Where |
 |----|---------|----------|--------|
-| B21 | `ui_v3_icon_back.png` | `←` | Back buttons (battle options, exploration) |
+| B21 | `ui_v3_icon_back.png` | `←` | Back buttons (battle options; exploration later) |
 | B22 | `ui_v3_icon_expand.png` | `▶` / `▾` | Advanced filters, expand |
 | B23 | `ui_v3_icon_collapse.png` | `▼` / `▴` | Collapse |
 | B24 | `ui_v3_icon_list.png` | `≡` | Deck gallery list mode |
 | B25 | `ui_v3_icon_grid.png` | `⊞` | Deck gallery grid mode |
-| B26 | `ui_v3_icon_mail_badge.png` | `[ ✉ ]` | Exploration mail affordance |
 | B27 | `ui_v3_icon_formations.png` | `📋` formations | Deck Builder formations entry |
 | B28 | `ui_v3_icon_copy.png` | `📋` copy | Only if used in **player** UI (editors stay text) |
+
+*(B26 mail badge deferred with Exploration HUD — see B2 deferred.)*
 
 ### Out of scope for Phase B
 
@@ -87,7 +97,13 @@ Skip **editor-only** tools (VNEditor, ExplorationEditor, builders) unless you la
 |------------|-----|
 | Bluff picker emojis | Content / expression, not chrome |
 | TECH / VOID / END TURN labels | Phase A battle PNGs |
+| Exploration HUD icons (B13–B17, B26) | Deferred — skip this pass |
+| Exit icon (B10) | Unused in game — skip |
+| Credit icon (B12) | Skip this pass |
+| Magnifier (B18) | Skip this pass |
+| Campaign platforms (B19–B20) | Skip this pass |
 | VNEditor / ExplorationEditor / builders | Dev tools |
+| Admin-only / vault-manager `✕` closes | Leave unicode — not player chrome |
 | Card rarity `★` strings | Card data display, not chrome buttons |
 | Affinity `⚙` on cards | Card glyph — separate decision later |
 
@@ -108,8 +124,8 @@ flowchart LR
   Wire2 --> Flats
 ```
 
-1. **Gate:** Phase A battle kit playable via `hud_skin v3`.  
-2. **Generate B1** (8 icons) — 128×128, blank sacred-silver + cyan, no baked words except none.  
+1. **Gate:** Phase A battle kit approved ✓ (`hud_skin v3`).  
+2. **Generate B1** (8 icons) — 128×128, blank sacred-silver + cyan, no baked words.  
 3. **Wire B1** — `DeckSwitchGallery`, `DeckBuilder`, `CardGallery`, `CampaignGallery`, overlay closes. Prefer one helper e.g. `ChromeIcon.tex("duplicate")` so paths stay centralized.  
 4. **Generate B2** — reskin existing decoration PNGs into `magitech_v3/chrome/`.  
 5. **Wire B2** — swap `load("…/decorations/…")` / scene ext_resources to v3 chrome (or a small path map like HudSkin).  
@@ -126,7 +142,7 @@ flowchart LR
 ### Acceptance
 
 - [ ] No `❐` / `🗑` / scrap `✂` / featured `★` unicode on player deck flows  
-- [ ] Main menu setting / exit / mailbox match holytech  
+- [ ] Main menu setting / mailbox match holytech  
 - [ ] Editors may still use unicode  
 - [ ] Bluff emojis unchanged  
 

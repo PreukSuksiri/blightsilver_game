@@ -443,14 +443,14 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 	var count: int = Collection.get_card_count(card_name)
 	if count > 1:
 		var scrap_btn := Button.new()
-		scrap_btn.text = "✂"
 		scrap_btn.tooltip_text = "Scrap duplicates (keep 1)"
-		scrap_btn.add_theme_font_size_override("font_size", 10)
+		scrap_btn.flat = true
 		scrap_btn.layout_mode = 1
 		scrap_btn.anchor_left   = 0.0; scrap_btn.anchor_right  = 0.0
 		scrap_btn.anchor_top    = 1.0; scrap_btn.anchor_bottom = 1.0
 		scrap_btn.offset_left   = 2.0;  scrap_btn.offset_right  = 22.0
 		scrap_btn.offset_top    = -18.0; scrap_btn.offset_bottom = -2.0
+		ChromeIcon.apply_button(scrap_btn, "scrap", true, "", ChromeIcon.COLOR_ON_LIGHT, 14)
 		var cap_name: String = card_name
 		var cap_type: String = card_type
 		scrap_btn.pressed.connect(func() -> void: _confirm_scrap_one(cap_name, cap_type))
@@ -604,11 +604,11 @@ func _build_adv_gallery_filters() -> void:
 	outer.add_theme_constant_override("separation", 3)
 
 	var toggle_btn := Button.new()
-	toggle_btn.text = "▶  Advanced Filters"
 	toggle_btn.toggle_mode = true
 	toggle_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	toggle_btn.add_theme_font_size_override("font_size", 13)
 	toggle_btn.add_theme_color_override("font_color", Color(0.45, 0.72, 1.0))
+	ChromeIcon.apply_button(toggle_btn, "expand", false, "  Advanced Filters", Color(0.45, 0.72, 1.0), 14)
 	outer.add_child(toggle_btn)
 
 	var body := VBoxContainer.new()
@@ -616,7 +616,14 @@ func _build_adv_gallery_filters() -> void:
 	body.visible = false
 	toggle_btn.toggled.connect(func(on: bool) -> void:
 		body.visible = on
-		toggle_btn.text = ("▼  Advanced Filters" if on else "▶  Advanced Filters"))
+		ChromeIcon.apply_button(
+			toggle_btn,
+			"collapse" if on else "expand",
+			false,
+			"  Advanced Filters",
+			Color(0.45, 0.72, 1.0),
+			14
+		))
 
 	# Affinity
 	var aff_row := HBoxContainer.new()
@@ -732,10 +739,10 @@ func _input(event: InputEvent) -> void:
 
 func _add_scrap_all_button() -> void:
 	var btn := Button.new()
-	btn.text = "✂ SCRAP ALL DUPES"
 	btn.add_theme_font_size_override("font_size", 12)
 	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.20))
 	btn.tooltip_text = "Scrap all duplicate copies, keeping 1 of each card (100 credits per scrapped copy)"
+	ChromeIcon.apply_button(btn, "scrap", false, "  SCRAP ALL DUPES", Color(1.0, 0.55, 0.20), 16)
 	btn.pressed.connect(_confirm_scrap_all)
 	filter_bar.add_child(btn)
 

@@ -413,6 +413,8 @@ func _connect_buttons() -> void:
 	export_btn.pressed.connect(_on_export_decks)
 	close_btn.pressed.connect(_on_back)
 	formations_btn.pressed.connect(_open_formation_editor)
+	ChromeIcon.apply_button(formations_btn, "formations", false, "  FORMATIONS", ChromeIcon.COLOR_ON_DARK, 18)
+	ChromeIcon.apply_button(trunk_add_btn, "add", false, "  Add to Deck", ChromeIcon.COLOR_ON_DARK, 16)
 	save_btn.pressed.connect(_on_save)
 	save_and_exit_btn.pressed.connect(_on_save_and_exit)
 	remove_char_btn.disabled = true
@@ -1436,10 +1438,10 @@ func _open_formation_editor() -> void:
 	hdr_panel.add_child(hdr_lbl)
 
 	var close_btn := Button.new()
-	close_btn.text = "✕ CLOSE"
 	close_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close_btn.offset_left = -130.0; close_btn.offset_right  = -10.0
 	close_btn.offset_top  =   8.0;  close_btn.offset_bottom =  40.0
+	ChromeIcon.apply_button(close_btn, "close", false, "  CLOSE", ChromeIcon.COLOR_DANGER, 16)
 	close_btn.pressed.connect(_fe_on_close_requested)
 	_fe_overlay.add_child(close_btn)
 
@@ -2300,11 +2302,11 @@ func _setup_multi_protagonist_ui() -> void:
 	right_top_bar.move_child(_switch_deck_btn, 0)
 
 	_featured_star_btn = Button.new()
-	_featured_star_btn.text = "★"
 	_featured_star_btn.tooltip_text = "Mark featured card"
 	GameDialog.style_button(_featured_star_btn)
 	_featured_star_btn.custom_minimum_size = Vector2(GameDialog.BTN_MIN_SIZE.y, GameDialog.BTN_MIN_SIZE.y)
 	_featured_star_btn.toggle_mode = true
+	ChromeIcon.apply_button(_featured_star_btn, "featured", false, "", ChromeIcon.COLOR_FEATURED, 20)
 	_featured_star_btn.toggled.connect(_on_featured_star_toggled)
 	right_top_bar.add_child(_featured_star_btn)
 	right_top_bar.move_child(_featured_star_btn, 1)
@@ -2574,11 +2576,11 @@ func _build_advanced_filters() -> void:
 
 	# Toggle header
 	var toggle_btn := Button.new()
-	toggle_btn.text = "▶  Advanced Filters"
 	toggle_btn.toggle_mode = true
 	toggle_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	toggle_btn.add_theme_font_size_override("font_size", 13)
 	toggle_btn.add_theme_color_override("font_color", Color(0.45, 0.72, 1.0))
+	ChromeIcon.apply_button(toggle_btn, "expand", false, "  Advanced Filters", Color(0.45, 0.72, 1.0), 14)
 	outer.add_child(toggle_btn)
 
 	# Collapsible body
@@ -2587,7 +2589,14 @@ func _build_advanced_filters() -> void:
 	body.visible = false
 	toggle_btn.toggled.connect(func(on: bool) -> void:
 		body.visible = on
-		toggle_btn.text = ("▼  Advanced Filters" if on else "▶  Advanced Filters"))
+		ChromeIcon.apply_button(
+			toggle_btn,
+			"collapse" if on else "expand",
+			false,
+			"  Advanced Filters",
+			Color(0.45, 0.72, 1.0),
+			14
+		))
 
 	# Affinity
 	var aff_row := HBoxContainer.new()
@@ -2730,6 +2739,7 @@ func _setup_gallery_containers() -> void:
 	_view_toggle_btn.add_theme_font_size_override("font_size", 13)
 	_view_toggle_btn.pressed.connect(_toggle_view_mode)
 	_view_toggle_btn.visible = false
+	ChromeIcon.apply_button(_view_toggle_btn, "grid", false, "  Gallery", ChromeIcon.COLOR_ON_DARK, 16)
 	filter_bar.add_child(_view_toggle_btn)
 
 	# Pool gallery (left panel, sibling of trunk_list)
@@ -2859,7 +2869,10 @@ func _apply_view_mode() -> void:
 	remove_char_btn.visible         = not _gallery_mode
 	remove_trap_btn.visible         = not _gallery_mode
 	remove_tech_btn.visible         = not _gallery_mode
-	_view_toggle_btn.text = "≡ List" if _gallery_mode else "⊞ Gallery"
+	if _gallery_mode:
+		ChromeIcon.apply_button(_view_toggle_btn, "list", false, "  List", ChromeIcon.COLOR_ON_DARK, 16)
+	else:
+		ChromeIcon.apply_button(_view_toggle_btn, "grid", false, "  Gallery", ChromeIcon.COLOR_ON_DARK, 16)
 	call_deferred("_refresh_all_hscroll_hints")
 
 func _rebuild_trunk_gallery() -> void:
@@ -3153,22 +3166,17 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
-	# × remove badge (top-right)
-	var rm := Label.new()
-	rm.text = "×"
+	# Remove badge (top-right)
+	var rm: TextureRect = ChromeIcon.make_rect("remove", Vector2(14, 14), Color(1.0, 0.35, 0.35, 0.95))
 	rm.layout_mode = 1
 	rm.anchor_left = 1.0; rm.anchor_right  = 1.0
 	rm.anchor_top  = 0.0; rm.anchor_bottom = 0.0
 	rm.offset_left = -16.0; rm.offset_right  = -2.0
 	rm.offset_top  =  2.0;  rm.offset_bottom = 16.0
-	rm.add_theme_font_size_override("font_size", 13)
-	rm.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 0.9))
-	rm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tile.add_child(rm)
 	# Featured star (bottom-right) — persists on the selected deck card only.
 	if _is_featured_card(card_name):
-		var star := Label.new()
-		star.text = "★"
+		var star: TextureRect = ChromeIcon.make_rect("featured", Vector2(16, 16), ChromeIcon.COLOR_FEATURED)
 		star.layout_mode = 1
 		star.anchor_left = 1.0
 		star.anchor_right = 1.0
@@ -3178,13 +3186,6 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 		star.offset_right = -1.0
 		star.offset_top = -18.0
 		star.offset_bottom = -1.0
-		star.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		star.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		star.add_theme_font_size_override("font_size", 14)
-		star.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2, 1.0))
-		star.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
-		star.add_theme_constant_override("outline_size", 3)
-		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(star)
 	# Temporary yellow only while choosing a featured card.
 	if _featured_pick_mode:

@@ -31,6 +31,9 @@ const _SKIN_MAP: Dictionary = {
 	"ui_context_menu_attack.png": "ui_magitech_attack.png",
 	"ui_context_menu_info.png":   "ui_magitech_info.png",
 	"ui_context_menu_bluff.png":  "ui_magitech_bluff.png",
+	## Card context-menu only (small). Big `ui_magitech_attack/union` stay for other HUD.
+	"ui_context_menu_attack_sm.png": "ui_magitech_context_attack.png",
+	"ui_context_menu_union.png":     "ui_magitech_context_union.png",
 	"ui_icon_union.png":          "ui_magitech_union.png",
 	"ui_crystal_indicator.png":   "ui_magitech_crystal.png",
 	"ui_icon_attack_count.png":   "ui_magitech_attack_count.png",
@@ -121,4 +124,33 @@ func hud_tex(v1_filename: String) -> Texture2D:
 	if mapped != "" and not skip_v3 and ResourceLoader.exists(_V3_BASE + mapped):
 		return load(_V3_BASE + mapped) as Texture2D
 	push_warning("HudSkin: missing texture for %s" % v1_filename)
+	return null
+
+
+## Card context-menu Attack — v3 small plaque; else full attack icon.
+func context_menu_attack_tex() -> Texture2D:
+	if version == "v3":
+		var sm: Texture2D = _load_v3_file("ui_magitech_context_attack.png")
+		if sm != null:
+			return sm
+	return hud_tex("ui_context_menu_attack.png")
+
+
+## Card context-menu Union — v3 small plaque; else main union icon.
+func context_menu_union_tex() -> Texture2D:
+	if version == "v3":
+		var sm: Texture2D = _load_v3_file("ui_magitech_context_union.png")
+		if sm != null:
+			return sm
+	return hud_tex("ui_icon_union.png")
+
+
+func _load_v3_file(filename: String) -> Texture2D:
+	var path := _V3_BASE + filename
+	if ResourceLoader.exists(path):
+		return load(path) as Texture2D
+	if FileAccess.file_exists(path):
+		var img := Image.load_from_file(path)
+		if img != null and not img.is_empty():
+			return ImageTexture.create_from_image(img)
 	return null

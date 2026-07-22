@@ -263,11 +263,13 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 
 	var captured_index: int = index
 	var deck_name: String = deck.deck_name
-	var copy_btn := _make_icon_btn("❐", "Duplicate deck")
+	var copy_btn := _make_icon_btn("", "Duplicate deck")
+	ChromeIcon.apply_button(copy_btn, "duplicate", true, "", ChromeIcon.COLOR_ON_LIGHT, 16)
 	copy_btn.pressed.connect(func() -> void:
 		_confirm_duplicate(captured_index, deck_name))
 	icon_col.add_child(copy_btn)
-	var del_btn := _make_icon_btn("🗑", "Delete deck")
+	var del_btn := _make_icon_btn("", "Delete deck")
+	ChromeIcon.apply_button(del_btn, "delete", true, "", ChromeIcon.COLOR_ON_LIGHT, 16)
 	del_btn.pressed.connect(func() -> void:
 		_confirm_delete(captured_index, deck_name))
 	icon_col.add_child(del_btn)

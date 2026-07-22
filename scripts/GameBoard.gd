@@ -135,6 +135,8 @@ const _OPT_REVEAL_HOVER: float = 0.80
 const _V3_HOVER_SCALE: float = 1.08
 ## v3: shift playmat + MainLayout (grids/cards/borders) down together.
 const _V3_BOARD_DOWN: float = 28.0
+## Extra Y shift for cyan grid borders only (positive = down). Tune if lines sit above cards.
+const _V3_GRID_LINE_NUDGE_Y: float = 0.0
 ## Dashboard content band inside the tall PNG (opaque region ≈ y 3.7%–39%).
 const _V3_TOP_DASH_CONTENT_TOP: float = 0.037
 const _V3_TOP_DASH_CONTENT_H: float = 0.355
@@ -315,6 +317,8 @@ var _attack_hover_node: Control = null  # card node currently showing attack-tar
 var grid_nodes: Array = [[], []]
 # bluff_labels[player][row][col] -> Label overlaid on card node
 var bluff_labels: Array = [[], []]
+# bluff_icons[player][row][col] -> TextureRect (v3 custom emoji) or null
+var bluff_icons: Array = [[], []]
 var _battle_layout_pending: bool = false
 
 # ── Campaign return button (added to game_over_panel at runtime)
@@ -503,10 +507,10 @@ func _ready() -> void:
 	_build_v3_chrome_frames()
 	_build_union_suggest_button()
 	SaveManager.union_mechanism_changed.connect(func(_u: bool) -> void: _update_union_suggest_button())
-	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
+	CTX_ICON_ATTACK = HudSkin.context_menu_attack_tex()
 	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
-	CTX_ICON_UNION  = HudSkin.hud_tex("ui_icon_union.png")
+	CTX_ICON_UNION  = HudSkin.context_menu_union_tex()
 	HudSkin.skin_changed.connect(_reload_hud_skin)
 	_reload_hud_skin()
 	game_over_panel.visible = false
@@ -725,9 +729,11 @@ func _build_grids() -> void:
 		grid_container.columns = GameState.GRID_SIZE
 		grid_nodes[p] = []
 		bluff_labels[p] = []
+		bluff_icons[p] = []
 		for r in range(GameState.GRID_SIZE):
 			var row_arr: Array = []
 			var lbl_row: Array = []
+			var icon_row: Array = []
 			for c in range(GameState.GRID_SIZE):
 				var card_node: Control = CARD_SCENE.instantiate()
 				card_node.rarity_fx_enabled = false
@@ -752,10 +758,26 @@ func _build_grids() -> void:
 				bluff_lbl.add_theme_constant_override("shadow_offset_y", 2)
 				bluff_lbl.add_theme_constant_override("shadow_outline_size", 3)
 				card_node.add_child(bluff_lbl)
+				var bluff_icon: TextureRect = null
+				if HudSkin.version == "v3":
+					bluff_icon = TextureRect.new()
+					bluff_icon.set_anchors_preset(Control.PRESET_CENTER_TOP)
+					bluff_icon.offset_left = -18.0
+					bluff_icon.offset_top = -2.0
+					bluff_icon.offset_right = 18.0
+					bluff_icon.offset_bottom = 34.0
+					bluff_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+					bluff_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+					bluff_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+					bluff_icon.z_index = 5
+					bluff_icon.visible = false
+					card_node.add_child(bluff_icon)
 				row_arr.append(card_node)
 				lbl_row.append(bluff_lbl)
+				icon_row.append(bluff_icon)
 			grid_nodes[p].append(row_arr)
 			bluff_labels[p].append(lbl_row)
+			bluff_icons[p].append(icon_row)
 	call_deferred("_add_grid_line_panels")
 	call_deferred("_refresh_all_bluff_labels")
 
@@ -863,38 +885,48 @@ func _add_grid_line_panels() -> void:
 	# Wait one extra frame so the GridContainer layout is fully computed
 	await get_tree().process_frame
 	_clear_grid_borders()
+	if grid_nodes.is_empty() or grid_nodes[0].is_empty():
+		return
 	var ml: Node = get_node("MainLayout")
 	var ml_idx: int = ml.get_index()
 	var lw: float = float(GRID_LINE_W)
-	var sep: float = 4.0  # matches scene h_separation / v_separation
+	var sep: float = float(BATTLE_GRID_SEP)
+	var board_origin: Vector2 = global_position
+	var nudge_y: float = _V3_GRID_LINE_NUDGE_Y if HudSkin.version == "v3" else 0.0
 
 	for p in range(2):
-		var gc: GridContainer = p1_grid if p == 0 else p2_grid
-		var gpos: Vector2 = gc.global_position
-		var gsz: Vector2  = gc.size
+		var n: int = GameState.GRID_SIZE
+		var first: Control = grid_nodes[p][0][0] as Control
+		var last: Control = grid_nodes[p][n - 1][n - 1] as Control
+		if first == null or last == null:
+			continue
+		# Align to actual card bounds (not GridContainer size, which can lag a frame).
+		var gpos: Vector2 = first.global_position + Vector2(0.0, nudge_y)
+		var br: Vector2 = last.global_position + last.size + Vector2(0.0, nudge_y)
+		var gsz: Vector2 = br - gpos
 
-		# Build a list of (position, size) rects for each line strip
+		# Build a list of (global position, size) rects for each line strip
 		var strips: Array = []
 
 		# Outer border — 4 thin edges
 		strips.append([Vector2(gpos.x - lw, gpos.y - lw), Vector2(gsz.x + lw * 2.0, lw)])  # top
-		strips.append([Vector2(gpos.x - lw, gpos.y + gsz.y), Vector2(gsz.x + lw * 2.0, lw)])  # bottom
+		strips.append([Vector2(gpos.x - lw, br.y), Vector2(gsz.x + lw * 2.0, lw)])  # bottom
 		strips.append([Vector2(gpos.x - lw, gpos.y), Vector2(lw, gsz.y)])  # left
-		strips.append([Vector2(gpos.x + gsz.x, gpos.y), Vector2(lw, gsz.y)])  # right
+		strips.append([Vector2(br.x, gpos.y), Vector2(lw, gsz.y)])  # right
 
 		# Inner vertical lines — between each pair of columns
-		for c in range(GameState.GRID_SIZE - 1):
+		for c in range(n - 1):
 			var card_node: Control = grid_nodes[p][0][c]
 			var gap_x: float = card_node.global_position.x + card_node.size.x
 			strips.append([Vector2(gap_x, gpos.y), Vector2(sep, gsz.y)])
 
 		# Inner horizontal lines — between each pair of rows
-		for r in range(GameState.GRID_SIZE - 1):
+		for r in range(n - 1):
 			var card_node: Control = grid_nodes[p][r][0]
-			var gap_y: float = card_node.global_position.y + card_node.size.y
+			var gap_y: float = card_node.global_position.y + card_node.size.y + nudge_y
 			strips.append([Vector2(gpos.x, gap_y), Vector2(gsz.x, sep)])
 
-		# Spawn one ColorRect per strip
+		# Spawn one ColorRect per strip (convert global → GameBoard local)
 		for strip: Array in strips:
 			var cr := ColorRect.new()
 			cr.color = GRID_LINE_COLOR
@@ -902,8 +934,8 @@ func _add_grid_line_panels() -> void:
 			cr.add_to_group("battle_grid_border")
 			add_child(cr)
 			move_child(cr, ml_idx)
-			cr.position = strip[0]
-			cr.size    = strip[1]
+			cr.position = (strip[0] as Vector2) - board_origin
+			cr.size = strip[1]
 
 func _setup_buttons() -> void:
 	attack_btn.pressed.connect(_on_attack_btn)
@@ -3103,10 +3135,10 @@ var CTX_ICON_BLUFF:  Texture2D
 var CTX_ICON_UNION:  Texture2D
 
 const CTX_MENU_SCALE: float = 1.25
-const CTX_ICON_SZ: float = 52.0 * CTX_MENU_SCALE
+const CTX_ICON_SZ: float = 68.0 * CTX_MENU_SCALE
 const CTX_PAD: float = 8.0 * CTX_MENU_SCALE
-const CTX_SEP: float = 6.0 * CTX_MENU_SCALE
-const CTX_ICON_MAX_W: float = 36.0 * CTX_MENU_SCALE
+const CTX_SEP: float = 8.0 * CTX_MENU_SCALE
+const CTX_ICON_MAX_W: float = 58.0 * CTX_MENU_SCALE
 const BLUFF_MODAL_SIZE: Vector2 = Vector2(598.5, 130.0) * CTX_MENU_SCALE
 
 
@@ -3297,7 +3329,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 func _make_context_icon_btn(tex: Texture2D) -> Button:
 	var btn := Button.new()
 	btn.icon = tex
-	btn.expand_icon = false
+	btn.expand_icon = true
 	btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -3341,6 +3373,9 @@ func _make_context_btn(label: String, col: Color) -> Button:
 
 const BLUFF_EMOJIS_BOARD: Array = ["😃","🥺","🤣","😎","❤️","☠️","🧨","👍","🤝","🖕"]
 func _get_bluff_emojis_board() -> Array:
+	# v3 uses custom middle-finger PNG — skip Steam 💩 swap.
+	if BluffEmoji.uses_custom():
+		return BLUFF_EMOJIS_BOARD
 	if SaveManager.nsfw_enabled:
 		return BLUFF_EMOJIS_BOARD.map(func(e: String) -> String: return "💩" if e == "🖕" else e)
 	return BLUFF_EMOJIS_BOARD
@@ -3349,30 +3384,63 @@ func _refresh_all_bluff_labels() -> void:
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				(bluff_labels[p][r][c] as Label).text = GameState.get_bluff(p, r, c)
+				_apply_bluff_visual(p, r, c, GameState.get_bluff(p, r, c))
 
 func _refresh_bluff_label(player: int, row: int, col: int) -> void:
-	(bluff_labels[player][row][col] as Label).text = GameState.get_bluff(player, row, col)
+	_apply_bluff_visual(player, row, col, GameState.get_bluff(player, row, col))
+
+
+func _bluff_icon_at(player: int, row: int, col: int) -> TextureRect:
+	if player < 0 or player >= bluff_icons.size():
+		return null
+	if row < 0 or row >= bluff_icons[player].size():
+		return null
+	if col < 0 or col >= (bluff_icons[player][row] as Array).size():
+		return null
+	return bluff_icons[player][row][col] as TextureRect
+
+
+func _apply_bluff_visual(player: int, row: int, col: int, emoji: String) -> void:
+	var lbl: Label = bluff_labels[player][row][col] as Label
+	var icon: TextureRect = _bluff_icon_at(player, row, col)
+	var use_png: bool = icon != null and BluffEmoji.uses_custom() and BluffEmoji.has_tex(emoji)
+	if use_png:
+		icon.texture = BluffEmoji.tex(emoji)
+		icon.visible = true
+		lbl.text = ""
+		lbl.visible = false
+	else:
+		if icon != null:
+			icon.texture = null
+			icon.visible = false
+		lbl.visible = true
+		lbl.text = emoji
+
 
 ## Sets a bluff emoji and plays the pop animation. Use this instead of
 ## set_bluff + _refresh_bluff_label whenever a new emoji is being placed.
 const BLUFF_ANIM_DURATION: float = 0.38   # enlarge(0.15) + hold(0.08) + shrink(0.15)
 func _set_bluff_animated(player: int, row: int, col: int, emoticon: String) -> void:
 	GameState.set_bluff(player, row, col, emoticon)
-	var lbl: Label = bluff_labels[player][row][col] as Label
-	lbl.text = emoticon
+	_apply_bluff_visual(player, row, col, emoticon)
 	if emoticon != "":
 		SFXManager.play(SFXManager.SFX_BLUFF_PLACE)
-		_animate_bluff_label(lbl)
+		var icon: TextureRect = _bluff_icon_at(player, row, col)
+		if icon != null and icon.visible:
+			_animate_bluff_marker(icon)
+		else:
+			_animate_bluff_marker(bluff_labels[player][row][col] as Control)
 
-func _animate_bluff_label(lbl: Label) -> void:
-	lbl.pivot_offset = lbl.size / 2.0
-	lbl.scale = Vector2.ONE
+func _animate_bluff_marker(node: Control) -> void:
+	if node == null:
+		return
+	node.pivot_offset = node.size / 2.0
+	node.scale = Vector2.ONE
 	var tw: Tween = create_tween()
-	tw.tween_property(lbl, "scale", Vector2(2.2, 2.2), 0.15) \
+	tw.tween_property(node, "scale", Vector2(2.2, 2.2), 0.15) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_interval(0.08)
-	tw.tween_property(lbl, "scale", Vector2.ONE, 0.15) \
+	tw.tween_property(node, "scale", Vector2.ONE, 0.15) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
@@ -3445,20 +3513,33 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 
 	for emoji in _get_bluff_emojis_board():
 		var btn := Button.new()
-		btn.text = emoji
 		var emoji_sz: float = 46.0 * CTX_MENU_SCALE
 		btn.custom_minimum_size = Vector2(emoji_sz, emoji_sz)
 		btn.add_theme_font_size_override("font_size", int(22.0 * CTX_MENU_SCALE))
+		btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
 		var esb := StyleBoxFlat.new()
 		esb.bg_color = Color(0.08, 0.12, 0.28, 1.0)
 		esb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
 		esb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
 		esb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
 		esb.corner_radius_bottom_left  = int(6.0 * CTX_MENU_SCALE)
+		# Even content box so icon/text centers in the square button.
+		esb.content_margin_left = 0
+		esb.content_margin_top = 0
+		esb.content_margin_right = 0
+		esb.content_margin_bottom = 0
 		btn.add_theme_stylebox_override("normal", esb)
+		btn.add_theme_stylebox_override("pressed", esb)
+		btn.add_theme_stylebox_override("focus", esb)
 		var esbh := esb.duplicate() as StyleBoxFlat
 		esbh.bg_color = Color(0.15, 0.25, 0.55, 1.0)
 		btn.add_theme_stylebox_override("hover", esbh)
+		if BluffEmoji.uses_custom() and BluffEmoji.has_tex(str(emoji)):
+			BluffEmoji.apply_button(btn, str(emoji), emoji_sz * 0.78)
+		else:
+			btn.text = str(emoji)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
 			_set_bluff_animated(snap_player, snap_row, snap_col, snap_emoji)
@@ -5484,10 +5565,10 @@ func _reload_hud_skin(_new_version: String = "") -> void:
 	if playmat_rect:
 		playmat_rect.texture = HudSkin.hud_tex("ui_playmat_default.png")
 		_apply_playmat_skin_layout(playmat_rect)
-	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
+	CTX_ICON_ATTACK = HudSkin.context_menu_attack_tex()
 	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
-	CTX_ICON_UNION  = HudSkin.hud_tex("ui_icon_union.png")
+	CTX_ICON_UNION  = HudSkin.context_menu_union_tex()
 	if is_instance_valid(_end_turn_btn):
 		_end_turn_btn.texture_normal     = HudSkin.hud_tex("ui_end_turn.png")
 	if is_instance_valid(_options_btn_art):
@@ -5787,7 +5868,7 @@ func _make_sub_overlay(half_w: float = 420.0, half_h: float = 300.0) -> Dictiona
 
 func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 	var back_btn := Button.new()
-	back_btn.text = "← Back"
+	ChromeIcon.apply_button(back_btn, "back", false, "  Back", ChromeIcon.COLOR_ON_DARK, 16)
 	GameDialog.style_menu_button(back_btn)
 	back_btn.pressed.connect(func() -> void:
 		dimmer.queue_free()

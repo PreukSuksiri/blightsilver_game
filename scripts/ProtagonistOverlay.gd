@@ -167,15 +167,13 @@ func _build_top_actions() -> void:
 	row.add_child(save_btn)
 
 	var close_btn := Button.new()
-	close_btn.text = "✕"
 	close_btn.custom_minimum_size = Vector2(38, 36)
-	close_btn.add_theme_font_size_override("font_size", 16)
-	close_btn.add_theme_color_override("font_color", Color(0.55, 0.72, 1.0, 0.85))
 	var close_sb := _make_close_stylebox()
 	close_btn.add_theme_stylebox_override("normal", close_sb)
 	close_btn.add_theme_stylebox_override("hover", close_sb)
 	close_btn.add_theme_stylebox_override("pressed", close_sb)
 	close_btn.add_theme_stylebox_override("focus", close_sb)
+	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 18)
 	close_btn.pressed.connect(_close)
 	row.add_child(close_btn)
 
@@ -211,9 +209,7 @@ func _make_arrow_wrap(is_up: bool) -> Dictionary:
 
 func _make_pose_arrow(is_up: bool) -> Button:
 	var btn := Button.new()
-	btn.text = "▲" if is_up else "▼"
 	btn.custom_minimum_size = Vector2(CAPSULE_W, ARROW_H)
-	btn.add_theme_font_size_override("font_size", 18)
 	btn.add_theme_color_override("font_color", SELECT_CYAN)
 	var sb := _make_arrow_stylebox()
 	btn.add_theme_stylebox_override("normal", sb)
@@ -223,6 +219,14 @@ func _make_pose_arrow(is_up: bool) -> Button:
 	btn.add_theme_stylebox_override("hover", hover)
 	btn.add_theme_stylebox_override("pressed", hover)
 	btn.add_theme_stylebox_override("focus", sb)
+	ChromeIcon.apply_button(
+		btn,
+		"chevron_up" if is_up else "chevron_down",
+		false,
+		"",
+		SELECT_CYAN,
+		18
+	)
 	btn.visible = false
 	btn.pressed.connect(func() -> void: _cycle_pose(-1 if is_up else 1))
 	return btn

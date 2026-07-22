@@ -201,14 +201,12 @@ func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> v
 	# Close button – top-right, outside card frame
 	var close_btn := Button.new()
 	var cb_size   := 38.0
-	close_btn.text = "✕"
 	close_btn.set_anchors_preset(Control.PRESET_CENTER)
 	close_btn.offset_left   = card_w * 0.5 + 8.0
 	close_btn.offset_top    = -card_h * 0.5
 	close_btn.offset_right  = card_w * 0.5 + 8.0 + cb_size
 	close_btn.offset_bottom = -card_h * 0.5 + cb_size
-	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	close_btn.add_theme_font_size_override("font_size", 20)
+	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 18)
 	close_btn.pressed.connect(_close)
 	add_child(close_btn)
 
@@ -406,14 +404,12 @@ func _build_ui(card_w: float, card_h: float) -> void:
 	# Close button – outside the card frame, anchored to card's top-right corner
 	var close_btn := Button.new()
 	var cb_size   := 38.0
-	close_btn.text = "✕"
 	close_btn.set_anchors_preset(Control.PRESET_CENTER)
 	close_btn.offset_left   = card_w * 0.5 + 8.0
 	close_btn.offset_top    = -card_h * 0.5
 	close_btn.offset_right  = card_w * 0.5 + 8.0 + cb_size
 	close_btn.offset_bottom = -card_h * 0.5 + cb_size
-	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	close_btn.add_theme_font_size_override("font_size", 20)
+	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 18)
 	close_btn.pressed.connect(_close)
 	add_child(close_btn)
 

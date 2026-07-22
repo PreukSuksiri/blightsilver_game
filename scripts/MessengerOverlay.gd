@@ -233,11 +233,9 @@ func _build_header() -> Control:
 	hrow.add_child(title)
 
 	var close_btn := Button.new()
-	close_btn.text = "✕"
 	close_btn.flat = true
 	close_btn.custom_minimum_size = Vector2(36, 36)
-	close_btn.add_theme_font_size_override("font_size", 18)
-	close_btn.add_theme_color_override("font_color", Color(0.85, 0.88, 0.95))
+	ChromeIcon.apply_button(close_btn, "close", false, "", Color(0.85, 0.88, 0.95), 16)
 	close_btn.pressed.connect(_close)
 	hrow.add_child(close_btn)
 	return header

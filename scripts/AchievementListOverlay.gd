@@ -55,8 +55,8 @@ func _build_ui() -> void:
 	header.add_child(_counter_lbl)
 
 	var close_btn := Button.new()
-	close_btn.text = "✕"
 	close_btn.custom_minimum_size = Vector2(38, 32)
+	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 16)
 	close_btn.pressed.connect(queue_free)
 	header.add_child(close_btn)
 

@@ -28,7 +28,6 @@ static func _make_close_stylebox(bg: Color, border: Color) -> StyleBoxFlat:
 static func style_close_button(btn: Button) -> void:
 	if btn == null:
 		return
-	btn.text = "✕"
 	btn.custom_minimum_size = CLOSE_BTN_SIZE
 	btn.focus_mode = Control.FOCUS_NONE
 	btn.add_theme_stylebox_override("normal", _make_close_stylebox(CLOSE_BG_NORMAL, CLOSE_BORDER))
@@ -39,6 +38,7 @@ static func style_close_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", CLOSE_FONT)
 	btn.add_theme_color_override("font_hover_color", CLOSE_FONT_HOVER)
 	btn.add_theme_color_override("font_pressed_color", CLOSE_FONT)
+	ChromeIcon.apply_button(btn, "close", false, "", CLOSE_FONT, 18)
 
 
 static func style_title(label: Label, text: String = "") -> void:

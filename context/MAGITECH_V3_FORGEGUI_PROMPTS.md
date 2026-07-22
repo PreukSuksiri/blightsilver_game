@@ -8,8 +8,9 @@ Human workflow (do **not** paste into ForgeGUI):
 - **Primary style lock:** `style_ref_holytech_kit_board.png` **+** `style_ref_panel_9slice_approved.png` (#20 ✓ approved, blank)  
 - **Save to:** `assets/textures/ui/battle/v3_magitech/`  
 - **Switch:** `hud_skin v3` · revert `hud_skin v2`  
-- **Order:** Phase A core wired (`HudSkin` default `v3`). #27 ✓ top dashboard + #28 ✓ bottom vault wired (v3 only).  
-- **Phase E (clockwork playmat):** see **Phase E** section below → save under `battle/v3_magitech/clockwork/`.  
+- **Order:** Phase A core wired (`HudSkin` default `v3`). #27 ✓ top dashboard + #28 ✓ bottom vault wired (v3 only). **Phase A battle screen approved.**  
+- **Phase B (game-wide chrome):** see **Phase B** section below → save under `magitech_v3/chrome/`. Start with **B1**. Skip B10, B12–B20, B26 this pass.  
+- **Phase E (clockwork playmat):** see **Phase E** section → save under `battle/v3_magitech/clockwork/` (can run parallel later).  
 
 - **If gen ignores the kit** (e.g. cartoon wood UI): style refs failed to upload — re-attach and confirm they are active. Do not “fix” with long negative prompts.
 
@@ -312,6 +313,28 @@ Game UI Attack context icon, isolated asset, square canvas 128x128, transparent 
 Single witchhunter flintlock pistol angled diagonally — realistic silver barrel and lock, dark luxury leather grip, thin cyan accent only. Freeform weapon only — no circular frame, no placard, no second pistol. Match cyan and silver of the uploaded style references. No text, no logos, no watermark.
 ```
 
+**#11 refine — fuller 3/4 toward camera** (attach current attack PNG only as **material/style** ref — not pose):
+
+Do **not** say “same angle / same pose.” Goal: new camera, fuller silhouette.
+
+```
+Game UI Attack context icon, isolated asset, square canvas 128x128, transparent background outside the object.
+
+Single witchhunter flintlock pistol in a foreshortened three-quarter view aimed slightly toward the camera — muzzle closer and larger, barrel compressed in depth, grip and flintlock still readable. Fuller, stockier silhouette that fills the square; avoid flat long side-profile and skinny diagonal strip.
+
+Sacred-silver barrel and lock, dark luxury leather or wood grip, thin cyan seam accents only — match materials of the uploaded style reference. Freeform weapon only — no circular frame, no placard, no second pistol, no hand. No text, no logos, no watermark.
+```
+
+**#11 refine — if still too long / thin:**
+
+```
+Game UI Attack icon, 128x128, transparent outside. Stronger foreshortening: muzzle more toward camera, grip compact in the lower corner, weapon mass filling most of the square. Silver + cyan accents, luxury grip. No side-profile strip. No frame, no text.
+```
+
+Drop-in filenames after export:
+- Large / reckoning: `ui_magitech_attack.png`
+- Context menu small: `ui_magitech_context_attack.png` (same art, smaller export or downscale)
+
 ---
 
 ## #12 — `ui_magitech_info.png` · 128×128
@@ -346,6 +369,24 @@ Elegant Venetian opera eye-mask covering eyes and nose only — no mouth, no low
 
 ```
 Same opera mask icon, but eyes and nose only — remove the mouth completely. Make the mask porcelain white / soft white, not dark gunmetal. Soft elegant filigree, thin cyan edge accent. Calm and refined, not scary. No lower face, no teeth, no smoke. No text, no logos.
+```
+
+**#13 alt — three-quarter toward camera** (attach current `ui_magitech_bluff.png` as **material/style** only — not pose):
+
+Do **not** keep a flat front-on / billboard face. Goal: depth and a fuller silhouette in the square.
+
+```
+Game UI Bluff context icon, isolated asset, square canvas 128x128, transparent background outside the mask.
+
+Elegant Venetian opera eye-mask (eyes and nose only) in a three-quarter view turned slightly toward the camera — show cheek/side depth and nose bridge foreshortening, not a flat symmetrical front face. One eye closer, the far wing slightly receding; fuller volumetric silhouette that fills the square.
+
+Porcelain white / soft white enamel, cool silver filigree, thin cyan seam accent only. Gentle, refined, not scary or grotesque. Standalone mask only — no mouth, no lower face, no teeth, no lips, no smoke, no jester bells, no circular medallion frame, no head. Match cyan-silver materials of the uploaded style reference. No text, no logos, no watermark.
+```
+
+**#13 alt — if still too flat / billboard:**
+
+```
+Game UI Bluff icon, 128x128, transparent outside. Stronger three-quarter turn: mask clearly angled in space, near eye larger, far edge thinner. Porcelain white + silver filigree + thin cyan accent. Eyes and nose only. No front-on symmetry. No frame, no text.
 ```
 
 ---
@@ -803,3 +844,356 @@ No logos, no text. Transparent above and below the strip. Match uploaded silver-
 - Mecha robot limbs, cyberpunk neon tubes, hologram gears  
 - Photoreal photo scrap / watermark  
 - Motion already baked as frames (we animate in Godot — deliver still PNGs only)  
+
+---
+
+# Phase B — Game-wide chrome icons
+
+**Goal:** Replace player-facing unicode / old decoration icons with Magitech v3 holytech PNGs.  
+**Gate:** Phase A battle screen approved ✓.  
+**Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → Phase B.  
+**Save to:** `assets/textures/ui/magitech_v3/chrome/`  
+
+**Order:** Generate **B1** first (8 action icons) → wire in Godot → then **B2** reskins → **B3** only if unicode still sticks out.  
+**Skip this pass:** Exploration HUD (**B13–B17**, **B26**); exit (**B10**); credit (**B12**); magnifier (**B18**); campaign platforms (**B19–B20**).
+
+**Style lock:** blank `#20` panel + one approved plaque (End Turn / Options).  
+Prefer **remove** holytech kit board (crests leak onto icon hubs).
+
+**Hard rules (every B icon):**
+
+- Isolated single icon · transparent outside · centered · readable at ~24–40px UI size  
+- Brushed sacred silver + thin sanctified cyan accents · dark charcoal recesses  
+- **No text, no letters, no logos, no faction crests, no watermark**  
+- Not emoji / not flat Material-icon blue · not mecha · not cyberpunk neon · not purple flood  
+- Destructive icons (delete / scrap): same silver kit, slightly warmer/darker void face — not a second rainbow skin  
+
+**Shared refine — strip branding:**
+
+```
+Identical silver-cyan UI icon, but DELETE every logo, crest, emblem, seal, letter, and watermark. Plain brushed sacred silver with thin cyan accents only. Transparent outside.
+```
+
+---
+
+## Phase B — Flat metal alt (preferred for tiny UI)
+
+Use this **instead of** the ornate B1–B3 plaque prompts when generating chrome icons. Same filenames / save path.  
+**Style lock:** blank `#20` only (or none). Do **not** attach End Turn / Options plaques — they force deep bevels.
+
+### Master style (paste every gen) · 128×128
+
+**Copy this**, then append the one-line **Glyph** for that ID:
+
+```
+Game UI flat icon, exact square 128x128, transparent background outside the glyph.
+
+FLAT METAL SILHOUETTE style (not embossed UI plaque, not 3D dossier chrome):
+- One bold opaque glyph centered, filling 75–90% of the canvas
+- Brushed sacred-silver fill, almost flat — tiny soft shade only, NO deep grooves, NO bolts, NO heavy bevels, NO nested panels
+- Thin sanctified cyan EDGE STROKE / rim light only (1–2px feel), optional single cyan accent cut
+- Hard clean silhouette readable at 24px; simple shapes; minimal internal detail
+- Magitech holy-tech palette: silver + cyan on transparency — not Material blue, not emoji, not mecha, not cyberpunk neon, not purple
+
+CRITICAL: no text, no letters, no logos, no crests, no watermark. Transparent outside the glyph only.
+```
+
+### Glyph lines (append under master)
+
+| ID | Save as | Append this Glyph line |
+|----|---------|------------------------|
+| B01 | `ui_v3_icon_duplicate.png` | `Glyph: two overlapping flat silver rectangles (copy / duplicate), cyan edge.` |
+| B02 | `ui_v3_icon_delete.png` | `Glyph: flat silver trash-hatch or bin silhouette, slightly darker face, cyan edge.` |
+| B03 | `ui_v3_icon_close.png` | `Glyph: bold flat silver X (two bars), cyan edge.` |
+| B04 | `ui_v3_icon_featured.png` | `Glyph: flat five-point silver star, cyan edge.` |
+| B05 | `ui_v3_icon_remove.png` | `Glyph: small flat silver X in a thin cyan ring (card-corner remove).` |
+| B06 | `ui_v3_icon_add.png` | `Glyph: bold flat silver plus +, cyan edge.` |
+| B07 | `ui_v3_icon_scrap.png` | `Glyph: flat silver scissors / shears silhouette, cyan edge.` |
+| B08 | `ui_v3_icon_locked.png` | `Glyph: flat silver padlock, cyan edge.` |
+| B09 | `ui_v3_icon_setting.png` | `Glyph: flat silver cog / gear face, cyan edge.` |
+| B10 | *(skip — unused)* | Do not generate. |
+| B11 | `ui_v3_mailbox.png` | `Glyph: flat silver envelope or mail hatch, cyan edge.` |
+| B12 | *(skip — credit)* | Do not generate this pass. |
+| B13–B17 | *(deferred — Exploration HUD)* | Skip this pass. |
+| B18 | *(skip — magnifier)* | Do not generate this pass. |
+| B19–B20 | *(skip — campaign platforms)* | Do not generate this pass. |
+| B21 | `ui_v3_icon_back.png` | `Glyph: flat silver left chevron / back arrow, cyan edge.` |
+| B22 | `ui_v3_icon_expand.png` | `Glyph: flat silver expand chevron (right or down), cyan edge.` |
+| B23 | `ui_v3_icon_collapse.png` | `Glyph: flat silver collapse chevron (up), cyan edge.` |
+| B24 | `ui_v3_icon_list.png` | `Glyph: three flat silver horizontal list bars, cyan ticks.` |
+| B25 | `ui_v3_icon_grid.png` | `Glyph: flat silver 2x2 grid tiles, cyan seams.` |
+| B26 | *(deferred — Exploration mail badge)* | Skip this pass. |
+| B27 | `ui_v3_icon_formations.png` | `Glyph: flat silver tactical slate with three unit pips, cyan edge.` |
+| B28 | `ui_v3_icon_copy.png` | `Glyph: simpler overlapping flat silver plates (copy), cyan edge.` |
+
+**Example full paste (B07 scrap):**
+
+```
+Game UI flat icon, exact square 128x128, transparent background outside the glyph.
+
+FLAT METAL SILHOUETTE style (not embossed UI plaque, not 3D dossier chrome):
+- One bold opaque glyph centered, filling 75–90% of the canvas
+- Brushed sacred-silver fill, almost flat — tiny soft shade only, NO deep grooves, NO bolts, NO heavy bevels, NO nested panels
+- Thin sanctified cyan EDGE STROKE / rim light only (1–2px feel), optional single cyan accent cut
+- Hard clean silhouette readable at 24px; simple shapes; minimal internal detail
+- Magitech holy-tech palette: silver + cyan on transparency — not Material blue, not emoji, not mecha, not cyberpunk neon, not purple
+
+CRITICAL: no text, no letters, no logos, no crests, no watermark. Transparent outside the glyph only.
+
+Glyph: flat silver scissors / shears silhouette, cyan edge.
+```
+
+**Flat-alt reject if:** deep plaque chrome, bolts/rivets soup, tiny unreadable filigree, emoji look, blue Material icons.
+
+---
+
+## B1 — High-priority action icons · 128×128
+
+*(Ornate plaque variants — use only if Flat alt above feels too plain.)*
+
+### B01 — `ui_v3_icon_duplicate.png` · 128×128
+
+Replaces `❐` (Deck Switch Gallery — duplicate deck).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech duplicate / copy control: two overlapping sacred-silver dossier plaques or tablets, slightly offset, thin sanctified cyan seam accents. Reads clearly as “make a copy” at small size. Centered, opaque metal faces, clean silhouette.
+
+No text, no letters, no logos, no crests, no watermark. Match uploaded silver-cyan style references. Not mecha, not cyberpunk.
+```
+
+---
+
+### B02 — `ui_v3_icon_delete.png` · 128×128
+
+Replaces `🗑` (Deck Switch Gallery — delete).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech delete control: a brushed sacred-silver waste-chute / incinerator hatch or sealed discard vault door with a darker charcoal void face and thin sanctified cyan seam. Slightly warmer darker metal than normal icons so it reads as destructive, still same kit. Simple, readable at small size — not a cartoon trash can emoji.
+
+No text, no logos, no crests, no skull, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+### B03 — `ui_v3_icon_close.png` · 128×128
+
+Replaces `✕` / `×` (overlay close).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech close / dismiss mark: a bold sacred-silver X formed by two beveled metal bars with thin cyan edge light, centered in a small dark hex or circular recess. Clean geometric X — not a letter “X” typography, not a skull.
+
+No text, no logos, no crests, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+### B04 — `ui_v3_icon_featured.png` · 128×128
+
+Replaces `★` (Deck Builder featured star).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech featured / favorite mark: a five-point ceremonial star medallion in brushed sacred silver with a thin sanctified cyan inner glow. Solid opaque star, sharp readable points at small size. Optional tiny bolt detail — no faction crest inside.
+
+No text, no logos, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+### B05 — `ui_v3_icon_remove.png` · 128×128
+
+Replaces `×` on cards (Deck Builder remove-from-deck).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE small holy-tech remove-from-list mark: a compact sacred-silver X inside a small dark circular chip / hex port, cyan seam ring. Smaller visual weight than the overlay close icon — meant to sit on a card corner.
+
+No text, no logos, no crests, no watermark. Match uploaded style references.
+```
+
+---
+
+### B06 — `ui_v3_icon_add.png` · 128×128
+
+Replaces `⊕` (Deck Builder add).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech add / plus control: a bold sacred-silver plus sign (+) inside a dark circular chip with thin sanctified cyan ring. Beveled metal bars, clean silhouette, readable at small size.
+
+No text, no logos, no crests, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+### B07 — `ui_v3_icon_scrap.png` · 128×128
+
+Replaces `✂` (Card Gallery scrap).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech scrap / cut control: ceremonial silver shears or a cutting guillotine blade plate with darker void accents and thin cyan seam. Reads as “destroy / scrap card,” same kit as delete but distinct silhouette from the trash hatch.
+
+No text, no logos, no crests, no watermark. Match uploaded style references. Not a cute emoji scissors.
+```
+
+---
+
+### B08 — `ui_v3_icon_locked.png` · 128×128
+
+Replaces `🔒` (Campaign gallery locked packs).
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent background outside the icon.
+
+ONE holy-tech lock: a brushed sacred-silver padlock / vault latch with dark charcoal shackle recess and thin sanctified cyan keyhole seam glow. Solid, readable at small size.
+
+No text, no logos, no crests, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+## B2 — Shared nav / system reskins
+
+Often replacing existing decoration PNGs. Same style rules. Canvas **128×128** unless noted.
+
+### B09 — `ui_v3_icon_setting.png` · 128×128
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent outside.
+
+ONE holy-tech settings cog: face-on sacred-silver gear with cyan seam ring, clean teeth, dark hub (no crest). Match uploaded silver-cyan references. No text, no logos, no watermark.
+```
+
+---
+
+### B10 — `ui_v3_icon_exit.png` *(skip — unused)*
+
+Do not generate. Exit icon is not used in player UI.
+
+---
+
+### B11 — `ui_v3_mailbox.png` · 128×128
+
+**Copy this:**
+
+```
+Game UI isolated icon, square canvas 128x128, transparent outside.
+
+ONE holy-tech mailbox / courier hatch: brushed sacred-silver sealed letter slot or dossier drop box with thin cyan seam. Readable as mail. No text, no logos, no crest stamps, no watermark. Match uploaded style references.
+```
+
+---
+
+### B12 — `ui_v3_icon_credit.png` *(skip this pass)*
+
+Do not generate. Keep current credit icon.
+
+---
+
+### B13–B17 — Exploration HUD *(deferred — skip this pass)*
+
+Do not generate compass / exploration settings / info / chat / inventory this Phase B pass. Keep current exploration HUD art.
+
+---
+
+### B18 — `ui_v3_icon_magnifier.png` *(skip this pass)*
+
+Do not generate. Keep current magnifier art.
+
+---
+
+### B19–B20 — Campaign platforms *(skip this pass)*
+
+Do not generate `ui_v3_campaign_platform_normal.png` / `ui_v3_campaign_platform_boss.png`. Keep current campaign map nodes.
+
+---
+
+## B3 — Secondary nav icons · 128×128
+
+Generate only if unicode still sticks out after B1–B2 wiring.
+
+### B21 — `ui_v3_icon_back.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech back chevron / left arrow in brushed sacred silver with cyan edge. No text, no logos. Match uploaded references. No watermark.
+```
+
+### B22 — `ui_v3_icon_expand.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech expand mark: sacred-silver right/down chevron or unfolded plate, cyan seam. No text, no logos. Match uploaded references. No watermark.
+```
+
+### B23 — `ui_v3_icon_collapse.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech collapse mark: sacred-silver up chevron or folded plate, cyan seam. Distinct from expand. No text, no logos. Match uploaded references. No watermark.
+```
+
+### B24 — `ui_v3_icon_list.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech list view: three horizontal sacred-silver dossier lines with cyan ticks. No text. Match uploaded references. No watermark.
+```
+
+### B25 — `ui_v3_icon_grid.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech grid view: 2x2 sacred-silver tile ports with cyan seams. No text. Match uploaded references. No watermark.
+```
+
+### B26 — `ui_v3_icon_mail_badge.png` *(deferred — Exploration HUD)*
+
+Skip this pass. Keep current exploration mail badge.
+
+### B27 — `ui_v3_icon_formations.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech formations / tactical slate: sacred-silver grid plaque with three unit pips and cyan seams. No text, no logos. Match uploaded references. No watermark.
+```
+
+### B28 — `ui_v3_icon_copy.png`
+
+```
+Game UI isolated icon, 128x128, transparent outside. ONE holy-tech copy mark (player UI only): overlapping silver plates similar to duplicate but simpler single glyph. No text, no logos. Match uploaded references. No watermark.
+```
+
+---
+
+## Phase B — Reject if
+
+- Unicode emoji look-alikes or Google Material flat icons  
+- Baked words / letters (except geometric info “i” bars as metal shapes)  
+- Faction crests on hubs  
+- Mecha / cyberpunk / purple neon  
+- Editors-only tools (out of scope)  
+- Bluff reaction faces (keep unicode — do not gen)  

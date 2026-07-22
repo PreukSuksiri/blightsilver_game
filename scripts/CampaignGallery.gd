@@ -115,15 +115,23 @@ func _build_card(d: Dictionary) -> Control:
 	if is_locked:
 		_add_card_dim_overlay(frame)
 
+		var lock_icon: TextureRect = ChromeIcon.make_rect("locked", Vector2(36, 36), Color(0.9, 0.92, 0.95, 0.95))
+		lock_icon.set_anchors_preset(Control.PRESET_CENTER)
+		lock_icon.offset_left = -18.0
+		lock_icon.offset_top = -40.0
+		lock_icon.offset_right = 18.0
+		lock_icon.offset_bottom = -4.0
+		frame.add_child(lock_icon)
 		var lbl_lock := Label.new()
 		var prereq_label: String = _prerequisite_display_name(prereq_vn)
 		if prereq_label != "":
-			lbl_lock.text = "🔒\nFinish\n%s" % prereq_label
+			lbl_lock.text = "Finish\n%s" % prereq_label
 		else:
-			lbl_lock.text = "🔒\nLOCKED"
+			lbl_lock.text = "LOCKED"
 		lbl_lock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl_lock.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl_lock.set_anchors_preset(Control.PRESET_FULL_RECT)
+		lbl_lock.offset_top = 28.0
 		lbl_lock.add_theme_font_override("font", FontManager.make_font("primary", 400))
 		lbl_lock.add_theme_font_size_override("font_size", CARD_DIM_LABEL_SIZE)
 		lbl_lock.add_theme_color_override("font_color", CARD_DIM_LABEL_COLOR)

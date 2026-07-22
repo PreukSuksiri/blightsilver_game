@@ -91,15 +91,13 @@ func _build_ui() -> void:
 
 	# Close button
 	var close_btn := Button.new()
-	close_btn.text = "✕"
 	close_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close_btn.offset_left   = -48.0
 	close_btn.offset_top    = 8.0
 	close_btn.offset_right  = -8.0
 	close_btn.offset_bottom = 44.0
-	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	close_btn.add_theme_font_size_override("font_size", 16)
 	_style_close_btn(close_btn)
+	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 16)
 	close_btn.pressed.connect(queue_free)
 	panel.add_child(close_btn)
 

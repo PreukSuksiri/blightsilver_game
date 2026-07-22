@@ -8,7 +8,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/title_glow.gdshader" id="5"]
 [ext_resource type="Shader" path="res://assets/shaders/silver_gradient.gdshader" id="7"]
 [ext_resource type="FontFile" path="res://assets/fonts/Chivo-VariableFont_wght.ttf" id="9"]
-[ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_setting.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_setting_2.png" id="10"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_exit.png" id="11"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_mailbox.png" id="12"]
 
