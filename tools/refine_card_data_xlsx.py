@@ -355,11 +355,11 @@ MANUAL: dict[str, dict[str, str]] = {
         "Ability": "After a successful attack, flip a coin. Heads: gain 20 Crystals.",
         "comment": "Head→Heads; Crystal→Crystals.",
     },
-    "Black Worms": {
+    "Slug-11": {
         "Ability": "At end of the owner's turn, foe loses 300 Crystals per Mutagen flag on the field.",
         "comment": "Shortened; grammar.",
     },
-    "Epsilon The Wither": {
+    "Epsilon The Withered": {
         "Ability": (
             "In Reckoning: +20 ATK&DEF this turn; all ally cards -20 ATK&DEF this turn."
         ),

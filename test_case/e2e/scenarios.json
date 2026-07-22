@@ -964,7 +964,7 @@
     {
       "tier": 1,
       "id": "E2E-Armored-Monkey-001",
-      "card_name": "Armored Monkey",
+      "card_name": "Armored Cat",
       "card_type": "Character",
       "ability_type": "ATK_BONUS_IF_AFFINITY_ON_FIELD",
       "max_turns": 50,
@@ -1036,7 +1036,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Armored Monkey",
+          "card_name": "Armored Cat",
           "row": 2,
           "col": 2
         }
@@ -1051,7 +1051,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_contains": [
-        "Armored Monkey",
+        "Armored Cat",
         "GAME OVER"
       ],
       "notes": "Tier 1 smoke: character on field, battle completes."
@@ -1059,7 +1059,7 @@
     {
       "tier": 2,
       "id": "E2E-Armored-Monkey-002",
-      "card_name": "Armored Monkey",
+      "card_name": "Armored Cat",
       "card_type": "Character",
       "ability_type": "ATK_BONUS_IF_AFFINITY_ON_FIELD",
       "ability_description": "+10 ATK if there is another exposed Nature card",
@@ -1072,12 +1072,12 @@
         "Stack trace"
       ],
       "expect_log_contains": [
-        "Armored Monkey",
+        "Armored Cat",
         "GAME OVER"
       ],
       "role": "t2_solo_attacker",
       "deck0": {
-        "deck_name": "E2E T2 solo Armored Monkey",
+        "deck_name": "E2E T2 solo Armored Cat",
         "characters": [
           "Chaotic Wisp",
           "Foul Wisp",
@@ -1130,7 +1130,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Armored Monkey",
+          "card_name": "Armored Cat",
           "row": 2,
           "col": 2
         },
@@ -1726,7 +1726,7 @@
     {
       "tier": 1,
       "id": "E2E-Black-Worms-001",
-      "card_name": "Black Worms",
+      "card_name": "Slug-11",
       "card_type": "Character",
       "ability_type": "TURN_END_FOE_CRYSTAL_PER_MUTAGEN",
       "max_turns": 50,
@@ -1798,7 +1798,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Black Worms",
+          "card_name": "Slug-11",
           "row": 2,
           "col": 2
         }
@@ -1813,7 +1813,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_contains": [
-        "Black Worms",
+        "Slug-11",
         "GAME OVER"
       ],
       "notes": "Tier 1 smoke: character on field, battle completes."
@@ -1821,7 +1821,7 @@
     {
       "tier": 2,
       "id": "E2E-Black-Worms-002",
-      "card_name": "Black Worms",
+      "card_name": "Slug-11",
       "card_type": "Character",
       "ability_type": "TURN_END_FOE_CRYSTAL_PER_MUTAGEN",
       "ability_description": "At your turn\u2019s end, foe loses 300 Crystals for each Mutagen flag on the field",
@@ -1834,12 +1834,12 @@
         "Stack trace"
       ],
       "expect_log_contains": [
-        "Black Worms",
+        "Slug-11",
         "GAME OVER"
       ],
       "role": "t2_solo_attacker",
       "deck0": {
-        "deck_name": "E2E T2 solo Black Worms",
+        "deck_name": "E2E T2 solo Slug-11",
         "characters": [
           "Chaotic Wisp",
           "Foul Wisp",
@@ -1892,7 +1892,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Black Worms",
+          "card_name": "Slug-11",
           "row": 2,
           "col": 2
         }
@@ -1912,7 +1912,7 @@
         "(\"Black\\ Worms\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Black\\ Worms\")"
       ],
       "expect_log_any": [
-        "Black Worms",
+        "Slug-11",
         "MSG:"
       ]
     },
@@ -21569,7 +21569,7 @@
     {
       "tier": 1,
       "id": "E2E-Rotten-Shrieker-001",
-      "card_name": "Rotten Shrieker",
+      "card_name": "Rotten Spider",
       "card_type": "Character",
       "ability_type": "PERM_ATK_LOSS_PER_OWN_TURN",
       "max_turns": 50,
@@ -21641,7 +21641,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Rotten Shrieker",
+          "card_name": "Rotten Spider",
           "row": 2,
           "col": 2
         }
@@ -21656,7 +21656,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_contains": [
-        "Rotten Shrieker",
+        "Rotten Spider",
         "GAME OVER"
       ],
       "notes": "Tier 1 smoke: character on field, battle completes."
@@ -21664,7 +21664,7 @@
     {
       "tier": 2,
       "id": "E2E-Rotten-Shrieker-002",
-      "card_name": "Rotten Shrieker",
+      "card_name": "Rotten Spider",
       "card_type": "Character",
       "ability_type": "PERM_ATK_LOSS_PER_OWN_TURN",
       "ability_description": "Without Mutagen Flag : -10 ATK permanently at the end of your turn.",
@@ -21677,12 +21677,12 @@
         "Stack trace"
       ],
       "expect_log_contains": [
-        "Rotten Shrieker",
+        "Rotten Spider",
         "GAME OVER"
       ],
       "role": "t2_solo_attacker",
       "deck0": {
-        "deck_name": "E2E T2 solo Rotten Shrieker",
+        "deck_name": "E2E T2 solo Rotten Spider",
         "characters": [
           "Chaotic Wisp",
           "Foul Wisp",
@@ -21735,7 +21735,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Rotten Shrieker",
+          "card_name": "Rotten Spider",
           "row": 2,
           "col": 2
         }
@@ -21755,7 +21755,7 @@
         "(\"Rotten\\ Shrieker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Rotten\\ Shrieker\")"
       ],
       "expect_log_any": [
-        "Rotten Shrieker",
+        "Rotten Spider",
         "MSG:"
       ]
     },
@@ -37227,7 +37227,7 @@
           "Mad Raccoon",
           "Canyon Warg",
           "Armored Bee",
-          "Armored Monkey",
+          "Armored Cat",
           "Hammer Shark",
           "Saw Shark"
         ],
@@ -37764,7 +37764,7 @@
           "Mad Raccoon",
           "Canyon Warg",
           "Armored Bee",
-          "Armored Monkey",
+          "Armored Cat",
           "Hammer Shark",
           "Saw Shark"
         ],

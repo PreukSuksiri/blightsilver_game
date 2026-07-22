@@ -92,9 +92,9 @@ func test_rename_cleanup() -> void:
 	var death_stag: CharacterData = CardDatabase.get_character("Death Stag")
 	if death_stag:
 		assert_eq(death_stag.ability_type, CharacterData.AbilityType.NONE, "Death Stag NONE")
-	var asteroid: CharacterData = CardDatabase.get_character("Asteroid Trooper")
+	var asteroid: CharacterData = CardDatabase.get_character("Star Hunter")
 	if asteroid:
-		assert_eq(asteroid.ability_type, CharacterData.AbilityType.NONE, "Asteroid Trooper NONE")
+		assert_eq(asteroid.ability_type, CharacterData.AbilityType.NONE, "Star Hunter NONE")
 
 func test_characters_loaded() -> void:
 	print("-- test_characters_loaded")

@@ -68,7 +68,7 @@ Champion of the Valley →  ★1 – Anima – ATK 50 / DEF 30 – Cost 400 – 
 Magenta the Nightbloom →  ★1 – Chaos – ATK 50 / DEF 30 – Cost 400 – Ability: None
 Jirayu the Rebellious Prince →  ★1 – Anima – ATK 50 / DEF 30 – Cost 400 – Ability: None
 Ice Mage →  ★1 – Arcane – ATK 50 / DEF 30 – Cost 400 – Ability: None
-Asteroid Trooper →  ★1 – Arcane – ATK 50 / DEF 30 – Cost 400 – Ability: None
+Star Hunter →  ★1 – Arcane – ATK 50 / DEF 30 – Cost 400 – Ability: None
 Slim Gray Tank →   ★2 – Cosmic – ATK 50 / DEF 60 – Cost 500 – Ability: +20 DEF if being attacked face-down
 Mafia Associates →  ★1 – Anima – ATK 50 / DEF 30 – Cost 400 – Ability: None
 

@@ -603,7 +603,7 @@ func _ox_patrol(A, AB) -> void:
 func _armored_monkey(A, AB) -> void:
 	print("-- TC-FUNC-Armored-Monkey-001 [Pattern B]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	var att := _make_char("Armored Monkey", 10, 20, 170, A.NATURE,
+	var att := _make_char("Armored Cat", 10, 20, 170, A.NATURE,
 		AB.ATK_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.NATURE, "atk": 10})
 	att.face_up = true
 	GameState.grids[0][0][0] = att

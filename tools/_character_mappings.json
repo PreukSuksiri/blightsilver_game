@@ -250,7 +250,7 @@
 			"face_down": true
 		}
 	},
-	"Human Dog": {
+	"Kappa": {
 		"ability_type": "ATK_BONUS_IF_AFFINITY_ON_FIELD",
 		"ability_params": {
 			"affinities": [
@@ -675,7 +675,7 @@
 			"turn_end": true
 		}
 	},
-	"Ethereal Shielder": {
+	"Ethereal Soldiers": {
 		"ability_type": "ONE_USE_SURVIVE_DESTRUCTION",
 		"ability_params": {
 			"vs_non_affinity": "ARCANE",
@@ -740,7 +740,7 @@
 			"foe_turn_end": true
 		}
 	},
-	"Toxin Folk": {
+	"Toxin Eater": {
 		"ability_type": "ATTACKER_ATK_DEBUFF",
 		"ability_params": {
 			"amount": 5,
@@ -765,7 +765,7 @@
 			"after_attack": true
 		}
 	},
-	"Epsilon The Wither": {
+	"Epsilon The Withered": {
 		"ability_type": "ATTACK_STANCE_BOOST",
 		"ability_params": {
 			"atk": 40,
@@ -858,7 +858,7 @@
 			"count": 1
 		}
 	},
-	"Aembar the Intel Dealer": {
+	"Aembar the Intel Broker": {
 		"ability_type": "TEMP_BOOST_ON_OPP_TECH",
 		"ability_params": {
 			"reveal_on_tech": true,

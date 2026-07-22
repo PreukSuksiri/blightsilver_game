@@ -47,7 +47,7 @@
 				"row": 3
 			},
 			{
-				"card_name": "Rotten Shrieker",
+				"card_name": "Rotten Spider",
 				"col": 0,
 				"row": 2
 			},
@@ -95,7 +95,7 @@
 		"enemy_deck": {
 			"characters": [
 				"Lab Zombie",
-				"Rotten Shrieker",
+				"Rotten Spider",
 				"Claw Mutant",
 				"Bleacher Squad",
 				"Bladeshifter",

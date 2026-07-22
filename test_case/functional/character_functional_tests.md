@@ -138,7 +138,7 @@ Expected Result:
 
 ---
 
-Card Name: Armored Monkey
+Card Name: Armored Cat
 Type: Character
 Stats: ATK=10 DEF=20 Cost=170 Affinity=NATURE
 AbilityType: ATK_BONUS_IF_AFFINITY_ON_FIELD
@@ -148,7 +148,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Armored-Monkey-001
 Description:
-Armored Monkey: +10 ATK when face-up NATURE ally on field
+Armored Cat: +10 ATK when face-up NATURE ally on field
 Implementation Reference:
 - BattleResolver._get_effective_atk() scans GameState.grids
 - AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD
@@ -157,7 +157,7 @@ Preconditions:
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
 - Place another face-up NATURE character on attacker's grid.
-- Armored Monkey attacks (does not need to target NATURE).
+- Armored Cat attacks (does not need to target NATURE).
 Steps:
 Step 1: Run calculate_field_bonuses if needed; resolve battle.
 Expected Result:
@@ -192,7 +192,7 @@ Expected Result:
 
 ---
 
-Card Name: Human Dog
+Card Name: Kappa
 Type: Character
 Stats: ATK=20 DEF=15 Cost=250 Affinity=CHAOS
 AbilityType: ATK_BONUS_IF_AFFINITY_ON_FIELD
@@ -202,7 +202,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Human-Dog-001
 Description:
-Human Dog: +10 ATK when face-up ? ally on field
+Kappa: +10 ATK when face-up ? ally on field
 Implementation Reference:
 - BattleResolver._get_effective_atk() scans GameState.grids
 - AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD
@@ -211,7 +211,7 @@ Preconditions:
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
 - Place another face-up ? character on attacker's grid.
-- Human Dog attacks (does not need to target ?).
+- Kappa attacks (does not need to target ?).
 Steps:
 Step 1: Run calculate_field_bonuses if needed; resolve battle.
 Expected Result:
@@ -1862,7 +1862,7 @@ Expected Result:
 
 ---
 
-Card Name: Toxin Folk
+Card Name: Toxin Eater
 Type: Character
 Stats: ATK=25 DEF=25 Cost=350 Affinity=BIO
 AbilityType: ATTACKER_ATK_DEBUFF
@@ -1872,7 +1872,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Toxin-Folk-001
 Description:
-Toxin Folk: debuff attacker ATK by 5 during battle
+Toxin Eater: debuff attacker ATK by 5 during battle
 Implementation Reference:
 - BattleResolver._get_effective_atk() defender branch
 - AbilityType.ATTACKER_ATK_DEBUFF
@@ -1880,7 +1880,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Toxin Folk defends; attacker ATK > 25.
+- Toxin Eater defends; attacker ATK > 25.
 Steps:
 Step 1: Resolve battle.
 Expected Result:
@@ -1968,7 +1968,7 @@ Expected Result:
 
 ---
 
-Card Name: Epsilon The Wither
+Card Name: Epsilon The Withered
 Type: Character
 Stats: ATK=80 DEF=50 Cost=850 Affinity=BIO
 AbilityType: ATTACK_STANCE_BOOST
@@ -1978,7 +1978,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Epsilon-The-Wither-001
 Description:
-Epsilon The Wither: +40 ATK in attack stance
+Epsilon The Withered: +40 ATK in attack stance
 Implementation Reference:
 - BattleResolver._get_effective_atk()
 - AbilityType.ATTACK_STANCE_BOOST
@@ -1986,7 +1986,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Epsilon The Wither attacks.
+- Epsilon The Withered attacks.
 Steps:
 Step 1: Resolve battle.
 Expected Result:
@@ -7450,7 +7450,7 @@ Expected Result:
 
 ---
 
-Card Name: Asteroid Trooper
+Card Name: Star Hunter
 Type: Character
 Stats: ATK=30 DEF=10 Cost=250 Affinity=COSMIC
 AbilityType: NONE
@@ -7460,7 +7460,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Asteroid-Trooper-001
 Description:
-Asteroid Trooper: ability NONE functional smoke test
+Star Hunter: ability NONE functional smoke test
 Implementation Reference:
 - CharacterData.AbilityType.NONE
 - See BattleResolver.gd / TurnManager.gd
@@ -10763,7 +10763,7 @@ Expected Result:
 
 ---
 
-Card Name: Ethereal Shielder
+Card Name: Ethereal Soldiers
 Type: Character
 Stats: ATK=25 DEF=80 Cost=1200 Affinity=ARCANE
 AbilityType: ONE_USE_SURVIVE_DESTRUCTION
@@ -10773,7 +10773,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Ethereal-Shielder-001
 Description:
-Ethereal Shielder: once per card, survive destruction
+Ethereal Soldiers: once per card, survive destruction
 Implementation Reference:
 - TurnManager/GameState destruction intercept
 - AbilityType.ONE_USE_SURVIVE_DESTRUCTION
@@ -10781,7 +10781,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Ethereal Shielder would be destroyed first time.
+- Ethereal Soldiers would be destroyed first time.
 Steps:
 Step 1: Trigger destruction.
 Expected Result:
@@ -11767,7 +11767,7 @@ Expected Result:
 
 ---
 
-Card Name: Rotten Shrieker
+Card Name: Rotten Spider
 Type: Character
 Stats: ATK=40 DEF=30 Cost=450 Affinity=BIO
 AbilityType: PERM_ATK_LOSS_PER_OWN_TURN
@@ -11777,7 +11777,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Rotten-Shrieker-001
 Description:
-Rotten Shrieker: -10 ATK at end of own turn (face-up)
+Rotten Spider: -10 ATK at end of own turn (face-up)
 Implementation Reference:
 - TurnManager._end_turn match PERM_ATK_LOSS_PER_OWN_TURN
 - AbilityType.PERM_ATK_LOSS_PER_OWN_TURN
@@ -11785,7 +11785,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Rotten Shrieker face-up at end of owner's turn.
+- Rotten Spider face-up at end of owner's turn.
 Steps:
 Step 1: End turn.
 Expected Result:
@@ -13332,7 +13332,7 @@ Expected Result:
 
 ---
 
-Card Name: Aembar the Intel Dealer
+Card Name: Aembar the Intel Broker
 Type: Character
 Stats: ATK=10 DEF=10 Cost=150 Affinity=COSMIC
 AbilityType: TEMP_BOOST_ON_OPP_TECH
@@ -13342,7 +13342,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Aembar-the-Intel-Dealer-001
 Description:
-Aembar the Intel Dealer: +5/+5 permanently when opponent plays Tech
+Aembar the Intel Broker: +5/+5 permanently when opponent plays Tech
 Implementation Reference:
 - TurnManager.play_tech_card TEMP_BOOST_ON_OPP_TECH loop
 - AbilityType.TEMP_BOOST_ON_OPP_TECH
@@ -13350,7 +13350,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Aembar the Intel Dealer face-up on opponent of tech player.
+- Aembar the Intel Broker face-up on opponent of tech player.
 Steps:
 Step 1: Opponent plays any Tech.
 Expected Result:
@@ -13462,7 +13462,7 @@ Expected Result:
 
 ---
 
-Card Name: Black Worms
+Card Name: Slug-11
 Type: Character
 Stats: ATK=45 DEF=65 Cost=800 Affinity=BIO
 AbilityType: TURN_END_FOE_CRYSTAL_PER_MUTAGEN
@@ -13472,7 +13472,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Black-Worms-001
 Description:
-Black Worms: ability TURN_END_FOE_CRYSTAL_PER_MUTAGEN functional smoke test
+Slug-11: ability TURN_END_FOE_CRYSTAL_PER_MUTAGEN functional smoke test
 Implementation Reference:
 - CharacterData.AbilityType.TURN_END_FOE_CRYSTAL_PER_MUTAGEN
 - See BattleResolver.gd / TurnManager.gd

@@ -613,7 +613,7 @@
 			"deck": {
 				"characters": [
 					"Lab Zombie",
-					"Rotten Shrieker",
+					"Rotten Spider",
 					"Claw Mutant",
 					"Bleacher Squad",
 					"Bladeshifter",
@@ -659,7 +659,7 @@
 							},
 							{
 								"c": 0.0,
-								"name": "Rotten Shrieker",
+								"name": "Rotten Spider",
 								"r": 2.0,
 								"type": "character"
 							},
@@ -1786,7 +1786,7 @@
 					"Lab Crawler",
 					"Bladeshifter",
 					"Plant-29",
-					"Rotten Shrieker",
+					"Rotten Spider",
 					"Gamma Emitter",
 					"Waste Slime"
 				],
@@ -1845,7 +1845,7 @@
 							},
 							{
 								"c": 3.0,
-								"name": "Rotten Shrieker",
+								"name": "Rotten Spider",
 								"r": 1.0,
 								"type": "character"
 							},
@@ -3558,7 +3558,7 @@
 		{
 			"deck": {
 				"characters": [
-					"Black Worms",
+					"Slug-11",
 					"Lab Bloater",
 					"WK-17 the Siren",
 					"Plant-29",
@@ -3576,7 +3576,7 @@
 						"placements": [
 							{
 								"c": 4.0,
-								"name": "Black Worms",
+								"name": "Slug-11",
 								"r": 0.0,
 								"type": "character"
 							},
@@ -3693,7 +3693,7 @@
 			"deck": {
 				"characters": [
 					"Armored Bee",
-					"Armored Monkey",
+					"Armored Cat",
 					"Armored Rhino",
 					"Nuki the Tanuki",
 					"Lazy Troll",
@@ -3716,7 +3716,7 @@
 							},
 							{
 								"c": 1.0,
-								"name": "Armored Monkey",
+								"name": "Armored Cat",
 								"r": 2.0,
 								"type": "character"
 							},
@@ -5269,7 +5269,7 @@
 					"Gamma Emitter",
 					"Bleacher Squad",
 					"Vile Creeper",
-					"Rotten Shrieker",
+					"Rotten Spider",
 					"Lab Bloater"
 				],
 				"deck_name": "Norm / Bio - Volatile Slasher",
@@ -5345,7 +5345,7 @@
 							},
 							{
 								"c": 0.0,
-								"name": "Rotten Shrieker",
+								"name": "Rotten Spider",
 								"r": 4.0,
 								"type": "character"
 							},
@@ -5357,7 +5357,7 @@
 							},
 							{
 								"c": 2.0,
-								"name": "Rotten Shrieker",
+								"name": "Rotten Spider",
 								"r": 1.0,
 								"type": "character"
 							},

@@ -17,7 +17,17 @@ DEMO_FLAGS = ROOT / "data" / "demo_flags.json"
 CUSTOM_PACKS = ROOT / "shop" / "custom_packs.json"
 
 NAME_ALIASES = {
-    "Armored Money": "Armored Monkey",
+    "Armored Money": "Armored Cat",
+    # 2026-07 renames (xlsx may still reference old names in formulas)
+    "Armored Monkey": "Armored Cat",
+    "Epsilon The Wither": "Epsilon The Withered",
+    "Ethereal Shielder": "Ethereal Soldiers",
+    "Human Dog": "Kappa",
+    "Rotten Shrieker": "Rotten Spider",
+    "Black Worms": "Slug-11",
+    "Asteroid Trooper": "Star Hunter",
+    "Toxin Folk": "Toxin Eater",
+    "Aembar the Intel Dealer": "Aembar the Intel Broker",
 }
 
 # xlsx formula / legacy references → current in-game card name

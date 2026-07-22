@@ -28,7 +28,7 @@
 				"weight": 50
 			},
 			{
-				"card_name": "Armored Monkey",
+				"card_name": "Armored Cat",
 				"card_type": "character",
 				"weight": 100
 			},
@@ -335,11 +335,6 @@
 				"weight": 20
 			},
 			{
-				"card_name": "Black Worms",
-				"card_type": "character",
-				"weight": 100
-			},
-			{
 				"card_name": "Bladeshifter",
 				"card_type": "character",
 				"weight": 50
@@ -555,7 +550,7 @@
 				"weight": 5
 			},
 			{
-				"card_name": "Rotten Shrieker",
+				"card_name": "Rotten Spider",
 				"card_type": "character",
 				"weight": 50
 			},
@@ -568,6 +563,11 @@
 				"card_name": "Scythe Shark",
 				"card_type": "character",
 				"weight": 50
+			},
+			{
+				"card_name": "Slug-11",
+				"card_type": "character",
+				"weight": 100
 			},
 			{
 				"card_name": "Sonic Seraph",

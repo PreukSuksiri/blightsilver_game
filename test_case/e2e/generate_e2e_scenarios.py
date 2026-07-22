@@ -125,12 +125,12 @@ UNION_T2_DECK_CHARS: dict[str, list[str]] = {
     # needs card_name="Flame Lizard" + 1 Nature
     "Ancient Lizard": [
         "Flame Lizard", "Goblin Poacher", "Mad Raccoon", "Canyon Warg",
-        "Armored Bee", "Armored Monkey", "Hammer Shark", "Saw Shark",
+        "Armored Bee", "Armored Cat", "Hammer Shark", "Saw Shark",
     ],
     # needs 2 Nature cards
     "Berserk Hyena": [
         "Flame Lizard", "Goblin Poacher", "Mad Raccoon", "Canyon Warg",
-        "Armored Bee", "Armored Monkey", "Hammer Shark", "Saw Shark",
+        "Armored Bee", "Armored Cat", "Hammer Shark", "Saw Shark",
     ],
     # needs 2 Nature cards with cost >= 800
     "Barros the Colossal": [

@@ -3073,7 +3073,7 @@ Expected Result:
 
 ---
 
-Card Name: Black Worms
+Card Name: Slug-11
 Type: Character
 Stats: Cost=800 ATK=45 DEF=65 Affinity=Bio
 Ability: At your turn’s end, foe loses 300 Crystals for each Mutagen flag on the field
@@ -3082,49 +3082,49 @@ Test Cases:
 
 Test Case ID: TC-Black-Worms-001
 Description:
-Happy path — Black Worms attacks and wins a standard battle.
+Happy path — Slug-11 attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Slug-11' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Black Worms face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Slug-11 face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Black Worms as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Slug-11 as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Black Worms participates in battle resolution without errors.
+- Slug-11 participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
 Test Case ID: TC-Black-Worms-002
 Description:
-Edge — Black Worms placed face-down, revealed on attack.
+Edge — Slug-11 placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Slug-11' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Black Worms face-down on Player 0 field.
+- Place Slug-11 face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Black Worms via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Black Worms.
+Step 1: Attack with another unit or reveal Slug-11 via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Slug-11.
 Expected Result:
-- Black Worms reveals correctly on attack.
+- Slug-11 reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
 Test Case ID: TC-Black-Worms-003
 Description:
-Mutagen — Black Worms with has_mutagen_flag active.
+Mutagen — Slug-11 with has_mutagen_flag active.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Slug-11' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Player 0 has Release Mutagen in hand.
-- Place face-up Bio character Black Worms on field.
+- Place face-up Bio character Slug-11 on field.
 Steps:
-Step 1: Play Release Mutagen; select Black Worms.
+Step 1: Play Release Mutagen; select Slug-11.
 Step 2: Verify mutagen flag icon appears on card.
 Step 3: Trigger combat scenario described: At your turn’s end, foe loses 300 Crystals for each Mutagen flag on the field
 Expected Result:
@@ -3133,12 +3133,12 @@ Expected Result:
 
 Test Case ID: TC-Black-Worms-004
 Description:
-Mutagen edge — Black Worms WITHOUT mutagen flag.
+Mutagen edge — Slug-11 WITHOUT mutagen flag.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Slug-11' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Black Worms face-up without using Release Mutagen.
+- Place Slug-11 face-up without using Release Mutagen.
 Steps:
 Step 1: Attempt the mutagen-dependent action or battle.
 Expected Result:
@@ -3146,10 +3146,10 @@ Expected Result:
 
 Test Case ID: TC-Black-Worms-005
 Description:
-Crystal interaction — Black Worms crystal gain/loss/drain.
+Crystal interaction — Slug-11 crystal gain/loss/drain.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Slug-11' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Record crystal totals before trigger.
 Steps:
@@ -3159,14 +3159,14 @@ Expected Result:
 
 Test Case ID: TC-Black-Worms-006
 Description:
-Edge — low crystals during Black Worms battle.
+Edge — low crystals during Slug-11 battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Black Worms' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Slug-11' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Black Worms and lose card (crystal cost payment).
+Step 1: Attack/defend with Slug-11 and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -4221,7 +4221,7 @@ Expected Result:
 
 ---
 
-Card Name: Rotten Shrieker
+Card Name: Rotten Spider
 Type: Character
 Stats: Cost=450 ATK=40 DEF=30 Affinity=Bio
 Ability: Without Mutagen Flag : -10 ATK permanently at the end of your turn.
@@ -4230,49 +4230,49 @@ Test Cases:
 
 Test Case ID: TC-Rotten-Shrieker-001
 Description:
-Happy path — Rotten Shrieker attacks and wins a standard battle.
+Happy path — Rotten Spider attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rotten Spider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Rotten Shrieker face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Rotten Spider face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Rotten Shrieker as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Rotten Spider as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Rotten Shrieker participates in battle resolution without errors.
+- Rotten Spider participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
 Test Case ID: TC-Rotten-Shrieker-002
 Description:
-Edge — Rotten Shrieker placed face-down, revealed on attack.
+Edge — Rotten Spider placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rotten Spider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Rotten Shrieker face-down on Player 0 field.
+- Place Rotten Spider face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Rotten Shrieker via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Rotten Shrieker.
+Step 1: Attack with another unit or reveal Rotten Spider via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Rotten Spider.
 Expected Result:
-- Rotten Shrieker reveals correctly on attack.
+- Rotten Spider reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
 Test Case ID: TC-Rotten-Shrieker-003
 Description:
-Mutagen — Rotten Shrieker with has_mutagen_flag active.
+Mutagen — Rotten Spider with has_mutagen_flag active.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rotten Spider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Player 0 has Release Mutagen in hand.
-- Place face-up Bio character Rotten Shrieker on field.
+- Place face-up Bio character Rotten Spider on field.
 Steps:
-Step 1: Play Release Mutagen; select Rotten Shrieker.
+Step 1: Play Release Mutagen; select Rotten Spider.
 Step 2: Verify mutagen flag icon appears on card.
 Step 3: Trigger combat scenario described: Without Mutagen Flag : -10 ATK permanently at the end of your turn.
 Expected Result:
@@ -4281,12 +4281,12 @@ Expected Result:
 
 Test Case ID: TC-Rotten-Shrieker-004
 Description:
-Mutagen edge — Rotten Shrieker WITHOUT mutagen flag.
+Mutagen edge — Rotten Spider WITHOUT mutagen flag.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rotten Spider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Rotten Shrieker face-up without using Release Mutagen.
+- Place Rotten Spider face-up without using Release Mutagen.
 Steps:
 Step 1: Attempt the mutagen-dependent action or battle.
 Expected Result:
@@ -4294,12 +4294,12 @@ Expected Result:
 
 Test Case ID: TC-Rotten-Shrieker-005
 Description:
-End-of-turn — Rotten Shrieker turn boundary effect.
+End-of-turn — Rotten Spider turn boundary effect.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rotten Spider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Rotten Shrieker survives to end of relevant turn.
+- Rotten Spider survives to end of relevant turn.
 Steps:
 Step 1: End turn; observe end-of-turn processing.
 Expected Result:
@@ -4307,14 +4307,14 @@ Expected Result:
 
 Test Case ID: TC-Rotten-Shrieker-006
 Description:
-Edge — low crystals during Rotten Shrieker battle.
+Edge — low crystals during Rotten Spider battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rotten Shrieker' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rotten Spider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Rotten Shrieker and lose card (crystal cost payment).
+Step 1: Attack/defend with Rotten Spider and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -5925,7 +5925,7 @@ Expected Result:
 
 ---
 
-Card Name: Armored Monkey
+Card Name: Armored Cat
 Type: Character
 Stats: Cost=170 ATK=10 DEF=20 Affinity=Nature
 Ability: +10 ATK if there is another exposed Nature card
@@ -5934,61 +5934,61 @@ Test Cases:
 
 Test Case ID: TC-Armored-Monkey-001
 Description:
-Happy path — Armored Monkey attacks and wins a standard battle.
+Happy path — Armored Cat attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Armored Cat' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Armored Monkey face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Armored Cat face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Armored Monkey as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Armored Cat as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Armored Monkey participates in battle resolution without errors.
+- Armored Cat participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
 Test Case ID: TC-Armored-Monkey-002
 Description:
-Edge — Armored Monkey placed face-down, revealed on attack.
+Edge — Armored Cat placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Armored Cat' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Armored Monkey face-down on Player 0 field.
+- Place Armored Cat face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Armored Monkey via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Armored Monkey.
+Step 1: Attack with another unit or reveal Armored Cat via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Armored Cat.
 Expected Result:
-- Armored Monkey reveals correctly on attack.
+- Armored Cat reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
 Test Case ID: TC-Armored-Monkey-003
 Description:
-Exposure edge — Armored Monkey face-up vs face-down states.
+Exposure edge — Armored Cat face-up vs face-down states.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Armored Cat' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Run once with defender face-up before attack; once face-down until reveal.
 Steps:
-Step 1: Attack with Armored Monkey each time.
+Step 1: Attack with Armored Cat each time.
 Expected Result:
 - Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
 
 Test Case ID: TC-Armored-Monkey-004
 Description:
-Edge — low crystals during Armored Monkey battle.
+Edge — low crystals during Armored Cat battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Armored Cat' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Armored Monkey and lose card (crystal cost payment).
+Step 1: Attack/defend with Armored Cat and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 

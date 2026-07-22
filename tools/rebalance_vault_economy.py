@@ -209,7 +209,7 @@ PATCHES: dict[str, dict] = {
             "Mind Flayer": "Book with Fangs",
             "Bladeshifter": "Claw Mutant",
             "Scarlet Mutant": "Gamma Emitter",
-            "Black Worms": "Red Mage",
+            "Slug-11": "Red Mage",
         },
     },
     "hard_full_emental": {
@@ -367,7 +367,7 @@ PATCHES: dict[str, dict] = {
             "Lab Crawler",
             "Bladeshifter",
             "Plant-29",
-            "Rotten Shrieker",
+            "Rotten Spider",
             "Gamma Emitter",
             "Waste Slime",
         ],
@@ -375,9 +375,9 @@ PATCHES: dict[str, dict] = {
         "char_map": {
             "Mind Flayer": "Gamma Emitter",
             "Nanomites Beast": "Waste Slime",
-            "Dystopian Cultist": "Rotten Shrieker",
+            "Dystopian Cultist": "Rotten Spider",
             "Bleacher Squad": "Plant-29",
-            "Black Worms": "Bladeshifter",
+            "Slug-11": "Bladeshifter",
         },
     },
     # ── NORMAL (mild) ─────────────────────────────────────────

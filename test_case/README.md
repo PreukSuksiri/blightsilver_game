@@ -103,11 +103,11 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Araya the Eerie Dancer
 - Archbishop
 - Armored Bee
-- Armored Monkey
+- Armored Cat
 - Armored Rhino
 - Bat Swarm
 - Big Thug
-- Black Worms
+- Slug-11
 - Bladeshifter
 - Bleacher Squad
 - Blue Mage
@@ -211,7 +211,7 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Radiaghoul
 - Raijin
 - Red Mage
-- Rotten Shrieker
+- Rotten Spider
 - Satellite Cannon
 - Saw Shark
 - Scarlet Mutant

@@ -382,7 +382,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "COIN_FLIP_SWAP_POSITION",
         "ability_params": {"on_targeted": True, "once": True, "face_down": True},
     },
-    "Human Dog": {
+    "Kappa": {
         "ability_type": "ATK_BONUS_IF_AFFINITY_ON_FIELD",
         "ability_params": {"affinities": ["ANIMA", "NATURE"], "bonus": 10},
     },
@@ -602,7 +602,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "UNION_SUMMON_REVIVE_MATCH",
         "ability_params": {"token_name": "Leviathan", "turn_end": True},
     },
-    "Ethereal Shielder": {
+    "Ethereal Soldiers": {
         "ability_type": "ONE_USE_SURVIVE_DESTRUCTION",
         "ability_params": {"vs_non_affinity": "ARCANE", "per_turn": True},
     },
@@ -638,7 +638,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "UNION_SUMMON_REVIVE_MATCH",
         "ability_params": {"token": True, "foe_turn_end": True},
     },
-    "Toxin Folk": {
+    "Toxin Eater": {
         "ability_type": "ATTACKER_ATK_DEBUFF",
         "ability_params": {"amount": 5, "when_exposed": True, "foe_attackers": True, "temp_until_foe_turn": True},
     },
@@ -650,7 +650,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "COIN_FLIP_ATK_BOOST",
         "ability_params": {"bonus": 0, "crystal_gain_heads": 50, "after_attack": True},
     },
-    "Epsilon The Wither": {
+    "Epsilon The Withered": {
         "ability_type": "ATTACK_STANCE_BOOST",
         "ability_params": {"atk": 40, "def": 40, "debuff_allies": 10},
     },
@@ -698,7 +698,7 @@ CHARACTER_MAPPINGS: dict[str, dict] = {
         "ability_type": "ON_EXPOSE_REVEAL_FOE_ONCE",
         "ability_params": {"own_cell": True, "count": 1},
     },
-    "Aembar the Intel Dealer": {
+    "Aembar the Intel Broker": {
         "ability_type": "TEMP_BOOST_ON_OPP_TECH",
         "ability_params": {"reveal_on_tech": True, "any_player": True, "face_down": True},
     },

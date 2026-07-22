@@ -100,7 +100,7 @@ func _run_summon_manual_tests() -> void:
 
 func _run_full_release_summon_tests() -> void:
 	print("-- Full-release union summon material tests")
-	_assert_deck_can_form_union("Big Bang Dragon", ["Asteroid Trooper", "Echo Bringer", "Electrogazer", "Laser Walker", "Lunar Wraith"], "TC-FUNC-Big-Bang-Dragon-summon")
+	_assert_deck_can_form_union("Big Bang Dragon", ["Star Hunter", "Echo Bringer", "Electrogazer", "Laser Walker", "Lunar Wraith"], "TC-FUNC-Big-Bang-Dragon-summon")
 	_assert_deck_can_form_union("Beowolf", ["Kulu the Alpha Leader", "Mina the Chemist"], "TC-FUNC-Beowolf-summon")
 	_assert_deck_can_form_union("Dew the Heroic Prince", ["Dew the Frog Knight", "Wendella the Wise Princess"], "TC-FUNC-Dew-the-Heroic-Prince-summon")
 	_assert_deck_can_form_union("Gemina the Supreme Queen", ["Wendella the Wise Princess", "Fern the Mermaid Princess", "Rena the Space Princess"], "TC-FUNC-Gemina-the-Supreme-Queen-summon")
@@ -142,7 +142,7 @@ func _run_full_release_summon_tests() -> void:
 	_assert_deck_can_form_union("Priestess of the Moon", ["Moon Rabbit", "Tiny Pixie"], "TC-FUNC-Priestess-of-the-Moon-summon")
 	_assert_deck_can_form_union("Moon Shifter", ["Moon Rabbit", "Nuki the Tanuki"], "TC-FUNC-Moon-Shifter-summon")
 	_assert_deck_can_form_union("Carbon Behemoth", ["Space Boy", "Slim Gray Trooper", "Mastimus the Outlaw"], "TC-FUNC-Carbon-Behemoth-summon")
-	_assert_deck_can_form_union("Nanomites Rafflesia", ["Nanomites Worms", "Black Worms"], "TC-FUNC-Nanomites-Rafflesia-summon")
+	_assert_deck_can_form_union("Nanomites Rafflesia", ["Nanomites Worms", "Slug-11"], "TC-FUNC-Nanomites-Rafflesia-summon")
 	_assert_deck_can_form_union("Gamma Kraken", ["Gamma Emitter", "Daddy Long Legs", "Dystopian Cultist"], "TC-FUNC-Gamma-Kraken-summon")
 	_assert_deck_can_form_union("Enormous Slime", ["Waste Slime", "Daddy Long Legs"], "TC-FUNC-Enormous-Slime-summon")
 	_assert_deck_can_form_union("Supreme Lich", ["Lich Servant", "Chaotic Wisp"], "TC-FUNC-Supreme-Lich-summon")

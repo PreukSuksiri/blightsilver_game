@@ -81,7 +81,7 @@ See agent response for ambiguous cards.
 - **Current:** Once, when this card defends, the attacker attack is negated.
 - **Suggested:** Once: when this card defends, the attacker attack is negated.
 
-### Black Worms
+### Slug-11
 
 - **Current:** At their turn’s end, foe lose 300 Crystals for each Mutagen flag on the field
 - **Suggested:** At their turn’s end, foe loses 300 Crystals for each Mutagen flag on the field
@@ -191,7 +191,7 @@ See agent response for ambiguous cards.
 - **Current:** Once, this card is not destroyed
 - **Suggested:** Once: this card is not destroyed
 
-### Epsilon The Wither
+### Epsilon The Withered
 
 - **Current:** At Reckoning, +20 ATK&DEF until this turn ends, but all ally units lose 20 ATK&DEF until this turn ends
 - **Suggested:** At Reckoning, +20 ATK and DEF This turn: but all ally units lose 20 ATK and DEF until this turn ends
@@ -561,7 +561,7 @@ See agent response for ambiguous cards.
 - **Current:** If this card would be destroyed, remove 1 princess flag from ally unit instead.
 - **Suggested:** If this card would be destroyed, remove 1 Princess flag from ally unit instead.
 
-### Rotten Shrieker *(Demo=Yes)*
+### Rotten Spider *(Demo=Yes)*
 
 - **Current:** Without Mutagen Flag : -10 ATK permanently at the end of their turn.
 - **Suggested:** Without Mutagen flag : -10 ATK permanently at the end of their turn.
