@@ -336,30 +336,44 @@ func _build_ui() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	# ── Solid background (center only, margins handled separately) ──
-	var bg := ColorRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.offset_left  =  160.0
-	bg.offset_right = -160.0
-	bg.color = Color(0.04, 0.05, 0.12, 1.0)
-	add_child(bg)
-
-	# ── Black margin strips ───────────────────────────────────
-	var lm := ColorRect.new()
-	lm.anchor_left    = 0.0;  lm.anchor_top    = 0.0
-	lm.anchor_right   = 0.0;  lm.anchor_bottom = 1.0
-	lm.offset_left    = 0.0;  lm.offset_top    = 0.0
-	lm.offset_right   = 160.0; lm.offset_bottom = 0.0
-	lm.color          = Color(0.0, 0.0, 0.0, 1.0)
-	add_child(lm)
-
-	var rm := ColorRect.new()
-	rm.anchor_left    = 1.0;  rm.anchor_top    = 0.0
-	rm.anchor_right   = 1.0;  rm.anchor_bottom = 1.0
-	rm.offset_left    = -160.0; rm.offset_top  = 0.0
-	rm.offset_right   = 0.0;  rm.offset_bottom = 0.0
-	rm.color          = Color(0.0, 0.0, 0.0, 1.0)
-	add_child(rm)
+	# ── Background (v3: setup-phase art; else solid + side margins) ──
+	var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
+	if setup_bg_tex != null:
+		# Black underlay so letterbox/gap never shows through.
+		var underlay := ColorRect.new()
+		underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		underlay.color = Color(0.0, 0.0, 0.0, 1.0)
+		underlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(underlay)
+		var bg := TextureRect.new()
+		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bg.texture = setup_bg_tex
+		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		# Cropped plate → stretch edge-to-edge (may distort slightly).
+		bg.stretch_mode = TextureRect.STRETCH_SCALE
+		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(bg)
+	else:
+		var bg := ColorRect.new()
+		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+		bg.offset_left  =  160.0
+		bg.offset_right = -160.0
+		bg.color = Color(0.04, 0.05, 0.12, 1.0)
+		add_child(bg)
+		var lm := ColorRect.new()
+		lm.anchor_left    = 0.0;  lm.anchor_top    = 0.0
+		lm.anchor_right   = 0.0;  lm.anchor_bottom = 1.0
+		lm.offset_left    = 0.0;  lm.offset_top    = 0.0
+		lm.offset_right   = 160.0; lm.offset_bottom = 0.0
+		lm.color          = Color(0.0, 0.0, 0.0, 1.0)
+		add_child(lm)
+		var rm := ColorRect.new()
+		rm.anchor_left    = 1.0;  rm.anchor_top    = 0.0
+		rm.anchor_right   = 1.0;  rm.anchor_bottom = 1.0
+		rm.offset_left    = -160.0; rm.offset_top  = 0.0
+		rm.offset_right   = 0.0;  rm.offset_bottom = 0.0
+		rm.color          = Color(0.0, 0.0, 0.0, 1.0)
+		add_child(rm)
 
 	# ── Header bar ──────────────────────────────────────────
 	var header := Panel.new()

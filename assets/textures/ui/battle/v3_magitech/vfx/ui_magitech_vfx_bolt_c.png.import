@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ch5hi8xa0lvqq"
-path="res://.godot/imported/ui_magitech_attack.png-ac3147ec4747431211b923c1c42e6315.ctex"
+uid="uid://dvtmldhhy057n"
+path="res://.godot/imported/ui_magitech_vfx_bolt_c.png-ae84a79d124471b4c857d7ecf66f3850.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/ui/battle/v3_magitech/ui_magitech_attack.png"
-dest_files=["res://.godot/imported/ui_magitech_attack.png-ac3147ec4747431211b923c1c42e6315.ctex"]
+source_file="res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_c.png"
+dest_files=["res://.godot/imported/ui_magitech_vfx_bolt_c.png-ae84a79d124471b4c857d7ecf66f3850.ctex"]
 
 [params]
 

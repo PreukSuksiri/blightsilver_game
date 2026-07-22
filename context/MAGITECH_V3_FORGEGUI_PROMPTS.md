@@ -13,6 +13,7 @@ Human workflow (do **not** paste into ForgeGUI):
 - **Phase E (clockwork playmat):** see **Phase E** section → save under `battle/v3_magitech/clockwork/` (can run parallel later).  
 - **Phase F (battle VFX):** smoke / bolt / fire spark → `battle/v3_magitech/vfx/`.  
 - **Phase G (crystal break):** pre-endgame shake shatter plate → `battle/v3_magitech/vfx/` (G01+).  
+- **Phase H (setup / coin-toss backdrop):** see **Phase H** section → `battle/v3_magitech/ui_bg_setup_phase.png` (wired on setup + coin toss).  
 
 - **If gen ignores the kit** (e.g. cartoon wood UI): style refs failed to upload — re-attach and confirm they are active. Do not “fix” with long negative prompts.
 
@@ -1387,3 +1388,57 @@ Game UI isolated icon, 128x128, transparent outside. ONE holy-tech copy mark (pl
 - Mecha / cyberpunk / purple neon  
 - Editors-only tools (out of scope)  
 - Bluff reaction faces (keep unicode — do not gen)  
+
+---
+
+# Phase H — Setup / coin-toss backdrop
+
+**Save to:** `assets/textures/ui/battle/v3_magitech/`  
+**Wired as:** setup screen + coin-toss overlay background (`HudSkin` → `ui_bg_setup_phase.png`).  
+**Also planned (optional layer):** wiremesh fence `ui_magitech_setup_wiremesh.png` — see pipeline Phase H.
+
+**Locked look (H01):** theatrical 2D stage drop — wall only, no floor — set **inside** a huge engine / automaton. Dark gunmetal plates + distant soft bronze gears; center band is a distinct left-to-right wiremesh fence (~50% height). Flat scenic backdrop (not a playable platformer stage). No text, logos, crests, characters, watermark.
+
+---
+
+## H01 — `ui_bg_setup_phase.png` · 1280×720
+
+**Approved prompt (re-roll from this).** Theatrical painted stage drop for setup + coin toss.
+
+**Copy this:**
+
+```
+Theatrical 2D platformer stage backdrop, wall only. no floor. 1280x720, full-bleed painted scenic drop. Vast steampunk machine interior as a stage backdrop — the scene is set INSIDE the mechanical guts of a huge engine / automaton. Dark gunmetal and blackened steel plates, riveted panels, polished bridges, bolted housings, screw heads, and shallow metal pillars — continuous dark metal surfaces only. Far background only: soft-focus aged bronze and brass gears, shafts, and machine plates sunk deep into the metallic chamber. Very thin muted teal light in distant seams at very low opacity. Center third has a very distinct wiremesh fence from left edge to right edges, covering 50% of the art's height. Soft vignette at edges. Flat scenic backdrop look (not a playable platformer stage). No text, no logos, no crests, no characters, no watermark. Dark metallic steampunk machine chamber + distant bronze mechanisms.
+```
+
+**Refine — quieter card/coin zone (if fence or gears fight readability):**
+
+```
+Same theatrical stage drop inside the engine guts, keep the left-to-right wiremesh fence band, but darken and soften detail behind the center board zone so cards and a large coin stay readable. No floor. No text, no logos, no watermark.
+```
+
+**Refine — stronger wiremesh band:**
+
+```
+Same backdrop, push the center wiremesh fence harder — clear grille from left edge to right edge across about half the image height. Keep far bronze gears soft-focus only. Wall only, no floor. No text, no logos, no watermark.
+```
+
+---
+
+## H02 — `ui_magitech_setup_wiremesh.png` · 1280×720 (optional layer)
+
+Distinct **wiremesh fence** overlay for setup (alpha). Readable industrial grille / chain rail / mesh plane — physical fence, not smoke. Transparent outside the mesh. Can sit over H01 or frame the placement board. No text, logos, watermark.
+
+**Copy this:**
+
+```
+1280x720 transparent UI overlay: Magitech industrial wiremesh fence / grille plane for a card setup screen. Sacred silver metal mesh with thin cyan edge light on the wires. Reads as a physical fence, not fog or smoke. Mostly transparent outside the mesh. No text, no logos, no crests, no watermark. Match uploaded cyan-silver style references.
+```
+
+## Phase H — Reject if
+
+- Flat navy / solid color fill pretending to be a stage  
+- Soft fog instead of readable wiremesh  
+- Busy motif dead-center under the 5×5 board  
+- Battle playmat clone with no setup-bay identity  
+- Text, logos, crests, watermarks  

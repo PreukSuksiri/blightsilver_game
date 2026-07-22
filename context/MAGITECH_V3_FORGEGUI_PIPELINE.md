@@ -352,14 +352,15 @@ Setup today is procedural flat UI: solid `ColorRect` bg, `StyleBoxFlat` grid cel
 
 ### H1 — Backdrop art (ForgeGUI → PNG)
 
-Save under `assets/textures/ui/battle/v3_magitech/setup/`.
+**Prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase H**.  
+Save under `assets/textures/ui/battle/v3_magitech/` (shipped H01 lives next to other v3 HUD plates).
 
 | ID | Save as | Role | Notes |
 |----|---------|------|-------|
-| H01 | `ui_magitech_setup_backdrop.png` | Full-bleed machinery interior | Bronze/brass machine bay; quiet center for the 5×5 board; no text/logos |
-| H02 | `ui_magitech_setup_wiremesh.png` | Distinct wiremesh fence layer | Alpha mesh / chain rail / industrial grille — **readable as fence**, not fog; can sit over H01 or as a mid-plane frame around the grid |
+| H01 | `ui_bg_setup_phase.png` | Full-bleed theatrical stage drop (wall only) | **Shipped / wired** on setup + coin toss. Locked prompt in PROMPTS → Phase H01 (engine guts + center wiremesh band) |
+| H02 | `ui_magitech_setup_wiremesh.png` | Distinct wiremesh fence layer | Optional alpha mesh / chain rail — **readable as fence**, not fog |
 
-**Ship-first:** H01 alone can ship with a shader/mesh overlay if H02 is late; prefer H01+H02 for the “fence” read.
+**Ship-first:** H01 alone is live; add H02 when a stronger fence read is needed.
 
 **Style lock**
 
@@ -370,11 +371,12 @@ Save under `assets/textures/ui/battle/v3_magitech/setup/`.
 
 ### H2 — Godot wiring (after assets)
 
-1. Replace center `ColorRect` bg in `_build_ui` with `TextureRect` H01 (full rect under grid/panels).  
+1. ~~Replace setup `ColorRect` bg with H01~~ — **done** (`ui_bg_setup_phase.png` on setup + coin toss).  
 2. Add H02 wiremesh as a second layer (above backdrop, below or framing the grid — pick one composition and stick).  
 3. Spawn animated gradient grid lines around / between setup cells (v3 only).  
 4. Soften or hide flat cell border chrome when v3 lines are active so borders don’t double up.  
-5. `hud_skin v1|v2`: unchanged procedural navy + unicode emojis.
+5. Bluff emoji → `BluffEmoji` PNGs in setup.  
+6. `hud_skin v1|v2`: unchanged procedural navy + unicode emojis.
 
 ### Suggested order
 

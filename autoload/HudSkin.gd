@@ -54,6 +54,9 @@ const _SKIN_MAP: Dictionary = {
 	"bg_game_over.png":           "ui_magitech_game_over.png",
 	"ui_top_dashboard.png":       "ui_magitech_top_dashboard.png",
 	"ui_bottom_vault.png":        "ui_magitech_bottom_vault.png",
+	## Setup / coin-toss full-bleed backdrop (v3 only).
+	"ui_bg_setup_phase.png":      "ui_bg_setup_phase.png",
+	"ui_setup_bottom_strip.png":  "ui_setup_bottom_strip.png",
 }
 
 ## On hud_skin v3, skip these and fall through to v2 → v1 (temporary).
@@ -100,6 +103,23 @@ func hud_tex_v3_only(v1_filename: String) -> Texture2D:
 		if img != null and not img.is_empty():
 			return ImageTexture.create_from_image(img)
 	return null
+
+
+## Setup / coin-toss backdrop: crop letterbox/pillarbox baked into the plate,
+## then callers STRETCH_SCALE it to the full viewport.
+func setup_phase_bg_tex() -> Texture2D:
+	var full: Texture2D = hud_tex_v3_only("ui_bg_setup_phase.png")
+	if full == null:
+		return null
+	var tw: float = float(full.get_width())
+	var th: float = float(full.get_height())
+	if tw <= 1.0 or th <= 1.0:
+		return full
+	var atlas := AtlasTexture.new()
+	atlas.atlas = full
+	# Measured content bounds on 1672×941 plate (black canvas padding).
+	atlas.region = Rect2(tw * 0.0807, th * 0.0457, tw * 0.8385, th * 0.9054)
+	return atlas
 
 
 ## Returns the correct Texture2D for the given v1 filename.

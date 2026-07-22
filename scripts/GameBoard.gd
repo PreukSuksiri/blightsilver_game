@@ -347,6 +347,8 @@ var _pre_endgame_flip_reveal_done: bool = true
 ## Player whose crystals hit 0 this duel (-1 = none / not a crystal loss).
 var _crystal_break_player: int = -1
 var _crystal_break_fx: TextureRect = null
+## Bump to cancel an in-flight crystal vent emission loop (smoke stays fire-and-forget).
+var _crystal_vent_token: int = 0
 const _TEX_CRYSTAL_BREAK: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/ui_magitech_vfx_crystal_break.png")
 ## Phase F — Kenney CC0 VFX (cyan–silver tint applied at spawn).
@@ -379,6 +381,7 @@ const _TEX_VFX_SMOKE_POOL: Array[Texture2D] = [
 const _TEX_VFX_SMOKE_SOOT_POOL: Array[Texture2D] = [
 	_TEX_VFX_SMOKE_SOOT_A, _TEX_VFX_SMOKE_SOOT_B, _TEX_VFX_SMOKE_SOOT_C,
 ]
+## Squiggly / jagged traces — electric jolts only.
 const _TEX_VFX_BOLT_A: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_a.png")
 const _TEX_VFX_BOLT_B: Texture2D = preload(
@@ -387,20 +390,18 @@ const _TEX_VFX_BOLT_D: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_d.png")
 const _TEX_VFX_BOLT_E: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_e.png")
-## bolt_c / bolt_f / bolt_g excluded — not electric-jolt shapes
 const _TEX_VFX_BOLT_POOL: Array[Texture2D] = [
 	_TEX_VFX_BOLT_A, _TEX_VFX_BOLT_B, _TEX_VFX_BOLT_D, _TEX_VFX_BOLT_E,
 ]
-const _TEX_VFX_FIRE_SPARK: Texture2D = preload(
-	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_a.png")
-const _TEX_VFX_FIRE_SPARK_B: Texture2D = preload(
-	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_b.png")
-const _TEX_VFX_FIRE_SPARK_C: Texture2D = preload(
-	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_c.png")
-const _TEX_VFX_FIRE_SPARK_D: Texture2D = preload(
-	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_d.png")
+## Straight streak traces — fire sparks only (not electric).
+const _TEX_VFX_FIRE_STREAK_C: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_c.png")
+const _TEX_VFX_FIRE_STREAK_F: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_f.png")
+const _TEX_VFX_FIRE_STREAK_G: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_g.png")
 const _TEX_VFX_FIRE_SPARK_POOL: Array[Texture2D] = [
-	_TEX_VFX_FIRE_SPARK, _TEX_VFX_FIRE_SPARK_B, _TEX_VFX_FIRE_SPARK_C, _TEX_VFX_FIRE_SPARK_D,
+	_TEX_VFX_FIRE_STREAK_C, _TEX_VFX_FIRE_STREAK_F, _TEX_VFX_FIRE_STREAK_G,
 ]
 const _PRE_ENDGAME_GLITCH_GLYPHS: Array[String] = [
 	"#", "@", "%", "&", "?", "/", "\\", "0", "1", "X", "!", "*", "=", "+",
@@ -802,6 +803,7 @@ func _connect_signals() -> void:
 const GRID_LINE_W: int = 4
 const GRID_LINE_COLOR: Color = Color(0.65, 0.88, 0.95, 0.9)  # silver-cyan
 const _SHADER_GRID_LINE: Shader = preload("res://assets/shaders/magitech_grid_line.gdshader")
+const _SHADER_VFX_BOLT: Shader = preload("res://assets/shaders/magitech_vfx_bolt.gdshader")
 ## 2×2 white tex so grid-line ShaderMaterial gets real 0–1 UVs (ColorRect UVs are flat).
 var _grid_line_white_tex: ImageTexture = null
 
@@ -4308,6 +4310,7 @@ func _vfx_make_smoke_puff(sz: float, dense: bool, z_idx: int,
 
 
 ## Electric jolt streak. `base_len` is the long axis; size/flip randomized, aspect preserved.
+## Fast traveling pulse + translucent alpha via magitech_vfx_bolt.gdshader.
 func _vfx_make_bolt(base_len: float, z_idx: int, rng: RandomNumberGenerator) -> TextureRect:
 	var tr := TextureRect.new()
 	tr.texture = _TEX_VFX_BOLT_POOL[rng.randi_range(0, _TEX_VFX_BOLT_POOL.size() - 1)]
@@ -4334,12 +4337,27 @@ func _vfx_make_bolt(base_len: float, z_idx: int, rng: RandomNumberGenerator) -> 
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.z_index = z_idx
 	tr.z_as_relative = false
-	tr.modulate = Color(0.55, 0.95, 1.0, 1.0) if rng.randf() < 0.55 \
+	var tint: Color = Color(0.55, 0.95, 1.0, 1.0) if rng.randf() < 0.55 \
 			else Color(0.88, 0.96, 1.0, 1.0)
+	var mat := ShaderMaterial.new()
+	mat.shader = _SHADER_VFX_BOLT
+	mat.set_shader_parameter("tint", tint)
+	mat.set_shader_parameter("band_color", Color(0.96, 0.99, 1.0, 1.0))
+	# Grid pulse ~0.16; jolts run much faster so the band races the streak.
+	mat.set_shader_parameter("speed", rng.randf_range(3.2, 6.5))
+	mat.set_shader_parameter("band_width", rng.randf_range(0.12, 0.26))
+	mat.set_shader_parameter("phase", rng.randf())
+	mat.set_shader_parameter("vertical", 1.0 if tr.size.y >= tr.size.x else 0.0)
+	mat.set_shader_parameter("base_alpha", rng.randf_range(0.42, 0.68))
+	mat.set_shader_parameter("pulse_boost", rng.randf_range(0.75, 1.15))
+	tr.material = mat
+	# Keep modulate mostly white so tweened modulate:a still fades the bolt out.
+	tr.modulate = Color(1.0, 1.0, 1.0, rng.randf_range(0.55, 0.85))
 	return tr
 
 
-## Spark mote. `base_sz` randomized uniformly (aspect preserved).
+## Fire spark streak — straight bolt art + warm tint (no electric shader / squiggle).
+## `base_sz` is the long axis; aspect preserved from the streak texture.
 func _vfx_make_fire_spark(base_sz: float, z_idx: int,
 		rng: RandomNumberGenerator = null) -> TextureRect:
 	if rng == null:
@@ -4349,23 +4367,78 @@ func _vfx_make_fire_spark(base_sz: float, z_idx: int,
 	tr.texture = _TEX_VFX_FIRE_SPARK_POOL[rng.randi_range(0, _TEX_VFX_FIRE_SPARK_POOL.size() - 1)]
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var side: float = maxf(6.0, base_sz) * rng.randf_range(0.45, 2.10)
+	var len: float = maxf(8.0, base_sz) * rng.randf_range(0.50, 1.90)
 	if rng.randf() < 0.14:
-		side *= rng.randf_range(0.40, 0.70)
+		len *= rng.randf_range(0.40, 0.70)
 	elif rng.randf() < 0.12:
-		side *= rng.randf_range(1.30, 1.85)
-	tr.size = Vector2(side, side)
+		len *= rng.randf_range(1.25, 1.70)
+	var tex_sz: Vector2 = tr.texture.get_size() if tr.texture != null else Vector2(1.0, 1.0)
+	var aspect: float = tex_sz.x / maxf(tex_sz.y, 1.0)
+	if aspect >= 1.0:
+		tr.size = Vector2(len, len / aspect)
+	else:
+		tr.size = Vector2(len * aspect, len)
 	tr.pivot_offset = tr.size * 0.5
 	tr.flip_h = rng.randf() < 0.5
 	tr.flip_v = rng.randf() < 0.5
-	var uni: float = rng.randf_range(0.70, 1.40)
+	var uni: float = rng.randf_range(0.75, 1.30)
 	tr.scale = Vector2(uni, uni)
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.z_index = z_idx
 	tr.z_as_relative = false
-	# Warm tip + cool rim via amber–cyan modulate.
+	# Warm ember — no traveling-pulse electric material.
 	tr.modulate = Color(1.0, 0.72, 0.42, 1.0)
 	return tr
+
+
+## Short crackle stab + flicker — reads as electric arc, not confetti drift.
+## Call after `add_child(spark)`. `heading` is travel direction in radians.
+func _vfx_play_electric_arc(spark: Control, is_bolt: bool, heading: float,
+		rng: RandomNumberGenerator, delay: float = 0.0) -> void:
+	if spark == null or not is_instance_valid(spark):
+		return
+	# Tall bolt art: +PI/2 aligns the long axis with travel heading.
+	spark.rotation = heading + PI * 0.5
+	var start: Vector2 = spark.position
+	var long_axis: float = maxf(spark.size.x, spark.size.y) * maxf(absf(spark.scale.x), 0.01)
+	var stab: float = long_axis * (rng.randf_range(0.50, 1.20) if is_bolt else rng.randf_range(0.30, 0.75))
+	stab = clampf(stab, 16.0, 96.0 if is_bolt else 42.0)
+	var kink: float = rng.randf_range(-0.70, 0.70)
+	var mid: Vector2 = start + Vector2(cos(heading + kink), sin(heading + kink)) \
+			* (stab * rng.randf_range(0.30, 0.50))
+	var end: Vector2 = start + Vector2(cos(heading), sin(heading)) * stab
+	var life: float = rng.randf_range(0.09, 0.18) if is_bolt else rng.randf_range(0.07, 0.14)
+	var base_a: float = clampf(spark.modulate.a, 0.35, 1.0)
+	var base_scale: Vector2 = spark.scale
+	# Stretch along the bolt's long axis for a whip-crack feel.
+	var stretch: Vector2 = base_scale * Vector2(
+		rng.randf_range(0.80, 1.05),
+		rng.randf_range(1.20, 1.65)) if is_bolt else base_scale * rng.randf_range(0.95, 1.25)
+	spark.modulate.a = 0.0
+	var tw := create_tween()
+	if delay > 0.0:
+		tw.tween_interval(delay)
+	# Pop on → jagged mid hop → tip stab + flicker out.
+	tw.tween_property(spark, "modulate:a", base_a, 0.018)
+	tw.set_parallel(true)
+	tw.tween_property(spark, "position", mid, life * 0.40) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+	tw.tween_property(spark, "scale", stretch, life * 0.40) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tw.chain()
+	tw.tween_property(spark, "modulate:a", base_a * rng.randf_range(0.12, 0.40), 0.025)
+	tw.tween_property(spark, "modulate:a", base_a, 0.025)
+	tw.set_parallel(true)
+	tw.tween_property(spark, "position", end, life * 0.55) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+	tw.tween_property(spark, "modulate:a", 0.0, life * 0.40) \
+		.set_delay(life * 0.12) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	tw.tween_property(spark, "scale",
+			base_scale * Vector2(rng.randf_range(0.55, 0.85), rng.randf_range(0.90, 1.20)),
+			life * 0.55) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	_queue_tween_free(tw, spark)
 
 
 func _spawn_union_short_circuit_sparks(card_node: Control) -> void:
@@ -4418,25 +4491,24 @@ func _spawn_union_short_circuit_sparks(card_node: Control) -> void:
 	const CYAN := Color(0.30, 0.98, 1.0, 1.0)
 	const WHITE := Color(1.0, 1.0, 1.0, 1.0)
 	var use_tex: bool = _v3_textured_vfx()
-	# Full-screen crackle — board, HUD bands, edges.
-	for _i: int in range(140):
-		var is_bolt: bool = rng.randf() < 0.35
+	# Full-screen crackle — electric bolts only (no fire-streak art).
+	for _i: int in range(96):
+		var is_bolt: bool = rng.randf() < 0.72
 		var spark: Control
 		if use_tex:
-			# Always Kenney jolt skins on v3 (no flat ColorRect crackle).
-			if is_bolt:
-				spark = _vfx_make_bolt(rng.randf_range(36.0, 160.0), 220, rng)
-			else:
-				spark = _vfx_make_fire_spark(rng.randf_range(10.0, 42.0), 220, rng)
-				# Cool electric flecks (not warm destroy sparks).
+			# Squiggly electric jolts; smaller flecks are still bolt art, cool-tinted.
+			spark = _vfx_make_bolt(
+				rng.randf_range(36.0, 140.0) if is_bolt else rng.randf_range(14.0, 48.0),
+				220, rng)
+			if not is_bolt:
 				spark.modulate = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 		else:
 			var cr := ColorRect.new()
 			if is_bolt:
-				var blen: float = rng.randf_range(28.0, 140.0) * rng.randf_range(0.55, 1.80)
+				var blen: float = rng.randf_range(28.0, 120.0) * rng.randf_range(0.55, 1.80)
 				cr.size = Vector2(maxf(2.0, blen * 0.06), blen)
 			else:
-				var ssz: float = rng.randf_range(4.0, 28.0) * rng.randf_range(0.55, 1.80)
+				var ssz: float = rng.randf_range(4.0, 24.0) * rng.randf_range(0.55, 1.80)
 				cr.size = Vector2(ssz, ssz)
 			cr.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 			cr.pivot_offset = cr.size * 0.5
@@ -4463,34 +4535,9 @@ func _spawn_union_short_circuit_sparks(card_node: Control) -> void:
 		else:
 			spawn = Vector2(rng.randf_range(0.0, area.x), rng.randf_range(0.0, area.y))
 		spark.position = spawn - spark.size * 0.5
-
-		var angle: float = rng.randf_range(0.0, TAU)
-		var dist: float = rng.randf_range(80.0, 340.0) if is_bolt else rng.randf_range(50.0, 220.0)
-		var dx: float = cos(angle) * dist
-		var dy: float = sin(angle) * dist
-		spark.rotation = angle + PI * 0.5
 		add_child(spark)
-
-		var delay: float = rng.randf_range(0.0, 1.45)
-		var duration: float = rng.randf_range(0.18, 0.55)
-		var end_pos: Vector2 = spark.position + Vector2(dx, dy)
-		var end_scale: Vector2 = Vector2(
-			rng.randf_range(0.3, 0.9), rng.randf_range(0.6, 1.4))
-		var tp := create_tween()
-		tp.tween_interval(delay)
-		tp.set_parallel(true)
-		tp.tween_property(spark, "position", end_pos, duration) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-		tp.tween_property(spark, "modulate:a", 0.0, duration * 0.55) \
-			.set_delay(duration * 0.30) \
-			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-		tp.tween_property(spark, "scale", end_scale, duration) \
-			.set_ease(Tween.EASE_IN)
-		var spark_id: int = spark.get_instance_id()
-		tp.finished.connect(func() -> void:
-			var n: Node = instance_from_id(spark_id) as Node
-			if n != null and is_instance_valid(n):
-				n.queue_free())
+		_vfx_play_electric_arc(
+			spark, is_bolt, rng.randf_range(0.0, TAU), rng, rng.randf_range(0.0, 1.20))
 
 	# Slow electrical haze — drifts to a screen edge (0.5–3s fade-out per puff).
 	_spawn_union_short_circuit_smoke(area, epicenter)
@@ -5613,14 +5660,17 @@ func _on_options_hover_exited() -> void:
 	await get_tree().process_frame
 	if not is_instance_valid(self):
 		return
+	# Modal covers the button but the cursor still sits over its rect — without this
+	# check we keep the hover slide up after Open Options / Close.
+	if GameDialog.has_open_overlay(self):
+		_force_options_hover_exit()
+		return
 	if _is_mouse_over_options():
 		return
 	_force_options_hover_exit()
 
 
 func _force_options_hover_exit() -> void:
-	if not _options_hovered:
-		return
 	_options_hovered = false
 	_restore_game_guide()
 	_v3_circuit_set_active(_options_btn_art, false)
@@ -6581,6 +6631,8 @@ func _show_options_panel() -> void:
 	if GameDialog.has_open_overlay(self):
 		return
 	SFXManager.play(SFXManager.SFX_POPUP)
+	# Collapse hover slide under the modal (cursor still over the button rect).
+	_force_options_hover_exit()
 	_options_panel = GameDialog.menu_overlay(
 		self,
 		"Options",
@@ -6590,11 +6642,20 @@ func _show_options_panel() -> void:
 			{"text": "Rules", "callback": _show_rules_panel},
 			{"text": "Surrender", "callback": _show_surrender_confirm},
 		],
-		"Close")
+		"Close",
+		func() -> void:
+			_options_panel = null
+			_force_options_hover_exit())
+	if _options_panel != null and is_instance_valid(_options_panel):
+		_options_panel.tree_exited.connect(func() -> void:
+			_options_panel = null
+			if is_instance_valid(self):
+				_force_options_hover_exit())
 
 func _close_options_panel() -> void:
 	GameDialog.close_overlay(self)
 	_options_panel = null
+	_force_options_hover_exit()
 
 # ─────────────────────────────────────────────────────────────
 # Change Music sub-panel
@@ -7162,10 +7223,27 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(overlay)
 
-	var bg := ColorRect.new()
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.color = Color(0.0, 0.0, 0.0, 1.0)
-	overlay.add_child(bg)
+	var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
+	var bg: Control
+	# Black underlay behind scenic art (covers any edge gaps).
+	var underlay := ColorRect.new()
+	underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	underlay.color = Color(0.0, 0.0, 0.0, 1.0)
+	underlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(underlay)
+	if setup_bg_tex != null:
+		var bg_tex := TextureRect.new()
+		bg_tex.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bg_tex.texture = setup_bg_tex
+		bg_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		# Cropped plate → stretch edge-to-edge (may distort slightly).
+		bg_tex.stretch_mode = TextureRect.STRETCH_SCALE
+		bg_tex.mouse_filter = Control.MOUSE_FILTER_STOP
+		overlay.add_child(bg_tex)
+		bg = bg_tex
+	else:
+		bg = underlay
+		underlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	# ── Player portraits (greyed until result) ─────────────────
 	const REF_H: float = 720.0
@@ -7191,6 +7269,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p1_port.flip_h        = true
 		coin_p1_port.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 		coin_p1_port.modulate      = GREY_MODULATE
+		coin_p1_port.z_index       = 1
 		overlay.add_child(coin_p1_port)
 
 	var _p2_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[1])
@@ -7211,11 +7290,13 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p2_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p2_port.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 		coin_p2_port.modulate      = GREY_MODULATE
+		coin_p2_port.z_index       = 1
 		overlay.add_child(coin_p2_port)
 
 	# ── CenterContainer ensures true centering regardless of VBox size ──
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.z_index = 10
 	overlay.add_child(center)
 
 	var vbox := VBoxContainer.new()
@@ -7427,10 +7508,9 @@ func _run_crystal_change_animation(player_index: int, new_amount: int) -> void:
 			_crystal_break_player = player_index
 			# Shatter intact gem → break plate + short-circuit (as soon as crystals hit 0).
 			await _play_crystal_break_explosion(player_index)
-		# Smoke while the number ticks (excessive + cross-screen if depleted).
+		# Vent smoke is fire-and-forget — never block tick / endgame on it.
 		_start_crystal_tick_vent_smoke(player_index, tick_dur, depleted)
 		await _tick_crystal(player_index, old_amount, new_amount)
-		await get_tree().create_timer(1.0).timeout
 		_check_almost_win_bgm()
 		_notify_crystal_animation_complete()
 	elif new_amount > old_amount:
@@ -7639,31 +7719,32 @@ func _play_smoke_emit_sfx(hard: bool = false) -> void:
 		SFXManager.play(_SFX_STEAM_VENT_SOFT)
 
 
-## Fire-and-forget: vent only while the crystal number ticks (incl. zero).
-## Stops emitting when the tick animation duration ends — no post-tick stream.
+## Fire-and-forget vent: emit through the tick, then +0.5s (does not block).
 func _start_crystal_tick_vent_smoke(player: int, duration: float, depleted: bool) -> void:
-	var stream_dur: float = maxf(duration, 0.35)
+	_crystal_vent_token += 1
+	var token: int = _crystal_vent_token
+	# Tick length + 0.5s trail; never awaited by crystal anim.
+	var stream_dur: float = maxf(duration, 0.35) + 0.5
 	if depleted:
-		# Immediate dump so the screen fills before the first interval wait.
-		_spawn_vent_smoke_burst(player, true, 22)
-	_crystal_tick_vent_smoke_loop(player, stream_dur, depleted)
+		_spawn_vent_smoke_burst(player, true, 8, true)
+	_crystal_tick_vent_smoke_loop(player, stream_dur, depleted, token)
 
 
-func _crystal_tick_vent_smoke_loop(player: int, duration: float, depleted: bool) -> void:
+func _stop_crystal_tick_vent_smoke() -> void:
+	_crystal_vent_token += 1
+
+
+func _crystal_tick_vent_smoke_loop(player: int, duration: float, depleted: bool,
+		token: int) -> void:
 	var t0: float = Time.get_ticks_msec() * 0.001
-	var interval: float = 0.07 if depleted else 0.38
-	var puffs_per: int = 12 if depleted else 1
-	var next_heavy: float = 0.45
+	var interval: float = 0.14 if depleted else 0.38
+	var puffs_per: int = 3 if depleted else 1
 	_play_smoke_emit_sfx(depleted)
-	while is_instance_valid(self):
+	while is_instance_valid(self) and token == _crystal_vent_token:
 		var elapsed: float = Time.get_ticks_msec() * 0.001 - t0
 		if elapsed >= duration:
 			break
-		_spawn_vent_smoke_burst(player, depleted, puffs_per)
-		if depleted and elapsed >= next_heavy:
-			_spawn_vent_smoke_burst(player, true, 18)
-			_play_smoke_emit_sfx(true)
-			next_heavy = elapsed + 0.55
+		_spawn_vent_smoke_burst(player, depleted, puffs_per, depleted)
 		await get_tree().create_timer(interval).timeout
 
 
@@ -7676,7 +7757,9 @@ func _spawn_vent_smoke(player: int, hard: bool = false) -> void:
 ## Spawn a burst of vent puffs.
 ## `cross_screen` (crystal depleted / hard): dense engine-break smoke that fills the
 ## board and drifts to bottom-right (P1 lose) or bottom-left (P2 lose).
-func _spawn_vent_smoke_burst(player: int, cross_screen: bool, puff_count: int) -> void:
+## `brief_life`: shorter puff lifetime (crystal-zero vent — don't linger after 0).
+func _spawn_vent_smoke_burst(player: int, cross_screen: bool, puff_count: int,
+		brief_life: bool = false) -> void:
 	var origin: Vector2 = _crystal_vent_emit_origin(player)
 	if origin == Vector2.ZERO or puff_count <= 0:
 		return
@@ -7687,11 +7770,20 @@ func _spawn_vent_smoke_burst(player: int, cross_screen: bool, puff_count: int) -
 		vp = get_viewport().get_visible_rect().size
 	var size_min: float = 36.0 if cross_screen else 26.0
 	var size_max: float = 88.0 if cross_screen else 54.0
-	var delay_max: float = 0.22 if cross_screen else 0.45
-	var dur_min: float = 2.80 if cross_screen else 1.80
-	var dur_max: float = 5.40 if cross_screen else 3.20
-	var scale_min: float = 3.6 if cross_screen else 2.5
-	var scale_max: float = 7.2 if cross_screen else 4.4
+	var delay_max: float = 0.10 if brief_life else (0.22 if cross_screen else 0.45)
+	var dur_min: float
+	var dur_max: float
+	if brief_life:
+		dur_min = 0.65
+		dur_max = 1.35
+	elif cross_screen:
+		dur_min = 2.80
+		dur_max = 5.40
+	else:
+		dur_min = 1.80
+		dur_max = 3.20
+	var scale_min: float = 2.4 if brief_life else (3.6 if cross_screen else 2.5)
+	var scale_max: float = 4.2 if brief_life else (7.2 if cross_screen else 4.4)
 	var alpha: float = 0.82 if cross_screen else 0.48
 	# Loser corner: P1 → bottom-right, P2 → bottom-left.
 	var corner: Vector2 = Vector2(
@@ -11837,17 +11929,19 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 		elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
 			_get_ai_for_player(player).decide_death_bluff(row, col)
 	var node: Control = grid_nodes[player][row][col]
-	_spawn_dense_card_smoke(node)
 	# Trap / dead-end dissolves stay quiet — no top/bottom HUD shake.
 	var is_dissolve: bool = inst != null and inst.card_type in ["dead_end", "trap"]
 	if not is_dissolve:
 		_play_hud_destroy_shake()
 	if is_dissolve:
+		# Dissolve owns its rising smoke — do not also run dense destroy plume
+		# (that stacked into two overlapping smoke sets on dead-end / trap).
 		if inst.card_type == "dead_end":
 			await get_tree().create_timer(0.5).timeout
 		_spawn_dissolve_effect(node)
 		await get_tree().create_timer(0.90).timeout
 	else:
+		_spawn_dense_card_smoke(node)
 		_spawn_destroy_effect(node)
 		node.play_destroy_animation()
 		await get_tree().create_timer(0.55).timeout
@@ -11898,6 +11992,17 @@ func _collect_destroy_shake_hud_nodes() -> Array[Control]:
 	var out: Array[Control] = []
 	out.append_array(_collect_top_hud_shake_nodes())
 	out.append_array(_collect_bottom_hud_shake_nodes())
+	return out
+
+
+## Pre-endgame strip shake: top/bottom chrome + widgets, but not player illustrations.
+func _collect_pre_endgame_strip_shake_nodes() -> Array[Control]:
+	var out: Array[Control] = []
+	out.append_array(_collect_top_hud_shake_nodes())
+	out.append_array(_filter_valid_controls([
+		_v3_bottom_vault,
+		_options_btn_root, _tech_fan,
+	]))
 	return out
 
 
@@ -12147,10 +12252,8 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 			1.0)
 		var spark: Control
 		if use_tex:
-			if rng2.randf() < 0.35:
-				spark = _vfx_make_bolt(rng2.randf_range(24.0, 90.0), 22, rng2)
-			else:
-				spark = _vfx_make_fire_spark(rng2.randf_range(12.0, 48.0), 22, rng2)
+			# Straight warm streaks only — never squiggly electric bolts.
+			spark = _vfx_make_fire_spark(rng2.randf_range(16.0, 72.0), 22, rng2)
 			spark.modulate = fire_col
 		else:
 			var cr := ColorRect.new()
@@ -12594,10 +12697,8 @@ func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
 		var warm := Color(1.0, rng.randf_range(0.80, 1.0), rng.randf_range(0.2, 0.6), 1.0)
 		var spark: Control
 		if use_tex:
-			if rng.randf() < 0.40:
-				spark = _vfx_make_bolt(rng.randf_range(22.0, 80.0), 12, rng)
-			else:
-				spark = _vfx_make_fire_spark(rng.randf_range(12.0, 44.0), 12, rng)
+			# Straight warm streaks only — never squiggly electric bolts.
+			spark = _vfx_make_fire_spark(rng.randf_range(14.0, 64.0), 12, rng)
 			spark.modulate = warm
 		else:
 			var cr := ColorRect.new()
@@ -12694,13 +12795,20 @@ func _process(delta: float) -> void:
 				_guide_box.global_position = get_global_mouse_position() + Vector2(58.0, 62.0)
 		elif _guide_box.visible:
 			_guide_box.global_position = get_global_mouse_position() + Vector2(58.0, 62.0)
-	if _shake_active:
+	# Pre-endgame: shake strip chrome only — never MainLayout / grids / cards.
+	if _shake_active and not _pre_endgame_shake_fx:
 		var ml: Control = get_node("MainLayout")
 		ml.position = _shake_origin + Vector2(
 			randf_range(-_shake_intensity, _shake_intensity),
 			randf_range(-_shake_intensity, _shake_intensity)
 		)
-	if _hud_destroy_shake_time > 0.0:
+	if _pre_endgame_shake_fx and not _hud_destroy_shake_origins.is_empty():
+		var strip_amp: float = maxf(_shake_intensity, 4.5)
+		_apply_hud_shake_offsets(Vector2(
+			randf_range(-strip_amp, strip_amp),
+			randf_range(-strip_amp, strip_amp)
+		))
+	elif _hud_destroy_shake_time > 0.0:
 		_hud_destroy_shake_time -= delta
 		if _hud_destroy_shake_time <= 0.0:
 			_end_hud_destroy_shake()
@@ -12820,13 +12928,23 @@ func _on_game_over(winner: int) -> void:
 	# ── 0. Let the final crystal burst + tick finish, then a brief beat ─────
 	# Music is NOT stopped here — it carries through the pause and is handled at shake start.
 	await _wait_crystal_display_finished()
+	# Surrender (and any loss without crystal depletion) still needs the Magitech
+	# break plate on the loser's gem — depletion path already spawned it at 0.
+	if not is_instance_valid(_crystal_break_fx):
+		var break_player: int = _resolve_crystal_break_player()
+		if break_player < 0 and GameState.game_over_reason == "surrender" \
+				and (winner == 0 or winner == 1):
+			break_player = 1 - winner
+		if break_player >= 0:
+			await _play_crystal_break_explosion(break_player)
 	# Keep Magitech chrome strips + widgets visible for the flip-reveal / almost win-loss beat.
 	_begin_pre_endgame_strip_hud()
 	await get_tree().create_timer(1.2).timeout
 
-	# ── 1. Flip-reveal all face-down cards (with screen shake) ───────────────
+	# ── 1. Flip-reveal face-down cards; shake top/bottom strips only (not grid).
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
+	# `_shake_active` gates FX loops; MainLayout is not offset during pre-endgame.
 	_shake_active = true
 	_start_pre_endgame_shake_fx()
 	# Options sinks under the bottom edge — fire-and-forget.
@@ -12846,8 +12964,8 @@ func _on_game_over(winner: int) -> void:
 	elif not player_won and not _vs_ai_bgm_muted():
 		# Lose: crossfade battle BGM out while defeat track fades in.
 		BGMManager.play_context(BGMManager.CONTEXT_DEFEAT, 1.0, 2.5, 100.0, BGMManager.LOOP_PLAY_ONCE)
-	# After shake has been going a bit, collapse HUD pieces one-by-one.
-	await get_tree().create_timer(0.90).timeout
+	# After a short shake beat, collapse HUD pieces one-by-one.
+	await get_tree().create_timer(0.55).timeout
 	var loser_player: int = -1
 	if winner == 0 or winner == 1:
 		loser_player = 1 - winner
@@ -12855,7 +12973,8 @@ func _on_game_over(winner: int) -> void:
 	while is_instance_valid(self) and not _pre_endgame_flip_reveal_done:
 		await get_tree().process_frame
 	_shake_active = false
-	ml.position = _shake_origin
+	if is_instance_valid(ml):
+		ml.position = _shake_origin
 	_stop_pre_endgame_shake_fx()
 
 	# ── 2. White flash fade-out ───────────────────────────────────────────────
@@ -12949,6 +13068,8 @@ func _pre_endgame_run_flip_reveal() -> void:
 
 func _start_pre_endgame_shake_fx() -> void:
 	_pre_endgame_shake_fx = true
+	# Shake top dashboard + bottom vault strips and their widgets (not the grid).
+	_begin_pre_endgame_strip_shake()
 	# 1) Hide attack badge art; replace real counts with error ticks (both players).
 	_set_pre_endgame_attack_badge_art_visible(false)
 	_set_pre_endgame_attack_glitch_visible(true)
@@ -12957,13 +13078,21 @@ func _start_pre_endgame_shake_fx() -> void:
 	_pre_endgame_dashboard_short_circuit_loop()
 	# 3) Random error glyphs on crystal + attack count labels.
 	_pre_endgame_hud_glitch_loop()
-	# Crystal-break plate already spawned at depletion; jitter it with the shake.
-	if is_instance_valid(_crystal_break_fx):
-		_pre_endgame_crystal_break_jitter_loop(_crystal_break_fx)
+	# Crystal-break plate stays still (no jitter).
+
+
+func _begin_pre_endgame_strip_shake() -> void:
+	if _hud_destroy_shake_time > 0.0:
+		_end_hud_destroy_shake()
+	_snapshot_hud_shake_origins(_collect_pre_endgame_strip_shake_nodes())
 
 
 func _stop_pre_endgame_shake_fx() -> void:
 	_pre_endgame_shake_fx = false
+	# Restore strip offsets snapped for the continuous shake.
+	if not _hud_destroy_shake_origins.is_empty():
+		_apply_hud_shake_offsets(Vector2.ZERO)
+		_hud_destroy_shake_origins.clear()
 	# Crystal amounts lock to error dashes when shake ends.
 	if is_instance_valid(_p1_bottom_crystal):
 		_p1_bottom_crystal.text = "----"
@@ -13085,15 +13214,16 @@ func _pre_endgame_run_options_sink() -> void:
 
 
 ## After shake has been going: fall + triangle-shatter HUD pieces one-by-one.
+## Turn plate falls early (not last) so it doesn't wait on void/tech chips.
 func _pre_endgame_hud_collapse_sequence(loser_player: int) -> void:
 	await _pre_endgame_fall_and_shatter_node(_end_turn_btn)
 	await _pre_endgame_fall_and_shatter_attack_counts()
+	await _pre_endgame_fall_and_shatter_turn_number()
 	if loser_player == 0 or loser_player == 1:
 		var void_chip: Control = _p1_void_stack if loser_player == 0 else _p2_void_stack
 		var tech_chip: Control = _p1_tech_stack if loser_player == 0 else _p2_tech_stack
 		await _pre_endgame_fall_and_shatter_node(void_chip)
 		await _pre_endgame_fall_and_shatter_node(tech_chip)
-	await _pre_endgame_fall_and_shatter_turn_number()
 
 
 func _pre_endgame_make_ghost_at(global_r: Rect2) -> Control:
@@ -13190,7 +13320,7 @@ func _pre_endgame_shake_controls(controls: Array) -> void:
 		var ctrl: Control = c as Control
 		if ctrl != null and is_instance_valid(ctrl):
 			bases.append([ctrl, ctrl.position, ctrl.rotation])
-	for _i: int in range(10):
+	for _i: int in range(6):
 		for entry: Variant in bases:
 			var arr: Array = entry as Array
 			var ctrl2: Control = arr[0] as Control
@@ -13200,7 +13330,7 @@ func _pre_endgame_shake_controls(controls: Array) -> void:
 			var base_rot: float = arr[2] as float
 			ctrl2.position = base_pos + Vector2(randf_range(-5.5, 5.5), randf_range(-5.5, 5.5))
 			ctrl2.rotation = base_rot + randf_range(-0.09, 0.09)
-		await get_tree().create_timer(0.035).timeout
+		await get_tree().create_timer(0.028).timeout
 	for entry2: Variant in bases:
 		var arr2: Array = entry2 as Array
 		var ctrl3: Control = arr2[0] as Control
@@ -13213,6 +13343,7 @@ func _pre_endgame_fall_controls_off_bottom(controls: Array) -> void:
 	var tw := create_tween()
 	tw.set_parallel(true)
 	var any: bool = false
+	const FALL_SEC: float = 0.40
 	for c: Variant in controls:
 		var ctrl: Control = c as Control
 		if ctrl == null or not is_instance_valid(ctrl):
@@ -13229,9 +13360,9 @@ func _pre_endgame_fall_controls_off_bottom(controls: Array) -> void:
 		if absf(end_tilt) < 0.55:
 			end_tilt = 0.55 * (1.0 if randf() < 0.5 else -1.0)
 		ctrl.rotation = start_tilt
-		tw.tween_property(ctrl, "position", dest, 0.58) \
+		tw.tween_property(ctrl, "position", dest, FALL_SEC) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-		tw.tween_property(ctrl, "rotation", end_tilt, 0.58) \
+		tw.tween_property(ctrl, "rotation", end_tilt, FALL_SEC) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	if not any:
 		return
@@ -13354,7 +13485,7 @@ func _pre_endgame_fall_and_shatter_ghosts(ghosts: Array) -> void:
 		var ghost0: Control = g as Control
 		if ghost0 != null and is_instance_valid(ghost0):
 			_spawn_pre_endgame_hud_collapse_smoke(ghost0)
-	await get_tree().create_timer(0.28).timeout
+	await get_tree().create_timer(0.16).timeout
 	await _pre_endgame_shake_controls(ghosts)
 	await _pre_endgame_fall_controls_off_bottom(ghosts)
 	for g: Variant in ghosts:
@@ -13373,7 +13504,8 @@ func _pre_endgame_fall_and_shatter_ghosts(ghosts: Array) -> void:
 		ghost.queue_free()
 		if tex == null:
 			continue
-		await _shatter_tex_triangles_at(tex, rect, 3)
+		# Silent shatter — HUD collapse already has smoke; no ceramic each piece.
+		await _shatter_tex_triangles_at(tex, rect, 3, false)
 
 
 func _pre_endgame_fall_and_shatter_node(ctrl: Control) -> void:
@@ -13450,7 +13582,7 @@ func _resolve_crystal_break_player() -> int:
 	return -1
 
 
-## Shatter intact crystal (Reckoning-style triangles) → break plate + short-circuit.
+## Intact crystal → broken plate (quick crossfade) + short-circuit.
 func _play_crystal_break_explosion(player: int) -> void:
 	if HudSkin.version != "v3":
 		return
@@ -13460,8 +13592,7 @@ func _play_crystal_break_explosion(player: int) -> void:
 		return
 	_crystal_break_player = player
 	var origin: Vector2 = _crystal_break_origin(player)
-	await _shatter_crystal_icon_triangles(player)
-	_spawn_crystal_break_plate(player, origin)
+	await _crossfade_crystal_to_break_plate(player, origin)
 	_spawn_crystal_short_circuit_explosion(origin)
 
 
@@ -13492,7 +13623,9 @@ func _shatter_crystal_icon_triangles(player: int) -> void:
 
 
 ## Triangle-fragment a texture in board-local space (Reckoning-style subdivision).
-func _shatter_tex_triangles_at(tex: Texture2D, local_rect: Rect2, levels_count: int = 3) -> void:
+## `play_sfx`: crystal break keeps ceramic; HUD fall-off-bottom stays silent.
+func _shatter_tex_triangles_at(tex: Texture2D, local_rect: Rect2, levels_count: int = 3,
+		play_sfx: bool = true) -> void:
 	if tex == null:
 		return
 	var aw: float = local_rect.size.x
@@ -13506,7 +13639,8 @@ func _shatter_tex_triangles_at(tex: Texture2D, local_rect: Rect2, levels_count: 
 	if tex_w < 1.0 or tex_h < 1.0:
 		return
 
-	SFXManager.play(_SFX_CRYSTAL_SHATTER)
+	if play_sfx:
+		SFXManager.play(_SFX_CRYSTAL_SHATTER)
 
 	var tl := Vector2(ax, ay)
 	var tr := Vector2(ax + aw, ay)
@@ -13619,13 +13753,12 @@ func _subdivide_crystal_triangle(verts: PackedVector2Array, uvs: PackedVector2Ar
 	]
 
 
+## Spawn break plate under/over the intact gem at alpha 0 — caller crossfades.
 func _spawn_crystal_break_plate(player: int, origin: Vector2) -> void:
 	if is_instance_valid(_crystal_break_fx):
 		_crystal_break_fx.queue_free()
 		_crystal_break_fx = null
 	var icon: TextureRect = _p1_crystal_icon if player == 0 else _p2_crystal_icon
-	if is_instance_valid(icon):
-		icon.visible = false
 	var fx := TextureRect.new()
 	fx.name = "CrystalBreakFx"
 	fx.texture = _TEX_CRYSTAL_BREAK
@@ -13634,24 +13767,55 @@ func _spawn_crystal_break_plate(player: int, origin: Vector2) -> void:
 	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx.z_index = 50
 	fx.z_as_relative = false
-	var sz: float = 168.0
+	# Match intact crystal icon footprint.
+	var sz: Vector2 = Vector2(_V3_CRYSTAL_ICON_SIZE, _V3_CRYSTAL_ICON_SIZE)
 	if is_instance_valid(icon):
 		var ir: Rect2 = icon.get_global_rect()
-		sz = maxf(ir.size.x, ir.size.y) * 1.55
-	fx.size = Vector2(sz, sz)
+		if ir.size.x > 2.0 and ir.size.y > 2.0:
+			sz = ir.size
+	fx.size = sz
 	fx.pivot_offset = fx.size * 0.5
 	fx.position = origin - fx.size * 0.5
-	fx.scale = Vector2(0.45, 0.45)
+	fx.scale = Vector2.ONE
 	fx.modulate.a = 0.0
 	add_child(fx)
 	_crystal_break_fx = fx
+
+
+## Quick crossfade: intact crystal fades out while broken plate fades in.
+func _crossfade_crystal_to_break_plate(player: int, origin: Vector2) -> void:
+	_spawn_crystal_break_plate(player, origin)
+	var fx: TextureRect = _crystal_break_fx
+	if fx == null or not is_instance_valid(fx):
+		return
+	var icon: TextureRect = _p1_crystal_icon if player == 0 else _p2_crystal_icon
+	var fade_old: Array[CanvasItem] = []
+	if is_instance_valid(icon):
+		icon.visible = true
+		var wrap: Node = icon.get_parent()
+		# Fade the whole icon wrap (shadow + gem) so the swap stays seamless.
+		if wrap is CanvasItem and wrap != self:
+			fade_old.append(wrap as CanvasItem)
+		else:
+			fade_old.append(icon)
+	SFXManager.play(_SFX_CRYSTAL_SHATTER)
+	const FADE_SEC: float = 0.16
 	var tw := create_tween()
-	tw.tween_property(fx, "modulate:a", 1.0, 0.08) \
+	tw.set_parallel(true)
+	for ci: CanvasItem in fade_old:
+		if is_instance_valid(ci):
+			tw.tween_property(ci, "modulate:a", 0.0, FADE_SEC) \
+				.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(fx, "modulate:a", 1.0, FADE_SEC) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-	tw.parallel().tween_property(fx, "scale", Vector2(1.18, 1.18), 0.18) \
-		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	tw.tween_property(fx, "scale", Vector2(1.0, 1.0), 0.16) \
-		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	await tw.finished
+	for ci2: CanvasItem in fade_old:
+		if not is_instance_valid(ci2):
+			continue
+		ci2.visible = false
+		ci2.modulate.a = 1.0
+	if is_instance_valid(icon):
+		icon.visible = false
 
 
 ## Dense short-circuit sparks + smoke + jolt at the broken crystal.
@@ -13683,22 +13847,22 @@ func _spawn_crystal_short_circuit_explosion(origin: Vector2) -> void:
 	const CYAN := Color(0.30, 0.98, 1.0, 1.0)
 	const WHITE := Color(1.0, 1.0, 1.0, 1.0)
 	var use_tex: bool = _v3_textured_vfx()
-	for _i: int in range(48):
-		var is_bolt: bool = rng.randf() < 0.40
+	for _i: int in range(36):
+		var is_bolt: bool = rng.randf() < 0.72
 		var spark: Control
 		if use_tex:
-			if is_bolt:
-				spark = _vfx_make_bolt(rng.randf_range(28.0, 120.0), 52, rng)
-			else:
-				spark = _vfx_make_fire_spark(rng.randf_range(10.0, 36.0), 52, rng)
+			spark = _vfx_make_bolt(
+				rng.randf_range(28.0, 110.0) if is_bolt else rng.randf_range(12.0, 40.0),
+				52, rng)
+			if not is_bolt:
 				spark.modulate = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 		else:
 			var cr := ColorRect.new()
 			if is_bolt:
-				var blen: float = rng.randf_range(24.0, 100.0) * rng.randf_range(0.55, 1.80)
+				var blen: float = rng.randf_range(24.0, 90.0) * rng.randf_range(0.55, 1.80)
 				cr.size = Vector2(maxf(2.0, blen * 0.06), blen)
 			else:
-				var ssz: float = rng.randf_range(4.0, 24.0) * rng.randf_range(0.55, 1.80)
+				var ssz: float = rng.randf_range(4.0, 22.0) * rng.randf_range(0.55, 1.80)
 				cr.size = Vector2(ssz, ssz)
 			cr.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 			cr.pivot_offset = cr.size * 0.5
@@ -13706,27 +13870,11 @@ func _spawn_crystal_short_circuit_explosion(origin: Vector2) -> void:
 			cr.z_index = 52
 			cr.z_as_relative = false
 			spark = cr
-		var angle: float = rng.randf_range(0.0, TAU)
-		var dist0: float = rng.randf_range(0.0, 18.0)
-		spark.position = origin + Vector2(cos(angle), sin(angle)) * dist0 - spark.size * 0.5
-		spark.rotation = angle + PI * 0.5
+		var heading: float = rng.randf_range(0.0, TAU)
+		var dist0: float = rng.randf_range(0.0, 14.0)
+		spark.position = origin + Vector2(cos(heading), sin(heading)) * dist0 - spark.size * 0.5
 		add_child(spark)
-		var dist: float = rng.randf_range(60.0, 220.0) if is_bolt else rng.randf_range(40.0, 140.0)
-		var end_pos: Vector2 = spark.position + Vector2(cos(angle), sin(angle)) * dist
-		var duration: float = rng.randf_range(0.16, 0.42)
-		var delay: float = rng.randf_range(0.0, 0.08)
-		var tw := create_tween()
-		tw.tween_interval(delay)
-		tw.set_parallel(true)
-		tw.tween_property(spark, "position", end_pos, duration) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-		tw.tween_property(spark, "modulate:a", 0.0, duration * 0.65) \
-			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-		var spark_id: int = spark.get_instance_id()
-		tw.finished.connect(func() -> void:
-			var n: Node = instance_from_id(spark_id) as Node
-			if n != null and is_instance_valid(n):
-				n.queue_free())
+		_vfx_play_electric_arc(spark, is_bolt, heading, rng, rng.randf_range(0.0, 0.10))
 
 	for _i: int in range(16):
 		var sz: float = rng.randf_range(24.0, 56.0)
@@ -13780,18 +13928,6 @@ func _spawn_crystal_short_circuit_explosion(origin: Vector2) -> void:
 				n.queue_free())
 
 
-func _pre_endgame_crystal_break_jitter_loop(fx: TextureRect) -> void:
-	var base_pos: Vector2 = fx.position
-	while is_instance_valid(self) and is_instance_valid(fx) \
-			and _pre_endgame_shake_fx and _shake_active:
-		fx.position = base_pos + Vector2(randf_range(-3.0, 3.0), randf_range(-3.0, 3.0))
-		fx.rotation = randf_range(-0.04, 0.04)
-		await get_tree().create_timer(0.04).timeout
-	if is_instance_valid(fx):
-		fx.position = base_pos
-		fx.rotation = 0.0
-
-
 func _fade_out_pre_endgame_crystal_break() -> void:
 	var fx: TextureRect = _crystal_break_fx
 	_crystal_break_fx = null
@@ -13827,15 +13963,10 @@ func _top_dashboard_fx_band() -> Rect2:
 
 
 func _pre_endgame_dashboard_short_circuit_loop() -> void:
-	var next_jolt: float = 0.55
-	var t0: float = Time.get_ticks_msec() * 0.001
+	# Electric short SFX plays once in `_start_pre_endgame_shake_fx` — visuals only here.
 	while is_instance_valid(self) and _pre_endgame_shake_fx and _shake_active:
 		_spawn_pre_endgame_dashboard_spark_burst()
 		_spawn_pre_endgame_dashboard_smoke_burst()
-		var elapsed: float = Time.get_ticks_msec() * 0.001 - t0
-		if elapsed >= next_jolt:
-			SFXManager.play(_SFX_ELECTRIC_SHORT)
-			next_jolt = elapsed + randf_range(0.45, 0.85)
 		await get_tree().create_timer(0.11).timeout
 
 
@@ -13849,19 +13980,19 @@ func _spawn_pre_endgame_dashboard_spark_burst() -> void:
 	const CYAN := Color(0.30, 0.98, 1.0, 1.0)
 	const WHITE := Color(1.0, 1.0, 1.0, 1.0)
 	var use_tex: bool = _v3_textured_vfx()
-	# Both sides of the top strip.
+	# Both sides of the top strip — crackle along / out of the chrome, not soft fall.
 	for side: int in range(2):
 		var x0: float = band.position.x if side == 0 else band.position.x + band.size.x * 0.55
 		var x1: float = band.position.x + band.size.x * 0.45 if side == 0 \
 				else band.position.x + band.size.x
-		for _i: int in range(rng.randi_range(5, 9)):
-			var is_bolt: bool = rng.randf() < 0.40
+		for _i: int in range(rng.randi_range(4, 7)):
+			var is_bolt: bool = rng.randf() < 0.74
 			var spark: Control
 			if use_tex:
-				if is_bolt:
-					spark = _vfx_make_bolt(rng.randf_range(20.0, 90.0), 48, rng)
-				else:
-					spark = _vfx_make_fire_spark(rng.randf_range(8.0, 32.0), 48, rng)
+				spark = _vfx_make_bolt(
+					rng.randf_range(20.0, 80.0) if is_bolt else rng.randf_range(10.0, 36.0),
+					48, rng)
+				if not is_bolt:
 					spark.modulate = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 			else:
 				var cr := ColorRect.new()
@@ -13869,7 +14000,7 @@ func _spawn_pre_endgame_dashboard_spark_burst() -> void:
 					var blen: float = rng.randf_range(16.0, 70.0) * rng.randf_range(0.55, 1.80)
 					cr.size = Vector2(maxf(2.0, blen * 0.06), blen)
 				else:
-					var ssz: float = rng.randf_range(3.0, 20.0) * rng.randf_range(0.55, 1.80)
+					var ssz: float = rng.randf_range(3.0, 18.0) * rng.randf_range(0.55, 1.80)
 					cr.size = Vector2(ssz, ssz)
 				cr.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 				cr.pivot_offset = cr.size * 0.5
@@ -13881,23 +14012,14 @@ func _spawn_pre_endgame_dashboard_spark_burst() -> void:
 				rng.randf_range(x0, x1),
 				rng.randf_range(band.position.y, band.position.y + band.size.y))
 			spark.position = spawn - spark.size * 0.5
-			spark.rotation = rng.randf_range(-0.9, 0.9)
 			spark.modulate.a = 1.0
 			add_child(spark)
-			var dx: float = rng.randf_range(-40.0, 40.0)
-			var dy: float = rng.randf_range(8.0, 55.0)
-			var duration: float = rng.randf_range(0.18, 0.42)
-			var tw := create_tween()
-			tw.set_parallel(true)
-			tw.tween_property(spark, "position", spark.position + Vector2(dx, dy), duration) \
-				.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-			tw.tween_property(spark, "modulate:a", 0.0, duration) \
-				.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
-			var spark_id: int = spark.get_instance_id()
-			tw.finished.connect(func() -> void:
-				var n: Node = instance_from_id(spark_id) as Node
-				if n != null and is_instance_valid(n):
-					n.queue_free())
+			# Mostly along the strip; some stabs down into the board.
+			var heading: float = rng.randf_range(-0.35, 0.35) if rng.randf() < 0.55 \
+					else (PI * 0.5 + rng.randf_range(-0.55, 0.55))
+			if side == 1 and absf(heading) < 0.40:
+				heading += PI  # right side arcs outward
+			_vfx_play_electric_arc(spark, is_bolt, heading, rng, rng.randf_range(0.0, 0.06))
 
 
 func _spawn_pre_endgame_dashboard_smoke_burst() -> void:
