@@ -21,7 +21,10 @@ static func present(parent: Node, rewards: Array) -> void:
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 25
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	parent.add_child(overlay)
+	if parent != null and is_instance_valid(parent):
+		parent.add_child.call_deferred(overlay)
+	if not overlay.is_inside_tree():
+		await overlay.tree_entered
 	await overlay.dismissed
 
 

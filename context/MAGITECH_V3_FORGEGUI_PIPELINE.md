@@ -10,9 +10,10 @@
 **Phase B exports:** `assets/textures/ui/magitech_v3/chrome/` (then wire in code)  
 **Phase C:** Hover FX — context-icon metal sheen (+ circuit patrol code retained, currently off). **Approved ✓**  
 
-**Phase D:** Gradient / circulating borders on dialogs & buttons + animated battle 5×5 grid lines (see below)  
+**Phase D:** Gradient message-box + button chrome + animated battle 5×5 grid lines. **Approved ✓**  
 **Phase E:** Clockwork playmat — modular gears/pistons (ForgeGUI pieces + Godot spin/pump). Prompts in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase E**  
-**Phase F:** Battle VFX sprites — smoke, electric bolt, fire spark (static PNG + alpha; Godot spawns/tweens). Prompts → **Phase F**
+**Phase F:** Battle VFX sprites — smoke, electric bolt, fire spark (static PNG + alpha; Godot spawns/tweens). Prompts → **Phase F**  
+**Phase G:** Pre-endgame shake HUD failure (glitch / dashboard short) + crystal-break art. **G0 code in progress**; art → **Phase G** prompts  
 
 ## Revertible battle skins
 
@@ -181,49 +182,26 @@ Reckoning metallic deflect clipped to card face only (`BattleCalculationOverlay`
 
 ---
 
-## Phase D — Gradient styling + battle grid (planned)
+## Phase D — Gradient styling + battle grid (approved ✓)
 
-**Gate:** Phase C approved ✓. Can prototype grid or one dialog earlier if needed.
+**Gate:** Phase C approved ✓.
 
-**`GameDialog` stay as-is:** Keep the current flat StyleBox dialog structure/layout — it is already good. **Do not** swap in ForgeGUI `#20` `ui_magitech_panel_9slice.png`. Phase D only adds polish on top of the existing dialog chrome.
+**`GameDialog` stay as-is:** Keep structure/layout. **Do not** swap in ForgeGUI `#20` 9-slice.
 
-**Effect A — `GameDialog` polish (shader / StyleBox only):**
-- **Gradient border** — cyan↔silver holytech rim (optional slow circulating variant via `TIME`)
-- **Gradient background** — soft dark navy→void fill (not a flat single color), still readable for title/body text  
-No 9-slice texture, no ForgeGUI re-bake for dialogs.
-
-**Effect B — battle 5×5 grid lines:** Replace solid `ColorRect` strips in `GameBoard._add_grid_line_panels()` with a **gradient line** (cyan↔silver / soft cyan pulse along the strip) that **loop-animates slowly** (gentle travel / shimmer, not a fast strobe). Outer frame + inner row/column separators on both P1 and P2 grids.
-
-### Targets (first pass)
-
-| Surface | Notes |
-|---------|--------|
-| `GameDialog` panels | Keep structure; add gradient border + gradient fill only |
-| Primary action buttons | Optional matching gradient rim |
-| Battle 5×5 grid lines | Both boards; outer + inner separators; slow loop animation |
-
-### Implementation sketch
-
-1. Extend `GameDialog.make_panel_stylebox` / button styles — or a small shader overlay — for gradient fill + gradient rim; params: colors (cyan/silver), speed, `animate` on/off.  
-2. Do **not** load `#20` panel 9-slice onto dialogs.  
-3. Grid: e.g. `assets/shaders/magitech_grid_line.gdshader` on each strip (or one overlay per board) — 1D gradient along the line + `TIME` offset for slow loop; reuse `battle_grid_border` group + `refresh_grid_borders()`.  
-4. Respect `hud_skin` — v3 holytech animated grid / dialog polish; v1/v2 keep current look unless opted in later.
-
-### Out of scope for Phase D
-
-- Wiring `#20` 9-slice into `GameDialog` (explicitly rejected — dialog stays StyleBox-based)  
-- Rainbow / purple cyber borders  
-- Always-on high-speed spin on every control (keep it sparse)  
-- Fast / seizure-risk grid flashing  
+**Shipped approach:**
+- Message box: `magitech_dialog_panel.gdshader` on panel (`GameDialog.attach_panel_fx`) — soft fill + cyan↔silver rim  
+- Buttons: `magitech_dialog_button.gdshader` on behind-parent `ColorRect` (label stays readable)  
+- Grid (v3): `magitech_grid_line.gdshader` on `TextureRect` strips in `GameBoard._add_grid_line_panels` (white tex for real UVs; opaque cyan↔silver + traveling pulse; outer border 4px)  
+- GLES3: `//` comments only; no `return` in fragment  
 
 ### Acceptance
 
-- [ ] `GameDialog` still same layout/structure; gradient border + gradient background only  
-- [ ] Text remains readable on gradient fill  
-- [ ] Optional circulating rim works without washing out text  
-- [ ] 5×5 grid lines: visible gradient + slow seamless loop on both boards  
-- [ ] `hud_skin v1|v2` unchanged (unless explicitly enabled)  
-- [ ] No ForgeGUI re-gen / no `#20` on dialogs  
+- [x] Message box: subtle gradient background + border; text readable  
+- [x] Dialog buttons: subtle gradient background + border; hover clear  
+- [x] 5×5 grid lines: slow gradient loop on both boards (v3)  
+- [x] `hud_skin v1|v2` grid unchanged  
+- [x] No `#20` on dialogs; no seizure-speed motion  
+- [x] In-game approved  
 
 ---
 
@@ -346,6 +324,70 @@ Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → 
 - [ ] Cards and overlays stay readable; z-order unchanged in spirit  
 - [ ] `hud_skin v1|v2` unchanged  
 - [ ] No full-screen VFX video required  
+
+---
+
+## Phase G — Crystal break + pre-endgame HUD failure (in progress)
+
+**Gate:** Phase A crystal HUD approved. Can run after / parallel with F (same `vfx/` folder).
+
+### G0 — Pre-endgame shake HUD failure (code landed)
+
+Wired in `GameBoard` at flip-reveal shake start/stop (`_start_pre_endgame_shake_fx` / `_stop_pre_endgame_shake_fx`):
+
+1. Attack count badge **art** hidden immediately; both players’ count labels tick random error glyphs  
+2. Top dashboard strip: short-circuit **sparks + smoke** on both sides + electric jolt SFX (`sfx_electric_short_circuit`)  
+3. Both players’ **crystal amounts** tick random error glyphs  
+4. When shake ends: crystal amounts lock to `----`; attack count stays hidden  
+
+### G1 — Crystal-break art (ForgeGUI → PNG + alpha)
+
+**When (locked):** During the **pre-endgame shake**, optionally reinforce with Magitech **crystal-break** art over the depleted player’s crystal zone (if loss was crystal depletion).  
+**Not:** a replacement for depletion vent smoke; not a full-screen shatter movie.
+
+Save under `assets/textures/ui/battle/v3_magitech/vfx/`.  
+Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase G**.
+
+| ID | Save as | Role | Size | Motion in Godot |
+|----|---------|------|------|-----------------|
+| G01 | `ui_magitech_vfx_crystal_break.png` | Shattered / cracking cyan crystal relic (hero piece) | 512×512 | Punch-in + crack hold + fade / shard drift |
+| G02 | `ui_magitech_vfx_crystal_shard_a.png` | Small flying shard fragment | 128×128 | Scatter + fade (optional multi-spawn) |
+| G03 | `ui_magitech_vfx_crystal_shard_b.png` | Shard variant | 128×128 | Scatter + fade |
+
+**Ship-first:** G01 alone is enough for the pre-endgame beat. Add G02–G03 if the break needs extra debris.
+
+### G2 — Godot wiring (after assets land)
+
+1. On crystal depletion → `0`, immediately play G01 break plate + short-circuit explosion/SFX at that player’s crystal (`_play_crystal_break_explosion`).  
+2. Plate stays through pre-endgame shake (jitters with shake), then fades before win/lose screen.  
+3. `hud_skin v3` only; v1/v2 skip.  
+4. Do **not** hide strip HUD for this — crystal-break sits above the strip widgets (`z_index` high, mouse ignore).
+
+### Style lock for Phase G
+
+- Match existing Magitech crystal (`ui_magitech_crystal.png` / `#6`) — same cyan facets + sacred silver claw language, but **broken / fractured**.  
+- Transparent outside; readable silhouette; no text, logos, crests, watermark.  
+- Holytech failure — cracked relic / engine-crystal rupture — not cartoon glass smash sticker, not purple neon.
+
+### Out of scope for Phase G
+
+| Skip | Why |
+|------|-----|
+| Full-screen shatter movie / GIF | Keep readable board + strip HUD |
+| Replacing depletion vent smoke | Smoke already covers “engine dying”; break is the gem beat |
+| Animating intact crystal HUD permanently | Only the pre-endgame (or depletion) moment |
+
+### Acceptance
+
+- [x] G0: attack badge art hidden at shake start; both attack counts glitch  
+- [x] G0: top dashboard sparks + smoke both sides + jolt SFX during shake  
+- [x] G0: both crystal amounts glitch during shake; lock to `----` when shake ends  
+- [x] G01 `ui_magitech_vfx_crystal_break.png` wired at depleted player’s crystal on pre-endgame shake  
+- [ ] Optional shards G02–G03  
+- [ ] P1 / P2 placement approved in-game  
+- [ ] Strip HUD stays visible; break is unclickable overlay  
+- [ ] `hud_skin v1|v2` unchanged  
+- [ ] In-game approved  
 
 ## Privacy
 

@@ -34,7 +34,8 @@ static func open(parent: Node, union_name: String, skippable: bool = true) -> vo
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 50
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	parent.add_child(overlay)
+	if parent != null and is_instance_valid(parent):
+		parent.add_child.call_deferred(overlay)
 
 func _ready() -> void:
 	_compute_sizes()

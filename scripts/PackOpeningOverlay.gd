@@ -67,6 +67,13 @@ var _clip_bot : Control   = null
 # pack_image: res:// path to the pack illustration (empty = use default)
 # card1/2/3 : card names (empty / invalid = shows fallback vellum frame)
 # ──────────────────────────────────────────────────────────────────────────────
+static func _attach_to_parent(parent: Node, overlay: Control) -> void:
+	if parent == null or not is_instance_valid(parent):
+		return
+	# Parent may be mid add_child/setup (e.g. endgame FX) — defer to avoid blocked tree.
+	parent.add_child.call_deferred(overlay)
+
+
 static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String, skippable: bool = true, reroll_pack_name: String = "") -> PackOpeningOverlay:
 	var overlay := PackOpeningOverlay.new()
 	overlay._pack_image_path  = pack_image if pack_image != null else ""
@@ -80,7 +87,7 @@ static func open(parent: Node, pack_image: String, card1: String, card2: String,
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index        = 50
 	overlay.mouse_filter   = Control.MOUSE_FILTER_STOP
-	parent.add_child(overlay)
+	_attach_to_parent(parent, overlay)
 	return overlay
 
 static func open_single_card_reveal(parent: Node, card_name: String, skippable: bool = true) -> PackOpeningOverlay:
@@ -92,7 +99,7 @@ static func open_single_card_reveal(parent: Node, card_name: String, skippable: 
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 50
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	parent.add_child(overlay)
+	_attach_to_parent(parent, overlay)
 	return overlay
 
 static func open_pose_reveal(parent: Node, portrait_path: String, pose_label: String, skippable: bool = true) -> PackOpeningOverlay:
@@ -105,7 +112,7 @@ static func open_pose_reveal(parent: Node, portrait_path: String, pose_label: St
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 50
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	parent.add_child(overlay)
+	_attach_to_parent(parent, overlay)
 	return overlay
 
 # ──────────────────────────────────────────────────────────────────────────────

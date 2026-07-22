@@ -11,6 +11,8 @@ Human workflow (do **not** paste into ForgeGUI):
 - **Order:** Phase A core wired (`HudSkin` default `v3`). #27 ✓ top dashboard + #28 ✓ bottom vault wired (v3 only). **Phase A battle screen approved.**  
 - **Phase B (game-wide chrome):** see **Phase B** section below → save under `magitech_v3/chrome/`. Start with **B1**. Skip B10, B12–B20, B26 this pass.  
 - **Phase E (clockwork playmat):** see **Phase E** section → save under `battle/v3_magitech/clockwork/` (can run parallel later).  
+- **Phase F (battle VFX):** smoke / bolt / fire spark → `battle/v3_magitech/vfx/`.  
+- **Phase G (crystal break):** pre-endgame shake shatter plate → `battle/v3_magitech/vfx/` (G01+).  
 
 - **If gen ignores the kit** (e.g. cartoon wood UI): style refs failed to upload — re-attach and confirm they are active. Do not “fix” with long negative prompts.
 
@@ -962,6 +964,75 @@ ONE fire spark VARIANT — slightly elongated streak ember (still a mote, not a 
 - Opaque black or solid background boxes  
 - Cartoon fireball / explosion blast replacing a spark  
 - Purple cyber neon flood, photoreal stock photo scrap, watermark  
+- Text, logos, crests  
+
+---
+
+# Phase G — Crystal break (pre-endgame shake)
+
+**Goal:** Magitech crystal **shatter / rupture** art for the pre-endgame shake when a player’s crystals hit 0.  
+**Gate:** Phase A crystal HUD approved. Parallel with F (same folder).  
+**Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → **Phase G**.  
+**Save to:** `assets/textures/ui/battle/v3_magitech/vfx/`  
+
+**When wired:** Pre-endgame flip-reveal shake (before win/lose screen), over the broken player’s crystal HUD. Depletion vent smoke stays separate.
+
+**Format (locked):** **static** PNG + alpha only. Godot handles punch-in, jitter with shake, shard scatter, fade.  
+**Do not** deliver animated sheets / GIF / full-screen shatter movies.
+
+**Style lock:** Match `#6` / `ui_magitech_crystal.png` cyan facets + sacred-silver claw — but fractured. Blank `#20` panel + crystal / end-turn refs (logo-free).
+
+**Hard rules (every piece):**
+
+- Isolated single VFX element · transparent outside · centered · no text · no logos · no watermark  
+- Readable silhouette; soft glow OK; no opaque black box  
+- Not cartoon glass-smash sticker, not photoreal stock photo, not purple neon cyber  
+
+---
+
+## G01 — `ui_magitech_vfx_crystal_break.png` · 512×512
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 512x512, transparent background outside the crystal.
+
+ONE Magitech holytech crystal relic in the moment of rupture: the same slender faceted cyan gem language as the UI crystal icon, but cracked and breaking apart — bright sanctified cyan fracture lines, sacred-silver claw setting stressed / splitting, sharp shard edges catching white-cyan light. Still reads as the game’s crystal resource, not generic glass. Centered, fills most of the canvas with transparent margin. Soft glow on the cracks. No intact perfect gem, no explosion fireball, no smoke cloud plate, no hand, no frame. No text, no logos, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+## G02 — `ui_magitech_vfx_crystal_shard_a.png` · 128×128
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 128x128, transparent background outside the shard.
+
+ONE small flying crystal shard fragment: faceted cyan glass-metal chip with a bright fracture highlight and faint silver edge. Soft glow, sharp silhouette, transparent outside. No full crystal, no claw setting, no smoke, no fire. No text, no logos, no watermark. Match uploaded cyan-silver style references.
+```
+
+---
+
+## G03 — `ui_magitech_vfx_crystal_shard_b.png` · 128×128
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 128x128, transparent background outside the shard.
+
+ONE crystal shard VARIANT — slightly longer / needle-like cyan facet chip, bright white-cyan tip, soft silver cool rim. Transparent outside. No full gem, no setting, no smoke plume. No text, no logos, no watermark. Match uploaded style references.
+```
+
+---
+
+## Phase G — Reject if
+
+- Full-screen shatter movie / GIF / animated strip  
+- Intact undamaged crystal (must read as breaking)  
+- Opaque black or solid background boxes  
+- Cartoon sticker smash / emoji-style crack  
+- Purple cyber neon flood, photoreal photo scrap, watermark  
 - Text, logos, crests  
 
 ---

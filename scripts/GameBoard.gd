@@ -122,6 +122,7 @@ const _SFX_STEAM_VENT_HEAVY: AudioStream = preload("res://assets/audio/sfx/sfx_s
 const _SFX_STEAM_CHROME_PUFF: AudioStream = preload("res://assets/audio/sfx/sfx_steam_chrome_puff.mp3")
 const _SFX_SMOKE_DESTROY: AudioStream = preload("res://assets/audio/sfx/sfx_smoke_destroy.mp3")
 const _SFX_ELECTRIC_SHORT: AudioStream = preload("res://assets/audio/sfx/sfx_electric_short_circuit.mp3")
+const _SFX_CRYSTAL_SHATTER: AudioStream = preload("res://assets/audio/sfx/ceramic.mp3")
 const _SHADER_METAL_REFLECT: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
 const _V3_HOVER_SCALE_SEC: float = 0.14
 ## Phase C1 circuit patrol — kept in code; off until polish pass.
@@ -182,8 +183,7 @@ const _V3_CHIP_P2_NUDGE := Vector2(-6.0, 0.0)
 var _v3_hover_scale_tweens: Dictionary = {}  # instance_id -> Tween
 var _v3_circuit_hovering: Dictionary = {}  # hover-control instance_id -> bool
 var _v3_fx_tweens: Dictionary = {}  # instance_id -> Tween (patrol / sheen stripe)
-var _p1_crystal_sheen_mat: ShaderMaterial = null
-var _p2_crystal_sheen_mat: ShaderMaterial = null
+var _crystal_sheen_tweens: Dictionary = {}  # player_index -> Tween
 var _v3_top_dashboard: TextureRect = null
 var _v3_bottom_vault: TextureRect = null
 
@@ -337,6 +337,22 @@ var _campaign_return_btn: Button = null
 var _shake_active: bool = false
 var _shake_origin: Vector2 = Vector2.ZERO
 var _shake_intensity: float = 5.0
+## True once the win/lose overlay is built. Until then, strip HUD stays visible but inert.
+var _endgame_screen_active: bool = false
+var _strip_hud_input_enabled: bool = true
+## Pre-endgame flip-reveal: HUD glitch + dashboard short-circuit FX.
+var _pre_endgame_shake_fx: bool = false
+## Parallel flip-reveal worker completion (GDScript 4.7 can't stash void/bool coroutines).
+var _pre_endgame_flip_reveal_done: bool = true
+## Player whose crystals hit 0 this duel (-1 = none / not a crystal loss).
+var _crystal_break_player: int = -1
+var _crystal_break_fx: TextureRect = null
+const _TEX_CRYSTAL_BREAK: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/ui_magitech_vfx_crystal_break.png")
+const _PRE_ENDGAME_GLITCH_GLYPHS: Array[String] = [
+	"#", "@", "%", "&", "?", "/", "\\", "0", "1", "X", "!", "*", "=", "+",
+	"ERR", "??", "--", "Ø", "¡", "¤", "░", "▒", "▓", "§", "‡",
+]
 
 # ── Hot Seat handoff overlay (built at runtime)
 var _handoff_overlay: Control = null
@@ -566,6 +582,7 @@ func _setup_turn_manager() -> void:
 	turn_manager.brainwash_redirect_resolved.connect(_on_flow_blocking_cleared)
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
 	turn_manager.battle_result_finalized.connect(_on_battle_result_finalized)
+	turn_manager.battle_overlay_pause_requested.connect(_on_battle_overlay_pause_requested)
 	turn_manager.attack_aborted.connect(_on_attack_aborted)
 	turn_manager.wait_badge_animation_requested.connect(_on_wait_badge_animation_requested)
 	turn_manager.coin_flip_visual_requested.connect(_on_coin_flip_visual_requested)
@@ -729,8 +746,19 @@ func _connect_signals() -> void:
 			_rebuild_tech_overlay_content(_tech_overlay_player))
 	GameState.card_effect_triggered.connect(_on_card_effect_triggered)
 
-const GRID_LINE_W: int = 2
+const GRID_LINE_W: int = 4
 const GRID_LINE_COLOR: Color = Color(0.65, 0.88, 0.95, 0.9)  # silver-cyan
+const _SHADER_GRID_LINE: Shader = preload("res://assets/shaders/magitech_grid_line.gdshader")
+## 2×2 white tex so grid-line ShaderMaterial gets real 0–1 UVs (ColorRect UVs are flat).
+var _grid_line_white_tex: ImageTexture = null
+
+
+func _grid_line_white_texture() -> Texture2D:
+	if _grid_line_white_tex == null:
+		var img := Image.create(2, 2, false, Image.FORMAT_RGBA8)
+		img.fill(Color.WHITE)
+		_grid_line_white_tex = ImageTexture.create_from_image(img)
+	return _grid_line_white_tex
 
 func _build_grids() -> void:
 	for p in range(2):
@@ -935,16 +963,42 @@ func _add_grid_line_panels() -> void:
 			var gap_y: float = card_node.global_position.y + card_node.size.y + nudge_y
 			strips.append([Vector2(gpos.x, gap_y), Vector2(gsz.x, sep)])
 
-		# Spawn one ColorRect per strip (convert global → GameBoard local)
+		# Spawn one strip per line (convert global → GameBoard local).
+		# v3 uses TextureRect + shader (needs real UVs); legacy keeps flat ColorRect.
 		for strip: Array in strips:
-			var cr := ColorRect.new()
-			cr.color = GRID_LINE_COLOR
-			cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			cr.add_to_group("battle_grid_border")
-			add_child(cr)
-			move_child(cr, ml_idx)
-			cr.position = (strip[0] as Vector2) - board_origin
-			cr.size = strip[1]
+			var sz: Vector2 = strip[1] as Vector2
+			var local_pos: Vector2 = (strip[0] as Vector2) - board_origin
+			if HudSkin.version == "v3":
+				var tr := TextureRect.new()
+				tr.texture = _grid_line_white_texture()
+				tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				tr.stretch_mode = TextureRect.STRETCH_SCALE
+				tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				tr.add_to_group("battle_grid_border")
+				add_child(tr)
+				move_child(tr, ml_idx)
+				tr.position = local_pos
+				tr.size = sz
+				var mat := ShaderMaterial.new()
+				mat.shader = _SHADER_GRID_LINE
+				# Dim ends → brighter mid cyan, plus a hot traveling pulse.
+				mat.set_shader_parameter("dim_color", Color(0.22, 0.38, 0.48, 1.0))
+				mat.set_shader_parameter("mid_color", Color(0.58, 0.88, 0.98, 1.0))
+				mat.set_shader_parameter("band_color", Color(0.95, 0.99, 1.0, 1.0))
+				mat.set_shader_parameter("speed", 0.16)
+				mat.set_shader_parameter("band_width", 0.14)
+				mat.set_shader_parameter("phase", randf())
+				mat.set_shader_parameter("vertical", 1.0 if sz.y > sz.x else 0.0)
+				tr.material = mat
+			else:
+				var cr := ColorRect.new()
+				cr.color = GRID_LINE_COLOR
+				cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				cr.add_to_group("battle_grid_border")
+				add_child(cr)
+				move_child(cr, ml_idx)
+				cr.position = local_pos
+				cr.size = sz
 
 func _setup_buttons() -> void:
 	attack_btn.pressed.connect(_on_attack_btn)
@@ -2117,6 +2171,8 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	# Click / tap to open modal (same mechanism as void stack)
 	var _tut_tech_player := player
 	container.gui_input.connect(func(ev: InputEvent) -> void:
+		if not _strip_hud_input_enabled:
+			return
 		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
 				or (ev is InputEventScreenTouch and ev.pressed):
 			SFXManager.play(SFXManager.SFX_BTN)
@@ -2134,9 +2190,7 @@ func _open_tech_modal(player: int) -> void:
 	_refresh_tech_hand()
 
 func _update_tech_stacks() -> void:
-	var phase := GameState.current_phase
-	var in_battle := phase not in [GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-			GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER]
+	var in_battle := _battle_strip_hud_active()
 	for p in range(2):
 		var stack: Control = _p1_tech_stack if p == 0 else _p2_tech_stack
 		var lbl: Label     = _p1_stack_count_lbl if p == 0 else _p2_stack_count_lbl
@@ -2357,6 +2411,8 @@ func _create_void_stack_indicator(player: int) -> Control:
 	# Click opens void modal for own pile only
 	var _tut_void_player := player
 	container.gui_input.connect(func(ev: InputEvent) -> void:
+		if not _strip_hud_input_enabled:
+			return
 		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
 				or (ev is InputEventScreenTouch and ev.pressed):
 			SFXManager.play(SFXManager.SFX_BTN)
@@ -2420,9 +2476,7 @@ func _layout_stack_count_label(count_lbl: Label) -> void:
 		count_lbl.add_theme_font_size_override("font_size", 18)
 
 func _update_void_stacks() -> void:
-	var phase := GameState.current_phase
-	var in_battle := phase not in [GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-			GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER]
+	var in_battle := _battle_strip_hud_active()
 	if _p1_void_stack:
 		_p1_void_stack.visible = in_battle
 		if _p1_void_count_lbl:
@@ -2804,26 +2858,32 @@ func dismiss_tutorial_overlays() -> void:
 func _update_tutorial_hud_lock() -> void:
 	if _is_ai_turn():
 		return
-	var in_battle: bool = GameState.current_phase not in [
-		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER
-	]
+	if _endgame_screen_active:
+		return
+	var in_battle: bool = _battle_strip_hud_active()
 	var show_opts: bool = in_battle and not TutorialBattleManager.should_hide_options_btn()
 	var show_end: bool = in_battle and TutorialBattleManager.should_allow_end_turn_btn() \
-			and GameState.current_phase != GameState.Phase.BATTLE
+			and GameState.current_phase != GameState.Phase.BATTLE \
+			and GameState.current_phase != GameState.Phase.GAME_OVER
+	# Pre-endgame shake: keep End Turn art visible (locked), even mid-BATTLE.
+	if GameState.current_phase == GameState.Phase.GAME_OVER and not _endgame_screen_active:
+		show_end = in_battle and _end_turn_btn != null
 	if selection_state == SelectionState.CONFIRMING_ATTACK \
 			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
-		show_end = false
+		if GameState.current_phase != GameState.Phase.GAME_OVER:
+			show_end = false
 	if _options_btn_root:
 		_options_btn_root.visible = show_opts
 	if _options_btn:
-		_options_btn.mouse_filter = Control.MOUSE_FILTER_STOP if show_opts else Control.MOUSE_FILTER_IGNORE
+		_options_btn.mouse_filter = Control.MOUSE_FILTER_STOP \
+				if show_opts and _strip_hud_input_enabled else Control.MOUSE_FILTER_IGNORE
 	if not show_opts:
 		_close_options_panel()
 	if _end_turn_btn:
 		_end_turn_btn.visible = show_end
-		_end_turn_btn.mouse_filter = Control.MOUSE_FILTER_STOP if show_end else Control.MOUSE_FILTER_IGNORE
-		if not show_end:
+		_end_turn_btn.mouse_filter = Control.MOUSE_FILTER_STOP \
+				if show_end and _strip_hud_input_enabled else Control.MOUSE_FILTER_IGNORE
+		if not show_end or not _strip_hud_input_enabled:
 			if _end_turn_blink_tween and _end_turn_blink_tween.is_valid():
 				_end_turn_blink_tween.kill()
 				_end_turn_blink_tween = null
@@ -2831,15 +2891,16 @@ func _update_tutorial_hud_lock() -> void:
 
 func _update_reveal_buttons() -> void:
 	var tut_hide: bool = TutorialBattleManager.should_hide_reveal_view_btn()
-	var in_battle: bool = GameState.current_phase not in [
-		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER
-	]
+	var in_battle: bool = _battle_strip_hud_active()
 	if _p1_reveal_btn:
 		_p1_reveal_btn.visible = in_battle and GameState.current_player == 0 and not tut_hide
+		_p1_reveal_btn.mouse_filter = Control.MOUSE_FILTER_STOP \
+				if _p1_reveal_btn.visible and _strip_hud_input_enabled else Control.MOUSE_FILTER_IGNORE
 	if _p2_reveal_btn:
 		var vs_ai: bool = GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON]
 		_p2_reveal_btn.visible = in_battle and GameState.current_player == 1 and not vs_ai and not tut_hide
+		_p2_reveal_btn.mouse_filter = Control.MOUSE_FILTER_STOP \
+				if _p2_reveal_btn.visible and _strip_hud_input_enabled else Control.MOUSE_FILTER_IGNORE
 
 # ─────────────────────────────────────────────────────────────
 # End Turn Button (standalone, bottom-center)
@@ -4440,12 +4501,6 @@ func _build_bottom_crystal_labels() -> void:
 	_p1_bottom_crystal.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_p1_bottom_crystal.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p1_crystal_hbox.add_child(_p1_bottom_crystal)
-	_p1_crystal_sheen_mat = ShaderMaterial.new()
-	_p1_crystal_sheen_mat.shader = _SHADER_METAL_REFLECT
-	_p1_crystal_sheen_mat.set_shader_parameter("progress", _V3_SHEEN_IDLE)
-	_p1_crystal_sheen_mat.set_shader_parameter("intensity", 0.85)
-	_p1_crystal_sheen_mat.set_shader_parameter("band_width", 0.18)
-	_p1_bottom_crystal.material = _p1_crystal_sheen_mat
 
 	var p2_root := Control.new()
 	p2_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -4489,12 +4544,6 @@ func _build_bottom_crystal_labels() -> void:
 	_p2_bottom_crystal.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_p2_bottom_crystal.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p2_crystal_hbox.add_child(_p2_bottom_crystal)
-	_p2_crystal_sheen_mat = ShaderMaterial.new()
-	_p2_crystal_sheen_mat.shader = _SHADER_METAL_REFLECT
-	_p2_crystal_sheen_mat.set_shader_parameter("progress", _V3_SHEEN_IDLE)
-	_p2_crystal_sheen_mat.set_shader_parameter("intensity", 0.85)
-	_p2_crystal_sheen_mat.set_shader_parameter("band_width", 0.18)
-	_p2_bottom_crystal.material = _p2_crystal_sheen_mat
 
 	if crystal_tex:
 		var icon2 := _build_crystal_icon_with_shadow(crystal_tex, ICON_SIZE)
@@ -4733,14 +4782,90 @@ func _int_to_roman(n: int) -> String:
 	return result
 
 
+## Top dashboard / bottom vault widgets stay visible through flip-reveal shake
+## until `_show_endgame_screen`. Input/hover are locked separately.
+func _battle_strip_hud_active() -> bool:
+	match GameState.current_phase:
+		GameState.Phase.NONE, GameState.Phase.SETUP_P1, GameState.Phase.SETUP_P2:
+			return false
+		GameState.Phase.GAME_OVER:
+			return not _endgame_screen_active
+		_:
+			return true
+
+
+func _begin_pre_endgame_strip_hud() -> void:
+	_endgame_screen_active = false
+	_set_strip_hud_input_enabled(false)
+	_hide_guide()
+	_update_crystal_visibility()
+	_update_tech_stacks()
+	_update_void_stacks()
+	_update_reveal_buttons()
+	_refresh_attack_labels()
+	# Force strip chrome widgets on for the shake beat (BATTLE may have hid End Turn).
+	if _end_turn_btn:
+		_end_turn_btn.visible = true
+		_end_turn_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if _end_turn_blink_tween and _end_turn_blink_tween.is_valid():
+			_end_turn_blink_tween.kill()
+			_end_turn_blink_tween = null
+		_end_turn_btn.modulate = Color.WHITE
+	if _options_btn_root and not TutorialBattleManager.should_hide_options_btn():
+		_options_btn_root.visible = true
+	if _options_btn:
+		_options_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_force_options_hover_exit()
+	_reset_strip_hud_hover_scales()
+
+
+func _set_strip_hud_input_enabled(enabled: bool) -> void:
+	_strip_hud_input_enabled = enabled
+	var mf: Control.MouseFilter = \
+			Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	var nodes: Array = [
+		_end_turn_btn, _options_btn, _turn_number_hit,
+		_p1_tech_stack, _p2_tech_stack, _p1_void_stack, _p2_void_stack,
+		_p1_reveal_btn, _p2_reveal_btn,
+		_p1_crystal_hbox, _p2_crystal_hbox,
+	]
+	if is_instance_valid(_p1_attack_lbl) and _p1_attack_lbl.get_parent() is Control:
+		nodes.append(_p1_attack_lbl.get_parent())
+	if is_instance_valid(_p2_attack_lbl) and _p2_attack_lbl.get_parent() is Control:
+		nodes.append(_p2_attack_lbl.get_parent())
+	for n in nodes:
+		var c: Control = n as Control
+		if c != null and is_instance_valid(c):
+			if enabled:
+				# Crystal rows stay PASS so tooltips work; hit targets use STOP.
+				if c == _p1_crystal_hbox or c == _p2_crystal_hbox:
+					c.mouse_filter = Control.MOUSE_FILTER_PASS
+				else:
+					c.mouse_filter = mf
+			else:
+				c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _reset_strip_hud_hover_scales() -> void:
+	var ctrls: Array = [
+		_end_turn_btn, _union_suggest_btn,
+		_p1_tech_stack, _p2_tech_stack, _p1_void_stack, _p2_void_stack,
+	]
+	for n in ctrls:
+		var c: Control = n as Control
+		if c == null or not is_instance_valid(c):
+			continue
+		var id: int = c.get_instance_id()
+		if _v3_hover_scale_tweens.has(id):
+			var old: Tween = _v3_hover_scale_tweens[id]
+			if old != null and old.is_valid():
+				old.kill()
+		c.scale = Vector2.ONE
+		_v3_circuit_set_active(c, false)
+
+
 func _update_crystal_visibility() -> void:
-	var hide_phases: Array = [
-		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-		GameState.Phase.SETUP_P2]
-	var show: bool = GameState.current_phase not in hide_phases
-	if GameState.current_phase == GameState.Phase.GAME_OVER:
-		# Keep the HUD visible until burst/tick/post-tick hold finishes on crystal depletion.
-		show = _crystal_anim_processing
+	var show: bool = _battle_strip_hud_active()
 	if _p1_crystal_row:
 		_p1_crystal_row.visible = show
 	if _p2_crystal_row:
@@ -4757,16 +4882,15 @@ func _update_crystal_visibility() -> void:
 		_fog_container.visible = show
 	# Keep top dashboard / bottom vault through GAME_OVER card-reveal (almost win/loss).
 	# Endgame screen hides them explicitly in `_show_endgame_screen`.
-	if GameState.current_phase == GameState.Phase.GAME_OVER:
+	if GameState.current_phase == GameState.Phase.GAME_OVER and not _endgame_screen_active:
 		_sync_v3_chrome_visibility(true)
 	else:
 		_sync_v3_chrome_visibility(show)
 
 func _refresh_attack_labels() -> void:
-	var phase := GameState.current_phase
-	var in_battle: bool = phase not in [
-		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER]
+	if _pre_endgame_shake_fx:
+		return
+	var in_battle: bool = _battle_strip_hud_active()
 	var cp: int = GameState.current_player
 	var remaining: int = GameState.attacks_remaining
 	for p: int in range(2):
@@ -5110,6 +5234,8 @@ func _build_options_button() -> void:
 	hit.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hit.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	hit.gui_input.connect(func(event: InputEvent) -> void:
+		if not _strip_hud_input_enabled:
+			return
 		if event is InputEventMouseButton:
 			var mb := event as InputEventMouseButton
 			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
@@ -5145,6 +5271,8 @@ func _build_options_button() -> void:
 
 
 func _on_options_hover_entered() -> void:
+	if not _strip_hud_input_enabled:
+		return
 	_show_hud_tooltip("Game options (concede, rules)")
 	if HudSkin.version != "v3":
 		return
@@ -5249,6 +5377,8 @@ func _apply_options_button_layout() -> void:
 		_set_options_reveal_frac(2.0 / 3.0)
 
 func _on_options_btn_pressed() -> void:
+	if not _strip_hud_input_enabled:
+		return
 	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_options_btn():
 		return
 	SFXManager.play(SFXManager.SFX_BTN)
@@ -5758,24 +5888,30 @@ func _apply_reveal_eye_layout() -> void:
 
 
 func _play_crystal_number_sheen(player: int) -> void:
+	# Do not put magitech_metal_reflect on Labels — font-atlas UVs leave a sticky highlight.
+	# Use a short modulate flash instead (v3 hover only).
+	if not _strip_hud_input_enabled:
+		return
 	if HudSkin.version != "v3":
 		return
 	if _crystal_anim_processing:
 		return
-	var mat: ShaderMaterial = _p1_crystal_sheen_mat if player == 0 else _p2_crystal_sheen_mat
-	if mat == null:
+	var lbl: Label = _p1_bottom_crystal if player == 0 else _p2_bottom_crystal
+	if lbl == null or not is_instance_valid(lbl):
 		return
+	var old_tw: Variant = _crystal_sheen_tweens.get(player, null)
+	if old_tw is Tween and is_instance_valid(old_tw):
+		(old_tw as Tween).kill()
+	lbl.modulate = Color.WHITE
 	var tw := create_tween()
-	mat.set_shader_parameter("progress", -0.15)
-	tw.tween_method(
-		func(v: float) -> void:
-			if is_instance_valid(mat):
-				mat.set_shader_parameter("progress", v),
-		-0.15, 1.15, 0.45
-	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_crystal_sheen_tweens[player] = tw
+	tw.tween_property(lbl, "modulate", Color(1.35, 1.45, 1.55, 1.0), 0.12) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(lbl, "modulate", Color.WHITE, 0.28) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tw.tween_callback(func() -> void:
-		if is_instance_valid(mat):
-			mat.set_shader_parameter("progress", _V3_SHEEN_IDLE))
+		if is_instance_valid(lbl):
+			lbl.modulate = Color.WHITE)
 
 
 func _v3_sync_circuit_patrol_skin() -> void:
@@ -5966,6 +6102,8 @@ func _v3_arm_circuit_after_settle(ctrl: Control, delay_sec: float) -> void:
 
 
 func _v3_hover_scale_enter(ctrl: Control) -> void:
+	if not _strip_hud_input_enabled:
+		return
 	if HudSkin.version != "v3" or ctrl == null or not is_instance_valid(ctrl):
 		return
 	if ctrl.size == Vector2.ZERO:
@@ -6962,6 +7100,10 @@ func _run_crystal_change_animation(player_index: int, new_amount: int) -> void:
 		await _play_crystal_burst(player_index, false)
 		var depleted: bool = new_amount <= 0 and old_amount > 0
 		var tick_dur: float = _crystal_tick_duration(old_amount, new_amount)
+		if depleted:
+			_crystal_break_player = player_index
+			# Shatter intact gem → break plate + short-circuit (as soon as crystals hit 0).
+			await _play_crystal_break_explosion(player_index)
 		# Smoke while the number ticks (excessive + cross-screen if depleted).
 		_start_crystal_tick_vent_smoke(player_index, tick_dur, depleted)
 		await _tick_crystal(player_index, old_amount, new_amount)
@@ -7176,21 +7318,30 @@ func _play_smoke_emit_sfx(hard: bool = false) -> void:
 
 ## Fire-and-forget: keep venting while the crystal number ticks.
 func _start_crystal_tick_vent_smoke(player: int, duration: float, depleted: bool) -> void:
-	_crystal_tick_vent_smoke_loop(player, maxf(duration, 0.35), depleted)
+	var stream_dur: float = maxf(duration, 0.35)
+	if depleted:
+		# Keep pouring after the tick — engine-breaking billow into the hold beat.
+		stream_dur = maxf(stream_dur, 0.8) + 3.2
+		# Immediate dump so the screen fills before the first interval wait.
+		_spawn_vent_smoke_burst(player, true, 22)
+	_crystal_tick_vent_smoke_loop(player, stream_dur, depleted)
 
 
 func _crystal_tick_vent_smoke_loop(player: int, duration: float, depleted: bool) -> void:
 	var t0: float = Time.get_ticks_msec() * 0.001
-	# Slow train-steam cadence — fewer, larger, lingering puffs.
-	var interval: float = 0.16 if depleted else 0.38
-	var puffs_per: int = 3 if depleted else 1
-	# One SFX for the whole crystal-change steam stream.
+	var interval: float = 0.07 if depleted else 0.38
+	var puffs_per: int = 12 if depleted else 1
+	var next_heavy: float = 0.45
 	_play_smoke_emit_sfx(depleted)
 	while is_instance_valid(self):
 		var elapsed: float = Time.get_ticks_msec() * 0.001 - t0
 		if elapsed >= duration:
 			break
 		_spawn_vent_smoke_burst(player, depleted, puffs_per)
+		if depleted and elapsed >= next_heavy:
+			_spawn_vent_smoke_burst(player, true, 18)
+			_play_smoke_emit_sfx(true)
+			next_heavy = elapsed + 0.55
 		await get_tree().create_timer(interval).timeout
 
 
@@ -7200,37 +7351,48 @@ func _spawn_vent_smoke(player: int, hard: bool = false) -> void:
 	_spawn_vent_smoke_burst(player, hard, 14 if hard else 6)
 
 
-## Spawn a burst of vent puffs. `cross_screen` (depleted) drives smoke to the far side.
-## Tuned for slow train-steam billow (not a quick spit).
+## Spawn a burst of vent puffs.
+## `cross_screen` (crystal depleted / hard): dense engine-break smoke that fills the
+## board and drifts to bottom-right (P1 lose) or bottom-left (P2 lose).
 func _spawn_vent_smoke_burst(player: int, cross_screen: bool, puff_count: int) -> void:
 	var origin: Vector2 = _crystal_vent_emit_origin(player)
 	if origin == Vector2.ZERO or puff_count <= 0:
 		return
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
-	var size_min: float = 22.0 if cross_screen else 18.0
-	var size_max: float = 48.0 if cross_screen else 36.0
-	# Gentle downward/sideways drift — slow locomotive roll.
-	var dy_min: float = 18.0 if cross_screen else 12.0
-	var dy_max: float = 55.0 if cross_screen else 38.0
-	var delay_max: float = 0.35 if cross_screen else 0.45
-	var dur_min: float = 2.40 if cross_screen else 1.80
-	var dur_max: float = 4.20 if cross_screen else 3.20
-	var scale_min: float = 2.4 if cross_screen else 2.0
-	var scale_max: float = 4.2 if cross_screen else 3.4
-	var alpha: float = 0.62 if cross_screen else 0.48
-	# Far edge on the opposite side of the board.
-	var far_x: float = size.x * (0.96 if player == 0 else 0.04)
+	var vp: Vector2 = size
+	if vp.x < 8.0 or vp.y < 8.0:
+		vp = get_viewport().get_visible_rect().size
+	var size_min: float = 28.0 if cross_screen else 18.0
+	var size_max: float = 72.0 if cross_screen else 36.0
+	var delay_max: float = 0.22 if cross_screen else 0.45
+	var dur_min: float = 2.80 if cross_screen else 1.80
+	var dur_max: float = 5.40 if cross_screen else 3.20
+	var scale_min: float = 3.2 if cross_screen else 2.0
+	var scale_max: float = 6.5 if cross_screen else 3.4
+	var alpha: float = 0.82 if cross_screen else 0.48
+	# Loser corner: P1 → bottom-right, P2 → bottom-left.
+	var corner: Vector2 = Vector2(
+		vp.x * (0.96 if player == 0 else 0.04),
+		vp.y * 0.96)
 	for _i: int in range(puff_count):
 		var puff := Panel.new()
 		var sz: float = rng.randf_range(size_min, size_max)
 		puff.size = Vector2(sz, sz)
 		puff.pivot_offset = puff.size * 0.5
-		puff.scale = Vector2(0.55, 0.55)
+		puff.scale = Vector2(0.45, 0.45)
 		var psb := StyleBoxFlat.new()
-		var grey: float = rng.randf_range(0.48 if cross_screen else 0.55, 0.78 if cross_screen else 0.82)
-		var cyan: float = rng.randf_range(0.01, 0.08)
-		psb.bg_color = Color(grey * 0.94, grey * 0.98, minf(1.0, grey + cyan), alpha)
+		# Depleted: sooty dark steam; normal: cool silver-cyan.
+		var grey: float
+		var cyan: float
+		if cross_screen:
+			grey = rng.randf_range(0.22, 0.55)
+			cyan = rng.randf_range(0.0, 0.04)
+			psb.bg_color = Color(grey * 0.90, grey * 0.92, minf(0.70, grey + cyan), alpha)
+		else:
+			grey = rng.randf_range(0.55, 0.82)
+			cyan = rng.randf_range(0.01, 0.08)
+			psb.bg_color = Color(grey * 0.94, grey * 0.98, minf(1.0, grey + cyan), alpha)
 		var rad: int = int(sz * 0.5)
 		psb.corner_radius_top_left = rad
 		psb.corner_radius_top_right = rad
@@ -7238,32 +7400,39 @@ func _spawn_vent_smoke_burst(player: int, cross_screen: bool, puff_count: int) -
 		psb.corner_radius_bottom_left = rad
 		puff.add_theme_stylebox_override("panel", psb)
 		puff.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		puff.z_index = 30
-		var spread: float = 16.0 if cross_screen else 8.0
+		puff.z_index = 45 if cross_screen else 30
+		var spread: float = 42.0 if cross_screen else 8.0
 		var drift0: float = rng.randf_range(-spread, spread)
-		puff.position = origin + Vector2(drift0, rng.randf_range(-2.0, 6.0)) - puff.size * 0.5
+		puff.position = origin + Vector2(drift0, rng.randf_range(-6.0, 14.0)) - puff.size * 0.5
 		puff.modulate.a = 0.0
 		add_child(puff)
 
 		var delay: float = rng.randf_range(0.0, delay_max)
-		var dy: float = rng.randf_range(dy_min, dy_max)
 		var duration: float = rng.randf_range(dur_min, dur_max)
 		var end_scale: float = rng.randf_range(scale_min, scale_max)
 		var end_pos: Vector2
 		if cross_screen:
-			# Slow roll across to the far side.
-			var jitter_x: float = rng.randf_range(-size.x * 0.03, size.x * 0.03)
-			end_pos = Vector2(far_x + jitter_x, puff.position.y + dy)
+			# Fan across the whole board toward the loser corner (engine failure plume).
+			var target := Vector2(
+				corner.x + rng.randf_range(-vp.x * 0.12, vp.x * 0.12),
+				rng.randf_range(vp.y * 0.42, vp.y * 0.99))
+			var travel: float = rng.randf_range(0.45, 1.05)
+			end_pos = puff.position.lerp(target, travel)
+			# Extra sideways billow so plumes overlap and choke the screen.
+			var billow_dir: float = 1.0 if player == 0 else -1.0
+			end_pos.x += billow_dir * rng.randf_range(0.0, vp.x * 0.18)
+			end_pos.y += rng.randf_range(20.0, vp.y * 0.22)
 		else:
 			# P1: bottom-right. P2: bottom-left — lazy steam drift.
 			var dir_x: float = 1.0 if player == 0 else -1.0
 			end_pos = puff.position + Vector2(
-				dir_x * rng.randf_range(55.0, 140.0), dy)
+				dir_x * rng.randf_range(55.0, 140.0),
+				rng.randf_range(12.0, 38.0))
 
-		# Soft fade-in, brief hold, then a quick fade-out (don't linger opaque).
-		var fade_in: float = minf(0.28, duration * 0.12)
-		var fade_hold: float = duration * 0.30
-		var fade_out: float = minf(0.55, duration * 0.20)
+		# Soft fade-in, longer opaque hold when dense, then fade.
+		var fade_in: float = minf(0.22 if cross_screen else 0.28, duration * 0.10)
+		var fade_hold: float = duration * (0.48 if cross_screen else 0.30)
+		var fade_out: float = minf(0.85 if cross_screen else 0.55, duration * 0.28)
 		var tp := create_tween()
 		tp.tween_interval(delay)
 		tp.set_parallel(true)
@@ -8280,11 +8449,12 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 		GameState.Phase.GAME_OVER:
 			mode_panel.visible = false
 			end_attack_btn.visible = false
-			if _end_turn_btn:
-				_end_turn_btn.visible = false
+			# Keep strip HUD (End Turn art, etc.) visible for flip-reveal shake;
+			# interaction is locked in `_on_game_over` until the win/lose screen.
 			if _attack_confirm_panel:
 				_attack_confirm_panel.visible = false
 			action_panel.visible = false
+			_begin_pre_endgame_strip_hud()
 
 func _on_mode_selected(_player: int, _mode: GameState.TurnMode) -> void:
 	pass
@@ -8350,7 +8520,11 @@ func _on_battle_preview_needed(attacker_player: int, attacker: GameState.CardIns
 	add_child(overlay)
 	await overlay.start(attacker_player, attacker, defender, result)
 	_current_battle_overlay = null
-	turn_manager.battle_preview_done.emit()
+	turn_manager.complete_battle_preview()
+
+func _on_battle_overlay_pause_requested() -> void:
+	if is_instance_valid(_current_battle_overlay):
+		_current_battle_overlay.pause_for_choice()
 
 func _on_tech_played(player: int, tech_name: String) -> void:
 	_tech_used_this_turn[player] = true
@@ -11129,6 +11303,8 @@ func _sync_guide_visibility() -> void:
 	_guide_box.visible = not _is_action_overlay_active()
 
 func _show_hud_tooltip(text: String) -> void:
+	if not _strip_hud_input_enabled:
+		return
 	_build_guide_box()
 	_guide_label.text = text
 	_guide_box.reset_size()
@@ -11291,8 +11467,11 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 			_get_ai_for_player(player).decide_death_bluff(row, col)
 	var node: Control = grid_nodes[player][row][col]
 	_spawn_dense_card_smoke(node)
-	_play_hud_destroy_shake()
-	if inst != null and inst.card_type in ["dead_end", "trap"]:
+	# Trap / dead-end dissolves stay quiet — no top/bottom HUD shake.
+	var is_dissolve: bool = inst != null and inst.card_type in ["dead_end", "trap"]
+	if not is_dissolve:
+		_play_hud_destroy_shake()
+	if is_dissolve:
 		if inst.card_type == "dead_end":
 			await get_tree().create_timer(0.5).timeout
 		_spawn_dissolve_effect(node)
@@ -11760,7 +11939,8 @@ func _show_card_effect_flash(card_name: String, card_type: String) -> void:
 	var overlay := Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	overlay.z_index = 50
+	# Above Reckoning (z=100) when mid-battle; ability choice uses 110 after the flash.
+	overlay.z_index = 105 if is_instance_valid(_current_battle_overlay) else 50
 	add_child(overlay)
 
 	# Semi-transparent dim
@@ -12176,9 +12356,9 @@ func _on_game_over(winner: int) -> void:
 	if GameState.game_mode == GameState.GameMode.EXPLORATION:
 		ExplorationManager.complete_battle_node(player_won)
 
-	# ── Disable all interactive UI immediately ───────────────────────────────
-	if _end_turn_btn:
-		_end_turn_btn.visible = false
+	# ── Disable non-strip interactive UI immediately ─────────────────────────
+	# Strip HUD (dashboard / vault widgets) stays visible but inert until win/lose screen.
+	_begin_pre_endgame_strip_hud()
 	mode_panel.visible   = false
 	action_panel.visible = false
 	if _tech_fan:
@@ -12190,14 +12370,20 @@ func _on_game_over(winner: int) -> void:
 	# ── 0. Let the final crystal burst + tick finish, then a brief beat ─────
 	# Music is NOT stopped here — it carries through the pause and is handled at shake start.
 	await _wait_crystal_display_finished()
-	# Keep Magitech chrome strips visible for the flip-reveal / almost win-loss beat.
-	_sync_v3_chrome_visibility(true)
+	# Keep Magitech chrome strips + widgets visible for the flip-reveal / almost win-loss beat.
+	_begin_pre_endgame_strip_hud()
 	await get_tree().create_timer(1.2).timeout
 
 	# ── 1. Flip-reveal all face-down cards (with screen shake) ───────────────
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
+	_start_pre_endgame_shake_fx()
+	# Options sinks under the bottom edge — fire-and-forget.
+	_pre_endgame_options_sink_ff()
+	# Flip-reveal in parallel via deferred launch (4.7 forbids non-awaited coroutine calls).
+	_pre_endgame_flip_reveal_done = false
+	call_deferred("_pre_endgame_run_flip_reveal")
 	if player_won and GameState.battle_almost_win_enabled and not _vs_ai_bgm_muted():
 		# Win: switch to almost-win BGM at 00:00 with no fade-in.
 		# If it's already playing (triggered by the almost-win threshold mid-battle),
@@ -12210,9 +12396,17 @@ func _on_game_over(winner: int) -> void:
 	elif not player_won and not _vs_ai_bgm_muted():
 		# Lose: crossfade battle BGM out while defeat track fades in.
 		BGMManager.play_context(BGMManager.CONTEXT_DEFEAT, 1.0, 2.5, 100.0, BGMManager.LOOP_PLAY_ONCE)
-	await _flip_reveal_all_cards()
+	# After shake has been going a bit, collapse HUD pieces one-by-one.
+	await get_tree().create_timer(0.90).timeout
+	var loser_player: int = -1
+	if winner == 0 or winner == 1:
+		loser_player = 1 - winner
+	await _pre_endgame_hud_collapse_sequence(loser_player)
+	while is_instance_valid(self) and not _pre_endgame_flip_reveal_done:
+		await get_tree().process_frame
 	_shake_active = false
 	ml.position = _shake_origin
+	_stop_pre_endgame_shake_fx()
 
 	# ── 2. White flash fade-out ───────────────────────────────────────────────
 	var white_overlay: ColorRect = await _fade_to_white()
@@ -12292,6 +12486,973 @@ func _flip_reveal_all_cards() -> void:
 				if not inst.face_up:
 					await _flip_card_reveal(p, r, c)
 					await get_tree().create_timer(0.030).timeout
+
+
+func _pre_endgame_run_flip_reveal() -> void:
+	await _flip_reveal_all_cards()
+	_pre_endgame_flip_reveal_done = true
+
+
+# ─────────────────────────────────────────────────────────────
+# Pre-endgame shake FX (Phase G — HUD glitch / dashboard short)
+# ─────────────────────────────────────────────────────────────
+
+func _start_pre_endgame_shake_fx() -> void:
+	_pre_endgame_shake_fx = true
+	# 1) Hide attack badge art; replace real counts with error ticks (both players).
+	_set_pre_endgame_attack_badge_art_visible(false)
+	_set_pre_endgame_attack_glitch_visible(true)
+	# 2) Jolt + dashboard short-circuit sparks/smoke (both sides).
+	SFXManager.play(_SFX_ELECTRIC_SHORT)
+	_pre_endgame_dashboard_short_circuit_loop()
+	# 3) Random error glyphs on crystal + attack count labels.
+	_pre_endgame_hud_glitch_loop()
+	# Crystal-break plate already spawned at depletion; jitter it with the shake.
+	if is_instance_valid(_crystal_break_fx):
+		_pre_endgame_crystal_break_jitter_loop(_crystal_break_fx)
+
+
+func _stop_pre_endgame_shake_fx() -> void:
+	_pre_endgame_shake_fx = false
+	# Crystal amounts lock to error dashes when shake ends.
+	if is_instance_valid(_p1_bottom_crystal):
+		_p1_bottom_crystal.text = "----"
+		_p1_bottom_crystal.modulate = Color.WHITE
+	if is_instance_valid(_p2_bottom_crystal):
+		_p2_bottom_crystal.text = "----"
+		_p2_bottom_crystal.modulate = Color.WHITE
+	# Attack count stays gone after the glitch beat.
+	_set_pre_endgame_attack_glitch_visible(false)
+	_set_pre_endgame_attack_badge_art_visible(false)
+	_fade_out_pre_endgame_crystal_break()
+
+
+func _set_pre_endgame_attack_badge_art_visible(show: bool) -> void:
+	for lbl: Label in [_p1_attack_lbl, _p2_attack_lbl]:
+		if lbl == null or not is_instance_valid(lbl):
+			continue
+		var container: Control = lbl.get_parent() as Control
+		if container == null:
+			continue
+		var icon: Node = container.get_node_or_null("AttackCountIcon")
+		var shadow: Node = container.get_node_or_null("AttackCountShadow")
+		if icon is CanvasItem:
+			(icon as CanvasItem).visible = show
+		if shadow is CanvasItem:
+			(shadow as CanvasItem).visible = show
+
+
+func _set_pre_endgame_attack_glitch_visible(show: bool) -> void:
+	for lbl: Label in [_p1_attack_lbl, _p2_attack_lbl]:
+		if lbl == null or not is_instance_valid(lbl):
+			continue
+		var container: Control = lbl.get_parent() as Control
+		if container == null:
+			continue
+		container.visible = show
+		lbl.visible = show
+		lbl.modulate = Color(1.0, 0.55, 0.45, 1.0) if show else Color.WHITE
+
+
+func _random_glitch_token(min_len: int = 2, max_len: int = 4) -> String:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	if rng.randf() < 0.22:
+		return _PRE_ENDGAME_GLITCH_GLYPHS[rng.randi_range(0, _PRE_ENDGAME_GLITCH_GLYPHS.size() - 1)]
+	var n: int = rng.randi_range(min_len, max_len)
+	var out: String = ""
+	for _i: int in range(n):
+		var g: String = _PRE_ENDGAME_GLITCH_GLYPHS[rng.randi_range(0, _PRE_ENDGAME_GLITCH_GLYPHS.size() - 1)]
+		if g.length() > 1:
+			g = g.substr(0, 1)
+		out += g
+	return out
+
+
+func _tick_pre_endgame_hud_glitch() -> void:
+	if is_instance_valid(_p1_bottom_crystal):
+		_p1_bottom_crystal.text = _random_glitch_token(3, 5)
+		_p1_bottom_crystal.modulate = Color(1.0, 0.75, 0.55, 1.0) if randf() < 0.35 \
+				else Color(0.85, 0.95, 1.0, 1.0)
+	if is_instance_valid(_p2_bottom_crystal):
+		_p2_bottom_crystal.text = _random_glitch_token(3, 5)
+		_p2_bottom_crystal.modulate = Color(1.0, 0.75, 0.55, 1.0) if randf() < 0.35 \
+				else Color(0.85, 0.95, 1.0, 1.0)
+	if is_instance_valid(_p1_attack_lbl) and _p1_attack_lbl.get_parent() != null \
+			and (_p1_attack_lbl.get_parent() as Control).visible:
+		_p1_attack_lbl.text = _random_glitch_token(1, 3)
+	if is_instance_valid(_p2_attack_lbl) and _p2_attack_lbl.get_parent() != null \
+			and (_p2_attack_lbl.get_parent() as Control).visible:
+		_p2_attack_lbl.text = _random_glitch_token(1, 3)
+
+
+func _pre_endgame_hud_glitch_loop() -> void:
+	while is_instance_valid(self) and _pre_endgame_shake_fx and _shake_active:
+		_tick_pre_endgame_hud_glitch()
+		await get_tree().create_timer(0.055).timeout
+
+
+## Options: shake + sink under the bottom edge. Fire-and-forget (do not await).
+func _pre_endgame_options_sink_ff() -> void:
+	if _options_btn_root == null or not is_instance_valid(_options_btn_root):
+		return
+	if not _options_btn_root.visible:
+		return
+	call_deferred("_pre_endgame_run_options_sink")
+
+
+func _pre_endgame_run_options_sink() -> void:
+	var root: Control = _options_btn_root
+	if root == null or not is_instance_valid(root):
+		return
+	if _options_slide_tween != null and _options_slide_tween.is_valid():
+		_options_slide_tween.kill()
+	_options_hovered = false
+	_v3_circuit_set_active(_options_btn_art, false)
+	var base_top: float = root.offset_top
+	var base_bot: float = root.offset_bottom
+	for _i: int in range(10):
+		if not is_instance_valid(root):
+			return
+		root.offset_top = base_top + randf_range(-6.0, 6.0)
+		root.offset_bottom = base_bot + randf_range(-6.0, 6.0)
+		await get_tree().create_timer(0.035).timeout
+	if not is_instance_valid(root):
+		return
+	root.offset_top = base_top
+	root.offset_bottom = base_bot
+	# Bottom-anchored: positive offset shift pushes the control under the lower edge.
+	var sink: float = _OPT_BTN_H + 48.0
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(root, "offset_top", base_top + sink, 0.55) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	tw.tween_property(root, "offset_bottom", base_bot + sink, 0.55) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	await tw.finished
+	if is_instance_valid(root):
+		root.visible = false
+
+
+## After shake has been going: fall + triangle-shatter HUD pieces one-by-one.
+func _pre_endgame_hud_collapse_sequence(loser_player: int) -> void:
+	await _pre_endgame_fall_and_shatter_node(_end_turn_btn)
+	await _pre_endgame_fall_and_shatter_attack_counts()
+	if loser_player == 0 or loser_player == 1:
+		var void_chip: Control = _p1_void_stack if loser_player == 0 else _p2_void_stack
+		var tech_chip: Control = _p1_tech_stack if loser_player == 0 else _p2_tech_stack
+		await _pre_endgame_fall_and_shatter_node(void_chip)
+		await _pre_endgame_fall_and_shatter_node(tech_chip)
+	await _pre_endgame_fall_and_shatter_turn_number()
+
+
+func _pre_endgame_make_ghost_at(global_r: Rect2) -> Control:
+	var ghost := Control.new()
+	ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ghost.z_index = 62
+	ghost.z_as_relative = false
+	ghost.position = global_r.position - global_position
+	ghost.size = global_r.size
+	ghost.pivot_offset = ghost.size * 0.5
+	add_child(ghost)
+	return ghost
+
+
+func _pre_endgame_add_fullrect_tex(parent: Control, tex: Texture2D) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.texture = tex
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(tr)
+	return tr
+
+
+func _pre_endgame_clone_label_into(parent: Control, src: Label, local_rect: Rect2) -> void:
+	if src == null or not is_instance_valid(src):
+		return
+	var lbl := Label.new()
+	lbl.text = src.text
+	lbl.horizontal_alignment = src.horizontal_alignment
+	lbl.vertical_alignment = src.vertical_alignment
+	lbl.position = local_rect.position
+	lbl.size = local_rect.size
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.modulate = src.modulate
+	var font: Font = src.get_theme_font("font")
+	if font != null:
+		lbl.add_theme_font_override("font", font)
+	lbl.add_theme_font_size_override("font_size", src.get_theme_font_size("font_size"))
+	lbl.add_theme_color_override("font_color", src.get_theme_color("font_color"))
+	lbl.add_theme_color_override("font_shadow_color", src.get_theme_color("font_shadow_color"))
+	lbl.add_theme_constant_override("shadow_offset_x", src.get_theme_constant("shadow_offset_x"))
+	lbl.add_theme_constant_override("shadow_offset_y", src.get_theme_constant("shadow_offset_y"))
+	lbl.add_theme_constant_override("shadow_outline_size", src.get_theme_constant("shadow_outline_size"))
+	parent.add_child(lbl)
+
+
+func _pre_endgame_build_control_ghost(ctrl: Control) -> Control:
+	var gr: Rect2 = ctrl.get_global_rect()
+	if gr.size.x < 2.0 or gr.size.y < 2.0:
+		return null
+	var ghost: Control = _pre_endgame_make_ghost_at(gr)
+	if ctrl is TextureButton:
+		var tb: TextureButton = ctrl as TextureButton
+		var tex: Texture2D = tb.texture_normal
+		if tex == null:
+			tex = HudSkin.hud_tex("ui_end_turn.png")
+		if tex != null:
+			_pre_endgame_add_fullrect_tex(ghost, tex)
+		return ghost
+	var chip: TextureRect = ctrl.get_node_or_null("ChipArt") as TextureRect
+	if chip != null and chip.texture != null and chip.visible:
+		_pre_endgame_add_fullrect_tex(ghost, chip.texture)
+		var count: Label = ctrl.get_node_or_null("CountLabel") as Label
+		if count != null and count.visible:
+			var cg: Rect2 = count.get_global_rect()
+			_pre_endgame_clone_label_into(ghost, count, Rect2(cg.position - gr.position, cg.size))
+		return ghost
+	# Generic: prefer first TextureRect child.
+	for child in ctrl.get_children():
+		if child is TextureRect and (child as TextureRect).texture != null \
+				and (child as TextureRect).visible:
+			_pre_endgame_add_fullrect_tex(ghost, (child as TextureRect).texture)
+			break
+	return ghost
+
+
+func _pre_endgame_build_attack_ghost(container: Control, lbl: Label) -> Control:
+	var gr: Rect2 = container.get_global_rect()
+	var ghost: Control = _pre_endgame_make_ghost_at(gr)
+	var tex: Texture2D = HudSkin.hud_tex("ui_icon_attack_count.png")
+	if tex != null:
+		_pre_endgame_add_fullrect_tex(ghost, tex)
+	if lbl != null and is_instance_valid(lbl):
+		var lg: Rect2 = lbl.get_global_rect()
+		_pre_endgame_clone_label_into(ghost, lbl, Rect2(lg.position - gr.position, lg.size))
+	return ghost
+
+
+func _pre_endgame_shake_controls(controls: Array) -> void:
+	var bases: Array = []
+	for c: Variant in controls:
+		var ctrl: Control = c as Control
+		if ctrl != null and is_instance_valid(ctrl):
+			bases.append([ctrl, ctrl.position, ctrl.rotation])
+	for _i: int in range(10):
+		for entry: Variant in bases:
+			var arr: Array = entry as Array
+			var ctrl2: Control = arr[0] as Control
+			if not is_instance_valid(ctrl2):
+				continue
+			var base_pos: Vector2 = arr[1] as Vector2
+			var base_rot: float = arr[2] as float
+			ctrl2.position = base_pos + Vector2(randf_range(-5.5, 5.5), randf_range(-5.5, 5.5))
+			ctrl2.rotation = base_rot + randf_range(-0.09, 0.09)
+		await get_tree().create_timer(0.035).timeout
+	for entry2: Variant in bases:
+		var arr2: Array = entry2 as Array
+		var ctrl3: Control = arr2[0] as Control
+		if is_instance_valid(ctrl3):
+			ctrl3.position = arr2[1] as Vector2
+			ctrl3.rotation = arr2[2] as float
+
+
+func _pre_endgame_fall_controls_off_bottom(controls: Array) -> void:
+	var tw := create_tween()
+	tw.set_parallel(true)
+	var any: bool = false
+	for c: Variant in controls:
+		var ctrl: Control = c as Control
+		if ctrl == null or not is_instance_valid(ctrl):
+			continue
+		any = true
+		# Rotate around center so tilt reads as tumbling, not pivoting from a corner.
+		ctrl.pivot_offset = ctrl.size * 0.5
+		var dest := Vector2(
+			ctrl.position.x + randf_range(-40.0, 40.0),
+			size.y - ctrl.size.y * 0.18)
+		# Random tumble: start slightly cocked, end at a stronger random tilt.
+		var start_tilt: float = randf_range(-0.35, 0.35)
+		var end_tilt: float = randf_range(-1.25, 1.25)
+		if absf(end_tilt) < 0.55:
+			end_tilt = 0.55 * (1.0 if randf() < 0.5 else -1.0)
+		ctrl.rotation = start_tilt
+		tw.tween_property(ctrl, "position", dest, 0.58) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(ctrl, "rotation", end_tilt, 0.58) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	if not any:
+		return
+	await tw.finished
+
+
+func _pre_endgame_snapshot_control(ctrl: Control) -> Texture2D:
+	if ctrl == null or not is_instance_valid(ctrl):
+		return null
+	var w: int = maxi(2, int(ceili(ctrl.size.x)))
+	var h: int = maxi(2, int(ceili(ctrl.size.y)))
+	var vp := SubViewport.new()
+	vp.size = Vector2i(w, h)
+	vp.transparent_bg = true
+	vp.handle_input_locally = false
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	var dup: Control = ctrl.duplicate() as Control
+	if dup == null:
+		vp.queue_free()
+		return null
+	dup.position = Vector2.ZERO
+	dup.rotation = 0.0
+	dup.scale = Vector2.ONE
+	dup.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	dup.size = Vector2(float(w), float(h))
+	dup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vp.add_child(dup)
+	add_child(vp)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var img: Image = vp.get_texture().get_image()
+	var out: Texture2D = null
+	if img != null:
+		out = ImageTexture.create_from_image(img)
+	vp.queue_free()
+	return out
+
+
+## Dense sooty smoke billowing off a HUD piece just before it falls.
+func _spawn_pre_endgame_hud_collapse_smoke(ctrl: Control) -> void:
+	if ctrl == null or not is_instance_valid(ctrl):
+		return
+	var gr: Rect2 = ctrl.get_global_rect()
+	var local_pos: Vector2 = gr.position - global_position
+	var area: Vector2 = gr.size
+	if area.x < 2.0 or area.y < 2.0:
+		return
+	SFXManager.play(_SFX_SMOKE_DESTROY)
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for _i: int in range(56):
+		var puff := Panel.new()
+		var sz: float = rng.randf_range(22.0, 64.0)
+		puff.size = Vector2(sz, sz)
+		puff.pivot_offset = puff.size * 0.5
+		puff.scale = Vector2(0.35, 0.35)
+		puff.modulate.a = 0.0
+		var psb := StyleBoxFlat.new()
+		var grey: float = rng.randf_range(0.10, 0.42)
+		psb.bg_color = Color(grey * 0.92, grey * 0.95, minf(0.55, grey + 0.06), 0.90)
+		var rad: int = int(sz * 0.5)
+		psb.corner_radius_top_left = rad
+		psb.corner_radius_top_right = rad
+		psb.corner_radius_bottom_right = rad
+		psb.corner_radius_bottom_left = rad
+		puff.add_theme_stylebox_override("panel", psb)
+		puff.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		puff.z_index = 64
+		puff.z_as_relative = false
+		# Spawn across the whole component; bias slightly toward the lower half.
+		var start := Vector2(
+			local_pos.x + rng.randf_range(area.x * 0.05, area.x * 0.95),
+			local_pos.y + rng.randf_range(area.y * 0.20, area.y * 1.05))
+		puff.position = start - puff.size * 0.5
+		add_child(puff)
+		var delay: float = rng.randf_range(0.0, 0.18)
+		var duration: float = rng.randf_range(0.55, 1.15)
+		var end_pos: Vector2 = puff.position + Vector2(
+			rng.randf_range(-70.0, 70.0),
+			rng.randf_range(-40.0, 120.0))
+		var end_scale: float = rng.randf_range(2.0, 3.6)
+		var tp := create_tween()
+		tp.tween_interval(delay)
+		tp.set_parallel(true)
+		tp.tween_property(puff, "modulate:a", 1.0, 0.08) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tp.tween_property(puff, "position", end_pos, duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tp.tween_property(puff, "scale", Vector2(end_scale, end_scale), duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tp.tween_property(puff, "modulate:a", 0.0, duration * 0.55) \
+			.set_delay(duration * 0.30) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		var puff_id: int = puff.get_instance_id()
+		tp.finished.connect(func() -> void:
+			var n: Node = instance_from_id(puff_id) as Node
+			if n != null and is_instance_valid(n):
+				n.queue_free())
+
+
+func _pre_endgame_fall_and_shatter_ghosts(ghosts: Array) -> void:
+	if ghosts.is_empty():
+		return
+	# Dense smoke on each piece, then a short beat so it billows before the fall.
+	for g: Variant in ghosts:
+		var ghost0: Control = g as Control
+		if ghost0 != null and is_instance_valid(ghost0):
+			_spawn_pre_endgame_hud_collapse_smoke(ghost0)
+	await get_tree().create_timer(0.28).timeout
+	await _pre_endgame_shake_controls(ghosts)
+	await _pre_endgame_fall_controls_off_bottom(ghosts)
+	for g: Variant in ghosts:
+		var ghost: Control = g as Control
+		if ghost == null or not is_instance_valid(ghost):
+			continue
+		var fallback_tex: Texture2D = null
+		for child in ghost.get_children():
+			if child is TextureRect and (child as TextureRect).texture != null:
+				fallback_tex = (child as TextureRect).texture
+				break
+		var tex: Texture2D = await _pre_endgame_snapshot_control(ghost)
+		if tex == null:
+			tex = fallback_tex
+		var rect := Rect2(ghost.position, ghost.size)
+		ghost.queue_free()
+		if tex == null:
+			continue
+		await _shatter_tex_triangles_at(tex, rect, 3)
+
+
+func _pre_endgame_fall_and_shatter_node(ctrl: Control) -> void:
+	if ctrl == null or not is_instance_valid(ctrl) or not ctrl.visible:
+		return
+	var ghost: Control = _pre_endgame_build_control_ghost(ctrl)
+	if ghost == null:
+		ctrl.visible = false
+		return
+	ctrl.visible = false
+	await _pre_endgame_fall_and_shatter_ghosts([ghost])
+
+
+func _pre_endgame_fall_and_shatter_attack_counts() -> void:
+	var ghosts: Array = []
+	for lbl: Label in [_p1_attack_lbl, _p2_attack_lbl]:
+		if lbl == null or not is_instance_valid(lbl):
+			continue
+		var container: Control = lbl.get_parent() as Control
+		if container == null or not is_instance_valid(container) or not container.visible:
+			continue
+		var ghost: Control = _pre_endgame_build_attack_ghost(container, lbl)
+		container.visible = false
+		ghosts.append(ghost)
+	await _pre_endgame_fall_and_shatter_ghosts(ghosts)
+
+
+func _pre_endgame_fall_and_shatter_turn_number() -> void:
+	if _turn_number_bg == null or not is_instance_valid(_turn_number_bg) \
+			or not _turn_number_bg.visible:
+		return
+	var gr: Rect2 = _turn_number_bg.get_global_rect()
+	if is_instance_valid(_turn_number_lbl) and _turn_number_lbl.visible:
+		gr = gr.merge(_turn_number_lbl.get_global_rect())
+	var ghost: Control = _pre_endgame_make_ghost_at(gr)
+	var bg_tex: Texture2D = _turn_number_bg.texture
+	if bg_tex == null:
+		bg_tex = HudSkin.hud_tex("ui_turn_number_panel.png")
+	if bg_tex != null:
+		var bg_g: Rect2 = _turn_number_bg.get_global_rect()
+		var tr := TextureRect.new()
+		tr.texture = bg_tex
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tr.position = bg_g.position - gr.position
+		tr.size = bg_g.size
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ghost.add_child(tr)
+	if is_instance_valid(_turn_number_lbl):
+		var lg: Rect2 = _turn_number_lbl.get_global_rect()
+		_pre_endgame_clone_label_into(
+			ghost, _turn_number_lbl, Rect2(lg.position - gr.position, lg.size))
+	_turn_number_bg.visible = false
+	if is_instance_valid(_turn_number_lbl):
+		_turn_number_lbl.visible = false
+	if is_instance_valid(_turn_number_hit):
+		_turn_number_hit.visible = false
+	await _pre_endgame_fall_and_shatter_ghosts([ghost])
+
+
+func _resolve_crystal_break_player() -> int:
+	if _crystal_break_player == 0 or _crystal_break_player == 1:
+		return _crystal_break_player
+	# Fallback if depletion was tracked only via GameState.
+	if GameState.game_over_reason == "crystals":
+		if GameState.crystals[0] <= 0:
+			return 0
+		if GameState.crystals[1] <= 0:
+			return 1
+	elif GameState.crystals[0] <= 0:
+		return 0
+	elif GameState.crystals[1] <= 0:
+		return 1
+	return -1
+
+
+## Shatter intact crystal (Reckoning-style triangles) → break plate + short-circuit.
+func _play_crystal_break_explosion(player: int) -> void:
+	if HudSkin.version != "v3":
+		return
+	if player < 0 or player > 1:
+		return
+	if _TEX_CRYSTAL_BREAK == null:
+		return
+	_crystal_break_player = player
+	var origin: Vector2 = _crystal_break_origin(player)
+	await _shatter_crystal_icon_triangles(player)
+	_spawn_crystal_break_plate(player, origin)
+	_spawn_crystal_short_circuit_explosion(origin)
+
+
+func _crystal_break_origin(player: int) -> Vector2:
+	var icon: TextureRect = _p1_crystal_icon if player == 0 else _p2_crystal_icon
+	if is_instance_valid(icon):
+		var ir: Rect2 = icon.get_global_rect()
+		if ir.size.x > 1.0 and ir.size.y > 1.0:
+			return (ir.position - global_position) + ir.size * 0.5
+	return _crystal_vent_emit_origin(player)
+
+
+## Triangle-fragment the intact crystal icon (same approach as BattleCalculationOverlay).
+func _shatter_crystal_icon_triangles(player: int) -> void:
+	var icon: TextureRect = _p1_crystal_icon if player == 0 else _p2_crystal_icon
+	if icon == null or not is_instance_valid(icon):
+		return
+	var tex: Texture2D = icon.texture
+	if tex == null:
+		tex = HudSkin.hud_tex("ui_crystal_indicator.png")
+	if tex == null:
+		return
+	var gr: Rect2 = icon.get_global_rect()
+	if gr.size.x < 2.0 or gr.size.y < 2.0:
+		return
+	icon.visible = false
+	await _shatter_tex_triangles_at(tex, Rect2(gr.position - global_position, gr.size), 3)
+
+
+## Triangle-fragment a texture in board-local space (Reckoning-style subdivision).
+func _shatter_tex_triangles_at(tex: Texture2D, local_rect: Rect2, levels_count: int = 3) -> void:
+	if tex == null:
+		return
+	var aw: float = local_rect.size.x
+	var ah: float = local_rect.size.y
+	if aw < 2.0 or ah < 2.0:
+		return
+	var ax: float = local_rect.position.x
+	var ay: float = local_rect.position.y
+	var tex_w: float = float(tex.get_width())
+	var tex_h: float = float(tex.get_height())
+	if tex_w < 1.0 or tex_h < 1.0:
+		return
+
+	SFXManager.play(_SFX_CRYSTAL_SHATTER)
+
+	var tl := Vector2(ax, ay)
+	var tr := Vector2(ax + aw, ay)
+	var br := Vector2(ax + aw, ay + ah)
+	var bl := Vector2(ax, ay + ah)
+	var uv_tl := Vector2(0.0, 0.0)
+	var uv_tr := Vector2(tex_w, 0.0)
+	var uv_br := Vector2(tex_w, tex_h)
+	var uv_bl := Vector2(0.0, tex_h)
+
+	var triangles: Array = [
+		[PackedVector2Array([tl, tr, br]), PackedVector2Array([uv_tl, uv_tr, uv_br])],
+		[PackedVector2Array([tl, br, bl]), PackedVector2Array([uv_tl, uv_br, uv_bl])],
+	]
+
+	var level_n: int = maxi(2, levels_count)
+	var levels: Array = []
+	for _level: int in range(level_n):
+		var level_polys: Array = []
+		for tri: Variant in triangles:
+			var arr: Array = tri as Array
+			var verts: PackedVector2Array = arr[0] as PackedVector2Array
+			var uvs: PackedVector2Array = arr[1] as PackedVector2Array
+			var cx: float = (verts[0].x + verts[1].x + verts[2].x) / 3.0
+			var cy: float = (verts[0].y + verts[1].y + verts[2].y) / 3.0
+			var centroid := Vector2(cx, cy)
+			var local_verts := PackedVector2Array()
+			for v: Vector2 in verts:
+				local_verts.append(v.lerp(centroid, 0.03) - centroid)
+			var poly := Polygon2D.new()
+			poly.texture = tex
+			poly.polygon = local_verts
+			poly.uv = uvs
+			poly.position = centroid
+			poly.z_index = 63
+			poly.z_as_relative = false
+			poly.visible = false
+			add_child(poly)
+			level_polys.append(poly)
+		levels.append(level_polys)
+		if _level < level_n - 1:
+			var next_tris: Array = []
+			for tri2: Variant in triangles:
+				var arr2: Array = tri2 as Array
+				for sub: Variant in _subdivide_crystal_triangle(
+						arr2[0] as PackedVector2Array,
+						arr2[1] as PackedVector2Array):
+					next_tris.append(sub)
+			triangles = next_tris
+
+	for level_idx: int in range(levels.size()):
+		var cur: Array = levels[level_idx] as Array
+		for p: Variant in cur:
+			var poly: Polygon2D = p as Polygon2D
+			if is_instance_valid(poly):
+				poly.visible = true
+		if level_idx > 0:
+			var prev: Array = levels[level_idx - 1] as Array
+			for p2: Variant in prev:
+				var poly2: Polygon2D = p2 as Polygon2D
+				if is_instance_valid(poly2):
+					poly2.visible = false
+		if level_idx < levels.size() - 1:
+			await get_tree().create_timer(0.05).timeout
+
+	var final_polys: Array = levels[levels.size() - 1] as Array
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var card_cx: float = ax + aw * 0.5
+	var card_cy: float = ay + ah * 0.5
+	for p3: Variant in final_polys:
+		var poly3: Polygon2D = p3 as Polygon2D
+		if not is_instance_valid(poly3):
+			continue
+		var dir := Vector2(poly3.position.x - card_cx, poly3.position.y - card_cy)
+		if dir.length() < 1.0:
+			dir = Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
+		dir = (dir.normalized() + Vector2(0.0, -0.35)).normalized()
+		var speed: float = rng.randf_range(70.0, 220.0)
+		var duration: float = rng.randf_range(0.32, 0.58)
+		var rot_delta: float = rng.randf_range(-TAU, TAU)
+		var tw := create_tween()
+		tw.tween_property(poly3, "position", poly3.position + dir * speed, duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tw.parallel().tween_property(poly3, "modulate:a", 0.0, duration) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		tw.parallel().tween_property(poly3, "rotation", poly3.rotation + rot_delta, duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+		var poly_id: int = poly3.get_instance_id()
+		tw.finished.connect(func() -> void:
+			var n: Node = instance_from_id(poly_id) as Node
+			if n != null and is_instance_valid(n):
+				n.queue_free())
+
+	# Overlap next beat with fly-apart (don't wait full duration).
+	await get_tree().create_timer(0.22).timeout
+
+
+func _subdivide_crystal_triangle(verts: PackedVector2Array, uvs: PackedVector2Array) -> Array:
+	var a := verts[0]; var b := verts[1]; var c := verts[2]
+	var ua := uvs[0]; var ub := uvs[1]; var uc := uvs[2]
+	var mab := (a + b) * 0.5; var muab := (ua + ub) * 0.5
+	var mbc := (b + c) * 0.5; var mubc := (ub + uc) * 0.5
+	var mca := (c + a) * 0.5; var muca := (uc + ua) * 0.5
+	return [
+		[PackedVector2Array([a, mab, mca]), PackedVector2Array([ua, muab, muca])],
+		[PackedVector2Array([mab, b, mbc]), PackedVector2Array([muab, ub, mubc])],
+		[PackedVector2Array([mbc, c, mca]), PackedVector2Array([mubc, uc, muca])],
+		[PackedVector2Array([mab, mbc, mca]), PackedVector2Array([muab, mubc, muca])],
+	]
+
+
+func _spawn_crystal_break_plate(player: int, origin: Vector2) -> void:
+	if is_instance_valid(_crystal_break_fx):
+		_crystal_break_fx.queue_free()
+		_crystal_break_fx = null
+	var icon: TextureRect = _p1_crystal_icon if player == 0 else _p2_crystal_icon
+	if is_instance_valid(icon):
+		icon.visible = false
+	var fx := TextureRect.new()
+	fx.name = "CrystalBreakFx"
+	fx.texture = _TEX_CRYSTAL_BREAK
+	fx.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fx.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fx.z_index = 50
+	fx.z_as_relative = false
+	var sz: float = 168.0
+	if is_instance_valid(icon):
+		var ir: Rect2 = icon.get_global_rect()
+		sz = maxf(ir.size.x, ir.size.y) * 1.55
+	fx.size = Vector2(sz, sz)
+	fx.pivot_offset = fx.size * 0.5
+	fx.position = origin - fx.size * 0.5
+	fx.scale = Vector2(0.45, 0.45)
+	fx.modulate.a = 0.0
+	add_child(fx)
+	_crystal_break_fx = fx
+	var tw := create_tween()
+	tw.tween_property(fx, "modulate:a", 1.0, 0.08) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	tw.parallel().tween_property(fx, "scale", Vector2(1.18, 1.18), 0.18) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.tween_property(fx, "scale", Vector2(1.0, 1.0), 0.16) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+
+
+## Dense short-circuit sparks + smoke + jolt at the broken crystal.
+func _spawn_crystal_short_circuit_explosion(origin: Vector2) -> void:
+	SFXManager.play(_SFX_ELECTRIC_SHORT)
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	# Brief cyan flash at the gem.
+	var flash := ColorRect.new()
+	flash.size = Vector2(120.0, 120.0)
+	flash.pivot_offset = flash.size * 0.5
+	flash.position = origin - flash.size * 0.5
+	flash.color = Color(0.35, 0.95, 1.0, 0.0)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash.z_index = 49
+	flash.z_as_relative = false
+	add_child(flash)
+	var ft := create_tween()
+	ft.tween_property(flash, "color:a", 0.55, 0.04)
+	ft.tween_property(flash, "color:a", 0.0, 0.16)
+	ft.parallel().tween_property(flash, "scale", Vector2(2.2, 2.2), 0.20)
+	var flash_id: int = flash.get_instance_id()
+	ft.finished.connect(func() -> void:
+		var n: Node = instance_from_id(flash_id) as Node
+		if n != null and is_instance_valid(n):
+			n.queue_free())
+
+	const SILVER := Color(0.90, 0.96, 1.0, 1.0)
+	const CYAN := Color(0.30, 0.98, 1.0, 1.0)
+	const WHITE := Color(1.0, 1.0, 1.0, 1.0)
+	for _i: int in range(48):
+		var spark := ColorRect.new()
+		var is_bolt: bool = rng.randf() < 0.30
+		if is_bolt:
+			spark.size = Vector2(rng.randf_range(2.0, 4.0), rng.randf_range(28.0, 90.0))
+		else:
+			spark.size = Vector2(rng.randf_range(3.0, 8.0), rng.randf_range(10.0, 32.0))
+		spark.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
+		spark.pivot_offset = spark.size * 0.5
+		spark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		spark.z_index = 52
+		spark.z_as_relative = false
+		var angle: float = rng.randf_range(0.0, TAU)
+		var dist0: float = rng.randf_range(0.0, 18.0)
+		spark.position = origin + Vector2(cos(angle), sin(angle)) * dist0 - spark.size * 0.5
+		spark.rotation = angle + PI * 0.5
+		add_child(spark)
+		var dist: float = rng.randf_range(60.0, 220.0) if is_bolt else rng.randf_range(40.0, 140.0)
+		var end_pos: Vector2 = spark.position + Vector2(cos(angle), sin(angle)) * dist
+		var duration: float = rng.randf_range(0.16, 0.42)
+		var delay: float = rng.randf_range(0.0, 0.08)
+		var tw := create_tween()
+		tw.tween_interval(delay)
+		tw.set_parallel(true)
+		tw.tween_property(spark, "position", end_pos, duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+		tw.tween_property(spark, "modulate:a", 0.0, duration * 0.65) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+		var spark_id: int = spark.get_instance_id()
+		tw.finished.connect(func() -> void:
+			var n: Node = instance_from_id(spark_id) as Node
+			if n != null and is_instance_valid(n):
+				n.queue_free())
+
+	for _i: int in range(16):
+		var puff := Panel.new()
+		var sz: float = rng.randf_range(24.0, 56.0)
+		puff.size = Vector2(sz, sz)
+		puff.pivot_offset = puff.size * 0.5
+		puff.scale = Vector2(0.35, 0.35)
+		puff.modulate.a = 0.0
+		var psb := StyleBoxFlat.new()
+		var grey: float = rng.randf_range(0.28, 0.62)
+		psb.bg_color = Color(grey * 0.90, grey * 0.95, minf(0.90, grey + 0.10), 0.75)
+		var rad: int = int(sz * 0.5)
+		psb.corner_radius_top_left = rad
+		psb.corner_radius_top_right = rad
+		psb.corner_radius_bottom_right = rad
+		psb.corner_radius_bottom_left = rad
+		puff.add_theme_stylebox_override("panel", psb)
+		puff.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		puff.z_index = 47
+		puff.z_as_relative = false
+		var a2: float = rng.randf_range(0.0, TAU)
+		puff.position = origin + Vector2(cos(a2), sin(a2)) * rng.randf_range(0.0, 20.0) - puff.size * 0.5
+		add_child(puff)
+		var end_pos2: Vector2 = puff.position + Vector2(
+			cos(a2) * rng.randf_range(40.0, 120.0),
+			sin(a2) * rng.randf_range(30.0, 100.0) + rng.randf_range(10.0, 50.0))
+		var life: float = rng.randf_range(0.45, 1.05)
+		var tp := create_tween()
+		tp.set_parallel(true)
+		tp.tween_property(puff, "modulate:a", 1.0, 0.06)
+		tp.tween_property(puff, "position", end_pos2, life) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tp.tween_property(puff, "scale", Vector2(2.6, 2.6), life)
+		tp.tween_property(puff, "modulate:a", 0.0, life * 0.55) \
+			.set_delay(life * 0.30)
+		var puff_id: int = puff.get_instance_id()
+		tp.finished.connect(func() -> void:
+			var n: Node = instance_from_id(puff_id) as Node
+			if n != null and is_instance_valid(n):
+				n.queue_free())
+
+
+func _pre_endgame_crystal_break_jitter_loop(fx: TextureRect) -> void:
+	var base_pos: Vector2 = fx.position
+	while is_instance_valid(self) and is_instance_valid(fx) \
+			and _pre_endgame_shake_fx and _shake_active:
+		fx.position = base_pos + Vector2(randf_range(-3.0, 3.0), randf_range(-3.0, 3.0))
+		fx.rotation = randf_range(-0.04, 0.04)
+		await get_tree().create_timer(0.04).timeout
+	if is_instance_valid(fx):
+		fx.position = base_pos
+		fx.rotation = 0.0
+
+
+func _fade_out_pre_endgame_crystal_break() -> void:
+	var fx: TextureRect = _crystal_break_fx
+	_crystal_break_fx = null
+	if fx == null or not is_instance_valid(fx):
+		return
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(fx, "modulate:a", 0.0, 0.35) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(fx, "scale", Vector2(1.25, 1.25), 0.35) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	var fx_id: int = fx.get_instance_id()
+	tw.finished.connect(func() -> void:
+		var n: Node = instance_from_id(fx_id) as Node
+		if n != null and is_instance_valid(n):
+			n.queue_free())
+
+
+func _top_dashboard_fx_band() -> Rect2:
+	# Prefer live top-dashboard rect; fall back to upper HUD strip.
+	if is_instance_valid(_v3_top_dashboard) and _v3_top_dashboard.visible:
+		var gr: Rect2 = _v3_top_dashboard.get_global_rect()
+		var local := Rect2(gr.position - global_position, gr.size)
+		# Only the on-screen reveal (bottom of the hanging strip).
+		var reveal_h: float = maxf(local.size.y * 0.55, 48.0)
+		return Rect2(
+			Vector2(local.position.x, local.position.y + local.size.y - reveal_h),
+			Vector2(local.size.x, reveal_h))
+	var vp: Vector2 = size
+	if vp.x < 8.0:
+		vp = get_viewport().get_visible_rect().size
+	return Rect2(Vector2(0.0, 0.0), Vector2(vp.x, maxf(vp.y * 0.16, 72.0)))
+
+
+func _pre_endgame_dashboard_short_circuit_loop() -> void:
+	var next_jolt: float = 0.55
+	var t0: float = Time.get_ticks_msec() * 0.001
+	while is_instance_valid(self) and _pre_endgame_shake_fx and _shake_active:
+		_spawn_pre_endgame_dashboard_spark_burst()
+		_spawn_pre_endgame_dashboard_smoke_burst()
+		var elapsed: float = Time.get_ticks_msec() * 0.001 - t0
+		if elapsed >= next_jolt:
+			SFXManager.play(_SFX_ELECTRIC_SHORT)
+			next_jolt = elapsed + randf_range(0.45, 0.85)
+		await get_tree().create_timer(0.11).timeout
+
+
+func _spawn_pre_endgame_dashboard_spark_burst() -> void:
+	var band: Rect2 = _top_dashboard_fx_band()
+	if band.size.x < 8.0 or band.size.y < 4.0:
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	const SILVER := Color(0.90, 0.96, 1.0, 1.0)
+	const CYAN := Color(0.30, 0.98, 1.0, 1.0)
+	const WHITE := Color(1.0, 1.0, 1.0, 1.0)
+	# Both sides of the top strip.
+	for side: int in range(2):
+		var x0: float = band.position.x if side == 0 else band.position.x + band.size.x * 0.55
+		var x1: float = band.position.x + band.size.x * 0.45 if side == 0 \
+				else band.position.x + band.size.x
+		for _i: int in range(rng.randi_range(5, 9)):
+			var spark := ColorRect.new()
+			var is_bolt: bool = rng.randf() < 0.28
+			if is_bolt:
+				spark.size = Vector2(rng.randf_range(2.0, 3.5), rng.randf_range(18.0, 52.0))
+			else:
+				spark.size = Vector2(rng.randf_range(2.5, 7.0), rng.randf_range(8.0, 22.0))
+			spark.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
+			spark.pivot_offset = spark.size * 0.5
+			spark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			spark.z_index = 48
+			spark.z_as_relative = false
+			var spawn := Vector2(
+				rng.randf_range(x0, x1),
+				rng.randf_range(band.position.y, band.position.y + band.size.y))
+			spark.position = spawn - spark.size * 0.5
+			spark.rotation = rng.randf_range(-0.9, 0.9)
+			spark.modulate.a = 1.0
+			add_child(spark)
+			var dx: float = rng.randf_range(-40.0, 40.0)
+			var dy: float = rng.randf_range(8.0, 55.0)
+			var duration: float = rng.randf_range(0.18, 0.42)
+			var tw := create_tween()
+			tw.set_parallel(true)
+			tw.tween_property(spark, "position", spark.position + Vector2(dx, dy), duration) \
+				.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+			tw.tween_property(spark, "modulate:a", 0.0, duration) \
+				.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+			var spark_id: int = spark.get_instance_id()
+			tw.finished.connect(func() -> void:
+				var n: Node = instance_from_id(spark_id) as Node
+				if n != null and is_instance_valid(n):
+					n.queue_free())
+
+
+func _spawn_pre_endgame_dashboard_smoke_burst() -> void:
+	var band: Rect2 = _top_dashboard_fx_band()
+	if band.size.x < 8.0:
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for side: int in range(2):
+		var x0: float = band.position.x if side == 0 else band.position.x + band.size.x * 0.58
+		var x1: float = band.position.x + band.size.x * 0.42 if side == 0 \
+				else band.position.x + band.size.x
+		for _i: int in range(rng.randi_range(2, 4)):
+			var puff := Panel.new()
+			var sz: float = rng.randf_range(22.0, 48.0)
+			puff.size = Vector2(sz, sz)
+			puff.pivot_offset = puff.size * 0.5
+			puff.scale = Vector2(0.4, 0.4)
+			puff.modulate.a = 0.0
+			var psb := StyleBoxFlat.new()
+			var grey: float = rng.randf_range(0.35, 0.70)
+			psb.bg_color = Color(grey * 0.92, grey * 0.96, minf(0.95, grey + 0.08), 0.70)
+			var rad: int = int(sz * 0.5)
+			psb.corner_radius_top_left = rad
+			psb.corner_radius_top_right = rad
+			psb.corner_radius_bottom_right = rad
+			psb.corner_radius_bottom_left = rad
+			puff.add_theme_stylebox_override("panel", psb)
+			puff.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			puff.z_index = 46
+			puff.z_as_relative = false
+			var spawn := Vector2(
+				rng.randf_range(x0, x1),
+				rng.randf_range(band.position.y, band.position.y + band.size.y * 0.85))
+			puff.position = spawn - puff.size * 0.5
+			add_child(puff)
+			var end_pos: Vector2 = puff.position + Vector2(
+				rng.randf_range(-30.0, 30.0),
+				rng.randf_range(25.0, 90.0))
+			var duration: float = rng.randf_range(0.55, 1.15)
+			var tw := create_tween()
+			tw.set_parallel(true)
+			tw.tween_property(puff, "modulate:a", 1.0, 0.08)
+			tw.tween_property(puff, "position", end_pos, duration) \
+				.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+			tw.tween_property(puff, "scale", Vector2(2.4, 2.4), duration)
+			tw.tween_property(puff, "modulate:a", 0.0, duration * 0.55) \
+				.set_delay(duration * 0.35)
+			var puff_id: int = puff.get_instance_id()
+			tw.finished.connect(func() -> void:
+				var n: Node = instance_from_id(puff_id) as Node
+				if n != null and is_instance_valid(n):
+					n.queue_free())
+
 
 func _flip_card_reveal(player: int, row: int, col: int) -> void:
 	var node: Control = grid_nodes[player][row][col]
@@ -12568,19 +13729,32 @@ func _present_quick_duel_reward_reveal_anims() -> void:
 
 
 func _await_pack_opening_overlay() -> void:
-	await get_tree().process_frame
-	for child: Node in get_children():
-		if child is PackOpeningOverlay:
-			await child.tree_exiting
-			return
+	var overlay: PackOpeningOverlay = null
+	# open() may defer add_child while GameBoard is busy setting up children.
+	for _i: int in range(60):
+		await get_tree().process_frame
+		for child: Node in get_children():
+			if child is PackOpeningOverlay:
+				overlay = child as PackOpeningOverlay
+				break
+		if overlay != null:
+			break
+	if overlay != null and is_instance_valid(overlay):
+		await overlay.tree_exiting
 
 
 func _await_union_opening_overlay() -> void:
-	await get_tree().process_frame
-	for child: Node in get_children():
-		if child is UnionScrollOpeningOverlay:
-			await child.tree_exiting
-			return
+	var overlay: UnionScrollOpeningOverlay = null
+	for _i: int in range(60):
+		await get_tree().process_frame
+		for child: Node in get_children():
+			if child is UnionScrollOpeningOverlay:
+				overlay = child as UnionScrollOpeningOverlay
+				break
+		if overlay != null:
+			break
+	if overlay != null and is_instance_valid(overlay):
+		await overlay.tree_exiting
 
 func _exit_tree() -> void:
 	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:
@@ -12608,7 +13782,17 @@ func _apply_endgame_serif_font(control: Control, weight: int = 400) -> void:
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
 	# Hide battle chrome strips once the win/lose screen takes over.
+	_endgame_screen_active = true
 	_sync_v3_chrome_visibility(false)
+	_update_crystal_visibility()
+	_update_tech_stacks()
+	_update_void_stacks()
+	_update_reveal_buttons()
+	_refresh_attack_labels()
+	if _end_turn_btn:
+		_end_turn_btn.visible = false
+	if _options_btn_root:
+		_options_btn_root.visible = false
 	var was_quick_duel: bool = GameState.quick_duel_active
 	var quick_duel_tier_snapshot: String = GameState.quick_duel_battle_tier
 	var mode := GameState.game_mode

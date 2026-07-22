@@ -13,6 +13,9 @@ signal awaiting_target_selection(prompt: String, filter: String)
 signal battle_preview_needed(attacker_player: int, attacker, defender, result)
 signal battle_preview_done
 signal battle_result_finalized(result)
+## Pause the Reckoning overlay before any mid-resolve awaits (flash / choice) so it
+## cannot race ahead and emit battle_preview_done before perform_attack awaits it.
+signal battle_overlay_pause_requested
 signal crystal_animation_done
 signal attack_aborted
 signal card_effect_flash_done
@@ -31,6 +34,26 @@ signal brainwash_redirect_resolved
 
 func _wait_crystal_animation() -> void:
 	await GameState.wait_crystal_animation()
+
+## True after complete_battle_preview() until consumed by _await_battle_preview_done().
+## Prevents hanging when the overlay finishes during a long mid-resolve await (e.g. sacrifice).
+var _battle_preview_completed: bool = false
+
+func _begin_battle_preview(attacker_player: int, attacker, defender, result) -> void:
+	_battle_preview_completed = false
+	emit_signal("battle_preview_needed", attacker_player, attacker, defender, result)
+
+func complete_battle_preview() -> void:
+	_battle_preview_completed = true
+	emit_signal("battle_preview_done")
+
+func _await_battle_preview_done() -> void:
+	if not _battle_preview_completed:
+		await battle_preview_done
+	_battle_preview_completed = false
+
+func _pause_battle_overlay() -> void:
+	emit_signal("battle_overlay_pause_requested")
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -754,7 +777,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	)
 
 	# Show the battle overlay — optional prompts will appear on top of it
-	emit_signal("battle_preview_needed", player, attacker, defender, preview_result)
+	_begin_battle_preview(player, attacker, defender, preview_result)
 
 	# OPTIONAL_CRYSTAL_PAY_ATK_BOOST (Gryphon / Hairpin Assassin / Silver Dragon) — on top of battle overlay
 	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_ATK_BOOST:
@@ -867,7 +890,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 
 	# Signal the overlay to update its animation to match the final result, then resume
 	emit_signal("battle_result_finalized", result)
-	await battle_preview_done
+	await _await_battle_preview_done()
 	if _battle_aborted():
 		return
 
@@ -1543,6 +1566,9 @@ func _maybe_resolve_sacrifice_for_card_type(
 			if sac_name_filter.is_empty() or sac_name_filter not in dying_name:
 				continue
 			var sac_label: String = sac_cand.card_name
+			# Pause Reckoning before flash/choice — otherwise the overlay can finish and
+			# emit battle_preview_done while we are still awaiting, freezing the battle.
+			_pause_battle_overlay()
 			await await_card_effect_flash(sac_label)
 			var _sac_prompt: String = "%s sacrifices itself to save %s?" % [sac_label, dying_name]
 			var _sac_choices: Array = ["Sacrifice", "Let it be destroyed"]
@@ -1743,7 +1769,7 @@ func resolve_wk17_substitute_battle(
 	var preview_result := BattleResolver.resolve_battle(
 		substitute, defender, GameState.dice_result, grid_player, grid_player,
 		defender_was_exposed, defender_pos, true)
-	emit_signal("battle_preview_needed", grid_player, substitute, defender, preview_result)
+	_begin_battle_preview(grid_player, substitute, defender, preview_result)
 
 	BattleResolver.reset_predetermined_coin_flip_index()
 	var result := BattleResolver.resolve_battle(
@@ -1776,7 +1802,7 @@ func resolve_wk17_substitute_battle(
 			return
 
 	emit_signal("battle_result_finalized", result)
-	await battle_preview_done
+	await _await_battle_preview_done()
 	if _battle_aborted():
 		GameState.set_phase(GameState.Phase.MODE_SELECT)
 		return
@@ -1832,7 +1858,7 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 	var preview_result := BattleResolver.resolve_battle(
 		attacker, ally, GameState.dice_result, attacker_player, attacker_player,
 		defender_was_exposed, friendly_pos, true)
-	emit_signal("battle_preview_needed", attacker_player, attacker, ally, preview_result)
+	_begin_battle_preview(attacker_player, attacker, ally, preview_result)
 
 	BattleResolver.reset_predetermined_coin_flip_index()
 	var result := BattleResolver.resolve_battle(
@@ -1862,7 +1888,7 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 			return
 
 	emit_signal("battle_result_finalized", result)
-	await battle_preview_done
+	await _await_battle_preview_done()
 	if _battle_aborted():
 		complete_brainwash_redirect()
 		return

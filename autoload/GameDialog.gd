@@ -19,6 +19,12 @@ const BTN_PRESSED := Color(0.06, 0.12, 0.30, 1.0)
 const BTN_BORDER := Color(0.38, 0.65, 1.0, 0.6)
 const BTN_TEXT := Color(0.88, 0.95, 1.0, 1.0)
 
+const _SHADER_DIALOG_PANEL: Shader = preload("res://assets/shaders/magitech_dialog_panel.gdshader")
+const _SHADER_DIALOG_BUTTON: Shader = preload("res://assets/shaders/magitech_dialog_button.gdshader")
+const _BTN_FX_META := &"magitech_btn_fx_mat"
+const _BTN_FX_NODE := &"MagitechBtnFx"
+const _BTN_FX_WIRED := &"magitech_btn_fx_wired"
+
 const OVERLAY_LAYER_NAME := &"GameDialogLayer"
 const OVERLAY_HOST_NAME := &"GameDialogHost"
 const REQUESTER_META := &"game_dialog_requester_id"
@@ -48,12 +54,29 @@ func has_open_overlay(parent: Node = null, overlay_name: StringName = OVERLAY_NA
 
 func make_panel_stylebox(content_margin: float = 18.0) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = PANEL_BG
-	sb.border_color = PANEL_BORDER
-	sb.set_border_width_all(1)
+	# Transparent chrome — fill/border drawn by magitech_dialog_panel shader.
+	sb.bg_color = Color(0, 0, 0, 0)
+	sb.border_color = Color(0, 0, 0, 0)
+	sb.set_border_width_all(0)
 	sb.set_corner_radius_all(8)
 	sb.set_content_margin_all(content_margin)
 	return sb
+
+
+func attach_panel_fx(panel: Control) -> void:
+	if panel == null:
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = _SHADER_DIALOG_PANEL
+	mat.set_shader_parameter("fill_top", Color(0.07, 0.10, 0.18, 0.97))
+	mat.set_shader_parameter("fill_bottom", Color(0.025, 0.035, 0.07, 0.97))
+	mat.set_shader_parameter("border_a", Color(0.55, 0.92, 1.0, 0.88))
+	mat.set_shader_parameter("border_b", Color(0.78, 0.84, 0.94, 0.72))
+	mat.set_shader_parameter("border_width", 0.016)
+	mat.set_shader_parameter("corner_radius", 0.055)
+	mat.set_shader_parameter("rim_speed", 0.20)
+	mat.set_shader_parameter("rim_pulse", 0.30)
+	panel.material = mat
 
 
 func style_button(btn: Button) -> void:
@@ -64,10 +87,15 @@ func style_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", BTN_TEXT)
 	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
 	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
-	btn.add_theme_stylebox_override("normal", _make_button_style(BTN_NORMAL))
-	btn.add_theme_stylebox_override("hover", _make_button_style(BTN_HOVER))
-	btn.add_theme_stylebox_override("pressed", _make_button_style(BTN_PRESSED))
-	btn.add_theme_stylebox_override("focus", _make_button_style(BTN_HOVER))
+	# Transparent StyleBoxes — gradient chrome on behind-parent ColorRect (keeps label readable).
+	var empty := _make_button_style(Color(0, 0, 0, 0))
+	empty.border_color = Color(0, 0, 0, 0)
+	empty.set_border_width_all(0)
+	btn.add_theme_stylebox_override("normal", empty)
+	btn.add_theme_stylebox_override("hover", empty.duplicate())
+	btn.add_theme_stylebox_override("pressed", empty.duplicate())
+	btn.add_theme_stylebox_override("focus", empty.duplicate())
+	_attach_button_fx(btn, btn.disabled)
 	_apply_disabled_button_style(btn)
 	SFXManager.wire_prompt_button(btn)
 
@@ -235,6 +263,7 @@ func confirmation_overlay_delayed(
 		else:
 			confirm_btn.text = ok_text
 			confirm_btn.disabled = false
+			_sync_button_fx_disabled(confirm_btn)
 			timer.stop())
 	root.add_child(timer)
 
@@ -495,6 +524,7 @@ func _make_overlay_shell(
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(min_width, 0.0)
 	panel.add_theme_stylebox_override("panel", make_panel_stylebox())
+	attach_panel_fx(panel)
 	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
@@ -556,7 +586,98 @@ func _make_button_style(bg: Color) -> StyleBoxFlat:
 	return sb
 
 
+func _attach_button_fx(btn: Button, disabled_look: bool) -> void:
+	if btn == null:
+		return
+	var fx: ColorRect = btn.get_node_or_null(NodePath(str(_BTN_FX_NODE))) as ColorRect
+	if fx == null:
+		fx = ColorRect.new()
+		fx.name = String(_BTN_FX_NODE)
+		fx.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fx.show_behind_parent = true
+		fx.color = Color.WHITE
+		btn.add_child(fx)
+		btn.move_child(fx, 0)
+	var mat := ShaderMaterial.new()
+	mat.shader = _SHADER_DIALOG_BUTTON
+	mat.set_shader_parameter("border_width", 0.05)
+	mat.set_shader_parameter("corner_radius", 0.14)
+	fx.material = mat
+	btn.set_meta(_BTN_FX_META, mat)
+	_apply_button_fx_colors(mat, disabled_look)
+	if btn.get_meta(_BTN_FX_WIRED, false):
+		return
+	btn.set_meta(_BTN_FX_WIRED, true)
+	btn.mouse_entered.connect(_on_fx_button_hover_entered.bind(btn))
+	btn.mouse_exited.connect(_on_fx_button_hover_exited.bind(btn))
+	btn.button_down.connect(_on_fx_button_down.bind(btn))
+	btn.button_up.connect(_on_fx_button_up.bind(btn))
+
+
+func _apply_button_fx_colors(mat: ShaderMaterial, disabled_look: bool) -> void:
+	if mat == null:
+		return
+	if disabled_look:
+		mat.set_shader_parameter("fill_top", Color(0.08, 0.10, 0.18, 0.85))
+		mat.set_shader_parameter("fill_bottom", Color(0.05, 0.07, 0.12, 0.85))
+		mat.set_shader_parameter("border_a", Color(0.35, 0.45, 0.55, 0.45))
+		mat.set_shader_parameter("border_b", Color(0.40, 0.48, 0.58, 0.40))
+		mat.set_shader_parameter("brightness", 0.75)
+	else:
+		mat.set_shader_parameter("fill_top", Color(0.11, 0.20, 0.40, 0.97))
+		mat.set_shader_parameter("fill_bottom", Color(0.05, 0.10, 0.22, 0.97))
+		mat.set_shader_parameter("border_a", Color(0.45, 0.88, 1.0, 0.82))
+		mat.set_shader_parameter("border_b", Color(0.72, 0.80, 0.92, 0.70))
+		mat.set_shader_parameter("brightness", 1.0)
+
+
+func _btn_fx_mat(btn: Button) -> ShaderMaterial:
+	if btn == null or not btn.has_meta(_BTN_FX_META):
+		return null
+	return btn.get_meta(_BTN_FX_META) as ShaderMaterial
+
+
+func _on_fx_button_hover_entered(btn: Button) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(btn)
+	if mat != null and not btn.disabled:
+		mat.set_shader_parameter("brightness", 1.14)
+
+
+func _on_fx_button_hover_exited(btn: Button) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(btn)
+	if mat != null and not btn.disabled:
+		mat.set_shader_parameter("brightness", 1.0)
+
+
+func _on_fx_button_down(btn: Button) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(btn)
+	if mat != null and not btn.disabled:
+		mat.set_shader_parameter("brightness", 0.88)
+
+
+func _on_fx_button_up(btn: Button) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(btn)
+	if mat == null or btn.disabled:
+		return
+	var hovered: bool = btn.get_global_rect().has_point(btn.get_global_mouse_position())
+	mat.set_shader_parameter("brightness", 1.14 if hovered else 1.0)
+
+
 func _apply_disabled_button_style(btn: Button) -> void:
-	var disabled_sb := _make_button_style(Color(0.08, 0.10, 0.22, 0.85))
+	var disabled_sb := _make_button_style(Color(0, 0, 0, 0))
+	disabled_sb.border_color = Color(0, 0, 0, 0)
+	disabled_sb.set_border_width_all(0)
 	btn.add_theme_stylebox_override("disabled", disabled_sb)
 	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.62, 0.72, 0.85))
+	_sync_button_fx_disabled(btn)
+
+
+func _sync_button_fx_disabled(btn: Button) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	var mat: ShaderMaterial = _btn_fx_mat(btn)
+	if mat == null:
+		_attach_button_fx(btn, btn.disabled)
+		return
+	_apply_button_fx_colors(mat, btn.disabled)
