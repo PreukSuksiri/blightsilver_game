@@ -7,14 +7,15 @@
 **Look:** Holy Tech / Witchhunter Corp — sacred brushed silver + sanctified cyan.  
 **Phase A prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → `battle/v3_magitech/`  
 **Style refs:** `assets/textures/ui/magitech_v3/_style_refs/`  
-**Phase B exports:** `assets/textures/ui/magitech_v3/chrome/` (then wire in code)  
+**Phase B:** Game-wide chrome actions (flat silhouettes via `ChromeIcon`). **Approved ✓**  
+**Phase B exports (optional later):** `assets/textures/ui/magitech_v3/chrome/` 
 **Phase C:** Hover FX — context-icon metal sheen (+ circuit patrol code retained, currently off). **Approved ✓**  
 
 **Phase D:** Gradient message-box + button chrome + animated battle 5×5 grid lines. **Approved ✓**  
 **Phase E:** Steampunk stage backdrop (static E00). Modular gears/pistons **cancelled**. **Approved ✓** (user wired)  
-**Phase F:** Battle VFX sprites — free CC0 (Kenney + cyan–silver modulate); ForgeGUI custom kit optional later. **In progress**  
-**Phase G:** Pre-endgame shake HUD failure (glitch / dashboard short) + crystal-break art. **G0 code in progress**; art → **Phase G** prompts  
-**Phase H:** Setup phase UI rework (animated grid + bluff icons + machinery/wiremesh backdrop). **Planned**  
+**Phase F:** Battle VFX sprites — free CC0 (Kenney + cyan–silver modulate). **Approved ✓**  
+**Phase G:** Pre-endgame shake HUD failure + crystal-break art (G01). **Approved ✓** 
+**Phase H:** Setup / coin-toss Magitech backdrop (H01). **Approved ✓**  
 
 ## Revertible battle skins
 
@@ -36,14 +37,14 @@ Skipped leftovers (fall back): #2 game over, #15 context panel, #17 exposed, #21
 
 ---
 
-## Phase B — Game-wide chrome actions (in progress)
+## Phase B — Game-wide chrome actions (approved ✓)
 
-Replace **player-facing** unicode/emoji control icons with holytech PNGs.  
+**In-game approved** — player-facing control icons use flat silhouettes via `ChromeIcon` (`assets/textures/ui/silhouettes/`).  
 Keep **bluff reaction emojis** as unicode.  
-Skip **editor-only** tools (VNEditor, ExplorationEditor, builders) unless you later want a “dev skin.”  
-**Prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase B**.  
-**Quick-win silhouettes (wired):** `assets/textures/ui/silhouettes/` via `ChromeIcon` autoload.  
-**Future Magitech chrome (optional):** `assets/textures/ui/magitech_v3/chrome/`
+Skip **editor-only** tools (VNEditor, ExplorationEditor, builders).  
+**Prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase B** (ForgeGUI Magitech chrome set optional later).  
+**Shipped path:** silhouettes + `ChromeIcon` autoload.  
+**Optional later:** ornate Magitech icons under `assets/textures/ui/magitech_v3/chrome/`.
 
 ### B1 — High priority (menus players hit often)
 
@@ -145,10 +146,12 @@ flowchart LR
 
 ### Acceptance
 
-- [ ] No `❐` / `🗑` / scrap `✂` / featured `★` unicode on player deck flows  
-- [ ] Main menu setting / mailbox match holytech  
-- [ ] Editors may still use unicode  
-- [ ] Bluff emojis unchanged  
+- [x] Player deck / overlay chrome uses `ChromeIcon` silhouettes (not unicode action glyphs)  
+- [x] Editors may still use unicode  
+- [x] Bluff emojis unchanged  
+- [x] Exploration HUD / campaign platforms / exit / credit / magnifier deferred or skipped as listed  
+- [x] In-game approved  
+- [x] Ornate ForgeGUI Magitech chrome set (`magitech_v3/chrome/`) — cancelled this pass / optional later  
 
 ---
 
@@ -223,13 +226,13 @@ Reckoning metallic deflect clipped to card face only (`BattleCalculationOverlay`
 
 ---
 
-## Phase F — Battle VFX sprites (in progress — free CC0)
+## Phase F — Battle VFX sprites (approved ✓)
 
-**Gate:** Phase A battle kit approved.
+**Gate:** Phase A battle kit approved.  
+**In-game approved** — Kenney CC0 path shipped; ForgeGUI custom F01–F06 optional later (prompts remain).
 
 **Approach (locked):** **static** PNG + alpha. Godot spawn / rotate / drift / fade.  
-**Ship path:** free **CC0 Kenney** assets vendored under `battle/v3_magitech/vfx/`, tinted cyan–silver in Godot (`modulate`).  
-**Optional later:** ForgeGUI custom F01–F06 (prompts remain in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md)).
+**Ship path:** free **CC0 Kenney** assets vendored under `battle/v3_magitech/vfx/`, tinted cyan–silver in Godot (`modulate`).
 
 ### F1 — Vendored kit (Kenney CC0)
 
@@ -262,14 +265,16 @@ Spawn helper randomizes texture, flip, rotation, aspect stretch, and peak opacit
 - [x] Cards and overlays stay readable; z-order unchanged in spirit  
 - [x] `hud_skin v1|v2` unchanged (procedural fallback)  
 - [x] No full-screen VFX video required  
+- [x] In-game approved  
 
 ---
 
-## Phase G — Crystal break + pre-endgame HUD failure (in progress)
+## Phase G — Crystal break + pre-endgame HUD failure (approved ✓)
 
-**Gate:** Phase A crystal HUD approved. Can run after / parallel with F (same `vfx/` folder).
+**Gate:** Phase A crystal HUD approved.  
+**In-game approved** — G0 shake failure + G01 crystal-break plate shipped. Optional shards G02–G03 cancelled this pass.
 
-### G0 — Pre-endgame shake HUD failure (code landed)
+### G0 — Pre-endgame shake HUD failure (shipped)
 
 Wired in `GameBoard` at flip-reveal shake start/stop (`_start_pre_endgame_shake_fx` / `_stop_pre_endgame_shake_fx`):
 
@@ -292,7 +297,7 @@ Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → 
 | G02 | `ui_magitech_vfx_crystal_shard_a.png` | Small flying shard fragment | 128×128 | Scatter + fade (optional multi-spawn) |
 | G03 | `ui_magitech_vfx_crystal_shard_b.png` | Shard variant | 128×128 | Scatter + fade |
 
-**Ship-first:** G01 alone is enough for the pre-endgame beat. Add G02–G03 if the break needs extra debris.
+**Shipped:** G01 alone. G02–G03 optional shards — **cancelled** this pass.
 
 ### G2 — Godot wiring (after assets land)
 
@@ -321,89 +326,39 @@ Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → 
 - [x] G0: top dashboard sparks + smoke both sides + jolt SFX during shake  
 - [x] G0: both crystal amounts glitch during shake; lock to `----` when shake ends  
 - [x] G01 `ui_magitech_vfx_crystal_break.png` wired at depleted player’s crystal on pre-endgame shake  
-- [ ] Optional shards G02–G03  
-- [ ] P1 / P2 placement approved in-game  
-- [ ] Strip HUD stays visible; break is unclickable overlay  
-- [ ] `hud_skin v1|v2` unchanged  
-- [ ] In-game approved  
+- [x] Optional shards G02–G03 cancelled this pass  
+- [x] P1 / P2 placement approved in-game  
+- [x] Strip HUD stays visible; break is unclickable overlay  
+- [x] `hud_skin v1|v2` unchanged  
+- [x] In-game approved  
 
 ---
 
-## Phase H — Setup phase UI rework (planned)
+## Phase H — Setup / coin-toss backdrop (approved ✓)
 
-**Gate:** Phase D grid language approved (reuse shader). Phase E stage language approved (machinery vocabulary).  
-**Owner script:** `scripts/SetupPhase.gd` (fullscreen overlay; separate from battle HUD).  
-**Skin gate:** `HudSkin.version == "v3"` for new art/shaders; v1/v2 keep current flat navy UI.
+**Gate:** Phase E stage language approved (machinery vocabulary).  
+**Owner scripts:** `scripts/SetupPhase.gd`, coin-toss overlay in `scripts/GameBoard.gd`.  
+**Skin gate:** `HudSkin.version == "v3"`; v1/v2 keep prior flat navy / solid overlay.
 
-Setup today is procedural flat UI: solid `ColorRect` bg, `StyleBoxFlat` grid cells, unicode bluff emojis. Battle already has Magitech grid lines + `BluffEmoji` PNGs — setup does not.
+**Shipped:** H01 `ui_bg_setup_phase.png` — theatrical engine-guts stage drop with baked center wiremesh band; wired full-bleed on setup + coin toss (`HudSkin.setup_phase_bg_tex()` crops letterbox padding, then `STRETCH_SCALE`).  
+**Cancelled / deferred this pass:** H02 separate wiremesh overlay; setup animated grid lines; setup bluff unicode → PNG (follow-on if needed).
 
-### Goals (locked direction)
-
-1. **Animated gradient grid** — same holytech band language as battle (`magitech_grid_line.gdshader`).  
-2. **Emoji → icons** — bluff picker + on-grid markers use `BluffEmoji` / `assets/textures/ui/emoji/` (data stays unicode in `GameState`).  
-3. **Machinery backdrop + distinct wiremesh fence** — full-bleed setup stage: steampunk machine interior with a readable **wiremesh fence** plane in front of/around the placement board (not a flat navy fill).
-
-### H0 — Code scaffolding (no new art required)
-
-1. Gate setup chrome on `HudSkin.version == "v3"`.  
-2. Reuse battle grid-line pattern from `GameBoard._add_grid_line_panels` (extract small shared helper **or** light duplicate in `SetupPhase`).  
-3. Wire `_show_bluff_modal` → `BluffEmoji.apply_button`; `GridCell.set_emoticon` → `TextureRect` + `BluffEmoji.tex` (mirror `GameBoard._apply_bluff_visual`).  
-4. Keep black side margins + portraits above the new backdrop.
-
-### H1 — Backdrop art (ForgeGUI → PNG)
-
-**Prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase H**.  
-Save under `assets/textures/ui/battle/v3_magitech/` (shipped H01 lives next to other v3 HUD plates).
+**Prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase H** (locked H01 re-roll prompt).
 
 | ID | Save as | Role | Notes |
 |----|---------|------|-------|
-| H01 | `ui_bg_setup_phase.png` | Full-bleed theatrical stage drop (wall only) | **Shipped / wired** on setup + coin toss. Locked prompt in PROMPTS → Phase H01 (engine guts + center wiremesh band) |
-| H02 | `ui_magitech_setup_wiremesh.png` | Distinct wiremesh fence layer | Optional alpha mesh / chain rail — **readable as fence**, not fog |
-
-**Ship-first:** H01 alone is live; add H02 when a stronger fence read is needed.
-
-**Style lock**
-
-- Same Magitech holytech / steampunk machine family as Phase E playmat — **setup bay**, not battle stage clone.  
-- Wiremesh must read as a **physical fence/grille** (perspective or flat overlay), distinct from soft smoke/fog.  
-- Center stays readable for cards; avoid busy motifs under the grid.  
-- Transparent outside for H02; no watermarks.
-
-### H2 — Godot wiring (after assets)
-
-1. ~~Replace setup `ColorRect` bg with H01~~ — **done** (`ui_bg_setup_phase.png` on setup + coin toss).  
-2. Add H02 wiremesh as a second layer (above backdrop, below or framing the grid — pick one composition and stick).  
-3. Spawn animated gradient grid lines around / between setup cells (v3 only).  
-4. Soften or hide flat cell border chrome when v3 lines are active so borders don’t double up.  
-5. Bluff emoji → `BluffEmoji` PNGs in setup.  
-6. `hud_skin v1|v2`: unchanged procedural navy + unicode emojis.
-
-### Suggested order
-
-| Step | Work | Depends |
-|------|------|---------|
-| H0a | Bluff emoji → `BluffEmoji` in setup | Existing emoji PNGs |
-| H0b | Animated grid lines on setup board | Phase D shader |
-| H1 | ForgeGUI H01 (+ H02) prompts + intake | Style refs |
-| H2 | Wire backdrop + fence; mute flat borders | H1 approved |
-
-### Out of scope for Phase H
-
-| Skip | Why |
-|------|-----|
-| Reworking gallery / union / info side panels into full Magitech kits | Can be Phase H+ / B follow-on |
-| Changing setup rules / placement logic | Visual only |
-| Moving gears / animated fence | Static art first (match Phase E lesson) |
-| Replacing battle playmat | Separate surface |
+| H01 | `ui_bg_setup_phase.png` | Full-bleed theatrical stage drop (wall only) | **Approved** — setup + coin toss |
+| H02 | `ui_magitech_setup_wiremesh.png` | Distinct wiremesh fence layer | **Cancelled** this pass (mesh baked into H01) |
 
 ### Acceptance
 
-- [ ] v3 setup grid shows animated Magitech gradient lines  
-- [ ] Bluff modal + on-grid bluff markers use PNG icons (not unicode) on v3  
-- [ ] Setup backdrop reads as machinery bay with a distinct wiremesh fence  
-- [ ] Cards / placement remain readable; portraits + side margins intact  
-- [ ] `hud_skin v1|v2` unchanged  
-- [ ] In-game approved  
+- [x] Setup + coin-toss backdrop reads as Magitech machinery bay with wiremesh band  
+- [x] Full-bleed stretch (no baked letterbox bars on screen)  
+- [x] Cards / placement remain readable; portraits intact  
+- [x] `hud_skin v1|v2` unchanged  
+- [x] In-game approved  
+
+---
 
 ## Privacy
 

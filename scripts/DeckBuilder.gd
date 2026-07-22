@@ -411,6 +411,9 @@ func _connect_buttons() -> void:
 	delete_deck_btn.visible = false
 	import_btn.pressed.connect(_on_import_decks)
 	export_btn.pressed.connect(_on_export_decks)
+	# Hidden for now — import/export logic kept intact.
+	import_btn.visible = false
+	export_btn.visible = false
 	close_btn.pressed.connect(_on_back)
 	formations_btn.pressed.connect(_open_formation_editor)
 	ChromeIcon.apply_button(formations_btn, "formations", false, "  FORMATIONS", ChromeIcon.COLOR_ON_DARK, 18)
@@ -3166,14 +3169,6 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
-	# Remove badge (top-right)
-	var rm: TextureRect = ChromeIcon.make_rect("remove", Vector2(14, 14), Color(1.0, 0.35, 0.35, 0.95))
-	rm.layout_mode = 1
-	rm.anchor_left = 1.0; rm.anchor_right  = 1.0
-	rm.anchor_top  = 0.0; rm.anchor_bottom = 0.0
-	rm.offset_left = -16.0; rm.offset_right  = -2.0
-	rm.offset_top  =  2.0;  rm.offset_bottom = 16.0
-	tile.add_child(rm)
 	# Featured star (bottom-right) — persists on the selected deck card only.
 	if _is_featured_card(card_name):
 		var star: TextureRect = ChromeIcon.make_rect("featured", Vector2(16, 16), ChromeIcon.COLOR_FEATURED)

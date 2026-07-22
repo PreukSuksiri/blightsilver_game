@@ -30,12 +30,23 @@ const _FILES := {
 	"formations": "27.png",
 	"copy": "b28.png",
 	"magnifier": "18.png",
+	# Triangle source files are identical (point UP) — rotate per id below.
 	"chevron_up": "triangle_up.png",
 	"chevron_down": "triangle_down.png",
 	"chevron_left": "triangle_left.png",
 	"chevron_right": "triangle_right.png",
 	"expand": "triangle_right.png",
 	"collapse": "triangle_down.png",
+}
+
+## Clockwise 90° steps from the shared up-pointing triangle asset.
+const _TRI_ROT_CW: Dictionary = {
+	"chevron_up": 0,
+	"expand": 1,
+	"chevron_right": 1,
+	"collapse": 2,
+	"chevron_down": 2,
+	"chevron_left": 3,
 }
 
 var _cache: Dictionary = {}  # id -> Texture2D (white+alpha)
@@ -55,21 +66,31 @@ func tex(id: String) -> Texture2D:
 	var src: Texture2D = load(path) as Texture2D
 	if src == null:
 		return null
-	var white_tex: Texture2D = _to_white_alpha(src)
+	var rot_cw: int = int(_TRI_ROT_CW.get(id, 0))
+	var white_tex: Texture2D = _to_white_alpha(src, rot_cw)
 	_cache[id] = white_tex
 	return white_tex
 
 
 ## Flatten any silhouette (black or gray) to white RGB, keep alpha — required for multiply tint.
-func _to_white_alpha(src: Texture2D) -> Texture2D:
+## Also crops to the opaque glyph and recenters it in a square so button icons sit on-center.
+## `rotate_cw_90` = number of clockwise 90° turns (used for chevron / expand / collapse).
+func _to_white_alpha(src: Texture2D, rotate_cw_90: int = 0) -> Texture2D:
 	var img: Image = src.get_image()
 	if img == null:
 		return src
 	if img.is_compressed():
 		img.decompress()
 	img.convert(Image.FORMAT_RGBA8)
+	var turns: int = posmod(rotate_cw_90, 4)
+	for _i: int in range(turns):
+		img.rotate_90(CLOCKWISE)
 	var w: int = img.get_width()
 	var h: int = img.get_height()
+	var min_x: int = w
+	var min_y: int = h
+	var max_x: int = -1
+	var max_y: int = -1
 	for y: int in range(h):
 		for x: int in range(w):
 			var c: Color = img.get_pixel(x, y)
@@ -77,7 +98,27 @@ func _to_white_alpha(src: Texture2D) -> Texture2D:
 				continue
 			# Keep coverage in alpha; force RGB white so icon_color/modulate recolors cleanly.
 			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, c.a))
-	return ImageTexture.create_from_image(img)
+			if x < min_x:
+				min_x = x
+			if y < min_y:
+				min_y = y
+			if x > max_x:
+				max_x = x
+			if y > max_y:
+				max_y = y
+	if max_x < min_x:
+		return ImageTexture.create_from_image(img)
+	var cw: int = max_x - min_x + 1
+	var ch: int = max_y - min_y + 1
+	# Small padding so AA edges aren't clipped at the square border.
+	var pad: int = maxi(2, int(ceili(float(maxi(cw, ch)) * 0.04)))
+	var side: int = maxi(cw, ch) + pad * 2
+	var out := Image.create(side, side, false, Image.FORMAT_RGBA8)
+	out.fill(Color(0, 0, 0, 0))
+	var dst_x: int = (side - cw) / 2
+	var dst_y: int = (side - ch) / 2
+	out.blit_rect(img, Rect2i(min_x, min_y, cw, ch), Vector2i(dst_x, dst_y))
+	return ImageTexture.create_from_image(out)
 
 
 ## Apply a silhouette icon to a Button. `keep_text` is shown beside the icon.
@@ -99,6 +140,13 @@ func apply_button(
 	btn.expand_icon = true
 	btn.text = keep_text
 	btn.add_theme_constant_override("icon_max_width", icon_max_width)
+	# Icon-only: center in the button. With label: icon left of text, vertically centered.
+	btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
+	if keep_text.strip_edges().is_empty():
+		btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	else:
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	var col: Color = icon_color
 	if col.a <= 0.0:
 		col = COLOR_ON_LIGHT if on_light_plate else COLOR_ON_DARK

@@ -9,11 +9,11 @@ Human workflow (do **not** paste into ForgeGUI):
 - **Save to:** `assets/textures/ui/battle/v3_magitech/`  
 - **Switch:** `hud_skin v3` · revert `hud_skin v2`  
 - **Order:** Phase A core wired (`HudSkin` default `v3`). #27 ✓ top dashboard + #28 ✓ bottom vault wired (v3 only). **Phase A battle screen approved.**  
-- **Phase B (game-wide chrome):** see **Phase B** section below → save under `magitech_v3/chrome/`. Start with **B1**. Skip B10, B12–B20, B26 this pass.  
+- **Phase B (game-wide chrome):** **Approved ✓** — flat silhouettes via `ChromeIcon` / `silhouettes/`. ForgeGUI Magitech chrome under `magitech_v3/chrome/` optional later.  
 - **Phase E (clockwork playmat):** see **Phase E** section → save under `battle/v3_magitech/clockwork/` (can run parallel later).  
-- **Phase F (battle VFX):** smoke / bolt / fire spark → `battle/v3_magitech/vfx/`.  
-- **Phase G (crystal break):** pre-endgame shake shatter plate → `battle/v3_magitech/vfx/` (G01+).  
-- **Phase H (setup / coin-toss backdrop):** see **Phase H** section → `battle/v3_magitech/ui_bg_setup_phase.png` (wired on setup + coin toss).  
+- **Phase F (battle VFX):** **Approved ✓** — Kenney CC0 smoke / bolt / fire spark → `battle/v3_magitech/vfx/`.  
+- **Phase G (crystal break):** **Approved ✓** — pre-endgame shake + G01 shatter plate → `battle/v3_magitech/vfx/`.  
+- **Phase H (setup / coin-toss backdrop):** **Approved ✓** — `battle/v3_magitech/ui_bg_setup_phase.png` wired on setup + coin toss.  
 
 - **If gen ignores the kit** (e.g. cartoon wood UI): style refs failed to upload — re-attach and confirm they are active. Do not “fix” with long negative prompts.
 
@@ -866,10 +866,10 @@ No logos, no text. Transparent above and below the strip. Match uploaded silver-
 
 ---
 
-# Phase F — Battle VFX sprites (smoke / bolt / fire spark)
+# Phase F — Battle VFX sprites (approved ✓)
 
-**Goal:** Replace procedural union short-circuit smoke + electric streaks (and add fire spark flecks) with real Magitech PNG pieces.  
-**Gate:** Phase A approved. Parallel with B/C/D/E.  
+**Shipped:** Kenney CC0 smoke / bolt / fire spark under `battle/v3_magitech/vfx/` (ForgeGUI custom kit optional later).  
+**Gate:** Phase A approved.  
 **Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → **Phase F**.  
 **Save to:** `assets/textures/ui/battle/v3_magitech/vfx/`  
 
@@ -969,10 +969,10 @@ ONE fire spark VARIANT — slightly elongated streak ember (still a mote, not a 
 
 ---
 
-# Phase G — Crystal break (pre-endgame shake)
+# Phase G — Crystal break (approved ✓)
 
-**Goal:** Magitech crystal **shatter / rupture** art for the pre-endgame shake when a player’s crystals hit 0.  
-**Gate:** Phase A crystal HUD approved. Parallel with F (same folder).  
+**Shipped:** G0 pre-endgame HUD failure + G01 shatter plate. G02–G03 shards cancelled this pass.  
+**Gate:** Phase A crystal HUD approved.  
 **Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → **Phase G**.  
 **Save to:** `assets/textures/ui/battle/v3_magitech/vfx/`  
 
@@ -1038,15 +1038,14 @@ ONE crystal shard VARIANT — slightly longer / needle-like cyan facet chip, bri
 
 ---
 
-# Phase B — Game-wide chrome icons
+# Phase B — Game-wide chrome icons (approved ✓)
 
-**Goal:** Replace player-facing unicode / old decoration icons with Magitech v3 holytech PNGs.  
+**Shipped:** flat silhouettes via `ChromeIcon` → `assets/textures/ui/silhouettes/`.  
+**Optional later:** ornate Magitech PNGs under `assets/textures/ui/magitech_v3/chrome/` (prompts below kept for re-rolls).  
 **Gate:** Phase A battle screen approved ✓.  
 **Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → Phase B.  
-**Save to:** `assets/textures/ui/magitech_v3/chrome/`  
 
-**Order:** Generate **B1** first (8 action icons) → wire in Godot → then **B2** reskins → **B3** only if unicode still sticks out.  
-**Skip this pass:** Exploration HUD (**B13–B17**, **B26**); exit (**B10**); credit (**B12**); magnifier (**B18**); campaign platforms (**B19–B20**).
+**Skip this pass (still deferred):** Exploration HUD (**B13–B17**, **B26**); exit (**B10**); credit (**B12**); magnifier (**B18**); campaign platforms (**B19–B20**).
 
 **Style lock:** blank `#20` panel + one approved plaque (End Turn / Options).  
 Prefer **remove** holytech kit board (crests leak onto icon hubs).
@@ -1391,11 +1390,11 @@ Game UI isolated icon, 128x128, transparent outside. ONE holy-tech copy mark (pl
 
 ---
 
-# Phase H — Setup / coin-toss backdrop
+# Phase H — Setup / coin-toss backdrop (approved ✓)
 
 **Save to:** `assets/textures/ui/battle/v3_magitech/`  
-**Wired as:** setup screen + coin-toss overlay background (`HudSkin` → `ui_bg_setup_phase.png`).  
-**Also planned (optional layer):** wiremesh fence `ui_magitech_setup_wiremesh.png` — see pipeline Phase H.
+**Shipped / wired:** setup screen + coin-toss overlay (`HudSkin.setup_phase_bg_tex()` → `ui_bg_setup_phase.png`).  
+**H02 separate wiremesh layer:** cancelled this pass (fence band baked into H01).
 
 **Locked look (H01):** theatrical 2D stage drop — wall only, no floor — set **inside** a huge engine / automaton. Dark gunmetal plates + distant soft bronze gears; center band is a distinct left-to-right wiremesh fence (~50% height). Flat scenic backdrop (not a playable platformer stage). No text, logos, crests, characters, watermark.
 
