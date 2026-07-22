@@ -8,9 +8,11 @@
 **Phase A prompts:** [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → `battle/v3_magitech/`  
 **Style refs:** `assets/textures/ui/magitech_v3/_style_refs/`  
 **Phase B exports:** `assets/textures/ui/magitech_v3/chrome/` (then wire in code)  
-**Phase C:** Hover shaders — circuit patrol on chrome + once-per-hover metal sheen on context icons (see below)  
+**Phase C:** Hover FX — context-icon metal sheen (+ circuit patrol code retained, currently off). **Approved ✓**  
+
 **Phase D:** Gradient / circulating borders on dialogs & buttons + animated battle 5×5 grid lines (see below)  
-**Phase E:** Clockwork playmat — modular gears/pistons (ForgeGUI pieces + Godot spin/pump). Prompts in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase E**
+**Phase E:** Clockwork playmat — modular gears/pistons (ForgeGUI pieces + Godot spin/pump). Prompts in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase E**  
+**Phase F:** Battle VFX sprites — smoke, electric bolt, fire spark (static PNG + alpha; Godot spawns/tweens). Prompts → **Phase F**
 
 ## Revertible battle skins
 
@@ -148,63 +150,40 @@ flowchart LR
 
 ---
 
-## Phase C — Hover shaders (planned)
+## Phase C — Hover FX (approved ✓)
 
-**Gate:** Phase A battle kit in-game (`hud_skin v3`). Can start after A even if B is unfinished — battle HUD only first.
+**In-game approved.** Proceed to Phase D (or parallel E/F).
 
-### C1 — Circuit patrol (chrome buttons)
+### C1 — Circuit patrol (chrome buttons) — code retained, **disabled**
 
-**Effect:** Fragment shader on hover — a cyan glowing signal “patrols” through the button’s baked V-grooves / cyan seam channels (sample bright/cyan edges in the texture, animate a traveling highlight with `TIME`). Not GPU particles.
+Implementation kept in `GameBoard.gd` (`_V3_CIRCUIT_PATROL_ENABLED = false`). Flip to `true` to re-enable after enlarge/settle on TECH / VOID / Union / End Turn / Options / eyes.
 
-| Control | Asset / note |
-|---------|----------------|
-| TECH stack chip | `ui_magitech_tech.png` |
-| VOID stack chip | `ui_magitech_void.png` |
-| Union (big center) | `ui_magitech_union.png` |
-| End Turn | `ui_magitech_end_turn.png` |
-| Options | `ui_magitech_options.png` |
-| Eye open / eye closed | `ui_magitech_eye_open.png` / `ui_magitech_eye_closed.png` |
+### C2 — Metal reflect sweep (card context menu) — **shipped**
 
-### C2 — Metal reflect sweep (card context menu)
+Once per hover on Attack / Info / Bluff / Union: L→R sheen via `magitech_metal_reflect.gdshader` on the icon `TextureRect` (alpha-masked — no glow on transparent). Re-arms after mouse exit. Crystal amount labels use the same shader with idle `progress` parked off-UV.
 
-**Effect:** On the card context menu icons (**Attack / Info / Bluff / Union**), **once per hover** — a short **metal specular / sheen** that travels **left → right** across the icon, then dismisses (same feel as a “new item” shine). Does **not** loop while the cursor stays; re-fires only after mouse exit + enter again.
-
-| Icon | Asset |
-|------|--------|
-| Attack | `ui_magitech_attack.png` |
-| Info | `ui_magitech_info.png` |
-| Bluff | `ui_magitech_bluff.png` |
-| Union (context slot) | `ui_magitech_union.png` |
-
-Wire on the context-menu icon controls in `GameBoard` (where `CTX_ICON_*` are applied).
-
-### Implementation sketch
-
-1. **C1:** `assets/shaders/magitech_circuit_patrol.gdshader` — params: speed, glow color, intensity; idle = identity; hover = animated patrol band.  
-2. **C2:** `assets/shaders/magitech_metal_reflect.gdshader` (or shared sheen) — diagonal/vertical band of specular highlight; drive `progress` 0→1 once on `mouse_entered`, then idle; reset arming on `mouse_exited`.  
-3. Shared materials / tiny helper; apply only when `HudSkin` is `v3` (v1/v2 stay plain).  
-4. Keep modulate/blink (e.g. end-turn tutorial blink) compatible — don’t fight existing tweens.
+Reckoning metallic deflect clipped to card face only (`BattleCalculationOverlay`).
 
 ### Out of scope for Phase C
 
 - Phase B chrome icons  
 - Always-on idle patrol / looping sheen while hovered  
-- Groove patrol on context icons (C2 is sheen only)
+- Re-enabling C1 (optional later polish)
 
 ### Acceptance
 
-- [ ] Hover TECH / VOID / Union / End Turn / Options / eyes → cyan groove patrol  
-- [ ] Hover Attack / Info / Bluff / Union (context) → one L→R metal sheen, then stop  
-- [ ] Sheen re-arms only after mouse leaves and re-enters  
-- [ ] Mouse exit → clean stop, no stuck glow/sheen  
-- [ ] `hud_skin v1|v2` unchanged  
-- [ ] No particle emitters required  
+- [x] Context Attack / Info / Bluff / Union → one L→R metal sheen on opaque art only  
+- [x] Sheen re-arms only after mouse leaves and re-enters  
+- [x] No stuck highlight on crystal amount text  
+- [x] C1 circuit patrol code present but off  
+- [x] `hud_skin v1|v2` unchanged  
+- [x] In-game approved  
 
 ---
 
 ## Phase D — Gradient styling + battle grid (planned)
 
-**Gate:** After Phase C hover shader lands (shared shader habits). Can prototype grid or one dialog earlier if needed.
+**Gate:** Phase C approved ✓. Can prototype grid or one dialog earlier if needed.
 
 **`GameDialog` stay as-is:** Keep the current flat StyleBox dialog structure/layout — it is already good. **Do not** swap in ForgeGUI `#20` `ui_magitech_panel_9slice.png`. Phase D only adds polish on top of the existing dialog chrome.
 
@@ -310,6 +289,63 @@ Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → 
 - [ ] Motion stays behind grids; overlays still above smoke/VFX as today  
 - [ ] `hud_skin v1|v2` unchanged  
 - [ ] No GIF / full playmat video required for ship  
+
+---
+
+## Phase F — Battle VFX sprites (planned)
+
+**Gate:** Phase A battle kit approved. Can run in parallel with B/C/D/E.
+
+**Approach (locked):** **static** PNG pieces with clean alpha. Godot keeps spawn / rotate / drift / fade (same pattern as today’s procedural `ColorRect` sparks + `Panel` smoke in `GameBoard._spawn_union_short_circuit_*`).  
+**Not:** full-screen GIF/video of the whole short-circuit; not one baked composite movie.
+
+### F1 — Asset kit (ForgeGUI → PNG + alpha)
+
+Save under `assets/textures/ui/battle/v3_magitech/vfx/`.  
+Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase F**.
+
+| ID | Save as | Role | Size | Motion in Godot |
+|----|---------|------|------|-----------------|
+| F01 | `ui_magitech_vfx_smoke_a.png` | Soft electrical / steam puff (light) | 256×256 | Drift + fade |
+| F02 | `ui_magitech_vfx_smoke_b.png` | Soft puff variant (denser / wispy) | 256×256 | Drift + fade |
+| F03 | `ui_magitech_vfx_bolt_a.png` | Thin electric bolt / arc (short) | 128×256 | Rotate + streak fade |
+| F04 | `ui_magitech_vfx_bolt_b.png` | Longer jagged arc variant | 128×256 | Rotate + streak fade |
+| F05 | `ui_magitech_vfx_fire_spark_a.png` | Hot ember / fire spark mote | 128×128 | Pop + fade / short rise |
+| F06 | `ui_magitech_vfx_fire_spark_b.png` | Fire spark variant (brighter tip) | 128×128 | Pop + fade / short rise |
+
+**Ship-first:** F01–F02 + F03–F04 + F05 (one fire spark). Add F06 if variety feels thin.
+
+### F2 — Godot wiring (after assets land)
+
+1. Replace procedural spark `ColorRect`s with `TextureRect` / `Sprite2D` using F03–F04 (keep scatter counts, delays, z-index).  
+2. Replace procedural smoke `Panel`s with F01–F02 textures (keep edge-drift + lifetime).  
+3. Mix in F05–F06 as hotter flecks among the short-circuit (or card-destroy / impact call sites if already sparking).  
+4. `hud_skin v3` only; v1/v2 keep procedural fallbacks (or skip VFX swap).  
+5. Preserve current z stacking: smoke under overlays; sparks above board as today.
+
+### Style lock for Phase F
+
+- Magitech silver–cyan for smoke/bolts; fire sparks may use warm amber/orange **tips** with cool cyan core or rim so they still read holytech (not cartoon cartoon-fireball).  
+- Transparent outside; soft edges on smoke; sharp readable silhouette on bolts.  
+- No text, logos, crests, watermark.  
+- Single isolated piece per file — not a full-screen effect plate.
+
+### Out of scope for Phase F
+
+| Skip | Why |
+|------|-----|
+| Animated sprite sheets / GIF loops | Motion stays in Godot for many instances |
+| Full-screen short-circuit movie | Style drift + size; cards unreadable |
+| Particle `.tres` library redesign | Wire textures into existing spawners first |
+| Fog-of-war board fog reskin | Separate system (`_fog_material`) — not this pass |
+
+### Acceptance
+
+- [ ] Smoke / bolt / fire-spark PNGs with clean alpha in `vfx/`  
+- [ ] Union short-circuit uses real textures instead of flat ColorRect/Panel blobs  
+- [ ] Cards and overlays stay readable; z-order unchanged in spirit  
+- [ ] `hud_skin v1|v2` unchanged  
+- [ ] No full-screen VFX video required  
 
 ## Privacy
 

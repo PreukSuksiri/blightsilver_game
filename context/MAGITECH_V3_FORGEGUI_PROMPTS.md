@@ -339,7 +339,7 @@ Drop-in filenames after export:
 
 ## #12 — `ui_magitech_info.png` · 128×128
 
-**Copy this:**
+**Copy this (legacy metal plate — superseded by scroll alt below):**
 
 ```
 Game UI Info context icon, isolated asset, square canvas 128x128, transparent background outside the badge.
@@ -347,11 +347,27 @@ Game UI Info context icon, isolated asset, square canvas 128x128, transparent ba
 Letter i on a compact sacred-silver dossier / decree plate with a thin cyan seam — freeform badge, not a coin ring. Small badge centered with generous transparent margin — plate about half the canvas width. Match cyan and silver of the uploaded style references. No other text, no logos, no watermark.
 ```
 
-**#12 refine — smaller badge:**
+**#12 alt — paper scroll + handwritten i, three-quarter** (preferred for context menu):
+
+Do **not** keep the flat metal plate. New prop: aged paper scroll.
 
 ```
-Same info placard with letter i, but scale the whole badge much smaller in the 128x128 frame — more empty transparent padding around it. Plate about half the canvas width. Keep cyan-silver materials. No other text, no logos.
+Game UI Info context icon, isolated asset, square canvas 128x128, transparent background outside the object.
+
+ONE short parchment / paper scroll in a three-quarter view turned slightly toward the camera — rolled ends readable, paper curl and thickness visible, not a flat front-on rectangle. Fuller volumetric silhouette that fills the square.
+
+On the open face: a single handwritten lowercase letter i only — ink calligraphy / quill stroke, slightly imperfect handwritten feel (not a clean digital font, not bold sans). Soft aged cream parchment, faint fiber texture; optional thin sacred-silver ribbon or wax-thread tie; tiny cyan ink glint on the i or a thin cyan edge accent so it still reads Magitech UI.
+
+Standalone scroll only — no hand, no desk, no circular medallion frame, no other letters or words. Transparent outside. No logos, no watermark. Match cool silver-cyan accents of the uploaded style references.
 ```
+
+**#12 alt — if still too flat / billboard:**
+
+```
+Game UI Info icon, 128x128, transparent outside. Stronger three-quarter paper scroll: near roll larger, far edge thinner, handwritten ink i on the parchment face. Aged cream paper, thin cyan accent. No metal plate, no other text, no frame.
+```
+
+Drop-in: `ui_magitech_info.png` (context menu + HudSkin info).
 
 ---
 
@@ -844,6 +860,109 @@ No logos, no text. Transparent above and below the strip. Match uploaded silver-
 - Mecha robot limbs, cyberpunk neon tubes, hologram gears  
 - Photoreal photo scrap / watermark  
 - Motion already baked as frames (we animate in Godot — deliver still PNGs only)  
+
+---
+
+# Phase F — Battle VFX sprites (smoke / bolt / fire spark)
+
+**Goal:** Replace procedural union short-circuit smoke + electric streaks (and add fire spark flecks) with real Magitech PNG pieces.  
+**Gate:** Phase A approved. Parallel with B/C/D/E.  
+**Pipeline:** [MAGITECH_V3_FORGEGUI_PIPELINE.md](MAGITECH_V3_FORGEGUI_PIPELINE.md) → **Phase F**.  
+**Save to:** `assets/textures/ui/battle/v3_magitech/vfx/`  
+
+**Format (locked):** **static** PNG + alpha only. Godot handles spawn, rotate, drift, fade.  
+**Do not** deliver animated sheets / GIF / full-screen composites.
+
+**Style lock:** blank `#20` panel + end-turn / playmat silver (logo-free). Soft silver–cyan haze; bolts cyan/white; fire sparks warm tip + cool rim.
+
+**Hard rules (every piece):**
+
+- Isolated single VFX element · transparent outside · centered · no text · no logos · no watermark  
+- Soft feathered edges on smoke; readable silhouette on bolts/sparks  
+- Not cartoon comic-book POW, not photoreal photo stock, not purple neon cyber  
+
+---
+
+## F01 — `ui_magitech_vfx_smoke_a.png` · 256×256
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 256x256, transparent background outside the smoke.
+
+ONE soft electrical steam / holytech smoke puff: silver-grey volumetric haze with a faint sanctified cyan tint in the denser core. Soft feathered edges, no hard outline, no black box. Centered, fills most of the canvas but leaves transparent margin. No sparks, no fire, no text, no logos, no watermark. Match silver-cyan of the uploaded style references.
+```
+
+---
+
+## F02 — `ui_magitech_vfx_smoke_b.png` · 256×256
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 256x256, transparent background outside the smoke.
+
+ONE soft smoke puff VARIANT — slightly denser / more wispy than a round blob, irregular cloud silhouette. Silver-grey with faint cyan cool tint. Soft feathered edges, transparent outside. No hard cartoon outline, no sparks, no fire, no text, no logos, no watermark. Match uploaded silver-cyan style references.
+```
+
+---
+
+## F03 — `ui_magitech_vfx_bolt_a.png` · 128×256
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, portrait canvas 128x256, transparent background outside the bolt.
+
+ONE thin jagged electric bolt / short arc running roughly top-to-bottom: bright white-cyan core, soft cyan glow fringe, sacred-silver cool highlights. Sharp readable silhouette for UI VFX. No smoke cloud, no fireball, no hand, no frame. Transparent outside. No text, no logos, no watermark. Match uploaded cyan-silver style references.
+```
+
+---
+
+## F04 — `ui_magitech_vfx_bolt_b.png` · 128×256
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, portrait canvas 128x256, transparent background outside the bolt.
+
+ONE longer jagged electric arc VARIANT — more branches / forked tips than a single stroke. Bright white-cyan core, soft cyan glow. Vertical composition for rotation in-engine. Transparent outside. No smoke, no fire, no text, no logos, no watermark. Match uploaded cyan-silver style references.
+```
+
+---
+
+## F05 — `ui_magitech_vfx_fire_spark_a.png` · 128×128
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 128x128, transparent background outside the spark.
+
+ONE small fire spark / hot ember mote: bright amber-orange tip fading to white-hot core, thin cool cyan rim so it still reads holytech. Soft glow, no large flame tongue, no smoke plume, no explosion. Centered with transparent margin. No text, no logos, no watermark. Match uploaded style references (warm spark accent on silver-cyan kit).
+```
+
+---
+
+## F06 — `ui_magitech_vfx_fire_spark_b.png` · 128×128
+
+**Copy this:**
+
+```
+Game VFX isolated sprite, square canvas 128x128, transparent background outside the spark.
+
+ONE fire spark VARIANT — slightly elongated streak ember (still a mote, not a torch flame). Amber-gold body, white-hot tip, faint cyan glint on the cool edge. Soft glow, transparent outside. No smoke cloud, no big fireball. No text, no logos, no watermark. Match uploaded style references.
+```
+
+---
+
+## Phase F — Reject if
+
+- Full-screen short-circuit plate / movie / GIF  
+- Animated frame strips (Godot animates stills)  
+- Opaque black or solid background boxes  
+- Cartoon fireball / explosion blast replacing a spark  
+- Purple cyber neon flood, photoreal stock photo scrap, watermark  
+- Text, logos, crests  
 
 ---
 

@@ -771,11 +771,10 @@ func _play_metallic_deflect(ctrl: Control) -> void:
 	ctrl.pivot_offset = Vector2(_card_w * 0.5, (BADGE_H + _card_h) * 0.5)
 	var saved_mod: Color = ctrl.modulate
 	var saved_pos: Vector2 = ctrl.position
-	var card_h: float = BADGE_H + _card_h
-
+	# Sheen only on the card face — not the ATK/DEF badge strip above it.
 	var fx_layer := Control.new()
-	fx_layer.position = Vector2.ZERO
-	fx_layer.size = Vector2(_card_w, card_h)
+	fx_layer.position = Vector2(0.0, BADGE_H)
+	fx_layer.size = Vector2(_card_w, _card_h)
 	fx_layer.clip_contents = true
 	fx_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.z_index = 6
@@ -788,7 +787,7 @@ func _play_metallic_deflect(ctrl: Control) -> void:
 	fx_layer.add_child(shine)
 
 	var streak := ColorRect.new()
-	streak.size = Vector2(_card_w * 0.18, card_h)
+	streak.size = Vector2(_card_w * 0.18, _card_h)
 	streak.color = Color(1.0, 1.0, 1.0, 0.0)
 	streak.rotation = -0.35
 	streak.position = Vector2(-_card_w * 0.3, 0.0)

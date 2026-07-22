@@ -123,6 +123,13 @@ const _SFX_STEAM_CHROME_PUFF: AudioStream = preload("res://assets/audio/sfx/sfx_
 const _SFX_SMOKE_DESTROY: AudioStream = preload("res://assets/audio/sfx/sfx_smoke_destroy.mp3")
 const _SFX_ELECTRIC_SHORT: AudioStream = preload("res://assets/audio/sfx/sfx_electric_short_circuit.mp3")
 const _SHADER_METAL_REFLECT: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
+const _V3_HOVER_SCALE_SEC: float = 0.14
+## Phase C1 circuit patrol — kept in code; off until polish pass.
+const _V3_CIRCUIT_PATROL_ENABLED: bool = false
+## Moving ColorRect band (no Control TEXTURE shaders — GL Compatibility safe).
+const _V3_FX_STRIPE := "V3FxStripe"
+## Sheen band parked far past UV.x so idle text/icons have zero leftover highlight.
+const _V3_SHEEN_IDLE: float = 2.0
 ## v3: turn plate + End Turn slide off the top when the turn number changes.
 const _TURN_CHROME_OFF_Y: float = -420.0
 const _TURN_CHROME_SLIDE_SEC: float = 0.38
@@ -173,6 +180,8 @@ const _V3_ZONE_TECH_X := 0.0805
 ## Extra nudge for P2 chips only (px). +x = toward screen center after mirror; +y = down.
 const _V3_CHIP_P2_NUDGE := Vector2(-6.0, 0.0)
 var _v3_hover_scale_tweens: Dictionary = {}  # instance_id -> Tween
+var _v3_circuit_hovering: Dictionary = {}  # hover-control instance_id -> bool
+var _v3_fx_tweens: Dictionary = {}  # instance_id -> Tween (patrol / sheen stripe)
 var _p1_crystal_sheen_mat: ShaderMaterial = null
 var _p2_crystal_sheen_mat: ShaderMaterial = null
 var _v3_top_dashboard: TextureRect = null
@@ -3328,16 +3337,19 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 
 func _make_context_icon_btn(tex: Texture2D) -> Button:
 	var btn := Button.new()
-	btn.icon = tex
-	btn.expand_icon = true
+	# Icon drawn on a TextureRect so metal-sheen ShaderMaterial has a real TEXTURE
+	# (Button.icon + StyleBox often leaves TEXTURE empty → sheen invisible).
+	btn.icon = null
+	btn.expand_icon = false
 	btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
 	btn.custom_minimum_size = Vector2(CTX_ICON_SZ, CTX_ICON_SZ)
-	btn.add_theme_constant_override("icon_max_width", int(CTX_ICON_MAX_W))
 	btn.add_theme_constant_override("h_separation", 0)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.06, 0.10, 0.24, 1.0)
+	sb.content_margin_left = 0
+	sb.content_margin_top = 0
+	sb.content_margin_right = 0
+	sb.content_margin_bottom = 0
 	sb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
 	sb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
 	sb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
@@ -3349,7 +3361,22 @@ func _make_context_icon_btn(tex: Texture2D) -> Button:
 	var sbp := sbh.duplicate() as StyleBoxFlat
 	sbp.bg_color = Color(0.20, 0.30, 0.56, 1.0)
 	btn.add_theme_stylebox_override("pressed", sbp)
+	btn.add_theme_stylebox_override("focus", sb)
+	var icon_pad: float = (CTX_ICON_SZ - CTX_ICON_MAX_W) * 0.5
+	var icon_rect := TextureRect.new()
+	icon_rect.name = "V3SheenIcon"
+	icon_rect.texture = tex
+	icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	icon_rect.offset_left = icon_pad
+	icon_rect.offset_top = icon_pad
+	icon_rect.offset_right = -icon_pad
+	icon_rect.offset_bottom = -icon_pad
+	btn.add_child(icon_rect)
 	SFXManager.wire_prompt_button(btn)
+	_v3_wire_context_icon_sheen(icon_rect)
 	return btn
 
 func _make_context_btn(label: String, col: Color) -> Button:
@@ -4415,7 +4442,9 @@ func _build_bottom_crystal_labels() -> void:
 	p1_crystal_hbox.add_child(_p1_bottom_crystal)
 	_p1_crystal_sheen_mat = ShaderMaterial.new()
 	_p1_crystal_sheen_mat.shader = _SHADER_METAL_REFLECT
-	_p1_crystal_sheen_mat.set_shader_parameter("progress", 1.2)
+	_p1_crystal_sheen_mat.set_shader_parameter("progress", _V3_SHEEN_IDLE)
+	_p1_crystal_sheen_mat.set_shader_parameter("intensity", 0.85)
+	_p1_crystal_sheen_mat.set_shader_parameter("band_width", 0.18)
 	_p1_bottom_crystal.material = _p1_crystal_sheen_mat
 
 	var p2_root := Control.new()
@@ -4462,7 +4491,9 @@ func _build_bottom_crystal_labels() -> void:
 	p2_crystal_hbox.add_child(_p2_bottom_crystal)
 	_p2_crystal_sheen_mat = ShaderMaterial.new()
 	_p2_crystal_sheen_mat.shader = _SHADER_METAL_REFLECT
-	_p2_crystal_sheen_mat.set_shader_parameter("progress", 1.2)
+	_p2_crystal_sheen_mat.set_shader_parameter("progress", _V3_SHEEN_IDLE)
+	_p2_crystal_sheen_mat.set_shader_parameter("intensity", 0.85)
+	_p2_crystal_sheen_mat.set_shader_parameter("band_width", 0.18)
 	_p2_bottom_crystal.material = _p2_crystal_sheen_mat
 
 	if crystal_tex:
@@ -5141,6 +5172,7 @@ func _force_options_hover_exit() -> void:
 		return
 	_options_hovered = false
 	_restore_game_guide()
+	_v3_circuit_set_active(_options_btn_art, false)
 	if HudSkin.version == "v3":
 		_tween_options_reveal(_OPT_REVEAL_REST, false)
 
@@ -5183,15 +5215,24 @@ func _tween_options_reveal(target: float, play_sfx: bool) -> void:
 	if _options_btn_root == null:
 		return
 	if is_equal_approx(_options_show_frac, target):
+		if target >= _OPT_REVEAL_HOVER - 0.01 and _options_hovered:
+			_v3_circuit_set_active(_options_btn_art, true)
 		return
 	if _options_slide_tween != null and _options_slide_tween.is_valid():
 		_options_slide_tween.kill()
 	if play_sfx and target > _options_show_frac + 0.01:
 		SFXManager.play(_SFX_MECH_OPTIONS)
+	_v3_circuit_set_active(_options_btn_art, false)
 	var start: float = _options_show_frac
 	_options_slide_tween = create_tween()
 	_options_slide_tween.tween_method(_set_options_reveal_frac, start, target, 0.32) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	var want_patrol: bool = target >= _OPT_REVEAL_HOVER - 0.01
+	_options_slide_tween.finished.connect(func() -> void:
+		if want_patrol and _options_hovered:
+			_v3_circuit_set_active(_options_btn_art, true)
+		elif not want_patrol:
+			_v3_circuit_set_active(_options_btn_art, false))
 
 
 func _apply_options_button_layout() -> void:
@@ -5602,6 +5643,7 @@ func _reload_hud_skin(_new_version: String = "") -> void:
 		_apply_stack_chip_skin(_p2_void_stack, "ui_void_stack_chip.png")
 	_refresh_v3_chrome_textures()
 	_apply_battle_hud_skin_layout()
+	_v3_sync_circuit_patrol_skin()
 	# Match current battle HUD visibility (setup / battle / game over).
 	var hud_show: bool = false
 	if is_instance_valid(_p1_crystal_row):
@@ -5726,9 +5768,201 @@ func _play_crystal_number_sheen(player: int) -> void:
 	var tw := create_tween()
 	mat.set_shader_parameter("progress", -0.15)
 	tw.tween_method(
-		func(v: float) -> void: mat.set_shader_parameter("progress", v),
+		func(v: float) -> void:
+			if is_instance_valid(mat):
+				mat.set_shader_parameter("progress", v),
 		-0.15, 1.15, 0.45
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(mat):
+			mat.set_shader_parameter("progress", _V3_SHEEN_IDLE))
+
+
+func _v3_sync_circuit_patrol_skin() -> void:
+	var hosts: Array = [
+		_end_turn_btn, _union_suggest_btn, _options_btn_art,
+		_p1_reveal_btn, _p2_reveal_btn,
+		_p1_tech_stack, _p2_tech_stack, _p1_void_stack, _p2_void_stack,
+	]
+	for h in hosts:
+		var ctrl: Control = h as Control
+		if ctrl == null or not is_instance_valid(ctrl):
+			continue
+		_v3_stop_fx_stripe(ctrl)
+		if HudSkin.version != "v3":
+			_v3_teardown_fx_stripe(ctrl)
+			if ctrl is TextureButton:
+				var btn := ctrl as TextureButton
+				var old_host: Node = btn.get_node_or_null("V3FxHost")
+				if old_host != null:
+					old_host.queue_free()
+				btn.self_modulate = Color.WHITE
+			var old_ov: Node = ctrl.get_node_or_null("V3FxOverlay")
+			if old_ov != null:
+				old_ov.queue_free()
+	_v3_circuit_hovering.clear()
+
+
+func _v3_teardown_fx_stripe(ctrl: Control) -> void:
+	_v3_stop_fx_stripe(ctrl)
+	if ctrl == null or not is_instance_valid(ctrl):
+		return
+	var stripe: Node = ctrl.get_node_or_null(_V3_FX_STRIPE)
+	if stripe != null:
+		stripe.queue_free()
+
+
+func _v3_stop_fx_stripe(ctrl: Control) -> void:
+	if ctrl == null or not is_instance_valid(ctrl):
+		return
+	var id: int = ctrl.get_instance_id()
+	if _v3_fx_tweens.has(id):
+		var old: Tween = _v3_fx_tweens[id]
+		if old != null and old.is_valid():
+			old.kill()
+		_v3_fx_tweens.erase(id)
+	var stripe: ColorRect = ctrl.get_node_or_null(_V3_FX_STRIPE) as ColorRect
+	if stripe != null:
+		stripe.visible = false
+
+
+func _v3_ensure_fx_stripe(ctrl: Control) -> ColorRect:
+	if ctrl == null or not is_instance_valid(ctrl) or HudSkin.version != "v3":
+		return null
+	ctrl.clip_contents = true
+	var stripe: ColorRect = ctrl.get_node_or_null(_V3_FX_STRIPE) as ColorRect
+	if stripe == null:
+		stripe = ColorRect.new()
+		stripe.name = _V3_FX_STRIPE
+		stripe.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		stripe.visible = false
+		ctrl.add_child(stripe)
+	_v3_layout_fx_stripe(ctrl, stripe)
+	return stripe
+
+
+func _v3_layout_fx_stripe(ctrl: Control, stripe: ColorRect) -> void:
+	var sz: Vector2 = ctrl.size
+	if sz.x < 2.0 or sz.y < 2.0:
+		sz = ctrl.custom_minimum_size
+	if sz.x < 2.0 or sz.y < 2.0:
+		sz = Vector2(88.0, 88.0)
+	var band_w: float = clampf(sz.x * 0.18, 12.0, 36.0)
+	stripe.size = Vector2(band_w, sz.y + 8.0)
+	stripe.position = Vector2(-band_w, -4.0)
+
+
+func _v3_circuit_set_active(ctrl: Control, on: bool) -> void:
+	if ctrl == null or not is_instance_valid(ctrl):
+		return
+	if HudSkin.version != "v3":
+		_v3_teardown_fx_stripe(ctrl)
+		return
+	_v3_stop_fx_stripe(ctrl)
+	if not on:
+		return
+	# Code retained — flip `_V3_CIRCUIT_PATROL_ENABLED` to re-enable.
+	if not _V3_CIRCUIT_PATROL_ENABLED:
+		return
+	var stripe: ColorRect = _v3_ensure_fx_stripe(ctrl)
+	if stripe == null:
+		return
+	_v3_layout_fx_stripe(ctrl, stripe)
+	stripe.color = Color(0.45, 0.95, 1.0, 0.62)
+	stripe.visible = true
+	var span: float = maxf(ctrl.size.x, ctrl.custom_minimum_size.x)
+	if span < 8.0:
+		span = stripe.size.x * 6.0
+	stripe.position.x = -stripe.size.x
+	var id: int = ctrl.get_instance_id()
+	var tw := create_tween()
+	tw.set_loops()
+	_v3_fx_tweens[id] = tw
+	tw.tween_property(stripe, "position:x", span + 4.0, 0.75) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(stripe):
+			stripe.position.x = -stripe.size.x)
+
+
+func _v3_wire_context_icon_sheen(icon_rect: TextureRect) -> void:
+	if HudSkin.version != "v3" or icon_rect == null:
+		return
+	var parent_btn: Control = icon_rect.get_parent() as Control
+	if parent_btn == null:
+		return
+	# Shader samples icon TEXTURE — shine is multiplied by alpha (no glow on transparent).
+	var mat := ShaderMaterial.new()
+	mat.shader = _SHADER_METAL_REFLECT
+	mat.set_shader_parameter("progress", _V3_SHEEN_IDLE)
+	mat.set_shader_parameter("intensity", 1.25)
+	mat.set_shader_parameter("band_width", 0.22)
+	icon_rect.material = mat
+	var armed: Array = [true]
+	parent_btn.mouse_entered.connect(func() -> void:
+		if not armed[0]:
+			return
+		armed[0] = false
+		_play_texture_metal_sheen(mat))
+	parent_btn.mouse_exited.connect(func() -> void:
+		armed[0] = true
+		if is_instance_valid(mat):
+			mat.set_shader_parameter("progress", _V3_SHEEN_IDLE))
+
+
+func _play_texture_metal_sheen(mat: ShaderMaterial) -> void:
+	if mat == null:
+		return
+	mat.set_shader_parameter("progress", -0.15)
+	var tw := create_tween()
+	tw.tween_method(
+		func(v: float) -> void:
+			if is_instance_valid(mat):
+				mat.set_shader_parameter("progress", v),
+		-0.15, 1.15, 0.42
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(mat):
+			mat.set_shader_parameter("progress", _V3_SHEEN_IDLE))
+
+
+## ColorRect stripe sheen (legacy / non-textured hosts). Prefer `_play_texture_metal_sheen` for icons.
+func _play_fx_band_sheen(ctrl: Control) -> void:
+	if ctrl == null or not is_instance_valid(ctrl) or HudSkin.version != "v3":
+		return
+	_v3_stop_fx_stripe(ctrl)
+	var stripe: ColorRect = _v3_ensure_fx_stripe(ctrl)
+	if stripe == null:
+		return
+	_v3_layout_fx_stripe(ctrl, stripe)
+	stripe.color = Color(0.95, 0.98, 1.0, 0.78)
+	stripe.visible = true
+	var span: float = maxf(ctrl.size.x, ctrl.custom_minimum_size.x)
+	if span < 8.0:
+		span = CTX_ICON_MAX_W
+	stripe.position.x = -stripe.size.x
+	var id: int = ctrl.get_instance_id()
+	var tw := create_tween()
+	_v3_fx_tweens[id] = tw
+	tw.tween_property(stripe, "position:x", span + 4.0, 0.42) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(stripe):
+			stripe.visible = false)
+
+
+func _v3_arm_circuit_after_settle(ctrl: Control, delay_sec: float) -> void:
+	if not _V3_CIRCUIT_PATROL_ENABLED:
+		return
+	var id: int = ctrl.get_instance_id()
+	_v3_circuit_hovering[id] = true
+	_v3_circuit_set_active(ctrl, false)
+	get_tree().create_timer(delay_sec).timeout.connect(func() -> void:
+		if not is_instance_valid(self) or not is_instance_valid(ctrl):
+			return
+		if not _v3_circuit_hovering.get(id, false):
+			return
+		_v3_circuit_set_active(ctrl, true))
 
 
 func _v3_hover_scale_enter(ctrl: Control) -> void:
@@ -5746,21 +5980,24 @@ func _v3_hover_scale_enter(ctrl: Control) -> void:
 			old.kill()
 	var tw := create_tween()
 	_v3_hover_scale_tweens[id] = tw
-	tw.tween_property(ctrl, "scale", Vector2(_V3_HOVER_SCALE, _V3_HOVER_SCALE), 0.14) \
+	tw.tween_property(ctrl, "scale", Vector2(_V3_HOVER_SCALE, _V3_HOVER_SCALE), _V3_HOVER_SCALE_SEC) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_v3_arm_circuit_after_settle(ctrl, _V3_HOVER_SCALE_SEC)
 
 
 func _v3_hover_scale_exit(ctrl: Control) -> void:
 	if ctrl == null or not is_instance_valid(ctrl):
 		return
 	var id: int = ctrl.get_instance_id()
+	_v3_circuit_hovering[id] = false
+	_v3_circuit_set_active(ctrl, false)
 	if _v3_hover_scale_tweens.has(id):
 		var old: Tween = _v3_hover_scale_tweens[id]
 		if old != null and old.is_valid():
 			old.kill()
 	var tw := create_tween()
 	_v3_hover_scale_tweens[id] = tw
-	tw.tween_property(ctrl, "scale", Vector2.ONE, 0.14) \
+	tw.tween_property(ctrl, "scale", Vector2.ONE, _V3_HOVER_SCALE_SEC) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
@@ -5770,11 +6007,15 @@ func _v3_eye_hover_enter(btn: TextureButton) -> void:
 	var tw := create_tween()
 	tw.tween_property(btn, "modulate", Color(0.55, 1.0, 1.0, 1.0), 0.22) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_v3_arm_circuit_after_settle(btn, 0.22)
 
 
 func _v3_eye_hover_exit(btn: TextureButton) -> void:
 	if btn == null:
 		return
+	var id: int = btn.get_instance_id()
+	_v3_circuit_hovering[id] = false
+	_v3_circuit_set_active(btn, false)
 	var base := Color(0.9, 0.97, 1.0, 0.95)
 	var tw := create_tween()
 	tw.tween_property(btn, "modulate", base, 0.22) \
