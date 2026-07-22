@@ -11,8 +11,8 @@
 **Phase C:** Hover FX — context-icon metal sheen (+ circuit patrol code retained, currently off). **Approved ✓**  
 
 **Phase D:** Gradient message-box + button chrome + animated battle 5×5 grid lines. **Approved ✓**  
-**Phase E:** Clockwork playmat — modular gears/pistons (ForgeGUI pieces + Godot spin/pump). Prompts in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase E**  
-**Phase F:** Battle VFX sprites — smoke, electric bolt, fire spark (static PNG + alpha; Godot spawns/tweens). Prompts → **Phase F**  
+**Phase E:** Steampunk stage backdrop (static E00). Modular gears/pistons **cancelled**. **Approved ✓** (user wired)  
+**Phase F:** Battle VFX sprites — free CC0 (Kenney + cyan–silver modulate); ForgeGUI custom kit optional later. **In progress**  
 **Phase G:** Pre-endgame shake HUD failure (glitch / dashboard short) + crystal-break art. **G0 code in progress**; art → **Phase G** prompts  
 
 ## Revertible battle skins
@@ -205,125 +205,62 @@ Reckoning metallic deflect clipped to card face only (`BattleCalculationOverlay`
 
 ---
 
-## Phase E — Clockwork playmat (planned)
+## Phase E — Steampunk stage backdrop (approved ✓)
 
-**Gate:** Phase A playmat + chrome approved in-game. Can run in parallel with B/C/D.
+**Gate:** Phase A playmat approved.  
 
-**Approach (locked):** modular ForgeGUI **pieces** + Godot rotation / piston tweens.  
-**Not:** one full animated 1280×720 GIF/video, not AI-video of the whole stage.
-
-Castlevania clocktower feel = layered depth + independent RPM. Keep motion **slow and sparse** behind the card grids so boards stay readable.
-
-### E1 — Asset kit (ForgeGUI → PNG + alpha)
-
-Save under `assets/textures/ui/battle/v3_magitech/clockwork/`.  
-Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → Phase E.
-
-| ID | Save as | Role | Animate in Godot |
-|----|---------|------|------------------|
-| E00 | `ui_magitech_clockwork_underlay.png` | Far stone / machine wall (static) | No (optional; else keep current playmat) |
-| E01 | `ui_magitech_gear_face_lg.png` | Large face-on cog | Spin |
-| E02 | `ui_magitech_gear_face_md.png` | Medium face-on cog | Spin |
-| E03 | `ui_magitech_gear_face_sm.png` | Small face-on cog | Spin |
-| E04 | `ui_magitech_gear_side.png` | Thick side-view / roller gear | Spin on local axis (or fake with scale) |
-| E05 | `ui_magitech_piston.png` | Piston head + short rod (isolated) | Vertical pump |
-| E06 | `ui_magitech_shaft.png` | Straight sacred-silver shaft / axle | Optional slow drift |
-| E07 | `ui_magitech_chain_seg.png` | One chain link / short segment | Optional scroll (later) |
-| E08 | `ui_magitech_belt_strip.png` | Short ridged belt tile (tileable X) | Optional scroll (later) |
-
-**Ship-first subset:** E00 (or reuse #1 playmat) + E01–E03 + E05. Add E04/E06–E08 if depth still feels thin.
-
-### E2 — Godot wiring (after assets land)
-
-1. Under `Background` / playmat: a `ClockworkLayer` `Control` with `clip_contents`, z below cards/grids/fog.  
-2. Instance ~8–15 gear `TextureRect`s (reuse E01–E03 at different scales/modulate).  
-3. Per gear: continuous `rotation` at different RPM (e.g. ±4°/s … ±18°/s).  
-4. 1–2 pistons: slow Y ping-pong (1.5–3s).  
-5. Far pieces darker / lower alpha; near pieces slightly brighter — fake depth, no camera parallax required.  
-6. Mute or pause motion when full-info / reckoning overlays are up (optional polish).  
-7. `hud_skin v3` only; v1/v2 keep static playmat.
-
-### Style lock for Phase E
-
-- Materials: blank `#20` panel + approved playmat / end-turn silver (logo-free).  
-- Prefer **remove** holytech kit board (crests leak onto gears).  
-- No text, logos, crests on any clockwork piece.  
-- Magitech silver + thin cyan seams — **not** SotN purple stone flood, not rust-brown only, not mecha.
-
-### Out of scope for Phase E
-
-| Skip | Why |
-|------|-----|
-| Full-screen loop video / GIF | Size, style drift, unreadable under cards |
-| Animated whole-stage AI video | Loses style lock + independent RPM |
-| Dense foreground gears over card cells | Cards must stay readable |
-| Fast / seizure-risk spin | Keep slow ceremonial grind |
-| Replacing top dashboard / bottom vault | Separate chrome; playmat mid only |
+**Shipped:** static steampunk machine stage backdrop (E00) as v3 battle background — **user wired**.  
+**Cancelled:** modular gears / pistons / Godot spin-pump `ClockworkLayer` (E01–E08 motion kit).
 
 ### Acceptance
 
-- [ ] Modular PNGs with clean alpha (no baked full stage)  
-- [ ] In-game: gears spin, ≥1 piston pumps, cards remain readable  
-- [ ] Motion stays behind grids; overlays still above smoke/VFX as today  
-- [ ] `hud_skin v1|v2` unchanged  
-- [ ] No GIF / full playmat video required for ship  
+- [x] Static E00 steampunk machine chamber behind boards  
+- [x] Cards remain readable (quiet center)  
+- [x] `hud_skin v1|v2` unchanged  
+- [x] No GIF / full playmat video  
+- [x] In-game approved  
 
 ---
 
-## Phase F — Battle VFX sprites (planned)
+## Phase F — Battle VFX sprites (in progress — free CC0)
 
-**Gate:** Phase A battle kit approved. Can run in parallel with B/C/D/E.
+**Gate:** Phase A battle kit approved.
 
-**Approach (locked):** **static** PNG pieces with clean alpha. Godot keeps spawn / rotate / drift / fade (same pattern as today’s procedural `ColorRect` sparks + `Panel` smoke in `GameBoard._spawn_union_short_circuit_*`).  
-**Not:** full-screen GIF/video of the whole short-circuit; not one baked composite movie.
+**Approach (locked):** **static** PNG + alpha. Godot spawn / rotate / drift / fade.  
+**Ship path:** free **CC0 Kenney** assets vendored under `battle/v3_magitech/vfx/`, tinted cyan–silver in Godot (`modulate`).  
+**Optional later:** ForgeGUI custom F01–F06 (prompts remain in [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md)).
 
-### F1 — Asset kit (ForgeGUI → PNG + alpha)
+### F1 — Vendored kit (Kenney CC0)
 
-Save under `assets/textures/ui/battle/v3_magitech/vfx/`.  
-Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → **Phase F**.
+Save under `assets/textures/ui/battle/v3_magitech/vfx/`. License: `LICENSE_KENNEY.txt`.
 
-| ID | Save as | Role | Size | Motion in Godot |
-|----|---------|------|------|-----------------|
-| F01 | `ui_magitech_vfx_smoke_a.png` | Soft electrical / steam puff (light) | 256×256 | Drift + fade |
-| F02 | `ui_magitech_vfx_smoke_b.png` | Soft puff variant (denser / wispy) | 256×256 | Drift + fade |
-| F03 | `ui_magitech_vfx_bolt_a.png` | Thin electric bolt / arc (short) | 128×256 | Rotate + streak fade |
-| F04 | `ui_magitech_vfx_bolt_b.png` | Longer jagged arc variant | 128×256 | Rotate + streak fade |
-| F05 | `ui_magitech_vfx_fire_spark_a.png` | Hot ember / fire spark mote | 128×128 | Pop + fade / short rise |
-| F06 | `ui_magitech_vfx_fire_spark_b.png` | Fire spark variant (brighter tip) | 128×128 | Pop + fade / short rise |
+| ID | Save as | Source (Kenney) | Role |
+|----|---------|-----------------|------|
+| F01–F02 | `ui_magitech_vfx_smoke_a/b.png` | whitePuff04 / 18 | Soft / denser puff |
+| F01+ | `ui_magitech_vfx_smoke_c…h.png` | whitePuff00/08/12/16/21/24 | Extra white shapes |
+| F01 soot | `ui_magitech_vfx_smoke_soot_a/b/c.png` | blackSmoke00/08/16 | Dark soot plumes |
+| F03 | `ui_magitech_vfx_bolt_a.png` | Particle Pack · trace_02 | Streak / arc |
+| F04 | `ui_magitech_vfx_bolt_b.png` | Particle Pack · trace_05 | Streak variant |
+| F05 | `ui_magitech_vfx_fire_spark_a.png` | Particle Pack · spark_05 | Hot spark mote |
 
-**Ship-first:** F01–F02 + F03–F04 + F05 (one fire spark). Add F06 if variety feels thin.
+Spawn helper randomizes texture, flip, rotation, aspect stretch, and peak opacity per puff.
 
-### F2 — Godot wiring (after assets land)
+### F2 — Godot wiring
 
-1. Replace procedural spark `ColorRect`s with `TextureRect` / `Sprite2D` using F03–F04 (keep scatter counts, delays, z-index).  
-2. Replace procedural smoke `Panel`s with F01–F02 textures (keep edge-drift + lifetime).  
-3. Mix in F05–F06 as hotter flecks among the short-circuit (or card-destroy / impact call sites if already sparking).  
-4. `hud_skin v3` only; v1/v2 keep procedural fallbacks (or skip VFX swap).  
-5. Preserve current z stacking: smoke under overlays; sparks above board as today.
-
-### Style lock for Phase F
-
-- Magitech silver–cyan for smoke/bolts; fire sparks may use warm amber/orange **tips** with cool cyan core or rim so they still read holytech (not cartoon cartoon-fireball).  
-- Transparent outside; soft edges on smoke; sharp readable silhouette on bolts.  
-- No text, logos, crests, watermark.  
-- Single isolated piece per file — not a full-screen effect plate.
-
-### Out of scope for Phase F
-
-| Skip | Why |
-|------|-----|
-| Animated sprite sheets / GIF loops | Motion stays in Godot for many instances |
-| Full-screen short-circuit movie | Style drift + size; cards unreadable |
-| Particle `.tres` library redesign | Wire textures into existing spawners first |
-| Fog-of-war board fog reskin | Separate system (`_fog_material`) — not this pass |
+1. v3: textured smoke/sparks/bolts in union short-circuit + related spawners (dashboard / crystal short).  
+2. Also: card destroy fire sparks, union landing sparks/dust, dissolve/dense/turn/HUD-collapse smoke.  
+3. Cyan–silver (smoke/bolts) and warm amber (fire spark) via `modulate`.  
+4. `hud_skin v1|v2`: procedural ColorRect/Panel fallbacks.  
+5. Preserve scatter counts, delays, z-index.
 
 ### Acceptance
 
-- [ ] Smoke / bolt / fire-spark PNGs with clean alpha in `vfx/`  
-- [ ] Union short-circuit uses real textures instead of flat ColorRect/Panel blobs  
-- [ ] Cards and overlays stay readable; z-order unchanged in spirit  
-- [ ] `hud_skin v1|v2` unchanged  
-- [ ] No full-screen VFX video required  
+- [x] Kenney CC0 PNGs vendored under `vfx/` + license note  
+- [x] v3 short-circuit / vent / dashboard / crystal short use textured smoke/sparks with tint  
+- [x] v3 destroy sparks + union landing sparks/dust use Kenney textures (no hand-crafted particle geometry)  
+- [x] Cards and overlays stay readable; z-order unchanged in spirit  
+- [x] `hud_skin v1|v2` unchanged (procedural fallback)  
+- [x] No full-screen VFX video required  
 
 ---
 

@@ -1,0 +1,27 @@
+Phase F battle VFX sprites — Kenney (CC0)
+
+Sources:
+  Smoke Particles by Kenney Vleugels (www.kenney.nl)
+  Particle Pack by Kenney Vleugels (www.kenney.nl)
+
+License: Creative Commons Zero (CC0)
+  https://creativecommons.org/publicdomain/zero/1.0/
+
+You may use these graphics in personal and commercial projects.
+Credit (Kenney or www.kenney.nl) would be nice but is not mandatory.
+
+Vendored filenames in this folder:
+  ui_magitech_vfx_smoke_a.png  ← Smoke Particles / whitePuff04
+  ui_magitech_vfx_smoke_b.png  ← Smoke Particles / whitePuff18
+  ui_magitech_vfx_smoke_c.png  ← Smoke Particles / whitePuff00
+  ui_magitech_vfx_smoke_d.png  ← Smoke Particles / whitePuff08
+  ui_magitech_vfx_smoke_e.png  ← Smoke Particles / whitePuff12
+  ui_magitech_vfx_smoke_f.png  ← Smoke Particles / whitePuff16
+  ui_magitech_vfx_smoke_g.png  ← Smoke Particles / whitePuff21
+  ui_magitech_vfx_smoke_h.png  ← Smoke Particles / whitePuff24
+  ui_magitech_vfx_smoke_soot_a.png ← Smoke Particles / blackSmoke00
+  ui_magitech_vfx_smoke_soot_b.png ← Smoke Particles / blackSmoke08
+  ui_magitech_vfx_smoke_soot_c.png ← Smoke Particles / blackSmoke16
+  ui_magitech_vfx_bolt_a.png   ← Particle Pack / trace_02
+  ui_magitech_vfx_bolt_b.png   ← Particle Pack / trace_05
+  ui_magitech_vfx_fire_spark_a.png ← Particle Pack / spark_05
