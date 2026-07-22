@@ -383,8 +383,25 @@ const _TEX_VFX_BOLT_A: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_a.png")
 const _TEX_VFX_BOLT_B: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_b.png")
+const _TEX_VFX_BOLT_D: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_d.png")
+const _TEX_VFX_BOLT_E: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_e.png")
+## bolt_c / bolt_f / bolt_g excluded — not electric-jolt shapes
+const _TEX_VFX_BOLT_POOL: Array[Texture2D] = [
+	_TEX_VFX_BOLT_A, _TEX_VFX_BOLT_B, _TEX_VFX_BOLT_D, _TEX_VFX_BOLT_E,
+]
 const _TEX_VFX_FIRE_SPARK: Texture2D = preload(
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_a.png")
+const _TEX_VFX_FIRE_SPARK_B: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_b.png")
+const _TEX_VFX_FIRE_SPARK_C: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_c.png")
+const _TEX_VFX_FIRE_SPARK_D: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_fire_spark_d.png")
+const _TEX_VFX_FIRE_SPARK_POOL: Array[Texture2D] = [
+	_TEX_VFX_FIRE_SPARK, _TEX_VFX_FIRE_SPARK_B, _TEX_VFX_FIRE_SPARK_C, _TEX_VFX_FIRE_SPARK_D,
+]
 const _PRE_ENDGAME_GLITCH_GLYPHS: Array[String] = [
 	"#", "@", "%", "&", "?", "/", "\\", "0", "1", "X", "!", "*", "=", "+",
 	"ERR", "??", "--", "Ø", "¡", "¤", "░", "▒", "▓", "§", "‡",
@@ -4139,51 +4156,54 @@ func _vfx_smoke_random_peak(rng: RandomNumberGenerator, dense: bool = false,
 	return peak_a
 
 
-## Weighted drift offset. `base_angle`: 0 = right, PI/2 = down, -PI/2 = up.
-## Used for the *second* leg of a path (after the puff has committed from spawn).
+## Soft drift offset around `base_angle` (0 = right, PI/2 = down, -PI/2 = up).
+## Kept mild so the original heading still reads; used on the *second* path leg.
 func _vfx_smoke_weighted_delta(rng: RandomNumberGenerator, dist_min: float, dist_max: float,
 		base_angle: float = -PI * 0.5) -> Vector2:
 	var roll: float = rng.randf()
 	var angle: float
-	if roll < 0.48:
+	if roll < 0.72:
+		# Most puffs: stay near the aimed heading.
+		angle = base_angle + rng.randf_range(-0.22, 0.22)
+	elif roll < 0.92:
+		# Occasional wider billow — still forward-biased.
 		angle = base_angle + rng.randf_range(-0.55, 0.55)
-	elif roll < 0.72:
-		angle = base_angle + rng.randf_range(-1.40, 1.40)
-	elif roll < 0.88:
-		angle = base_angle + PI + rng.randf_range(-0.90, 0.90)
 	else:
-		angle = rng.randf_range(0.0, TAU)
+		# Rare soft side drift (no reverse / full wild spin).
+		angle = base_angle + rng.randf_range(-0.85, 0.85)
 	var dist: float = rng.randf_range(dist_min, dist_max)
 	var delta := Vector2(cos(angle), sin(angle)) * dist
 	var ortho := Vector2(-sin(angle), cos(angle)) \
-			* rng.randf_range(-dist * 0.24, dist * 0.24)
+			* rng.randf_range(-dist * 0.08, dist * 0.08)
 	return delta + ortho
 
 
-## Mild aimed end from spawn (coherent first heading; scatter comes later).
+## Mild aimed end from spawn (coherent first heading; light scatter later).
 func _vfx_smoke_aimed_end(rng: RandomNumberGenerator, start: Vector2,
 		dist_min: float, dist_max: float, base_angle: float = -PI * 0.5) -> Vector2:
-	var ang: float = base_angle + rng.randf_range(-0.20, 0.20)
+	var ang: float = base_angle + rng.randf_range(-0.10, 0.10)
 	var dist: float = rng.randf_range(dist_min, dist_max)
 	return start + Vector2(cos(ang), sin(ang)) * dist
 
 
-## Travel toward `intended_end` first, then apply weighted random direction.
+## Travel toward `intended_end` first, then a light bend that still respects that heading.
 ## Returns { mid, end, commit_frac }.
 func _vfx_smoke_bend_path(rng: RandomNumberGenerator, start: Vector2,
 		intended_end: Vector2) -> Dictionary:
 	var to: Vector2 = intended_end - start
 	var dist: float = to.length()
-	var commit_frac: float = rng.randf_range(0.32, 0.52)
+	# Longer commit so the original direction dominates the path.
+	var commit_frac: float = rng.randf_range(0.48, 0.68)
 	if dist < 4.0:
 		return {"mid": intended_end, "end": intended_end, "commit_frac": 1.0}
 	var base_angle: float = to.angle()
 	var mid: Vector2 = start + to * commit_frac
 	var remain: float = dist * (1.0 - commit_frac)
+	# Second leg ≈ remaining distance, with only a soft heading wobble.
 	var end: Vector2 = mid + _vfx_smoke_weighted_delta(
 		rng,
-		maxf(12.0, remain * 0.55),
-		maxf(20.0, remain * 1.40),
+		maxf(10.0, remain * 0.85),
+		maxf(14.0, remain * 1.15),
 		base_angle)
 	return {"mid": mid, "end": end, "commit_frac": commit_frac}
 
@@ -4220,18 +4240,27 @@ func _vfx_smoke_end_scale(rng: RandomNumberGenerator, base: float) -> Vector2:
 ## `tint_rgb` alpha < 0 → default holytech cyan–silver; else use that color (e.g. dissolve soot).
 ## Randomizes Kenney shape, flip, rotation, uniform size, and peak opacity.
 ## Always preserves the texture width/height ratio (no non-square stretch).
+##
+## Important: Kenney blackSmoke is already dark. Never multiply a dark tint onto soot
+## sprites (dissolve used to vanish on the playmat). Dark looks = white puff + grey tint,
+## or soot + near-white modulate.
 func _vfx_make_smoke_puff(sz: float, dense: bool, z_idx: int,
 		tint_rgb: Color = Color(-1.0, -1.0, -1.0, -1.0)) -> TextureRect:
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
 	var tr := TextureRect.new()
+	var custom: bool = tint_rgb.a >= 0.0
+	var lum: float = (tint_rgb.r + tint_rgb.g + tint_rgb.b) * 0.333 if custom else 1.0
+	var dark_tint: bool = custom and lum < 0.55
+	# Soot sprites only as a minority accent; dark dissolve/destroy uses white puffs + tint.
 	var use_soot: bool = false
-	if tint_rgb.a >= 0.0:
-		# Custom dark tint → prefer blackSmoke silhouettes for soot plumes.
-		var lum: float = (tint_rgb.r + tint_rgb.g + tint_rgb.b) * 0.333
-		use_soot = dense or lum < 0.55
-		if use_soot:
-			use_soot = rng.randf() < (0.70 if dense else 0.45)
+	if custom:
+		if dark_tint:
+			use_soot = rng.randf() < (0.28 if dense else 0.14)
+		else:
+			use_soot = dense and rng.randf() < 0.40
+	elif dense:
+		use_soot = rng.randf() < 0.20
 	if use_soot:
 		tr.texture = _TEX_VFX_SMOKE_SOOT_POOL[rng.randi_range(0, _TEX_VFX_SMOKE_SOOT_POOL.size() - 1)]
 	else:
@@ -4248,8 +4277,8 @@ func _vfx_make_smoke_puff(sz: float, dense: bool, z_idx: int,
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.z_index = z_idx
 	tr.z_as_relative = false
-	var peak_a: float = _vfx_smoke_random_peak(rng, dense, tr)
-	if tint_rgb.a < 0.0:
+	var peak_a: float = _vfx_smoke_random_peak(rng, dense or dark_tint, tr)
+	if not custom:
 		# Holytech silver–cyan tint over Kenney white puff.
 		var base: Color = Color(0.70, 0.90, 1.0, 1.0) if not dense \
 				else Color(0.62, 0.84, 0.96, 1.0)
@@ -4259,20 +4288,49 @@ func _vfx_make_smoke_puff(sz: float, dense: bool, z_idx: int,
 		base.b = clampf(base.b + rng.randf_range(-0.04, 0.06), 0.70, 1.0)
 		base.a = peak_a
 		tr.modulate = base
+	elif use_soot:
+		# Sprite is already charcoal — keep modulate bright so it stays visible.
+		tr.modulate = Color(
+			rng.randf_range(0.78, 1.0),
+			rng.randf_range(0.78, 1.0),
+			rng.randf_range(0.82, 1.0),
+			peak_a)
 	else:
+		# White puff + requested tint (lift very dark greys so they read on the board).
 		var tinted := tint_rgb
+		if dark_tint:
+			tinted.r = maxf(tinted.r, 0.42)
+			tinted.g = maxf(tinted.g, 0.42)
+			tinted.b = maxf(tinted.b, 0.46)
 		tinted.a = peak_a
 		tr.modulate = tinted
 	return tr
 
 
-func _vfx_make_bolt(sz: Vector2, z_idx: int, rng: RandomNumberGenerator) -> TextureRect:
+## Electric jolt streak. `base_len` is the long axis; size/flip randomized, aspect preserved.
+func _vfx_make_bolt(base_len: float, z_idx: int, rng: RandomNumberGenerator) -> TextureRect:
 	var tr := TextureRect.new()
-	tr.texture = _TEX_VFX_BOLT_A if rng.randf() < 0.5 else _TEX_VFX_BOLT_B
+	tr.texture = _TEX_VFX_BOLT_POOL[rng.randi_range(0, _TEX_VFX_BOLT_POOL.size() - 1)]
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.size = sz
+	var len: float = maxf(8.0, base_len) * rng.randf_range(0.40, 2.20)
+	# Occasional tiny fleck / fat arc.
+	if rng.randf() < 0.14:
+		len *= rng.randf_range(0.35, 0.65)
+	elif rng.randf() < 0.12:
+		len *= rng.randf_range(1.35, 1.90)
+	var tex_sz: Vector2 = tr.texture.get_size() if tr.texture != null else Vector2(1.0, 1.0)
+	var aspect: float = tex_sz.x / maxf(tex_sz.y, 1.0)
+	if aspect >= 1.0:
+		tr.size = Vector2(len, len / aspect)
+	else:
+		tr.size = Vector2(len * aspect, len)
 	tr.pivot_offset = tr.size * 0.5
+	# Mirror for free shape variety without new art.
+	tr.flip_h = rng.randf() < 0.5
+	tr.flip_v = rng.randf() < 0.5
+	var uni: float = rng.randf_range(0.70, 1.40)
+	tr.scale = Vector2(uni, uni)
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.z_index = z_idx
 	tr.z_as_relative = false
@@ -4281,13 +4339,27 @@ func _vfx_make_bolt(sz: Vector2, z_idx: int, rng: RandomNumberGenerator) -> Text
 	return tr
 
 
-func _vfx_make_fire_spark(sz: float, z_idx: int) -> TextureRect:
+## Spark mote. `base_sz` randomized uniformly (aspect preserved).
+func _vfx_make_fire_spark(base_sz: float, z_idx: int,
+		rng: RandomNumberGenerator = null) -> TextureRect:
+	if rng == null:
+		rng = RandomNumberGenerator.new()
+		rng.randomize()
 	var tr := TextureRect.new()
-	tr.texture = _TEX_VFX_FIRE_SPARK
+	tr.texture = _TEX_VFX_FIRE_SPARK_POOL[rng.randi_range(0, _TEX_VFX_FIRE_SPARK_POOL.size() - 1)]
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.size = Vector2(sz, sz)
+	var side: float = maxf(6.0, base_sz) * rng.randf_range(0.45, 2.10)
+	if rng.randf() < 0.14:
+		side *= rng.randf_range(0.40, 0.70)
+	elif rng.randf() < 0.12:
+		side *= rng.randf_range(1.30, 1.85)
+	tr.size = Vector2(side, side)
 	tr.pivot_offset = tr.size * 0.5
+	tr.flip_h = rng.randf() < 0.5
+	tr.flip_v = rng.randf() < 0.5
+	var uni: float = rng.randf_range(0.70, 1.40)
+	tr.scale = Vector2(uni, uni)
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.z_index = z_idx
 	tr.z_as_relative = false
@@ -4353,19 +4425,19 @@ func _spawn_union_short_circuit_sparks(card_node: Control) -> void:
 		if use_tex:
 			# Always Kenney jolt skins on v3 (no flat ColorRect crackle).
 			if is_bolt:
-				spark = _vfx_make_bolt(
-					Vector2(rng.randf_range(16.0, 40.0), rng.randf_range(48.0, 140.0)),
-					220, rng)
+				spark = _vfx_make_bolt(rng.randf_range(36.0, 160.0), 220, rng)
 			else:
-				spark = _vfx_make_fire_spark(rng.randf_range(12.0, 34.0), 220)
+				spark = _vfx_make_fire_spark(rng.randf_range(10.0, 42.0), 220, rng)
 				# Cool electric flecks (not warm destroy sparks).
 				spark.modulate = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 		else:
 			var cr := ColorRect.new()
 			if is_bolt:
-				cr.size = Vector2(rng.randf_range(2.0, 4.0), rng.randf_range(40.0, 120.0))
+				var blen: float = rng.randf_range(28.0, 140.0) * rng.randf_range(0.55, 1.80)
+				cr.size = Vector2(maxf(2.0, blen * 0.06), blen)
 			else:
-				cr.size = Vector2(rng.randf_range(3.0, 8.0), rng.randf_range(12.0, 40.0))
+				var ssz: float = rng.randf_range(4.0, 28.0) * rng.randf_range(0.55, 1.80)
+				cr.size = Vector2(ssz, ssz)
 			cr.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 			cr.pivot_offset = cr.size * 0.5
 			cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -7567,12 +7639,11 @@ func _play_smoke_emit_sfx(hard: bool = false) -> void:
 		SFXManager.play(_SFX_STEAM_VENT_SOFT)
 
 
-## Fire-and-forget: keep venting while the crystal number ticks.
+## Fire-and-forget: vent only while the crystal number ticks (incl. zero).
+## Stops emitting when the tick animation duration ends — no post-tick stream.
 func _start_crystal_tick_vent_smoke(player: int, duration: float, depleted: bool) -> void:
 	var stream_dur: float = maxf(duration, 0.35)
 	if depleted:
-		# Keep pouring after the tick — engine-breaking billow into the hold beat.
-		stream_dur = maxf(stream_dur, 0.8) + 3.2
 		# Immediate dump so the screen fills before the first interval wait.
 		_spawn_vent_smoke_burst(player, true, 22)
 	_crystal_tick_vent_smoke_loop(player, stream_dur, depleted)
@@ -11785,14 +11856,17 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	if not GameState._pending_ancestral_revive.is_empty():
 		await turn_manager.resolve_ancestral_spirit_revive()
 
+## Free `node` when `tw` fully finishes.
+## Must NOT use tween_callback after set_parallel(true) — that runs immediately and
+## deletes smoke/sparks at spawn (destroy + dissolve looked like "no VFX").
 func _queue_tween_free(tw: Tween, node: Node) -> void:
-	if node == null:
+	if node == null or tw == null:
 		return
 	var node_id: int = node.get_instance_id()
-	tw.tween_callback(func() -> void:
+	tw.finished.connect(func() -> void:
 		var n: Node = instance_from_id(node_id) as Node
 		if n != null and is_instance_valid(n):
-			n.queue_free())
+			n.queue_free(), CONNECT_ONE_SHOT)
 
 
 func _collect_top_hud_shake_nodes() -> Array[Control]:
@@ -11953,11 +12027,12 @@ func _spawn_dense_card_smoke(card_node: Control) -> void:
 	for _i: int in range(52):
 		var sz: float = rng.randf_range(24.0, 70.0)
 		var puff: Control
-		var grey: float = rng.randf_range(0.06, 0.32)
+		# Mid charcoal — readable after white-puff tint (avoid near-black vanish).
+		var grey: float = rng.randf_range(0.32, 0.62)
 		if use_tex:
 			# Sooty destroy plume (not cyan electrical haze).
-			puff = _vfx_make_smoke_puff(sz, rng.randf() < 0.55, 23,
-					Color(grey * 1.15, grey * 1.15, grey * 1.25, 1.0))
+			puff = _vfx_make_smoke_puff(sz, rng.randf() < 0.55, 34,
+					Color(grey, grey, grey * 1.08, 1.0))
 		else:
 			var panel := Panel.new()
 			panel.size = Vector2(sz, sz)
@@ -11972,7 +12047,8 @@ func _spawn_dense_card_smoke(card_node: Control) -> void:
 			psb.corner_radius_bottom_left = rad
 			panel.add_theme_stylebox_override("panel", psb)
 			panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			panel.z_index = 23
+			panel.z_index = 34
+			panel.z_as_relative = false
 			panel.modulate.a = peak_a
 			puff = panel
 		# X: random across the cell width. Y: strong bias to the cell bottom edge.
@@ -11996,6 +12072,7 @@ func _spawn_dense_card_smoke(card_node: Control) -> void:
 		var end_pos: Vector2 = _vfx_smoke_aimed_end(
 			rng, puff.position, 90.0, 240.0, -PI * 0.5)
 		var path: Dictionary = _vfx_smoke_bend_path(rng, puff.position, end_pos)
+		var peak_a: float = _vfx_smoke_peak_a(puff)
 
 		var tp := create_tween()
 		tp.tween_interval(delay)
@@ -12005,7 +12082,9 @@ func _spawn_dense_card_smoke(card_node: Control) -> void:
 				float(path["commit_frac"]), Tween.EASE_OUT, Tween.TRANS_QUAD)
 		tp.tween_property(puff, "scale", _vfx_smoke_end_scale(rng, end_scale), duration) \
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tp.tween_property(puff, "modulate:a", 0.0, duration) \
+		tp.tween_property(puff, "modulate:a", peak_a, 0.01)
+		tp.tween_property(puff, "modulate:a", 0.0, duration * 0.55) \
+			.set_delay(duration * 0.28) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 		_queue_tween_free(tp, puff)
 
@@ -12069,15 +12148,14 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 		var spark: Control
 		if use_tex:
 			if rng2.randf() < 0.35:
-				spark = _vfx_make_bolt(
-					Vector2(rng2.randf_range(10.0, 22.0), rng2.randf_range(28.0, 64.0)),
-					22, rng2)
+				spark = _vfx_make_bolt(rng2.randf_range(24.0, 90.0), 22, rng2)
 			else:
-				spark = _vfx_make_fire_spark(rng2.randf_range(16.0, 40.0), 22)
+				spark = _vfx_make_fire_spark(rng2.randf_range(12.0, 48.0), 22, rng2)
 			spark.modulate = fire_col
 		else:
 			var cr := ColorRect.new()
-			cr.size = Vector2(rng2.randf_range(4.0, 12.0), rng2.randf_range(20.0, 52.0))
+			var blen: float = rng2.randf_range(16.0, 64.0) * rng2.randf_range(0.55, 1.80)
+			cr.size = Vector2(maxf(3.0, blen * 0.12), blen)
 			cr.color = fire_col
 			cr.pivot_offset = cr.size * 0.5
 			cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -12105,11 +12183,16 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 		_queue_tween_free(ts, spark)
 
 func _spawn_dissolve_effect(card_node: Control) -> void:
+	if card_node == null or not is_instance_valid(card_node):
+		return
 	SFXManager.play(SFXManager.SFX_DISSOLVE)
 	_play_smoke_emit_sfx(false)
 	var card_rect := card_node.get_global_rect()
 	var local_pos := card_rect.position - global_position
 	var card_size := card_rect.size
+	if card_size.x < 2.0 or card_size.y < 2.0:
+		# Fallback if the slot was already cleared — still show a local plume.
+		card_size = Vector2(90.0, 120.0)
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
 
@@ -12118,20 +12201,23 @@ func _spawn_dissolve_effect(card_node: Control) -> void:
 	dissolve_tw.tween_property(card_node, "modulate:a", 0.0, 0.75) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
-	# Rising dark grey smoke puffs
+	# Rising dark grey smoke puffs (readable on dark Magitech playmat).
 	var use_tex: bool = _v3_textured_vfx()
-	for _i: int in range(22):
-		var sz: float = rng.randf_range(18.0, 48.0)
-		var grey: float = rng.randf_range(0.12, 0.38)
+	for _i: int in range(28):
+		var sz: float = rng.randf_range(22.0, 56.0)
+		# Mid greys — white puff + tint; helper lifts/soot-mix safely.
+		var grey: float = rng.randf_range(0.38, 0.72)
 		var puff: Control
+		var peak_a: float = 1.0
 		if use_tex:
-			puff = _vfx_make_smoke_puff(sz, rng.randf() < 0.5, 22,
-					Color(grey * 1.2, grey * 1.2, grey * 1.3, 1.0))
+			puff = _vfx_make_smoke_puff(sz, rng.randf() < 0.55, 36,
+					Color(grey, grey, grey * 1.05, 1.0))
+			peak_a = _vfx_smoke_peak_a(puff)
 		else:
 			var panel := Panel.new()
 			panel.size = Vector2(sz, sz)
 			panel.pivot_offset = panel.size * 0.5
-			var peak_a: float = _vfx_smoke_random_peak(rng, false, panel)
+			peak_a = _vfx_smoke_random_peak(rng, true, panel)
 			var psb := StyleBoxFlat.new()
 			psb.bg_color = Color(grey, grey, grey, peak_a)
 			var rad: int = int(sz * 0.5)
@@ -12141,20 +12227,21 @@ func _spawn_dissolve_effect(card_node: Control) -> void:
 			psb.corner_radius_bottom_left = rad
 			panel.add_theme_stylebox_override("panel", psb)
 			panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			panel.z_index = 22
+			panel.z_index = 36
 			panel.modulate.a = peak_a
 			puff = panel
-		var start_x: float = local_pos.x + rng.randf_range(0.0, card_size.x) - sz * 0.5
-		var start_y: float = local_pos.y + rng.randf_range(card_size.y * 0.3, card_size.y)
+		var start_x: float = local_pos.x + rng.randf_range(0.0, card_size.x) - puff.size.x * 0.5
+		var start_y: float = local_pos.y + rng.randf_range(card_size.y * 0.25, card_size.y)
 		puff.position = Vector2(start_x, start_y)
 		add_child(puff)
 
 		var delay: float    = rng.randf_range(0.0, 0.38)
-		var duration: float = rng.randf_range(0.45, 0.85)
-		var end_scale: float = rng.randf_range(1.3, 2.1)
+		var duration: float = rng.randf_range(0.55, 1.05)
+		var end_scale: float = rng.randf_range(1.5, 2.6)
 		var end_pos: Vector2 = _vfx_smoke_aimed_end(
 			rng, puff.position, 55.0, 170.0, -PI * 0.5)
 		var path: Dictionary = _vfx_smoke_bend_path(rng, puff.position, end_pos)
+		var fade_hold: float = duration * 0.28
 
 		var tp := create_tween()
 		tp.tween_interval(delay)
@@ -12164,7 +12251,10 @@ func _spawn_dissolve_effect(card_node: Control) -> void:
 				float(path["commit_frac"]), Tween.EASE_OUT, Tween.TRANS_QUAD)
 		tp.tween_property(puff, "scale", _vfx_smoke_end_scale(rng, end_scale), duration) \
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tp.tween_property(puff, "modulate:a", 0.0, duration) \
+		# Hold peak opacity briefly so the plume reads, then fade.
+		tp.tween_property(puff, "modulate:a", peak_a, 0.01)
+		tp.tween_property(puff, "modulate:a", 0.0, duration * 0.55) \
+			.set_delay(fade_hold) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 		_queue_tween_free(tp, puff)
 
@@ -12505,15 +12595,14 @@ func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
 		var spark: Control
 		if use_tex:
 			if rng.randf() < 0.40:
-				spark = _vfx_make_bolt(
-					Vector2(rng.randf_range(10.0, 22.0), rng.randf_range(24.0, 56.0)),
-					12, rng)
+				spark = _vfx_make_bolt(rng.randf_range(22.0, 80.0), 12, rng)
 			else:
-				spark = _vfx_make_fire_spark(rng.randf_range(14.0, 36.0), 12)
+				spark = _vfx_make_fire_spark(rng.randf_range(12.0, 44.0), 12, rng)
 			spark.modulate = warm
 		else:
 			var cr := ColorRect.new()
-			cr.size = Vector2(rng.randf_range(4.0, 11.0), rng.randf_range(18.0, 48.0))
+			var blen: float = rng.randf_range(14.0, 56.0) * rng.randf_range(0.55, 1.80)
+			cr.size = Vector2(maxf(3.0, blen * 0.12), blen)
 			cr.color = warm
 			cr.pivot_offset = cr.size * 0.5
 			cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -13599,18 +13688,18 @@ func _spawn_crystal_short_circuit_explosion(origin: Vector2) -> void:
 		var spark: Control
 		if use_tex:
 			if is_bolt:
-				spark = _vfx_make_bolt(
-					Vector2(rng.randf_range(14.0, 32.0), rng.randf_range(36.0, 100.0)),
-					52, rng)
+				spark = _vfx_make_bolt(rng.randf_range(28.0, 120.0), 52, rng)
 			else:
-				spark = _vfx_make_fire_spark(rng.randf_range(12.0, 30.0), 52)
+				spark = _vfx_make_fire_spark(rng.randf_range(10.0, 36.0), 52, rng)
 				spark.modulate = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 		else:
 			var cr := ColorRect.new()
 			if is_bolt:
-				cr.size = Vector2(rng.randf_range(2.0, 4.0), rng.randf_range(28.0, 90.0))
+				var blen: float = rng.randf_range(24.0, 100.0) * rng.randf_range(0.55, 1.80)
+				cr.size = Vector2(maxf(2.0, blen * 0.06), blen)
 			else:
-				cr.size = Vector2(rng.randf_range(3.0, 8.0), rng.randf_range(10.0, 32.0))
+				var ssz: float = rng.randf_range(4.0, 24.0) * rng.randf_range(0.55, 1.80)
+				cr.size = Vector2(ssz, ssz)
 			cr.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 			cr.pivot_offset = cr.size * 0.5
 			cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -13770,18 +13859,18 @@ func _spawn_pre_endgame_dashboard_spark_burst() -> void:
 			var spark: Control
 			if use_tex:
 				if is_bolt:
-					spark = _vfx_make_bolt(
-						Vector2(rng.randf_range(12.0, 26.0), rng.randf_range(24.0, 60.0)),
-						48, rng)
+					spark = _vfx_make_bolt(rng.randf_range(20.0, 90.0), 48, rng)
 				else:
-					spark = _vfx_make_fire_spark(rng.randf_range(10.0, 24.0), 48)
+					spark = _vfx_make_fire_spark(rng.randf_range(8.0, 32.0), 48, rng)
 					spark.modulate = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 			else:
 				var cr := ColorRect.new()
 				if is_bolt:
-					cr.size = Vector2(rng.randf_range(2.0, 3.5), rng.randf_range(18.0, 52.0))
+					var blen: float = rng.randf_range(16.0, 70.0) * rng.randf_range(0.55, 1.80)
+					cr.size = Vector2(maxf(2.0, blen * 0.06), blen)
 				else:
-					cr.size = Vector2(rng.randf_range(2.5, 7.0), rng.randf_range(8.0, 22.0))
+					var ssz: float = rng.randf_range(3.0, 20.0) * rng.randf_range(0.55, 1.80)
+					cr.size = Vector2(ssz, ssz)
 				cr.color = [SILVER, CYAN, WHITE][rng.randi_range(0, 2)]
 				cr.pivot_offset = cr.size * 0.5
 				cr.mouse_filter = Control.MOUSE_FILTER_IGNORE

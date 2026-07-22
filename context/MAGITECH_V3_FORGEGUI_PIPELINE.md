@@ -14,6 +14,7 @@
 **Phase E:** Steampunk stage backdrop (static E00). Modular gears/pistons **cancelled**. **Approved ✓** (user wired)  
 **Phase F:** Battle VFX sprites — free CC0 (Kenney + cyan–silver modulate); ForgeGUI custom kit optional later. **In progress**  
 **Phase G:** Pre-endgame shake HUD failure (glitch / dashboard short) + crystal-break art. **G0 code in progress**; art → **Phase G** prompts  
+**Phase H:** Setup phase UI rework (animated grid + bluff icons + machinery/wiremesh backdrop). **Planned**  
 
 ## Revertible battle skins
 
@@ -323,6 +324,82 @@ Prompts: [MAGITECH_V3_FORGEGUI_PROMPTS.md](MAGITECH_V3_FORGEGUI_PROMPTS.md) → 
 - [ ] Optional shards G02–G03  
 - [ ] P1 / P2 placement approved in-game  
 - [ ] Strip HUD stays visible; break is unclickable overlay  
+- [ ] `hud_skin v1|v2` unchanged  
+- [ ] In-game approved  
+
+---
+
+## Phase H — Setup phase UI rework (planned)
+
+**Gate:** Phase D grid language approved (reuse shader). Phase E stage language approved (machinery vocabulary).  
+**Owner script:** `scripts/SetupPhase.gd` (fullscreen overlay; separate from battle HUD).  
+**Skin gate:** `HudSkin.version == "v3"` for new art/shaders; v1/v2 keep current flat navy UI.
+
+Setup today is procedural flat UI: solid `ColorRect` bg, `StyleBoxFlat` grid cells, unicode bluff emojis. Battle already has Magitech grid lines + `BluffEmoji` PNGs — setup does not.
+
+### Goals (locked direction)
+
+1. **Animated gradient grid** — same holytech band language as battle (`magitech_grid_line.gdshader`).  
+2. **Emoji → icons** — bluff picker + on-grid markers use `BluffEmoji` / `assets/textures/ui/emoji/` (data stays unicode in `GameState`).  
+3. **Machinery backdrop + distinct wiremesh fence** — full-bleed setup stage: steampunk machine interior with a readable **wiremesh fence** plane in front of/around the placement board (not a flat navy fill).
+
+### H0 — Code scaffolding (no new art required)
+
+1. Gate setup chrome on `HudSkin.version == "v3"`.  
+2. Reuse battle grid-line pattern from `GameBoard._add_grid_line_panels` (extract small shared helper **or** light duplicate in `SetupPhase`).  
+3. Wire `_show_bluff_modal` → `BluffEmoji.apply_button`; `GridCell.set_emoticon` → `TextureRect` + `BluffEmoji.tex` (mirror `GameBoard._apply_bluff_visual`).  
+4. Keep black side margins + portraits above the new backdrop.
+
+### H1 — Backdrop art (ForgeGUI → PNG)
+
+Save under `assets/textures/ui/battle/v3_magitech/setup/`.
+
+| ID | Save as | Role | Notes |
+|----|---------|------|-------|
+| H01 | `ui_magitech_setup_backdrop.png` | Full-bleed machinery interior | Bronze/brass machine bay; quiet center for the 5×5 board; no text/logos |
+| H02 | `ui_magitech_setup_wiremesh.png` | Distinct wiremesh fence layer | Alpha mesh / chain rail / industrial grille — **readable as fence**, not fog; can sit over H01 or as a mid-plane frame around the grid |
+
+**Ship-first:** H01 alone can ship with a shader/mesh overlay if H02 is late; prefer H01+H02 for the “fence” read.
+
+**Style lock**
+
+- Same Magitech holytech / steampunk machine family as Phase E playmat — **setup bay**, not battle stage clone.  
+- Wiremesh must read as a **physical fence/grille** (perspective or flat overlay), distinct from soft smoke/fog.  
+- Center stays readable for cards; avoid busy motifs under the grid.  
+- Transparent outside for H02; no watermarks.
+
+### H2 — Godot wiring (after assets)
+
+1. Replace center `ColorRect` bg in `_build_ui` with `TextureRect` H01 (full rect under grid/panels).  
+2. Add H02 wiremesh as a second layer (above backdrop, below or framing the grid — pick one composition and stick).  
+3. Spawn animated gradient grid lines around / between setup cells (v3 only).  
+4. Soften or hide flat cell border chrome when v3 lines are active so borders don’t double up.  
+5. `hud_skin v1|v2`: unchanged procedural navy + unicode emojis.
+
+### Suggested order
+
+| Step | Work | Depends |
+|------|------|---------|
+| H0a | Bluff emoji → `BluffEmoji` in setup | Existing emoji PNGs |
+| H0b | Animated grid lines on setup board | Phase D shader |
+| H1 | ForgeGUI H01 (+ H02) prompts + intake | Style refs |
+| H2 | Wire backdrop + fence; mute flat borders | H1 approved |
+
+### Out of scope for Phase H
+
+| Skip | Why |
+|------|-----|
+| Reworking gallery / union / info side panels into full Magitech kits | Can be Phase H+ / B follow-on |
+| Changing setup rules / placement logic | Visual only |
+| Moving gears / animated fence | Static art first (match Phase E lesson) |
+| Replacing battle playmat | Separate surface |
+
+### Acceptance
+
+- [ ] v3 setup grid shows animated Magitech gradient lines  
+- [ ] Bluff modal + on-grid bluff markers use PNG icons (not unicode) on v3  
+- [ ] Setup backdrop reads as machinery bay with a distinct wiremesh fence  
+- [ ] Cards / placement remain readable; portraits + side margins intact  
 - [ ] `hud_skin v1|v2` unchanged  
 - [ ] In-game approved  
 
