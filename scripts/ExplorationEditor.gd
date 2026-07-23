@@ -87,6 +87,9 @@ var _prop_show_info_chk:      CheckBox    = null
 var _prop_show_who_chk:       CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
 var _prop_music_cond_vbox:  VBoxContainer = null
+var _prop_room_temp_spin:   SpinBox     = null
+var _prop_photo_alt_edit:   LineEdit    = null
+var _prop_photo_vn_edit:    LineEdit    = null
 var _prop_battle_section:   VBoxContainer = null
 var _prop_vault_opt:        OptionButton = null
 var _prop_vault_form_opt:   OptionButton = null
@@ -543,6 +546,27 @@ func _build_props_panel() -> Control:
 	add_music_cond_btn.add_theme_font_size_override("font_size", 13)
 	add_music_cond_btn.pressed.connect(func() -> void: _add_media_cond_row(_prop_music_cond_vbox, false))
 	vbox.add_child(add_music_cond_btn)
+
+	_add_section_header(vbox, "DETECTIVE TOOLS")
+	var temp_row := HBoxContainer.new()
+	temp_row.add_theme_constant_override("separation", 8)
+	var temp_lbl := Label.new()
+	temp_lbl.text = "Room temp °C"
+	temp_lbl.add_theme_font_size_override("font_size", 13)
+	temp_row.add_child(temp_lbl)
+	_prop_room_temp_spin = SpinBox.new()
+	_prop_room_temp_spin.min_value = -50.0
+	_prop_room_temp_spin.max_value = 100.0
+	_prop_room_temp_spin.step = 1.0
+	_prop_room_temp_spin.value = 25.0
+	_prop_room_temp_spin.tooltip_text = "Ambient temperature for the thermometer tool"
+	_prop_room_temp_spin.add_theme_font_size_override("font_size", 13)
+	temp_row.add_child(_prop_room_temp_spin)
+	vbox.add_child(temp_row)
+	_prop_photo_alt_edit = _add_file_field(vbox, "Polaroid alt photo BG (optional)",
+		PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Images"]), "res://assets/textures")
+	_prop_photo_vn_edit = _add_file_field(vbox, "Polaroid Mode 2 VN (optional)",
+		PackedStringArray(["*.json ; VN Scenes"]), "res://exploration/vn")
 
 	vbox.add_child(HSeparator.new())
 
@@ -1871,13 +1895,16 @@ func _wire_hitbox_spin_auto_display(spin: SpinBox, refresh_cb: Callable) -> void
 ##   3: hitbox_row   (HBoxContainer → SpinBox hitbox_w, SpinBox hitbox_h; 0 = auto)
 ##   4: tooltip_row  (HBoxContainer → LineEdit tooltip)
 ##   5: hide_row     (HBoxContainer → CheckBox hide_after_interact)
-##   6: acts_hdr     (Label)
-##   7: acts_vbox    (VBoxContainer of action rows)
-##   8: add_act_btn  (Button)
-##   9: conds_hdr    (Label)
-##  10: conds_vbox   (VBoxContainer of condition rows)
-##  11: add_cond_btn (Button)
-##  12: del_btn      (Button)
+##   6: disable_row  (HBoxContainer → CheckBox disabled_after_interact)
+##   7: disabled_icon_row (HBoxContainer → LineEdit disabled_icon)
+##   8: disabled_tooltip_row (HBoxContainer → LineEdit disabled_tooltip)
+##   9: acts_hdr     (Label)
+##  10: acts_vbox    (VBoxContainer of action rows)
+##  11: add_act_btn  (Button)
+##  12: conds_hdr    (Label)
+##  13: conds_vbox   (VBoxContainer of condition rows)
+##  14: add_cond_btn (Button)
+##  15: del_btn      (Button)
 func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	var frame := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
@@ -2012,42 +2039,93 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	hide_cb.text           = "Hide after interact"
 	hide_cb.button_pressed = bool(spot_data.get("hide_after_interact", false))
 	hide_cb.add_theme_font_size_override("font_size", 12)
+	hide_cb.tooltip_text = "Remove this spot completely after a successful interaction."
 	hide_row.add_child(hide_cb)
 	vb.add_child(hide_row)
 
-	# Index 6: Actions header
+	# Index 6: Disabled-after-interact row
+	var disable_row := HBoxContainer.new()
+	var disable_cb := CheckBox.new()
+	disable_cb.text           = "Disabled after interact"
+	disable_cb.button_pressed = bool(spot_data.get("disabled_after_interact", false))
+	disable_cb.add_theme_font_size_override("font_size", 12)
+	disable_cb.tooltip_text = (
+		"After interact: keep the spot visible but non-clickable. "
+		+ "Still detectable by detective tools and still appears on Polaroid photos.")
+	disable_row.add_child(disable_cb)
+	vb.add_child(disable_row)
+
+	# Index 7: Disabled-state icon row (blank = no image)
+	var disabled_icon_row := HBoxContainer.new()
+	disabled_icon_row.add_theme_constant_override("separation", 4)
+	var dilbl := Label.new()
+	dilbl.text = "Disabled icon"
+	dilbl.add_theme_font_size_override("font_size", 12)
+	disabled_icon_row.add_child(dilbl)
+	var disabled_icon_edit := LineEdit.new()
+	disabled_icon_edit.text = str(spot_data.get("disabled_icon", "")).strip_edges()
+	disabled_icon_edit.placeholder_text = "blank = no image"
+	disabled_icon_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	disabled_icon_edit.add_theme_font_size_override("font_size", 12)
+	disabled_icon_edit.tooltip_text = "Icon shown while disabled. Leave blank for no image."
+	disabled_icon_row.add_child(disabled_icon_edit)
+	var disabled_icon_browse := Button.new()
+	disabled_icon_browse.text = "…"
+	disabled_icon_browse.custom_minimum_size = Vector2(28, 0)
+	disabled_icon_browse.pressed.connect(func() -> void:
+		_browse_for_file(disabled_icon_edit, PackedStringArray(["*.png,*.jpg,*.webp ; Images"]),
+			"res://assets/textures/exploration"))
+	disabled_icon_row.add_child(disabled_icon_browse)
+	vb.add_child(disabled_icon_row)
+
+	# Index 8: Disabled tooltip row
+	var disabled_tip_row := HBoxContainer.new()
+	var dtlbl := Label.new()
+	dtlbl.text = "Disabled tooltip"
+	dtlbl.add_theme_font_size_override("font_size", 12)
+	disabled_tip_row.add_child(dtlbl)
+	var disabled_tip_edit := LineEdit.new()
+	disabled_tip_edit.text = str(spot_data.get("disabled_tooltip", ""))
+	disabled_tip_edit.placeholder_text = "hover text when disabled (optional)"
+	disabled_tip_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	disabled_tip_edit.add_theme_font_size_override("font_size", 12)
+	disabled_tip_edit.tooltip_text = "Shown on hover after the spot is disabled. Leave blank for no tip."
+	disabled_tip_row.add_child(disabled_tip_edit)
+	vb.add_child(disabled_tip_row)
+
+	# Index 9: Actions header
 	var acts_hdr := Label.new()
 	acts_hdr.text = "Actions on click:"
 	acts_hdr.add_theme_font_size_override("font_size", 11)
 	acts_hdr.add_theme_color_override("font_color", Color(0.80, 0.65, 1.0))
 	vb.add_child(acts_hdr)
 
-	# Index 7: Actions VBox
+	# Index 10: Actions VBox
 	var acts_vbox := VBoxContainer.new()
 	acts_vbox.add_theme_constant_override("separation", 3)
 	acts_vbox.set_meta("spot_index", spots_vbox.get_child_count() - 1)
 	vb.add_child(acts_vbox)
 
-	# Index 8: Add Action button
+	# Index 11: Add Action button
 	var add_act_btn := Button.new()
 	add_act_btn.text = "+ Add Action"
 	add_act_btn.add_theme_font_size_override("font_size", 11)
 	add_act_btn.pressed.connect(func() -> void: _add_spot_action_row(acts_vbox))
 	vb.add_child(add_act_btn)
 
-	# Index 9: Conditions header
+	# Index 12: Conditions header
 	var cond_hdr := Label.new()
 	cond_hdr.text = "Conditions (all must pass to show):"
 	cond_hdr.add_theme_font_size_override("font_size", 11)
 	cond_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
 	vb.add_child(cond_hdr)
 
-	# Index 10: Conditions VBox
+	# Index 13: Conditions VBox
 	var cond_vbox := VBoxContainer.new()
 	cond_vbox.add_theme_constant_override("separation", 3)
 	vb.add_child(cond_vbox)
 
-	# Index 11: Add Condition button
+	# Index 14: Add Condition button
 	var add_cond_btn := Button.new()
 	add_cond_btn.text = "+ Condition"
 	add_cond_btn.add_theme_font_size_override("font_size", 11)
@@ -2134,6 +2212,67 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	vb.add_child(tool_row)
 	frame.set_meta("requires_tool_opt", tool_opt)
 	frame.set_meta("reveal_radius_spin", radius_spin)
+
+	# Spot temperature + translator mumbling (meta-collected; after tool row).
+	var tool_fx_row := HBoxContainer.new()
+	tool_fx_row.add_theme_constant_override("separation", 4)
+	var temp_spot_lbl := Label.new()
+	temp_spot_lbl.text = "Temp °C"
+	temp_spot_lbl.tooltip_text = "Thermometer target at this spot. Leave unchecked to use room temperature."
+	temp_spot_lbl.add_theme_font_size_override("font_size", 12)
+	tool_fx_row.add_child(temp_spot_lbl)
+	var temp_enable := CheckBox.new()
+	temp_enable.text = "set"
+	temp_enable.add_theme_font_size_override("font_size", 12)
+	var temp_spot_spin := SpinBox.new()
+	temp_spot_spin.min_value = -50.0
+	temp_spot_spin.max_value = 100.0
+	temp_spot_spin.step = 1.0
+	temp_spot_spin.value = 25.0
+	temp_spot_spin.editable = false
+	temp_spot_spin.custom_minimum_size = Vector2(80, 0)
+	temp_spot_spin.add_theme_font_size_override("font_size", 12)
+	if spot_data.has("temperature"):
+		temp_enable.button_pressed = true
+		temp_spot_spin.editable = true
+		temp_spot_spin.value = float(spot_data.get("temperature", 25.0))
+	temp_enable.toggled.connect(func(on: bool) -> void: temp_spot_spin.editable = on)
+	tool_fx_row.add_child(temp_enable)
+	tool_fx_row.add_child(temp_spot_spin)
+	vb.add_child(tool_fx_row)
+	var mumble_edit := _add_file_field(vb, "Mumbling SFX (Translator close)",
+		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio"]), "res://assets/audio/sfx/mumbling")
+	mumble_edit.text = str(spot_data.get("mumbling_sound", "")).strip_edges()
+	var mumble_play_btn := Button.new()
+	mumble_play_btn.text = "▶"
+	mumble_play_btn.custom_minimum_size = Vector2(30, 0)
+	mumble_play_btn.add_theme_font_size_override("font_size", 12)
+	mumble_play_btn.tooltip_text = "Preview mumbling SFX"
+	mumble_play_btn.pressed.connect(func() -> void: _preview_audio(mumble_edit.text.strip_edges()))
+	mumble_edit.get_parent().add_child(mumble_play_btn)
+	var mumble_stop_btn := Button.new()
+	mumble_stop_btn.text = "■"
+	mumble_stop_btn.custom_minimum_size = Vector2(30, 0)
+	mumble_stop_btn.add_theme_font_size_override("font_size", 12)
+	mumble_stop_btn.tooltip_text = "Stop preview"
+	mumble_stop_btn.pressed.connect(func() -> void: if _preview_player != null: _preview_player.stop())
+	mumble_edit.get_parent().add_child(mumble_stop_btn)
+	var smoke_edit := _add_file_field(vb, "Polaroid smoke image (optional)",
+		PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Images"]),
+		"res://assets/textures/ui/battle/v3_magitech/vfx")
+	smoke_edit.text = str(spot_data.get("smoke_image", "")).strip_edges()
+	smoke_edit.tooltip_text = "Custom smoke texture for Polaroid Mode 2 photos. Empty = random default smoke."
+	var smoke_preview_btn := Button.new()
+	smoke_preview_btn.text = "Preview"
+	smoke_preview_btn.custom_minimum_size = Vector2(60, 0)
+	smoke_preview_btn.add_theme_font_size_override("font_size", 12)
+	smoke_preview_btn.tooltip_text = "Preview smoke image"
+	smoke_preview_btn.pressed.connect(func() -> void: _preview_image(smoke_edit.text.strip_edges()))
+	smoke_edit.get_parent().add_child(smoke_preview_btn)
+	frame.set_meta("temp_enable_chk", temp_enable)
+	frame.set_meta("temp_spot_spin", temp_spot_spin)
+	frame.set_meta("mumbling_edit", mumble_edit)
+	frame.set_meta("smoke_edit", smoke_edit)
 
 	# Index 10: Remove button
 	var del_btn := Button.new()
@@ -2323,14 +2462,35 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 				if c is CheckBox:
 					hide_after_interact = (c as CheckBox).button_pressed
 					break
-		# Index 7: acts_vbox — VBoxContainer
+		# Index 6: disabled_after_interact CheckBox
+		var disabled_after_interact: bool = false
+		if vb.get_child_count() > 6 and vb.get_child(6) is HBoxContainer:
+			for c: Node in (vb.get_child(6) as HBoxContainer).get_children():
+				if c is CheckBox:
+					disabled_after_interact = (c as CheckBox).button_pressed
+					break
+		# Index 7: disabled_icon LineEdit
+		var disabled_icon_path: String = ""
+		if vb.get_child_count() > 7 and vb.get_child(7) is HBoxContainer:
+			for c: Node in (vb.get_child(7) as HBoxContainer).get_children():
+				if c is LineEdit:
+					disabled_icon_path = (c as LineEdit).text.strip_edges()
+					break
+		# Index 8: disabled_tooltip LineEdit
+		var disabled_tooltip: String = ""
+		if vb.get_child_count() > 8 and vb.get_child(8) is HBoxContainer:
+			for c: Node in (vb.get_child(8) as HBoxContainer).get_children():
+				if c is LineEdit:
+					disabled_tooltip = (c as LineEdit).text
+					break
+		# Index 10: acts_vbox — VBoxContainer
 		var actions: Array = []
-		if vb.get_child_count() > 7 and vb.get_child(7) is VBoxContainer:
-			actions = _collect_events(vb.get_child(7) as VBoxContainer)
-		# Index 10: conds_vbox — VBoxContainer
-		var conditions: Array = []
 		if vb.get_child_count() > 10 and vb.get_child(10) is VBoxContainer:
-			conditions = _collect_conditions_from_vbox(vb.get_child(10) as VBoxContainer)
+			actions = _collect_events(vb.get_child(10) as VBoxContainer)
+		# Index 13: conds_vbox — VBoxContainer
+		var conditions: Array = []
+		if vb.get_child_count() > 13 and vb.get_child(13) is VBoxContainer:
+			conditions = _collect_conditions_from_vbox(vb.get_child(13) as VBoxContainer)
 		var entry: Dictionary = {
 			"x_norm":             x_norm,
 			"y_norm":             y_norm,
@@ -2338,9 +2498,14 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 			"icon_scale":         icon_scale,
 			"tooltip":            tooltip,
 			"hide_after_interact": hide_after_interact,
+			"disabled_after_interact": disabled_after_interact,
 			"actions":            actions,
 			"conditions":         conditions,
 		}
+		if not disabled_icon_path.is_empty():
+			entry["disabled_icon"] = disabled_icon_path
+		if not disabled_tooltip.strip_edges().is_empty():
+			entry["disabled_tooltip"] = disabled_tooltip
 		if hitbox_w > 0.0:
 			entry["hitbox_w"] = hitbox_w
 		if hitbox_h > 0.0:
@@ -2356,6 +2521,23 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 			var radius_spin := frame.get_meta("reveal_radius_spin") as SpinBox
 			if radius_spin != null and radius_spin.value > 0.0:
 				entry["reveal_radius"] = radius_spin.value
+		if frame.has_meta("temp_enable_chk") and frame.has_meta("temp_spot_spin"):
+			var temp_chk := frame.get_meta("temp_enable_chk") as CheckBox
+			var temp_spin := frame.get_meta("temp_spot_spin") as SpinBox
+			if temp_chk != null and temp_spin != null and temp_chk.button_pressed:
+				entry["temperature"] = float(temp_spin.value)
+		if frame.has_meta("mumbling_edit"):
+			var mumble_edit := frame.get_meta("mumbling_edit") as LineEdit
+			if mumble_edit != null:
+				var mpath: String = mumble_edit.text.strip_edges()
+				if not mpath.is_empty():
+					entry["mumbling_sound"] = mpath
+		if frame.has_meta("smoke_edit"):
+			var smoke_edit := frame.get_meta("smoke_edit") as LineEdit
+			if smoke_edit != null:
+				var spath: String = smoke_edit.text.strip_edges()
+				if not spath.is_empty():
+					entry["smoke_image"] = spath
 		result.append(entry)
 	return result
 
@@ -2756,6 +2938,12 @@ func _populate_props(en: ExplorationNode) -> void:
 			var cd: Dictionary = cond as Dictionary
 			_add_media_cond_row(_prop_music_cond_vbox, false,
 				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("path", "")))
+	if _prop_room_temp_spin != null:
+		_prop_room_temp_spin.value = en.room_temperature
+	if _prop_photo_alt_edit != null:
+		_prop_photo_alt_edit.text = en.photo_alt_background
+	if _prop_photo_vn_edit != null:
+		_prop_photo_vn_edit.text = en.photo_vn_scene
 
 	# On-enter events
 	for child: Node in _prop_events_in_vbox.get_children():
@@ -2896,6 +3084,12 @@ func _collect_props(en: ExplorationNode) -> void:
 				"equals": (frame.get_meta("eq_edit")   as LineEdit).text.strip_edges(),
 				"path":   (frame.get_meta("path_edit") as LineEdit).text.strip_edges(),
 			})
+	if _prop_room_temp_spin != null:
+		en.room_temperature = float(_prop_room_temp_spin.value)
+	if _prop_photo_alt_edit != null:
+		en.photo_alt_background = _prop_photo_alt_edit.text.strip_edges()
+	if _prop_photo_vn_edit != null:
+		en.photo_vn_scene = _prop_photo_vn_edit.text.strip_edges()
 
 	# On-enter events
 	en.on_enter_events.clear()
@@ -3307,6 +3501,9 @@ func _generate_reward_report() -> String:
 		var hide_after: Variant = entry.get("hide_after", null)
 		if hide_after != null:
 			lines.append("Hide after click: %s" % ("yes" if bool(hide_after) else "no"))
+		var disable_after: Variant = entry.get("disable_after", null)
+		if disable_after != null:
+			lines.append("Disable after click: %s" % ("yes" if bool(disable_after) else "no"))
 		var event_gate: String = str(entry.get("event_gate", ""))
 		if not event_gate.is_empty():
 			lines.append("Event gate: %s" % event_gate)
@@ -3326,6 +3523,7 @@ func _collect_spot_reward_entries(entries: Array[Dictionary], node: ExplorationN
 		var extra: Dictionary = {
 			"tooltip": str(spot.get("tooltip", "")),
 			"hide_after": bool(spot.get("hide_after_interact", false)),
+			"disable_after": bool(spot.get("disabled_after_interact", false)),
 			"conditions": spot.get("conditions", []) if spot.get("conditions", []) is Array else [],
 		}
 		_append_reward_entries_from_actions(
@@ -3389,6 +3587,7 @@ func _append_reward_entries_from_actions(
 			"chain": _format_report_action_chain(actions, action_idx),
 			"tooltip": str(extra.get("tooltip", "")),
 			"hide_after": extra.get("hide_after", null),
+			"disable_after": extra.get("disable_after", null),
 			"conditions": extra.get("conditions", []),
 			"event_gate": str(extra.get("event_gate", "")),
 		})

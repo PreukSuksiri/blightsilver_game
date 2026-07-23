@@ -151,6 +151,15 @@ enum NodeType {
 ## If a match is found its "path" is used instead of `music`.
 @export var music_conditions: Array = []
 
+## Ambient room temperature (°C) for the thermometer tool. Default 25.
+@export var room_temperature: float = 25.0
+
+## Optional alternate background used by Polaroid Mode 2 photos. Empty = use this node's background.
+@export var photo_alt_background: String = ""
+
+## Optional VN beat played after a Polaroid Mode 2 photo, before the overlay can be dismissed.
+@export var photo_vn_scene: String = ""
+
 ## BATTLE node audio — applied when start_battle_for_node() runs.
 ## Blank paths fall back to engine defaults at battle start.
 @export var battle_bgm: String = ""
@@ -193,6 +202,11 @@ enum NodeType {
 ##     "hitbox_w": float                    — click area width in px (0 = auto from icon or 24)
 ##     "hitbox_h": float                    — click area height in px (0 = auto from icon or 24)
 ##     "tooltip": String                   — text shown on hover
+##     "hide_after_interact": bool         — remove spot entirely after a successful click
+##     "disabled_after_interact": bool     — keep spot after click but make it non-interactable;
+##                                           still tool-detectable and visible on Polaroid photos
+##     "disabled_icon": String             — optional icon while disabled (empty = no image)
+##     "disabled_tooltip": String          — optional hover text while disabled (empty = no tip)
 ##     "actions": Array                    — action dicts fired on click (see on_enter_events format)
 ##                                           extra action types: "play_vn" (optional play_once), "navigate_to", "play_puzzle"
 ##                                           play_puzzle: value = puzzle id, key = optional params (JSON or text)
@@ -204,6 +218,11 @@ enum NodeType {
 ##                                           (no requires_tool) are temporarily hidden.
 ##     "reveal_radius": float               — proximity reveal radius in px for tool-gated spots
 ##                                           (0 = default TOOL_REVEAL_RADIUS in ExplorationPlayer)
+##     "temperature": float                 — optional °C target for thermometer blend (omit = room temp)
+##     "mumbling_sound": String             — optional Translator close-band mumbling SFX path
+##                                           (empty = random from assets/audio/sfx/mumbling/)
+##     "smoke_image": String                — optional Polaroid Mode 2 smoke texture for this spot
+##                                           (empty = random from magitech smoke VFX pool)
 ##     "vn_scene": String                  — legacy field; treated as play_vn action if actions empty
 ##   }
 @export var clickable_spots: Array = []
@@ -339,6 +358,9 @@ func to_dict() -> Dictionary:
 		"show_who_is_here":   show_who_is_here,
 		"music":              music,
 		"music_conditions":   music_conditions.duplicate(true),
+		"room_temperature":     room_temperature,
+		"photo_alt_background": photo_alt_background,
+		"photo_vn_scene":       photo_vn_scene,
 		"battle_bgm":         battle_bgm,
 		"setup_bgm":          setup_bgm,
 		"almost_win_bgm":     almost_win_bgm,
@@ -384,6 +406,9 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	node.music       = str(d.get("music",       ""))
 	var msc: Variant = d.get("music_conditions", [])
 	node.music_conditions = msc if msc is Array else []
+	node.room_temperature = float(d.get("room_temperature", 25.0))
+	node.photo_alt_background = str(d.get("photo_alt_background", "")).strip_edges()
+	node.photo_vn_scene = str(d.get("photo_vn_scene", "")).strip_edges()
 	node.battle_bgm         = str(d.get("battle_bgm", ""))
 	node.setup_bgm          = str(d.get("setup_bgm", ""))
 	node.almost_win_bgm     = str(d.get("almost_win_bgm", ""))

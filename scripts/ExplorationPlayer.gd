@@ -195,12 +195,16 @@ var _hovered_nav_panel: Control    = null   # nav-choice panel currently being h
 
 # ── Detective tool (active-cursor state) ──────────────────────────────────
 const TOOL_REVEAL_RADIUS: float = 90.0      # default proximity reveal radius (px)
-const TOOL_CURSOR_SIZE: Vector2 = Vector2(40.0, 40.0)
+const TOOL_CURSOR_SIZE: Vector2 = Vector2(64.0, 64.0)
+const DetectiveToolFxScript = preload("res://scripts/DetectiveToolFx.gd")
 var _active_tool_id: String        = ""     # empty = no tool active
-# Entries: { "hit": Control, "center": Vector2, "radius": float, "revealed": bool }
+# Entries: { "hit": Control, "center": Vector2, "radius": float, "revealed": bool, ... }
 var _tool_spots: Array             = []
 var _tool_dismiss_pending: bool    = false
+var _tool_banner_layer: CanvasLayer = null
 var _tool_banner: Label            = null    # top-right "<Tool> Activated" text
+var _tool_fx: Control              = null    # DetectiveToolFx active-state HUD/SFX
+var _tool_activate_grace_msec: int = 0       # ignore dismiss clicks briefly after activate
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -1034,6 +1038,12 @@ func _dispatch_hud_click(which: String) -> void:
 		"info":
 			_on_info_clicked()
 
+
+## HUD icon taps dismiss the active detective tool (cursor / FX / banner).
+func _deactivate_tool_for_hud_button() -> void:
+	if not _active_tool_id.is_empty():
+		_deactivate_tool()
+
 ## Close every HUD menu except [param except_id], then continue the tapped icon's action.
 func _close_other_hud_menus(except_id: String) -> void:
 	if except_id != "compass" and _compass_open:
@@ -1053,6 +1063,7 @@ func _close_other_hud_menus(except_id: String) -> void:
 func _on_compass_clicked() -> void:
 	if _enter_vn_hud_blocked:
 		return
+	_deactivate_tool_for_hud_button()
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _compass_animating:
@@ -1270,6 +1281,7 @@ func _on_radial_item_selected(target_id: String) -> void:
 func _on_setting_clicked() -> void:
 	if _enter_vn_hud_blocked:
 		return
+	_deactivate_tool_for_hud_button()
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _setting_animating:
@@ -1492,6 +1504,7 @@ func _open_detective_note_overlay() -> void:
 func _on_inventory_clicked() -> void:
 	if _enter_vn_hud_blocked:
 		return
+	_deactivate_tool_for_hud_button()
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _inv_animating:
@@ -1691,6 +1704,7 @@ func _on_inventory_item_selected(item_id: String) -> void:
 func _on_chat_clicked() -> void:
 	if _enter_vn_hud_blocked:
 		return
+	_deactivate_tool_for_hud_button()
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _chat_animating:
@@ -1935,6 +1949,7 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 func _on_info_clicked() -> void:
 	if _enter_vn_hud_blocked:
 		return
+	_deactivate_tool_for_hud_button()
 	_register_exploration_activity()
 	if _is_info_panel_showing():
 		_close_info_panel(true)
@@ -2712,15 +2727,15 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center.add_child(vbox)
 
-	# Envelope icon
-	var icon_lbl := Label.new()
-	icon_lbl.text = "[ ✉ ]"
-	_tag_ui(icon_lbl, "font", 300)
-	icon_lbl.add_theme_font_size_override("font_size", 52)
-	icon_lbl.add_theme_color_override("font_color", Color(0.0, 1.0, 0.9))
-	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	icon_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
-	vbox.add_child(icon_lbl)
+	# Same mailbox art as main-menu MailboxIconBtn (no brackets / unicode).
+	var icon_tr := TextureRect.new()
+	icon_tr.texture = load("res://assets/textures/ui/decorations/ui_mailbox.png") as Texture2D
+	icon_tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon_tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon_tr.custom_minimum_size = Vector2(88, 88)
+	icon_tr.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	icon_tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(icon_tr)
 
 	# Primary text
 	var sent_lbl := Label.new()
@@ -3676,7 +3691,8 @@ func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionar
 		cleanup.call()
 		on_done.call(success))
 
-func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
+func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true,
+		deactivate_tool: bool = true) -> void:
 	if _vn_playing or _puzzle_playing:
 		on_done.call()
 		return
@@ -3684,7 +3700,8 @@ func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
 		on_done.call()
 		return
-	_deactivate_tool()   # never carry the tool cursor into a VN
+	if deactivate_tool:
+		_deactivate_tool()   # never carry the tool cursor into a VN
 	ExplorationManager.snapshot_bgm_before_vn()
 	_vn_playing = true
 	_refresh_flashlight_state()
@@ -3909,11 +3926,15 @@ func _activate_tool(item_id: String) -> void:
 		return
 	_active_tool_id       = item_id
 	_tool_dismiss_pending = false
+	# Ignore the activating click (and a short tail) so the tool does not
+	# immediately dismiss itself via _input.
+	_tool_activate_grace_msec = Time.get_ticks_msec() + 400
 	GameState.set_cursor_override(tex, TOOL_CURSOR_SIZE * 0.5, TOOL_CURSOR_SIZE)
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_show_tool_banner(str(item.get("name", item_id)))
 	if ExplorationManager.current_node != null:
 		_rebuild_spots(ExplorationManager.current_node)
+	_start_tool_fx(item_id)
 
 ## Leave "tool active" state: restore the finger cursor and remove tool-gated spots.
 func _deactivate_tool() -> void:
@@ -3924,38 +3945,197 @@ func _deactivate_tool() -> void:
 	_tool_spots.clear()
 	GameState.clear_cursor_override()
 	_hide_tool_banner()
+	_stop_tool_fx()
 	if is_inside_tree() and ExplorationManager.current_node != null:
 		_rebuild_spots(ExplorationManager.current_node)
 
+
+func _ensure_tool_fx() -> void:
+	if _tool_fx != null and is_instance_valid(_tool_fx):
+		return
+	_tool_fx = DetectiveToolFxScript.new()
+	add_child(_tool_fx)
+	_tool_fx.photo_vn_requested.connect(_on_tool_fx_photo_vn)
+	_tool_fx.polaroid_shot_finished.connect(_on_tool_fx_polaroid_shot_finished)
+	_tool_fx.polaroid_overlay_dismissed.connect(_on_tool_fx_polaroid_dismissed)
+
+
+func _start_tool_fx(item_id: String) -> void:
+	_ensure_tool_fx()
+	var node: ExplorationNode = ExplorationManager.current_node
+	var opts: Dictionary = {
+		"room_temperature": 25.0,
+		"photo_alt_background": "",
+		"photo_vn_scene": "",
+		"background_texture": _bg_rect.texture if _bg_rect != null else null,
+		"photo_smoke_spots": _all_tool_gated_spots_for_photo(),
+	}
+	if node != null:
+		opts["room_temperature"] = node.room_temperature
+		opts["photo_alt_background"] = node.photo_alt_background
+		opts["photo_vn_scene"] = node.photo_vn_scene
+	_tool_fx.call("start_tool", item_id, _tool_spots_for_fx(), opts)
+
+
+## Every unlockable tool-gated spot in the current room (any detective tool).
+## Used by Polaroid Mode 2 smoke — not limited to the active tool's spots.
+func _all_tool_gated_spots_for_photo() -> Array:
+	var out: Array = []
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return out
+	var vp: Vector2 = get_viewport_rect().size
+	for i: int in node.clickable_spots.size():
+		var spot_var: Variant = node.clickable_spots[i]
+		if not spot_var is Dictionary:
+			continue
+		var spot: Dictionary = spot_var as Dictionary
+		var required: String = str(spot.get("requires_tool", "")).strip_edges()
+		if required.is_empty():
+			continue
+		if not ExplorationManager.is_connection_unlocked(spot):
+			continue
+		if bool(spot.get("hide_after_interact", false)) \
+				and ExplorationManager.is_spot_interacted(ExplorationManager.current_node_id, i):
+			continue
+		var xn: float = float(spot.get("x_norm", 0.5))
+		var yn: float = float(spot.get("y_norm", 0.5))
+		var radius: float = float(spot.get("reveal_radius", 0.0))
+		if radius <= 0.0:
+			radius = TOOL_REVEAL_RADIUS
+		var entry: Dictionary = {
+			"center": Vector2(xn * vp.x, yn * vp.y),
+			"x_norm": xn,
+			"y_norm": yn,
+			"radius": radius,
+			"requires_tool": required,
+		}
+		var smoke_path: String = str(spot.get("smoke_image", "")).strip_edges()
+		if not smoke_path.is_empty():
+			entry["smoke_image"] = smoke_path
+		out.append(entry)
+	return out
+
+
+func _stop_tool_fx() -> void:
+	if _tool_fx != null and is_instance_valid(_tool_fx):
+		_tool_fx.call("stop_tool")
+
+
+func _tool_spots_for_fx() -> Array:
+	var out: Array = []
+	for entry_var: Variant in _tool_spots:
+		if not entry_var is Dictionary:
+			continue
+		var e: Dictionary = entry_var as Dictionary
+		var copy: Dictionary = {
+			"center": e.get("center", Vector2.ZERO),
+			"radius": float(e.get("radius", TOOL_REVEAL_RADIUS)),
+		}
+		if e.has("temperature"):
+			copy["temperature"] = float(e.get("temperature"))
+		var mumble: String = str(e.get("mumbling_sound", "")).strip_edges()
+		if not mumble.is_empty():
+			copy["mumbling_sound"] = mumble
+		out.append(copy)
+	return out
+
+
+func _sync_tool_fx_spots() -> void:
+	if _tool_fx != null and is_instance_valid(_tool_fx) and not _active_tool_id.is_empty():
+		_tool_fx.call("set_spots", _tool_spots_for_fx())
+
+
+func _on_tool_fx_photo_vn(path: String) -> void:
+	# Tool active mode already left after the shot; keep overlay through the VN beat.
+	_play_vn(path, func() -> void:
+		if _tool_fx != null and is_instance_valid(_tool_fx):
+			_tool_fx.call("notify_photo_vn_finished")
+	, true, false)
+
+
+func _on_tool_fx_polaroid_shot_finished() -> void:
+	# Leave polaroid active mode immediately after a Mode 2 picture; keep the overlay.
+	_tool_dismiss_pending = false
+	if _active_tool_id.is_empty():
+		if _tool_fx != null and is_instance_valid(_tool_fx):
+			_tool_fx.call("exit_active_keep_overlay")
+		return
+	_active_tool_id = ""
+	_tool_spots.clear()
+	GameState.clear_cursor_override()
+	_hide_tool_banner()
+	if _tool_fx != null and is_instance_valid(_tool_fx):
+		_tool_fx.call("exit_active_keep_overlay")
+	if is_inside_tree() and ExplorationManager.current_node != null:
+		_rebuild_spots(ExplorationManager.current_node)
+
+
+func _on_tool_fx_polaroid_dismissed() -> void:
+	# Active mode is already cleared on shot; only fully stop if somehow still active.
+	if not _active_tool_id.is_empty():
+		_deactivate_tool()
+
+
+func _is_press_over_revealed_tool_spot(global_pos: Vector2) -> bool:
+	for entry_var: Variant in _tool_spots:
+		if not entry_var is Dictionary:
+			continue
+		var e: Dictionary = entry_var as Dictionary
+		if not bool(e.get("revealed", false)):
+			continue
+		# Disabled-after spots are hover-only; do not treat as Mode 1 click targets.
+		if not bool(e.get("interactable", true)):
+			continue
+		var hit: Control = e.get("hit")
+		if hit != null and is_instance_valid(hit) and hit.get_global_rect().has_point(global_pos):
+			return true
+	return false
+
 ## Top-right white banner naming the active tool, e.g. "Translator Activated".
 func _show_tool_banner(tool_name: String) -> void:
+	if _tool_banner_layer == null or not is_instance_valid(_tool_banner_layer):
+		_tool_banner_layer = CanvasLayer.new()
+		_tool_banner_layer.name = "ToolBannerLayer"
+		_tool_banner_layer.layer = 71
+		add_child(_tool_banner_layer)
 	if _tool_banner == null or not is_instance_valid(_tool_banner):
+		var root := Control.new()
+		root.name = "ToolBannerRoot"
+		root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_tool_banner_layer.add_child(root)
+		root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		_tool_banner = Label.new()
 		_tool_banner.name          = "ToolBanner"
-		_tool_banner.z_index       = 90   # above spots/tooltip, below item preview (50 is lower z-layer)
 		_tool_banner.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 		_tool_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		_tag_ui(_tool_banner, "font", 700)
-		_tool_banner.add_theme_font_size_override("font_size", 28)
+		_tool_banner.add_theme_font_size_override("font_size", 30)
 		_tool_banner.add_theme_color_override("font_color", Color.WHITE)
 		# Bold dark outline/shadow so the white text reads over any background.
 		_tool_banner.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 		_tool_banner.add_theme_constant_override("shadow_offset_x", 2)
 		_tool_banner.add_theme_constant_override("shadow_offset_y", 2)
 		_tool_banner.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.9))
-		_tool_banner.add_theme_constant_override("outline_size", 6)
-		add_child(_tool_banner)
+		_tool_banner.add_theme_constant_override("outline_size", 8)
+		root.add_child(_tool_banner)
 		_tool_banner.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-		_tool_banner.offset_left   = -520.0
-		_tool_banner.offset_top    = 28.0
-		_tool_banner.offset_right  = -28.0
-		_tool_banner.offset_bottom = 72.0
+		_tool_banner.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		_tool_banner.grow_vertical = Control.GROW_DIRECTION_END
+		_tool_banner.offset_left   = -560.0
+		_tool_banner.offset_top    = 24.0
+		_tool_banner.offset_right  = -24.0
+		_tool_banner.offset_bottom = 70.0
 	_tool_banner.text    = "%s Activated" % tool_name
 	_tool_banner.visible = true
+	if _tool_banner_layer != null:
+		_tool_banner_layer.visible = true
 
 func _hide_tool_banner() -> void:
 	if _tool_banner != null and is_instance_valid(_tool_banner):
 		_tool_banner.visible = false
+	if _tool_banner_layer != null and is_instance_valid(_tool_banner_layer):
+		_tool_banner_layer.visible = false
 
 ## Reveal tool-gated spots the cursor sweeps near; once found they stay revealed
 ## until the tool is dismissed.
@@ -3975,7 +4155,11 @@ func _update_tool_reveal() -> void:
 		if mouse.distance_to(center) <= radius:
 			entry["revealed"]   = true
 			hit.visible          = true
-			hit.mouse_filter     = Control.MOUSE_FILTER_STOP
+			# Disabled-after: not clickable, but hoverable if a disabled tooltip is set.
+			if bool(entry.get("interactable", true)) or bool(entry.get("hoverable", false)):
+				hit.mouse_filter = Control.MOUSE_FILTER_STOP
+			else:
+				hit.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var fade := create_tween()
 			hit.modulate.a = 0.0
 			fade.tween_property(hit, "modulate:a", 1.0, 0.18)
@@ -4040,17 +4224,17 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 		child.queue_free()
 	_tool_spots.clear()     # freed above; re-registered below for the active tool
 	_on_spot_hover_exit()   # ensure cursor + tooltip reset when node changes
-	if node.clickable_spots.is_empty():
-		return
-	var vp: Vector2 = get_viewport_rect().size
-	# Use full viewport width so x_norm 0-1 maps to the full background image width,
-	# matching the coordinate picker in the editor.
-	var bg_w: float = vp.x
-	var bg_h: float = vp.y
-	for i: int in node.clickable_spots.size():
-		var spot_var: Variant = node.clickable_spots[i]
-		if spot_var is Dictionary:
-			_spawn_spot(spot_var as Dictionary, bg_w, bg_h, i)
+	if not node.clickable_spots.is_empty():
+		var vp: Vector2 = get_viewport_rect().size
+		# Use full viewport width so x_norm 0-1 maps to the full background image width,
+		# matching the coordinate picker in the editor.
+		var bg_w: float = vp.x
+		var bg_h: float = vp.y
+		for i: int in node.clickable_spots.size():
+			var spot_var: Variant = node.clickable_spots[i]
+			if spot_var is Dictionary:
+				_spawn_spot(spot_var as Dictionary, bg_w, bg_h, i)
+	_sync_tool_fx_spots()
 
 func _clear_spots() -> void:
 	if _spots_layer == null:
@@ -4077,18 +4261,28 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 			return
 	elif required_tool != _active_tool_id:
 		return
-	# Skip one-time spots already used or currently running an action queue
+	# Skip hide-after spots already used or currently running an action queue.
+	# Disabled-after spots stay spawned (non-interactable) so tools/Polaroid still see them.
 	var spot_key_node: String = ExplorationManager.current_node_id
-	if bool(spot.get("hide_after_interact", false)) \
-			and (ExplorationManager.is_spot_interacted(spot_key_node, spot_index) \
-			or ExplorationManager.is_spot_in_progress(spot_key_node, spot_index)):
+	var hide_after: bool = bool(spot.get("hide_after_interact", false))
+	var disable_after: bool = bool(spot.get("disabled_after_interact", false))
+	var already_interacted: bool = ExplorationManager.is_spot_interacted(spot_key_node, spot_index)
+	var in_progress: bool = ExplorationManager.is_spot_in_progress(spot_key_node, spot_index)
+	if hide_after and (already_interacted or in_progress):
 		return
+	var is_disabled: bool = disable_after and already_interacted
+	var block_click: bool = is_disabled or (disable_after and in_progress)
 
 	var xn: float         = float(spot.get("x_norm",    0.5))
 	var yn: float         = float(spot.get("y_norm",    0.5))
 	var icon_path: String = str(spot.get("icon",        ""))
+	if is_disabled:
+		icon_path = str(spot.get("disabled_icon", "")).strip_edges()
 	var icon_scale: float = float(spot.get("icon_scale", 100.0))
 	var tip: String       = str(spot.get("tooltip",     ""))
+	if is_disabled:
+		tip = str(spot.get("disabled_tooltip", ""))
+	var can_hover: bool = not tip.is_empty() and not (disable_after and in_progress and not is_disabled)
 
 	# Build actions list; backward-compat: bare vn_scene field → play_vn action
 	var actions: Array = []
@@ -4118,7 +4312,9 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	var hit := Control.new()
 	hit.position     = Vector2(xn * bg_w - hit_w * 0.5, yn * bg_h - hit_h * 0.5)
 	hit.size         = Vector2(hit_w, hit_h)
-	hit.mouse_filter = Control.MOUSE_FILTER_STOP
+	# Disabled spots may still receive hover for alternate tooltip (clicks stay blocked).
+	hit.mouse_filter = Control.MOUSE_FILTER_STOP if (not block_click or can_hover) \
+			else Control.MOUSE_FILTER_IGNORE
 	_spots_layer.add_child(hit)
 
 	if has_icon:
@@ -4132,44 +4328,63 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 
 	var cap_tip:   String = tip
 	var cap_acts:  Array  = actions
-	var cap_hide:  bool   = bool(spot.get("hide_after_interact", false))
+	var cap_hide:  bool   = hide_after
+	var cap_disable: bool = disable_after
 	var cap_node:  String = ExplorationManager.current_node_id
 	var cap_index: int    = spot_index
 	var apply_hide := func() -> void:
 		# Spot may already be freed if var/inventory change triggered _rebuild_spots mid-action.
 		if is_instance_valid(hit):
 			hit.visible = false
-	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip, hit))
-	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
-	hit.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton:
-			var mb := ev as InputEventMouseButton
-			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-				ExplorationManager.set_pending_spot_interaction(cap_node, cap_index, cap_hide)
-				if cap_hide:
-					ExplorationManager.begin_spot_interaction(cap_node, cap_index)
-					apply_hide.call()
-				var complete_cb: Callable = Callable()
-				if cap_hide:
-					complete_cb = func() -> void:
-						ExplorationManager.mark_spot_interacted(cap_node, cap_index)
-						ExplorationManager.end_spot_interaction(cap_node, cap_index)
+	if can_hover:
+		hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip, hit))
+		hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
+	if not block_click:
+		hit.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton:
+				var mb := ev as InputEventMouseButton
+				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+					ExplorationManager.set_pending_spot_interaction(
+						cap_node, cap_index, cap_hide, cap_disable)
+					if cap_hide or cap_disable:
+						ExplorationManager.begin_spot_interaction(cap_node, cap_index)
+					if cap_hide:
 						apply_hide.call()
-				_handle_spot_click(cap_acts, complete_cb, spot))
+					var complete_cb: Callable = Callable()
+					if cap_hide:
+						complete_cb = func() -> void:
+							ExplorationManager.mark_spot_interacted(cap_node, cap_index)
+							ExplorationManager.end_spot_interaction(cap_node, cap_index)
+							apply_hide.call()
+					elif cap_disable:
+						complete_cb = func() -> void:
+							ExplorationManager.mark_spot_interacted(cap_node, cap_index)
+							ExplorationManager.end_spot_interaction(cap_node, cap_index)
+							_refresh_spots_for_state()
+					_handle_spot_click(cap_acts, complete_cb, spot))
 
 	# Tool-gated spot: start hidden and reveal by proximity (see _process).
+	# Disabled spots stay detectable / photo-smokeable but never become clickable.
 	if not required_tool.is_empty():
 		hit.visible      = false
 		hit.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var radius: float = float(spot.get("reveal_radius", 0.0))
 		if radius <= 0.0:
 			radius = TOOL_REVEAL_RADIUS
-		_tool_spots.append({
-			"hit":      hit,
-			"center":   Vector2(xn * bg_w, yn * bg_h),
-			"radius":   radius,
-			"revealed": false,
-		})
+		var tool_entry: Dictionary = {
+			"hit":          hit,
+			"center":       Vector2(xn * bg_w, yn * bg_h),
+			"radius":       radius,
+			"revealed":     false,
+			"interactable": not block_click,
+			"hoverable":    can_hover,
+		}
+		if spot.has("temperature"):
+			tool_entry["temperature"] = float(spot.get("temperature"))
+		var mumble: String = str(spot.get("mumbling_sound", "")).strip_edges()
+		if not mumble.is_empty():
+			tool_entry["mumbling_sound"] = mumble
+		_tool_spots.append(tool_entry)
 
 func _handle_spot_click(actions: Array, hide_on_success: Callable, spot: Dictionary = {}) -> void:
 	if _is_hidden_spot(spot):
@@ -4278,7 +4493,7 @@ func _abort_pending_spot_interaction() -> void:
 	ExplorationManager.end_spot_interaction(node_id, spot_index)
 	ExplorationManager.clear_pending_spot_on_complete()
 	ExplorationManager.reset_pending_play_once_paths()
-	if bool(ctx.get("hide_after", false)):
+	if bool(ctx.get("hide_after", false)) or bool(ctx.get("disable_after", false)):
 		_refresh_spots_for_state()
 
 func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Callable) -> void:
@@ -4442,6 +4657,7 @@ func _exit_tree() -> void:
 		_active_tool_id = ""
 		_tool_spots.clear()
 		GameState.clear_cursor_override()
+		_stop_tool_fx()
 	for tw: Variant in _hud_glow_tweens.values():
 		if tw is Tween and (tw as Tween).is_valid():
 			(tw as Tween).kill()
@@ -4463,11 +4679,39 @@ func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
 func _input(event: InputEvent) -> void:
-	# Detective tool active: any tap dismisses it. Deferred so a revealed spot's
-	# gui_input (and normal HUD clicks) still process this event first.
+	# Polaroid overlay can outlive active mode — always route presses to it first.
+	if _is_press_event(event) and _tool_fx != null and is_instance_valid(_tool_fx) \
+			and bool(_tool_fx.call("is_polaroid_overlay_open")):
+		var gp_overlay: Vector2 = _get_press_global_position(event)
+		_tool_fx.call("handle_press", gp_overlay, false)
+		get_viewport().set_input_as_handled()
+		return
+
+	# Detective tool active: any tap dismisses it — except polaroid Mode 2 /
+	# overlay flows, which consume the press themselves.
 	if _is_press_event(event) and not _active_tool_id.is_empty() and not _tool_dismiss_pending:
-		_tool_dismiss_pending = true
-		call_deferred("_deactivate_tool")
+		if Time.get_ticks_msec() < _tool_activate_grace_msec:
+			get_viewport().set_input_as_handled()
+			return
+		var gp: Vector2 = _get_press_global_position(event)
+		# HUD icons deactivate via their click handlers; don't also treat as blank-tap dismiss.
+		if _hud_icon_at_point(gp) != "":
+			pass
+		elif _is_point_on_open_menu_ui(gp):
+			pass
+		else:
+			var over_spot: bool = _is_press_over_revealed_tool_spot(gp)
+			var fx_consumed: bool = false
+			if _tool_fx != null and is_instance_valid(_tool_fx):
+				fx_consumed = bool(_tool_fx.call("handle_press", gp, over_spot))
+			if fx_consumed:
+				_tool_dismiss_pending = false
+				get_viewport().set_input_as_handled()
+			elif _tool_fx != null and is_instance_valid(_tool_fx) and bool(_tool_fx.call("blocks_tool_dismiss")):
+				pass
+			else:
+				_tool_dismiss_pending = true
+				call_deferred("_deactivate_tool")
 
 	# HUD icons can sit under the info-only overlay; route taps explicitly while info is open.
 	if _is_press_event(event) and _is_info_panel_showing():

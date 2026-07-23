@@ -171,7 +171,7 @@ var _interacted_spots: Dictionary = {}   # "node_id:spot_index" → true; one-ti
 var _spots_in_progress: Dictionary = {}  # "node_id:spot_index" → true; hide-after spots mid-action (not saved)
 var _talked_characters: Dictionary = {}  # "node_id:char_index" → true; characters removed from room after talk
 var _pending_spot_on_complete: Callable = Callable()
-var _pending_spot_interaction: Dictionary = {}  # { node_id, spot_index, hide_after } while a spot queue runs
+var _pending_spot_interaction: Dictionary = {}  # { node_id, spot_index, hide_after, disable_after }
 var _pending_play_once_paths: Array = []  # VN paths to mark played when the current spot queue finishes
 var _exploration_checkpoint_pending: bool = false
 
@@ -410,11 +410,13 @@ func take_pending_spot_on_complete() -> Callable:
 func clear_pending_spot_on_complete() -> void:
 	_pending_spot_on_complete = Callable()
 
-func set_pending_spot_interaction(node_id: String, spot_index: int, hide_after: bool) -> void:
+func set_pending_spot_interaction(
+		node_id: String, spot_index: int, hide_after: bool, disable_after: bool = false) -> void:
 	_pending_spot_interaction = {
-		"node_id":    node_id,
-		"spot_index": spot_index,
-		"hide_after": hide_after,
+		"node_id":       node_id,
+		"spot_index":    spot_index,
+		"hide_after":    hide_after,
+		"disable_after": disable_after,
 	}
 
 func take_pending_spot_interaction() -> Dictionary:
