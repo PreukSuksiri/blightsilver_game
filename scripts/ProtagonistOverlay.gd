@@ -149,42 +149,14 @@ func _build_top_actions() -> void:
 	save_btn.text = "Save"
 	save_btn.custom_minimum_size = Vector2(88, 36)
 	save_btn.add_theme_font_size_override("font_size", 15)
-	save_btn.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
-	var save_sb := StyleBoxFlat.new()
-	save_sb.bg_color = Color(0.12, 0.55, 0.28, 1.0)
-	save_sb.set_corner_radius_all(6)
-	save_sb.border_color = Color(0.35, 0.85, 0.45, 1.0)
-	save_sb.set_border_width_all(1)
-	save_btn.add_theme_stylebox_override("normal", save_sb)
-	var save_hover := save_sb.duplicate() as StyleBoxFlat
-	save_hover.bg_color = Color(0.16, 0.65, 0.34, 1.0)
-	save_btn.add_theme_stylebox_override("hover", save_hover)
-	var save_pressed := save_sb.duplicate() as StyleBoxFlat
-	save_pressed.bg_color = Color(0.10, 0.45, 0.22, 1.0)
-	save_btn.add_theme_stylebox_override("pressed", save_pressed)
-	save_btn.add_theme_stylebox_override("focus", save_sb)
+	_skin_green_save_button(save_btn)
 	save_btn.pressed.connect(_on_done)
 	row.add_child(save_btn)
 
 	var close_btn := Button.new()
-	close_btn.custom_minimum_size = Vector2(38, 36)
-	var close_sb := _make_close_stylebox()
-	close_btn.add_theme_stylebox_override("normal", close_sb)
-	close_btn.add_theme_stylebox_override("hover", close_sb)
-	close_btn.add_theme_stylebox_override("pressed", close_sb)
-	close_btn.add_theme_stylebox_override("focus", close_sb)
-	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 18)
+	MenuScreenHeader.style_close_button(close_btn)
 	close_btn.pressed.connect(_close)
 	row.add_child(close_btn)
-
-
-func _make_close_stylebox() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.18, 0.04, 0.04, 1.0)
-	sb.set_border_width_all(1)
-	sb.border_color = Color(1.0, 0.30, 0.30, 0.7)
-	sb.set_corner_radius_all(4)
-	return sb
 
 
 func _make_arrow_stylebox() -> StyleBoxFlat:
@@ -332,6 +304,26 @@ func _apply_capsule_button_style(btn: Button) -> void:
 	btn.add_theme_stylebox_override("hover", empty)
 	btn.add_theme_stylebox_override("pressed", empty)
 	btn.add_theme_stylebox_override("focus", empty)
+
+
+## Magitech gradient chrome, tinted green (matches deck-builder Save).
+func _skin_green_save_button(btn: Button) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(0.55, 1.0, 0.72, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(0.75, 1.0, 0.85, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.40, 0.92, 0.58, 1.0))
+	GameDialog.apply_button_chrome(btn, true)
+	if not btn.has_meta(&"magitech_btn_fx_mat"):
+		return
+	var mat: ShaderMaterial = btn.get_meta(&"magitech_btn_fx_mat") as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.08, 0.28, 0.14, 0.97))
+	mat.set_shader_parameter("fill_bottom", Color(0.04, 0.14, 0.08, 0.97))
+	mat.set_shader_parameter("border_a", Color(0.30, 1.0, 0.55, 0.85))
+	mat.set_shader_parameter("border_b", Color(0.55, 0.95, 0.70, 0.70))
+	mat.set_shader_parameter("brightness", 1.0)
 
 
 func _portraits_for_selected() -> Array[String]:

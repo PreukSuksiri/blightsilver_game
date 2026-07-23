@@ -174,7 +174,7 @@ const _V3_ZONE_ATTACK_W := 0.088
 const _V3_ZONE_ATTACK_Y := 0.008
 const _V3_ZONE_ATTACK_H := 0.092
 ## VOID / TECH chips (pink circular ports)
-const _V3_ZONE_CHIP_Y := 0.051#0.055
+const _V3_ZONE_CHIP_Y := 0.056#0.055
 const _V3_ZONE_CHIP_S := 0.062
 const _V3_ZONE_VOID_X := 0.025#0.022
 const _V3_ZONE_TECH_X := 0.0805
@@ -6180,8 +6180,11 @@ func _update_fog(delta: float) -> void:
 
 func _build_union_suggest_button() -> void:
 	const BTN_SIZE: float = 110.0
+	# Glow must be larger than the button — same-size glow sits fully under the opaque icon.
+	const GLOW_SIZE: float = BTN_SIZE * 1.55
+	const Y_NUDGE: float = -34.0
 
-	# Pulsing cyan glow — same rect as the button (alpha pulse only).
+	# Pulsing cyan halo behind the tappable icon.
 	var glow := TextureRect.new()
 	glow.texture = HudSkin.hud_tex("ui_icon_union.png")
 	glow.ignore_texture_size = true
@@ -6189,8 +6192,11 @@ func _build_union_suggest_button() -> void:
 	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
 	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
-	glow.offset_left   = -(BTN_SIZE * 0.5); glow.offset_right  =  (BTN_SIZE * 0.5)
-	glow.offset_top    = -(BTN_SIZE * 0.5) - 34.0; glow.offset_bottom =  (BTN_SIZE * 0.5) - 34.0
+	glow.offset_left   = -(GLOW_SIZE * 0.5)
+	glow.offset_right  =  (GLOW_SIZE * 0.5)
+	glow.offset_top    = -(GLOW_SIZE * 0.5) + Y_NUDGE
+	glow.offset_bottom =  (GLOW_SIZE * 0.5) + Y_NUDGE
+	glow.pivot_offset = Vector2(GLOW_SIZE * 0.5, GLOW_SIZE * 0.5)
 	glow.modulate    = Color(0.25, 0.90, 1.00, 0.0)
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glow.z_index  = 3
@@ -6198,7 +6204,7 @@ func _build_union_suggest_button() -> void:
 	add_child(glow)
 	_union_suggest_glow = glow
 
-	# Tappable button on top
+	# Tappable button on top (smaller than glow so the halo peeks around it).
 	var btn := TextureButton.new()
 	btn.texture_normal   = HudSkin.hud_tex("ui_icon_union.png")
 	btn.ignore_texture_size = true
@@ -6206,7 +6212,7 @@ func _build_union_suggest_button() -> void:
 	btn.anchor_left   = 0.5; btn.anchor_right  = 0.5
 	btn.anchor_top    = 0.5; btn.anchor_bottom = 0.5
 	btn.offset_left   = -(BTN_SIZE * 0.5); btn.offset_right  =  (BTN_SIZE * 0.5)
-	btn.offset_top    = -(BTN_SIZE * 0.5) - 34.0; btn.offset_bottom =  (BTN_SIZE * 0.5) - 34.0
+	btn.offset_top    = -(BTN_SIZE * 0.5) + Y_NUDGE; btn.offset_bottom =  (BTN_SIZE * 0.5) + Y_NUDGE
 	btn.z_index  = 4
 	btn.visible  = false
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -6744,9 +6750,12 @@ func _update_union_suggest_button() -> void:
 	_union_suggest_btn.visible  = show
 	_union_suggest_glow.visible = show
 	if show and (_union_suggest_tween == null or not _union_suggest_tween.is_valid()):
+		_union_suggest_glow.modulate = Color(0.25, 0.90, 1.00, 0.20)
 		_union_suggest_tween = create_tween().set_loops()
-		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.65, 0.7)
-		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.15, 0.7)
+		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.75, 0.7) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.18, 0.7) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	elif not show:
 		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
 			_union_suggest_tween.kill()
@@ -7380,6 +7389,8 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	const NUM_FLIPS    : int   = 10   # even → lands on same side it started
 	const PORTRAIT_W   : float = 260.0
 	const GREY_MODULATE: Color = Color(0.3, 0.3, 0.35, 1.0)
+	## Nudge portraits / coin / labels down so they sit clearer in the frame.
+	const CONTENT_DOWN_SHIFT: float = 56.0
 
 	# ── Overlay ────────────────────────────────────────────────
 	var overlay := Control.new()
@@ -7428,7 +7439,9 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p1_port.anchor_right  = 0.0
 		coin_p1_port.anchor_bottom = 1.0
 		coin_p1_port.offset_left   = _p1ox
+		coin_p1_port.offset_top    = CONTENT_DOWN_SHIFT
 		coin_p1_port.offset_right  = pw + _p1ox
+		coin_p1_port.offset_bottom = CONTENT_DOWN_SHIFT
 		coin_p1_port.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		coin_p1_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p1_port.flip_h        = true
@@ -7450,7 +7463,9 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p2_port.anchor_right  = 1.0
 		coin_p2_port.anchor_bottom = 1.0
 		coin_p2_port.offset_left   = -pw - _p2ox
+		coin_p2_port.offset_top    = CONTENT_DOWN_SHIFT
 		coin_p2_port.offset_right  = -_p2ox
+		coin_p2_port.offset_bottom = CONTENT_DOWN_SHIFT
 		coin_p2_port.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		coin_p2_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p2_port.mouse_filter  = Control.MOUSE_FILTER_IGNORE
@@ -7461,8 +7476,22 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	# ── CenterContainer ensures true centering regardless of VBox size ──
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.offset_top = CONTENT_DOWN_SHIFT * 2.0  # recenter lower (coin + labels)
 	center.z_index = 10
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(center)
+
+	# Front frame: same placement/stretch as backdrop, above portraits + coin.
+	var front_frame_tex: Texture2D = HudSkin.setup_phase_front_frame_tex()
+	if front_frame_tex != null:
+		var front_frame := TextureRect.new()
+		front_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		front_frame.texture = front_frame_tex
+		front_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		front_frame.stretch_mode = TextureRect.STRETCH_SCALE
+		front_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		front_frame.z_index = 20
+		overlay.add_child(front_frame)
 
 	var vbox := VBoxContainer.new()
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER

@@ -109,12 +109,13 @@ func _build_header() -> void:
 
 	var ach_btn := Button.new()
 	ach_btn.text = "Achievements"
-	ach_btn.custom_minimum_size = Vector2(120, 32)
+	var ach_h: float = MenuScreenHeader.CLOSE_BTN_SIZE.y
+	ach_btn.custom_minimum_size = Vector2(120.0, ach_h)
 	ach_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	ach_btn.offset_left = -178.0
 	ach_btn.offset_top = 6.0
 	ach_btn.offset_right = -58.0
-	ach_btn.offset_bottom = 38.0
+	ach_btn.offset_bottom = 6.0 + ach_h
 	_skin_quick_duel_button(ach_btn)
 	ach_btn.pressed.connect(func() -> void:
 		AchievementListOverlay.open(self))

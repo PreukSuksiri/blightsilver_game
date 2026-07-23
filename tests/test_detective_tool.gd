@@ -53,6 +53,11 @@ func test_tool_items_present() -> void:
 		assert_true(bool(item.get("detective_tool", false)), "item '%s' is detective_tool" % id)
 		var icon: String = str(item.get("icon", ""))
 		assert_true(ResourceLoader.exists(icon), "item '%s' icon exists: %s" % [id, icon])
+		# Cursor uses Icon (small item image) when tool_cursor is blank.
+		var cursor: String = str(item.get("tool_cursor", "")).strip_edges()
+		if cursor.is_empty():
+			cursor = icon
+		assert_true(ResourceLoader.exists(cursor), "item '%s' cursor image exists: %s" % [id, cursor])
 
 # A regular key item must not be treated as a detective tool.
 func test_non_tool_item_not_flagged() -> void:

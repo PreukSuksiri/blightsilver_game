@@ -25,6 +25,9 @@ const _BTN_FX_META := &"magitech_btn_fx_mat"
 const _BTN_FX_NODE := &"MagitechBtnFx"
 const _BTN_FX_WIRED := &"magitech_btn_fx_wired"
 const _BTN_FX_SIZE_WIRED := &"magitech_btn_fx_size_wired"
+const _BTN_FX_FILL_META := &"magitech_btn_fx_fill"
+const _BTN_FX_BORDER_META := &"magitech_btn_fx_border"
+const _BTN_FX_DISABLED_META := &"magitech_btn_fx_disabled_look"
 const _PANEL_FX_SIZE_WIRED := &"magitech_panel_fx_size_wired"
 
 const OVERLAY_LAYER_NAME := &"GameDialogLayer"
@@ -131,6 +134,141 @@ func apply_button_chrome(btn: Button, wire_sfx: bool = false) -> void:
 
 func sync_button_chrome_disabled(btn: Button) -> void:
 	_sync_button_fx_disabled(btn)
+
+
+## Magitech gradient button face on any Control (e.g. exploration radial chips).
+## Caller should set a transparent StyleBox for layout/margins; colors match `fill`/`border`.
+func apply_control_button_chrome(
+		ctrl: Control,
+		fill: Color,
+		border: Color,
+		disabled_look: bool = false,
+		corner_radius: float = 8.0) -> void:
+	if ctrl == null:
+		return
+	ctrl.set_meta(_BTN_FX_FILL_META, fill)
+	ctrl.set_meta(_BTN_FX_BORDER_META, border)
+	ctrl.set_meta(_BTN_FX_DISABLED_META, disabled_look)
+	var fx: ColorRect = ctrl.get_node_or_null(NodePath(str(_BTN_FX_NODE))) as ColorRect
+	if fx == null:
+		fx = ColorRect.new()
+		fx.name = String(_BTN_FX_NODE)
+		fx.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fx.show_behind_parent = true
+		fx.color = Color.WHITE
+		ctrl.add_child(fx)
+		ctrl.move_child(fx, 0)
+	var mat := ShaderMaterial.new()
+	mat.shader = _SHADER_DIALOG_BUTTON
+	mat.set_shader_parameter("border_px", 1.5)
+	mat.set_shader_parameter("corner_radius_px", corner_radius)
+	fx.material = mat
+	ctrl.set_meta(_BTN_FX_META, mat)
+	_apply_custom_button_fx_colors(mat, fill, border, disabled_look, true)
+	_sync_control_button_fx_size(ctrl)
+	if not ctrl.get_meta(_BTN_FX_SIZE_WIRED, false):
+		ctrl.set_meta(_BTN_FX_SIZE_WIRED, true)
+		fx.resized.connect(_sync_control_button_fx_size.bind(ctrl))
+	call_deferred("_sync_control_button_fx_size", ctrl)
+	if ctrl.get_meta(_BTN_FX_WIRED, false):
+		return
+	ctrl.set_meta(_BTN_FX_WIRED, true)
+	ctrl.mouse_entered.connect(_on_fx_control_hover_entered.bind(ctrl))
+	ctrl.mouse_exited.connect(_on_fx_control_hover_exited.bind(ctrl))
+	ctrl.gui_input.connect(_on_fx_control_gui_input.bind(ctrl))
+
+
+func set_control_button_chrome_colors(
+		ctrl: Control,
+		fill: Color,
+		border: Color,
+		disabled_look: bool = false) -> void:
+	if ctrl == null:
+		return
+	ctrl.set_meta(_BTN_FX_FILL_META, fill)
+	ctrl.set_meta(_BTN_FX_BORDER_META, border)
+	ctrl.set_meta(_BTN_FX_DISABLED_META, disabled_look)
+	var mat: ShaderMaterial = _btn_fx_mat(ctrl)
+	if mat == null:
+		return
+	# Keep hover/press brightness; only swap fill/border tints.
+	_apply_custom_button_fx_colors(mat, fill, border, disabled_look, false)
+
+
+func _apply_custom_button_fx_colors(
+		mat: ShaderMaterial,
+		fill: Color,
+		border: Color,
+		disabled_look: bool,
+		reset_brightness: bool = true) -> void:
+	if mat == null:
+		return
+	var fill_top: Color = fill.lightened(0.12)
+	var fill_bottom: Color = fill.darkened(0.18)
+	fill_top.a = fill.a
+	fill_bottom.a = fill.a
+	var border_a: Color = border
+	var border_b: Color = border.darkened(0.15)
+	border_b.a = border.a * 0.85
+	if disabled_look:
+		fill_top = fill_top.darkened(0.25)
+		fill_bottom = fill_bottom.darkened(0.25)
+		border_a.a *= 0.55
+		border_b.a *= 0.50
+		mat.set_shader_parameter("brightness", 0.75)
+	elif reset_brightness:
+		mat.set_shader_parameter("brightness", 1.0)
+	mat.set_shader_parameter("fill_top", fill_top)
+	mat.set_shader_parameter("fill_bottom", fill_bottom)
+	mat.set_shader_parameter("border_a", border_a)
+	mat.set_shader_parameter("border_b", border_b)
+
+
+func _sync_control_button_fx_size(ctrl: Control) -> void:
+	if ctrl == null or not is_instance_valid(ctrl):
+		return
+	var fx: ColorRect = ctrl.get_node_or_null(NodePath(str(_BTN_FX_NODE))) as ColorRect
+	var mat: ShaderMaterial = _btn_fx_mat(ctrl)
+	if fx == null or mat == null:
+		return
+	var sz: Vector2 = fx.size
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = ctrl.size
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = ctrl.get_combined_minimum_size()
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = BTN_MIN_SIZE
+	mat.set_shader_parameter("rect_size", sz)
+
+
+func _on_fx_control_hover_entered(ctrl: Control) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(ctrl)
+	if mat == null or bool(ctrl.get_meta(_BTN_FX_DISABLED_META, false)):
+		return
+	mat.set_shader_parameter("brightness", 1.14)
+
+
+func _on_fx_control_hover_exited(ctrl: Control) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(ctrl)
+	if mat == null or bool(ctrl.get_meta(_BTN_FX_DISABLED_META, false)):
+		return
+	mat.set_shader_parameter("brightness", 1.0)
+
+
+func _on_fx_control_gui_input(event: InputEvent, ctrl: Control) -> void:
+	var mat: ShaderMaterial = _btn_fx_mat(ctrl)
+	if mat == null or bool(ctrl.get_meta(_BTN_FX_DISABLED_META, false)):
+		return
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed:
+			mat.set_shader_parameter("brightness", 0.88)
+		else:
+			var hovered: bool = ctrl.get_global_rect().has_point(ctrl.get_global_mouse_position())
+			mat.set_shader_parameter("brightness", 1.14 if hovered else 1.0)
 
 
 func style_menu_button(btn: Button) -> void:
@@ -786,10 +924,10 @@ func _apply_button_fx_colors(mat: ShaderMaterial, disabled_look: bool) -> void:
 		mat.set_shader_parameter("brightness", 1.0)
 
 
-func _btn_fx_mat(btn: Button) -> ShaderMaterial:
-	if btn == null or not btn.has_meta(_BTN_FX_META):
+func _btn_fx_mat(ctrl: Control) -> ShaderMaterial:
+	if ctrl == null or not ctrl.has_meta(_BTN_FX_META):
 		return null
-	return btn.get_meta(_BTN_FX_META) as ShaderMaterial
+	return ctrl.get_meta(_BTN_FX_META) as ShaderMaterial
 
 
 func _on_fx_button_hover_entered(btn: Button) -> void:

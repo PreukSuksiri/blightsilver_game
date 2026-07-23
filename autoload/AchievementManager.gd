@@ -4,8 +4,9 @@ extends Node
 signal achievement_unlocked(achievement_id: String)
 
 const DATA_PATH := "res://data/achievements.json"
-const DEFAULT_ACHIEVEMENT_ICON := "res://assets/icon/game_icon.png"
+const DEFAULT_ACHIEVEMENT_ICON := "res://assets/textures/ui/decorations/ui_coin_back_small.png"
 const LEGACY_ACHIEVEMENT_ICON := "res://icon.svg"
+const LEGACY_GAME_ICON := "res://assets/icon/game_icon.png"
 
 const AFFINITY_TO_ACHIEVEMENT := {
 	CharacterData.Affinity.DIVINE: "union_summon_divine",
@@ -106,11 +107,12 @@ func get_definition(achievement_id: String) -> Dictionary:
 
 func get_icon_path(def: Dictionary) -> String:
 	var path: String = str(def.get("icon", "")).strip_edges()
-	if path.is_empty() or path == LEGACY_ACHIEVEMENT_ICON:
+	# Achievement list + toaster use the small coin badge by default.
+	if path.is_empty() or path == LEGACY_ACHIEVEMENT_ICON or path == LEGACY_GAME_ICON:
 		path = DEFAULT_ACHIEVEMENT_ICON
-	if ResourceLoader.exists(path):
+	if ResourceLoader.exists(path) or FileAccess.file_exists(path):
 		return path
-	if ResourceLoader.exists(DEFAULT_ACHIEVEMENT_ICON):
+	if ResourceLoader.exists(DEFAULT_ACHIEVEMENT_ICON) or FileAccess.file_exists(DEFAULT_ACHIEVEMENT_ICON):
 		return DEFAULT_ACHIEVEMENT_ICON
 	return ""
 

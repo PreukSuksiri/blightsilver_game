@@ -55,8 +55,7 @@ func _build_ui() -> void:
 	header.add_child(_counter_lbl)
 
 	var close_btn := Button.new()
-	close_btn.custom_minimum_size = Vector2(38, 32)
-	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 16)
+	MenuScreenHeader.style_close_button(close_btn, 16)
 	close_btn.pressed.connect(queue_free)
 	header.add_child(close_btn)
 
@@ -150,11 +149,13 @@ func _make_row(id: String, def: Dictionary) -> PanelContainer:
 
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 12)
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
 	h.custom_minimum_size.y = 72.0
 	row.add_child(h)
 
 	var icon := TextureRect.new()
 	icon.custom_minimum_size = Vector2(48, 48)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var icon_path: String = AchievementManager.get_icon_path(def)
@@ -164,6 +165,7 @@ func _make_row(id: String, def: Dictionary) -> PanelContainer:
 
 	var body := VBoxContainer.new()
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	body.add_theme_constant_override("separation", 2)
 	h.add_child(body)
 
@@ -203,6 +205,8 @@ func _make_row(id: String, def: Dictionary) -> PanelContainer:
 			prog_lbl.text = "%d / %d" % [int(prog.get("current", 0)), int(prog.get("target", 0))]
 		prog_lbl.custom_minimum_size.x = 72.0
 		prog_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		prog_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		prog_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(prog_lbl)
 
 	return row

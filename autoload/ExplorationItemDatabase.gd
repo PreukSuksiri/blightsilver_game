@@ -13,7 +13,7 @@ extends Node
 ##   key_item      bool    — pulses inventory HUD when item is eligible to use
 ##   detective_tool bool   — if true, tapping the item in exploration enters "tool active"
 ##                           state (swaps cursor) instead of showing the use preview
-##   tool_cursor   String  — res:// path used as the active-tool cursor (defaults to icon)
+##   tool_cursor   String  — optional active-tool cursor override; defaults to icon
 ##
 ## Effect Dict: { "type", "key", "value" }
 ##   play_vn      — play VN beat JSON at value path

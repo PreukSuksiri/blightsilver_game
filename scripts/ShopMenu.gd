@@ -17,13 +17,27 @@ const PANEL_MAX_SIZE: Vector2 = Vector2(1680.0, 900.0)
 @onready var pack_scroll: ScrollContainer = $Panel/VBox/PackScroll
 @onready var pack_row: HBoxContainer      = $Panel/VBox/PackScroll/PackRow
 @onready var result_overlay: Control      = $ResultOverlay
+@onready var result_panel: Panel          = $ResultOverlay/ResultPanel
 @onready var result_title: Label          = $ResultOverlay/ResultPanel/VBox/TitleLabel
+@onready var result_div: ColorRect        = $ResultOverlay/ResultPanel/VBox/DivLine
 @onready var result_card_list: VBoxContainer = $ResultOverlay/ResultPanel/VBox/CardList
 @onready var result_ok_btn: Button        = $ResultOverlay/ResultPanel/VBox/OkBtn
 
 var _card_size: Vector2 = Vector2.ZERO
+var _art_sheen_tweens: Array[Tween] = []
+var _art_shake_tweens: Array[Tween] = []
+var _spotlight_pivots: Array[Control] = []
 
 const _BTN_FX_META := &"magitech_btn_fx_mat"
+const _RESULT_TITLE_GOLD := Color(1.0, 0.88, 0.45, 1.0)
+const _RESULT_TITLE_ERROR := Color(1.0, 0.40, 0.38, 1.0)
+const _METAL_SHEEN_SHADER: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
+const _SHEEN_IDLE: float = 2.0
+const _SHEEN_DURATION: float = 0.55
+const _SHEEN_INTERVAL_MIN: float = 3.8
+const _SHEEN_INTERVAL_MAX: float = 7.2
+const _SHAKE_PAUSE_MIN: float = 0.55
+const _SHAKE_PAUSE_MAX: float = 1.25
 
 ## Magitech chrome tinted gold for shop actions.
 func _skin_shop_button(btn: Button, wire_sfx: bool = true) -> void:
@@ -61,18 +75,143 @@ func _sync_gold_button_chrome(btn: Button) -> void:
 	_apply_gold_button_fx(btn)
 
 
+func _skin_result_modal() -> void:
+	if result_panel == null:
+		return
+	# Transparent StyleBox — fill/border drawn by magitech panel shader (gold tint).
+	var sb := GameDialog.make_panel_stylebox(0.0)
+	sb.set_corner_radius_all(8)
+	result_panel.add_theme_stylebox_override("panel", sb)
+	GameDialog.attach_panel_fx(result_panel)
+	_apply_gold_panel_fx(result_panel)
+	if result_title != null:
+		result_title.add_theme_color_override("font_color", _RESULT_TITLE_GOLD)
+		FontManager.tag_font(result_title, "font", "primary", 600)
+	if result_div != null:
+		result_div.color = Color(1.0, 0.82, 0.28, 0.40)
+	_skin_shop_button(result_ok_btn)
+
+
+func _apply_gold_panel_fx(host: Control, patrol_strong: bool = false) -> void:
+	if host == null:
+		return
+	var mat: ShaderMaterial = host.material as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.16, 0.11, 0.04, 0.97))
+	mat.set_shader_parameter("fill_bottom", Color(0.06, 0.04, 0.015, 0.97))
+	mat.set_shader_parameter("border_a", Color(1.0, 0.82, 0.28, 0.90))
+	mat.set_shader_parameter("border_b", Color(0.95, 0.70, 0.28, 0.72))
+	mat.set_shader_parameter("border_px", 2.5 if patrol_strong else 2.0)
+	mat.set_shader_parameter("rim_speed", 0.42 if patrol_strong else 0.18)
+	mat.set_shader_parameter("rim_pulse", 0.70 if patrol_strong else 0.28)
+
+
+## Main shop frame — gold magitech chrome with circuit patrol on the border.
+func _skin_shop_frame() -> void:
+	if panel == null:
+		return
+	var sb := GameDialog.make_panel_stylebox(0.0)
+	sb.set_corner_radius_all(6)
+	panel.add_theme_stylebox_override("panel", sb)
+	GameDialog.attach_panel_fx(panel)
+	_apply_gold_panel_fx(panel, true)
+
+
+## Soft white spotlight cones rising from below the screen, swaying left/right.
+func _build_spotlight_beams() -> void:
+	var existing := get_node_or_null("SpotlightLayer") as Control
+	if existing != null:
+		existing.queue_free()
+	_spotlight_pivots.clear()
+
+	var layer := Control.new()
+	layer.name = "SpotlightLayer"
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Above shop panel chrome, below result modal.
+	layer.z_index = 2
+	add_child(layer)
+	if result_overlay != null:
+		move_child(layer, result_overlay.get_index())
+
+	var shader: Shader = load("res://assets/shaders/shop_spotlight_cone.gdshader") as Shader
+	if shader == null:
+		return
+
+	var count: int = randi_range(4, 5)
+	for i in count:
+		var pivot := Control.new()
+		pivot.name = "SpotlightPivot_%d" % i
+		pivot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# Anchor along the bottom of the screen, spaced across the viewport.
+		var x_frac: float = lerpf(0.10, 0.90, float(i) / float(maxi(count - 1, 1)))
+		x_frac = clampf(x_frac + randf_range(-0.05, 0.05), 0.04, 0.96)
+		pivot.anchor_left = x_frac
+		pivot.anchor_right = x_frac
+		pivot.anchor_top = 1.0
+		pivot.anchor_bottom = 1.0
+		pivot.offset_left = 0.0
+		pivot.offset_right = 0.0
+		pivot.offset_top = 0.0
+		pivot.offset_bottom = 0.0
+		pivot.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		pivot.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		layer.add_child(pivot)
+
+		var cone_w: float = randf_range(220.0, 360.0)
+		var cone_h: float = randf_range(720.0, 980.0)
+		var cone := ColorRect.new()
+		cone.name = "Cone"
+		cone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cone.size = Vector2(cone_w, cone_h)
+		cone.position = Vector2(-cone_w * 0.5, -cone_h)
+		cone.color = Color(1, 1, 1, 1)
+
+		var mat := ShaderMaterial.new()
+		mat.shader = shader
+		mat.set_shader_parameter("intensity", randf_range(0.22, 0.40))
+		mat.set_shader_parameter("core_width", randf_range(0.05, 0.11))
+		mat.set_shader_parameter("tip_width", randf_range(0.42, 0.78))
+		mat.set_shader_parameter("beam_color", Color(1.0, 0.99, 0.96, 1.0))
+		cone.material = mat
+		pivot.add_child(cone)
+
+		pivot.rotation = deg_to_rad(randf_range(-22.0, 22.0))
+		_spotlight_pivots.append(pivot)
+		_start_spotlight_sway(pivot)
+
+
+func _start_spotlight_sway(pivot: Control) -> void:
+	if pivot == null or not is_instance_valid(pivot):
+		return
+	# Pick a random target angle each hop so left/right sway stays irregular.
+	var target_deg: float = randf_range(-30.0, 30.0)
+	var dur: float = randf_range(2.2, 4.6)
+	var tw := create_tween()
+	tw.tween_property(pivot, "rotation", deg_to_rad(target_deg), dur) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(_start_spotlight_sway.bind(pivot))
+
+
 func _ready() -> void:
 	Collection.credits_changed.connect(_on_credits_changed)
+	var title_lbl: Label = $Panel/VBox/Header/TitleLabel
 	var header_rebuild: Dictionary = MenuScreenHeader.rebuild_panel_header(
 		$Panel/VBox/Header,
-		$Panel/VBox/Header/TitleLabel,
+		title_lbl,
 		$Panel/VBox/Header/CloseBtn)
 	var close_btn: Button = header_rebuild.get("close_btn", null) as Button
 	if close_btn != null:
 		close_btn.pressed.connect(_on_close)
+	# Shop chrome is gold — override shared cyan header title.
+	if title_lbl != null:
+		title_lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 1.0))
+	_skin_shop_frame()
+	_build_spotlight_beams()
 	_relocate_shop_header_extras()
 	result_ok_btn.pressed.connect(func() -> void: result_overlay.hide())
-	_skin_shop_button(result_ok_btn)
+	_skin_result_modal()
 	result_overlay.hide()
 	_apply_panel_to_viewport()
 	_refresh_credits()
@@ -158,6 +297,8 @@ func _update_pack_scroll_mode(catalog_count: int) -> void:
 		pack_row.alignment = BoxContainer.ALIGNMENT_BEGIN
 
 func _build_pack_cards() -> void:
+	_clear_art_sheen_tweens()
+	_clear_art_shake_tweens()
 	for child in pack_row.get_children():
 		child.queue_free()
 	var catalog: Array = ShopManager.get_shop_catalog()
@@ -166,8 +307,8 @@ func _build_pack_cards() -> void:
 	var total_w: float = _card_size.x * count + PACK_ROW_GAP * maxi(0, count - 1)
 	pack_row.custom_minimum_size = Vector2(total_w, _card_size.y)
 	_update_pack_scroll_mode(count)
-	for pack: Dictionary in catalog:
-		pack_row.add_child(_make_pack_card(pack, _card_size))
+	for i: int in range(catalog.size()):
+		pack_row.add_child(_make_pack_card(catalog[i] as Dictionary, _card_size, i))
 
 func _refresh_pack_buy_states() -> void:
 	var catalog: Array = ShopManager.get_shop_catalog()
@@ -193,7 +334,136 @@ func _update_pack_card_buy_state(card_root: Node, pack: Dictionary) -> void:
 			buy_btn.disabled = not can_buy
 			_sync_gold_button_chrome(buy_btn)
 
-func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
+func _clear_art_sheen_tweens() -> void:
+	for tw: Tween in _art_sheen_tweens:
+		if tw != null and tw.is_valid():
+			tw.kill()
+	_art_sheen_tweens.clear()
+
+
+func _clear_art_shake_tweens() -> void:
+	for tw: Tween in _art_shake_tweens:
+		if tw != null and tw.is_valid():
+			tw.kill()
+	_art_shake_tweens.clear()
+
+
+func _reset_pack_art_pose(img: TextureRect) -> void:
+	if img == null or not is_instance_valid(img):
+		return
+	img.rotation = 0.0
+	img.scale = Vector2.ONE
+
+
+func _wire_pack_art_hover_shake(card: Control, img: TextureRect) -> void:
+	if card == null or img == null:
+		return
+	img.resized.connect(func() -> void:
+		if is_instance_valid(img):
+			img.pivot_offset = img.size * 0.5)
+	var hovering: Array = [false]
+	card.mouse_entered.connect(func() -> void:
+		hovering[0] = true
+		_start_pack_art_shake_loop(img, hovering))
+	card.mouse_exited.connect(func() -> void:
+		# Still inside card if pointer moved onto a child button.
+		await get_tree().process_frame
+		if not is_instance_valid(card):
+			return
+		if card.get_global_rect().has_point(card.get_global_mouse_position()):
+			return
+		hovering[0] = false
+		_kill_shake_tweens_for(img)
+		_reset_pack_art_pose(img))
+
+
+func _kill_shake_tweens_for(img: TextureRect) -> void:
+	# Full clear is fine — only one card is hovered at a time in practice,
+	# and rebuild already clears all. Keep simple: stop all shake tweens.
+	_clear_art_shake_tweens()
+
+
+func _start_pack_art_shake_loop(img: TextureRect, hovering: Array) -> void:
+	if img == null or not is_instance_valid(img) or not bool(hovering[0]):
+		return
+	_play_pack_art_shake_burst(img, hovering)
+
+
+func _play_pack_art_shake_burst(img: TextureRect, hovering: Array) -> void:
+	if img == null or not is_instance_valid(img) or not bool(hovering[0]):
+		return
+	img.pivot_offset = img.size * 0.5
+	var tw := create_tween()
+	_art_shake_tweens.append(tw)
+	# Playful human-like wiggle: uneven amplitude / timing per step.
+	var steps: int = randi_range(5, 9)
+	var weight: float = randf_range(0.55, 1.35)
+	for _i: int in range(steps):
+		var ang: float = randf_range(-0.10, 0.10) * weight
+		var sc: float = 1.0 + randf_range(-0.025, 0.04) * weight
+		var dur: float = randf_range(0.035, 0.095)
+		tw.tween_property(img, "rotation", ang, dur) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tw.parallel().tween_property(img, "scale", Vector2(sc, sc), dur) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		# Occasionally change weight mid-burst (like a re-grip).
+		if randf() < 0.28:
+			weight = randf_range(0.45, 1.45)
+	tw.tween_property(img, "rotation", 0.0, 0.10) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(img, "scale", Vector2.ONE, 0.10) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_interval(randf_range(_SHAKE_PAUSE_MIN, _SHAKE_PAUSE_MAX))
+	tw.tween_callback(func() -> void:
+		if bool(hovering[0]):
+			_play_pack_art_shake_burst(img, hovering))
+
+
+func _wire_pack_art_metal_sheen(img: TextureRect, stagger_index: int) -> void:
+	if img == null:
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = _METAL_SHEEN_SHADER
+	mat.set_shader_parameter("progress", _SHEEN_IDLE)
+	mat.set_shader_parameter("intensity", 1.2)
+	mat.set_shader_parameter("band_width", 0.20)
+	mat.set_shader_parameter("shine_color", Color(1.0, 0.92, 0.62))
+	img.material = mat
+	var initial_delay: float = 0.8 + float(stagger_index) * 1.15 \
+		+ randf_range(0.0, 0.8)
+	_schedule_pack_art_sheen(img, mat, initial_delay)
+
+
+func _schedule_pack_art_sheen(img: TextureRect, mat: ShaderMaterial, delay: float) -> void:
+	if img == null or not is_instance_valid(img) or mat == null:
+		return
+	var tw := create_tween()
+	_art_sheen_tweens.append(tw)
+	tw.tween_interval(delay)
+	tw.tween_callback(func() -> void:
+		_play_pack_art_sheen_once(img, mat))
+
+
+func _play_pack_art_sheen_once(img: TextureRect, mat: ShaderMaterial) -> void:
+	if img == null or not is_instance_valid(img) or mat == null:
+		return
+	mat.set_shader_parameter("progress", -0.15)
+	var tw := create_tween()
+	_art_sheen_tweens.append(tw)
+	tw.tween_method(
+		func(v: float) -> void:
+			if is_instance_valid(mat):
+				mat.set_shader_parameter("progress", v),
+		-0.15, 1.15, _SHEEN_DURATION
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(mat):
+			mat.set_shader_parameter("progress", _SHEEN_IDLE)
+		_schedule_pack_art_sheen(
+			img, mat, randf_range(_SHEEN_INTERVAL_MIN, _SHEEN_INTERVAL_MAX)))
+
+
+func _make_pack_card(pack: Dictionary, card_size: Vector2, stagger_index: int = 0) -> Control:
 	var accent_raw: Variant = pack.get("accent", null)
 	var accent: Color
 	if accent_raw is Array and accent_raw.size() >= 3:
@@ -210,7 +480,7 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	card.custom_minimum_size = card_size
 
 	var card_sb := StyleBoxFlat.new()
-	card_sb.bg_color = Color(0.02, 0.038, 0.082, 1.0)
+	card_sb.bg_color = Color(0.0, 0.0, 0.0, 1.0)
 	card_sb.border_width_left   = 3
 	card_sb.border_width_top    = 1
 	card_sb.border_width_right  = 1
@@ -255,12 +525,14 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		vbox.add_child(img)
+		_wire_pack_art_metal_sheen(img, stagger_index)
+		_wire_pack_art_hover_shake(card, img)
 
 	# — Description ——————————————————————————
 	var desc := Label.new()
 	desc.text = pack.get("description", "")
 	desc.add_theme_font_size_override("font_size", 12)
-	desc.add_theme_color_override("font_color", Color(0.58, 0.7, 0.8, 0.82))
+	desc.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.78))
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD
 	desc.clip_text = true
 	if str(pack.get("product_type", "")) == "union_scroll":
@@ -273,7 +545,7 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	var contents := Label.new()
 	contents.text = _contents_text(pack)
 	contents.add_theme_font_size_override("font_size", 11)
-	contents.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.55))
+	contents.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.70))
 	contents.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(contents)
 
@@ -398,16 +670,16 @@ func _show_result(pack_name: String, cards: Array, error: String) -> void:
 
 	if error != "":
 		result_title.text = "Error"
-		result_title.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35))
+		result_title.add_theme_color_override("font_color", _RESULT_TITLE_ERROR)
 		var err_lbl := Label.new()
 		err_lbl.text = error
-		err_lbl.add_theme_color_override("font_color", Color(0.9, 0.6, 0.6))
+		err_lbl.add_theme_color_override("font_color", Color(1.0, 0.72, 0.55, 0.95))
 		err_lbl.add_theme_font_size_override("font_size", 14)
 		err_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		result_card_list.add_child(err_lbl)
 	else:
 		result_title.text = "Opened: %s" % pack_name
-		result_title.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
+		result_title.add_theme_color_override("font_color", _RESULT_TITLE_GOLD)
 		for card: Dictionary in cards:
 			result_card_list.add_child(_make_result_row(card))
 
@@ -421,21 +693,27 @@ func _make_result_row(card: Dictionary) -> Control:
 		"union":     type_color = Color(0.25, 0.90, 1.0)
 		"trap":      type_color = Color(0.78, 0.28, 1.0)
 		"tech":      type_color = Color(0.28, 1.0, 0.62)
-		_:           type_color = Color(0.6, 0.6, 0.6)
+		_:           type_color = Color(0.85, 0.70, 0.35)
 
 	var row := PanelContainer.new()
 	row.custom_minimum_size = Vector2(0, 46)
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.025, 0.05, 0.10, 1.0)
-	sb.border_width_left = 3; sb.border_color = type_color
-	sb.corner_radius_top_left = 4; sb.corner_radius_top_right = 4
-	sb.corner_radius_bottom_right = 4; sb.corner_radius_bottom_left = 4
-	sb.content_margin_left = 12; sb.content_margin_right = 12
-	sb.content_margin_top = 6; sb.content_margin_bottom = 6
+	sb.bg_color = Color(0.10, 0.07, 0.02, 0.92)
+	sb.border_width_left = 3
+	sb.border_width_top = 1
+	sb.border_width_right = 1
+	sb.border_width_bottom = 1
+	sb.border_color = type_color
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 12
+	sb.content_margin_right = 12
+	sb.content_margin_top = 6
+	sb.content_margin_bottom = 6
 	row.add_theme_stylebox_override("panel", sb)
 
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 10)
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_child(hbox)
 
 	# Type tag
@@ -443,7 +721,7 @@ func _make_result_row(card: Dictionary) -> Control:
 	type_lbl.text = "UNION" if c_type == "union" else ("UNIT" if c_type == "character" else c_type.to_upper())
 	type_lbl.custom_minimum_size = Vector2(88, 0)
 	type_lbl.add_theme_font_size_override("font_size", 10)
-	type_lbl.add_theme_color_override("font_color", Color(type_color.r, type_color.g, type_color.b, 0.75))
+	type_lbl.add_theme_color_override("font_color", Color(type_color.r, type_color.g, type_color.b, 0.85))
 	type_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(type_lbl)
 
@@ -452,7 +730,7 @@ func _make_result_row(card: Dictionary) -> Control:
 	name_lbl.text = card.get("name", "?")
 	name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_lbl.add_theme_font_size_override("font_size", 15)
-	name_lbl.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
+	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.94, 0.78, 1.0))
 	name_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(name_lbl)
 
@@ -460,7 +738,7 @@ func _make_result_row(card: Dictionary) -> Control:
 	var src_lbl := Label.new()
 	src_lbl.text = card.get("from_pack", "")
 	src_lbl.add_theme_font_size_override("font_size", 10)
-	src_lbl.add_theme_color_override("font_color", Color(0.42, 0.52, 0.62, 0.65))
+	src_lbl.add_theme_color_override("font_color", Color(0.78, 0.62, 0.32, 0.75))
 	src_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(src_lbl)
 

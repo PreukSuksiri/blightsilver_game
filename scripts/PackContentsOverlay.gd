@@ -96,8 +96,7 @@ func _build_ui() -> void:
 	close_btn.offset_top    = 8.0
 	close_btn.offset_right  = -8.0
 	close_btn.offset_bottom = 44.0
-	_style_close_btn(close_btn)
-	ChromeIcon.apply_button(close_btn, "close", false, "", ChromeIcon.COLOR_DANGER, 16)
+	MenuScreenHeader.style_close_button(close_btn, 16)
 	close_btn.pressed.connect(queue_free)
 	panel.add_child(close_btn)
 
@@ -210,14 +209,3 @@ func _type_color(t: String) -> Color:
 		"trap":      return Color(1.0, 0.45, 0.35)
 		"tech":      return Color(0.5, 1.0, 0.6)
 	return Color(0.7, 0.7, 0.7)
-
-func _style_close_btn(btn: Button) -> void:
-	for state: StringName in [&"normal", &"hover", &"pressed", &"focus"]:
-		var bsb := StyleBoxFlat.new()
-		bsb.bg_color = Color(0.55, 0.1, 0.1, 1.0) if state != &"normal" else Color(0.3, 0.05, 0.05, 1.0)
-		bsb.corner_radius_top_left     = 4
-		bsb.corner_radius_top_right    = 4
-		bsb.corner_radius_bottom_left  = 4
-		bsb.corner_radius_bottom_right = 4
-		btn.add_theme_stylebox_override(state, bsb)
-	btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))

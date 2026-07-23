@@ -7,38 +7,42 @@ const TITLE_FONT_SIZE := 26
 const TITLE_COLOR := Color(0.40, 0.85, 1.0, 1.0)
 const CLOSE_BTN_SIZE := Vector2(38.0, 38.0)
 const CLOSE_INSET := 12.0
-const CLOSE_BG_NORMAL := Color(0.18, 0.04, 0.04, 1.0)
-const CLOSE_BG_HOVER := Color(0.28, 0.06, 0.06, 1.0)
-const CLOSE_BG_PRESSED := Color(0.12, 0.02, 0.02, 1.0)
-const CLOSE_BORDER := Color(1.0, 0.30, 0.30, 0.75)
-const CLOSE_BORDER_HOVER := Color(1.0, 0.45, 0.45, 0.9)
 const CLOSE_FONT := Color(1.0, 0.62, 0.62, 0.95)
 const CLOSE_FONT_HOVER := Color(1.0, 0.78, 0.78, 1.0)
 
 
-static func _make_close_stylebox(bg: Color, border: Color) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = bg
-	sb.border_color = border
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(4)
-	return sb
+## Red magitech chrome only (no size / icon). Use for non-square close labels.
+static func apply_red_close_chrome(btn: Button) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", CLOSE_FONT)
+	btn.add_theme_color_override("font_hover_color", CLOSE_FONT_HOVER)
+	btn.add_theme_color_override("font_pressed_color", CLOSE_FONT)
+	GameDialog.apply_button_chrome(btn, true)
+	_apply_red_close_fx(btn)
 
 
-static func style_close_button(btn: Button) -> void:
+static func style_close_button(btn: Button, icon_size: int = 18) -> void:
 	if btn == null:
 		return
 	btn.custom_minimum_size = CLOSE_BTN_SIZE
 	btn.focus_mode = Control.FOCUS_NONE
-	btn.add_theme_stylebox_override("normal", _make_close_stylebox(CLOSE_BG_NORMAL, CLOSE_BORDER))
-	btn.add_theme_stylebox_override("hover", _make_close_stylebox(CLOSE_BG_HOVER, CLOSE_BORDER_HOVER))
-	btn.add_theme_stylebox_override("pressed", _make_close_stylebox(CLOSE_BG_PRESSED, CLOSE_BORDER))
-	btn.add_theme_stylebox_override("focus", _make_close_stylebox(CLOSE_BG_NORMAL, CLOSE_BORDER))
 	btn.add_theme_font_size_override("font_size", 16)
-	btn.add_theme_color_override("font_color", CLOSE_FONT)
-	btn.add_theme_color_override("font_hover_color", CLOSE_FONT_HOVER)
-	btn.add_theme_color_override("font_pressed_color", CLOSE_FONT)
-	ChromeIcon.apply_button(btn, "close", false, "", CLOSE_FONT, 18)
+	apply_red_close_chrome(btn)
+	ChromeIcon.apply_button(btn, "close", false, "", CLOSE_FONT, icon_size)
+
+
+static func _apply_red_close_fx(btn: Button) -> void:
+	if btn == null or not btn.has_meta(&"magitech_btn_fx_mat"):
+		return
+	var mat: ShaderMaterial = btn.get_meta(&"magitech_btn_fx_mat") as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.28, 0.06, 0.06, 0.97))
+	mat.set_shader_parameter("fill_bottom", Color(0.14, 0.03, 0.03, 0.97))
+	mat.set_shader_parameter("border_a", Color(1.0, 0.35, 0.35, 0.90))
+	mat.set_shader_parameter("border_b", Color(0.95, 0.50, 0.50, 0.72))
+	mat.set_shader_parameter("brightness", 1.0)
 
 
 static func style_title(label: Label, text: String = "") -> void:

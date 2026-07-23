@@ -253,7 +253,11 @@ func _build_edit_panel() -> void:
 	_ef_detective_tool_chk.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_ef_detective_tool_chk)
 
-	_ef_tool_cursor = _make_image_field_row(vbox, "Tool Cursor (optional)", "res:// cursor image (defaults to Icon)")
+	_ef_tool_cursor = _make_image_field_row(
+		vbox,
+		"Tool Cursor (optional)",
+		"override cursor image; leave blank to use Icon (small item image)"
+	)
 
 	# ── Effects ────────────────────────────────────────────
 	var eff_hdr_row := HBoxContainer.new()

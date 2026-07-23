@@ -20,7 +20,7 @@ func get_shop_product() -> Dictionary:
 		"item_image": SCROLL_IMAGE,
 		"unlock_requires_tutorial": true,
 		"shop_available": true,
-		"accent": [0.92, 0.92, 1.0],
+		"accent": [1.0, 0.72, 0.22],
 	}
 
 func is_scroll_purchasable() -> bool:

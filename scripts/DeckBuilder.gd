@@ -1499,7 +1499,8 @@ func _open_formation_editor() -> void:
 	close_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close_btn.offset_left = -130.0; close_btn.offset_right  = -10.0
 	close_btn.offset_top  =   8.0;  close_btn.offset_bottom =  40.0
-	ChromeIcon.apply_button(close_btn, "close", false, "  CLOSE", ChromeIcon.COLOR_DANGER, 16)
+	MenuScreenHeader.apply_red_close_chrome(close_btn)
+	ChromeIcon.apply_button(close_btn, "close", false, "  CLOSE", MenuScreenHeader.CLOSE_FONT, 16)
 	close_btn.pressed.connect(_fe_on_close_requested)
 	_fe_overlay.add_child(close_btn)
 

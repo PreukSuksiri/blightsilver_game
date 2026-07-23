@@ -1365,7 +1365,7 @@ func _spawn_setting_radial_items(center: Vector2) -> void:
 		lbl.add_theme_font_size_override("font_size", 17)
 		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 		_tag_ui(lbl, "font", 500)
-		panel.add_child(lbl)
+		_radial_panel_content(panel).add_child(lbl)
 		var action: String = str(choices[i].get("action", ""))
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if _is_press_event(ev):
@@ -1453,7 +1453,7 @@ func _spawn_info_radial_items(center: Vector2) -> void:
 		var panel: PanelContainer = _make_radial_panel(
 			Vector2(clampf(item_cx - RADIAL_ITEM_W * 0.5, pad, vp.x - RADIAL_ITEM_W - pad),
 					clampf(item_cy - RADIAL_ITEM_H * 0.5, pad, vp.y - RADIAL_ITEM_H - pad)),
-			Color(0.10, 0.07, 0.02, 0.94), Color(0.90, 0.72, 0.40, 0.85))
+			Color(0.04, 0.08, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
 		var lbl := Label.new()
 		lbl.text = str(choices[i].get("label", ""))
 		lbl.horizontal_alignment  = HORIZONTAL_ALIGNMENT_CENTER
@@ -1462,9 +1462,9 @@ func _spawn_info_radial_items(center: Vector2) -> void:
 		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
 		lbl.add_theme_font_size_override("font_size", 17)
-		lbl.add_theme_color_override("font_color", Color(1.0, 0.94, 0.82))
+		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 		_tag_ui(lbl, "font", 500)
-		panel.add_child(lbl)
+		_radial_panel_content(panel).add_child(lbl)
 		var action: String = str(choices[i].get("action", ""))
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if _is_press_event(ev):
@@ -1639,7 +1639,7 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 			inner.add_theme_constant_override("separation", 6)
 			inner.alignment   = BoxContainer.ALIGNMENT_CENTER
 			inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			panel.add_child(inner)
+			_radial_panel_content(panel).add_child(inner)
 
 			if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
 				var icon_tr := TextureRect.new()
@@ -1675,7 +1675,7 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 			nav_lbl.add_theme_font_size_override("font_size", 16)
 			nav_lbl.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0))
 			_tag_ui(nav_lbl, "font", 500)
-			panel.add_child(nav_lbl)
+			_radial_panel_content(panel).add_child(nav_lbl)
 			var target_page: int = page + 1 if choice_type == "more" else page - 1
 			panel.gui_input.connect(func(ev: InputEvent) -> void:
 				if _is_press_event(ev):
@@ -1815,7 +1815,7 @@ func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 		lbl.add_theme_font_size_override("font_size", 17)
 		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 		_tag_ui(lbl, "font", 500)
-		panel.add_child(lbl)
+		_radial_panel_content(panel).add_child(lbl)
 		var captured_char: Dictionary = char_data.duplicate(true)
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if _is_press_event(ev):
@@ -2930,18 +2930,11 @@ func _make_nav_radial_panel(
 	panel.position   = Vector2(item_x, item_y)
 	panel.modulate.a = 0.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sb := StyleBoxFlat.new()
-	if disabled:
-		sb.bg_color = Color(0.08, 0.08, 0.10, 0.72)
-		sb.border_color = Color(0.35, 0.38, 0.42, 0.55)
-	else:
-		sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
-		sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(8)
-	sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
-	sb.content_margin_top  = 8.0;  sb.content_margin_bottom = 8.0
-	panel.add_theme_stylebox_override("panel", sb)
+	var fill: Color = Color(0.08, 0.08, 0.10, 0.72) if disabled \
+		else Color(0.04, 0.08, 0.20, 0.94)
+	var border: Color = Color(0.35, 0.38, 0.42, 0.55) if disabled \
+		else Color(0.45, 0.70, 1.0, 0.85)
+	_prepare_radial_panel_chrome(panel, fill, border, disabled)
 
 	var lbl := Label.new()
 	lbl.text = label_text
@@ -2957,7 +2950,7 @@ func _make_nav_radial_panel(
 	lbl.add_theme_color_override("font_color",
 		Color(0.48, 0.50, 0.54) if disabled else Color(0.88, 0.96, 1.0))
 	_tag_ui(lbl, "font", 500)
-	panel.add_child(lbl)
+	_radial_panel_content(panel).add_child(lbl)
 
 	if not disabled:
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
@@ -2969,16 +2962,20 @@ func _make_nav_radial_panel(
 	var cap_panel := panel
 	if not disabled:
 		panel.mouse_entered.connect(func() -> void:
-			sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
-			sb.border_color = Color(0.65, 0.88, 1.0, 1.0)
+			GameDialog.set_control_button_chrome_colors(
+				cap_panel,
+				Color(0.10, 0.22, 0.48, 0.97),
+				Color(0.65, 0.88, 1.0, 1.0))
 			if not cap_tip.is_empty():
 				_tooltip_lbl.text = cap_tip
 				_tooltip_panel.reset_size()
 				_tooltip_panel.visible = true
 				_hovered_nav_panel = cap_panel)
 		panel.mouse_exited.connect(func() -> void:
-			sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
-			sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
+			GameDialog.set_control_button_chrome_colors(
+				cap_panel,
+				Color(0.04, 0.08, 0.20, 0.94),
+				Color(0.45, 0.70, 1.0, 0.85))
 			if not cap_tip.is_empty():
 				_hide_tooltip()
 			_hovered_nav_panel = null)
@@ -3062,6 +3059,38 @@ func _on_radial_overlay_gui_input(event: InputEvent) -> void:
 	if _radial_overlay != null:
 		_radial_overlay.accept_event()
 
+## Chrome must fill the full chip; keep label padding on an inner margin host.
+func _prepare_radial_panel_chrome(
+		panel: PanelContainer,
+		fill: Color,
+		border: Color,
+		disabled: bool = false) -> void:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0)
+	sb.border_color = Color(0, 0, 0, 0)
+	sb.set_border_width_all(0)
+	sb.set_corner_radius_all(8)
+	# Zero stylebox margins so MagitechBtnFx covers the original full chip size.
+	sb.set_content_margin_all(0.0)
+	panel.add_theme_stylebox_override("panel", sb)
+	GameDialog.apply_control_button_chrome(panel, fill, border, disabled, 8.0)
+	var content := MarginContainer.new()
+	content.name = "RadialContent"
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("margin_left", 12)
+	content.add_theme_constant_override("margin_right", 12)
+	content.add_theme_constant_override("margin_top", 8)
+	content.add_theme_constant_override("margin_bottom", 8)
+	panel.add_child(content)
+
+
+func _radial_panel_content(panel: PanelContainer) -> Control:
+	var content := panel.get_node_or_null("RadialContent") as Control
+	return content if content != null else panel
+
+
 func _make_radial_panel(
 		pos: Vector2,
 		bg_color: Color,
@@ -3073,20 +3102,13 @@ func _make_radial_panel(
 	panel.position   = pos
 	panel.modulate.a = 0.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = bg_color
-	sb.set_border_width_all(1)
-	sb.border_color = border_color
-	sb.set_corner_radius_all(8)
-	sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
-	sb.content_margin_top  =  8.0; sb.content_margin_bottom =  8.0
-	panel.add_theme_stylebox_override("panel", sb)
+	_prepare_radial_panel_chrome(panel, bg_color, border_color, false)
 	var hover_bg: Color    = bg_color.lightened(0.15)
 	var hover_bord: Color  = border_color.lightened(0.20)
 	panel.mouse_entered.connect(func() -> void:
-		sb.bg_color = hover_bg; sb.border_color = hover_bord)
+		GameDialog.set_control_button_chrome_colors(panel, hover_bg, hover_bord))
 	panel.mouse_exited.connect(func() -> void:
-		sb.bg_color = bg_color; sb.border_color = border_color)
+		GameDialog.set_control_button_chrome_colors(panel, bg_color, border_color))
 	return panel
 
 # ─────────────────────────────────────────────────────────────
@@ -3908,12 +3930,14 @@ func _show_no_session_error() -> void:
 # Detective Tool (active-cursor state)
 # ─────────────────────────────────────────────────────────────
 
-## Enter "tool active" state: swap the cursor to the tool image and rebuild
-## spots so tool-gated ones become discoverable by sweeping the cursor.
+## Enter "tool active" state: swap the cursor to the tool's small Icon image
+## (item database / exploration item editor) and rebuild spots so tool-gated
+## ones become discoverable by sweeping the cursor.
 func _activate_tool(item_id: String) -> void:
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
 	if item.is_empty() or not bool(item.get("detective_tool", false)):
 		return
+	# Optional tool_cursor override; otherwise use Icon (small item image).
 	var cursor_path: String = str(item.get("tool_cursor", "")).strip_edges()
 	if cursor_path.is_empty():
 		cursor_path = str(item.get("icon", "")).strip_edges()

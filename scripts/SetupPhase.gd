@@ -17,9 +17,30 @@ const GAL_W   : float = 88.0
 const GAL_H   : float = 121.0
 const GAL_GAP : int   = 6
 const TUTORIAL_FORMATION_MSG := "Formation Change is unavailable in tutorial"
-const FORMATION_BAR_BASE_LEFT: float = 172.0
-const FORMATION_BAR_PORTRAIT_PAD: float = 14.0
 const SP_PORTRAIT_REF_H: float = 720.0
+const SETUP_PANEL_SIDE_INSET: float = 172.0
+const BOTTOM_PANEL_SIDE_INSET: float = SETUP_PANEL_SIDE_INSET
+const BOTTOM_PANEL_H: float = 58.0
+const BOTTOM_PANEL_BODY_GAP: float = 6.0
+const FORMATION_BTN_MIN_W: float = 72.0
+const FORMATION_BTN_MAX_W: float = 168.0
+const ACTION_BTN_H: float = 34.0
+const FORMATION_BTN_H: float = ACTION_BTN_H
+const CONFIRM_BTN_H: float = 44.0
+const CONFIRM_BTN_W: float = 260.0
+# Setup UI text — labels stay B&W; buttons use yellow tone.
+const TXT_PRIMARY := Color(0.96, 0.96, 0.96, 1.0)
+const TXT_BODY := Color(0.82, 0.82, 0.82, 1.0)
+const TXT_MUTED := Color(0.62, 0.62, 0.62, 1.0)
+const TXT_ACCENT := Color(0.90, 0.90, 0.90, 1.0)
+const TXT_BUTTON := Color(1.0, 0.88, 0.45, 1.0)
+const TXT_BUTTON_HOVER := Color(1.0, 0.95, 0.70, 1.0)
+const TXT_BUTTON_PRESSED := Color(0.92, 0.78, 0.35, 1.0)
+const _METAL_SHEEN_SHADER: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
+const _SHEEN_IDLE: float = 2.0
+const _SHEEN_DURATION: float = 0.55
+const _SHEEN_INTERVAL_MIN: float = 3.6
+const _SHEEN_INTERVAL_MAX: float = 6.8
 
 # ─────────────────────────────────────────────────────────────
 # Inner class: gallery card (drag source + tap to preview)
@@ -210,6 +231,8 @@ var _locked_cells: Array = []        # Array[Vector2i] — forced placement cell
 var _tutorial_formation_overlay: Control = null
 var _union_panel_node: Panel = null  # ref to the "POSSIBLE UNIONS" panel
 var _formation_bar: HBoxContainer = null  # pre-defined formation buttons
+var _bottom_panel: Panel = null           # formation + random + confirm chrome
+var _bottom_vbox: VBoxContainer = null
 var _body_hbox:     Control       = null  # body (grid + right panel)
 
 var _player_lbl   : Label           = null
@@ -218,6 +241,8 @@ var _gallery_flow : HFlowContainer  = null
 var _confirm_btn  : Button          = null
 var _random_btn   : Button          = null
 var _confirm_btn_pulse_tween: Tween = null
+var _confirm_sheen_tween: Tween = null
+var _confirm_sheen_mat: ShaderMaterial = null
 const _CONFIRM_BTN_BRIGHT_REST := 1.0
 const _CONFIRM_BTN_BRIGHT_PULSE := 1.28
 const _BTN_FX_META := &"magitech_btn_fx_mat"
@@ -272,8 +297,8 @@ func start_setup(player_index: int) -> void:
 	# Reset confirm button, random button, and info panel
 	_confirm_btn.disabled = true
 	_random_btn.disabled  = true
-	GameDialog.sync_button_chrome_disabled(_confirm_btn)
-	GameDialog.sync_button_chrome_disabled(_random_btn)
+	_sync_setup_button_chrome(_confirm_btn)
+	_sync_setup_button_chrome(_random_btn)
 	_clear_card_info()
 
 	_reset_grid()
@@ -294,7 +319,7 @@ func start_setup(player_index: int) -> void:
 		else:
 			_instr_lbl.text = "No valid deck found. Please build a deck first."
 			_confirm_btn.disabled = true
-			GameDialog.sync_button_chrome_disabled(_confirm_btn)
+			_sync_setup_button_chrome(_confirm_btn)
 		return
 
 	_chars_remaining = deck.characters.duplicate()
@@ -302,7 +327,7 @@ func start_setup(player_index: int) -> void:
 	GameState.tech_hands[player_index] = deck.techs.duplicate()
 	_random_btn.visible = not _is_tutorial_setup()
 	_random_btn.disabled = false
-	GameDialog.sync_button_chrome_disabled(_random_btn)
+	_sync_setup_button_chrome(_random_btn)
 
 	# Apply forced cell placements for this player
 	_locked_cells.clear()
@@ -382,14 +407,10 @@ func _build_ui() -> void:
 	# ── Header bar ──────────────────────────────────────────
 	var header := Panel.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	header.offset_left   =  160.0
-	header.offset_right  = -160.0
+	header.offset_left   =  SETUP_PANEL_SIDE_INSET
+	header.offset_right  = -SETUP_PANEL_SIDE_INSET
 	header.offset_bottom = 72.0
-	var hdr_sb := StyleBoxFlat.new()
-	hdr_sb.bg_color            = Color(0.05, 0.07, 0.16, 1.0)
-	hdr_sb.border_width_bottom = 1
-	hdr_sb.border_color        = Color(0.35, 0.6, 1.0, 0.45)
-	header.add_theme_stylebox_override("panel", hdr_sb)
+	_skin_setup_panel(header, 0.0, false)
 	add_child(header)
 
 	_player_lbl = Label.new()
@@ -398,7 +419,7 @@ func _build_ui() -> void:
 	_player_lbl.offset_bottom = 42.0
 	_player_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_player_lbl.add_theme_font_size_override("font_size", 24)
-	_player_lbl.add_theme_color_override("font_color", Color(0.5, 0.88, 1.0))
+	_player_lbl.add_theme_color_override("font_color", TXT_PRIMARY)
 	header.add_child(_player_lbl)
 
 	_instr_lbl = Label.new()
@@ -407,7 +428,7 @@ func _build_ui() -> void:
 	_instr_lbl.offset_bottom = 70.0
 	_instr_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_instr_lbl.add_theme_font_size_override("font_size", 13)
-	_instr_lbl.add_theme_color_override("font_color", Color(0.82, 0.82, 0.82))
+	_instr_lbl.add_theme_color_override("font_color", TXT_BODY)
 	header.add_child(_instr_lbl)
 
 	# ── Body (grid + right panel side by side) ──────────────
@@ -415,49 +436,15 @@ func _build_ui() -> void:
 	_body_hbox = body
 	body.set_anchors_preset(Control.PRESET_FULL_RECT)
 	body.offset_top    = 76.0
-	body.offset_bottom = -62.0
-	body.offset_left   = 172.0
-	body.offset_right  = -172.0
+	body.offset_bottom = -(BOTTOM_PANEL_H + BOTTOM_PANEL_BODY_GAP)
+	body.offset_left   = SETUP_PANEL_SIDE_INSET
+	body.offset_right  = -SETUP_PANEL_SIDE_INSET
 	body.add_theme_constant_override("separation", 14)
 	add_child(body)
 
 	_build_grid_panel(body)
 	_build_right_panel(body)
-
-	# ── Formation selector bar (above Random / Confirm) ─────
-	_formation_bar = HBoxContainer.new()
-	_formation_bar.anchor_left    = 0.0; _formation_bar.anchor_right   = 0.0
-	_formation_bar.anchor_top     = 1.0; _formation_bar.anchor_bottom  = 1.0
-	_formation_bar.offset_left    = 172.0; _formation_bar.offset_right  = 476.0
-	_formation_bar.offset_top     = -98.0; _formation_bar.offset_bottom = -60.0
-	_formation_bar.add_theme_constant_override("separation", 4)
-	_formation_bar.visible = false
-	add_child(_formation_bar)
-
-	# ── Bottom bar: Random + Confirm ─────────────────────────
-	_random_btn = Button.new()
-	_random_btn.anchor_left    = 0.0;  _random_btn.anchor_top    = 1.0
-	_random_btn.anchor_right   = 0.0;  _random_btn.anchor_bottom = 1.0
-	_random_btn.offset_left    = 172.0; _random_btn.offset_top   = -54.0
-	_random_btn.offset_right   = 476.0; _random_btn.offset_bottom = -8.0
-	_random_btn.text = "RANDOM FORMATION"
-	_random_btn.add_theme_font_size_override("font_size", 16)
-	_random_btn.disabled = true
-	_skin_setup_button(_random_btn)
-	_random_btn.pressed.connect(_on_random_formation)
-	add_child(_random_btn)
-
-	_confirm_btn = Button.new()
-	_confirm_btn.anchor_left    = 0.0;  _confirm_btn.anchor_top    = 1.0
-	_confirm_btn.anchor_right   = 1.0;  _confirm_btn.anchor_bottom = 1.0
-	_confirm_btn.offset_left    = 484.0; _confirm_btn.offset_top   = -54.0
-	_confirm_btn.offset_right   = -172.0; _confirm_btn.offset_bottom = -8.0
-	_confirm_btn.text = "CONFIRM PLACEMENT"
-	_confirm_btn.add_theme_font_size_override("font_size", 20)
-	_confirm_btn.disabled = true
-	_skin_setup_button(_confirm_btn)
-	_confirm_btn.pressed.connect(_on_confirm)
-	add_child(_confirm_btn)
+	_build_bottom_panel()
 
 	# ── Player portrait illustrations (on top of all content) ─
 	var _sp_p1_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
@@ -510,20 +497,145 @@ func _on_hold_hover_exit() -> void:
 	if _hover_hold_hint != null:
 		_hover_hold_hint.on_hover_exited()
 
-## Magitech blue gradient fill + border (same chrome as dialog buttons).
+## Yellow magitech chrome for all setup actions.
 func _skin_setup_button(btn: Button, wire_sfx: bool = true) -> void:
 	if btn == null:
 		return
-	btn.add_theme_color_override("font_color", Color(0.88, 0.95, 1.0, 1.0))
-	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
-	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	btn.add_theme_color_override("font_color", TXT_BUTTON)
+	btn.add_theme_color_override("font_hover_color", TXT_BUTTON_HOVER)
+	btn.add_theme_color_override("font_pressed_color", TXT_BUTTON_PRESSED)
 	GameDialog.apply_button_chrome(btn, wire_sfx)
+	_apply_yellow_button_fx(btn)
+
+
+func _apply_yellow_button_fx(btn: Button) -> void:
+	if btn == null or not btn.has_meta(_BTN_FX_META):
+		return
+	var mat: ShaderMaterial = btn.get_meta(_BTN_FX_META) as ShaderMaterial
+	if mat == null:
+		return
+	if btn.disabled:
+		mat.set_shader_parameter("fill_top", Color(0.14, 0.10, 0.04, 0.85))
+		mat.set_shader_parameter("fill_bottom", Color(0.08, 0.06, 0.02, 0.85))
+		mat.set_shader_parameter("border_a", Color(0.55, 0.42, 0.18, 0.45))
+		mat.set_shader_parameter("border_b", Color(0.60, 0.48, 0.22, 0.40))
+		mat.set_shader_parameter("brightness", 0.75)
+	else:
+		mat.set_shader_parameter("fill_top", Color(0.34, 0.24, 0.06, 0.97))
+		mat.set_shader_parameter("fill_bottom", Color(0.18, 0.12, 0.03, 0.97))
+		mat.set_shader_parameter("border_a", Color(1.0, 0.84, 0.28, 0.92))
+		mat.set_shader_parameter("border_b", Color(0.95, 0.72, 0.28, 0.74))
+		mat.set_shader_parameter("brightness", 1.0)
+
+
+func _sync_setup_button_chrome(btn: Button) -> void:
+	GameDialog.sync_button_chrome_disabled(btn)
+	_apply_yellow_button_fx(btn)
+
+
+## Black fill + white/grey frame. Circuit patrol only when enable_patrol.
+func _skin_setup_panel(panel: Panel, content_margin: float = 12.0, enable_patrol: bool = false) -> void:
+	if panel == null:
+		return
+	var sb := GameDialog.make_panel_stylebox(content_margin)
+	sb.set_corner_radius_all(8)
+	panel.add_theme_stylebox_override("panel", sb)
+	GameDialog.attach_panel_fx(panel)
+	var mat: ShaderMaterial = panel.material as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("fill_bottom", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("border_a", Color(0.96, 0.96, 0.98, 0.92))
+	mat.set_shader_parameter("border_b", Color(0.52, 0.54, 0.58, 0.70))
+	mat.set_shader_parameter("border_px", 2.5 if enable_patrol else 2.0)
+	mat.set_shader_parameter("rim_speed", 0.40 if enable_patrol else 0.0)
+	mat.set_shader_parameter("rim_pulse", 0.68 if enable_patrol else 0.0)
+	mat.set_shader_parameter("circuit_patrol", 1.0 if enable_patrol else 0.0)
+
+
+## Bottom chrome: Random | formation chips | Confirm (hero).
+func _build_bottom_panel() -> void:
+	_bottom_panel = Panel.new()
+	_bottom_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_bottom_panel.offset_left = BOTTOM_PANEL_SIDE_INSET
+	_bottom_panel.offset_right = -BOTTOM_PANEL_SIDE_INSET
+	_bottom_panel.offset_top = -BOTTOM_PANEL_H
+	_bottom_panel.offset_bottom = 0.0
+	_skin_setup_panel(_bottom_panel, 0.0, false)
+	add_child(_bottom_panel)
+
+	_bottom_vbox = VBoxContainer.new()
+	_bottom_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_bottom_vbox.offset_left = 8.0
+	_bottom_vbox.offset_right = -8.0
+	_bottom_vbox.offset_top = 6.0
+	_bottom_vbox.offset_bottom = -6.0
+	_bottom_vbox.add_theme_constant_override("separation", 0)
+	_bottom_panel.add_child(_bottom_vbox)
+
+	var action_row := HBoxContainer.new()
+	action_row.custom_minimum_size = Vector2(0.0, CONFIRM_BTN_H)
+	action_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	action_row.add_theme_constant_override("separation", 8)
+	action_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_bottom_vbox.add_child(action_row)
+
+	_random_btn = Button.new()
+	_random_btn.text = "RANDOM"
+	_random_btn.custom_minimum_size = Vector2(120.0, ACTION_BTN_H)
+	_random_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_random_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_random_btn.add_theme_font_size_override("font_size", 14)
+	_random_btn.disabled = true
+	_skin_setup_button(_random_btn)
+	_random_btn.pressed.connect(_on_random_formation)
+	action_row.add_child(_random_btn)
+
+	_formation_bar = HBoxContainer.new()
+	_formation_bar.custom_minimum_size = Vector2(0.0, FORMATION_BTN_H)
+	_formation_bar.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_formation_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_formation_bar.add_theme_constant_override("separation", 4)
+	_formation_bar.visible = false
+	action_row.add_child(_formation_bar)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	action_row.add_child(spacer)
+
+	_confirm_btn = Button.new()
+	_confirm_btn.text = "CONFIRM PLACEMENT"
+	_confirm_btn.custom_minimum_size = Vector2(CONFIRM_BTN_W, CONFIRM_BTN_H)
+	_confirm_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_confirm_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_confirm_btn.add_theme_font_size_override("font_size", 18)
+	_confirm_btn.disabled = true
+	_skin_setup_button(_confirm_btn)
+	_confirm_btn.pressed.connect(_on_confirm)
+	action_row.add_child(_confirm_btn)
+	_wire_confirm_metal_sheen()
+
+	_sync_bottom_panel_layout(false)
+
+
+func _sync_bottom_panel_layout(_show_formations: bool = false) -> void:
+	if _bottom_panel != null:
+		_bottom_panel.offset_top = -BOTTOM_PANEL_H
+	if _body_hbox != null:
+		_body_hbox.offset_bottom = -(BOTTOM_PANEL_H + BOTTOM_PANEL_BODY_GAP)
+	if _bottom_vbox != null:
+		# Keep Random flush to the left of the bottom panel.
+		_bottom_vbox.offset_left = 8.0
+		_bottom_vbox.offset_right = -8.0
 
 
 func _make_grid_cell_style() -> StyleBoxFlat:
 	var cell_sb := StyleBoxFlat.new()
-	cell_sb.bg_color = Color(0.07, 0.10, 0.18, 0.96)
-	cell_sb.border_color = Color(0.45, 0.88, 1.0, 0.55)
+	cell_sb.bg_color = Color(0.0, 0.0, 0.0, 1.0)
+	cell_sb.border_color = Color(0.92, 0.92, 0.94, 0.70)
 	cell_sb.set_border_width_all(MagitechTheme.BORDER_WIDTH_THIN)
 	cell_sb.set_corner_radius_all(4)
 	return cell_sb
@@ -536,9 +648,11 @@ func _build_grid_panel(parent: Control) -> void:
 	var grid_panel := Panel.new()
 	_grid_panel = grid_panel
 	grid_panel.custom_minimum_size = Vector2(grid_w, grid_h)
-	grid_panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	grid_panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox(12.0))
-	GameDialog.attach_panel_fx(grid_panel)
+	# Modest horizontal grow — leave most leftover width for the right column.
+	grid_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	grid_panel.size_flags_stretch_ratio = 0.72
+	_skin_setup_panel(grid_panel, 12.0, true)
 	parent.add_child(grid_panel)
 
 	var center := CenterContainer.new()
@@ -584,6 +698,8 @@ func _build_right_panel(parent: Control) -> void:
 	var right_vbox := VBoxContainer.new()
 	right_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_vbox.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+	right_vbox.size_flags_stretch_ratio = 1.45
+	right_vbox.custom_minimum_size = Vector2(520.0, 0.0)
 	right_vbox.add_theme_constant_override("separation", 8)
 	parent.add_child(right_vbox)
 
@@ -597,18 +713,7 @@ func _build_gallery_panel(parent: Control) -> void:
 	var gal_panel := Panel.new()
 	gal_panel.custom_minimum_size   = Vector2(0.0, TWO_ROW_H)
 	gal_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var gal_sb := StyleBoxFlat.new()
-	gal_sb.bg_color                   = Color(0.05, 0.07, 0.16, 1.0)
-	gal_sb.border_color               = Color(0.35, 0.6, 1.0, 0.35)
-	gal_sb.border_width_left          = 1
-	gal_sb.border_width_right         = 1
-	gal_sb.border_width_top           = 1
-	gal_sb.border_width_bottom        = 1
-	gal_sb.corner_radius_top_left     = 8
-	gal_sb.corner_radius_top_right    = 8
-	gal_sb.corner_radius_bottom_left  = 8
-	gal_sb.corner_radius_bottom_right = 8
-	gal_panel.add_theme_stylebox_override("panel", gal_sb)
+	_skin_setup_panel(gal_panel, 8.0, false)
 	parent.add_child(gal_panel)
 
 	var gal_lbl := Label.new()
@@ -618,7 +723,7 @@ func _build_gallery_panel(parent: Control) -> void:
 	gal_lbl.offset_bottom = 28.0
 	gal_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	gal_lbl.add_theme_font_size_override("font_size", 12)
-	gal_lbl.add_theme_color_override("font_color", Color(0.55, 0.8, 1.0, 0.85))
+	gal_lbl.add_theme_color_override("font_color", TXT_MUTED)
 	gal_panel.add_child(gal_lbl)
 
 	var scroll := ScrollContainer.new()
@@ -642,18 +747,7 @@ func _build_union_panel(parent: Control) -> void:
 	_union_panel_node = panel
 	panel.custom_minimum_size   = Vector2(0.0, ONE_ROW_H)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var sb := StyleBoxFlat.new()
-	sb.bg_color                   = Color(0.04, 0.08, 0.16, 1.0)
-	sb.border_color               = Color(0.25, 0.85, 1.0, 0.40)
-	sb.border_width_left          = 1
-	sb.border_width_right         = 1
-	sb.border_width_top           = 1
-	sb.border_width_bottom        = 1
-	sb.corner_radius_top_left     = 8
-	sb.corner_radius_top_right    = 8
-	sb.corner_radius_bottom_left  = 8
-	sb.corner_radius_bottom_right = 8
-	panel.add_theme_stylebox_override("panel", sb)
+	_skin_setup_panel(panel, 8.0, false)
 	parent.add_child(panel)
 
 	var hdr := Label.new()
@@ -663,7 +757,7 @@ func _build_union_panel(parent: Control) -> void:
 	hdr.offset_bottom = 28.0
 	hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hdr.add_theme_font_size_override("font_size", 12)
-	hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0, 0.90))
+	hdr.add_theme_color_override("font_color", TXT_ACCENT)
 	panel.add_child(hdr)
 
 	var scroll := ScrollContainer.new()
@@ -685,18 +779,7 @@ func _build_info_panel(parent: Control) -> void:
 	var info_panel := Panel.new()
 	info_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info_panel.size_flags_vertical   = Control.SIZE_EXPAND_FILL
-	var ip_sb := StyleBoxFlat.new()
-	ip_sb.bg_color                   = Color(0.04, 0.06, 0.14, 1.0)
-	ip_sb.border_color               = Color(0.35, 0.6, 1.0, 0.35)
-	ip_sb.border_width_left          = 1
-	ip_sb.border_width_right         = 1
-	ip_sb.border_width_top           = 1
-	ip_sb.border_width_bottom        = 1
-	ip_sb.corner_radius_top_left     = 8
-	ip_sb.corner_radius_top_right    = 8
-	ip_sb.corner_radius_bottom_left  = 8
-	ip_sb.corner_radius_bottom_right = 8
-	info_panel.add_theme_stylebox_override("panel", ip_sb)
+	_skin_setup_panel(info_panel, 8.0, false)
 	info_panel.clip_contents = true
 	parent.add_child(info_panel)
 
@@ -726,19 +809,19 @@ func _build_info_panel(parent: Control) -> void:
 
 	_info_name = Label.new()
 	_info_name.add_theme_font_size_override("font_size", 22)
-	_info_name.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
+	_info_name.add_theme_color_override("font_color", TXT_PRIMARY)
 	text_col.add_child(_info_name)
 
 	_info_stats = Label.new()
 	_info_stats.add_theme_font_size_override("font_size", 16)
-	_info_stats.add_theme_color_override("font_color", Color(1.0, 0.82, 0.3))
+	_info_stats.add_theme_color_override("font_color", TXT_ACCENT)
 	text_col.add_child(_info_stats)
 
 	_info_desc = Label.new()
 	_info_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_info_desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_info_desc.add_theme_font_size_override("font_size", 14)
-	_info_desc.add_theme_color_override("font_color", Color(0.78, 0.78, 0.85))
+	_info_desc.add_theme_color_override("font_color", TXT_BODY)
 	text_col.add_child(_info_desc)
 
 	_info_preview_btn = Button.new()
@@ -771,7 +854,7 @@ func _clear_card_info() -> void:
 	if _info_preview_btn != null:
 		_info_preview_btn.visible = false
 		_info_preview_btn.disabled = true
-		GameDialog.sync_button_chrome_disabled(_info_preview_btn)
+		_sync_setup_button_chrome(_info_preview_btn)
 
 func _open_card_detail(card_name: String, card_type: String) -> void:
 	CardDetailOverlay.open(self, card_name, card_type)
@@ -781,7 +864,7 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 	_info_card_type = card_type
 	_info_preview_btn.visible = true
 	_info_preview_btn.disabled = false
-	GameDialog.sync_button_chrome_disabled(_info_preview_btn)
+	_sync_setup_button_chrome(_info_preview_btn)
 
 	var subfolder: String
 	match card_type:
@@ -798,8 +881,8 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 
 	match card_type:
 		"character":
-			_info_name.add_theme_color_override("font_color", Color(1.0, 0.82, 0.3))
-			_info_stats.add_theme_color_override("font_color", Color(1.0, 0.82, 0.3))
+			_info_name.add_theme_color_override("font_color", TXT_PRIMARY)
+			_info_stats.add_theme_color_override("font_color", TXT_ACCENT)
 			var data: Variant = CardDatabase.get_character(card_name)
 			_info_name.text = (data as CharacterData).display_name \
 				if data != null and not (data as CharacterData).display_name.is_empty() \
@@ -813,8 +896,8 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 				_info_stats.text = "Unit"
 				_info_desc.text  = ""
 		"trap":
-			_info_name.add_theme_color_override("font_color", Color(1.0, 0.38, 0.38))
-			_info_stats.add_theme_color_override("font_color", Color(1.0, 0.38, 0.38))
+			_info_name.add_theme_color_override("font_color", TXT_PRIMARY)
+			_info_stats.add_theme_color_override("font_color", TXT_ACCENT)
 			var data: Variant = CardDatabase.get_trap(card_name)
 			_info_name.text = (data as TrapData).display_name \
 				if data != null and not (data as TrapData).display_name.is_empty() \
@@ -827,8 +910,8 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 				_info_stats.text = "Trap"
 				_info_desc.text  = ""
 		"tech":
-			_info_name.add_theme_color_override("font_color", Color(0.3, 1.0, 0.65))
-			_info_stats.add_theme_color_override("font_color", Color(0.3, 1.0, 0.65))
+			_info_name.add_theme_color_override("font_color", TXT_PRIMARY)
+			_info_stats.add_theme_color_override("font_color", TXT_ACCENT)
 			var data: Variant = CardDatabase.get_tech(card_name)
 			_info_name.text = (data as TechCardData).display_name \
 				if data != null and not (data as TechCardData).display_name.is_empty() \
@@ -841,9 +924,8 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 				_info_stats.text = "Tech"
 				_info_desc.text  = ""
 		"union":
-			const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
-			_info_name.add_theme_color_override("font_color", UNION_CYAN)
-			_info_stats.add_theme_color_override("font_color", UNION_CYAN)
+			_info_name.add_theme_color_override("font_color", TXT_PRIMARY)
+			_info_stats.add_theme_color_override("font_color", TXT_ACCENT)
 			var u: UnionData = UnionDatabase.get_union(card_name)
 			_info_name.text = u.display_name \
 				if u != null and not u.display_name.is_empty() \
@@ -963,7 +1045,7 @@ func _make_union_tile(u: UnionData) -> Control:
 	lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
 	lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.00))
+	lbl.add_theme_color_override("font_color", TXT_ACCENT)
 	wrap.add_child(lbl)
 	return wrap
 
@@ -1042,7 +1124,7 @@ func _add_gallery_card(card_name: String, card_type: String) -> void:
 	lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
 	lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.add_theme_color_override("font_color", Color(0.88, 0.88, 0.88))
+	lbl.add_theme_color_override("font_color", TXT_BODY)
 	wrap.add_child(lbl)
 
 # ─────────────────────────────────────────────────────────────
@@ -1179,7 +1261,7 @@ func _show_invalid_deck_abort_dialog() -> void:
 		return
 	_instr_lbl.text = "No valid deck found. Please build a deck first."
 	_confirm_btn.disabled = true
-	GameDialog.sync_button_chrome_disabled(_confirm_btn)
+	_sync_setup_button_chrome(_confirm_btn)
 	var body: String = (
 		"Some cards in this deck are not in your collection, "
 		+ "and the deck no longer meets requirements.\n\n"
@@ -1192,56 +1274,50 @@ func _show_invalid_deck_abort_dialog() -> void:
 		func() -> void:
 			MainMenuReturnLoader.go_to_scene(SaveManager.get_setup_abort_return_scene()))
 
-func _formation_bar_left_offset() -> float:
-	if current_setup_player != 0:
-		return FORMATION_BAR_BASE_LEFT
-	var tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
-	if tex == null:
-		return FORMATION_BAR_BASE_LEFT
-	var sz := tex.get_size()
-	if sz.y <= 0.0:
-		return FORMATION_BAR_BASE_LEFT
-	var pw: float = SP_PORTRAIT_REF_H * sz.x / sz.y
-	return maxf(FORMATION_BAR_BASE_LEFT, pw * 0.6 + FORMATION_BAR_PORTRAIT_PAD)
-
 func _refresh_formation_bar(deck: DeckData) -> void:
 	if _formation_bar == null:
 		return
-	_formation_bar.offset_left = _formation_bar_left_offset()
 	if _is_tutorial_setup():
 		_formation_bar.visible = false
-		if _body_hbox != null:
-			_body_hbox.offset_bottom = -62.0
+		_sync_bottom_panel_layout(false)
 		return
 	for child in _formation_bar.get_children():
 		child.queue_free()
 
 	var formations: Array = deck.formations if deck != null else []
 	_formation_bar.visible = not formations.is_empty()
+	_sync_bottom_panel_layout(_formation_bar.visible)
 	if not _formation_bar.visible:
-		# Restore body to normal height
-		if _body_hbox != null:
-			_body_hbox.offset_bottom = -62.0
 		return
 
-	# Shrink body to make room for formation bar
-	if _body_hbox != null:
-		_body_hbox.offset_bottom = -104.0
-
 	var lbl := Label.new()
-	lbl.text = "Formation:"
+	lbl.text = "Form:"
 	lbl.add_theme_font_size_override("font_size", 11)
-	lbl.add_theme_color_override("font_color", Color(0.6, 0.8, 1.0))
+	lbl.add_theme_color_override("font_color", TXT_MUTED)
 	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_formation_bar.add_child(lbl)
 
 	for i in range(formations.size()):
 		var fd: Dictionary = formations[i] as Dictionary
 		var btn := Button.new()
-		btn.text = str(fd.get("name", "F%d" % (i + 1)))
-		btn.add_theme_font_size_override("font_size", 11)
-		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var raw_name: String = str(fd.get("name", "F%d" % (i + 1))).strip_edges()
+		btn.text = raw_name
+		btn.tooltip_text = raw_name
+		btn.add_theme_font_size_override("font_size", 12)
+		btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		btn.clip_text = true
+		btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		_skin_setup_button(btn)
+		var font: Font = btn.get_theme_font("font")
+		var text_w: float = 96.0
+		if font != null:
+			text_w = font.get_string_size(
+				raw_name, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12).x
+		btn.custom_minimum_size = Vector2(
+			clampf(text_w + 36.0, FORMATION_BTN_MIN_W, FORMATION_BTN_MAX_W),
+			FORMATION_BTN_H)
 		var idx := i
 		btn.pressed.connect(func() -> void: _apply_formation(idx))
 		_formation_bar.add_child(btn)
@@ -1416,7 +1492,7 @@ func _refresh_confirm() -> void:
 		return
 	var all_placed: bool = _chars_remaining.is_empty() and _traps_remaining.is_empty()
 	_confirm_btn.disabled = not all_placed
-	GameDialog.sync_button_chrome_disabled(_confirm_btn)
+	_sync_setup_button_chrome(_confirm_btn)
 	if _is_tutorial_setup():
 		_start_tutorial_confirm_pulse()
 		if all_placed:
@@ -1435,10 +1511,10 @@ func _refresh_confirm() -> void:
 func _lock_confirm_ui() -> void:
 	if _confirm_btn != null:
 		_confirm_btn.disabled = true
-		GameDialog.sync_button_chrome_disabled(_confirm_btn)
+		_sync_setup_button_chrome(_confirm_btn)
 	if _random_btn != null:
 		_random_btn.disabled = true
-		GameDialog.sync_button_chrome_disabled(_random_btn)
+		_sync_setup_button_chrome(_random_btn)
 	if _gallery_flow != null:
 		_gallery_flow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if _formation_bar != null:
@@ -1483,8 +1559,83 @@ func _stop_tutorial_confirm_pulse() -> void:
 	if mat != null:
 		mat.set_shader_parameter("brightness", _CONFIRM_BTN_BRIGHT_REST)
 
+
+func _wire_confirm_metal_sheen() -> void:
+	if _confirm_btn == null:
+		return
+	var existing := _confirm_btn.get_node_or_null("MetalSheen") as TextureRect
+	if existing != null:
+		existing.queue_free()
+	var sheen := TextureRect.new()
+	sheen.name = "MetalSheen"
+	sheen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sheen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sheen.show_behind_parent = true
+	sheen.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sheen.stretch_mode = TextureRect.STRETCH_SCALE
+	# Soft plate — mostly invisible until the sheen band sweeps across.
+	var img := Image.create(8, 8, false, Image.FORMAT_RGBA8)
+	img.fill(Color(1.0, 0.95, 0.70, 0.18))
+	sheen.texture = ImageTexture.create_from_image(img)
+	var mat := ShaderMaterial.new()
+	mat.shader = _METAL_SHEEN_SHADER
+	mat.set_shader_parameter("progress", _SHEEN_IDLE)
+	mat.set_shader_parameter("band_width", 0.22)
+	mat.set_shader_parameter("intensity", 1.55)
+	mat.set_shader_parameter("shine_color", Color(1.0, 0.97, 0.78, 1.0))
+	sheen.material = mat
+	_confirm_sheen_mat = mat
+	_confirm_btn.add_child(sheen)
+	# Keep sheen above the chrome ColorRect but still behind label text.
+	var fx := _confirm_btn.get_node_or_null("MagitechBtnFx")
+	if fx != null:
+		_confirm_btn.move_child(sheen, fx.get_index() + 1)
+	_schedule_confirm_metal_sheen(randf_range(0.6, 1.8))
+
+
+func _schedule_confirm_metal_sheen(delay: float) -> void:
+	if _confirm_sheen_tween != null and _confirm_sheen_tween.is_valid():
+		_confirm_sheen_tween.kill()
+	_confirm_sheen_tween = null
+	if _confirm_btn == null or not is_instance_valid(_confirm_btn) or _confirm_sheen_mat == null:
+		return
+	var tw := create_tween()
+	_confirm_sheen_tween = tw
+	tw.tween_interval(delay)
+	tw.tween_callback(_play_confirm_metal_sheen_once)
+
+
+func _play_confirm_metal_sheen_once() -> void:
+	if _confirm_btn == null or not is_instance_valid(_confirm_btn) or _confirm_sheen_mat == null:
+		return
+	if _confirm_sheen_tween != null and _confirm_sheen_tween.is_valid():
+		_confirm_sheen_tween.kill()
+	var mat: ShaderMaterial = _confirm_sheen_mat
+	var tw := create_tween()
+	_confirm_sheen_tween = tw
+	tw.tween_method(
+		func(v: float) -> void:
+			if mat != null:
+				mat.set_shader_parameter("progress", v),
+		-0.15, 1.15, _SHEEN_DURATION
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		if mat != null:
+			mat.set_shader_parameter("progress", _SHEEN_IDLE)
+		_schedule_confirm_metal_sheen(randf_range(_SHEEN_INTERVAL_MIN, _SHEEN_INTERVAL_MAX)))
+
+
+func _stop_confirm_metal_sheen() -> void:
+	if _confirm_sheen_tween != null and _confirm_sheen_tween.is_valid():
+		_confirm_sheen_tween.kill()
+	_confirm_sheen_tween = null
+	if _confirm_sheen_mat != null:
+		_confirm_sheen_mat.set_shader_parameter("progress", _SHEEN_IDLE)
+
+
 func _exit_tree() -> void:
 	_stop_tutorial_confirm_pulse()
+	_stop_confirm_metal_sheen()
 
 # ─────────────────────────────────────────────────────────────
 # Tutorial formation lock
@@ -1536,7 +1687,7 @@ func _apply_tutorial_formation_lock() -> void:
 	msg.offset_left = 14.0
 	msg.offset_right = -14.0
 	msg.add_theme_font_size_override("font_size", 14)
-	msg.add_theme_color_override("font_color", Color(0.88, 0.92, 1.0))
+	msg.add_theme_color_override("font_color", TXT_PRIMARY)
 	msg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(msg)
 
@@ -1619,7 +1770,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	title.text = "Pick a Bluff"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 16)
-	title.add_theme_color_override("font_color", Color(0.75, 0.92, 1.0))
+	title.add_theme_color_override("font_color", TXT_PRIMARY)
 	vbox.add_child(title)
 
 	# Emoji row
@@ -1636,14 +1787,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 		btn.text = emoji
 		btn.custom_minimum_size = Vector2(46.0, 46.0)
 		btn.add_theme_font_size_override("font_size", 22)
-		var esb := StyleBoxFlat.new()
-		esb.bg_color = Color(0.08, 0.12, 0.28, 1.0)
-		esb.corner_radius_top_left     = 6; esb.corner_radius_top_right    = 6
-		esb.corner_radius_bottom_right = 6; esb.corner_radius_bottom_left  = 6
-		btn.add_theme_stylebox_override("normal", esb)
-		var esbh := esb.duplicate() as StyleBoxFlat
-		esbh.bg_color = Color(0.15, 0.25, 0.55, 1.0)
-		btn.add_theme_stylebox_override("hover", esbh)
+		_skin_setup_button(btn)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
 			SFXManager.play(SFXManager.SFX_BLUFF_PLACE)
@@ -1657,13 +1801,8 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	clear_btn.text = "✕  Remove Bluff"
 	clear_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	clear_btn.add_theme_font_size_override("font_size", 14)
-	clear_btn.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
-	var csb := StyleBoxFlat.new()
-	csb.bg_color = Color(0.08, 0.08, 0.16, 1.0)
-	csb.corner_radius_top_left     = 6; csb.corner_radius_top_right    = 6
-	csb.corner_radius_bottom_right = 6; csb.corner_radius_bottom_left  = 6
-	clear_btn.add_theme_stylebox_override("normal", csb)
 	clear_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_skin_setup_button(clear_btn)
 	clear_btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(current_setup_player, snap_row, snap_col, "")

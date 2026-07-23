@@ -56,6 +56,7 @@ const _SKIN_MAP: Dictionary = {
 	"ui_bottom_vault.png":        "ui_magitech_bottom_vault.png",
 	## Setup / coin-toss full-bleed backdrop (v3 only).
 	"ui_bg_setup_phase.png":      "ui_bg_setup_phase.png",
+	"ui_bg_setup_phase_front_frame.png": "ui_bg_setup_phase_front_frame.png",
 	"ui_setup_bottom_strip.png":  "ui_setup_bottom_strip.png",
 }
 
@@ -108,7 +109,16 @@ func hud_tex_v3_only(v1_filename: String) -> Texture2D:
 ## Setup / coin-toss backdrop: crop letterbox/pillarbox baked into the plate,
 ## then callers STRETCH_SCALE it to the full viewport.
 func setup_phase_bg_tex() -> Texture2D:
-	var full: Texture2D = hud_tex_v3_only("ui_bg_setup_phase.png")
+	return _setup_phase_plate_tex("ui_bg_setup_phase.png")
+
+
+## Foreground frame plate (same crop/placement as backdrop; drawn above portraits/coin).
+func setup_phase_front_frame_tex() -> Texture2D:
+	return _setup_phase_plate_tex("ui_bg_setup_phase_front_frame.png")
+
+
+func _setup_phase_plate_tex(v1_filename: String) -> Texture2D:
+	var full: Texture2D = hud_tex_v3_only(v1_filename)
 	if full == null:
 		return null
 	var tw: float = float(full.get_width())

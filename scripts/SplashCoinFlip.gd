@@ -12,8 +12,8 @@ var _running := false
 
 
 func _ready() -> void:
-	var coin_front: Texture2D = HudSkin.hud_tex("ui_coin_front.png")
-	var coin_back: Texture2D = HudSkin.hud_tex("ui_coin_back.png")
+	var coin_front: Texture2D = _load_loading_coin_tex("ui_coin_front_small.png")
+	var coin_back: Texture2D = _load_loading_coin_tex("ui_coin_back_small.png")
 	_coin_mat = ShaderMaterial.new()
 	_coin_mat.shader = COIN_SHADER
 	_coin_mat.set_shader_parameter("coin_front", coin_front)
@@ -52,3 +52,18 @@ func stop() -> void:
 	_running = false
 	if _coin_mat != null:
 		_coin_mat.set_shader_parameter("running", 0.0)
+
+
+## Loading spinner uses dedicated small coin art in decorations/ (not HudSkin remap).
+func _load_loading_coin_tex(filename: String) -> Texture2D:
+	var path := "res://assets/textures/ui/decorations/%s" % filename
+	if ResourceLoader.exists(path):
+		var tex: Texture2D = load(path) as Texture2D
+		if tex != null:
+			return tex
+	if FileAccess.file_exists(path):
+		var img := Image.load_from_file(path)
+		if img != null and not img.is_empty():
+			return ImageTexture.create_from_image(img)
+	push_warning("SplashCoinFlip: missing %s" % path)
+	return null
