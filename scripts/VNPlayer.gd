@@ -22,7 +22,7 @@ const DIALOG_SIDE_BORDER_W := 3.0
 const DIALOG_BORDER_CYAN := Color(0.38, 0.65, 1.0, 0.35)
 const STAGE_DESIGN_SIZE := Vector2(1600.0, 900.0)
 
-const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
+const HINT_ICON_PATH  := "res://assets/textures/vn/etc/facedown_frame_small.png"
 const NOTE_ICON_PATH  := "res://assets/textures/detective/ui_detective_note_icon.png"
 const NOTE_HOVER_OPEN_SEC := 0.5
 const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
@@ -169,10 +169,18 @@ func _resolve_gallery_chapter_end(beat: Dictionary) -> String:
 # Font helper
 # ─────────────────────────────────────────────────────────────
 func _make_font(weight: int) -> Font:
-	return FontManager.make_font("primary", weight)
+	return FontManager.vn_font(weight)
 
 func _tag_ui(node: Control, property: String, weight: int = 400) -> void:
-	FontManager.tag_font(node, property, "primary", weight)
+	FontManager.tag_font(node, property, FontManager.SLOT_VN, weight)
+
+func _apply_vn_dialog_fonts() -> void:
+	if _dialog_lbl == null or not is_instance_valid(_dialog_lbl):
+		return
+	# RichTextLabel only stores one FontManager tag — keep bold/italics in sync too.
+	_dialog_lbl.add_theme_font_override("bold_font", FontManager.vn_font(700))
+	_dialog_lbl.add_theme_font_override("italics_font", FontManager.vn_font(400))
+	_dialog_lbl.add_theme_font_override("bold_italics_font", FontManager.vn_font(700))
 
 func _apply_text_shadow(node: Control) -> void:
 	node.add_theme_color_override("font_shadow_color", TEXT_SHADOW_COLOR)
@@ -181,6 +189,7 @@ func _apply_text_shadow(node: Control) -> void:
 
 func _on_fonts_changed() -> void:
 	FontManager.refresh_tree(self)
+	_apply_vn_dialog_fonts()
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -353,6 +362,7 @@ func _build_ui() -> void:
 	_dialog_lbl.add_theme_font_size_override("normal_font_size", 30)
 	_dialog_lbl.add_theme_color_override("default_color", Color(0.90, 0.95, 1.0, 0.97))
 	_apply_text_shadow(_dialog_lbl)
+	_apply_vn_dialog_fonts()
 	_dialog_panel.add_child(_dialog_lbl)
 
 	# Continue icon (bottom-right of dialog panel)

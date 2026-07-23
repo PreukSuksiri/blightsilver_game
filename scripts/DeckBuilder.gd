@@ -59,7 +59,7 @@ const _ProtagonistEquipBar := preload("res://scripts/ProtagonistEquipBar.gd")
 const _DeckSwitchGallery := preload("res://scripts/DeckSwitchGallery.gd")
 @onready var import_btn:        Button      = $PageHeaderActions/ImportBtn
 @onready var export_btn:        Button      = $PageHeaderActions/ExportBtn
-@onready var close_btn:         Button      = $PageHeaderActions/CloseBtn
+@onready var close_btn:         Button      = $CloseBtn
 @onready var remove_char_btn:   Button      = $MainLayout/RightPanel/Inner/CharSection/RemoveBtn
 @onready var remove_trap_btn:   Button      = $MainLayout/RightPanel/Inner/TrapSection/RemoveBtn
 @onready var remove_tech_btn:   Button      = $MainLayout/RightPanel/Inner/TechSection/RemoveBtn
@@ -330,6 +330,7 @@ func _ready() -> void:
 	_show_loading_blocker()
 	MenuScreenHeader.style_title(get_node("TitleLabel") as Label)
 	MenuScreenHeader.style_close_button(close_btn)
+	MenuScreenHeader.anchor_close_top_right(close_btn)
 	_skin_text_fields()
 	_connect_buttons()
 	_refresh_tutorial_locked_controls()
@@ -375,6 +376,54 @@ func _ready() -> void:
 		call_deferred("_grab_loading_blocker_focus")
 
 # ── Button wiring ─────────────────────────────────────────────
+const _BTN_FX_META := &"magitech_btn_fx_mat"
+
+## Magitech blue gradient fill + border (same chrome as dialog / menu buttons).
+func _skin_primary_action_button(btn: Button) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(0.88, 0.95, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	GameDialog.apply_button_chrome(btn, true)
+
+
+## Same chrome shape as primary actions, tinted green for Save / Save and Exit.
+func _skin_green_action_button(btn: Button) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(0.55, 1.0, 0.72, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(0.75, 1.0, 0.85, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.40, 0.92, 0.58, 1.0))
+	GameDialog.apply_button_chrome(btn, true)
+	_apply_green_button_fx(btn)
+
+
+func _apply_green_button_fx(btn: Button) -> void:
+	if btn == null or not btn.has_meta(_BTN_FX_META):
+		return
+	var mat: ShaderMaterial = btn.get_meta(_BTN_FX_META) as ShaderMaterial
+	if mat == null:
+		return
+	if btn.disabled:
+		mat.set_shader_parameter("fill_top", Color(0.06, 0.12, 0.08, 0.85))
+		mat.set_shader_parameter("fill_bottom", Color(0.04, 0.08, 0.05, 0.85))
+		mat.set_shader_parameter("border_a", Color(0.30, 0.50, 0.35, 0.45))
+		mat.set_shader_parameter("border_b", Color(0.35, 0.55, 0.40, 0.40))
+		mat.set_shader_parameter("brightness", 0.75)
+	else:
+		mat.set_shader_parameter("fill_top", Color(0.08, 0.28, 0.14, 0.97))
+		mat.set_shader_parameter("fill_bottom", Color(0.04, 0.14, 0.08, 0.97))
+		mat.set_shader_parameter("border_a", Color(0.30, 1.0, 0.55, 0.85))
+		mat.set_shader_parameter("border_b", Color(0.55, 0.95, 0.70, 0.70))
+		mat.set_shader_parameter("brightness", 1.0)
+
+
+func _sync_green_button_chrome(btn: Button) -> void:
+	GameDialog.sync_button_chrome_disabled(btn)
+	_apply_green_button_fx(btn)
+
+
 func _connect_buttons() -> void:
 	filter_all.pressed.connect(func(): _set_filter("all"))
 	filter_char.pressed.connect(func(): _set_filter("character"))
@@ -417,7 +466,11 @@ func _connect_buttons() -> void:
 	close_btn.pressed.connect(_on_back)
 	formations_btn.pressed.connect(_open_formation_editor)
 	ChromeIcon.apply_button(formations_btn, "formations", false, "  FORMATIONS", ChromeIcon.COLOR_ON_DARK, 18)
-	ChromeIcon.apply_button(trunk_add_btn, "add", false, "  Add to Deck", ChromeIcon.COLOR_ON_DARK, 16)
+	trunk_add_btn.icon = null
+	trunk_add_btn.text = "Add to Deck"
+	_skin_primary_action_button(trunk_add_btn)
+	_skin_green_action_button(save_btn)
+	_skin_green_action_button(save_and_exit_btn)
 	save_btn.pressed.connect(_on_save)
 	save_and_exit_btn.pressed.connect(_on_save_and_exit)
 	remove_char_btn.disabled = true
@@ -955,6 +1008,8 @@ func _rebuild_deck_lists(refresh_gallery: bool = true, refresh_union: bool = tru
 	save_btn.disabled = save_disabled
 	# During tutorial, Save and Exit stays enabled so the player can leave without saving.
 	save_and_exit_btn.disabled = save_disabled and SaveManager.is_attack_tutorial_complete()
+	_sync_green_button_chrome(save_btn)
+	_sync_green_button_chrome(save_and_exit_btn)
 
 	remove_char_btn.disabled = true
 	remove_trap_btn.disabled = true
@@ -1069,7 +1124,7 @@ func _add_union_filter_button() -> void:
 	_filter_union_btn.text = "Union"
 	_filter_union_btn.toggle_mode = true
 	_filter_union_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_filter_union_btn.add_theme_font_size_override("font_size", 18)
+	_filter_union_btn.add_theme_font_size_override("font_size", 16)
 	# Copy StyleBoxes from filter_all so it looks identical
 	for style_name: String in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var sb: StyleBox = filter_all.get_theme_stylebox(style_name)
@@ -2615,6 +2670,7 @@ func _build_advanced_filters() -> void:
 	_adv_affinity_btn.add_item("Any")
 	for aff: String in ["Divine", "Chaos", "Nature", "Arcane", "Cosmic", "Bio", "Anima"]:
 		_adv_affinity_btn.add_item(aff)
+	GameDialog.style_option_button(_adv_affinity_btn)
 	# no auto-apply — user presses Apply
 	aff_row.add_child(_adv_affinity_btn)
 	body.add_child(aff_row)
@@ -2957,7 +3013,8 @@ func _make_hscroll_gallery_row() -> Dictionary:
 
 	var scroll := ScrollContainer.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	# Scroll without drawing the native scrollbar — arrows replace it.
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 
 	var flow := HBoxContainer.new()
@@ -2966,41 +3023,75 @@ func _make_hscroll_gallery_row() -> Dictionary:
 	scroll.add_child(flow)
 	wrap.add_child(scroll)
 
-	var hint := _make_hscroll_hint_label()
-	wrap.add_child(hint)
-	scroll.set_meta("scroll_hint", hint)
+	var left_btn: Button = _make_hscroll_arrow_btn("chevron_left")
+	var right_btn: Button = _make_hscroll_arrow_btn("chevron_right")
+	_anchor_hscroll_arrow(left_btn, true)
+	_anchor_hscroll_arrow(right_btn, false)
+	wrap.add_child(left_btn)
+	wrap.add_child(right_btn)
+	scroll.set_meta("scroll_arrow_left", left_btn)
+	scroll.set_meta("scroll_arrow_right", right_btn)
+
+	const NUDGE := 80.0
+	left_btn.pressed.connect(func() -> void: _nudge_hscroll(scroll, -NUDGE))
+	right_btn.pressed.connect(func() -> void: _nudge_hscroll(scroll, NUDGE))
 
 	var bar := scroll.get_h_scroll_bar()
-	bar.changed.connect(func() -> void: _update_hscroll_hint(scroll, hint))
-	bar.value_changed.connect(func(_v: float) -> void: _update_hscroll_hint(scroll, hint))
-	wrap.resized.connect(func() -> void: _update_hscroll_hint(scroll, hint))
+	bar.changed.connect(func() -> void: _update_hscroll_arrows(scroll))
+	bar.value_changed.connect(func(_v: float) -> void: _update_hscroll_arrows(scroll))
+	wrap.resized.connect(func() -> void: _update_hscroll_arrows(scroll))
 
 	return {"wrap": wrap, "scroll": scroll, "flow": flow}
 
 
-func _make_hscroll_hint_label() -> Label:
-	var hint := Label.new()
-	hint.name = "HScrollHint"
-	hint.text = "▸"
-	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hint.anchor_left = 1.0
-	hint.anchor_top = 0.5
-	hint.anchor_right = 1.0
-	hint.anchor_bottom = 0.5
-	hint.offset_left = -20.0
-	hint.offset_top = -14.0
-	hint.offset_right = -2.0
-	hint.offset_bottom = 14.0
-	hint.add_theme_font_size_override("font_size", 18)
-	hint.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0, 1.0))
-	hint.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.75))
-	hint.add_theme_constant_override("shadow_offset_x", 1)
-	hint.add_theme_constant_override("shadow_offset_y", 1)
-	hint.visible = false
-	hint.modulate.a = 0.8
-	return hint
+func _make_hscroll_arrow_btn(chevron_id: String) -> Button:
+	var btn := Button.new()
+	btn.focus_mode = Control.FOCUS_NONE
+	btn.mouse_filter = Control.MOUSE_FILTER_STOP
+	btn.custom_minimum_size = Vector2(28, 36)
+	btn.flat = true
+	var empty := StyleBoxEmpty.new()
+	btn.add_theme_stylebox_override("normal", empty)
+	btn.add_theme_stylebox_override("hover", empty)
+	btn.add_theme_stylebox_override("pressed", empty)
+	btn.add_theme_stylebox_override("focus", empty)
+	btn.add_theme_stylebox_override("disabled", empty)
+
+	# Black shadow (alpha 1) behind a white triangle.
+	var shadow: TextureRect = ChromeIcon.make_rect(chevron_id, Vector2(18, 18), Color(0.0, 0.0, 0.0, 1.0))
+	shadow.position = Vector2(7, 11)
+	btn.add_child(shadow)
+	var glyph: TextureRect = ChromeIcon.make_rect(chevron_id, Vector2(18, 18), Color(1.0, 1.0, 1.0, 1.0))
+	glyph.position = Vector2(5, 9)
+	btn.add_child(glyph)
+	btn.visible = false
+	return btn
+
+
+func _anchor_hscroll_arrow(btn: Button, left_side: bool) -> void:
+	btn.anchor_top = 0.5
+	btn.anchor_bottom = 0.5
+	btn.offset_top = -18.0
+	btn.offset_bottom = 18.0
+	if left_side:
+		btn.anchor_left = 0.0
+		btn.anchor_right = 0.0
+		btn.offset_left = 0.0
+		btn.offset_right = 28.0
+	else:
+		btn.anchor_left = 1.0
+		btn.anchor_right = 1.0
+		btn.offset_left = -28.0
+		btn.offset_right = 0.0
+
+
+func _nudge_hscroll(scroll: ScrollContainer, delta: float) -> void:
+	if scroll == null or not is_instance_valid(scroll):
+		return
+	var bar := scroll.get_h_scroll_bar()
+	var max_scroll: float = maxf(0.0, bar.max_value - bar.page)
+	bar.value = clampf(bar.value + delta, 0.0, max_scroll)
+	_update_hscroll_arrows(scroll)
 
 
 func _set_hscroll_gallery_visible(scroll: ScrollContainer, vis: bool) -> void:
@@ -3019,47 +3110,61 @@ func _refresh_all_hscroll_hints() -> void:
 	]:
 		if scroll == null or not is_instance_valid(scroll):
 			continue
-		if not scroll.has_meta("scroll_hint"):
-			continue
-		var hint: Label = scroll.get_meta("scroll_hint") as Label
-		_update_hscroll_hint(scroll, hint)
+		_update_hscroll_arrows(scroll)
 
 
-func _update_hscroll_hint(scroll: ScrollContainer, hint: Label) -> void:
-	if scroll == null or hint == null or not is_instance_valid(hint):
+func _update_hscroll_arrows(scroll: ScrollContainer) -> void:
+	if scroll == null or not is_instance_valid(scroll):
+		return
+	if not scroll.has_meta("scroll_arrow_left") or not scroll.has_meta("scroll_arrow_right"):
+		return
+	var left_btn: Button = scroll.get_meta("scroll_arrow_left") as Button
+	var right_btn: Button = scroll.get_meta("scroll_arrow_right") as Button
+	if left_btn == null or right_btn == null:
 		return
 	var wrap: Control = scroll.get_parent() as Control
 	var row_visible: bool = scroll.is_visible_in_tree() and (wrap == null or wrap.visible)
 	var bar := scroll.get_h_scroll_bar()
 	var overflow: bool = bar.max_value > bar.page + 1.0
-	var more_right: bool = overflow and bar.value < bar.max_value - bar.page - 1.0
-	if not row_visible or not more_right:
-		hint.visible = false
-		_stop_hscroll_hint_pulse(hint)
-		return
-	hint.visible = true
-	_start_hscroll_hint_pulse(hint)
+	var can_left: bool = overflow and bar.value > 1.0
+	var can_right: bool = overflow and bar.value < bar.max_value - bar.page - 1.0
+	var show_left: bool = row_visible and can_left
+	var show_right: bool = row_visible and can_right
+	left_btn.visible = show_left
+	right_btn.visible = show_right
+	if show_left:
+		_start_hscroll_arrow_pulse(left_btn)
+	else:
+		_stop_hscroll_arrow_pulse(left_btn)
+	if show_right:
+		_start_hscroll_arrow_pulse(right_btn)
+	else:
+		_stop_hscroll_arrow_pulse(right_btn)
 
 
-func _start_hscroll_hint_pulse(hint: Label) -> void:
-	if hint.has_meta("pulse_running") and bool(hint.get_meta("pulse_running")):
+func _start_hscroll_arrow_pulse(btn: Button) -> void:
+	if btn == null or not is_instance_valid(btn):
 		return
-	hint.set_meta("pulse_running", true)
-	hint.modulate.a = 0.85
+	if btn.has_meta("pulse_running") and bool(btn.get_meta("pulse_running")):
+		return
+	btn.set_meta("pulse_running", true)
+	btn.modulate.a = 1.0
 	var tw := create_tween().set_loops()
-	tw.tween_property(hint, "modulate:a", 0.28, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_property(hint, "modulate:a", 0.85, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	hint.set_meta("pulse_tween", tw)
+	tw.tween_property(btn, "modulate:a", 0.45, 0.85).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(btn, "modulate:a", 1.0, 0.85).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	btn.set_meta("pulse_tween", tw)
 
 
-func _stop_hscroll_hint_pulse(hint: Label) -> void:
-	if hint.has_meta("pulse_tween"):
-		var tw: Variant = hint.get_meta("pulse_tween")
+func _stop_hscroll_arrow_pulse(btn: Button) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	if btn.has_meta("pulse_tween"):
+		var tw: Variant = btn.get_meta("pulse_tween")
 		if tw is Tween and is_instance_valid(tw):
 			(tw as Tween).kill()
-		hint.remove_meta("pulse_tween")
-	hint.set_meta("pulse_running", false)
-	hint.modulate.a = 1.0
+		btn.remove_meta("pulse_tween")
+	btn.set_meta("pulse_running", false)
+	btn.modulate.a = 1.0
 
 
 func _make_pool_tile(card_name: String, card_type: String) -> Control:

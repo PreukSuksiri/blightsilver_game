@@ -115,6 +115,7 @@ func _build_header() -> void:
 	ach_btn.offset_top = 6.0
 	ach_btn.offset_right = -58.0
 	ach_btn.offset_bottom = 38.0
+	_skin_quick_duel_button(ach_btn)
 	ach_btn.pressed.connect(func() -> void:
 		AchievementListOverlay.open(self))
 	add_child(ach_btn)
@@ -149,6 +150,7 @@ func _build_player_portrait_zone() -> void:
 	_switch_char_btn.offset_bottom = -16.0
 	_switch_char_btn.z_index = 10
 	_switch_char_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+	_skin_quick_duel_button(_switch_char_btn)
 	_switch_char_btn.pressed.connect(_open_protagonist_overlay)
 	add_child(_switch_char_btn)
 
@@ -255,11 +257,13 @@ func _build_picker_ui() -> void:
 
 	_casual_btn = Button.new()
 	_casual_btn.custom_minimum_size = Vector2(220, 36)
+	_skin_quick_duel_button(_casual_btn)
 	_casual_btn.pressed.connect(_open_settings)
 	bottom_bar.add_child(_casual_btn)
 
 	_reroll_btn = Button.new()
 	_reroll_btn.custom_minimum_size = Vector2(220, 36)
+	_skin_quick_duel_button(_reroll_btn)
 	_reroll_btn.pressed.connect(_on_reroll_pressed)
 	bottom_bar.add_child(_reroll_btn)
 
@@ -352,6 +356,16 @@ func _build_tier_capsule(tier: String) -> Dictionary:
 		"root": root,
 		"btn": btn,
 	}
+
+
+## Magitech blue gradient fill + border (same chrome as dialog / menu buttons).
+func _skin_quick_duel_button(btn: Button, wire_sfx: bool = true) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(0.88, 0.95, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
 
 
 func _apply_transparent_button_style(btn: Button) -> void:
@@ -596,6 +610,7 @@ func _refresh_reroll_button() -> void:
 	var cost: int = QuickDuelRewards.get_reroll_cost()
 	_reroll_btn.disabled = Collection.credits < cost
 	_reroll_btn.text = "Re-roll (%d Credits)" % cost
+	GameDialog.sync_button_chrome_disabled(_reroll_btn)
 
 
 func _on_reroll_pressed() -> void:
@@ -796,6 +811,8 @@ func launch_vault_duel(tier: String) -> void:
 		GameState.campaign_player_names = names
 
 	AIDeckVault.apply_enemy_battle_config(cfg)
+	# Identity personality must apply after deck config (which resets campaign_enemy_config).
+	AIIdentityVault.apply_personality_to_battle(GameState.battle_ai_identity_id)
 	GameState.battle_ai_deck = cfg.get("deck")
 	GameState.battle_ai_forced_cells = (cfg.get("forced_cells", []) as Array).duplicate(true)
 	GameState.battle_ai_forced_tech = (cfg.get("forced_tech", []) as Array).duplicate(true)

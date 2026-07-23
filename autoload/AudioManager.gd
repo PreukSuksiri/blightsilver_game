@@ -231,6 +231,16 @@ func tts_stop() -> void:
 		DisplayServer.tts_stop()
 	_restore_music()
 
+## Temporarily lower Music bus to 50% of the current setting (does not change saved volume).
+func duck_music_half() -> void:
+	_duck_music()
+
+
+## Restore Music bus to the saved `music_volume` setting.
+func restore_music() -> void:
+	_restore_music()
+
+
 func _duck_music() -> void:
 	# 50% of current setting, rounded down to nearest whole percent
 	var ducked := floorf(music_volume * 50.0) / 100.0

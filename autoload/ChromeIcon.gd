@@ -50,6 +50,9 @@ const _TRI_ROT_CW: Dictionary = {
 }
 
 var _cache: Dictionary = {}  # id -> Texture2D (white+alpha)
+var _bold_cache: Dictionary = {}  # "id@dilate" -> Texture2D
+
+const _SILVER_GRADIENT: Shader = preload("res://assets/shaders/silver_gradient.gdshader")
 
 
 func tex(id: String) -> Texture2D:
@@ -70,6 +73,84 @@ func tex(id: String) -> Texture2D:
 	var white_tex: Texture2D = _to_white_alpha(src, rot_cw)
 	_cache[id] = white_tex
 	return white_tex
+
+
+## Same as tex(), but dilates alpha so thin silhouettes read bolder at small sizes.
+func tex_bold(id: String, dilate_px: int = 1) -> Texture2D:
+	var key: String = "%s@%d" % [id, dilate_px]
+	if _bold_cache.has(key):
+		return _bold_cache[key] as Texture2D
+	var base: Texture2D = tex(id)
+	if base == null:
+		return null
+	if dilate_px <= 0:
+		_bold_cache[key] = base
+		return base
+	var img: Image = base.get_image()
+	if img == null:
+		return base
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	var bold_img: Image = _dilate_alpha(img, dilate_px)
+	var out: Texture2D = ImageTexture.create_from_image(bold_img)
+	_bold_cache[key] = out
+	return out
+
+
+func _dilate_alpha(src: Image, radius: int) -> Image:
+	var w: int = src.get_width()
+	var h: int = src.get_height()
+	var out := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	out.fill(Color(0, 0, 0, 0))
+	var r: int = maxi(1, radius)
+	for y: int in range(h):
+		for x: int in range(w):
+			var best_a: float = 0.0
+			for dy: int in range(-r, r + 1):
+				for dx: int in range(-r, r + 1):
+					if dx * dx + dy * dy > r * r + 1:
+						continue
+					var sx: int = x + dx
+					var sy: int = y + dy
+					if sx < 0 or sy < 0 or sx >= w or sy >= h:
+						continue
+					best_a = maxf(best_a, src.get_pixel(sx, sy).a)
+			if best_a > 0.004:
+				out.set_pixel(x, y, Color(1.0, 1.0, 1.0, best_a))
+	return out
+
+
+## Icon-only button: bold silhouette with grey→white silver gradient (not a flat tint).
+func apply_silver_icon_button(btn: Button, id: String, icon_px: int = 20, dilate_px: int = 1) -> void:
+	if btn == null:
+		return
+	var t: Texture2D = tex_bold(id, dilate_px)
+	if t == null:
+		return
+	btn.icon = null
+	btn.text = ""
+	btn.expand_icon = false
+	var old: Node = btn.get_node_or_null("SilverIconHost")
+	if old != null:
+		old.queue_free()
+	var host := CenterContainer.new()
+	host.name = "SilverIconHost"
+	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var tr := TextureRect.new()
+	tr.texture = t
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = Vector2(icon_px, icon_px)
+	tr.size = Vector2(icon_px, icon_px)
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var mat := ShaderMaterial.new()
+	mat.shader = _SILVER_GRADIENT
+	tr.material = mat
+	host.add_child(tr)
+	btn.add_child(host)
+	btn.move_child(host, 0)
 
 
 ## Flatten any silhouette (black or gray) to white RGB, keep alpha — required for multiply tint.

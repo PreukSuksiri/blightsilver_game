@@ -694,16 +694,23 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 
 	# Personality: emoji reaction bias
 	var opp_emoji: String = GameState.get_bluff(opponent_index, target_pos.x, target_pos.y)
-	if opp_emoji == "💩":   # normalize NSFW variant to canonical key
-		opp_emoji = "🖕"
+	var reaction: int = get_emoji_reaction(opp_emoji)
 	if _trailer_offensive:
 		# Always attack 💩/🖕 cells first — massive priority override
-		if opp_emoji == "🖕":
+		if AIIdentityVault.normalize_bluff_emoji(opp_emoji) == "🖕":
 			base += 999
-	elif opp_emoji != "" and _emoji_reactions.has(opp_emoji):
-		base += (_emoji_reactions[opp_emoji] as int) * 15
+	elif opp_emoji != "" and reaction != 0:
+		base += reaction * 15
 
 	return base
+
+
+## Returns -1 (Avoid), 0 (Neutral/unknown), or +1 (Interested / attack) for an opponent bluff emoji.
+func get_emoji_reaction(emoji: String) -> int:
+	var key: String = AIIdentityVault.normalize_bluff_emoji(emoji)
+	if key.is_empty() or not _emoji_reactions.has(key):
+		return 0
+	return int(_emoji_reactions[key])
 
 # ─────────────────────────────────────────────────────────────
 # Tech selection

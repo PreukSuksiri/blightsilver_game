@@ -9,7 +9,6 @@ extends Node
 # ── Preloads & constants (mirrored exactly from CardDetailOverlay) ─────────────
 const VELLUM_FRAME    := preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
 const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")
-const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
 const EXPORT_W     := CardArtLayout.REF_WIDTH
 const EXPORT_H     := CardArtLayout.REF_HEIGHT
@@ -247,7 +246,7 @@ func _build_card_node() -> Control:
 	_type.size               = Vector2(card_w * 0.55, hdr_h * 0.64)
 	_type.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_type.add_theme_font_size_override("font_size", fsz_hdr)
-	_type.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_type)
 	card.add_child(_type)
 
 	# Cost badge – crystal icon + number in rounded pill
@@ -286,7 +285,7 @@ func _build_card_node() -> Control:
 	_cost_num = Label.new()
 	_cost_num.add_theme_font_size_override("font_size", fsz_hdr)
 	_cost_num.add_theme_color_override("font_color", Color(1.0, 0.88, 0.25))
-	_cost_num.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_cost_num)
 	_cost_num.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_cost_num.mouse_filter       = Control.MOUSE_FILTER_IGNORE
 	cost_hbox.add_child(_cost_num)
@@ -303,7 +302,7 @@ func _build_card_node() -> Control:
 	_name.size               = Vector2(card_w - pad_x * 2.0, info_h * 0.34)
 	_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_name.add_theme_font_size_override("font_size", fsz_name)
-	_name.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_name)
 	_name.add_theme_color_override("font_color", Color(1.0, 0.95, 0.82))
 	card.add_child(_name)
 
@@ -319,7 +318,7 @@ func _build_card_node() -> Control:
 	_atk.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 	_atk.add_theme_font_size_override("font_size", fsz_stat)
 	_atk.add_theme_color_override("font_color", Color(1.0, 0.62, 0.30))
-	_atk.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_atk)
 	card.add_child(_atk)
 
 	_def = Label.new()
@@ -329,7 +328,7 @@ func _build_card_node() -> Control:
 	_def.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 	_def.add_theme_font_size_override("font_size", fsz_stat)
 	_def.add_theme_color_override("font_color", Color(0.38, 0.68, 1.0))
-	_def.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_def)
 	card.add_child(_def)
 
 	_aff = Label.new()
@@ -338,7 +337,7 @@ func _build_card_node() -> Control:
 	_aff.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_aff.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 	_aff.add_theme_font_size_override("font_size", fsz_stat + 10)
-	_aff.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_aff)
 	card.add_child(_aff)
 
 	_desc = Label.new()
@@ -348,7 +347,7 @@ func _build_card_node() -> Control:
 	_desc.add_theme_color_override("font_color", Color(0.82, 0.88, 0.98))
 	_desc.autowrap_mode         = TextServer.AUTOWRAP_WORD_SMART
 	_desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	_desc.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_desc)
 	card.add_child(_desc)
 
 	# Rarity stars – lower-right corner
@@ -359,7 +358,7 @@ func _build_card_node() -> Control:
 	_rarity.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_rarity.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 	_rarity.add_theme_font_size_override("font_size", fsz_rarity)
-	_rarity.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_rarity)
 	_rarity.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	card.add_child(_rarity)
 
@@ -405,7 +404,7 @@ func _build_card_node() -> Control:
 	_mat_formula_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_mat_formula_lbl.add_theme_font_size_override("font_size", 24)
 	_mat_formula_lbl.add_theme_color_override("font_color", Color.WHITE)
-	_mat_formula_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_mat_formula_lbl)
 	_mat_formula_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_union_info_panel.add_child(_mat_formula_lbl)
 

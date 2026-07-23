@@ -5,7 +5,6 @@ class_name CreditsEarnedOverlay
 
 signal dismissed
 
-const CHIVO_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
 var _amount: int = 0
 var _dismissed: bool = false
@@ -68,7 +67,7 @@ func _build_ui() -> void:
 	_text_lbl.text = "Earned %d credits" % _amount
 	_text_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_text_lbl.add_theme_font_size_override("font_size", 40)
-	_text_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_text_lbl)
 	_text_lbl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.28))
 	_text_lbl.add_theme_color_override("font_shadow_color", Color(0.35, 0.22, 0.0, 0.95))
 	_text_lbl.add_theme_constant_override("shadow_offset_x", 0)

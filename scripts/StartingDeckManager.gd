@@ -5,7 +5,6 @@ extends Control
 
 const DeckData = preload("res://resources/DeckData.gd")
 const SAVE_PATH := "res://data/starting_deck.json"
-const CHIVO_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
 const GRID_ROWS    := 5
 const GRID_COLS    := 5
@@ -97,7 +96,7 @@ func _build_ui() -> void:
 	title.offset_top = 10.0; title.offset_bottom = 42.0
 	title.offset_left = -200.0; title.offset_right = 200.0
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(title)
 	title.add_theme_font_size_override("font_size", 20)
 	title.add_theme_color_override("font_color", Color(1, 1, 1))
 	top.add_child(title)
@@ -116,7 +115,7 @@ func _build_ui() -> void:
 	save_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	save_btn.offset_left = -130.0; save_btn.offset_top    = 8.0
 	save_btn.offset_right = -10.0;  save_btn.offset_bottom = 40.0
-	save_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(save_btn)
 	save_btn.pressed.connect(_save_deck)
 	top.add_child(save_btn)
 
@@ -125,7 +124,7 @@ func _build_ui() -> void:
 	_status_lbl.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	_status_lbl.offset_top = -26.0; _status_lbl.offset_bottom = 0.0
 	_status_lbl.offset_left = 8.0
-	_status_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_status_lbl)
 	_status_lbl.add_theme_font_size_override("font_size", 12)
 	_status_lbl.add_theme_color_override("font_color", Color(0.6, 0.9, 0.6))
 	add_child(_status_lbl)
@@ -136,7 +135,7 @@ func _build_ui() -> void:
 	reset_btn.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	reset_btn.offset_top    = -55.0; reset_btn.offset_bottom = -28.0
 	reset_btn.offset_left   =  10.0; reset_btn.offset_right  = -10.0
-	reset_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(reset_btn)
 	reset_btn.add_theme_font_size_override("font_size", 14)
 	reset_btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	reset_btn.pressed.connect(_show_reset_confirm)
@@ -158,14 +157,14 @@ func _build_ui() -> void:
 	main.add_child(name_row)
 	var name_lbl := Label.new()
 	name_lbl.text = "Deck Name:"
-	name_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(name_lbl)
 	name_lbl.add_theme_font_size_override("font_size", 13)
 	name_lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.9))
 	name_row.add_child(name_lbl)
 	var name_edit := LineEdit.new()
 	name_edit.text = _deck.deck_name
 	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	name_edit.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(name_edit)
 	name_edit.text_changed.connect(func(t: String) -> void: _deck.deck_name = t)
 	name_row.add_child(name_edit)
 
@@ -191,14 +190,14 @@ func _build_ui() -> void:
 	var form_lbl := Label.new()
 	form_lbl.text = "Formations: %d / %d" % [_deck.formations.size(), MAX_FORMATIONS]
 	form_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	form_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(form_lbl)
 	form_lbl.add_theme_font_size_override("font_size", 12)
 	form_lbl.add_theme_color_override("font_color", Color(0.6, 0.75, 0.9))
 	form_row.add_child(form_lbl)
 
 	var fe_btn := Button.new()
 	fe_btn.text = "📋 Edit Formations"
-	fe_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(fe_btn)
 	fe_btn.add_theme_font_size_override("font_size", 12)
 	fe_btn.pressed.connect(_open_formation_editor.bind(form_lbl))
 	form_row.add_child(fe_btn)
@@ -212,14 +211,14 @@ func _build_card_column(parent: Control, header: String, card_array: Array, card
 
 	var hdr := Label.new()
 	hdr.text = header
-	hdr.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(hdr)
 	hdr.add_theme_font_size_override("font_size", 13)
 	hdr.add_theme_color_override("font_color", Color(0.75, 0.88, 1.0))
 	col.add_child(hdr)
 
 	var list := ItemList.new()
 	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	list.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(list)
 	list.add_theme_font_size_override("font_size", 12)
 	for n: String in card_array:
 		list.add_item(n)
@@ -232,7 +231,7 @@ func _build_card_column(parent: Control, header: String, card_array: Array, card
 	var add_btn := Button.new()
 	add_btn.text = "+ Add"
 	add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(add_btn)
 	add_btn.add_theme_font_size_override("font_size", 12)
 	add_btn.pressed.connect(func() -> void: _show_add_dialog(list, card_array, card_type))
 	btns.add_child(add_btn)
@@ -240,7 +239,7 @@ func _build_card_column(parent: Control, header: String, card_array: Array, card
 	var rem_btn := Button.new()
 	rem_btn.text = "− Remove"
 	rem_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rem_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(rem_btn)
 	rem_btn.add_theme_font_size_override("font_size", 12)
 	rem_btn.pressed.connect(func() -> void: _remove_selected(list, card_array))
 	btns.add_child(rem_btn)
@@ -256,21 +255,21 @@ func _build_union_column(parent: Control) -> void:
 
 	_union_hdr = Label.new()
 	_union_hdr.text = "Unions  [demo, achievable]"
-	_union_hdr.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_union_hdr)
 	_union_hdr.add_theme_font_size_override("font_size", 13)
 	_union_hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
 	col.add_child(_union_hdr)
 
 	_union_list = ItemList.new()
 	_union_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_union_list.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_union_list)
 	_union_list.add_theme_font_size_override("font_size", 12)
 	col.add_child(_union_list)
 
 	var add_btn := Button.new()
 	add_btn.text = "+ Add"
 	add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(add_btn)
 	add_btn.add_theme_font_size_override("font_size", 12)
 	add_btn.pressed.connect(_show_union_add_dialog)
 	col.add_child(add_btn)
@@ -301,7 +300,7 @@ func _refresh_card_list(list: ItemList, card_array: Array) -> void:
 		list.add_item(n)
 
 func _show_union_add_dialog() -> void:
-	AdminDeckEditorSupport.show_union_add_dialog(self, _deck, CHIVO_FONT, func(res: Dictionary) -> void:
+	AdminDeckEditorSupport.show_union_add_dialog(self, _deck, FontManager.primary_font(), func(res: Dictionary) -> void:
 		if bool(res.get("ok", false)):
 			_refresh_deck_lists()
 		var msg: String = str(res.get("message", ""))
@@ -338,7 +337,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	ttl.offset_top = 8.0; ttl.offset_bottom = 40.0
 	ttl.offset_left = -180.0; ttl.offset_right = 180.0
 	ttl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ttl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(ttl)
 	ttl.add_theme_font_size_override("font_size", 18)
 	ttl.add_theme_color_override("font_color", Color(1, 1, 1))
 	top.add_child(ttl)
@@ -375,14 +374,14 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 
 	var ll := Label.new()
 	ll.text = "Formations  (max %d)" % MAX_FORMATIONS
-	ll.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(ll)
 	ll.add_theme_font_size_override("font_size", 12)
 	ll.add_theme_color_override("font_color", Color(0.75, 0.88, 1.0))
 	left.add_child(ll)
 
 	_fe_list = ItemList.new()
 	_fe_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_fe_list.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_fe_list)
 	_fe_list.add_theme_font_size_override("font_size", 12)
 	left.add_child(_fe_list)
 
@@ -399,7 +398,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	var add_f := Button.new()
 	add_f.text = "+ New"
 	add_f.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_f.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(add_f)
 	add_f.add_theme_font_size_override("font_size", 12)
 	add_f.pressed.connect(_fe_add_formation)
 	lbtns.add_child(add_f)
@@ -407,7 +406,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	var del_f := Button.new()
 	del_f.text = "− Del"
 	del_f.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	del_f.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(del_f)
 	del_f.add_theme_font_size_override("font_size", 12)
 	del_f.pressed.connect(_fe_delete_formation)
 	lbtns.add_child(del_f)
@@ -429,7 +428,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 
 	var nl := Label.new()
 	nl.text = "Name:"
-	nl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(nl)
 	nl.add_theme_font_size_override("font_size", 12)
 	nl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.9))
 	name_row.add_child(nl)
@@ -438,13 +437,13 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	_fe_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fe_name_edit.placeholder_text = "Formation name"
 	_fe_name_edit.editable = false
-	_fe_name_edit.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_fe_name_edit)
 	_fe_name_edit.text_changed.connect(_fe_on_name_changed)
 	name_row.add_child(_fe_name_edit)
 
 	var save_f := Button.new()
 	save_f.text = "💾 Save"
-	save_f.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(save_f)
 	save_f.add_theme_font_size_override("font_size", 12)
 	save_f.pressed.connect(_fe_save_formation)
 	name_row.add_child(save_f)
@@ -463,7 +462,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 			var cell := Button.new()
 			cell.custom_minimum_size = Vector2(CELL_SIZE, CELL_SIZE)
 			cell.clip_text = true
-			cell.add_theme_font_override("font", CHIVO_FONT)
+			FontManager.tag_primary(cell)
 			cell.add_theme_font_size_override("font_size", 9)
 			var ri: int = r
 			var ci: int = c
@@ -484,7 +483,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	var hint_lbl := Label.new()
 	hint_lbl.text = "Left-click: place selected card    Right-click: clear cell"
 	hint_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(hint_lbl)
 	hint_lbl.add_theme_font_size_override("font_size", 10)
 	hint_lbl.add_theme_color_override("font_color", Color(0.55, 0.55, 0.65))
 	centre.add_child(hint_lbl)
@@ -497,14 +496,14 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 
 	var rl := Label.new()
 	rl.text = "Cards (deck)"
-	rl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(rl)
 	rl.add_theme_font_size_override("font_size", 12)
 	rl.add_theme_color_override("font_color", Color(0.75, 0.88, 1.0))
 	right.add_child(rl)
 
 	_fe_pick_list = ItemList.new()
 	_fe_pick_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_fe_pick_list.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_fe_pick_list)
 	_fe_pick_list.add_theme_font_size_override("font_size", 11)
 	right.add_child(_fe_pick_list)
 
@@ -523,7 +522,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 
 	var pu_hdr := Label.new()
 	pu_hdr.text = "Possible Unions  [demo]  —  tap to highlight zone"
-	pu_hdr.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(pu_hdr)
 	pu_hdr.add_theme_font_size_override("font_size", 11)
 	pu_hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
 	right.add_child(pu_hdr)
@@ -531,7 +530,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	_fe_possible_union_list = ItemList.new()
 	_fe_possible_union_list.custom_minimum_size = Vector2(0, 120)
 	_fe_possible_union_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_fe_possible_union_list.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_fe_possible_union_list)
 	_fe_possible_union_list.add_theme_font_size_override("font_size", 11)
 	_fe_possible_union_list.item_selected.connect(_fe_on_possible_union_selected)
 	right.add_child(_fe_possible_union_list)
@@ -685,7 +684,7 @@ func _fe_save_formation() -> void:
 
 # ── Add dialog (simple popup) ────────────────────────────────
 func _show_add_dialog(target_list: ItemList, card_array: Array, card_type: String) -> void:
-	AdminDeckEditorSupport.show_add_card_dialog(self, card_type, CHIVO_FONT, func(chosen: String) -> void:
+	AdminDeckEditorSupport.show_add_card_dialog(self, card_type, FontManager.primary_font(), func(chosen: String) -> void:
 		card_array.append(chosen)
 		target_list.add_item(chosen)
 		_refresh_deck_lists()
@@ -723,7 +722,7 @@ func _show_reset_confirm() -> void:
 	var lbl := Label.new()
 	lbl.text = "Reset player to starter deck?\n\nAll cards in collection and decks\nwill be removed and replaced."
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(lbl)
 	lbl.add_theme_font_size_override("font_size", 14)
 	lbl.add_theme_color_override("font_color", Color(1, 0.85, 0.85))
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -736,14 +735,14 @@ func _show_reset_confirm() -> void:
 
 	var confirm_btn := Button.new()
 	confirm_btn.text = "Confirm Reset"
-	confirm_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(confirm_btn)
 	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	confirm_btn.pressed.connect(_do_reset)
 	row.add_child(confirm_btn)
 
 	var cancel_btn := Button.new()
 	cancel_btn.text = "Cancel"
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(cancel_btn)
 	cancel_btn.pressed.connect(func() -> void: pop.queue_free())
 	row.add_child(cancel_btn)
 

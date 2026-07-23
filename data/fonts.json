@@ -1,40 +1,52 @@
 {
 	"slots": {
-		"primary": {
-			"label": "Primary UI",
-			"description": "Menus, exploration, VN dialog, puzzles, editors",
-			"path": "res://assets/fonts/Chivo-VariableFont_wght.ttf",
-			"variable": true
-		},
-		"digital": {
-			"label": "Digital HUD",
-			"description": "Numeric timers and stat readouts (digital-7)",
-			"path": "res://assets/fonts/digit-tech.7.ttf",
-			"variable": false
-		},
 		"credits_jp": {
-			"label": "Credits Japanese",
 			"description": "Japanese lines in credits / credit demo",
+			"label": "Credits Japanese",
 			"path": "res://assets/fonts/MPLUS1p-ExtraBold.ttf",
 			"variable": false
 		},
+		"digital": {
+			"description": "Numeric timers and stat readouts (digital-7)",
+			"label": "Digital HUD",
+			"path": "res://assets/fonts/digit-tech.7.ttf",
+			"variable": false
+		},
 		"display_serif": {
-			"label": "Display Serif",
 			"description": "Battle HUD display titles (Farro Bold)",
+			"label": "Display Serif",
 			"path": "res://assets/fonts/Farro-Bold.ttf",
 			"variable": false
 		},
+		"handwritten": {
+			"description": "Hand-written labels on detective note verdict maps",
+			"label": "Detective Handwriting",
+			"path": "res://assets/fonts/JMH Typewriter-Bold.ttf",
+			"variable": false
+		},
 		"mplus": {
-			"label": "M PLUS",
 			"description": "Japanese UI alternative",
+			"label": "M PLUS",
 			"path": "res://assets/fonts/MPLUS1p-Regular.ttf",
 			"variable": false
 		},
-		"handwritten": {
-			"label": "Detective Handwriting",
-			"description": "Hand-written labels on detective note verdict maps",
-			"path": "res://assets/fonts/JMH Typewriter-Bold.ttf",
-			"variable": false
+		"primary": {
+			"description": "Menus, exploration, puzzles, editors",
+			"label": "Primary UI",
+			"path": "res://assets/fonts/Farro-Bold.ttf",
+			"variable": true
+		},
+		"primary_italic": {
+			"description": "Italic display accents (turn banners, etc.)",
+			"label": "Primary Italic",
+			"path": "res://assets/fonts/Chivo-Italic-VariableFont_wght.ttf",
+			"variable": true
+		},
+		"vn": {
+			"description": "Visual novel dialog body, speaker name, and choices (Chivo)",
+			"label": "Visual Novel",
+			"path": "res://assets/fonts/Chivo-VariableFont_wght.ttf",
+			"variable": true
 		}
 	}
 }

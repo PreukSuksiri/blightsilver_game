@@ -38,6 +38,8 @@ func run_all_tests() -> void:
 	test_non_tool_item_not_flagged()
 	test_cursor_override_toggle()
 	test_requires_tool_gating()
+	test_node_tool_fx_fields()
+	test_distance_bands()
 
 # The four shipped detective tools should be flagged and point at real icons.
 func test_tool_items_present() -> void:
@@ -94,3 +96,38 @@ func test_requires_tool_gating() -> void:
 	assert_false(_spot_shown(gated_spot, ""), "gated spot hidden with no tool")
 	assert_false(_spot_shown(gated_spot, "tool_translator"), "gated spot hidden with wrong tool")
 	assert_true(_spot_shown(gated_spot, "tool_thermometer"), "gated spot shown with matching tool")
+
+
+func test_node_tool_fx_fields() -> void:
+	print("-- test_node_tool_fx_fields")
+	var node := ExplorationNode.new()
+	assert_eq(node.room_temperature, 25.0, "default room temp 25")
+	assert_eq(node.photo_alt_background, "", "default alt photo empty")
+	assert_eq(node.photo_vn_scene, "", "default photo vn empty")
+	node.room_temperature = 12.0
+	node.photo_alt_background = "res://assets/textures/vn/backgrounds/test.png"
+	node.photo_vn_scene = "res://exploration/vn/test.json"
+	var d: Dictionary = node.to_dict()
+	var roundtrip := ExplorationNode.from_dict(d)
+	assert_eq(roundtrip.room_temperature, 12.0, "room temp round-trips")
+	assert_eq(roundtrip.photo_alt_background, node.photo_alt_background, "alt photo round-trips")
+	assert_eq(roundtrip.photo_vn_scene, node.photo_vn_scene, "photo vn round-trips")
+
+
+func _band_for_ratio(dist_ratio: float) -> String:
+	# Mirrors DetectiveToolFx._band_for_ratio (close≤1.0, medium≤3.0, far>3.0)
+	if dist_ratio == INF or dist_ratio > 3.0:
+		return "far"
+	if dist_ratio <= 1.0:
+		return "close"
+	return "medium"
+
+
+func test_distance_bands() -> void:
+	print("-- test_distance_bands")
+	assert_eq(_band_for_ratio(INF), "far", "no spot → far")
+	assert_eq(_band_for_ratio(3.01), "far", "beyond medium ring → far")
+	assert_eq(_band_for_ratio(3.0), "medium", "at medium cutoff → medium")
+	assert_eq(_band_for_ratio(1.5), "medium", "approach ring → medium")
+	assert_eq(_band_for_ratio(1.0), "close", "at sense radius → close")
+	assert_eq(_band_for_ratio(0.2), "close", "near center → close")

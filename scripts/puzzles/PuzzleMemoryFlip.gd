@@ -9,7 +9,6 @@ extends ExplorationPuzzleBase
 
 const _SFX_BTN     := preload("res://assets/audio/sfx/scifi_ui_9.mp3")
 const _SFX_CORRECT := preload("res://assets/audio/sfx/scifi_ui_30.mp3")
-const _FONT_CHIVO  := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
 const _COLOR_BG     := Color(0.05, 0.08, 0.14, 0.97)
 const _COLOR_BORDER := Color(0.30, 0.70, 1.0, 0.80)
@@ -115,7 +114,7 @@ func _build_ui() -> void:
 
 	_status_lbl = Label.new()
 	_status_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_status_lbl.add_theme_font_override("font", _FONT_CHIVO)
+	FontManager.tag_primary(_status_lbl)
 	_status_lbl.add_theme_font_size_override("font_size", 17)
 	_status_lbl.add_theme_color_override("font_color", Color(0.65, 0.80, 1.0))
 	_status_lbl.text = "Find all matching pairs"

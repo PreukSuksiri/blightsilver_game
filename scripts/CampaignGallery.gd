@@ -5,7 +5,6 @@ const GALLERY_DATA_PATH := "res://campaign/gallery_data.json"
 const PLACEHOLDER_IMG   := "res://assets/textures/campagin/placeholder_campagin.png"
 const VN_PLAYER_SCENE   := "res://scenes/vn_player.tscn"
 
-const CHIVO_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
 const CARD_IMG_W: float = 180.0
 const CARD_IMG_H: float = 260.0
@@ -148,7 +147,7 @@ func _build_card(d: Dictionary) -> Control:
 		lbl_cs.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl_cs.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl_cs.set_anchors_preset(Control.PRESET_FULL_RECT)
-		lbl_cs.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(lbl_cs)
 		lbl_cs.add_theme_font_size_override("font_size", CARD_DIM_LABEL_SIZE)
 		lbl_cs.add_theme_color_override("font_color", CARD_DIM_LABEL_COLOR)
 		lbl_cs.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -178,7 +177,7 @@ func _build_card(d: Dictionary) -> Control:
 	var l1 := Label.new()
 	l1.text = str(d.get("line1", ""))
 	l1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l1.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(l1)
 	l1.add_theme_font_size_override("font_size", 14)
 	l1.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.95))
 	card.add_child(l1)
@@ -187,7 +186,7 @@ func _build_card(d: Dictionary) -> Control:
 	var l2 := Label.new()
 	l2.text = str(d.get("line2", ""))
 	l2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l2.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(l2)
 	l2.add_theme_font_size_override("font_size", 12)
 	l2.add_theme_color_override("font_color", Color(0.60, 0.62, 0.68, 0.85))
 	card.add_child(l2)
@@ -243,7 +242,7 @@ func _add_saved_progress_badge(frame: Panel, save_kind: String) -> void:
 	var lbl := Label.new()
 	lbl.text = "Continue Saved Progress"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(lbl)
 	lbl.add_theme_font_size_override("font_size", 11)
 	lbl.add_theme_color_override("font_color", Color(0.82, 0.94, 1.0))
 	badge.add_child(lbl)
@@ -257,6 +256,8 @@ func _add_saved_progress_badge(frame: Panel, save_kind: String) -> void:
 
 
 func _on_chapter_pressed(card: Dictionary) -> void:
+	if GameDialog.has_any_open_overlay():
+		return
 	if _is_chapter_locked(card):
 		return
 	if not _require_deck_ready_for_chapter():

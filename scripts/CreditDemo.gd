@@ -2,8 +2,6 @@ extends Control
 
 const BG_TEXTURE      := preload("res://assets/textures/ui/backgrounds/bg_ending_1.png")
 const BGM_STREAM      := preload("res://assets/audio/bgm_ost_blind_cross.mp3")
-const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
-const MPLUS_FONT      := preload("res://assets/fonts/MPLUS1p-ExtraBold.ttf")
 const LOGO_TEXTURE    := preload("res://assets/textures/ui/decorations/ui_logo_quiet_eve.png")
 const SHADER_LANTERN  := preload("res://assets/shaders/bg_lantern_glow.gdshader")
 const SHADER_SILHOUETTE := preload("res://assets/shaders/silhouette.gdshader")
@@ -74,7 +72,7 @@ func _ready() -> void:
 	_scroll_label.fit_content     = true
 	_scroll_label.scroll_active   = false
 	_scroll_label.size            = Vector2(840.0, 0.0)
-	_scroll_label.add_theme_font_override("normal_font", CHIVO_FONT)
+	FontManager.tag_primary(_scroll_label, "normal_font")
 	_scroll_label.add_theme_font_size_override("normal_font_size", 36)
 	_scroll_label.add_theme_color_override("default_color", Color(0.92, 0.95, 1.0))
 	_scroll_label.add_theme_constant_override("line_separation", 8)
@@ -146,7 +144,7 @@ func _ready() -> void:
 	hint.offset_bottom = -8.0
 	hint.text = "Press Esc or click to skip"
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	hint.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(hint)
 	hint.add_theme_font_size_override("font_size", 13)
 	hint.add_theme_color_override("font_color", Color(0.7, 0.7, 0.75, 0.5))
 	hint.mouse_filter = MOUSE_FILTER_IGNORE

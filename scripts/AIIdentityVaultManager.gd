@@ -1,10 +1,10 @@
 extends Control
-## Admin overlay for AI opponent identities (name + illustration + difficulty).
+## Admin overlay for AI opponent identities (name + illustration + difficulty + personality).
 ## Opened via admin command: ai_identity_vault
 
 const DIFFICULTIES: Array[String] = ["easy", "normal", "hard"]
-const PREVIEW_WIDTH := 220.0
-const PREVIEW_HEIGHT := 280.0
+const PREVIEW_WIDTH := 180.0
+const PREVIEW_HEIGHT := 220.0
 
 var _entries: Array = []
 var _selected_idx: int = -1
@@ -17,7 +17,12 @@ var _illus_edit: LineEdit = null
 var _illus_preview: TextureRect = null
 var _illus_preview_hint: Label = null
 var _diff_opt: OptionButton = null
+var _pers_def_opt: OptionButton = null
+var _pers_off_opt: OptionButton = null
+var _pers_soc_opt: OptionButton = null
 var _exclude_checks: Dictionary = {}
+## emoji -> {"attack": LineEdit, "avoid": LineEdit}
+var _bluff_chat_edits: Dictionary = {}
 var _status_lbl: Label = null
 var _file_dialog: FileDialog = null
 
@@ -47,6 +52,10 @@ func _make_blank_entry(entry_id: String, display_name: String) -> Dictionary:
 		"illustration": "",
 		"difficulty": "easy",
 		"exclude_protagonists": [],
+		"personality_defensive": "",
+		"personality_offensive": "",
+		"personality_social": "",
+		"bluff_reaction_chats": {},
 	}
 
 
@@ -106,10 +115,16 @@ func _build_ui() -> void:
 	del_btn.pressed.connect(_on_delete)
 	left_btns.add_child(del_btn)
 
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	body.add_child(scroll)
+
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation", 10)
-	body.add_child(right)
+	scroll.add_child(right)
 
 	_id_edit = LineEdit.new()
 	right.add_child(_labeled_row("ID", _id_edit))
@@ -141,6 +156,14 @@ func _build_ui() -> void:
 		_diff_opt.set_item_metadata(_diff_opt.item_count - 1, d)
 	right.add_child(_labeled_row("Difficulty", _diff_opt))
 
+	right.add_child(_section_label("Personality"))
+	_pers_def_opt = _make_personality_opt(AIIdentityVault.DEF_PERSONALITY_OPTIONS)
+	right.add_child(_labeled_row("Defense", _pers_def_opt))
+	_pers_off_opt = _make_personality_opt(AIIdentityVault.OFF_PERSONALITY_OPTIONS)
+	right.add_child(_labeled_row("Attack", _pers_off_opt))
+	_pers_soc_opt = _make_personality_opt(AIIdentityVault.SOC_PERSONALITY_OPTIONS)
+	right.add_child(_labeled_row("Social", _pers_soc_opt))
+
 	var exclude_lbl := Label.new()
 	exclude_lbl.text = "Exclude for protagonist"
 	exclude_lbl.add_theme_font_size_override("font_size", 13)
@@ -154,6 +177,18 @@ func _build_ui() -> void:
 		chk.text = ProtagonistVault.get_display_name(protagonist_id)
 		_exclude_checks[protagonist_id] = chk
 		exclude_row.add_child(chk)
+
+	right.add_child(_section_label("Bluff reaction chat"))
+	var bluff_hint := Label.new()
+	bluff_hint.text = "Rolled at AI turn start from visible opponent bluffs (Attack = Interested, Avoid = Avoid)."
+	bluff_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	bluff_hint.add_theme_font_size_override("font_size", 11)
+	bluff_hint.add_theme_color_override("font_color", Color(0.65, 0.7, 0.78))
+	right.add_child(bluff_hint)
+
+	_bluff_chat_edits.clear()
+	for emoji: String in AIIdentityVault.BLUFF_REACTION_EMOJIS:
+		right.add_child(_make_bluff_reaction_row(emoji))
 
 	var bot := HBoxContainer.new()
 	bot.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
@@ -183,6 +218,45 @@ func _build_ui() -> void:
 	add_child(_file_dialog)
 
 	_refresh_list()
+
+
+func _section_label(text: String) -> Label:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.85, 0.9, 1.0))
+	return lbl
+
+
+func _make_personality_opt(options: Array[String]) -> OptionButton:
+	var opt := OptionButton.new()
+	opt.add_item("Random")
+	opt.set_item_metadata(0, "")
+	for name: String in options:
+		opt.add_item(name)
+		opt.set_item_metadata(opt.item_count - 1, name)
+	return opt
+
+
+func _make_bluff_reaction_row(emoji: String) -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 4)
+
+	var title := Label.new()
+	title.text = "%s  reaction chat" % emoji
+	title.add_theme_font_size_override("font_size", 12)
+	box.add_child(title)
+
+	var attack_edit := LineEdit.new()
+	attack_edit.placeholder_text = "Attack (Interested) chat…"
+	box.add_child(_labeled_row("Attack", attack_edit))
+
+	var avoid_edit := LineEdit.new()
+	avoid_edit.placeholder_text = "Avoid chat…"
+	box.add_child(_labeled_row("Avoid", avoid_edit))
+
+	_bluff_chat_edits[emoji] = {"attack": attack_edit, "avoid": avoid_edit}
+	return box
 
 
 func _make_illustration_preview_row() -> HBoxContainer:
@@ -272,13 +346,63 @@ func _sync_current_entry() -> void:
 	entry["illustration"] = _illus_edit.text.strip_edges() if _illus_edit else ""
 	if _diff_opt != null and _diff_opt.selected >= 0:
 		entry["difficulty"] = str(_diff_opt.get_item_metadata(_diff_opt.selected))
+	entry["personality_defensive"] = _personality_value(_pers_def_opt)
+	entry["personality_offensive"] = _personality_value(_pers_off_opt)
+	entry["personality_social"] = _personality_value(_pers_soc_opt)
 	var exclude: Array = []
 	for protagonist_id: String in _exclude_checks.keys():
 		var chk: CheckBox = _exclude_checks[protagonist_id]
 		if chk != null and chk.button_pressed:
 			exclude.append(protagonist_id)
 	entry["exclude_protagonists"] = exclude
+	entry["bluff_reaction_chats"] = _collect_bluff_reaction_chats()
 	_entries[_selected_idx] = entry
+
+
+func _personality_value(opt: OptionButton) -> String:
+	if opt == null or opt.selected < 0:
+		return ""
+	return str(opt.get_item_metadata(opt.selected)).strip_edges()
+
+
+func _collect_bluff_reaction_chats() -> Dictionary:
+	var out: Dictionary = {}
+	for emoji: Variant in _bluff_chat_edits.keys():
+		var edits: Dictionary = _bluff_chat_edits[emoji] as Dictionary
+		var attack_edit: LineEdit = edits.get("attack") as LineEdit
+		var avoid_edit: LineEdit = edits.get("avoid") as LineEdit
+		var attack := attack_edit.text.strip_edges() if attack_edit else ""
+		var avoid := avoid_edit.text.strip_edges() if avoid_edit else ""
+		if attack.is_empty() and avoid.is_empty():
+			continue
+		out[str(emoji)] = {"attack": attack, "avoid": avoid}
+	return out
+
+
+func _select_personality_opt(opt: OptionButton, value: String) -> void:
+	if opt == null:
+		return
+	var needle := value.strip_edges()
+	for i: int in range(opt.item_count):
+		if str(opt.get_item_metadata(i)) == needle:
+			opt.select(i)
+			return
+	opt.select(0)
+
+
+func _load_bluff_reaction_chats(entry: Dictionary) -> void:
+	var chats_raw: Variant = entry.get("bluff_reaction_chats", {})
+	var chats: Dictionary = chats_raw as Dictionary if chats_raw is Dictionary else {}
+	for emoji: Variant in _bluff_chat_edits.keys():
+		var edits: Dictionary = _bluff_chat_edits[emoji] as Dictionary
+		var attack_edit: LineEdit = edits.get("attack") as LineEdit
+		var avoid_edit: LineEdit = edits.get("avoid") as LineEdit
+		var row_raw: Variant = chats.get(str(emoji), {})
+		var row: Dictionary = row_raw as Dictionary if row_raw is Dictionary else {}
+		if attack_edit:
+			attack_edit.text = str(row.get("attack", ""))
+		if avoid_edit:
+			avoid_edit.text = str(row.get("avoid", ""))
 
 
 func _select_entry(idx: int) -> void:
@@ -304,6 +428,9 @@ func _select_entry(idx: int) -> void:
 			if str(_diff_opt.get_item_metadata(i)) == diff:
 				_diff_opt.select(i)
 				break
+	_select_personality_opt(_pers_def_opt, str(entry.get("personality_defensive", "")))
+	_select_personality_opt(_pers_off_opt, str(entry.get("personality_offensive", "")))
+	_select_personality_opt(_pers_soc_opt, str(entry.get("personality_social", "")))
 	var exclude_raw: Variant = entry.get("exclude_protagonists", [])
 	var exclude_set: Dictionary = {}
 	if exclude_raw is Array:
@@ -313,6 +440,7 @@ func _select_entry(idx: int) -> void:
 		var chk: CheckBox = _exclude_checks[protagonist_id]
 		if chk != null:
 			chk.button_pressed = exclude_set.has(protagonist_id)
+	_load_bluff_reaction_chats(entry)
 	if _list:
 		_list.select(idx)
 

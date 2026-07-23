@@ -8,7 +8,6 @@ signal finished(outcome_key: String)
 const SPIN_DURATION: float = 8.5
 const SPIN_PAUSE: float = 1.5
 const FULL_ROTATIONS: float = 8.0
-const WHEEL_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 const PAPER_TEX: Texture2D = preload("res://assets/textures/daily_dungeon/wheel/parchment_paper.png")
 const LEATHER_FRAME_TEX: Texture2D = preload("res://assets/textures/daily_dungeon/wheel/leather_mirror_frame.png")
 const SPIN_HAND_TEX: Texture2D = preload("res://assets/textures/daily_dungeon/wheel/spin_hand.png")
@@ -32,7 +31,6 @@ var _outcomes: Array = []
 var _win_idx: int = 0
 var _wheel_pivot: Control = null
 var _spinning: bool = false
-var _wheel_font: Font = null
 var _wheel_radius: float = 210.0
 var _tick_seg: float = 0.0
 var _prev_rot: float = 0.0
@@ -43,13 +41,6 @@ func setup(outcomes: Array) -> void:
 	if _outcomes.is_empty():
 		_outcomes = ["no_effect"]
 	_win_idx = randi() % _outcomes.size()
-
-
-func _make_bold_font() -> Font:
-	var fv := FontVariation.new()
-	fv.base_font = WHEEL_FONT
-	fv.variation_opentype = {"wght": 800}
-	return fv
 
 
 func _compute_layout() -> Dictionary:
@@ -71,7 +62,6 @@ func _compute_layout() -> Dictionary:
 
 
 func _ready() -> void:
-	_wheel_font = _make_bold_font()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
 	z_index = 85
@@ -102,7 +92,7 @@ func _ready() -> void:
 	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	title.offset_top = -title_font - 18.0
 	title.offset_bottom = -6.0
-	title.add_theme_font_override("font", _wheel_font)
+	FontManager.tag_primary(title, "font", 800)
 	title.add_theme_font_size_override("font_size", title_font)
 	title.add_theme_color_override("font_color", COLOR_TITLE)
 	title.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))

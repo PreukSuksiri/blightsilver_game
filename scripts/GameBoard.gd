@@ -260,12 +260,18 @@ var _almost_win_bgm_active: bool  = false   # latches true once bgm_almost_win s
 var _p1_attack_lbl: Label = null
 var _p2_attack_lbl: Label = null
 
-# AI thinking bubble
+# AI thinking / chat bubble
 var _thinking_bubble: Control = null
 var _thinking_bubble_style: StyleBoxFlat = null
+var _thinking_bubble_body: Panel = null
+var _thinking_bubble_tail: Polygon2D = null
+var _thinking_bubble_shadow: Panel = null
+var _thinking_dots_hbox: HBoxContainer = null
+var _thinking_chat_label: Label = null
 var _thinking_dot_labels: Array[Label] = []
 var _thinking_dot_tween: Tween = null
 var _thinking_timer_active: bool = false
+var _chat_bubble_token: int = 0
 var _portrait_last_tap: Array[float] = [0.0, 0.0]  # last tap timestamp per player
 
 # Tax confirmation overlay
@@ -829,6 +835,8 @@ func _build_grids() -> void:
 			for c in range(GameState.GRID_SIZE):
 				var card_node: Control = CARD_SCENE.instantiate()
 				card_node.rarity_fx_enabled = false
+				# Let bluff emoticons bleed past the cell; art still clips via ArtworkClip.
+				card_node.clip_contents = false
 				grid_container.add_child(card_node)
 				card_node.card_clicked.connect(_on_card_node_clicked.bind(p, r, c))
 				card_node.card_detail_requested.connect(_on_card_detail_requested)
@@ -842,7 +850,10 @@ func _build_grids() -> void:
 				bluff_lbl.offset_bottom = 42.0
 				bluff_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				bluff_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				bluff_lbl.z_index = 5
+				# Above neighboring cells so overflow is not covered by later cards.
+				bluff_lbl.z_as_relative = false
+				bluff_lbl.z_index = 20
+				bluff_lbl.clip_contents = false
 				bluff_lbl.text = ""
 				bluff_lbl.add_theme_font_size_override("font_size", 36)
 				bluff_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.75))
@@ -861,7 +872,9 @@ func _build_grids() -> void:
 					bluff_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 					bluff_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 					bluff_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-					bluff_icon.z_index = 5
+					bluff_icon.z_as_relative = false
+					bluff_icon.z_index = 20
+					bluff_icon.clip_contents = false
 					bluff_icon.visible = false
 					card_node.add_child(bluff_icon)
 				row_arr.append(card_node)
@@ -4922,44 +4935,75 @@ func _build_bottom_crystal_labels() -> void:
 
 	_apply_crystal_hud_layout()
 
-## Builds the "thinking bubble" overlay used to show when the AI is processing.
-## Hidden by default; shown via _show_thinking_bubble() after a 0.5s delay.
+## Builds the battle chat / thinking bubble (speech-bubble shape with a triangular tail).
+## Hidden by default; shown via _show_thinking_bubble() / _show_chat_bubble().
 func _build_thinking_bubble() -> void:
 	_thinking_bubble = Control.new()
-	_thinking_bubble.z_index       = 8
-	_thinking_bubble.visible       = false
-	_thinking_bubble.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble.z_index = 8
+	_thinking_bubble.visible = false
+	_thinking_bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble.pivot_offset = Vector2(50, 22)
 	add_child(_thinking_bubble)
 
-	# Rounded white background — corners adjusted per-player in _show_thinking_bubble()
-	var bg := Panel.new()
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_thinking_bubble_style = StyleBoxFlat.new()
-	_thinking_bubble_style.bg_color       = Color(0.96, 0.96, 1.0, 0.92)
-	_thinking_bubble_style.border_width_left   = 1; _thinking_bubble_style.border_width_right  = 1
-	_thinking_bubble_style.border_width_top    = 1; _thinking_bubble_style.border_width_bottom = 1
-	_thinking_bubble_style.border_color        = Color(0.7, 0.7, 0.85, 0.6)
-	bg.add_theme_stylebox_override("panel", _thinking_bubble_style)
-	_thinking_bubble.add_child(bg)
+	_thinking_bubble_shadow = Panel.new()
+	_thinking_bubble_shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var shadow_sb := StyleBoxFlat.new()
+	shadow_sb.bg_color = Color(0.0, 0.0, 0.0, 0.22)
+	shadow_sb.set_corner_radius_all(18)
+	_thinking_bubble_shadow.add_theme_stylebox_override("panel", shadow_sb)
+	_thinking_bubble.add_child(_thinking_bubble_shadow)
 
-	# Three dot labels centred inside the bubble
-	var hbox := HBoxContainer.new()
-	hbox.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	hbox.add_theme_constant_override("separation", 5)
-	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_thinking_bubble.add_child(hbox)
+	_thinking_bubble_body = Panel.new()
+	_thinking_bubble_body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_thinking_bubble_body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble_style = StyleBoxFlat.new()
+	_thinking_bubble_style.bg_color = Color(1.0, 1.0, 1.0, 0.97)
+	_thinking_bubble_style.border_width_left = 2
+	_thinking_bubble_style.border_width_right = 2
+	_thinking_bubble_style.border_width_top = 2
+	_thinking_bubble_style.border_width_bottom = 2
+	_thinking_bubble_style.border_color = Color(0.78, 0.82, 0.90, 0.95)
+	_thinking_bubble_style.set_corner_radius_all(18)
+	_thinking_bubble_style.content_margin_left = 14.0
+	_thinking_bubble_style.content_margin_right = 14.0
+	_thinking_bubble_style.content_margin_top = 10.0
+	_thinking_bubble_style.content_margin_bottom = 10.0
+	_thinking_bubble_body.add_theme_stylebox_override("panel", _thinking_bubble_style)
+	_thinking_bubble.add_child(_thinking_bubble_body)
+
+	_thinking_bubble_tail = Polygon2D.new()
+	_thinking_bubble_tail.color = Color(1.0, 1.0, 1.0, 0.97)
+	_thinking_bubble_tail.z_index = 1
+	_thinking_bubble.add_child(_thinking_bubble_tail)
+
+	_thinking_dots_hbox = HBoxContainer.new()
+	_thinking_dots_hbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_thinking_dots_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	_thinking_dots_hbox.add_theme_constant_override("separation", 6)
+	_thinking_dots_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble_body.add_child(_thinking_dots_hbox)
 
 	_thinking_dot_labels.clear()
 	for _i: int in range(3):
 		var dot := Label.new()
 		dot.text = "●"
-		dot.add_theme_font_size_override("font_size", 16)
-		dot.add_theme_color_override("font_color", Color(0.25, 0.25, 0.4, 1.0))
+		dot.add_theme_font_size_override("font_size", 15)
+		dot.add_theme_color_override("font_color", Color(0.28, 0.32, 0.42, 1.0))
 		dot.modulate.a = 0.0
 		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hbox.add_child(dot)
+		_thinking_dots_hbox.add_child(dot)
 		_thinking_dot_labels.append(dot)
+
+	_thinking_chat_label = Label.new()
+	_thinking_chat_label.visible = false
+	_thinking_chat_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_thinking_chat_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_thinking_chat_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_thinking_chat_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_thinking_chat_label.add_theme_font_size_override("font_size", 15)
+	_thinking_chat_label.add_theme_color_override("font_color", Color(0.12, 0.14, 0.20, 1.0))
+	_thinking_chat_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble_body.add_child(_thinking_chat_label)
 
 ## Start a 0.5-second timer; if the AI is still thinking when it fires, show the bubble.
 func _start_ai_thinking() -> void:
@@ -4971,46 +5015,130 @@ func _start_ai_thinking() -> void:
 func _show_thinking_bubble(thinking_player: int) -> void:
 	if _thinking_bubble == null:
 		return
-	# Position the bubble just inside the portrait edge at ~35% screen height.
-	# P1 (left portrait): bubble hugs the left edge, tip points LEFT (bottom-left corner sharp).
-	# P2 (right portrait): bubble hugs the right edge, tip points RIGHT (bottom-right corner sharp).
-	const W: float = 100.0
-	const H: float = 44.0
-	const MARGIN: float = 40.0
-	const R_ROUND: int = 14
-	const R_TIP: int   = 3
-	if thinking_player == 0:
-		_thinking_bubble.anchor_left   = 0.0;  _thinking_bubble.anchor_right  = 0.0
-		_thinking_bubble.anchor_top    = 0.35; _thinking_bubble.anchor_bottom = 0.35
-		_thinking_bubble.offset_left   = MARGIN
-		_thinking_bubble.offset_right  = MARGIN + W
-		_thinking_bubble.offset_top    = -H * 0.5
-		_thinking_bubble.offset_bottom =  H * 0.5
-		_thinking_bubble_style.corner_radius_top_left     = R_ROUND
-		_thinking_bubble_style.corner_radius_top_right    = R_ROUND
-		_thinking_bubble_style.corner_radius_bottom_right = R_ROUND
-		_thinking_bubble_style.corner_radius_bottom_left  = R_TIP   # tip points left
-	else:
-		_thinking_bubble.anchor_left   = 1.0;  _thinking_bubble.anchor_right  = 1.0
-		_thinking_bubble.anchor_top    = 0.35; _thinking_bubble.anchor_bottom = 0.35
-		_thinking_bubble.offset_right  = -MARGIN
-		_thinking_bubble.offset_left   = -MARGIN - W
-		_thinking_bubble.offset_top    = -H * 0.5
-		_thinking_bubble.offset_bottom =  H * 0.5
-		_thinking_bubble_style.corner_radius_top_left     = R_ROUND
-		_thinking_bubble_style.corner_radius_top_right    = R_ROUND
-		_thinking_bubble_style.corner_radius_bottom_right = R_TIP   # tip points right
-		_thinking_bubble_style.corner_radius_bottom_left  = R_ROUND
+	_chat_bubble_token += 1
+	_layout_chat_bubble(thinking_player, Vector2(108.0, 48.0))
+	if _thinking_chat_label:
+		_thinking_chat_label.visible = false
+		_thinking_chat_label.text = ""
+	if _thinking_dots_hbox:
+		_thinking_dots_hbox.visible = true
 	_thinking_bubble.visible = true
+	_thinking_bubble.modulate.a = 1.0
+	_thinking_bubble.scale = Vector2.ONE
 	_start_dot_animation()
+
+## Show authored reaction / dialogue text in the battle speech bubble.
+func _show_chat_bubble(speaking_player: int, text: String, duration: float = 2.6) -> void:
+	if _thinking_bubble == null:
+		return
+	var cleaned := text.strip_edges()
+	if cleaned.is_empty():
+		return
+	_thinking_timer_active = false
+	_chat_bubble_token += 1
+	var token := _chat_bubble_token
+	if _thinking_dot_tween and _thinking_dot_tween.is_valid():
+		_thinking_dot_tween.kill()
+		_thinking_dot_tween = null
+	for dot: Label in _thinking_dot_labels:
+		dot.modulate.a = 0.0
+	if _thinking_dots_hbox:
+		_thinking_dots_hbox.visible = false
+	if _thinking_chat_label:
+		_thinking_chat_label.text = cleaned
+		_thinking_chat_label.visible = true
+	var size := _measure_chat_bubble_size(cleaned)
+	_layout_chat_bubble(speaking_player, size)
+	_thinking_bubble.visible = true
+	_thinking_bubble.modulate.a = 0.0
+	_thinking_bubble.scale = Vector2(0.86, 0.86)
+	var pop := create_tween()
+	pop.tween_property(_thinking_bubble, "modulate:a", 1.0, 0.12)
+	pop.parallel().tween_property(_thinking_bubble, "scale", Vector2.ONE, 0.16) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await get_tree().create_timer(duration).timeout
+	if token != _chat_bubble_token:
+		return
+	_hide_thinking_bubble()
+
+func _measure_chat_bubble_size(text: String) -> Vector2:
+	const MIN_W := 120.0
+	const MAX_W := 260.0
+	const PAD_X := 28.0
+	const PAD_Y := 22.0
+	const MIN_H := 48.0
+	var font: Font = _thinking_chat_label.get_theme_font("font") if _thinking_chat_label else null
+	var font_size: int = 15
+	if _thinking_chat_label:
+		font_size = _thinking_chat_label.get_theme_font_size("font_size")
+	var measured := Vector2(MIN_W, MIN_H)
+	if font != null:
+		measured = font.get_multiline_string_size(
+			text, HORIZONTAL_ALIGNMENT_LEFT, MAX_W - PAD_X, font_size)
+	var w: float = clampf(measured.x + PAD_X, MIN_W, MAX_W)
+	var h: float = maxf(measured.y + PAD_Y, MIN_H)
+	return Vector2(w, h)
+
+func _layout_chat_bubble(player: int, size: Vector2) -> void:
+	if _thinking_bubble == null:
+		return
+	const MARGIN: float = 28.0
+	const TAIL_W: float = 16.0
+	const TAIL_H: float = 14.0
+	var w: float = size.x
+	var h: float = size.y
+	_thinking_bubble.pivot_offset = Vector2(w * 0.5, h * 0.5)
+	if player == 0:
+		_thinking_bubble.anchor_left = 0.0
+		_thinking_bubble.anchor_right = 0.0
+		_thinking_bubble.anchor_top = 0.34
+		_thinking_bubble.anchor_bottom = 0.34
+		_thinking_bubble.offset_left = MARGIN + TAIL_W
+		_thinking_bubble.offset_right = MARGIN + TAIL_W + w
+		_thinking_bubble.offset_top = -h * 0.5
+		_thinking_bubble.offset_bottom = h * 0.5
+		if _thinking_bubble_tail:
+			_thinking_bubble_tail.polygon = PackedVector2Array([
+				Vector2(2.0, h * 0.55),
+				Vector2(-TAIL_W, h * 0.72),
+				Vector2(2.0, h * 0.78),
+			])
+	else:
+		_thinking_bubble.anchor_left = 1.0
+		_thinking_bubble.anchor_right = 1.0
+		_thinking_bubble.anchor_top = 0.34
+		_thinking_bubble.anchor_bottom = 0.34
+		_thinking_bubble.offset_right = -(MARGIN + TAIL_W)
+		_thinking_bubble.offset_left = -(MARGIN + TAIL_W + w)
+		_thinking_bubble.offset_top = -h * 0.5
+		_thinking_bubble.offset_bottom = h * 0.5
+		if _thinking_bubble_tail:
+			_thinking_bubble_tail.polygon = PackedVector2Array([
+				Vector2(w - 2.0, h * 0.55),
+				Vector2(w + TAIL_W, h * 0.72),
+				Vector2(w - 2.0, h * 0.78),
+			])
+	if _thinking_bubble_shadow:
+		_thinking_bubble_shadow.position = Vector2(3.0, 4.0)
+		_thinking_bubble_shadow.size = Vector2(w, h)
+	if _thinking_bubble_style:
+		_thinking_bubble_style.set_corner_radius_all(18)
 
 func _hide_thinking_bubble() -> void:
 	_thinking_timer_active = false
+	_chat_bubble_token += 1
 	if _thinking_dot_tween and _thinking_dot_tween.is_valid():
 		_thinking_dot_tween.kill()
 		_thinking_dot_tween = null
 	if _thinking_bubble != null:
 		_thinking_bubble.visible = false
+		_thinking_bubble.scale = Vector2.ONE
+		_thinking_bubble.modulate.a = 1.0
+	if _thinking_chat_label:
+		_thinking_chat_label.visible = false
+		_thinking_chat_label.text = ""
+	if _thinking_dots_hbox:
+		_thinking_dots_hbox.visible = true
 	for dot: Label in _thinking_dot_labels:
 		dot.modulate.a = 0.0
 
@@ -5049,6 +5177,42 @@ func _start_dot_animation() -> void:
 	_thinking_dot_tween.parallel().tween_property(_thinking_dot_labels[1], "modulate:a", 0.0, 0.22)
 	_thinking_dot_tween.parallel().tween_property(_thinking_dot_labels[2], "modulate:a", 0.0, 0.22)
 	_thinking_dot_tween.tween_interval(0.25)
+
+## At AI turn start: roll among visible opponent bluffs the AI reacts to (Interested/Avoid)
+## and play authored reaction chat immediately. Returns true if a chat was shown.
+func _roll_bluff_reaction_chat_at_turn_start(ai: AIPlayer) -> bool:
+	if ai == null or not is_instance_valid(ai):
+		return false
+	var identity_id := _battle_ai_identity_id.strip_edges()
+	if identity_id.is_empty():
+		identity_id = GameState.battle_ai_identity_id.strip_edges()
+	if identity_id.is_empty():
+		return false
+	var candidates: Array[Dictionary] = []
+	var opp := GameState.get_opponent(ai.player_index)
+	var seen: Dictionary = {}  # emoji|trigger -> true (one candidate per emoji+trigger)
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var emoji: String = GameState.get_bluff(opp, r, c)
+			if emoji.is_empty():
+				continue
+			var reaction: int = ai.get_emoji_reaction(emoji)
+			if reaction == 0:
+				continue
+			var trigger: String = "attack" if reaction > 0 else "avoid"
+			var key: String = "%s|%s" % [AIIdentityVault.normalize_bluff_emoji(emoji), trigger]
+			if seen.has(key):
+				continue
+			var chat: String = AIIdentityVault.get_bluff_reaction_chat(identity_id, emoji, trigger)
+			if chat.is_empty():
+				continue
+			seen[key] = true
+			candidates.append({"emoji": emoji, "trigger": trigger, "chat": chat})
+	if candidates.is_empty():
+		return false
+	var pick: Dictionary = candidates[randi() % candidates.size()]
+	_show_chat_bubble(ai.player_index, str(pick.get("chat", "")))
+	return true
 
 ## Creates a fixed-size Control with the attack-count icon and a centered number label.
 ## Child 0 = TextureRect (icon), Child 1 = Label (count). Caller stores child 1 as _pN_attack_lbl.
@@ -5396,8 +5560,10 @@ func _set_crystal_amount_nudge(lbl: Label, nudge: Vector2) -> void:
 		wrap = parent as Control
 	if wrap == null:
 		return
-	# Wide enough for 4-digit crystal totals; label fills wrap then translates.
+	# Fixed slot so digit / glitch text length cannot reflow the HBox.
 	wrap.custom_minimum_size = Vector2(96.0, 44.0)
+	wrap.size = Vector2(96.0, 44.0)
+	wrap.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	wrap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	wrap.clip_contents = false
 	wrap.z_index = 2
@@ -6013,10 +6179,9 @@ func _update_fog(delta: float) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _build_union_suggest_button() -> void:
-	const BTN_SIZE:  float = 110.0
-	const GLOW_SIZE: float = 155.0
+	const BTN_SIZE: float = 110.0
 
-	# Pulsing cyan glow halo behind the button
+	# Pulsing cyan glow — same rect as the button (alpha pulse only).
 	var glow := TextureRect.new()
 	glow.texture = HudSkin.hud_tex("ui_icon_union.png")
 	glow.ignore_texture_size = true
@@ -6024,8 +6189,8 @@ func _build_union_suggest_button() -> void:
 	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
 	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
-	glow.offset_left   = -(GLOW_SIZE * 0.5); glow.offset_right  =  (GLOW_SIZE * 0.5)
-	glow.offset_top    = -(GLOW_SIZE * 0.5) - 34.0; glow.offset_bottom =  (GLOW_SIZE * 0.5) - 34.0
+	glow.offset_left   = -(BTN_SIZE * 0.5); glow.offset_right  =  (BTN_SIZE * 0.5)
+	glow.offset_top    = -(BTN_SIZE * 0.5) - 34.0; glow.offset_bottom =  (BTN_SIZE * 0.5) - 34.0
 	glow.modulate    = Color(0.25, 0.90, 1.00, 0.0)
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glow.z_index  = 3
@@ -6620,7 +6785,7 @@ func _make_sub_overlay(half_w: float = 420.0, half_h: float = 300.0) -> Dictiona
 
 func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 	var back_btn := Button.new()
-	ChromeIcon.apply_button(back_btn, "back", false, "  Back", ChromeIcon.COLOR_ON_DARK, 16)
+	back_btn.text = "Back"
 	GameDialog.style_menu_button(back_btn)
 	back_btn.pressed.connect(func() -> void:
 		dimmer.queue_free()
@@ -8763,8 +8928,11 @@ func _start_ai_turn_flow() -> void:
 		and "tech_royale" in GameState.active_dungeon_modifiers
 	_active_ai = ai_player_0 if (GameState.game_mode == GameState.GameMode.AI_VS_AI \
 		and GameState.current_player == 0) else ai_player
+	# React to visible opponent bluffs immediately at turn start (chat overrides thinking).
+	var showed_reaction_chat: bool = _roll_bluff_reaction_chat_at_turn_start(_active_ai)
 	_active_ai.decide_bluff()
-	_start_ai_thinking()
+	if not showed_reaction_chat:
+		_start_ai_thinking()
 	if (_tech_used_this_turn[GameState.current_player] and not _tech_royale_ai) \
 			or _ai_turn_action_started[GameState.current_player]:
 		_request_ai_continue_after_union()
@@ -9059,13 +9227,9 @@ func _show_turn_banner(player: int) -> void:
 	const BANNER_H: float = 80.0
 	const FONT_SIZE: int = 52
 
-	var fv := FontVariation.new()
-	fv.base_font = load("res://assets/fonts/Chivo-Italic-VariableFont_wght.ttf")
-	fv.variation_opentype = {"wght": 700}
-
 	var lbl := Label.new()
 	lbl.text = "%s's Turn" % _battle_display_name(player)
-	lbl.add_theme_font_override("font", fv)
+	FontManager.tag_font(lbl, "font", "primary_italic", 700)
 	lbl.add_theme_font_size_override("font_size", FONT_SIZE)
 	lbl.add_theme_color_override("font_color", Color.WHITE)
 	lbl.add_theme_constant_override("outline_size", 4)
@@ -13809,13 +13973,19 @@ func _crossfade_crystal_to_break_plate(player: int, origin: Vector2) -> void:
 	tw.tween_property(fx, "modulate:a", 1.0, FADE_SEC) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	await tw.finished
+	# Keep the icon wrap in the HBox (modulate only). Setting visible=false
+	# drops it from the container and relocates CrystalAmountWrap.
 	for ci2: CanvasItem in fade_old:
 		if not is_instance_valid(ci2):
 			continue
-		ci2.visible = false
-		ci2.modulate.a = 1.0
+		ci2.modulate.a = 0.0
 	if is_instance_valid(icon):
-		icon.visible = false
+		icon.modulate.a = 0.0
+	var amount_lbl: Label = _p1_bottom_crystal if player == 0 else _p2_bottom_crystal
+	if HudSkin.version == "v3" and is_instance_valid(amount_lbl):
+		var nudge: Vector2 = _V3_CRYSTAL_AMOUNT_NUDGE if player == 0 \
+				else Vector2(-_V3_CRYSTAL_AMOUNT_NUDGE.x, _V3_CRYSTAL_AMOUNT_NUDGE.y)
+		_set_crystal_amount_nudge(amount_lbl, nudge)
 
 
 ## Dense short-circuit sparks + smoke + jolt at the broken crystal.

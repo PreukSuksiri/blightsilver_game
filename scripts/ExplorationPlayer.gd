@@ -20,7 +20,6 @@ const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_e
 const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
 const CHAT_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_chat.png"
 const INFO_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_info.png"
-const DISSOLVE_FONT: Font      = preload("res://assets/fonts/digit-tech.7.ttf")
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const INFO_ICON_SIZE: float = 140.0  # info HUD icon — slightly larger than COMPASS_SIZE
 const CHAT_ICON_SIZE: float = 128.0  # chat HUD icon — slightly larger than COMPASS_SIZE
@@ -2597,7 +2596,7 @@ func _play_digital_dissolve(overlay: Control, img_tr: TextureRect, on_done: Call
 	particle_layer.z_index = 3
 	overlay.add_child(particle_layer)
 
-	var digit_font: Font = DISSOLVE_FONT
+	var digit_font: Font = FontManager.make_font("digital")
 
 	# Spawn area — read from image rect once layout is settled
 	var spawn_cx: float = vp.x * 0.5

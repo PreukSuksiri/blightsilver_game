@@ -154,9 +154,17 @@ func _drop_photos() -> void:
 # ── Build one Polaroid card ────────────────────────────────────
 func _build_polaroid(pivot: Control, photo_path: String) -> void:
 	var tex: Variant = load(photo_path)
-	var card := _PolaroidCard.new()
-	card.setup(tex as Texture2D, FRAME_W, FRAME_H, PAD_EDGE, PAD_BOTTOM)
+	var card := make_polaroid_card(tex as Texture2D, 1.0)
 	pivot.add_child(card)
+
+
+## Shared polaroid frame used by Photo Scatter and exploration Polaroid Mode 2.
+## `scale_mul` enlarges the whole card (frame + footer) proportionally.
+static func make_polaroid_card(tex: Texture2D, scale_mul: float = 1.0) -> Control:
+	var s: float = maxf(0.1, scale_mul)
+	var card := _PolaroidCard.new()
+	card.setup(tex, FRAME_W * s, FRAME_H * s, PAD_EDGE * s, PAD_BOTTOM * s)
+	return card
 
 
 # ── Tween one photo from off-screen to its resting place ──────

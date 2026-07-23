@@ -17,8 +17,6 @@ extends Control
 ##
 ## Data format: see ExplorationGraph / ExplorationNode for JSON schema.
 
-const FONT_PATH: String = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
-
 # ── Node type colours ─────────────────────────────────────────────────────
 const NODE_TYPE_COLORS: Dictionary = {
 	"NORMAL":  Color(0.25, 0.40, 0.60),

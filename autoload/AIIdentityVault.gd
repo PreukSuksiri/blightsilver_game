@@ -5,6 +5,30 @@ extends Node
 const SAVE_PATH := "res://data/ai_identity_vault.json"
 const DIFFICULTIES: Array[String] = ["easy", "normal", "hard"]
 
+## Bluff emoji keys authors can assign attack/avoid reaction chat for.
+const BLUFF_REACTION_EMOJIS: Array[String] = [
+	"😎", "🤣", "🤝", "👍", "🥺", "🧨", "🖕", "😃", "❤️", "☠️",
+]
+
+const DEF_PERSONALITY_OPTIONS: Array[String] = [
+	"Frontline", "Fortress", "Watch Tower", "Mine Field", "Tomb Trap", "Bait Trap",
+	"Diagonal Shield", "Cluster Defender", "Checker", "Straightforward", "Midwit",
+	"Symmetric Defender", "Random Defender", "Religious", "Zoro", "Helios",
+	"Helios 2", "Zoro 2", "Tomb Trap (Hard)", "Frontline (Hard)",
+]
+
+const OFF_PERSONALITY_OPTIONS: Array[String] = [
+	"Center Hoarder", "Border Guard", "Corner Assassin", "Melee Fighter", "Sniper",
+	"Leftist", "Rightist", "X Sabre", "Crusader", "Column Crusher", "Row Ripper",
+	"Revealed Hunter", "Explorer", "Tinkerer", "Berserker", "Shadow Lurker",
+	"Sleeping Dragon", "Rambo", "Spy", "X Alien", "Technophobia", "Witchhunter",
+]
+
+const SOC_PERSONALITY_OPTIONS: Array[String] = [
+	"Degen", "Talkative", "Fiddly", "Flirty", "Bully", "Fun Guy", "Daredevil",
+	"Vengeful", "Paranoid", "Skeptical", "Ungrateful", "Monk", "Eager", "Introvert",
+]
+
 var _entries: Array = []
 
 
@@ -92,3 +116,51 @@ func save_entries(entries: Array) -> bool:
 	f.store_string(JSON.stringify({"entries": _entries}, "\t"))
 	f.close()
 	return true
+
+
+## Apply identity personality into campaign_enemy_config (empty = leave random).
+## Call after deck config apply so forced cells/tech are not wiped.
+func apply_personality_to_battle(entry_id: String) -> void:
+	var entry: Dictionary = get_entry(entry_id)
+	if entry.is_empty():
+		return
+	_set_or_erase_personality("ai_personality_defensive", str(entry.get("personality_defensive", "")))
+	_set_or_erase_personality("ai_personality_offensive", str(entry.get("personality_offensive", "")))
+	_set_or_erase_personality("ai_personality_social", str(entry.get("personality_social", "")))
+
+
+func _set_or_erase_personality(key: String, value: String) -> void:
+	var cleaned := value.strip_edges()
+	if cleaned.is_empty() or cleaned.to_lower() == "random":
+		GameState.campaign_enemy_config.erase(key)
+	else:
+		GameState.campaign_enemy_config[key] = cleaned
+
+
+static func normalize_bluff_emoji(emoji: String) -> String:
+	var e := emoji.strip_edges()
+	if e == "💩":
+		return "🖕"
+	return e
+
+
+## Reaction chat for a bluff emoji trigger: "attack" (Interested) or "avoid".
+func get_bluff_reaction_chat(entry_id: String, emoji: String, trigger: String) -> String:
+	var entry: Dictionary = get_entry(entry_id)
+	if entry.is_empty():
+		return ""
+	var chats_raw: Variant = entry.get("bluff_reaction_chats", {})
+	if not chats_raw is Dictionary:
+		return ""
+	var chats: Dictionary = chats_raw as Dictionary
+	var key := normalize_bluff_emoji(emoji)
+	if key.is_empty() or not chats.has(key):
+		return ""
+	var row_raw: Variant = chats[key]
+	if not row_raw is Dictionary:
+		return ""
+	var row: Dictionary = row_raw as Dictionary
+	var t := trigger.strip_edges().to_lower()
+	if t != "attack" and t != "avoid":
+		return ""
+	return str(row.get(t, "")).strip_edges()

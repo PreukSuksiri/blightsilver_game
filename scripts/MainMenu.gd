@@ -132,6 +132,7 @@ func _ready() -> void:
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
 	MenuButtonConfig.load_config()
 	MenuButtonConfig.visibility_changed.connect(_apply_menu_button_state)
+	_apply_gradient_menu_buttons()
 	_apply_menu_button_state()
 	# Re-open daily dungeon overlay when returning from a daily dungeon battle.
 	if DailyDungeonManager.return_to_dungeon_map:
@@ -304,6 +305,8 @@ func _apply_menu_button_state() -> void:
 func _set_main_menu_btn(btn: BaseButton, key: String) -> void:
 	btn.visible = MenuButtonConfig.is_main_visible(key)
 	btn.disabled = not MenuButtonConfig.is_main_enabled(key)
+	if btn is Button:
+		GameDialog.sync_button_chrome_disabled(btn as Button)
 
 
 func _sync_corner_icon(btn: BaseButton, shadow: Control, key: String,
@@ -738,6 +741,15 @@ func _apply_menu_fonts() -> void:
 		FontManager.tag_font(deck_status_label, "font", "primary", 400)
 
 
+func _apply_gradient_menu_buttons() -> void:
+	for btn: Button in [
+		local_2p_btn, campaign_btn, deck_build_btn, mailbox_btn,
+		shop_btn, gallery_btn, credits_btn, exit_game_btn,
+	]:
+		if btn != null:
+			GameDialog.apply_button_chrome(btn, false)
+
+
 func _on_fonts_changed() -> void:
 	_apply_menu_fonts()
 	FontManager.refresh_tree(self)
@@ -796,49 +808,11 @@ func _on_settings() -> void:
 func _open_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
-func _apply_menu_btn_style(btn: Button, bordered: bool = true) -> void:
-	var bw: int = 4 if bordered else 0
-
-	var sb_n := StyleBoxFlat.new()
-	sb_n.bg_color = Color(0.047, 0.094, 0.157, 1)
-	sb_n.border_width_left = bw; sb_n.border_width_top = bw
-	sb_n.border_width_right = bw; sb_n.border_width_bottom = bw
-	sb_n.border_color = Color(0.494, 0.839, 1.0, 1.0) if bordered else sb_n.bg_color
-	sb_n.corner_radius_top_left = 12; sb_n.corner_radius_top_right = 12
-	sb_n.corner_radius_bottom_right = 12; sb_n.corner_radius_bottom_left = 12
-	sb_n.shadow_color = Color(0.494, 0.839, 1.0, 0.25) if bordered else Color(0, 0, 0, 0)
-	sb_n.shadow_offset = Vector2(0.0, 2.0)
-	sb_n.shadow_size = 6 if bordered else 0
-	sb_n.anti_aliasing = bordered
-
-	var sb_h := StyleBoxFlat.new()
-	sb_h.bg_color = Color(0.118, 0.184, 0.271, 1)
-	sb_h.border_width_left = bw; sb_h.border_width_top = bw
-	sb_h.border_width_right = bw; sb_h.border_width_bottom = bw
-	sb_h.border_color = Color(0.608, 0.902, 1.0, 1.0) if bordered else sb_h.bg_color
-	sb_h.corner_radius_top_left = 12; sb_h.corner_radius_top_right = 12
-	sb_h.corner_radius_bottom_right = 12; sb_h.corner_radius_bottom_left = 12
-	sb_h.shadow_color = Color(0.608, 0.902, 1.0, 0.5) if bordered else Color(0, 0, 0, 0)
-	sb_h.shadow_size = 12 if bordered else 0
-	sb_h.anti_aliasing = bordered
-
-	var sb_p := StyleBoxFlat.new()
-	sb_p.bg_color = Color(0.039, 0.075, 0.133, 1)
-	sb_p.border_width_left = bw; sb_p.border_width_top = bw
-	sb_p.border_width_right = bw; sb_p.border_width_bottom = bw
-	sb_p.border_color = Color(0.494, 0.839, 1.0, 1.0) if bordered else sb_p.bg_color
-	sb_p.corner_radius_top_left = 12; sb_p.corner_radius_top_right = 12
-	sb_p.corner_radius_bottom_right = 12; sb_p.corner_radius_bottom_left = 12
-	sb_p.shadow_color = Color(0.494, 0.839, 1.0, 0.15) if bordered else Color(0, 0, 0, 0)
-	sb_p.shadow_offset = Vector2(0.0, 1.0)
-	sb_p.shadow_size = 3 if bordered else 0
-	sb_p.anti_aliasing = bordered
-
-	btn.add_theme_stylebox_override("normal", sb_n)
-	btn.add_theme_stylebox_override("hover",  sb_h)
-	btn.add_theme_stylebox_override("pressed", sb_p)
-	btn.add_theme_stylebox_override("focus",  StyleBoxEmpty.new())
+func _apply_menu_btn_style(btn: Button, _bordered: bool = true) -> void:
+	GameDialog.apply_button_chrome(btn, false)
 	btn.add_theme_color_override("font_color", Color(0.910, 0.957, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
 
 func _input(event: InputEvent) -> void:
 	if BuildConfig.admin_shortcut_pressed(event):

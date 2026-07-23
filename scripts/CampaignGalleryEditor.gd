@@ -4,7 +4,6 @@ extends Control
 
 const GALLERY_PATH  := "res://campaign/gallery_data.json"
 const PLACEHOLDER   := "res://assets/textures/campagin/placeholder_campagin.png"
-const CHIVO_FONT    := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 
 var _data:         Array    = []
 var _selected_idx: int      = -1
@@ -104,7 +103,7 @@ func _build_ui() -> void:
 	title_lbl.offset_left   = -200.0
 	title_lbl.offset_right  = 200.0
 	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(title_lbl)
 	title_lbl.add_theme_font_size_override("font_size", 18)
 	title_lbl.add_theme_color_override("font_color", Color(1, 1, 1))
 	top.add_child(title_lbl)
@@ -116,7 +115,7 @@ func _build_ui() -> void:
 	clear_prog_btn.offset_top    = 8.0
 	clear_prog_btn.offset_right  = -130.0
 	clear_prog_btn.offset_bottom = 40.0
-	clear_prog_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(clear_prog_btn)
 	clear_prog_btn.add_theme_font_size_override("font_size", 13)
 	clear_prog_btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
 	clear_prog_btn.pressed.connect(_on_clear_progress)
@@ -129,7 +128,7 @@ func _build_ui() -> void:
 	save_btn.offset_top    = 8.0
 	save_btn.offset_right  = -10.0
 	save_btn.offset_bottom = 40.0
-	save_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(save_btn)
 	save_btn.add_theme_font_size_override("font_size", 14)
 	save_btn.pressed.connect(_save_data)
 	top.add_child(save_btn)
@@ -141,7 +140,7 @@ func _build_ui() -> void:
 	_status_lbl.offset_bottom = 0.0
 	_status_lbl.offset_left   = 8.0
 	_status_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_status_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_status_lbl)
 	_status_lbl.add_theme_font_size_override("font_size", 12)
 	_status_lbl.add_theme_color_override("font_color", Color(0.6, 0.8, 0.6))
 	add_child(_status_lbl)
@@ -162,7 +161,7 @@ func _build_ui() -> void:
 
 	_entry_list = ItemList.new()
 	_entry_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_entry_list.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_entry_list)
 	_entry_list.add_theme_font_size_override("font_size", 13)
 	_entry_list.item_selected.connect(_on_entry_selected)
 	left.add_child(_entry_list)
@@ -176,7 +175,7 @@ func _build_ui() -> void:
 		var b := Button.new()
 		b.text = label
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(b)
 		b.add_theme_font_size_override("font_size", 12)
 		b.pressed.connect(cb)
 		list_btns.add_child(b)
@@ -199,7 +198,7 @@ func _build_ui() -> void:
 
 	_no_sel_lbl = Label.new()
 	_no_sel_lbl.text = "Select an entry to edit."
-	_no_sel_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_no_sel_lbl)
 	_no_sel_lbl.add_theme_font_size_override("font_size", 14)
 	_no_sel_lbl.add_theme_color_override("font_color", Color(0.5, 0.5, 0.55))
 	right.add_child(_no_sel_lbl)
@@ -218,7 +217,7 @@ func _build_ui() -> void:
 		lbl.text             = label
 		lbl.custom_minimum_size = Vector2(90.0, 0.0)
 		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		lbl.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(lbl)
 		lbl.add_theme_font_size_override("font_size", 13)
 		lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.85))
 		hb.add_child(lbl)
@@ -227,7 +226,7 @@ func _build_ui() -> void:
 	var _field := func(hb: HBoxContainer) -> LineEdit:
 		var le := LineEdit.new()
 		le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		le.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(le)
 		le.add_theme_font_size_override("font_size", 13)
 		le.text_changed.connect(func(_s: String) -> void: _mark_dirty())
 		hb.add_child(le)
@@ -237,7 +236,7 @@ func _build_ui() -> void:
 		var b := Button.new()
 		b.text = "…"
 		b.custom_minimum_size = Vector2(32.0, 0.0)
-		b.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(b)
 		b.pressed.connect(func() -> void: _open_file_dialog(target))
 		hb.add_child(b)
 
@@ -260,7 +259,7 @@ func _build_ui() -> void:
 	var row_prereq: HBoxContainer = _row.call("Prerequisite")
 	_f_prerequisite = OptionButton.new()
 	_f_prerequisite.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_f_prerequisite.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_f_prerequisite)
 	_f_prerequisite.add_theme_font_size_override("font_size", 13)
 	_f_prerequisite.item_selected.connect(func(_i: int) -> void: _mark_dirty())
 	row_prereq.add_child(_f_prerequisite)
@@ -268,7 +267,7 @@ func _build_ui() -> void:
 	prereq_hint.text = "Finish this chapter first to unlock"
 	prereq_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	prereq_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	prereq_hint.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(prereq_hint)
 	prereq_hint.add_theme_font_size_override("font_size", 11)
 	prereq_hint.add_theme_color_override("font_color", Color(0.45, 0.48, 0.55))
 	_fields_root.add_child(prereq_hint)
@@ -276,7 +275,7 @@ func _build_ui() -> void:
 	var row_nl: HBoxContainer = _row.call("New Line")
 	_f_newline = CheckBox.new()
 	_f_newline.text = "Start a new row before this entry"
-	_f_newline.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_f_newline)
 	_f_newline.add_theme_font_size_override("font_size", 13)
 	_f_newline.toggled.connect(func(_b: bool) -> void: _mark_dirty())
 	row_nl.add_child(_f_newline)
@@ -284,7 +283,7 @@ func _build_ui() -> void:
 	var row_ct: HBoxContainer = _row.call("Custom Text")
 	_f_custom_text_on = CheckBox.new()
 	_f_custom_text_on.text = ""
-	_f_custom_text_on.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_f_custom_text_on)
 	_f_custom_text_on.toggled.connect(func(b: bool) -> void:
 		_f_custom_text.editable = b
 		_f_custom_text.modulate.a = 1.0 if b else 0.4
@@ -293,7 +292,7 @@ func _build_ui() -> void:
 	_f_custom_text = LineEdit.new()
 	_f_custom_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_f_custom_text.placeholder_text = "Text shown instead of COMING SOON"
-	_f_custom_text.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_f_custom_text)
 	_f_custom_text.add_theme_font_size_override("font_size", 13)
 	_f_custom_text.text_changed.connect(func(_s: String) -> void: _mark_dirty())
 	row_ct.add_child(_f_custom_text)
@@ -301,7 +300,7 @@ func _build_ui() -> void:
 	var row_ud: HBoxContainer = _row.call("Unlock")
 	_f_unlock_deckbuilding = CheckBox.new()
 	_f_unlock_deckbuilding.text = "Unlock deckbuilding after cleared"
-	_f_unlock_deckbuilding.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_f_unlock_deckbuilding)
 	_f_unlock_deckbuilding.add_theme_font_size_override("font_size", 13)
 	_f_unlock_deckbuilding.toggled.connect(func(_b: bool) -> void: _mark_dirty())
 	row_ud.add_child(_f_unlock_deckbuilding)
@@ -310,7 +309,7 @@ func _build_ui() -> void:
 	_f_unlocks_packs_lbl = Label.new()
 	_f_unlocks_packs_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_f_unlocks_packs_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_f_unlocks_packs_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(_f_unlocks_packs_lbl)
 	_f_unlocks_packs_lbl.add_theme_font_size_override("font_size", 12)
 	_f_unlocks_packs_lbl.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88))
 	row_packs.add_child(_f_unlocks_packs_lbl)
@@ -318,7 +317,7 @@ func _build_ui() -> void:
 	packs_hint.text = "Set per pack in Pack Editor → Unlock requires chapter (read-only summary)."
 	packs_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	packs_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	packs_hint.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(packs_hint)
 	packs_hint.add_theme_font_size_override("font_size", 11)
 	packs_hint.add_theme_color_override("font_color", Color(0.45, 0.48, 0.55))
 	_fields_root.add_child(packs_hint)
@@ -329,7 +328,7 @@ func _build_ui() -> void:
 
 	var prev_lbl := Label.new()
 	prev_lbl.text = "Preview:"
-	prev_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(prev_lbl)
 	prev_lbl.add_theme_font_size_override("font_size", 12)
 	prev_lbl.add_theme_color_override("font_color", Color(0.55, 0.55, 0.6))
 	_fields_root.add_child(prev_lbl)

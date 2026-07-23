@@ -48,7 +48,7 @@ static func style_title(label: Label, text: String = "") -> void:
 		label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
+	FontManager.tag_font(label, "font", "display_serif", 600)
 	label.add_theme_font_size_override("font_size", TITLE_FONT_SIZE)
 	label.add_theme_color_override("font_color", TITLE_COLOR)
 

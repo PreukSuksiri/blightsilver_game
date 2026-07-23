@@ -1,7 +1,6 @@
 extends Control
 
 const DeckData = preload("res://resources/DeckData.gd")
-const CHIVO_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 const InventoryMenuScene = preload("res://scenes/inventory_menu.tscn")
 const AdminConsoleScene = preload("res://scenes/admin_console.tscn")
 const ShopMenuScene     = preload("res://scenes/shop_menu.tscn")
@@ -108,7 +107,7 @@ func _on_local_2p() -> void:
 		var btn := Button.new()
 		btn.text = label
 		btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		btn.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(btn)
 		btn.add_theme_font_size_override("font_size", 18)
 		btn.pressed.connect(cb)
 		vbox.add_child(btn)

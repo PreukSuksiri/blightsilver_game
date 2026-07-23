@@ -27,11 +27,18 @@ func apply_to_control(control: Control) -> void:
 	var theme := Theme.new()
 	_apply_scrollbar_theme(theme)
 	_apply_checkbox_theme(theme)
+	FontManager.apply_primary_theme_fonts(theme)
 	control.theme = theme
 
 
 func _ready() -> void:
 	call_deferred("_apply_root_theme")
+	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
+		FontManager.fonts_changed.connect(_on_fonts_changed)
+
+
+func _on_fonts_changed() -> void:
+	_apply_root_theme()
 
 
 func _apply_root_theme() -> void:
@@ -41,6 +48,7 @@ func _apply_root_theme() -> void:
 	var theme := root.theme if root.theme != null else Theme.new()
 	_apply_scrollbar_theme(theme)
 	_apply_checkbox_theme(theme)
+	FontManager.apply_primary_theme_fonts(theme)
 	root.theme = theme
 
 

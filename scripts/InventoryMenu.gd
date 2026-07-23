@@ -81,9 +81,15 @@ func _build_ui() -> void:
 
 	# ── Tab bar ──────────────────────────────────
 	var tab_bar := HBoxContainer.new()
-	tab_bar.add_theme_constant_override("separation", 0)
+	tab_bar.add_theme_constant_override("separation", 6)
 	tab_bar.custom_minimum_size = Vector2(0, 40)
-	root_vbox.add_child(tab_bar)
+	var tab_margin := MarginContainer.new()
+	tab_margin.add_theme_constant_override("margin_left", 10)
+	tab_margin.add_theme_constant_override("margin_right", 10)
+	tab_margin.add_theme_constant_override("margin_top", 6)
+	tab_margin.add_theme_constant_override("margin_bottom", 6)
+	tab_margin.add_child(tab_bar)
+	root_vbox.add_child(tab_margin)
 
 	_tab_items_btn = _make_tab_button("ITEMS")
 	_tab_mail_btn  = _make_tab_button("MAILBOX")
@@ -127,6 +133,17 @@ func _make_separator() -> HSeparator:
 	sep.custom_minimum_size = Vector2(0, 1)
 	return sep
 
+## Magitech blue gradient fill + border (same chrome as dialog / gallery buttons).
+func _skin_inventory_button(btn: Button, wire_sfx: bool = true) -> void:
+	if btn == null:
+		return
+	btn.flat = false
+	btn.add_theme_color_override("font_color", Color(0.88, 0.95, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+
+
 func _make_tab_button(label: String) -> Button:
 	var btn := Button.new()
 	btn.text = label
@@ -135,9 +152,14 @@ func _make_tab_button(label: String) -> Button:
 	btn.custom_minimum_size = Vector2(0, 40)
 	btn.add_theme_font_size_override("font_size", 14)
 	btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
+	btn.add_theme_color_override("font_color", Color(0.4, 0.5, 0.6))
+	btn.add_theme_color_override("font_hover_color", Color(0.55, 0.72, 0.88))
+	btn.add_theme_color_override("font_pressed_color", Color(0.35, 0.85, 1.0))
 	return btn
 
 func _set_tab_active(btn: Button, active: bool) -> void:
+	if btn == null:
+		return
 	if active:
 		btn.add_theme_color_override("font_color", Color(0.35, 0.85, 1.0))
 	else:
@@ -280,6 +302,7 @@ func _build_items_panel() -> Control:
 	_scroll_use_btn = Button.new()
 	_scroll_use_btn.text = "Use"
 	_scroll_use_btn.add_theme_font_size_override("font_size", 13)
+	_skin_inventory_button(_scroll_use_btn)
 	_scroll_use_btn.pressed.connect(_on_use_union_scroll)
 	scroll_hbox.add_child(_scroll_use_btn)
 
@@ -300,6 +323,7 @@ func _refresh_items(_new_amount: int = 0) -> void:
 		_scroll_count_lbl.text = "×%d" % Collection.union_scrolls
 	if _scroll_use_btn != null:
 		_scroll_use_btn.disabled = Collection.union_scrolls <= 0
+		GameDialog.sync_button_chrome_disabled(_scroll_use_btn)
 
 func _on_use_union_scroll() -> void:
 	var res: Dictionary = UnionScrollManager.use_scroll(get_tree().root, true)
@@ -339,6 +363,7 @@ func _build_mail_panel() -> Control:
 	_claim_all_btn = Button.new()
 	_claim_all_btn.text = "Claim All"
 	_claim_all_btn.add_theme_font_size_override("font_size", 12)
+	_skin_inventory_button(_claim_all_btn)
 	_claim_all_btn.pressed.connect(_on_claim_all)
 	_claim_all_btn.visible = false
 	mail_header.add_child(_claim_all_btn)
@@ -346,12 +371,14 @@ func _build_mail_panel() -> Control:
 	_claim_credits_btn = Button.new()
 	_claim_credits_btn.text = "Claim Credits"
 	_claim_credits_btn.add_theme_font_size_override("font_size", 12)
+	_skin_inventory_button(_claim_credits_btn)
 	_claim_credits_btn.pressed.connect(_on_claim_all_credits)
 	mail_header.add_child(_claim_credits_btn)
 
 	_delete_btn = Button.new()
 	_delete_btn.text = "Delete Claimed"
 	_delete_btn.add_theme_font_size_override("font_size", 12)
+	_skin_inventory_button(_delete_btn)
 	_delete_btn.pressed.connect(func() -> void: MailboxManager.delete_claimed())
 	mail_header.add_child(_delete_btn)
 
@@ -466,7 +493,7 @@ func _make_credit_bundle_row(summary: Dictionary) -> Control:
 	var btn := Button.new()
 	btn.text = "Claim"
 	btn.add_theme_font_size_override("font_size", 12)
-	btn.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	_skin_inventory_button(btn)
 	btn.pressed.connect(_on_claim_all_credits)
 	hbox.add_child(btn)
 
@@ -531,13 +558,13 @@ func _make_mail_row(item: Dictionary) -> Control:
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(80, 34)
 	btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_skin_inventory_button(btn)
 	if claimed:
 		btn.text = "Claimed"
 		btn.disabled = true
-		btn.add_theme_color_override("font_color", Color(0.3, 0.4, 0.45, 0.5))
+		GameDialog.sync_button_chrome_disabled(btn)
 	else:
 		btn.text = "CLAIM"
-		btn.add_theme_color_override("font_color", Color(0.25, 1.0, 0.65))
 		var mail_id: String = item["id"]
 		btn.pressed.connect(func() -> void: _on_claim(mail_id))
 	hbox.add_child(btn)

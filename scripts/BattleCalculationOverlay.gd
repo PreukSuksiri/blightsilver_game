@@ -8,7 +8,6 @@ extends Control
 
 const VELLUM_FRAME    := preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
 const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")
-const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 const SFX_CLANK       := preload("res://assets/audio/sound_axe1.mp3")
 const SFX_GEAR        := preload("res://assets/audio/sound_sledgehammer1.mp3")
 const SFX_SHATTER     := preload("res://assets/audio/sfx/ceramic.mp3")
@@ -287,7 +286,7 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool, atk_delta: int
 		var num_lbl := Label.new()
 		var stat_val: int = inst.get_effective_atk() if is_attacker else inst.get_effective_def()
 		num_lbl.text = str(stat_val)
-		num_lbl.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(num_lbl)
 		num_lbl.add_theme_font_size_override("font_size", int(_card_w * 0.10))
 		var lbl_color := Color(1.0, 0.62, 0.30) if is_attacker else Color(0.38, 0.68, 1.0)
 		num_lbl.add_theme_color_override("font_color", lbl_color)
@@ -393,7 +392,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	type_lbl.size = Vector2(cw * 0.60, hdr_h * 0.7)
 	type_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	type_lbl.add_theme_font_size_override("font_size", fsz_hdr)
-	type_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(type_lbl)
 	parent.add_child(type_lbl)
 
 	var cost_sb := StyleBoxFlat.new()
@@ -425,7 +424,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	var cost_lbl := Label.new()
 	cost_lbl.add_theme_font_size_override("font_size", fsz_hdr)
 	cost_lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.25))
-	cost_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(cost_lbl)
 	cost_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cost_lbl.mouse_filter       = MOUSE_FILTER_IGNORE
 	cost_hbox.add_child(cost_lbl)
@@ -443,7 +442,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	name_lbl.size = Vector2(cw - pad_x * 2.0, info_h * 0.34)
 	name_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name_lbl.add_theme_font_size_override("font_size", fsz_name)
-	name_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(name_lbl)
 	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.82))
 	parent.add_child(name_lbl)
 
@@ -458,7 +457,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	atk_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	atk_lbl.add_theme_font_size_override("font_size", fsz_stat)
 	atk_lbl.add_theme_color_override("font_color", Color(1.0, 0.62, 0.30))
-	atk_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(atk_lbl)
 	parent.add_child(atk_lbl)
 	parent.set_meta("atk_lbl", atk_lbl)
 
@@ -469,7 +468,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	def_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	def_lbl.add_theme_font_size_override("font_size", fsz_stat)
 	def_lbl.add_theme_color_override("font_color", Color(0.38, 0.68, 1.0))
-	def_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(def_lbl)
 	parent.add_child(def_lbl)
 	parent.set_meta("def_lbl", def_lbl)
 
@@ -480,7 +479,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	aff_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	aff_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	aff_lbl.add_theme_font_size_override("font_size", fsz_stat + 10)
-	aff_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(aff_lbl)
 	parent.add_child(aff_lbl)
 
 	var desc_lbl := Label.new()
@@ -490,7 +489,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	desc_lbl.add_theme_color_override("font_color", Color(0.82, 0.88, 0.98))
 	desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	desc_lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_primary(desc_lbl)
 	parent.add_child(desc_lbl)
 
 	# Populate
@@ -571,7 +570,7 @@ func _add_stat_deltas(card_ctrl: Control, atk_delta: int, def_delta: int) -> voi
 		var delta_val: int = deltas[i]
 		var lbl := Label.new()
 		lbl.text = labels_str[i]
-		lbl.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_primary(lbl)
 		lbl.add_theme_font_size_override("font_size", fsz)
 		var col: Color = Color(0.35, 1.0, 0.45) if delta_val > 0 else Color(1.0, 0.35, 0.35)
 		lbl.add_theme_color_override("font_color", col)

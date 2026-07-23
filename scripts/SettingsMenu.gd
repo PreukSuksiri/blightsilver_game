@@ -10,8 +10,8 @@ func _ready() -> void:
 
 	# ── Full-screen dimmer (click outside to close) ──────────────
 	var dimmer := ColorRect.new()
-	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0.0, 0.0, 0.0, 0.0)
+	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.02, 0.03, 0.06, 0.62)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.gui_input.connect(func(e: InputEvent) -> void:
 		if e is InputEventMouseButton and e.pressed:
@@ -26,6 +26,7 @@ func _ready() -> void:
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
+	GameDialog.attach_panel_fx(panel)
 	panel.custom_minimum_size.x = 400.0
 	center.add_child(panel)
 

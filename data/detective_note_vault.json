@@ -1,6 +1,7 @@
 {
 	"chapters": [
 		{
+			"exploration_session_chapter": "",
 			"graphs": [],
 			"hidden": true,
 			"id": "ch0_demo",
@@ -120,7 +121,7 @@
 							"arrow": "end",
 							"from": "node_individual_1",
 							"label": "Copied from",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_object_2"
 						}
 					],
@@ -132,15 +133,15 @@
 							"kind": "individual",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								56,
-								120
+								56.0,
+								120.0
 							],
 							"prefill": "person_nex",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						},
@@ -149,15 +150,15 @@
 							"kind": "object",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								408,
-								115
+								408.0,
+								115.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_book_name"
 						}
@@ -170,35 +171,35 @@
 							"arrow": "end",
 							"from": "node_individual_1",
 							"label": "Owned",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_object_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_object_1",
 							"label": "Has been lent to",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_individual_2"
 						},
 						{
 							"arrow": "end",
 							"from": "node_individual_2",
 							"label": "Lent Object #1 to",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_individual_3"
 						},
 						{
 							"arrow": "end",
 							"from": "node_individual_3",
 							"label": "Output",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_information_1"
 						},
 						{
 							"arrow": "end",
 							"from": "node_information_1",
 							"label": "Motivated",
-							"min_level": 1,
+							"min_level": 1.0,
 							"to": "node_individual_2"
 						}
 					],
@@ -210,15 +211,15 @@
 							"kind": "individual",
 							"label": "Individual #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								46,
-								46
+								46.0,
+								46.0
 							],
 							"prefill": "person_mayu",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": ""
 						},
@@ -227,15 +228,15 @@
 							"kind": "object",
 							"label": "Object #1",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								447,
-								40
+								447.0,
+								40.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_obj_1"
 						},
@@ -244,15 +245,15 @@
 							"kind": "individual",
 							"label": "Individual #2",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								50,
-								274
+								50.0,
+								274.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_2"
 						},
@@ -261,15 +262,15 @@
 							"kind": "individual",
 							"label": "Individual #3",
 							"label_side": "top",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								467,
-								272
+								467.0,
+								272.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_indiv_3"
 						},
@@ -278,15 +279,15 @@
 							"kind": "information",
 							"label": "Information #1",
 							"label_side": "bottom",
-							"min_level": 1,
+							"min_level": 1.0,
 							"pos": [
-								247,
-								596
+								247.0,
+								596.0
 							],
 							"prefill": "",
 							"size": [
-								200,
-								128
+								200.0,
+								128.0
 							],
 							"var_key": "var_verdict_ch0_s1_topic_notebook_motiv_1"
 						}
@@ -359,12 +360,12 @@
 			"vn_scenes": []
 		},
 		{
+			"exploration_session_chapter": "act_1_ch_1",
 			"graphs": [
 				"res://exploration/graphs/ch0_s1_blackout_library.json"
 			],
 			"hidden": false,
 			"id": "ch1_s1",
-			"exploration_session_chapter": "act_1_ch_1",
 			"start_clues": [
 				"anomaly_quiet_study_ghost",
 				"anomaly_quiet_study_demon"
@@ -419,8 +420,8 @@
 							"label_side": "top",
 							"min_level": 1,
 							"pos": [
-								31,
-								67
+								22,
+								58
 							],
 							"prefill": "",
 							"size": [
@@ -436,8 +437,8 @@
 							"label_side": "top",
 							"min_level": 1,
 							"pos": [
-								743,
-								134
+								498,
+								62
 							],
 							"prefill": "person_possessed_mayu",
 							"size": [
@@ -453,8 +454,8 @@
 							"label_side": "bottom",
 							"min_level": 1,
 							"pos": [
-								359,
-								278
+								60,
+								493
 							],
 							"prefill": "",
 							"size": [
@@ -470,8 +471,8 @@
 							"label_side": "bottom",
 							"min_level": 1,
 							"pos": [
-								339,
-								584
+								283,
+								493
 							],
 							"prefill": "",
 							"size": [

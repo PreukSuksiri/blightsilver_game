@@ -253,10 +253,10 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 	icon_col.anchor_right = 1.0
 	icon_col.anchor_top = 0.0
 	icon_col.anchor_bottom = 0.0
-	icon_col.offset_left = -36.0
+	icon_col.offset_left = -38.0
 	icon_col.offset_top = 4.0
 	icon_col.offset_right = -4.0
-	icon_col.offset_bottom = 72.0
+	icon_col.offset_bottom = 76.0
 	icon_col.add_theme_constant_override("separation", 4)
 	icon_col.mouse_filter = Control.MOUSE_FILTER_STOP
 	wrap.add_child(icon_col)
@@ -264,12 +264,12 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 	var captured_index: int = index
 	var deck_name: String = deck.deck_name
 	var copy_btn := _make_icon_btn("", "Duplicate deck")
-	ChromeIcon.apply_button(copy_btn, "duplicate", true, "", ChromeIcon.COLOR_ON_LIGHT, 16)
+	ChromeIcon.apply_silver_icon_button(copy_btn, "duplicate", 20, 1)
 	copy_btn.pressed.connect(func() -> void:
 		_confirm_duplicate(captured_index, deck_name))
 	icon_col.add_child(copy_btn)
 	var del_btn := _make_icon_btn("", "Delete deck")
-	ChromeIcon.apply_button(del_btn, "delete", true, "", ChromeIcon.COLOR_ON_LIGHT, 16)
+	ChromeIcon.apply_silver_icon_button(del_btn, "delete", 20, 1)
 	del_btn.pressed.connect(func() -> void:
 		_confirm_delete(captured_index, deck_name))
 	icon_col.add_child(del_btn)
@@ -384,7 +384,7 @@ func _make_icon_btn(icon_text: String, tip: String) -> Button:
 	btn.text = icon_text
 	btn.tooltip_text = tip
 	btn.focus_mode = Control.FOCUS_NONE
-	btn.custom_minimum_size = Vector2(28, 28)
+	btn.custom_minimum_size = Vector2(30, 30)
 	btn.add_theme_font_size_override("font_size", 13)
 	btn.add_theme_color_override("font_color", Color(0.12, 0.12, 0.14, 0.95))
 	btn.add_theme_color_override("font_hover_color", Color(0.08, 0.08, 0.1, 1.0))

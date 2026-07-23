@@ -217,10 +217,10 @@ var _instr_lbl    : Label           = null
 var _gallery_flow : HFlowContainer  = null
 var _confirm_btn  : Button          = null
 var _random_btn   : Button          = null
-var _confirm_btn_base_sb: StyleBoxFlat = null
 var _confirm_btn_pulse_tween: Tween = null
-const _CONFIRM_BTN_BG_REST := Color(0.10, 0.14, 0.32, 1.0)
-const _CONFIRM_BTN_BG_PULSE := Color(0.17, 0.26, 0.50, 1.0)
+const _CONFIRM_BTN_BRIGHT_REST := 1.0
+const _CONFIRM_BTN_BRIGHT_PULSE := 1.28
+const _BTN_FX_META := &"magitech_btn_fx_mat"
 var _sp_p1_portrait: TextureRect    = null
 var _sp_p2_portrait: TextureRect    = null
 
@@ -272,6 +272,8 @@ func start_setup(player_index: int) -> void:
 	# Reset confirm button, random button, and info panel
 	_confirm_btn.disabled = true
 	_random_btn.disabled  = true
+	GameDialog.sync_button_chrome_disabled(_confirm_btn)
+	GameDialog.sync_button_chrome_disabled(_random_btn)
 	_clear_card_info()
 
 	_reset_grid()
@@ -292,6 +294,7 @@ func start_setup(player_index: int) -> void:
 		else:
 			_instr_lbl.text = "No valid deck found. Please build a deck first."
 			_confirm_btn.disabled = true
+			GameDialog.sync_button_chrome_disabled(_confirm_btn)
 		return
 
 	_chars_remaining = deck.characters.duplicate()
@@ -299,6 +302,7 @@ func start_setup(player_index: int) -> void:
 	GameState.tech_hands[player_index] = deck.techs.duplicate()
 	_random_btn.visible = not _is_tutorial_setup()
 	_random_btn.disabled = false
+	GameDialog.sync_button_chrome_disabled(_random_btn)
 
 	# Apply forced cell placements for this player
 	_locked_cells.clear()
@@ -439,8 +443,8 @@ func _build_ui() -> void:
 	_random_btn.text = "RANDOM FORMATION"
 	_random_btn.add_theme_font_size_override("font_size", 16)
 	_random_btn.disabled = true
+	_skin_setup_button(_random_btn)
 	_random_btn.pressed.connect(_on_random_formation)
-	SFXManager.wire_prompt_button(_random_btn)
 	add_child(_random_btn)
 
 	_confirm_btn = Button.new()
@@ -451,9 +455,8 @@ func _build_ui() -> void:
 	_confirm_btn.text = "CONFIRM PLACEMENT"
 	_confirm_btn.add_theme_font_size_override("font_size", 20)
 	_confirm_btn.disabled = true
+	_skin_setup_button(_confirm_btn)
 	_confirm_btn.pressed.connect(_on_confirm)
-	_setup_confirm_btn_styles()
-	SFXManager.wire_prompt_button(_confirm_btn)
 	add_child(_confirm_btn)
 
 	# ── Player portrait illustrations (on top of all content) ─
@@ -507,6 +510,25 @@ func _on_hold_hover_exit() -> void:
 	if _hover_hold_hint != null:
 		_hover_hold_hint.on_hover_exited()
 
+## Magitech blue gradient fill + border (same chrome as dialog buttons).
+func _skin_setup_button(btn: Button, wire_sfx: bool = true) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(0.88, 0.95, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+
+
+func _make_grid_cell_style() -> StyleBoxFlat:
+	var cell_sb := StyleBoxFlat.new()
+	cell_sb.bg_color = Color(0.07, 0.10, 0.18, 0.96)
+	cell_sb.border_color = Color(0.45, 0.88, 1.0, 0.55)
+	cell_sb.set_border_width_all(MagitechTheme.BORDER_WIDTH_THIN)
+	cell_sb.set_corner_radius_all(4)
+	return cell_sb
+
+
 func _build_grid_panel(parent: Control) -> void:
 	var grid_w: float = CELL_W * GRID_N + float(CELL_GAP) * (GRID_N - 1) + 24.0
 	var grid_h: float = CELL_H * GRID_N + float(CELL_GAP) * (GRID_N - 1) + 24.0
@@ -515,18 +537,8 @@ func _build_grid_panel(parent: Control) -> void:
 	_grid_panel = grid_panel
 	grid_panel.custom_minimum_size = Vector2(grid_w, grid_h)
 	grid_panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var gp_sb := StyleBoxFlat.new()
-	gp_sb.bg_color                   = Color(0.06, 0.08, 0.18, 1.0)
-	gp_sb.border_color               = Color(0.35, 0.6, 1.0, 0.45)
-	gp_sb.border_width_left          = 1
-	gp_sb.border_width_right         = 1
-	gp_sb.border_width_top           = 1
-	gp_sb.border_width_bottom        = 1
-	gp_sb.corner_radius_top_left     = 8
-	gp_sb.corner_radius_top_right    = 8
-	gp_sb.corner_radius_bottom_left  = 8
-	gp_sb.corner_radius_bottom_right = 8
-	grid_panel.add_theme_stylebox_override("panel", gp_sb)
+	grid_panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox(12.0))
+	GameDialog.attach_panel_fx(grid_panel)
 	parent.add_child(grid_panel)
 
 	var center := CenterContainer.new()
@@ -552,18 +564,7 @@ func _build_grid_panel(parent: Control) -> void:
 			cell.on_detail_cb  = _open_card_detail
 			cell.on_bluff_cb   = _on_cell_bluff_tap
 			cell.custom_minimum_size = Vector2(CELL_W, CELL_H)
-			var cell_sb := StyleBoxFlat.new()
-			cell_sb.bg_color                   = Color(0.08, 0.10, 0.24, 1.0)
-			cell_sb.border_color               = Color(0.28, 0.48, 0.9, 0.55)
-			cell_sb.border_width_left          = 1
-			cell_sb.border_width_right         = 1
-			cell_sb.border_width_top           = 1
-			cell_sb.border_width_bottom        = 1
-			cell_sb.corner_radius_top_left     = 4
-			cell_sb.corner_radius_top_right    = 4
-			cell_sb.corner_radius_bottom_left  = 4
-			cell_sb.corner_radius_bottom_right = 4
-			cell.add_theme_stylebox_override("panel", cell_sb)
+			cell.add_theme_stylebox_override("panel", _make_grid_cell_style())
 			var flash_cr := ColorRect.new()
 			flash_cr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			flash_cr.color        = Color(0.25, 0.90, 1.00, 0.0)
@@ -745,7 +746,7 @@ func _build_info_panel(parent: Control) -> void:
 	_info_preview_btn.visible = false
 	_info_preview_btn.disabled = true
 	_info_preview_btn.add_theme_font_size_override("font_size", 14)
-	_info_preview_btn.add_theme_color_override("font_color", Color(0.5, 0.88, 1.0))
+	_skin_setup_button(_info_preview_btn)
 	_info_preview_btn.pressed.connect(_on_preview_btn)
 	text_col.add_child(_info_preview_btn)
 
@@ -770,6 +771,7 @@ func _clear_card_info() -> void:
 	if _info_preview_btn != null:
 		_info_preview_btn.visible = false
 		_info_preview_btn.disabled = true
+		GameDialog.sync_button_chrome_disabled(_info_preview_btn)
 
 func _open_card_detail(card_name: String, card_type: String) -> void:
 	CardDetailOverlay.open(self, card_name, card_type)
@@ -779,6 +781,7 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 	_info_card_type = card_type
 	_info_preview_btn.visible = true
 	_info_preview_btn.disabled = false
+	GameDialog.sync_button_chrome_disabled(_info_preview_btn)
 
 	var subfolder: String
 	match card_type:
@@ -1176,6 +1179,7 @@ func _show_invalid_deck_abort_dialog() -> void:
 		return
 	_instr_lbl.text = "No valid deck found. Please build a deck first."
 	_confirm_btn.disabled = true
+	GameDialog.sync_button_chrome_disabled(_confirm_btn)
 	var body: String = (
 		"Some cards in this deck are not in your collection, "
 		+ "and the deck no longer meets requirements.\n\n"
@@ -1237,6 +1241,7 @@ func _refresh_formation_bar(deck: DeckData) -> void:
 		btn.text = str(fd.get("name", "F%d" % (i + 1)))
 		btn.add_theme_font_size_override("font_size", 11)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_skin_setup_button(btn)
 		var idx := i
 		btn.pressed.connect(func() -> void: _apply_formation(idx))
 		_formation_bar.add_child(btn)
@@ -1411,6 +1416,7 @@ func _refresh_confirm() -> void:
 		return
 	var all_placed: bool = _chars_remaining.is_empty() and _traps_remaining.is_empty()
 	_confirm_btn.disabled = not all_placed
+	GameDialog.sync_button_chrome_disabled(_confirm_btn)
 	if _is_tutorial_setup():
 		_start_tutorial_confirm_pulse()
 		if all_placed:
@@ -1429,8 +1435,10 @@ func _refresh_confirm() -> void:
 func _lock_confirm_ui() -> void:
 	if _confirm_btn != null:
 		_confirm_btn.disabled = true
+		GameDialog.sync_button_chrome_disabled(_confirm_btn)
 	if _random_btn != null:
 		_random_btn.disabled = true
+		GameDialog.sync_button_chrome_disabled(_random_btn)
 	if _gallery_flow != null:
 		_gallery_flow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if _formation_bar != null:
@@ -1439,42 +1447,41 @@ func _lock_confirm_ui() -> void:
 		for c in range(GRID_N):
 			(_grid_cells[r][c] as GridCell).mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-func _setup_confirm_btn_styles() -> void:
-	if _confirm_btn_base_sb != null:
-		return
-	_confirm_btn_base_sb = StyleBoxFlat.new()
-	_confirm_btn_base_sb.bg_color = _CONFIRM_BTN_BG_REST
-	_confirm_btn_base_sb.border_color = Color(0.38, 0.62, 1.0, 0.55)
-	_confirm_btn_base_sb.set_border_width_all(1)
-	_confirm_btn_base_sb.set_corner_radius_all(6)
-	_confirm_btn.add_theme_stylebox_override("normal", _confirm_btn_base_sb)
-	var hover_sb := _confirm_btn_base_sb.duplicate() as StyleBoxFlat
-	hover_sb.bg_color = Color(0.14, 0.20, 0.40, 1.0)
-	_confirm_btn.add_theme_stylebox_override("hover", hover_sb)
-	var disabled_sb := _confirm_btn_base_sb.duplicate() as StyleBoxFlat
-	disabled_sb.bg_color = Color(0.08, 0.10, 0.22, 0.85)
-	_confirm_btn.add_theme_stylebox_override("disabled", disabled_sb)
+func _confirm_btn_fx_mat() -> ShaderMaterial:
+	if _confirm_btn == null or not _confirm_btn.has_meta(_BTN_FX_META):
+		return null
+	return _confirm_btn.get_meta(_BTN_FX_META) as ShaderMaterial
 
 func _start_tutorial_confirm_pulse() -> void:
-	if _confirm_btn == null or _confirm_btn_base_sb == null:
+	var mat: ShaderMaterial = _confirm_btn_fx_mat()
+	if mat == null:
 		return
 	if _confirm_btn_pulse_tween != null and _confirm_btn_pulse_tween.is_valid():
 		return
-	_confirm_btn_base_sb.bg_color = _CONFIRM_BTN_BG_REST
+	mat.set_shader_parameter("brightness", _CONFIRM_BTN_BRIGHT_REST)
 	_confirm_btn_pulse_tween = create_tween().set_loops()
-	_confirm_btn_pulse_tween.tween_property(
-		_confirm_btn_base_sb, "bg_color", _CONFIRM_BTN_BG_PULSE, 0.90) \
+	_confirm_btn_pulse_tween.tween_method(
+		func(v: float) -> void:
+			var m: ShaderMaterial = _confirm_btn_fx_mat()
+			if m != null:
+				m.set_shader_parameter("brightness", v),
+		_CONFIRM_BTN_BRIGHT_REST, _CONFIRM_BTN_BRIGHT_PULSE, 0.90) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_confirm_btn_pulse_tween.tween_property(
-		_confirm_btn_base_sb, "bg_color", _CONFIRM_BTN_BG_REST, 0.90) \
+	_confirm_btn_pulse_tween.tween_method(
+		func(v: float) -> void:
+			var m: ShaderMaterial = _confirm_btn_fx_mat()
+			if m != null:
+				m.set_shader_parameter("brightness", v),
+		_CONFIRM_BTN_BRIGHT_PULSE, _CONFIRM_BTN_BRIGHT_REST, 0.90) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func _stop_tutorial_confirm_pulse() -> void:
 	if _confirm_btn_pulse_tween != null and _confirm_btn_pulse_tween.is_valid():
 		_confirm_btn_pulse_tween.kill()
 	_confirm_btn_pulse_tween = null
-	if _confirm_btn_base_sb != null:
-		_confirm_btn_base_sb.bg_color = _CONFIRM_BTN_BG_REST
+	var mat: ShaderMaterial = _confirm_btn_fx_mat()
+	if mat != null:
+		mat.set_shader_parameter("brightness", _CONFIRM_BTN_BRIGHT_REST)
 
 func _exit_tree() -> void:
 	_stop_tutorial_confirm_pulse()

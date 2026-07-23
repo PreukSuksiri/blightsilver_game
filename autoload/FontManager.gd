@@ -1,6 +1,9 @@
 extends Node
 ## Central font registry — swap game-wide fonts from the admin Font Manager.
 ## Shipped defaults: res://data/fonts.json (saved from admin tools in the editor).
+##
+## Primary slot is also applied as the root Theme default font so any Control
+## that would otherwise use Godot’s built-in theme font inherits the main UI font.
 
 signal fonts_changed
 
@@ -9,6 +12,17 @@ const FONTS_DIR := "res://assets/fonts/"
 const META_SLOT := "fm_slot"
 const META_PROP := "fm_prop"
 const META_WEIGHT := "fm_weight"
+const SLOT_PRIMARY := "primary"
+const SLOT_VN := "vn"
+
+## Control types that use a single `font` theme item.
+const _THEME_FONT_TYPES: Array[StringName] = [
+	&"Label", &"Button", &"CheckBox", &"CheckButton", &"OptionButton",
+	&"LinkButton", &"MenuButton", &"LineEdit", &"TextEdit", &"CodeEdit",
+	&"ItemList", &"Tree", &"TabBar", &"TabContainer", &"PopupMenu",
+	&"TooltipLabel", &"GraphNode", &"Window", &"AcceptDialog",
+	&"FileDialog", &"SpinBox",
+]
 
 var _slots: Dictionary = {}
 var _defaults: Dictionary = {}
@@ -17,6 +31,8 @@ var _defaults: Dictionary = {}
 func _ready() -> void:
 	load_config()
 	get_tree().node_added.connect(_on_node_added)
+	# After UiTheme (and other autoloads) have created/merged root.theme.
+	call_deferred("apply_to_root_theme")
 
 
 func load_config() -> void:
@@ -142,6 +158,44 @@ func get_font(slot_id: String) -> Font:
 	return make_font(slot_id, 400)
 
 
+func primary_font(weight: int = 400) -> Font:
+	return make_font(SLOT_PRIMARY, weight)
+
+
+func vn_font(weight: int = 400) -> Font:
+	return make_font(SLOT_VN, weight)
+
+
+## Apply primary (and bold primary) onto a Theme so untagged Controls inherit it.
+func apply_primary_theme_fonts(theme: Theme) -> void:
+	if theme == null:
+		return
+	var regular: Font = primary_font(400)
+	var bold: Font = primary_font(700)
+	theme.set_default_font(regular)
+	for type_name: StringName in _THEME_FONT_TYPES:
+		theme.set_font("font", type_name, regular)
+	# RichTextLabel uses separate font roles.
+	theme.set_font("normal_font", &"RichTextLabel", regular)
+	theme.set_font("bold_font", &"RichTextLabel", bold)
+	theme.set_font("italics_font", &"RichTextLabel", regular)
+	theme.set_font("bold_italics_font", &"RichTextLabel", bold)
+	theme.set_font("mono_font", &"RichTextLabel", regular)
+
+
+## Push primary fonts into the viewport root Theme (live-swappable).
+func apply_to_root_theme() -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	var root: Window = tree.root
+	if root == null:
+		return
+	var theme: Theme = root.theme if root.theme != null else Theme.new()
+	apply_primary_theme_fonts(theme)
+	root.theme = theme
+
+
 ## Tag a control so live font swaps refresh it automatically.
 func tag_font(node: Control, property: String, slot_id: String, weight: int = 400) -> void:
 	if node == null:
@@ -152,13 +206,19 @@ func tag_font(node: Control, property: String, slot_id: String, weight: int = 40
 	_apply_tagged(node)
 
 
+func tag_primary(node: Control, property: String = "font", weight: int = 400) -> void:
+	tag_font(node, property, SLOT_PRIMARY, weight)
+
+
 func apply_and_notify() -> void:
 	save_config()
+	apply_to_root_theme()
 	refresh_tree()
 	emit_signal("fonts_changed")
 
 
 func refresh_tree(root: Node = null) -> void:
+	apply_to_root_theme()
 	var start: Node = root if root != null else get_tree().root
 	_walk_refresh(start)
 

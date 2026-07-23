@@ -24,6 +24,8 @@ const _SHADER_DIALOG_BUTTON: Shader = preload("res://assets/shaders/magitech_dia
 const _BTN_FX_META := &"magitech_btn_fx_mat"
 const _BTN_FX_NODE := &"MagitechBtnFx"
 const _BTN_FX_WIRED := &"magitech_btn_fx_wired"
+const _BTN_FX_SIZE_WIRED := &"magitech_btn_fx_size_wired"
+const _PANEL_FX_SIZE_WIRED := &"magitech_panel_fx_size_wired"
 
 const OVERLAY_LAYER_NAME := &"GameDialogLayer"
 const OVERLAY_HOST_NAME := &"GameDialogHost"
@@ -72,11 +74,30 @@ func attach_panel_fx(panel: Control) -> void:
 	mat.set_shader_parameter("fill_bottom", Color(0.025, 0.035, 0.07, 0.97))
 	mat.set_shader_parameter("border_a", Color(0.55, 0.92, 1.0, 0.88))
 	mat.set_shader_parameter("border_b", Color(0.78, 0.84, 0.94, 0.72))
-	mat.set_shader_parameter("border_width", 0.016)
-	mat.set_shader_parameter("corner_radius", 0.055)
+	mat.set_shader_parameter("border_px", 2.0)
+	mat.set_shader_parameter("corner_radius_px", float(MagitechTheme.CORNER_RADIUS))
 	mat.set_shader_parameter("rim_speed", 0.20)
 	mat.set_shader_parameter("rim_pulse", 0.30)
 	panel.material = mat
+	_sync_panel_fx_size(panel)
+	if not panel.get_meta(_PANEL_FX_SIZE_WIRED, false):
+		panel.set_meta(_PANEL_FX_SIZE_WIRED, true)
+		panel.resized.connect(_sync_panel_fx_size.bind(panel))
+	call_deferred("_sync_panel_fx_size", panel)
+
+
+func _sync_panel_fx_size(panel: Control) -> void:
+	if panel == null or not is_instance_valid(panel):
+		return
+	var mat: ShaderMaterial = panel.material as ShaderMaterial
+	if mat == null or mat.shader != _SHADER_DIALOG_PANEL:
+		return
+	var sz: Vector2 = panel.size
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = panel.get_combined_minimum_size()
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = Vector2(DEFAULT_MIN_WIDTH, 200.0)
+	mat.set_shader_parameter("rect_size", sz)
 
 
 func style_button(btn: Button) -> void:
@@ -87,7 +108,14 @@ func style_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", BTN_TEXT)
 	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
 	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
-	# Transparent StyleBoxes — gradient chrome on behind-parent ColorRect (keeps label readable).
+	apply_button_chrome(btn, true)
+
+
+## Magitech gradient face only — keeps caller font size / layout / labels.
+## Used by dialogs (via style_button) and main-menu stack buttons.
+func apply_button_chrome(btn: Button, wire_sfx: bool = false) -> void:
+	if btn == null:
+		return
 	var empty := _make_button_style(Color(0, 0, 0, 0))
 	empty.border_color = Color(0, 0, 0, 0)
 	empty.set_border_width_all(0)
@@ -97,7 +125,12 @@ func style_button(btn: Button) -> void:
 	btn.add_theme_stylebox_override("focus", empty.duplicate())
 	_attach_button_fx(btn, btn.disabled)
 	_apply_disabled_button_style(btn)
-	SFXManager.wire_prompt_button(btn)
+	if wire_sfx:
+		SFXManager.wire_prompt_button(btn)
+
+
+func sync_button_chrome_disabled(btn: Button) -> void:
+	_sync_button_fx_disabled(btn)
 
 
 func style_menu_button(btn: Button) -> void:
@@ -148,6 +181,68 @@ func style_spin_box(spin: SpinBox) -> void:
 	var line: LineEdit = spin.get_line_edit()
 	if line != null:
 		style_line_edit(line)
+
+
+## Magitech OptionButton + popup menu (replaces default grey OS-like dropdown).
+func style_option_button(opt: OptionButton) -> void:
+	if opt == null:
+		return
+	FontManager.tag_primary(opt)
+	opt.add_theme_color_override("font_color", BODY_COLOR)
+	opt.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	opt.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	opt.add_theme_color_override("font_disabled_color", Color(0.55, 0.62, 0.72, 0.85))
+	opt.add_theme_color_override("font_focus_color", Color(1.0, 1.0, 1.0, 1.0))
+	opt.add_theme_color_override("icon_normal_color", Color(0.55, 0.88, 1.0, 1.0))
+	opt.add_theme_color_override("icon_hover_color", Color(0.75, 0.95, 1.0, 1.0))
+	opt.add_theme_color_override("icon_pressed_color", Color(0.45, 0.78, 0.95, 1.0))
+	opt.add_theme_color_override("icon_disabled_color", Color(0.45, 0.55, 0.65, 0.45))
+
+	var normal := _make_line_edit_style(
+		Color(0.08, 0.10, 0.18, 1.0), Color(0.35, 0.55, 0.85, 0.55))
+	var hover := _make_line_edit_style(
+		Color(0.10, 0.14, 0.24, 1.0), Color(0.55, 0.78, 1.0, 0.80))
+	var pressed := _make_line_edit_style(
+		Color(0.06, 0.09, 0.16, 1.0), Color(0.40, 0.65, 0.95, 0.70))
+	var disabled := _make_line_edit_style(
+		Color(0.06, 0.08, 0.12, 0.90), Color(0.28, 0.38, 0.55, 0.40))
+	opt.add_theme_stylebox_override("normal", normal)
+	opt.add_theme_stylebox_override("hover", hover)
+	opt.add_theme_stylebox_override("pressed", pressed)
+	opt.add_theme_stylebox_override("disabled", disabled)
+	opt.add_theme_stylebox_override("focus", hover.duplicate())
+
+	var popup: PopupMenu = opt.get_popup()
+	if popup == null:
+		return
+	popup.add_theme_font_override("font", FontManager.primary_font())
+	popup.add_theme_font_size_override("font_size", opt.get_theme_font_size("font_size"))
+	popup.add_theme_color_override("font_color", BODY_COLOR)
+	popup.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	popup.add_theme_color_override("font_separator_color", Color(0.35, 0.50, 0.70, 0.55))
+	popup.add_theme_color_override("font_accelerator_color", Color(0.55, 0.65, 0.78, 0.85))
+	popup.add_theme_color_override("font_disabled_color", Color(0.55, 0.62, 0.72, 0.55))
+
+	var panel_sb := StyleBoxFlat.new()
+	panel_sb.bg_color = Color(0.05, 0.07, 0.14, 0.98)
+	panel_sb.border_color = Color(0.45, 0.78, 1.0, 0.70)
+	panel_sb.set_border_width_all(1)
+	panel_sb.set_corner_radius_all(6)
+	panel_sb.set_content_margin_all(6)
+	popup.add_theme_stylebox_override("panel", panel_sb)
+
+	var item_hover := StyleBoxFlat.new()
+	item_hover.bg_color = Color(0.12, 0.22, 0.40, 0.95)
+	item_hover.border_color = Color(0.40, 0.75, 1.0, 0.35)
+	item_hover.set_border_width_all(1)
+	item_hover.set_corner_radius_all(4)
+	item_hover.set_content_margin_all(6)
+	popup.add_theme_stylebox_override("hover", item_hover)
+
+	var item_sep := StyleBoxFlat.new()
+	item_sep.bg_color = Color(0.35, 0.50, 0.70, 0.35)
+	item_sep.set_content_margin_all(0)
+	popup.add_theme_stylebox_override("separator", item_sep)
 
 
 func _make_line_edit_style(bg: Color, border: Color) -> StyleBoxFlat:
@@ -438,6 +533,9 @@ func attach_viewport_overlay(control: Control, requester: Node = null) -> void:
 		control.set_meta(REQUESTER_META, requester.get_instance_id())
 	host.add_child(control)
 	control.move_to_front()
+	_sync_overlay_host_input_block()
+	if not control.tree_exited.is_connected(_on_overlay_child_tree_exited):
+		control.tree_exited.connect(_on_overlay_child_tree_exited)
 
 
 func _find_overlay(parent: Node, overlay_name: StringName) -> Control:
@@ -495,8 +593,34 @@ func _sync_overlay_host_size() -> void:
 	if _overlay_host == null or not is_instance_valid(_overlay_host):
 		return
 	var vp_size: Vector2 = get_viewport().get_visible_rect().size
+	_overlay_host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_overlay_host.position = Vector2.ZERO
 	_overlay_host.size = vp_size
+	for child: Node in _overlay_host.get_children():
+		if child is Control and is_instance_valid(child):
+			var c: Control = child as Control
+			c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			c.position = Vector2.ZERO
+			c.size = vp_size
+
+
+func _sync_overlay_host_input_block() -> void:
+	if _overlay_host == null or not is_instance_valid(_overlay_host):
+		return
+	var has_modal := false
+	for child: Node in _overlay_host.get_children():
+		if is_instance_valid(child) and not child.is_queued_for_deletion():
+			has_modal = true
+			break
+	# Host itself must catch clicks when any modal is up, so IGNORE never leaks
+	# through a zero-size / mis-anchored child to the screen underneath.
+	_overlay_host.mouse_filter = (
+			Control.MOUSE_FILTER_STOP if has_modal else Control.MOUSE_FILTER_IGNORE)
+
+
+func _on_overlay_child_tree_exited() -> void:
+	# Defer so queue_free siblings are gone before we re-evaluate.
+	call_deferred("_sync_overlay_host_input_block")
 
 
 func _make_overlay_shell(
@@ -506,23 +630,22 @@ func _make_overlay_shell(
 		overlay_name: StringName) -> Dictionary:
 	var root := Control.new()
 	root.name = String(overlay_name)
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_STOP
 	root.z_index = z_index
 
 	var blocker := ColorRect.new()
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.color = Color(0.0, 0.0, 0.0, 0.0)
+	blocker.name = "DimBlocker"
 	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.color = Color(0.02, 0.03, 0.06, 0.62)
 	root.add_child(blocker)
 
 	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(center)
 
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(min_width, 0.0)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.add_theme_stylebox_override("panel", make_panel_stylebox())
 	attach_panel_fx(panel)
 	center.add_child(panel)
@@ -536,6 +659,17 @@ func _make_overlay_shell(
 		root.set_meta(REQUESTER_META, parent.get_instance_id())
 	host.add_child(root)
 	root.move_to_front()
+	# Force full-viewport coverage after parenting (anchors alone can leave size 0).
+	var cover: Vector2 = host.size
+	if cover.x < 1.0 or cover.y < 1.0:
+		cover = get_viewport().get_visible_rect().size
+	for node: Control in [root, blocker, center]:
+		node.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		node.position = Vector2.ZERO
+		node.size = cover
+	_sync_overlay_host_input_block()
+	if not root.tree_exited.is_connected(_on_overlay_child_tree_exited):
+		root.tree_exited.connect(_on_overlay_child_tree_exited)
 	return {"root": root, "vbox": vbox, "panel": panel}
 
 
@@ -601,11 +735,16 @@ func _attach_button_fx(btn: Button, disabled_look: bool) -> void:
 		btn.move_child(fx, 0)
 	var mat := ShaderMaterial.new()
 	mat.shader = _SHADER_DIALOG_BUTTON
-	mat.set_shader_parameter("border_width", 0.05)
-	mat.set_shader_parameter("corner_radius", 0.14)
+	mat.set_shader_parameter("border_px", 1.5)
+	mat.set_shader_parameter("corner_radius_px", float(MagitechTheme.CORNER_RADIUS))
 	fx.material = mat
 	btn.set_meta(_BTN_FX_META, mat)
 	_apply_button_fx_colors(mat, disabled_look)
+	_sync_button_fx_size(btn)
+	if not btn.get_meta(_BTN_FX_SIZE_WIRED, false):
+		btn.set_meta(_BTN_FX_SIZE_WIRED, true)
+		fx.resized.connect(_sync_button_fx_size.bind(btn))
+	call_deferred("_sync_button_fx_size", btn)
 	if btn.get_meta(_BTN_FX_WIRED, false):
 		return
 	btn.set_meta(_BTN_FX_WIRED, true)
@@ -613,6 +752,21 @@ func _attach_button_fx(btn: Button, disabled_look: bool) -> void:
 	btn.mouse_exited.connect(_on_fx_button_hover_exited.bind(btn))
 	btn.button_down.connect(_on_fx_button_down.bind(btn))
 	btn.button_up.connect(_on_fx_button_up.bind(btn))
+
+
+func _sync_button_fx_size(btn: Button) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	var fx: ColorRect = btn.get_node_or_null(NodePath(str(_BTN_FX_NODE))) as ColorRect
+	var mat: ShaderMaterial = _btn_fx_mat(btn)
+	if fx == null or mat == null:
+		return
+	var sz: Vector2 = fx.size
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = btn.size
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = BTN_MIN_SIZE
+	mat.set_shader_parameter("rect_size", sz)
 
 
 func _apply_button_fx_colors(mat: ShaderMaterial, disabled_look: bool) -> void:

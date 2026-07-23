@@ -23,6 +23,44 @@ const PANEL_MAX_SIZE: Vector2 = Vector2(1680.0, 900.0)
 
 var _card_size: Vector2 = Vector2.ZERO
 
+const _BTN_FX_META := &"magitech_btn_fx_mat"
+
+## Magitech chrome tinted gold for shop actions.
+func _skin_shop_button(btn: Button, wire_sfx: bool = true) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.70, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.92, 0.78, 0.35, 1.0))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+	_apply_gold_button_fx(btn)
+
+
+func _apply_gold_button_fx(btn: Button) -> void:
+	if btn == null or not btn.has_meta(_BTN_FX_META):
+		return
+	var mat: ShaderMaterial = btn.get_meta(_BTN_FX_META) as ShaderMaterial
+	if mat == null:
+		return
+	if btn.disabled:
+		mat.set_shader_parameter("fill_top", Color(0.14, 0.10, 0.04, 0.85))
+		mat.set_shader_parameter("fill_bottom", Color(0.08, 0.06, 0.02, 0.85))
+		mat.set_shader_parameter("border_a", Color(0.55, 0.42, 0.18, 0.45))
+		mat.set_shader_parameter("border_b", Color(0.60, 0.48, 0.22, 0.40))
+		mat.set_shader_parameter("brightness", 0.75)
+	else:
+		mat.set_shader_parameter("fill_top", Color(0.32, 0.22, 0.06, 0.97))
+		mat.set_shader_parameter("fill_bottom", Color(0.16, 0.10, 0.03, 0.97))
+		mat.set_shader_parameter("border_a", Color(1.0, 0.82, 0.28, 0.90))
+		mat.set_shader_parameter("border_b", Color(0.95, 0.72, 0.30, 0.72))
+		mat.set_shader_parameter("brightness", 1.0)
+
+
+func _sync_gold_button_chrome(btn: Button) -> void:
+	GameDialog.sync_button_chrome_disabled(btn)
+	_apply_gold_button_fx(btn)
+
+
 func _ready() -> void:
 	Collection.credits_changed.connect(_on_credits_changed)
 	var header_rebuild: Dictionary = MenuScreenHeader.rebuild_panel_header(
@@ -34,6 +72,7 @@ func _ready() -> void:
 		close_btn.pressed.connect(_on_close)
 	_relocate_shop_header_extras()
 	result_ok_btn.pressed.connect(func() -> void: result_overlay.hide())
+	_skin_shop_button(result_ok_btn)
 	result_overlay.hide()
 	_apply_panel_to_viewport()
 	_refresh_credits()
@@ -149,8 +188,10 @@ func _update_pack_card_buy_state(card_root: Node, pack: Dictionary) -> void:
 				Color(0.95, 0.82, 0.22, 1.0) if can_buy else Color(0.75, 0.28, 0.28, 0.8))
 		elif child is Button and (child as Button).text in ["BUY PACK", "BUY SCROLL", "LOCKED"]:
 			var is_scroll: bool = str(pack.get("product_type", "")) == "union_scroll"
-			(child as Button).text = ("BUY SCROLL" if is_scroll else "BUY PACK") if shop_unlocked else "LOCKED"
-			(child as Button).disabled = not can_buy
+			var buy_btn: Button = child as Button
+			buy_btn.text = ("BUY SCROLL" if is_scroll else "BUY PACK") if shop_unlocked else "LOCKED"
+			buy_btn.disabled = not can_buy
+			_sync_gold_button_chrome(buy_btn)
 
 func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	var accent_raw: Variant = pack.get("accent", null)
@@ -242,20 +283,7 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 		var vc_btn := Button.new()
 		vc_btn.text = "View Contents"
 		vc_btn.add_theme_font_size_override("font_size", 12)
-		vc_btn.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.85))
-		var vc_sb := StyleBoxFlat.new()
-		vc_sb.bg_color   = Color(accent.r * 0.08, accent.g * 0.08, accent.b * 0.08, 1.0)
-		vc_sb.border_width_left = 1; vc_sb.border_width_top    = 1
-		vc_sb.border_width_right = 1; vc_sb.border_width_bottom = 1
-		vc_sb.border_color = Color(accent.r, accent.g, accent.b, 0.4)
-		vc_sb.corner_radius_top_left     = 4; vc_sb.corner_radius_top_right    = 4
-		vc_sb.corner_radius_bottom_left  = 4; vc_sb.corner_radius_bottom_right = 4
-		var vc_sb_h := vc_sb.duplicate() as StyleBoxFlat
-		vc_sb_h.border_color = Color(accent.r, accent.g, accent.b, 0.9)
-		vc_btn.add_theme_stylebox_override("normal",  vc_sb)
-		vc_btn.add_theme_stylebox_override("hover",   vc_sb_h)
-		vc_btn.add_theme_stylebox_override("pressed", vc_sb)
-		vc_btn.add_theme_stylebox_override("focus",   vc_sb)
+		_skin_shop_button(vc_btn)
 		var pid: String = str(pack.get("id", ""))
 		vc_btn.pressed.connect(func() -> void:
 			load("res://scripts/PackContentsOverlay.gd").open(get_tree().root, pid))
@@ -287,23 +315,7 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	btn.text = ("BUY SCROLL" if is_scroll else "BUY PACK") if shop_unlocked else "LOCKED"
 	btn.disabled = not can_buy
 	btn.add_theme_font_size_override("font_size", 15)
-	btn.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 1.0))
-
-	var btn_n := StyleBoxFlat.new()
-	btn_n.bg_color = Color(accent.r * 0.12, accent.g * 0.12, accent.b * 0.12, 1.0)
-	btn_n.border_width_left = 2; btn_n.border_width_top = 1
-	btn_n.border_width_right = 1; btn_n.border_width_bottom = 1
-	btn_n.border_color = Color(accent.r, accent.g, accent.b, 0.65)
-	btn_n.corner_radius_top_left = 4; btn_n.corner_radius_top_right = 4
-	btn_n.corner_radius_bottom_right = 4; btn_n.corner_radius_bottom_left = 4
-	var btn_h := btn_n.duplicate() as StyleBoxFlat
-	btn_h.bg_color = Color(accent.r * 0.22, accent.g * 0.22, accent.b * 0.22, 1.0)
-	btn_h.border_color = Color(accent.r, accent.g, accent.b, 1.0)
-	btn.add_theme_stylebox_override("normal",   btn_n)
-	btn.add_theme_stylebox_override("hover",    btn_h)
-	btn.add_theme_stylebox_override("pressed",  btn_n)
-	btn.add_theme_stylebox_override("focus",    btn_n)
-	btn.add_theme_stylebox_override("disabled", btn_n)
+	_skin_shop_button(btn)
 
 	var pack_id: String = pack["id"]
 	btn.pressed.connect(func() -> void: _on_buy(pack_id))

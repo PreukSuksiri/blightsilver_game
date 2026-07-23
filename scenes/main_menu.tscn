@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/decor_game_title_text.png" id="4"]
 [ext_resource type="Shader" path="res://assets/shaders/title_glow.gdshader" id="5"]
 [ext_resource type="Shader" path="res://assets/shaders/silver_gradient.gdshader" id="7"]
-[ext_resource type="FontFile" path="res://assets/fonts/Chivo-VariableFont_wght.ttf" id="9"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_setting_2.png" id="10"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_exit.png" id="11"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_mailbox.png" id="12"]
@@ -128,7 +127,6 @@ offset_right = 190.0
 offset_bottom = 494.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -147,7 +145,6 @@ offset_right = 190.0
 offset_bottom = 420.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -167,7 +164,6 @@ offset_right = 190.0
 offset_bottom = 568.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -187,7 +183,6 @@ offset_right = 190.0
 offset_bottom = 642.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -207,7 +202,6 @@ offset_right = 190.0
 offset_bottom = 716.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -227,7 +221,6 @@ offset_right = 190.0
 offset_bottom = 790.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -248,7 +241,6 @@ offset_right = 190.0
 offset_bottom = 814.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")
@@ -267,7 +259,6 @@ offset_right = 190.0
 offset_bottom = 888.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
-theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("SBF_btn_n")
 theme_override_styles/pressed = SubResource("SBF_btn_p")

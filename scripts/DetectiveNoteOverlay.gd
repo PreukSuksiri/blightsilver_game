@@ -264,7 +264,28 @@ func _make_done_button() -> Button:
 	return btn
 
 
-## Flat fill + colored border for detective-note chrome (tabs / Done / Close).
+func _refresh_toggle_btn_labels(btns: Dictionary, active_key: String) -> void:
+	for k: String in btns:
+		var btn: Button = btns[k] as Button
+		if btn == null:
+			continue
+		var on: bool = (k == active_key)
+		btn.add_theme_color_override(
+			"font_color",
+			Color(1.0, 0.96, 0.86) if on else Color(0.90, 0.84, 0.72)
+		)
+		# Selected tabs use the warmer selected fill.
+		if on:
+			_apply_note_button_skin(
+				btn, BTN_FILL_SELECTED, BTN_FILL_HOVER, BTN_FILL_SELECTED,
+				BTN_BORDER_SELECTED, BTN_BORDER_SELECTED, 2)
+		else:
+			_apply_note_button_skin(
+				btn, BTN_FILL, BTN_FILL_HOVER, BTN_FILL_SELECTED,
+				BTN_BORDER, BTN_BORDER_SELECTED, 2)
+
+
+## Flat warm fill + gold border for detective-note chrome (tabs / Done / Close).
 func _apply_note_button_skin(
 		btn: Button,
 		fill: Color,
@@ -273,6 +294,8 @@ func _apply_note_button_skin(
 		border: Color,
 		pressed_border: Color,
 		border_w: int = 2) -> void:
+	if btn == null:
+		return
 	var normal := _note_button_stylebox(fill, border, border_w)
 	var hover := _note_button_stylebox(hover_fill, border.lightened(0.12), border_w)
 	var pressed := _note_button_stylebox(pressed_fill, pressed_border, border_w + 1)
@@ -631,6 +654,7 @@ func _build_ui() -> void:
 		btn.pressed.connect(_switch_clue_tab.bind(kind))
 		tab_bar.add_child(btn)
 		_clue_tab_buttons[kind] = btn
+	_refresh_toggle_btn_labels(_clue_tab_buttons, _clue_kind)
 
 	var clue_scroll := ScrollContainer.new()
 	clue_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -749,6 +773,14 @@ func _refresh_chapter_list() -> void:
 		btn.toggle_mode = true
 		btn.button_pressed = (cid == _selected_chapter)
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		btn.add_theme_color_override("font_hover_color", Color(0.98, 0.94, 0.84))
+		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.96, 0.86))
+		_apply_note_button_skin(
+			btn, BTN_FILL, BTN_FILL_HOVER, BTN_FILL_SELECTED, BTN_BORDER, BTN_BORDER_SELECTED, 2)
+		btn.add_theme_color_override(
+			"font_color",
+			Color(1.0, 0.96, 0.86) if cid == _selected_chapter else Color(0.90, 0.84, 0.72)
+		)
 		btn.pressed.connect(_select_chapter.bind(cid))
 		_chapter_vbox.add_child(btn)
 
@@ -760,7 +792,21 @@ func _select_chapter(chapter_id: String) -> void:
 	if _all_chapters_mode:
 		for btn: Node in _chapter_vbox.get_children():
 			if btn is Button:
-				(btn as Button).button_pressed = str(btn.get_meta("chapter_id", "")) == chapter_id
+				var ch_btn: Button = btn as Button
+				var on: bool = str(ch_btn.get_meta("chapter_id", "")) == chapter_id
+				ch_btn.button_pressed = on
+				if on:
+					_apply_note_button_skin(
+						ch_btn, BTN_FILL_SELECTED, BTN_FILL_HOVER, BTN_FILL_SELECTED,
+						BTN_BORDER_SELECTED, BTN_BORDER_SELECTED, 2)
+				else:
+					_apply_note_button_skin(
+						ch_btn, BTN_FILL, BTN_FILL_HOVER, BTN_FILL_SELECTED,
+						BTN_BORDER, BTN_BORDER_SELECTED, 2)
+				ch_btn.add_theme_color_override(
+					"font_color",
+					Color(1.0, 0.96, 0.86) if on else Color(0.90, 0.84, 0.72)
+				)
 	_refresh_topic_list()
 	var unlocked: Array = DetectiveNoteManager.get_unlocked_topics(chapter_id)
 	if not keep_topic.is_empty() and unlocked.has(keep_topic):
@@ -783,6 +829,10 @@ func _refresh_topic_list() -> void:
 		btn.toggle_mode = true
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		btn.add_theme_color_override("font_hover_color", Color(0.98, 0.94, 0.84))
+		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.96, 0.86))
+		_apply_note_button_skin(
+			btn, BTN_FILL, BTN_FILL_HOVER, BTN_FILL_SELECTED, BTN_BORDER, BTN_BORDER_SELECTED, 2)
 		btn.pressed.connect(_select_topic.bind(tid))
 		_topic_vbox.add_child(btn)
 
@@ -793,7 +843,20 @@ func _select_topic(topic_id: String) -> void:
 	for i: int in range(_topic_vbox.get_child_count()):
 		var btn := _topic_vbox.get_child(i) as Button
 		if btn != null:
-			btn.button_pressed = (i < topics.size() and str(topics[i]) == topic_id)
+			var on: bool = (i < topics.size() and str(topics[i]) == topic_id)
+			btn.button_pressed = on
+			if on:
+				_apply_note_button_skin(
+					btn, BTN_FILL_SELECTED, BTN_FILL_HOVER, BTN_FILL_SELECTED,
+					BTN_BORDER_SELECTED, BTN_BORDER_SELECTED, 2)
+			else:
+				_apply_note_button_skin(
+					btn, BTN_FILL, BTN_FILL_HOVER, BTN_FILL_SELECTED,
+					BTN_BORDER, BTN_BORDER_SELECTED, 2)
+			btn.add_theme_color_override(
+				"font_color",
+				Color(1.0, 0.96, 0.86) if on else Color(0.90, 0.84, 0.72)
+			)
 	_refresh_map()
 
 
@@ -891,6 +954,7 @@ func _switch_clue_tab(kind: String) -> void:
 	_clue_kind = kind
 	for k: String in KIND_TABS:
 		(_clue_tab_buttons[k] as Button).button_pressed = (k == kind)
+	_refresh_toggle_btn_labels(_clue_tab_buttons, kind)
 	_clear_children(_clue_grid)
 	for cid_v: Variant in DetectiveNoteManager.get_discovered_clues_by_kind(_selected_chapter, kind):
 		_clue_grid.add_child(_make_clue_tile(str(cid_v)))

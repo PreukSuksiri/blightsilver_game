@@ -60,7 +60,6 @@ var _count_filter_btns: Dictionary = {}
 # Threaded texture loading
 var _pending_tex: Dictionary = {}   # tex_path -> TextureRect
 var _tex_start_queue: Array = []
-var _badge_font: FontVariation = null  # shared badge font — created once in _ready
 var _build_gen: int = 0
 var _loading_label: Label = null
 
@@ -77,9 +76,6 @@ var _adv_ability:   LineEdit
 var _header_trailing: HBoxContainer = null
 
 func _ready() -> void:
-	_badge_font = FontVariation.new()
-	_badge_font.base_font = preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
-	_badge_font.variation_opentype = {"wght": 1200}
 	Collection.collection_changed.connect(_on_collection_changed)
 	if not SaveManager.demo_mode_changed.is_connected(_on_demo_mode_changed):
 		SaveManager.demo_mode_changed.connect(_on_demo_mode_changed)
@@ -132,6 +128,56 @@ func _begin_gallery_build() -> void:
 # ─────────────────────────────────────────────────────────────
 # Filter bar
 # ─────────────────────────────────────────────────────────────
+
+## Magitech blue gradient fill + border (same chrome as dialog buttons).
+func _skin_gallery_button(btn: Button, wire_sfx: bool = true) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", Color(0.88, 0.95, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+
+
+## Flat tab chrome for All / Units / Traps / Tech / Union (no magitech gradient).
+func _skin_filter_tab(btn: Button) -> void:
+	if btn == null:
+		return
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color(0.04, 0.06, 0.14, 1)
+	normal.set_border_width_all(1)
+	normal.border_color = Color(0.38, 0.65, 1.0, 0.3)
+	normal.set_corner_radius_all(4)
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color(0.07, 0.10, 0.22, 1)
+	hover.border_color = Color(0.38, 0.65, 1.0, 0.7)
+	var pressed := StyleBoxFlat.new()
+	pressed.bg_color = Color(0.08, 0.14, 0.32, 1)
+	pressed.set_border_width_all(1)
+	pressed.border_width_left = 2
+	pressed.border_color = Color(0.38, 0.65, 1.0, 0.9)
+	pressed.set_corner_radius_all(4)
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	btn.add_theme_stylebox_override("focus", normal)
+	btn.add_theme_color_override("font_color", Color(0.55, 0.72, 1.0, 0.9))
+	btn.add_theme_color_override("font_hover_color", Color(0.78, 0.90, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(1.0, 1.0, 1.0, 1.0))
+
+
+func _refresh_toggle_btn_labels(btns: Dictionary, active_key: String) -> void:
+	for k: String in btns:
+		var btn: Button = btns[k] as Button
+		if btn == null:
+			continue
+		var on: bool = (k == active_key)
+		btn.add_theme_color_override(
+			"font_color",
+			Color(1.0, 1.0, 1.0, 1.0) if on else Color(0.55, 0.72, 1.0, 0.9)
+		)
+
+
 func _build_filter_bar() -> void:
 	var defs: Array = [
 		["all",       "ALL"],
@@ -147,10 +193,12 @@ func _build_filter_bar() -> void:
 		btn.button_pressed = (d[0] == "all")
 		btn.custom_minimum_size = Vector2(110, 32)
 		btn.add_theme_font_size_override("font_size", 13)
+		_skin_filter_tab(btn)
 		var fid: String = d[0]
 		btn.pressed.connect(func() -> void: _set_filter(fid))
 		filter_bar.add_child(btn)
 		_filter_btns[d[0]] = btn
+	_refresh_toggle_btn_labels(_filter_btns, _active_filter)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -170,6 +218,7 @@ func _build_filter_bar() -> void:
 	search.placeholder_text = "Search by name..."
 	search.custom_minimum_size = Vector2(200, 32)
 	search.add_theme_font_size_override("font_size", 13)
+	GameDialog.style_line_edit(search)
 	search.text_changed.connect(func(t: String) -> void:
 		_search_text = t
 		_apply_filter())
@@ -194,14 +243,17 @@ func _build_count_filter_row() -> void:
 		btn.button_pressed = (d[0] == "all")
 		btn.add_theme_font_size_override("font_size", 12)
 		btn.custom_minimum_size = Vector2(80, 26)
+		_skin_gallery_button(btn)
 		var cid: String = d[0]
 		btn.pressed.connect(func() -> void:
 			_filter_count = cid
 			for k: String in _count_filter_btns:
 				_count_filter_btns[k].button_pressed = (k == cid)
+			_refresh_toggle_btn_labels(_count_filter_btns, cid)
 			_apply_filter())
 		_count_filter_btns[d[0]] = btn
 		row.add_child(btn)
+	_refresh_toggle_btn_labels(_count_filter_btns, _filter_count)
 
 	gallery_vbox.add_child(row)
 	gallery_vbox.move_child(row, filter_bar.get_index() + 1)
@@ -210,6 +262,7 @@ func _set_filter(fid: String) -> void:
 	_active_filter = fid
 	for k: String in _filter_btns:
 		_filter_btns[k].button_pressed = (k == fid)
+	_refresh_toggle_btn_labels(_filter_btns, fid)
 	_apply_filter()
 
 func _entry_include_in_demo(kind: String, data: Variant) -> bool:
@@ -422,7 +475,7 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 		var count: int = Collection.get_card_count(card_name)
 		var badge := Label.new()
 		badge.text = "×%d" % count
-		badge.add_theme_font_override("font", _badge_font)
+		FontManager.tag_primary(badge, "font", 700)
 		badge.add_theme_font_size_override("font_size", 12)
 		badge.add_theme_color_override("font_color",
 			Color(1.0, 1.0, 1.0, 1.0) if count > 0 else Color(1.0, 1.0, 1.0, 1.0))
@@ -605,6 +658,7 @@ func _build_adv_gallery_filters() -> void:
 
 	var toggle_btn := Button.new()
 	toggle_btn.toggle_mode = true
+	toggle_btn.flat = true
 	toggle_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	toggle_btn.add_theme_font_size_override("font_size", 13)
 	toggle_btn.add_theme_color_override("font_color", Color(0.45, 0.72, 1.0))
@@ -639,6 +693,7 @@ func _build_adv_gallery_filters() -> void:
 	_adv_affinity_btn.add_item("Any")
 	for aff: String in ["Divine", "Chaos", "Nature", "Arcane", "Cosmic", "Bio", "Anima"]:
 		_adv_affinity_btn.add_item(aff)
+	GameDialog.style_option_button(_adv_affinity_btn)
 	aff_row.add_child(_adv_affinity_btn)
 	body.add_child(aff_row)
 
@@ -660,6 +715,7 @@ func _build_adv_gallery_filters() -> void:
 	_adv_ability.placeholder_text = "contains..."
 	_adv_ability.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_adv_ability.add_theme_font_size_override("font_size", 13)
+	GameDialog.style_line_edit(_adv_ability)
 	_adv_ability.text_changed.connect(func(t: String) -> void: _filter_ability = t)
 	abil_row.add_child(_adv_ability)
 	body.add_child(abil_row)
@@ -670,12 +726,13 @@ func _build_adv_gallery_filters() -> void:
 	apply_btn.text = "Apply Filter"
 	apply_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	apply_btn.add_theme_font_size_override("font_size", 13)
-	apply_btn.add_theme_color_override("font_color", Color(0.3, 1.0, 0.5))
+	_skin_gallery_button(apply_btn)
 	apply_btn.pressed.connect(_apply_adv_gallery)
 	btn_row.add_child(apply_btn)
 	var clear_btn := Button.new()
 	clear_btn.text = "Clear"
 	clear_btn.add_theme_font_size_override("font_size", 13)
+	_skin_gallery_button(clear_btn)
 	clear_btn.pressed.connect(_clear_adv_gallery)
 	btn_row.add_child(clear_btn)
 	body.add_child(btn_row)
@@ -696,10 +753,12 @@ func _gallery_range_row(parent: VBoxContainer, lbl_text: String,
 	var s_min := SpinBox.new()
 	s_min.min_value = spin_min;  s_min.max_value = spin_max;  s_min.value = spin_min
 	s_min.size_flags_horizontal = Control.SIZE_EXPAND_FILL;  s_min.suffix = "min"
+	GameDialog.style_spin_box(s_min)
 	row.add_child(s_min)
 	var s_max := SpinBox.new()
 	s_max.min_value = spin_min;  s_max.max_value = spin_max;  s_max.value = default_max
 	s_max.size_flags_horizontal = Control.SIZE_EXPAND_FILL;  s_max.suffix = "max"
+	GameDialog.style_spin_box(s_max)
 	row.add_child(s_max)
 	parent.add_child(row)
 	return [s_min, s_max]
@@ -740,9 +799,9 @@ func _input(event: InputEvent) -> void:
 func _add_scrap_all_button() -> void:
 	var btn := Button.new()
 	btn.add_theme_font_size_override("font_size", 12)
-	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.20))
 	btn.tooltip_text = "Scrap all duplicate copies, keeping 1 of each card (100 credits per scrapped copy)"
-	ChromeIcon.apply_button(btn, "scrap", false, "  SCRAP ALL DUPES", Color(1.0, 0.55, 0.20), 16)
+	_skin_gallery_button(btn)
+	ChromeIcon.apply_button(btn, "scrap", false, "  SCRAP ALL DUPES", ChromeIcon.COLOR_ON_DARK, 16)
 	btn.pressed.connect(_confirm_scrap_all)
 	filter_bar.add_child(btn)
 
