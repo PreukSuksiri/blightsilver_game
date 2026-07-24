@@ -632,14 +632,29 @@ func _run_async(
 	tin.tween_property(self, "modulate:a", 1.0, 0.25).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	await tin.finished
 
-	# Wait for any pending ability-choice overlays (pause_for_choice set _paused = true)
-	while _paused:
-		_skip_requested = false  # don't let a stray click skip while choice is active
+	# Wait for mid-resolve ability prompts (sacrifice / crystal pay). Re-check after each
+	# stage — pause can be requested after fade-in completes.
+	await _await_unpaused()
+
+	# Skippable 2-second pause (also yields to mid-resolve pause requests)
+	_skippable = true
+	var start_ms := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - start_ms < 2000 and not _skip_requested:
+		if _paused:
+			_skippable = false
+			_skip_requested = false
+			await _await_unpaused()
+			_skippable = true
+			start_ms = Time.get_ticks_msec()  # restart hold after unpause
+			continue
 		await get_tree().process_frame
+	_skippable = false
+	_skip_requested = false
+
+	await _await_unpaused()
 
 	# _live_result is now final — pre-build triangle fragments only for the card(s) that
-	# will actually be destroyed.  This is synchronous and completes before any animation,
-	# using the ~2-second display pause as free build time.
+	# will actually be destroyed.
 	var _att_pre: Control = _left_ctrl  if attacker_player == 0 else _right_ctrl
 	var _def_pre: Control = _right_ctrl if attacker_player == 0 else _left_ctrl
 	match _get_scenario(defender, _live_result):
@@ -657,14 +672,6 @@ func _run_async(
 		"3E":
 			if not _live_result.destruction_blocked_attacker:
 				_prebuild_tri_polys(_att_pre)
-
-	# Skippable 2-second pause
-	_skippable = true
-	var start_ms := Time.get_ticks_msec()
-	while Time.get_ticks_msec() - start_ms < 2000 and not _skip_requested:
-		await get_tree().process_frame
-	_skippable = false
-	_skip_requested = false
 
 	# Determine attacker/defender controls and bounce direction
 	var att_ctrl: Control = _left_ctrl  if attacker_player == 0 else _right_ctrl
@@ -703,6 +710,11 @@ func _run_async(
 	await tout.finished
 
 	queue_free()
+
+func _await_unpaused() -> void:
+	while _paused:
+		_skip_requested = false  # don't let a stray click skip while choice is active
+		await get_tree().process_frame
 
 func _get_scenario(defender: GameState.CardInstance, result: BattleResolver.BattleResult) -> String:
 	# Check special_trigger FIRST — defender.card_type may read as "dead_end" if the

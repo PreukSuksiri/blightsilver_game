@@ -27,7 +27,7 @@ func _ready() -> void:
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
 	GameDialog.attach_panel_fx(panel)
-	panel.custom_minimum_size.x = 400.0
+	panel.custom_minimum_size.x = 480.0
 	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
@@ -84,7 +84,7 @@ func _ready() -> void:
 		casual_row.add_child(casual_lbl)
 		var casual_chk := CheckBox.new()
 		casual_chk.button_pressed = SaveManager.is_casual_mode()
-		casual_chk.text = "Enemy starts with 3000 crystals"
+		casual_chk.text = "Non-boss enemy starts with 3000 crystals"
 		casual_chk.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		casual_chk.toggled.connect(func(on: bool) -> void: SaveManager.set_casual_mode(on))
 		casual_row.add_child(casual_chk)

@@ -151,6 +151,7 @@ var _f_player1_name: LineEdit = null
 var _f_player2_name: LineEdit = null
 var _f_ask_player_name_cb: CheckBox = null
 var _f_ask_player_name_opt: OptionButton = null
+var _f_force_starting_crystals: CheckBox = null
 var _f_start_crystals_p1: SpinBox = null
 var _f_start_crystals_p2: SpinBox = null
 var _f_portrait_p1: LineEdit = null
@@ -1031,12 +1032,15 @@ func _build_fields() -> void:
 	_f_ask_player_name_opt = _row_opt(v, "Ask for", ["Player 1", "Player 2", "Both"],
 		"Which name fields appear in the popup")
 	_sync_ask_player_name_fields()
+	_f_force_starting_crystals = _row_cb(v, "Forced Starting Crystals",
+		"When on, P1/P2 crystal amounts are always saved (even 5000) and override casual mode")
 	_f_start_crystals_p1 = _row_sb(v, "P1 Starting Crystals", 0.0, 99999.0, 100.0,
-		"default %d — only saved when changed" % GameState.STARTING_CRYSTALS)
+		"default %d — saved when Forced Starting Crystals is on" % GameState.STARTING_CRYSTALS)
 	_f_start_crystals_p1.value = GameState.STARTING_CRYSTALS
 	_f_start_crystals_p2 = _row_sb(v, "P2 Starting Crystals", 0.0, 99999.0, 100.0,
-		"default %d — only saved when changed" % GameState.STARTING_CRYSTALS)
+		"default %d — saved when Forced Starting Crystals is on" % GameState.STARTING_CRYSTALS)
 	_f_start_crystals_p2.value = GameState.STARTING_CRYSTALS
+	_sync_force_starting_crystals_fields()
 	_f_portrait_p1 = _row_le(v, "Portrait P1", "res://assets/textures/ui/portraits/...")
 	_add_browse(_f_portrait_p1, PackedStringArray(["*.png,*.jpg,*.webp;Image"]), "res://assets/textures/ui/portraits/")
 	_f_portrait_p1_offset_x = _row_sb(v, "P1 Portrait Offset X", -800.0, 800.0, 1.0, "pixels — positive = move right (toward center)")
@@ -1620,6 +1624,10 @@ func _connect_static_signals() -> void:
 			ch.call())
 	if _f_ask_player_name_opt != null:
 		_f_ask_player_name_opt.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_force_starting_crystals != null:
+		_f_force_starting_crystals.toggled.connect(func(_on: bool) -> void:
+			_sync_force_starting_crystals_fields()
+			ch.call())
 	_f_start_crystals_p1.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_start_crystals_p2.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_portrait_p1.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -2385,6 +2393,15 @@ func _sync_ask_player_name_fields() -> void:
 	if _f_ask_player_name_opt == null or _f_ask_player_name_cb == null:
 		return
 	_f_ask_player_name_opt.disabled = not _f_ask_player_name_cb.button_pressed
+
+func _sync_force_starting_crystals_fields() -> void:
+	if _f_force_starting_crystals == null:
+		return
+	var on: bool = _f_force_starting_crystals.button_pressed
+	if _f_start_crystals_p1 != null:
+		_f_start_crystals_p1.editable = on
+	if _f_start_crystals_p2 != null:
+		_f_start_crystals_p2.editable = on
 
 func _browse(target: LineEdit, filters: PackedStringArray, start_dir: String) -> void:
 	_browse_target = target
@@ -4271,8 +4288,14 @@ func _populate_fields() -> void:
 		var ask_idx: int = ASK_PLAYER_NAME_KEYS.find(ask_key)
 		_f_ask_player_name_opt.selected = ask_idx if ask_idx >= 0 else 0
 	_sync_ask_player_name_fields()
+	# Backward compat: any beat that already defined crystal amounts counts as forced.
+	var force_crystals: bool = bool(b.get("force_starting_crystals", false)) \
+			or b.has("starting_crystals_p1") or b.has("starting_crystals_p2")
+	if _f_force_starting_crystals != null:
+		_f_force_starting_crystals.button_pressed = force_crystals
 	_f_start_crystals_p1.value = float(b.get("starting_crystals_p1", GameState.STARTING_CRYSTALS))
 	_f_start_crystals_p2.value = float(b.get("starting_crystals_p2", GameState.STARTING_CRYSTALS))
+	_sync_force_starting_crystals_fields()
 	_f_portrait_p1.text = str(b.get("portrait_p1", ""))
 	_f_portrait_p1_offset_x.value = float(b.get("portrait_p1_offset_x", 0.0))
 	_f_portrait_p1_offset_y.value = float(b.get("portrait_p1_offset_y", 0.0))
@@ -4633,12 +4656,10 @@ func _collect_beat() -> Dictionary:
 
 	if _f_start_battle.button_pressed:
 		b["start_battle"] = true
-		var sc1: int = int(_f_start_crystals_p1.value)
-		if sc1 != GameState.STARTING_CRYSTALS:
-			b["starting_crystals_p1"] = sc1
-		var sc2: int = int(_f_start_crystals_p2.value)
-		if sc2 != GameState.STARTING_CRYSTALS:
-			b["starting_crystals_p2"] = sc2
+		if _f_force_starting_crystals != null and _f_force_starting_crystals.button_pressed:
+			b["force_starting_crystals"] = true
+			b["starting_crystals_p1"] = int(_f_start_crystals_p1.value)
+			b["starting_crystals_p2"] = int(_f_start_crystals_p2.value)
 	if _f_call_tutorial != null and _f_call_tutorial.button_pressed \
 			and _f_tutorial_opt != null and _f_tutorial_opt.selected > 0:
 		var tut_sel: int = _f_tutorial_opt.selected

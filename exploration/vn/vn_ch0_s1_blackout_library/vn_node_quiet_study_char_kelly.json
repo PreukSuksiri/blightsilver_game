@@ -507,93 +507,93 @@
 		"ai_forced_cells": [
 			{
 				"card_name": "Pit Lord",
-				"col": 2.0,
-				"row": 4.0
+				"col": 2,
+				"row": 4
 			},
 			{
 				"card_name": "Death Knight",
-				"col": 2.0,
-				"row": 3.0
+				"col": 2,
+				"row": 3
 			},
 			{
 				"card_name": "Ancient Lich",
-				"col": 1.0,
-				"row": 3.0
+				"col": 1,
+				"row": 3
 			},
 			{
 				"card_name": "Vampire Servant",
-				"col": 2.0,
-				"row": 0.0
+				"col": 2,
+				"row": 0
 			},
 			{
 				"card_name": "Succubus",
-				"col": 0.0,
-				"row": 2.0
+				"col": 0,
+				"row": 2
 			},
 			{
 				"card_name": "Vampire Duchess",
-				"col": 2.0,
-				"row": 1.0
+				"col": 2,
+				"row": 1
 			},
 			{
 				"card_name": "Void Stalker",
-				"col": 3.0,
-				"row": 3.0
+				"col": 3,
+				"row": 3
 			},
 			{
 				"card_name": "Claw Mutant",
-				"col": 0.0,
-				"row": 0.0
+				"col": 0,
+				"row": 0
 			},
 			{
 				"card_name": "Bladeshifter",
-				"col": 0.0,
-				"row": 4.0
+				"col": 0,
+				"row": 4
 			},
 			{
 				"card_name": "Leech Man",
-				"col": 1.0,
-				"row": 1.0
+				"col": 1,
+				"row": 1
 			},
 			{
 				"card_name": "Lab Crawler",
-				"col": 1.0,
-				"row": 2.0
+				"col": 1,
+				"row": 2
 			},
 			{
 				"card_name": "Red Card",
-				"col": 4.0,
-				"row": 2.0
+				"col": 4,
+				"row": 2
 			},
 			{
 				"card_name": "Cursed Reflection",
-				"col": 2.0,
-				"row": 2.0
+				"col": 2,
+				"row": 2
 			},
 			{
 				"card_name": "Mana Drain",
-				"col": 3.0,
-				"row": 2.0
+				"col": 3,
+				"row": 2
 			},
 			{
 				"card_name": "Acid Trap Hole",
-				"col": 3.0,
-				"row": 1.0
+				"col": 3,
+				"row": 1
 			},
 			{
 				"card_name": "Explosive Barrels",
-				"col": 4.0,
-				"row": 0.0
+				"col": 4,
+				"row": 0
 			},
 			{
 				"card_name": "Poltergeist",
-				"col": 4.0,
-				"row": 1.0
+				"col": 4,
+				"row": 1
 			},
 			{
 				"card_name": "Decoy Puppet",
-				"col": 4.0,
-				"row": 4.0
+				"col": 4,
+				"row": 4
 			}
 		],
 		"ai_forced_tech": [
@@ -609,7 +609,7 @@
 		"battle_bgm_start_sec": 0.0,
 		"battle_reward": [
 			{
-				"amount": 50000.0,
+				"amount": 50000,
 				"type": "credits"
 			},
 			{
@@ -651,13 +651,16 @@
 				"Explosive Barrels"
 			]
 		},
+		"force_starting_crystals": true,
 		"on_lose": "game_over",
 		"on_win": "res://campaign/scenes/ch1_s1_post_DEMO.json",
 		"player1_name": "Nexus Crowmont",
 		"player2_name": "Mayu Kokawa",
 		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_possessed_mayu.png",
-		"start_battle": true
+		"start_battle": true,
+		"starting_crystals_p1": 5000,
+		"starting_crystals_p2": 5000
 	},
 	{
 		"beat_name": "end_beat",

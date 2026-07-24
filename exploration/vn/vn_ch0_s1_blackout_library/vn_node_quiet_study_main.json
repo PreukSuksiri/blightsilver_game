@@ -189,7 +189,8 @@
 		],
 		"hide_dialog": true,
 		"linger_characters": true,
-		"suppress_dialog_ui": true
+		"suppress_dialog_ui": true,
+		"wait": 0.2
 	},
 	{
 		"exploration_actions": [
@@ -201,7 +202,8 @@
 		],
 		"hide_dialog": true,
 		"linger_characters": true,
-		"suppress_dialog_ui": true
+		"suppress_dialog_ui": true,
+		"wait": 0.2
 	},
 	{
 		"exploration_actions": [
@@ -213,7 +215,8 @@
 		],
 		"hide_dialog": true,
 		"linger_characters": true,
-		"suppress_dialog_ui": true
+		"suppress_dialog_ui": true,
+		"wait": 0.2
 	},
 	{
 		"exploration_actions": [
@@ -225,7 +228,8 @@
 		],
 		"hide_dialog": true,
 		"linger_characters": true,
-		"suppress_dialog_ui": true
+		"suppress_dialog_ui": true,
+		"wait": 0.2
 	},
 	{
 		"characters": [

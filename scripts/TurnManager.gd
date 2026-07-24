@@ -38,9 +38,13 @@ func _wait_crystal_animation() -> void:
 ## True after complete_battle_preview() until consumed by _await_battle_preview_done().
 ## Prevents hanging when the overlay finishes during a long mid-resolve await (e.g. sacrifice).
 var _battle_preview_completed: bool = false
+## SACRIFICE_FOR_CARD_TYPE destroy deferred until after Reckoning overlay dismisses.
+## {owner: int, row: int, col: int, label: String, saved: String}
+var _pending_sacrifice_destroy: Dictionary = {}
 
 func _begin_battle_preview(attacker_player: int, attacker, defender, result) -> void:
 	_battle_preview_completed = false
+	_pending_sacrifice_destroy.clear()
 	emit_signal("battle_preview_needed", attacker_player, attacker, defender, result)
 
 func complete_battle_preview() -> void:
@@ -54,6 +58,32 @@ func _await_battle_preview_done() -> void:
 
 func _pause_battle_overlay() -> void:
 	emit_signal("battle_overlay_pause_requested")
+
+func _finalize_and_await_battle_preview(result: BattleResolver.BattleResult) -> void:
+	emit_signal("battle_result_finalized", result)
+	await _await_battle_preview_done()
+
+func _apply_pending_sacrifice_destroy() -> void:
+	if _pending_sacrifice_destroy.is_empty():
+		return
+	var pending: Dictionary = _pending_sacrifice_destroy.duplicate()
+	_pending_sacrifice_destroy.clear()
+	var owner: int = int(pending.get("owner", -1))
+	var row: int = int(pending.get("row", -1))
+	var col: int = int(pending.get("col", -1))
+	var label: String = str(pending.get("label", ""))
+	var saved: String = str(pending.get("saved", ""))
+	if owner < 0 or row < 0 or col < 0:
+		return
+	var sac_cand: GameState.CardInstance = GameState.get_card(owner, row, col)
+	if sac_cand.card_type != "character" or not _card_has_sacrifice_for_card_type(sac_cand):
+		return
+	if not sac_cand.face_up:
+		GameState.reveal_card(owner, row, col)
+	GameState.destroy_card(owner, row, col)
+	await _wait_crystal_animation()
+	if not label.is_empty() and not saved.is_empty():
+		GameState.post_message("%s sacrificed itself to save %s!" % [label, saved])
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -878,19 +908,16 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 
 	await _maybe_resolve_sacrifice_for_card_type(
 		result, player, opponent, attacker_pos, target_pos, attacker, defender)
-	if _battle_aborted():
-		return
 
 	# Show coin flip visual for any flips that happened inside BattleResolver
 	if not result.coin_flip_results.is_empty() and _pre_shown_reckoning_coins.is_empty():
 		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
 		await coin_flip_visual_done
-		if _battle_aborted():
-			return
 
-	# Signal the overlay to update its animation to match the final result, then resume
-	emit_signal("battle_result_finalized", result)
-	await _await_battle_preview_done()
+	# Always resume/finalize Reckoning before abort checks — sacrifice pauses the overlay,
+	# and an early return here would leave it stuck on screen forever.
+	await _finalize_and_await_battle_preview(result)
+	await _apply_pending_sacrifice_destroy()
 	if _battle_aborted():
 		return
 
@@ -1586,13 +1613,15 @@ func _maybe_resolve_sacrifice_for_card_type(
 					result.attacker_destroyed = false
 					result.attacker_crystal_loss = 0
 					result.destruction_blocked_attacker = false
-				sac_cand = GameState.get_card(field_owner, _sac_r, _sac_c)
-				if sac_cand.card_type == "character" and _card_has_sacrifice_for_card_type(sac_cand):
-					if not sac_cand.face_up:
-						GameState.reveal_card(field_owner, _sac_r, _sac_c)
-					GameState.destroy_card(field_owner, _sac_r, _sac_c)
-					await _wait_crystal_animation()
-					GameState.post_message("%s sacrificed itself to save %s!" % [sac_label, dying_name])
+				# Defer destroy until after Reckoning dismisses — destroying mid-pause
+				# races crystal GAME_OVER / board VFX and can leave the overlay stuck.
+				_pending_sacrifice_destroy = {
+					"owner": field_owner,
+					"row": _sac_r,
+					"col": _sac_c,
+					"label": sac_label,
+					"saved": dying_name,
+				}
 			return
 
 
