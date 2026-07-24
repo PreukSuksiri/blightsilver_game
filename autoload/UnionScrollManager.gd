@@ -68,8 +68,14 @@ func use_scroll(parent: Node, consume_inventory: bool = false) -> Dictionary:
 		return {"success": true, "error": "", "union_name": "", "compensated": true}
 
 	SaveManager.unlock_union(union_name)
-	UnionScrollOpeningOverlay.open(parent, union_name)
-	return {"success": true, "error": "", "union_name": union_name, "compensated": false}
+	var overlay: UnionScrollOpeningOverlay = UnionScrollOpeningOverlay.open(parent, union_name)
+	return {
+		"success": true,
+		"error": "",
+		"union_name": union_name,
+		"compensated": false,
+		"overlay": overlay,
+	}
 
 func purchase_from_shop(parent: Node) -> Dictionary:
 	if not is_scroll_purchasable():

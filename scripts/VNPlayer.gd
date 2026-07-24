@@ -1725,8 +1725,10 @@ func _show_beat() -> void:
 			0.0, total, total)
 
 	# ── Characters ──
+	# suppress_dialog_ui clears illustrations even when linger_characters is set.
+	var suppress_dialog_ui: bool = bool(beat.get("suppress_dialog_ui", false))
 	# Skip entirely when linger_characters is set — keep previous beat's sprites.
-	if not beat.get("linger_characters", false):
+	if suppress_dialog_ui or not beat.get("linger_characters", false):
 		for i in SLOT_NAMES.size():
 			var sn: String = SLOT_NAMES[i]
 			_char_slots[sn].texture  = null
@@ -1734,7 +1736,7 @@ func _show_beat() -> void:
 			_char_slots[sn].size     = Vector2(CHAR_W, CHAR_H)
 			_char_slots[sn].position = Vector2(SLOT_X[i], CHAR_Y)
 			_char_slots[sn].modulate = Color(1.0, 1.0, 1.0, 0.0)
-	if not beat.get("linger_characters", false) and beat.has("characters"):
+	if not suppress_dialog_ui and not beat.get("linger_characters", false) and beat.has("characters"):
 		var char_data: Array = beat["characters"]
 		var active_slots: Array = []
 		for ci in char_data:
@@ -1778,7 +1780,7 @@ func _show_beat() -> void:
 
 	# ── Speaker ──
 	var speaker: String = _loc_display(beat.get("speaker", ""))
-	if speaker != "":
+	if not suppress_dialog_ui and speaker != "":
 		_speaker_lbl.text      = speaker
 		_speaker_panel.reset_size()
 		var ph: float = _speaker_panel.get_minimum_size().y
@@ -1789,10 +1791,11 @@ func _show_beat() -> void:
 
 	# ── Dialog text ──
 	_dialog_lbl.text = ""
-	_dialog_lbl.append_text(_loc_display(beat.get("text", "")))
+	if not suppress_dialog_ui:
+		_dialog_lbl.append_text(_loc_display(beat.get("text", "")))
 
 	# ── Hide messagebox ──
-	if beat.get("hide_dialog", false):
+	if suppress_dialog_ui or beat.get("hide_dialog", false):
 		_dialog_panel.visible = false
 
 	# ── Music ──

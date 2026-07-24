@@ -8,7 +8,7 @@ const MAX_CHARACTERS: int = 12
 const MIN_TRAPS:      int = 4
 const MAX_TRAPS:      int = 6
 const TECH_COUNT:     int = 3   # exactly 3 tech cards held in hand
-const MAX_FORMATIONS: int = 5
+const MAX_FORMATIONS: int = 4
 
 @export var deck_name:  String = "My Deck"
 @export var characters: Array  = []   # Array of String card names
@@ -136,7 +136,18 @@ func load_from_dict(d: Dictionary) -> void:
 	limited_caps = (caps_raw as Dictionary).duplicate(true) if caps_raw is Dictionary else {}
 	reserved_slot = int(d.get("reserved_slot", 0))
 	gallery_slot = int(d.get("gallery_slot", -1))
+	clamp_formations_to_max()
 	ensure_identity()
+
+
+## Trim excess presets when older saves exceed `MAX_FORMATIONS`.
+func clamp_formations_to_max() -> void:
+	if formations.size() > MAX_FORMATIONS:
+		formations = formations.slice(0, MAX_FORMATIONS)
+	if formations.is_empty():
+		preferred_formation_index = 0
+	else:
+		preferred_formation_index = clampi(preferred_formation_index, 0, formations.size() - 1)
 
 func _formation_has_placements(formation_idx: int) -> bool:
 	if formation_idx < 0 or formation_idx >= formations.size():

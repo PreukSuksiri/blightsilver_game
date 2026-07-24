@@ -1,6 +1,8 @@
 extends Control
 class_name UnionScrollOpeningOverlay
 
+signal reveal_finished
+
 const SCROLL_TEX_PATH: String = "res://assets/textures/inventory/ui_union_scroll.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
 const FULL_CARDS_DIR: String = "res://assets/textures/cards/full_cards/"
@@ -27,7 +29,7 @@ var _pack_root: Control = null
 var _clip_top: Control = null
 var _clip_bot: Control = null
 
-static func open(parent: Node, union_name: String, skippable: bool = true) -> void:
+static func open(parent: Node, union_name: String, skippable: bool = true) -> UnionScrollOpeningOverlay:
 	var overlay := UnionScrollOpeningOverlay.new()
 	overlay._union_name = union_name if union_name != null else ""
 	overlay._skippable = skippable
@@ -36,6 +38,7 @@ static func open(parent: Node, union_name: String, skippable: bool = true) -> vo
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	if parent != null and is_instance_valid(parent):
 		parent.add_child.call_deferred(overlay)
+	return overlay
 
 func _ready() -> void:
 	_compute_sizes()
@@ -201,7 +204,14 @@ func _run() -> void:
 	t9.tween_property(_bg, "color:a", 0.0, 0.40)
 	await t9.finished
 
+	_finish_reveal()
+
+
+func _finish_reveal() -> void:
+	if _anim_done:
+		return
 	_anim_done = true
+	reveal_finished.emit()
 	queue_free()
 
 func _wiggle(ctrl: Control) -> void:

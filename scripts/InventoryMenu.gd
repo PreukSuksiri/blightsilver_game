@@ -100,6 +100,8 @@ func _build_ui() -> void:
 	tab_bar.add_child(_tab_items_btn)
 	tab_bar.add_child(_tab_mail_btn)
 	tab_bar.add_child(_tab_note_btn)
+	# Temporarily hidden — keep tab wired for easy re-enable.
+	_tab_note_btn.visible = false
 
 	root_vbox.add_child(_make_separator())
 

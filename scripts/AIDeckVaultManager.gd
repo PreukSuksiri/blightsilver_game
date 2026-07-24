@@ -8,7 +8,7 @@ const DeckData = preload("res://resources/DeckData.gd")
 const GRID_ROWS := 5
 const GRID_COLS := 5
 const CELL_SIZE := 48
-const MAX_FORMATIONS := 5
+const MAX_FORMATIONS := DeckData.MAX_FORMATIONS
 const MAX_TAGS := 5
 const QUICK_DUEL_LIST_BG := Color(0.12, 0.62, 0.72, 0.38)
 

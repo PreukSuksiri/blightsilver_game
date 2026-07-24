@@ -7,8 +7,15 @@ signal request_new()
 signal decks_changed()
 
 const DeckData = preload("res://resources/DeckData.gd")
-const FACEDOWN := preload("res://assets/textures/cards/frames/facedown_frame.png")
+const FACEDOWN := preload("res://assets/textures/cards/frames/facedown_frame_medium.png")
 const OVERLAY_NAME := &"DeckSwitchGallery"
+const EYES_PATH := "res://assets/textures/profile/eyes/eyes_%s.png"
+## Check order only — display whoever equips this deck (Nex need not be first).
+const EQUIP_EYE_IDS: Array[String] = ["nex", "mayu", "kelly"]
+const EYE_STRIP_SIZE := Vector2(72, 28)
+const _METAL_SHEEN_SHADER: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
+const _SHEEN_IDLE := 2.0
+const _SHEEN_DURATION := 0.42
 
 static var _locked_hatch_tex: Texture2D = null
 
@@ -17,6 +24,7 @@ var _grid: GridContainer = null
 var _dialog_parent: Node = null
 var _drag_ghost: Control = null
 var _drag_ghost_active: bool = false
+var _tile_sheen_tweens: Dictionary = {}  # wrap instance_id -> Tween
 
 
 static func open(parent: Node) -> Node:
@@ -100,6 +108,11 @@ func rebuild() -> void:
 	if _grid == null:
 		return
 	_hide_drag_ghost()
+	for id: Variant in _tile_sheen_tweens.keys():
+		var old: Variant = _tile_sheen_tweens[id]
+		if old is Tween and (old as Tween).is_valid():
+			(old as Tween).kill()
+	_tile_sheen_tweens.clear()
 	for c in _grid.get_children():
 		c.queue_free()
 	for slot in range(SaveManager.MAX_FREE_DECK_SLOTS):
@@ -204,16 +217,27 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 	wrap.clip_contents = true
 	wrap.mouse_filter = Control.MOUSE_FILTER_STOP
 
+	var is_selected: bool = index == SaveManager.active_deck_index
 	var frame := PanelContainer.new()
 	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	frame.add_theme_stylebox_override("panel", _slot_panel_style(Color(0.04, 0.06, 0.13, 0.97)))
+	if is_selected:
+		_skin_selected_deck_frame(frame)
+	else:
+		frame.add_theme_stylebox_override("panel", _slot_panel_style(Color(0.04, 0.06, 0.13, 0.97)))
 	wrap.add_child(frame)
+
+	# Equipped-character eyes (below delete); behind card art (lower z).
+	var eyes_col := _make_equipped_eyes_column(deck)
+	if eyes_col != null:
+		wrap.add_child(eyes_col)
 
 	var stack := Control.new()
 	stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.z_index = 1
 	wrap.add_child(stack)
+	var stack_cards: Array = []
 	for i in range(3):
 		var back := TextureRect.new()
 		back.texture = FACEDOWN
@@ -223,7 +247,9 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 		back.size = Vector2(90, 124)
 		back.rotation_degrees = -6.0 + i * 2.0
 		back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_attach_card_metal_sheen(back)
 		stack.add_child(back)
+		stack_cards.append(back)
 	var featured_name: String = deck.resolve_featured_preview_name()
 	var face := TextureRect.new()
 	face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -234,7 +260,10 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 	face.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var tex: Texture2D = _load_card_tex(featured_name)
 	face.texture = tex if tex != null else FACEDOWN
+	_attach_card_metal_sheen(face)
 	stack.add_child(face)
+	stack_cards.append(face)
+	_wire_tile_stack_sheen(wrap, stack, stack_cards)
 
 	var name_lbl := Label.new()
 	name_lbl.text = deck.deck_name
@@ -244,6 +273,7 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 	name_lbl.add_theme_font_size_override("font_size", 13)
 	name_lbl.add_theme_color_override("font_color", GameDialog.BODY_COLOR)
 	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	name_lbl.z_index = 2
 	wrap.add_child(name_lbl)
 
 	# Top-right icon-only copy / delete, stacked (always confirm).
@@ -253,23 +283,22 @@ func _make_tile(deck: DeckData, index: int, gallery_slot: int) -> Control:
 	icon_col.anchor_right = 1.0
 	icon_col.anchor_top = 0.0
 	icon_col.anchor_bottom = 0.0
-	icon_col.offset_left = -38.0
+	icon_col.offset_left = -40.0
 	icon_col.offset_top = 4.0
 	icon_col.offset_right = -4.0
-	icon_col.offset_bottom = 76.0
+	icon_col.offset_bottom = 80.0
 	icon_col.add_theme_constant_override("separation", 4)
 	icon_col.mouse_filter = Control.MOUSE_FILTER_STOP
+	icon_col.z_index = 2
 	wrap.add_child(icon_col)
 
 	var captured_index: int = index
 	var deck_name: String = deck.deck_name
-	var copy_btn := _make_icon_btn("", "Duplicate deck")
-	ChromeIcon.apply_silver_icon_button(copy_btn, "duplicate", 20, 1)
+	var copy_btn := _make_blue_icon_btn("duplicate", "Duplicate deck")
 	copy_btn.pressed.connect(func() -> void:
 		_confirm_duplicate(captured_index, deck_name))
 	icon_col.add_child(copy_btn)
-	var del_btn := _make_icon_btn("", "Delete deck")
-	ChromeIcon.apply_silver_icon_button(del_btn, "delete", 20, 1)
+	var del_btn := _make_blue_icon_btn("delete", "Delete deck")
 	del_btn.pressed.connect(func() -> void:
 		_confirm_delete(captured_index, deck_name))
 	icon_col.add_child(del_btn)
@@ -379,31 +408,207 @@ func _process(_delta: float) -> void:
 		_hide_drag_ghost()
 
 
-func _make_icon_btn(icon_text: String, tip: String) -> Button:
+func _attach_card_metal_sheen(card: TextureRect) -> void:
+	if card == null:
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = _METAL_SHEEN_SHADER
+	mat.set_shader_parameter("progress", _SHEEN_IDLE)
+	mat.set_shader_parameter("intensity", 1.25)
+	mat.set_shader_parameter("band_width", 0.22)
+	card.material = mat
+
+
+func _wire_tile_stack_sheen(wrap: Control, stack: Control, cards: Array) -> void:
+	if wrap == null or stack == null or cards.is_empty():
+		return
+	wrap.set_meta("_stack_sheen_cards", cards)
+	wrap.set_meta("_stack_sheen_host", stack)
+	wrap.mouse_entered.connect(_on_tile_sheen_entered.bind(wrap))
+	wrap.mouse_exited.connect(_on_tile_sheen_exited.bind(wrap))
+
+
+func _on_tile_sheen_entered(wrap: Control) -> void:
+	if wrap == null or not is_instance_valid(wrap):
+		return
+	_play_tile_stack_sheen(wrap)
+
+
+func _on_tile_sheen_exited(wrap: Control) -> void:
+	if wrap == null or not is_instance_valid(wrap):
+		return
+	# Icon buttons sit above the tile — don't kill sheen when moving onto them.
+	await get_tree().process_frame
+	if not is_instance_valid(wrap):
+		return
+	if wrap.get_global_rect().has_point(wrap.get_global_mouse_position()):
+		return
+	_reset_tile_stack_sheen(wrap)
+
+
+func _kill_tile_sheen_tween(wrap: Control) -> void:
+	if wrap == null or not is_instance_valid(wrap):
+		return
+	var id: int = wrap.get_instance_id()
+	if not _tile_sheen_tweens.has(id):
+		return
+	var old: Variant = _tile_sheen_tweens[id]
+	_tile_sheen_tweens.erase(id)
+	if old is Tween and (old as Tween).is_valid():
+		(old as Tween).kill()
+
+
+func _reset_tile_stack_sheen(wrap: Control) -> void:
+	_kill_tile_sheen_tween(wrap)
+	var cards_v: Variant = wrap.get_meta("_stack_sheen_cards", [])
+	if not (cards_v is Array):
+		return
+	for c: Variant in cards_v as Array:
+		var card: TextureRect = c as TextureRect
+		if card == null or not is_instance_valid(card):
+			continue
+		var mat: ShaderMaterial = card.material as ShaderMaterial
+		if mat != null:
+			mat.set_shader_parameter("progress", _SHEEN_IDLE)
+
+
+## One shared left→right metal sweep across facedown stack + featured card.
+func _play_tile_stack_sheen(wrap: Control) -> void:
+	if wrap == null or not is_instance_valid(wrap):
+		return
+	var cards_v: Variant = wrap.get_meta("_stack_sheen_cards", [])
+	var stack: Control = wrap.get_meta("_stack_sheen_host", null) as Control
+	if not (cards_v is Array) or stack == null:
+		return
+	var cards: Array = cards_v as Array
+	if cards.is_empty():
+		return
+	_kill_tile_sheen_tween(wrap)
+	var stack_w: float = maxf(stack.size.x, wrap.custom_minimum_size.x)
+	if stack_w < 2.0:
+		stack_w = 200.0
+	var hold: Array = [cards, stack_w]
+	var id: int = wrap.get_instance_id()
+	var tw := create_tween()
+	_tile_sheen_tweens[id] = tw
+	tw.tween_method(
+		func(p: float) -> void:
+			var list: Array = hold[0] as Array
+			var w: float = float(hold[1])
+			for c: Variant in list:
+				var card: TextureRect = c as TextureRect
+				if card == null or not is_instance_valid(card):
+					continue
+				var mat: ShaderMaterial = card.material as ShaderMaterial
+				if mat == null:
+					continue
+				# Map shared stack-space progress into each card's local UV.
+				var local_p: float = (p * w - card.position.x) / maxf(card.size.x, 1.0)
+				mat.set_shader_parameter("progress", local_p),
+		-0.25, 1.35, _SHEEN_DURATION
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_callback(func() -> void:
+		var list: Array = hold[0] as Array
+		for c: Variant in list:
+			var card: TextureRect = c as TextureRect
+			if card == null or not is_instance_valid(card):
+				continue
+			var mat: ShaderMaterial = card.material as ShaderMaterial
+			if mat != null:
+				mat.set_shader_parameter("progress", _SHEEN_IDLE)
+		_tile_sheen_tweens.erase(id))
+
+
+## Protagonist ids that currently have `deck` equipped (any order; omit unequipped).
+func _equipped_pids_for_deck(deck: DeckData) -> Array[String]:
+	var out: Array[String] = []
+	if deck == null:
+		return out
+	var deck_id: String = deck.deck_id.strip_edges()
+	if deck_id.is_empty():
+		return out
+	for pid: String in EQUIP_EYE_IDS:
+		var eq: DeckData = SaveManager.get_equipped_deck(pid)
+		if eq != null and eq.deck_id == deck_id:
+			out.append(pid)
+	return out
+
+
+## Eye strips under the delete button; z below card stack so the featured card overlaps.
+func _make_equipped_eyes_column(deck: DeckData) -> VBoxContainer:
+	var pids: Array[String] = _equipped_pids_for_deck(deck)
+	if pids.is_empty():
+		return null
+	var eyes_col := VBoxContainer.new()
+	eyes_col.layout_mode = 1
+	eyes_col.anchor_left = 1.0
+	eyes_col.anchor_right = 1.0
+	eyes_col.anchor_top = 0.0
+	eyes_col.anchor_bottom = 0.0
+	# Sit under the two 32px icon buttons (+ separations).
+	eyes_col.offset_left = -EYE_STRIP_SIZE.x - 4.0
+	eyes_col.offset_top = 76.0
+	eyes_col.offset_right = -4.0
+	eyes_col.offset_bottom = 76.0 + float(pids.size()) * (EYE_STRIP_SIZE.y + 3.0)
+	eyes_col.add_theme_constant_override("separation", 3)
+	eyes_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	eyes_col.z_index = 0
+	for pid: String in pids:
+		var eye := TextureRect.new()
+		eye.custom_minimum_size = EYE_STRIP_SIZE
+		eye.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		eye.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		eye.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		eye.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var path: String = EYES_PATH % pid
+		if ResourceLoader.exists(path):
+			eye.texture = load(path) as Texture2D
+		eyes_col.add_child(eye)
+	return eyes_col
+
+
+## Magitech blue chrome icon button (duplicate / delete).
+func _make_blue_icon_btn(icon_id: String, tip: String) -> Button:
 	var btn := Button.new()
-	btn.text = icon_text
+	btn.text = ""
 	btn.tooltip_text = tip
 	btn.focus_mode = Control.FOCUS_NONE
-	btn.custom_minimum_size = Vector2(30, 30)
-	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_color_override("font_color", Color(0.12, 0.12, 0.14, 0.95))
-	btn.add_theme_color_override("font_hover_color", Color(0.08, 0.08, 0.1, 1.0))
-	btn.add_theme_color_override("font_pressed_color", Color(0.05, 0.05, 0.08, 1.0))
-	btn.add_theme_stylebox_override("normal", _icon_btn_style(Color(1, 1, 1, 0.55)))
-	btn.add_theme_stylebox_override("hover", _icon_btn_style(Color(1, 1, 1, 0.78)))
-	btn.add_theme_stylebox_override("pressed", _icon_btn_style(Color(1, 1, 1, 0.92)))
-	btn.add_theme_stylebox_override("focus", _icon_btn_style(Color(1, 1, 1, 0.55)))
+	btn.custom_minimum_size = Vector2(32, 32)
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	GameDialog.apply_button_chrome(btn, true)
+	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var sb: StyleBox = btn.get_theme_stylebox(state)
+		if sb == null:
+			continue
+		var dup: StyleBox = sb.duplicate() as StyleBox
+		dup.content_margin_left = 4.0
+		dup.content_margin_right = 4.0
+		dup.content_margin_top = 4.0
+		dup.content_margin_bottom = 4.0
+		btn.add_theme_stylebox_override(state, dup)
+	ChromeIcon.apply_button(btn, icon_id, false, "", ChromeIcon.COLOR_ON_DARK, 18)
 	return btn
 
 
-func _icon_btn_style(bg: Color) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = bg
-	sb.set_corner_radius_all(6)
-	sb.set_content_margin_all(2)
-	sb.set_border_width_all(1)
-	sb.border_color = Color(1, 1, 1, 0.85)
-	return sb
+## Selected deck tile: lighter Magitech fill + circuit patrol border.
+func _skin_selected_deck_frame(frame: PanelContainer) -> void:
+	if frame == null:
+		return
+	var sb := GameDialog.make_panel_stylebox(0.0)
+	sb.set_corner_radius_all(8)
+	frame.add_theme_stylebox_override("panel", sb)
+	GameDialog.attach_panel_fx(frame)
+	var mat: ShaderMaterial = frame.material as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.14, 0.20, 0.34, 0.97))
+	mat.set_shader_parameter("fill_bottom", Color(0.07, 0.11, 0.20, 0.97))
+	mat.set_shader_parameter("border_a", Color(0.92, 0.97, 1.0, 0.95))
+	mat.set_shader_parameter("border_b", Color(0.78, 0.88, 1.0, 0.82))
+	mat.set_shader_parameter("border_px", 2.5)
+	mat.set_shader_parameter("rim_speed", 0.40)
+	mat.set_shader_parameter("rim_pulse", 0.68)
+	mat.set_shader_parameter("circuit_patrol", 1.0)
 
 
 func _confirm_duplicate(index: int, deck_name: String) -> void:

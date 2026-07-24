@@ -1,0 +1,190 @@
+shader_type canvas_item;
+
+/// One-pass diagonal-divided capsule: body fill + 3 portraits + SDF-union chrome.
+/// Segment ID from half-planes; chrome is AA(union), not max(AA, AA).
+
+uniform vec2 bar_size = vec2(480.0, 56.0);
+uniform float corner_radius = 8.0;
+uniform float frame_width : hint_range(0.5, 6.0) = 2.5;
+uniform float divider_px : hint_range(0.5, 8.0) = 3.5;
+uniform float diagonal_degrees = 60.0;
+
+uniform sampler2D tex0 : filter_linear, repeat_disable;
+uniform sampler2D tex1 : filter_linear, repeat_disable;
+uniform sampler2D tex2 : filter_linear, repeat_disable;
+uniform vec2 tex_size0 = vec2(512.0, 149.0);
+uniform vec2 tex_size1 = vec2(512.0, 149.0);
+uniform vec2 tex_size2 = vec2(512.0, 149.0);
+
+uniform vec4 tint0 : source_color = vec4(1.0);
+uniform vec4 tint1 : source_color = vec4(1.0);
+uniform vec4 tint2 : source_color = vec4(1.0);
+uniform vec4 fill_color0 : source_color = vec4(1.0);
+uniform vec4 fill_color1 : source_color = vec4(1.0);
+uniform vec4 fill_color2 : source_color = vec4(1.0);
+uniform float desaturate0 : hint_range(0.0, 1.0) = 0.0;
+uniform float desaturate1 : hint_range(0.0, 1.0) = 0.0;
+uniform float desaturate2 : hint_range(0.0, 1.0) = 0.0;
+uniform float sepia_mix0 : hint_range(0.0, 1.0) = 0.0;
+uniform float sepia_mix1 : hint_range(0.0, 1.0) = 0.0;
+uniform float sepia_mix2 : hint_range(0.0, 1.0) = 0.0;
+uniform vec3 sepia_color : source_color = vec3(0.78, 0.64, 0.42);
+uniform float edge_glow0 : hint_range(0.0, 1.0) = 0.0;
+uniform float edge_glow1 : hint_range(0.0, 1.0) = 0.0;
+uniform float edge_glow2 : hint_range(0.0, 1.0) = 0.0;
+
+uniform float sheen_progress0 : hint_range(-0.2, 2.5) = 2.0;
+uniform float sheen_progress1 : hint_range(-0.2, 2.5) = 2.0;
+uniform float sheen_progress2 : hint_range(-0.2, 2.5) = 2.0;
+uniform float sheen_band : hint_range(0.05, 0.5) = 0.22;
+uniform float sheen_intensity : hint_range(0.0, 2.5) = 1.25;
+uniform vec3 sheen_color : source_color = vec3(1.0, 0.96, 0.82);
+uniform float bevel_strength : hint_range(0.0, 1.0) = 0.55;
+
+uniform vec4 frame_color : source_color = vec4(1.0);
+uniform float rim_speed : hint_range(0.0, 2.0) = 0.40;
+uniform float rim_pulse : hint_range(0.0, 1.0) = 0.68;
+uniform float circuit_patrol : hint_range(0.0, 1.0) = 1.0;
+
+varying vec2 v_pos;
+
+void vertex() {
+	v_pos = VERTEX;
+}
+
+float sd_round_box(vec2 p, vec2 half_extents, float r) {
+	vec2 q = abs(p) - half_extents + vec2(r);
+	return length(max(q, vec2(0.0))) + min(max(q.x, q.y), 0.0) - r;
+}
+
+vec2 cover_uv(vec2 local_uv, vec2 rect_size, vec2 tex_size) {
+	vec2 ts = max(tex_size, vec2(1.0));
+	vec2 rs = max(rect_size, vec2(1.0));
+	float tex_aspect = ts.x / ts.y;
+	float rect_aspect = rs.x / rs.y;
+	vec2 uv = local_uv;
+	if (tex_aspect > rect_aspect) {
+		float s = rect_aspect / tex_aspect;
+		uv.x = (uv.x - 0.5) * s + 0.5;
+	} else {
+		float s = tex_aspect / rect_aspect;
+		uv.y = (uv.y - 0.5) * s + 0.5;
+	}
+	return clamp(uv, vec2(0.0), vec2(1.0));
+}
+
+vec3 apply_look(vec3 rgb, float desat, float sepia_m) {
+	float luma = dot(rgb, vec3(0.299, 0.587, 0.114));
+	vec3 gray = vec3(luma);
+	rgb = mix(rgb, gray, clamp(desat, 0.0, 1.0));
+	rgb = mix(rgb, gray * sepia_color, clamp(sepia_m, 0.0, 1.0));
+	return rgb;
+}
+
+void fragment() {
+	vec2 full = max(bar_size, vec2(1.0));
+	vec2 bar_pos = v_pos;
+	vec2 bar_half = full * 0.5 - vec2(0.5);
+	float r = min(corner_radius, min(bar_half.x, bar_half.y));
+	float box_d = sd_round_box(bar_pos - full * 0.5, bar_half, r);
+	float aa = max(fwidth(box_d), 0.6);
+	float body_a = 1.0 - smoothstep(0.0, aa, box_d);
+
+	float rad = radians(clamp(diagonal_degrees, 1.0, 89.0));
+	float dx_per_dy = cos(rad) / max(sin(rad), 0.001);
+	float slant = dx_per_dy * (full.y * 0.5 - bar_pos.y);
+	float cut1 = full.x * (1.0 / 3.0) + slant;
+	float cut2 = full.x * (2.0 / 3.0) + slant;
+
+	int seg = 0;
+	if (bar_pos.x >= cut2) {
+		seg = 2;
+	} else if (bar_pos.x >= cut1) {
+		seg = 1;
+	}
+
+	float third_w = full.x / 3.0;
+	float seg_left = float(seg) * third_w;
+	vec2 seg_rect = vec2(third_w, full.y);
+	vec2 local_uv = vec2((bar_pos.x - seg_left) / max(third_w, 1.0), bar_pos.y / max(full.y, 1.0));
+	local_uv = clamp(local_uv, vec2(0.0), vec2(1.0));
+
+	vec4 tint;
+	vec4 fill_c;
+	float desat;
+	float sepia_m;
+	float glow;
+	float sheen_p;
+	vec4 tex;
+	if (seg == 0) {
+		tint = tint0;
+		fill_c = fill_color0;
+		desat = desaturate0;
+		sepia_m = sepia_mix0;
+		glow = edge_glow0;
+		sheen_p = sheen_progress0;
+		tex = texture(tex0, cover_uv(local_uv, seg_rect, tex_size0));
+	} else if (seg == 1) {
+		tint = tint1;
+		fill_c = fill_color1;
+		desat = desaturate1;
+		sepia_m = sepia_mix1;
+		glow = edge_glow1;
+		sheen_p = sheen_progress1;
+		tex = texture(tex1, cover_uv(local_uv, seg_rect, tex_size1));
+	} else {
+		tint = tint2;
+		fill_c = fill_color2;
+		desat = desaturate2;
+		sepia_m = sepia_mix2;
+		glow = edge_glow2;
+		sheen_p = sheen_progress2;
+		tex = texture(tex2, cover_uv(local_uv, seg_rect, tex_size2));
+	}
+
+	vec3 art = tex.rgb * tint.rgb;
+	float art_a = tex.a * tint.a;
+	vec3 rgb = mix(fill_c.rgb, art, art_a);
+	rgb = apply_look(rgb, desat, sepia_m);
+
+	float bevel = clamp(bevel_strength, 0.0, 1.0);
+	float ny = clamp(bar_pos.y / max(full.y, 1.0), 0.0, 1.0);
+	float top_glow = (1.0 - ny);
+	top_glow *= top_glow;
+	float bot_shade = smoothstep(0.35, 1.0, ny);
+	rgb += vec3(1.0) * top_glow * (0.22 * bevel);
+	rgb *= mix(1.0, 1.0 - 0.32 * bevel, bot_shade);
+	rgb = mix(rgb, rgb * (1.0 + clamp(glow, 0.0, 1.0) * 0.08), 1.0);
+
+	float shine = 1.0 - smoothstep(0.0, sheen_band, abs((bar_pos.x / max(full.x, 1.0)) - sheen_p));
+	rgb += sheen_color * shine * sheen_intensity;
+
+	// Chrome: SDF union of rim annulus + diagonal bands, single AA.
+	float half_div = max(divider_px * 0.5, 1.0);
+	float d_stroke = max(box_d, -(box_d + frame_width));
+	float d_div = min(abs(bar_pos.x - cut1), abs(bar_pos.x - cut2)) - half_div;
+	float d_chrome = min(d_stroke, d_div);
+	float chrome_a = (1.0 - smoothstep(0.0, aa, d_chrome)) * body_a;
+
+	vec2 centered = bar_pos - full * 0.5;
+	float ang = atan(centered.y, centered.x) / 6.2831853 + 0.5;
+	float patrol_t = fract(TIME * max(rim_speed * 2.4, 0.001));
+	float pd = abs(ang - patrol_t);
+	pd = min(pd, 1.0 - pd);
+	float band_w = mix(0.05, 0.11, clamp(rim_pulse, 0.0, 1.0));
+	float patrol = (1.0 - smoothstep(0.0, band_w, pd)) * clamp(circuit_patrol, 0.0, 1.0);
+
+	float along = fract(bar_pos.y / max(full.y, 1.0) - TIME * max(rim_speed * 1.6, 0.001));
+	float ad = min(along, 1.0 - along);
+	float on_div = 1.0 - smoothstep(0.0, aa, d_div);
+	float diag_patrol = (1.0 - smoothstep(0.0, mix(0.06, 0.14, clamp(rim_pulse, 0.0, 1.0)), ad))
+			* clamp(circuit_patrol, 0.0, 1.0) * on_div * body_a;
+	float line_patrol = max(patrol * chrome_a, diag_patrol);
+
+	float pulse = 1.0 + rim_pulse * 0.18 * sin(TIME * 1.4 + ang * 6.2831853);
+	vec3 chrome_rgb = frame_color.rgb * pulse;
+	chrome_rgb += frame_color.rgb * line_patrol * (0.85 + rim_pulse * 0.55);
+
+	rgb = mix(rgb, chrome_rgb, clamp(chrome_a * frame_color.a, 0.0, 1.0));
+	COLOR = vec4(rgb, body_a);
+}

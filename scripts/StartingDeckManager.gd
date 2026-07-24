@@ -9,7 +9,7 @@ const SAVE_PATH := "res://data/starting_deck.json"
 const GRID_ROWS    := 5
 const GRID_COLS    := 5
 const CELL_SIZE    := 48
-const MAX_FORMATIONS := 5
+const MAX_FORMATIONS := DeckData.MAX_FORMATIONS
 
 var _deck: DeckData = null
 

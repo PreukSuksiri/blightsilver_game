@@ -12236,6 +12236,7 @@ func _collect_pre_endgame_strip_shake_nodes() -> Array[Control]:
 	out.append_array(_filter_valid_controls([
 		_v3_bottom_vault,
 		_options_btn_root, _tech_fan,
+		_crystal_break_fx,
 	]))
 	return out
 
@@ -13320,7 +13321,7 @@ func _start_pre_endgame_shake_fx() -> void:
 	_pre_endgame_dashboard_short_circuit_loop()
 	# 2) Random error glyphs on crystal amount labels only.
 	_pre_endgame_hud_glitch_loop()
-	# Crystal-break plate stays still (no jitter).
+	# Broken crystal plate is included in strip-shake origins (see collector).
 
 
 func _begin_pre_endgame_strip_shake() -> void:

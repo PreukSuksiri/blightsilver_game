@@ -388,6 +388,22 @@ func _skin_primary_action_button(btn: Button) -> void:
 	GameDialog.apply_button_chrome(btn, true)
 
 
+## Extra content margins so icons/labels aren't flush against Magitech chrome edges.
+func _pad_action_button_content(btn: Button, left: float, right: float, top: float = 8.0, bottom: float = 8.0) -> void:
+	if btn == null:
+		return
+	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var sb: StyleBox = btn.get_theme_stylebox(state)
+		if sb == null:
+			continue
+		var dup: StyleBox = sb.duplicate() as StyleBox
+		dup.content_margin_left = left
+		dup.content_margin_right = right
+		dup.content_margin_top = top
+		dup.content_margin_bottom = bottom
+		btn.add_theme_stylebox_override(state, dup)
+
+
 ## Same chrome shape as primary actions, tinted green for Save / Save and Exit.
 func _skin_green_action_button(btn: Button) -> void:
 	if btn == null:
@@ -465,7 +481,13 @@ func _connect_buttons() -> void:
 	export_btn.visible = false
 	close_btn.pressed.connect(_on_back)
 	formations_btn.pressed.connect(_open_formation_editor)
-	ChromeIcon.apply_button(formations_btn, "formations", false, "  FORMATIONS", ChromeIcon.COLOR_ON_DARK, 18)
+	ChromeIcon.apply_button(formations_btn, "formations", false, "FORMATIONS", ChromeIcon.COLOR_ON_DARK, 18)
+	_skin_primary_action_button(formations_btn)
+	_pad_action_button_content(formations_btn, 14.0, 14.0)
+	formations_btn.add_theme_constant_override("h_separation", 10)
+	formations_btn.add_theme_font_size_override("font_size", GameDialog.BTN_FONT_SIZE)
+	formations_btn.custom_minimum_size = Vector2(168, GameDialog.BTN_MIN_SIZE.y)
+	formations_btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	trunk_add_btn.icon = null
 	trunk_add_btn.text = "Add to Deck"
 	_skin_primary_action_button(trunk_add_btn)
@@ -1347,13 +1369,31 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
 	var union_name: String = u.card_name
+	# Featured star (bottom-right) — same as deck tiles.
+	if _is_featured_card(union_name):
+		var star: TextureRect = ChromeIcon.make_rect("featured", Vector2(16, 16), ChromeIcon.COLOR_FEATURED)
+		star.layout_mode = 1
+		star.anchor_left = 1.0
+		star.anchor_right = 1.0
+		star.anchor_top = 1.0
+		star.anchor_bottom = 1.0
+		star.offset_left = -18.0
+		star.offset_right = -1.0
+		star.offset_top = -18.0
+		star.offset_bottom = -1.0
+		tile.add_child(star)
+	# Temporary yellow while choosing a featured card.
+	if _featured_pick_mode:
+		tile.modulate = Color(1.2, 1.15, 0.55, 1.0)
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
 		var mb := ev as InputEventMouseButton
 		if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
 			return
-		if mb.double_click:
+		if _featured_pick_mode:
+			_set_featured_card(union_name, "union")
+		elif mb.double_click:
 			CardDetailOverlay.open(self, union_name, "union")
 		else:
 			_show_preview("union", union_name))
@@ -1427,6 +1467,7 @@ var _fe_selected:         int            = -1
 var _fe_grid_cells:       Array          = []   # [r][c] = FEGridCell
 var _fe_name_edit:        LineEdit       = null
 var _fe_list:             ItemList       = null
+var _fe_add_btn:          Button         = null
 var _fe_gallery_flow:     HFlowContainer = null
 var _fe_union_panel_node: Panel          = null
 var _fe_union_flow:       HFlowContainer = null
@@ -1457,6 +1498,7 @@ func _open_formation_editor() -> void:
 		return
 	if current_deck == null:
 		return
+	current_deck.clamp_formations_to_max()
 	_fe_hide_drag_ghost()
 	_purge_stale_formation_placements()
 	_fe_refresh_if_open()
@@ -1518,50 +1560,51 @@ func _open_formation_editor() -> void:
 	left.add_theme_constant_override("separation", 5)
 	main.add_child(left)
 
-	var list_panel := Panel.new()
+	var list_panel := PanelContainer.new()
 	list_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var lp_sb := StyleBoxFlat.new()
-	lp_sb.bg_color = Color(0.05, 0.07, 0.16, 1.0)
-	lp_sb.border_color = Color(0.35, 0.6, 1.0, 0.35)
-	lp_sb.border_width_left = 1; lp_sb.border_width_right  = 1
-	lp_sb.border_width_top  = 1; lp_sb.border_width_bottom = 1
-	lp_sb.corner_radius_top_left = 8;    lp_sb.corner_radius_top_right    = 8
-	lp_sb.corner_radius_bottom_left = 8; lp_sb.corner_radius_bottom_right = 8
+	list_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var lp_sb := GameDialog.make_panel_stylebox(10.0)
+	lp_sb.set_corner_radius_all(8)
 	list_panel.add_theme_stylebox_override("panel", lp_sb)
+	GameDialog.attach_panel_fx(list_panel)
 	left.add_child(list_panel)
 
 	var lp_vb := VBoxContainer.new()
-	lp_vb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	lp_vb.offset_left = 8.0; lp_vb.offset_right  = -8.0
-	lp_vb.offset_top  = 8.0; lp_vb.offset_bottom = -8.0
-	lp_vb.add_theme_constant_override("separation", 5)
+	lp_vb.add_theme_constant_override("separation", 6)
 	list_panel.add_child(lp_vb)
 
 	var list_hdr := Label.new()
 	list_hdr.text = "Formations"
-	list_hdr.add_theme_font_size_override("font_size", 14)
-	list_hdr.add_theme_color_override("font_color", Color(0.8, 0.8, 0.9))
+	GameDialog.style_title_label(list_hdr)
+	list_hdr.add_theme_font_size_override("font_size", 16)
+	list_hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	lp_vb.add_child(list_hdr)
 
 	_fe_list = ItemList.new()
 	_fe_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_fe_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fe_list.item_selected.connect(_fe_on_formation_selected)
+	_style_fe_item_list(_fe_list)
 	lp_vb.add_child(_fe_list)
 
 	var list_btns := HBoxContainer.new()
-	list_btns.add_theme_constant_override("separation", 4)
+	list_btns.add_theme_constant_override("separation", 6)
 	lp_vb.add_child(list_btns)
 
-	var add_btn := Button.new()
-	add_btn.text = "+ Add"
-	add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_btn.pressed.connect(_fe_add_formation)
-	list_btns.add_child(add_btn)
+	_fe_add_btn = Button.new()
+	_fe_add_btn.text = "+ Add"
+	_fe_add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fe_add_btn.custom_minimum_size = Vector2(0, 36)
+	_fe_add_btn.pressed.connect(_fe_add_formation)
+	_skin_primary_action_button(_fe_add_btn)
+	list_btns.add_child(_fe_add_btn)
 
 	var del_btn := Button.new()
 	del_btn.text = "− Del"
 	del_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	del_btn.custom_minimum_size = Vector2(0, 36)
 	del_btn.pressed.connect(_fe_delete_formation)
+	_skin_primary_action_button(del_btn)
 	list_btns.add_child(del_btn)
 
 	var name_row := HBoxContainer.new()
@@ -1570,6 +1613,7 @@ func _open_formation_editor() -> void:
 	var name_lbl := Label.new()
 	name_lbl.text = "Name:"
 	name_lbl.add_theme_font_size_override("font_size", 12)
+	name_lbl.add_theme_color_override("font_color", GameDialog.BODY_COLOR)
 	name_row.add_child(name_lbl)
 	_fe_name_edit = LineEdit.new()
 	_fe_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1579,9 +1623,11 @@ func _open_formation_editor() -> void:
 	name_row.add_child(_fe_name_edit)
 
 	var save_f_btn := Button.new()
-	save_f_btn.text = "💾  Save"
+	save_f_btn.text = "Save"
+	save_f_btn.custom_minimum_size = Vector2(0, 40)
 	save_f_btn.add_theme_font_size_override("font_size", 13)
 	save_f_btn.pressed.connect(_fe_save_formation)
+	_skin_green_action_button(save_f_btn)
 	lp_vb.add_child(save_f_btn)
 
 	# ── Center: styled 5×5 grid ───────────────────────────────
@@ -2038,6 +2084,50 @@ func _fe_on_cell_unplace(r: int, c: int) -> void:
 	_fe_on_cell_drag_start(r, c)
 	SFXManager.play(SFXManager.SFX_REMOVE)
 
+## Magitech ItemList skin for the formation picker (replaces default grey panel).
+func _style_fe_item_list(list: ItemList) -> void:
+	if list == null:
+		return
+	FontManager.tag_font(list, "font", "primary", 500)
+	list.add_theme_font_size_override("font_size", 14)
+	list.add_theme_color_override("font_color", GameDialog.BODY_COLOR)
+	list.add_theme_color_override("font_hovered_color", Color(1.0, 1.0, 1.0, 1.0))
+	list.add_theme_color_override("font_selected_color", Color(1.0, 1.0, 1.0, 1.0))
+	list.add_theme_constant_override("v_separation", 4)
+	list.focus_mode = Control.FOCUS_NONE
+
+	var panel := StyleBoxFlat.new()
+	panel.bg_color = Color(0.04, 0.06, 0.12, 0.96)
+	panel.border_color = Color(0.40, 0.70, 1.0, 0.55)
+	panel.set_border_width_all(1)
+	panel.set_corner_radius_all(6)
+	panel.set_content_margin_all(6)
+	list.add_theme_stylebox_override("panel", panel)
+	list.add_theme_stylebox_override("focus", panel.duplicate())
+
+	var hovered := StyleBoxFlat.new()
+	hovered.bg_color = Color(0.10, 0.18, 0.34, 0.95)
+	hovered.border_color = Color(0.45, 0.78, 1.0, 0.45)
+	hovered.set_border_width_all(1)
+	hovered.set_corner_radius_all(4)
+	hovered.set_content_margin_all(6)
+	list.add_theme_stylebox_override("hovered", hovered)
+
+	var selected := StyleBoxFlat.new()
+	selected.bg_color = Color(0.12, 0.28, 0.52, 0.97)
+	selected.border_color = Color(0.55, 0.88, 1.0, 0.85)
+	selected.set_border_width_all(1)
+	selected.set_corner_radius_all(4)
+	selected.set_content_margin_all(6)
+	list.add_theme_stylebox_override("selected", selected)
+	list.add_theme_stylebox_override("selected_focus", selected.duplicate())
+
+	var cursor := selected.duplicate() as StyleBoxFlat
+	cursor.bg_color = Color(0.14, 0.32, 0.58, 0.55)
+	list.add_theme_stylebox_override("cursor", cursor)
+	list.add_theme_stylebox_override("cursor_unfocused", cursor.duplicate())
+
+
 func _fe_rebuild_list() -> void:
 	if _fe_list == null: return
 	_fe_list.clear()
@@ -2046,6 +2136,9 @@ func _fe_rebuild_list() -> void:
 		var fd: Dictionary = f as Dictionary
 		_fe_list.add_item(str(fd.get("name", "Formation")))
 	_fe_selected = -1
+	if _fe_add_btn != null and is_instance_valid(_fe_add_btn):
+		_fe_add_btn.disabled = current_deck.formations.size() >= DeckData.MAX_FORMATIONS
+		GameDialog.sync_button_chrome_disabled(_fe_add_btn)
 
 func _fe_on_formation_selected(idx: int) -> void:
 	_fe_select_formation(idx)
@@ -2518,7 +2611,7 @@ func _try_save(exit_after: bool) -> void:
 	if _deck_cost_is_high(current_deck):
 		_confirm_high_cost_save(exit_after)
 		return
-	_perform_save(exit_after)
+	_show_save_equip_prompt(exit_after)
 
 
 func _confirm_high_cost_save(exit_after: bool = false) -> void:
@@ -2528,7 +2621,133 @@ func _confirm_high_cost_save(exit_after: bool = false) -> void:
 		"The unit and trap costs in this deck are too high. Consider replacing some cards with lower-cost options.",
 		"Save",
 		"Edit Deck",
-		func() -> void: _perform_save(exit_after))
+		func() -> void: _show_save_equip_prompt(exit_after))
+
+
+## Width of the in-page equip bar (RightPanel Inner), so the save prompt matches it.
+func _equip_bar_reference_width() -> float:
+	if _protagonist_bar != null and is_instance_valid(_protagonist_bar):
+		var bar_w: float = (_protagonist_bar as Control).size.x
+		if bar_w >= 200.0:
+			return bar_w
+	var bottom_bar: Node = save_btn.get_parent() if save_btn != null else null
+	var right_inner: Control = bottom_bar.get_parent() as Control if bottom_bar != null else null
+	if right_inner != null and right_inner.size.x >= 200.0:
+		return right_inner.size.x
+	return 620.0
+
+
+## True if any protagonist already has this deck equipped.
+func _deck_is_equipped_to_any_character(deck: DeckData) -> bool:
+	if deck == null:
+		return false
+	var deck_id: String = deck.deck_id.strip_edges()
+	if deck_id.is_empty():
+		return false
+	for pid: String in ["nex", "mayu", "kelly"]:
+		var eq: DeckData = SaveManager.get_equipped_deck(pid)
+		if eq != null and eq.deck_id == deck_id:
+			return true
+	return false
+
+
+## After Save / Save and Exit: offer to equip the deck to a protagonist.
+func _show_save_equip_prompt(exit_after: bool) -> void:
+	if current_deck == null:
+		return
+	# Skip equip prompt when this deck is already equipped to someone.
+	if _deck_is_equipped_to_any_character(current_deck):
+		_perform_save(exit_after)
+		return
+	if GameDialog.has_open_overlay(self):
+		return
+
+	# Match deckbuilding equip-bar width; pad for dialog chrome/margins.
+	var bar_w: float = _equip_bar_reference_width()
+	var modal_w: float = bar_w + 64.0
+	var shell: Dictionary = GameDialog.content_overlay(self, modal_w)
+	var root: Control = shell["root"] as Control
+	var vbox: VBoxContainer = shell["vbox"] as VBoxContainer
+
+	var title := Label.new()
+	title.text = "Save Deck"
+	GameDialog.style_title_label(title)
+	vbox.add_child(title)
+
+	var body := Label.new()
+	body.text = "Do you want to equip this deck to any character?"
+	GameDialog.style_body_label(body)
+	vbox.add_child(body)
+
+	var equip_bar = _ProtagonistEquipBar.new()
+	equip_bar.show_hint = false
+	equip_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# Same footprint as the deckbuilding-page equip bar (do not shrink).
+	equip_bar.custom_minimum_size = Vector2(bar_w, 56.0)
+	vbox.add_child(equip_bar)
+	equip_bar.call("set_open_deck_id", current_deck.deck_id)
+	equip_bar.equip_requested.connect(func(pid: String) -> void:
+		_on_save_equip_character_chosen(pid, exit_after, root))
+
+	var skip_btn := Button.new()
+	skip_btn.text = "I don't want to equip this deck to any character. Just let me save."
+	skip_btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	skip_btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	GameDialog.style_menu_button(skip_btn)
+	skip_btn.custom_minimum_size = Vector2(0, 64)
+	skip_btn.pressed.connect(func() -> void:
+		if is_instance_valid(root):
+			root.queue_free()
+		_perform_save(exit_after))
+	vbox.add_child(skip_btn)
+
+
+func _on_save_equip_character_chosen(pid: String, exit_after: bool, dialog_root: Control) -> void:
+	if current_deck == null:
+		return
+	if current_deck.limited and current_deck.reserved_slot != 0:
+		var owner: String = SaveManager.reserved_slot_protagonist(current_deck.reserved_slot)
+		if owner != pid:
+			GameDialog.accept_overlay(
+				self,
+				"Cannot Equip",
+				"This Limited deck belongs to %s." % ProtagonistVault.get_display_name(owner))
+			return
+
+	var cur: DeckData = SaveManager.get_equipped_deck(pid)
+	if cur != null and cur.deck_id == current_deck.deck_id:
+		if is_instance_valid(dialog_root):
+			dialog_root.queue_free()
+		_perform_save(exit_after)
+		status_label.text = "Deck saved — already equipped to %s." % ProtagonistVault.get_display_name(pid)
+		return
+
+	var cur_name: String = cur.deck_name if cur != null else "(None)"
+	var finish := func() -> void:
+		if is_instance_valid(dialog_root):
+			dialog_root.queue_free()
+		_perform_save(false)
+		if SaveManager.set_equipped_deck(pid, current_deck):
+			status_label.text = "Deck saved & equipped to %s." % ProtagonistVault.get_display_name(pid)
+			_refresh_protagonist_capsules()
+		else:
+			status_label.text = "Deck saved — could not equip (Limited rules)."
+		if exit_after:
+			_on_back()
+
+	if cur == null:
+		finish.call()
+		return
+
+	GameDialog.confirmation_overlay(
+		self,
+		"Equip Deck",
+		"%s\n\nCurrently equipped: %s\nWill equip instead: %s\n\nSwitch?" % [
+			ProtagonistVault.get_display_name(pid), cur_name, current_deck.deck_name
+		],
+		"Equip",
+		"Cancel",
+		finish)
 
 
 func _perform_save(exit_after: bool = false) -> void:
@@ -2543,6 +2762,7 @@ func _perform_save(exit_after: bool = false) -> void:
 	SaveManager.save_deck(current_deck)
 	_refresh_deck_select()
 	status_label.text = "Deck saved!"
+	_refresh_protagonist_capsules()
 	if exit_after:
 		_on_back()
 

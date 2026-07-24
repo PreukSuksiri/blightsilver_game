@@ -187,7 +187,9 @@
 				"value": ""
 			}
 		],
-		"linger_characters": true
+		"hide_dialog": true,
+		"linger_characters": true,
+		"suppress_dialog_ui": true
 	},
 	{
 		"exploration_actions": [
@@ -197,7 +199,9 @@
 				"value": ""
 			}
 		],
-		"linger_characters": true
+		"hide_dialog": true,
+		"linger_characters": true,
+		"suppress_dialog_ui": true
 	},
 	{
 		"exploration_actions": [
@@ -207,7 +211,9 @@
 				"value": ""
 			}
 		],
-		"linger_characters": true
+		"hide_dialog": true,
+		"linger_characters": true,
+		"suppress_dialog_ui": true
 	},
 	{
 		"exploration_actions": [
@@ -217,7 +223,9 @@
 				"value": ""
 			}
 		],
-		"linger_characters": true
+		"hide_dialog": true,
+		"linger_characters": true,
+		"suppress_dialog_ui": true
 	},
 	{
 		"characters": [

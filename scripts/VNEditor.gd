@@ -176,6 +176,7 @@ var _tutorial_config_paths: PackedStringArray = PackedStringArray()
 var _f_go_to_credits:    CheckBox     = null
 var _f_credits_target:   OptionButton = null
 var _f_hide_dialog:      CheckBox     = null
+var _f_suppress_dialog_ui: CheckBox   = null
 var _f_bg_color:       LineEdit = null
 var _f_center_text:          LineEdit = null
 var _f_center_text_size:     SpinBox  = null
@@ -860,6 +861,8 @@ func _build_fields() -> void:
 
 	_f_dim_others   = _row_cb(v, "Dim others",   "Dim characters not listed in this beat")
 	_f_hide_dialog  = _row_cb(v, "Hide dialog",  "Hide the message box panel for this beat (player still clicks to advance)")
+	_f_suppress_dialog_ui = _row_cb(v, "Suppress dialog UI",
+		"Hide dialog box, speaker name, and character illustrations for this beat")
 
 	# ── NSFW flag ─────────────────────────────────────────────
 	var nsfw_hbox := HBoxContainer.new()
@@ -1537,6 +1540,7 @@ func _connect_static_signals() -> void:
 	_f_hidden.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_dim_others.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_hide_dialog.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_suppress_dialog_ui.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_bg_color.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_nsfw.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_animation.item_selected.connect(func(_i: int) -> void: ch.call())
@@ -4147,6 +4151,7 @@ func _populate_fields() -> void:
 			break
 
 	_f_hide_dialog.button_pressed   = bool(b.get("hide_dialog",  false))
+	_f_suppress_dialog_ui.button_pressed = bool(b.get("suppress_dialog_ui", false))
 	_f_bg_color.text                = str(b.get("bg_color",     ""))
 	_f_center_text.text             = str(b.get("center_text",  ""))
 	_f_center_text_size.value       = float(b.get("center_text_size",     48.0))
@@ -4535,6 +4540,8 @@ func _collect_beat() -> Dictionary:
 		b["dim_others"] = true
 	if _f_hide_dialog.button_pressed:
 		b["hide_dialog"] = true
+	if _f_suppress_dialog_ui.button_pressed:
+		b["suppress_dialog_ui"] = true
 	var bgc: String = _f_bg_color.text.strip_edges()
 	if not bgc.is_empty():
 		b["bg_color"] = bgc

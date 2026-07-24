@@ -17,6 +17,7 @@ const PANEL_MAX_SIZE: Vector2 = Vector2(1680.0, 900.0)
 @onready var pack_scroll: ScrollContainer = $Panel/VBox/PackScroll
 @onready var pack_row: HBoxContainer      = $Panel/VBox/PackScroll/PackRow
 @onready var result_overlay: Control      = $ResultOverlay
+@onready var result_bg: ColorRect         = $ResultOverlay/ResultBg
 @onready var result_panel: Panel          = $ResultOverlay/ResultPanel
 @onready var result_title: Label          = $ResultOverlay/ResultPanel/VBox/TitleLabel
 @onready var result_div: ColorRect        = $ResultOverlay/ResultPanel/VBox/DivLine
@@ -210,7 +211,11 @@ func _ready() -> void:
 	_skin_shop_frame()
 	_build_spotlight_beams()
 	_relocate_shop_header_extras()
-	result_ok_btn.pressed.connect(func() -> void: result_overlay.hide())
+	result_ok_btn.pressed.connect(_hide_result)
+	if result_bg != null:
+		result_bg.gui_input.connect(_on_result_bg_gui_input)
+	if result_panel != null:
+		result_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_skin_result_modal()
 	result_overlay.hide()
 	_apply_panel_to_viewport()
@@ -637,16 +642,22 @@ func _load_pack_texture(pack: Dictionary) -> Texture2D:
 func _on_buy(pack_id: String) -> void:
 	if pack_id == UnionScrollManager.PRODUCT_ID:
 		var scroll_res: Dictionary = ShopManager.purchase_shop_item(pack_id, get_tree().root)
+		_refresh_credits()
 		if not scroll_res["success"]:
 			_show_result("Purchase Failed", [], scroll_res["error"])
 			return
+		await _await_reveal_overlay(scroll_res.get("overlay", null))
 		var union_name: String = str(scroll_res.get("union_name", ""))
 		if union_name.is_empty():
+			# Empty-pool compensation already shows GameDialog from UnionScrollManager.
+			if bool(scroll_res.get("compensated", false)):
+				return
 			_show_result("Union Scroll", [], "")
 		else:
 			_show_result("Union Scroll", [{"name": union_name, "type": "union"}], "")
 		return
 	var res: Variant = ShopManager.purchase_pack(pack_id)
+	_refresh_credits()
 	if not res["success"]:
 		_show_result("Purchase Failed", [], res["error"])
 		return
@@ -659,10 +670,34 @@ func _on_buy(pack_id: String) -> void:
 		var pack_dict: Dictionary = ShopManager.get_pack(pack_id)
 		var pack_img: String  = str(pack_dict.get("pack_image", ""))
 		var pack_nm: String   = str(pack_dict.get("name", ""))
-		var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
-		overlay_script.open(get_tree().root, pack_img, n0, n1, n2, true, pack_nm)
+		var overlay: PackOpeningOverlay = PackOpeningOverlay.open(
+			get_tree().root, pack_img, n0, n1, n2, true, pack_nm)
+		await _await_reveal_overlay(overlay)
 	var pack_name: String = ShopManager.get_pack(pack_id).get("name", "Pack")
 	_show_result(pack_name, cards, "")
+
+
+func _await_reveal_overlay(overlay: Variant) -> void:
+	if overlay == null or not is_instance_valid(overlay):
+		return
+	if overlay is PackOpeningOverlay:
+		await (overlay as PackOpeningOverlay).reveal_finished
+	elif overlay is UnionScrollOpeningOverlay:
+		await (overlay as UnionScrollOpeningOverlay).reveal_finished
+
+
+func _hide_result() -> void:
+	if result_overlay != null:
+		result_overlay.hide()
+
+
+func _on_result_bg_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+			and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_hide_result()
+		accept_event()
+
 
 func _show_result(pack_name: String, cards: Array, error: String) -> void:
 	for child in result_card_list.get_children():
@@ -754,6 +789,6 @@ func _on_close() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		if result_overlay.visible:
-			result_overlay.hide()
+			_hide_result()
 		else:
 			_on_close()
