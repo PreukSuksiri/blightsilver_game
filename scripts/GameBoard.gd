@@ -13,6 +13,18 @@ const MAX_CRYSTALS: int = 5000
 const MAX_LOG_LINES: int = 60
 const PROMPT_DISMISS_DELAY: float = 0.5
 const SFX_CRYSTAL: AudioStream = preload("res://assets/audio/sound_crystal_1.mp3")
+# Absolute Control z on GameBoard (incl. z_as_relative=false children):
+#   grid bluff markers ........ Z_GRID_BLUFF (above cards, below menus)
+#   game HUD / stacks ......... ≤8
+#   context menu .............. Z_CONTEXT_*
+#   tech resolve blocker ...... 40
+#   endgame / system overlays . Z_ENDGAME_* / 50+
+const Z_GRID_BLUFF: int = 3
+const Z_CONTEXT_BACKDROP: int = 9
+const Z_CONTEXT_POPUP: int = 10
+const Z_ENDGAME_BACKDROP: int = 50
+const Z_ENDGAME_OVERLAY: int = 51
+const Z_GAME_OVER_PANEL: int = 52
 
 # ── Grid containers
 @onready var p1_grid: GridContainer = $MainLayout/P1Side/P1Grid
@@ -175,11 +187,17 @@ const _V3_ZONE_ATTACK_Y := 0.008
 const _V3_ZONE_ATTACK_H := 0.092
 ## VOID / TECH chips (pink circular ports)
 const _V3_ZONE_CHIP_Y := 0.056#0.055
-const _V3_ZONE_CHIP_S := 0.062
+## Drawn size (slightly larger). Anchor geometry still uses `_V3_ZONE_CHIP_S_LOCK`.
+const _V3_ZONE_CHIP_S := 0.066
+const _V3_ZONE_CHIP_S_LOCK := 0.062  # previous size — keeps chip centers fixed
 const _V3_ZONE_VOID_X := 0.025#0.022
 const _V3_ZONE_TECH_X := 0.0805
 ## Extra nudge for P2 chips only (px). +x = toward screen center after mirror; +y = down.
 const _V3_CHIP_P2_NUDGE := Vector2(-6.0, 0.0)
+## Tech chip only (both sides). -y = up.
+const _V3_TECH_CHIP_NUDGE := Vector2(0.0, -1.0)
+## P2 tech chip only. +x = right (toward screen edge after mirror).
+const _V3_TECH_CHIP_P2_NUDGE := Vector2(1.0, 0.0)
 var _v3_hover_scale_tweens: Dictionary = {}  # instance_id -> Tween
 var _v3_circuit_hovering: Dictionary = {}  # hover-control instance_id -> bool
 var _v3_fx_tweens: Dictionary = {}  # instance_id -> Tween (patrol / sheen stripe)
@@ -850,9 +868,9 @@ func _build_grids() -> void:
 				bluff_lbl.offset_bottom = 42.0
 				bluff_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				bluff_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				# Above neighboring cells so overflow is not covered by later cards.
+				# Absolute z so overflow clears later sibling cards, but stays under menus/endgame.
 				bluff_lbl.z_as_relative = false
-				bluff_lbl.z_index = 20
+				bluff_lbl.z_index = Z_GRID_BLUFF
 				bluff_lbl.clip_contents = false
 				bluff_lbl.text = ""
 				bluff_lbl.add_theme_font_size_override("font_size", 36)
@@ -873,7 +891,7 @@ func _build_grids() -> void:
 					bluff_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 					bluff_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 					bluff_icon.z_as_relative = false
-					bluff_icon.z_index = 20
+					bluff_icon.z_index = Z_GRID_BLUFF
 					bluff_icon.clip_contents = false
 					bluff_icon.visible = false
 					card_node.add_child(bluff_icon)
@@ -1073,8 +1091,9 @@ func _setup_buttons() -> void:
 	tech_btn.pressed.connect(_on_tech_btn)
 	end_attack_btn.pressed.connect(_on_end_attack_btn)
 	play_again_btn.pressed.connect(_on_play_again_btn)
+	_style_overlay_button(play_again_btn, true)
 	end_attack_btn.visible = false
-	game_over_panel.z_index = 5
+	game_over_panel.z_index = Z_GAME_OVER_PANEL
 
 	# Campaign-only "Return to Map" button added below PlayAgainBtn
 	if GameState.game_mode == GameState.GameMode.CAMPAIGN:
@@ -1093,6 +1112,7 @@ func _setup_buttons() -> void:
 		_campaign_return_btn.offset_bottom =  16.0
 		_campaign_return_btn.visible = false
 		_campaign_return_btn.pressed.connect(_on_return_to_map)
+		_style_overlay_button(_campaign_return_btn, true)
 		game_over_panel.add_child(_campaign_return_btn)
 
 func _build_handoff_overlay() -> void:
@@ -1174,28 +1194,9 @@ func _build_handoff_overlay() -> void:
 	_handoff_ready_btn.text = "I'M READY"
 	_handoff_ready_btn.custom_minimum_size = Vector2(0, 48)
 	_handoff_ready_btn.add_theme_font_size_override("font_size", 18)
-	var rn := StyleBoxFlat.new()
-	rn.bg_color = Color(0.06, 0.12, 0.28, 1.0)
-	rn.border_width_left   = 2
-	rn.border_width_top    = 2
-	rn.border_width_right  = 2
-	rn.border_width_bottom = 2
-	rn.border_color = Color(0.38, 0.65, 1.0, 0.6)
-	rn.corner_radius_top_left     = 6
-	rn.corner_radius_top_right    = 6
-	rn.corner_radius_bottom_right = 6
-	rn.corner_radius_bottom_left  = 6
-	var rh := rn.duplicate() as StyleBoxFlat
-	rh.bg_color = Color(0.1, 0.2, 0.44, 1.0)
-	rh.border_color = Color(0.38, 0.65, 1.0, 1.0)
-	_handoff_ready_btn.add_theme_stylebox_override("normal", rn)
-	_handoff_ready_btn.add_theme_stylebox_override("hover", rh)
-	_handoff_ready_btn.add_theme_stylebox_override("pressed", rn)
-	_handoff_ready_btn.add_theme_stylebox_override("focus", rn)
-	_handoff_ready_btn.add_theme_color_override("font_color", Color(0.72, 0.9, 1.0, 1.0))
 	_handoff_ready_btn.pressed.connect(_on_handoff_ready)
+	_style_overlay_button(_handoff_ready_btn, true)
 	vbox.add_child(_handoff_ready_btn)
-	SFXManager.wire_prompt_button(_handoff_ready_btn)
 
 func _build_bribe_overlay() -> void:
 	_bribe_overlay = Control.new()
@@ -1268,20 +1269,8 @@ func _build_bribe_overlay() -> void:
 	reveal_btn.text = "Reveal a Unit  (+700 💎)"
 	reveal_btn.custom_minimum_size = Vector2(220.0, 48.0)
 	reveal_btn.add_theme_font_size_override("font_size", 14)
-	var rn := StyleBoxFlat.new()
-	rn.bg_color    = Color(0.12, 0.26, 0.08, 1.0)
-	rn.border_width_left = 2; rn.border_width_top = 2; rn.border_width_right = 2; rn.border_width_bottom = 2
-	rn.border_color = Color(0.3, 0.9, 0.3, 0.8)
-	rn.corner_radius_top_left = 6; rn.corner_radius_top_right = 6; rn.corner_radius_bottom_right = 6; rn.corner_radius_bottom_left = 6
-	var rh := rn.duplicate() as StyleBoxFlat
-	rh.bg_color = Color(0.18, 0.38, 0.12, 1.0)
-	rh.border_color = Color(0.4, 1.0, 0.4, 1.0)
-	reveal_btn.add_theme_stylebox_override("normal",  rn)
-	reveal_btn.add_theme_stylebox_override("hover",   rh)
-	reveal_btn.add_theme_stylebox_override("pressed", rn)
-	reveal_btn.add_theme_stylebox_override("focus",   rn)
-	reveal_btn.add_theme_color_override("font_color", Color(0.7, 1.0, 0.7, 1.0))
 	reveal_btn.pressed.connect(_on_bribe_reveal_pressed)
+	_style_overlay_button(reveal_btn, true)
 	hbox.add_child(reveal_btn)
 
 	# "Pass" button
@@ -1289,22 +1278,9 @@ func _build_bribe_overlay() -> void:
 	pass_btn.text = "Pass"
 	pass_btn.custom_minimum_size = Vector2(120.0, 48.0)
 	pass_btn.add_theme_font_size_override("font_size", 14)
-	var pn := StyleBoxFlat.new()
-	pn.bg_color    = Color(0.06, 0.10, 0.22, 1.0)
-	pn.border_width_left = 2; pn.border_width_top = 2; pn.border_width_right = 2; pn.border_width_bottom = 2
-	pn.border_color = Color(0.38, 0.50, 0.75, 0.6)
-	pn.corner_radius_top_left = 6; pn.corner_radius_top_right = 6; pn.corner_radius_bottom_right = 6; pn.corner_radius_bottom_left = 6
-	var ph := pn.duplicate() as StyleBoxFlat
-	ph.bg_color = Color(0.10, 0.16, 0.34, 1.0)
-	ph.border_color = Color(0.55, 0.70, 1.0, 1.0)
-	pass_btn.add_theme_stylebox_override("normal",  pn)
-	pass_btn.add_theme_stylebox_override("hover",   ph)
-	pass_btn.add_theme_stylebox_override("pressed", pn)
-	pass_btn.add_theme_stylebox_override("focus",   pn)
-	pass_btn.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0, 1.0))
 	pass_btn.pressed.connect(_on_bribe_pass_pressed)
+	_style_overlay_button(pass_btn, true)
 	hbox.add_child(pass_btn)
-	SFXManager.wire_prompt_buttons_in(_bribe_overlay)
 
 func _build_ability_choice_overlay() -> void:
 	_ability_choice_overlay = Control.new()
@@ -1358,12 +1334,13 @@ func _build_ability_choice_overlay() -> void:
 	for i: int in range(4):
 		var btn := Button.new()
 		btn.visible = false
-		btn.add_theme_color_override("font_color", Color(0.8, 0.95, 1.0, 1.0))
+		btn.custom_minimum_size = Vector2(0.0, 44.0)
+		btn.add_theme_font_size_override("font_size", 15)
 		var capture_i: int = i
 		btn.pressed.connect(func() -> void: _on_ability_choice_selected(capture_i))
+		_style_overlay_button(btn, true)
 		vbox.add_child(btn)
 		_ability_choice_btns.append(btn)
-	SFXManager.wire_prompt_buttons_in(_ability_choice_overlay)
 
 func _show_ability_choice_overlay(title: String, choices: Array) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
@@ -1793,6 +1770,7 @@ func _show_name_entry(ask_p1: bool = true, ask_p2: bool = true, heading_text: St
 	start_btn.text = "START GAME" if GameState.game_mode == GameState.GameMode.HOT_SEAT else "CONTINUE"
 	start_btn.custom_minimum_size = Vector2(0, 52)
 	start_btn.add_theme_font_size_override("font_size", 18)
+	_style_overlay_button(start_btn, true)
 	start_btn.pressed.connect(func() -> void:
 		var missing: PackedStringArray = []
 		if ask_p1 and p1_edit != null and _normalized_name_from_edit(p1_edit.text).is_empty():
@@ -2213,7 +2191,11 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	tech_lbl.text = "TECH"
 	tech_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tech_lbl.add_theme_font_size_override("font_size", 10)
-	tech_lbl.add_theme_color_override("font_color", Color(0.25, 0.92, 0.45, 0.90))
+	tech_lbl.add_theme_color_override("font_color", Color.WHITE)
+	tech_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	tech_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	tech_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	tech_lbl.add_theme_constant_override("shadow_outline_size", 3)
 	tech_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	container.add_child(tech_lbl)
 
@@ -2223,11 +2205,13 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	count_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	count_lbl.add_theme_font_size_override("font_size", 18)
-	count_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.82))
+	count_lbl.add_theme_color_override("font_color", Color.WHITE)
 	count_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
-	count_lbl.add_theme_constant_override("shadow_offset_x", 1)
-	count_lbl.add_theme_constant_override("shadow_offset_y", 1)
+	count_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	count_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	count_lbl.add_theme_constant_override("shadow_outline_size", 3)
 	count_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	count_lbl.visible = false
 	container.add_child(count_lbl)
 	_layout_stack_count_label(count_lbl)
 
@@ -2236,7 +2220,7 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	else:
 		_p2_stack_count_lbl = count_lbl
 
-	# Click / tap to open modal (same mechanism as void stack)
+	# Click / tap to open modal (own hand playable; enemy hand view-only silhouettes)
 	var _tut_tech_player := player
 	container.gui_input.connect(func(ev: InputEvent) -> void:
 		if not _strip_hud_input_enabled:
@@ -2252,22 +2236,33 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	_apply_stack_chip_skin(container, "ui_tech_stack_chip.png")
 	return container
 
+func _battle_local_player() -> int:
+	# Human side in AI modes; active player in hot-seat / local 2P.
+	if GameState.game_mode in [
+			GameState.GameMode.VS_AI,
+			GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON,
+			GameState.GameMode.EXPLORATION]:
+		return 0
+	return GameState.current_player
+
 func _open_tech_modal(player: int) -> void:
-	if player != GameState.current_player:
-		return
-	_refresh_tech_hand()
+	_refresh_tech_hand(player)
 
 func _update_tech_stacks() -> void:
 	var in_battle := _battle_strip_hud_active()
+	var local_p: int = _battle_local_player()
 	for p in range(2):
 		var stack: Control = _p1_tech_stack if p == 0 else _p2_tech_stack
 		var lbl: Label     = _p1_stack_count_lbl if p == 0 else _p2_stack_count_lbl
 		if stack:
 			stack.visible = in_battle
-			# Grey out when tech has already been used this turn
-			stack.modulate = Color(0.38, 0.38, 0.38, 0.65) if _tech_used_this_turn[p] \
+			# Grey only the local player's chip after they spent tech — never lock the enemy chip.
+			var grey_own: bool = p == local_p and _tech_used_this_turn[p]
+			stack.modulate = Color(0.38, 0.38, 0.38, 0.65) if grey_own \
 				else Color(1.0, 1.0, 1.0, 1.0)
 		if lbl:
+			lbl.visible = false
 			lbl.text = str(GameState.tech_hands[p].size())
 
 func _open_tech_overlay(player: int) -> void:
@@ -2371,7 +2366,7 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 			use_btn.add_theme_font_size_override("font_size", 10)
 			var captured: String = tech_name
 			use_btn.pressed.connect(func() -> void: _on_tech_use_pressed(captured, false))
-			SFXManager.wire_prompt_button(use_btn)
+			_style_overlay_button(use_btn, true)
 			_tech_overlay_panel.add_child(use_btn)
 
 # ─────────────────────────────────────────────────────────────
@@ -2452,7 +2447,11 @@ func _create_void_stack_indicator(player: int) -> Control:
 	dump_lbl.text = "VOID"
 	dump_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dump_lbl.add_theme_font_size_override("font_size", 10)
-	dump_lbl.add_theme_color_override("font_color", Color(0.75, 0.40, 1.0, 0.90))
+	dump_lbl.add_theme_color_override("font_color", Color.WHITE)
+	dump_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	dump_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	dump_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	dump_lbl.add_theme_constant_override("shadow_outline_size", 3)
 	dump_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	container.add_child(dump_lbl)
 
@@ -2462,12 +2461,14 @@ func _create_void_stack_indicator(player: int) -> Control:
 	count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	count_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	count_lbl.add_theme_font_size_override("font_size", 18)
-	count_lbl.add_theme_color_override("font_color", Color(0.88, 0.72, 1.0))
+	count_lbl.add_theme_color_override("font_color", Color.WHITE)
 	count_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
-	count_lbl.add_theme_constant_override("shadow_offset_x", 1)
-	count_lbl.add_theme_constant_override("shadow_offset_y", 1)
+	count_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	count_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	count_lbl.add_theme_constant_override("shadow_outline_size", 3)
 	count_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	count_lbl.text = "0"
+	count_lbl.visible = false
 	container.add_child(count_lbl)
 	_layout_stack_count_label(count_lbl)
 
@@ -2513,19 +2514,20 @@ func _apply_stack_chip_skin(container: Control, v1_filename: String) -> void:
 			(child as Panel).visible = not use_chip
 	var count := container.get_node_or_null("CountLabel") as Label
 	if count:
+		count.visible = false
 		_layout_stack_count_label(count)
 
 
-## v3: count bleeds at bottom-right of the chip. v1/v2: fixed inset near the stack corner.
+## Count labels are kept in the tree for layout helpers but stay hidden.
 func _layout_stack_count_label(count_lbl: Label) -> void:
 	if count_lbl == null:
 		return
+	count_lbl.visible = false
 	if HudSkin.version == "v3":
 		count_lbl.anchor_left = 1.0
 		count_lbl.anchor_right = 1.0
 		count_lbl.anchor_top = 1.0
 		count_lbl.anchor_bottom = 1.0
-		# Bleed past the art's bottom-right corner.
 		count_lbl.offset_left = -22.0
 		count_lbl.offset_top = -20.0
 		count_lbl.offset_right = 12.0
@@ -2548,11 +2550,24 @@ func _update_void_stacks() -> void:
 	if _p1_void_stack:
 		_p1_void_stack.visible = in_battle
 		if _p1_void_count_lbl:
+			_p1_void_count_lbl.visible = false
 			_p1_void_count_lbl.text = str(_void_piles[0].size())
 	if _p2_void_stack:
 		_p2_void_stack.visible = in_battle
 		if _p2_void_count_lbl:
+			_p2_void_count_lbl.visible = false
 			_p2_void_count_lbl.text = str(_void_piles[1].size())
+
+## Magitech gradient chrome for battle overlay Buttons (keeps caller size/font).
+func _style_overlay_button(btn: Button, wire_sfx: bool = false) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", GameDialog.BTN_TEXT)
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.62, 0.72, 0.85))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+
 
 func _open_void_modal(player: int) -> void:
 	if _void_modal != null:
@@ -2634,7 +2649,7 @@ func _open_void_modal(player: int) -> void:
 			_void_modal.queue_free()
 			_void_modal = null
 		await _await_prompt_dismiss_delay())
-	SFXManager.wire_prompt_button(close_btn)
+	_style_overlay_button(close_btn, true)
 	title_row.add_child(close_btn)
 
 	# Scrollable card grid
@@ -2803,9 +2818,10 @@ func _build_observer_peek_panel() -> void:
 		var btn := Button.new()
 		btn.text = modes[i]
 		btn.add_theme_font_size_override("font_size", 10)
-		btn.add_theme_color_override("font_color", Color(0.70, 0.92, 1.0, 1.0))
+		btn.custom_minimum_size = Vector2(48.0, 24.0)
 		var idx := i
 		btn.pressed.connect(func() -> void: _set_observer_peek(idx))
+		_style_overlay_button(btn, true)
 		hbox.add_child(btn)
 		_observer_peek_btns.append(btn)
 
@@ -3236,32 +3252,17 @@ func _build_attack_confirm_panel() -> void:
 	confirm_btn.text = "ATTACK"
 	confirm_btn.custom_minimum_size = Vector2(100, 36)
 	confirm_btn.add_theme_font_size_override("font_size", 14)
-	var csb := StyleBoxFlat.new()
-	csb.bg_color = Color(0.55, 0.12, 0.08, 1.0)
-	csb.border_width_left   = 2; csb.border_width_top    = 2
-	csb.border_width_right  = 2; csb.border_width_bottom = 2
-	csb.border_color = Color(1.0, 0.35, 0.2, 0.9)
-	csb.corner_radius_top_left = 5; csb.corner_radius_top_right = 5
-	csb.corner_radius_bottom_right = 5; csb.corner_radius_bottom_left = 5
-	confirm_btn.add_theme_stylebox_override("normal", csb)
 	confirm_btn.pressed.connect(_confirm_attack)
+	_style_overlay_button(confirm_btn, true)
 	hbox.add_child(confirm_btn)
 
 	var cancel_btn2 := Button.new()
 	cancel_btn2.text = "CANCEL"
 	cancel_btn2.custom_minimum_size = Vector2(100, 36)
 	cancel_btn2.add_theme_font_size_override("font_size", 14)
-	var xsb := StyleBoxFlat.new()
-	xsb.bg_color = Color(0.08, 0.10, 0.22, 1.0)
-	xsb.border_width_left   = 2; xsb.border_width_top    = 2
-	xsb.border_width_right  = 2; xsb.border_width_bottom = 2
-	xsb.border_color = Color(0.38, 0.65, 1.0, 0.6)
-	xsb.corner_radius_top_left = 5; xsb.corner_radius_top_right = 5
-	xsb.corner_radius_bottom_right = 5; xsb.corner_radius_bottom_left = 5
-	cancel_btn2.add_theme_stylebox_override("normal", xsb)
 	cancel_btn2.pressed.connect(_cancel_confirm_attack)
+	_style_overlay_button(cancel_btn2, true)
 	hbox.add_child(cancel_btn2)
-	SFXManager.wire_prompt_buttons_in(_attack_confirm_panel)
 
 # ─────────────────────────────────────────────────────────────
 # Card Context Menu
@@ -3351,7 +3352,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	# ── Fullscreen backdrop — catches outside clicks to dismiss ──
 	var backdrop := Control.new()
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.z_index = 9
+	backdrop.z_index = Z_CONTEXT_BACKDROP
 	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
 	backdrop.gui_input.connect(func(e: InputEvent) -> void:
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
@@ -3361,7 +3362,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 
 	# ── Build fresh popup node ────────────────────────────────
 	var popup := Panel.new()
-	popup.z_index = 10
+	popup.z_index = Z_CONTEXT_POPUP
 	popup.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.04, 0.07, 0.16, 0.97)
@@ -3675,23 +3676,6 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
-		var esb := StyleBoxFlat.new()
-		esb.bg_color = Color(0.08, 0.12, 0.28, 1.0)
-		esb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
-		esb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
-		esb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
-		esb.corner_radius_bottom_left  = int(6.0 * CTX_MENU_SCALE)
-		# Even content box so icon/text centers in the square button.
-		esb.content_margin_left = 0
-		esb.content_margin_top = 0
-		esb.content_margin_right = 0
-		esb.content_margin_bottom = 0
-		btn.add_theme_stylebox_override("normal", esb)
-		btn.add_theme_stylebox_override("pressed", esb)
-		btn.add_theme_stylebox_override("focus", esb)
-		var esbh := esb.duplicate() as StyleBoxFlat
-		esbh.bg_color = Color(0.15, 0.25, 0.55, 1.0)
-		btn.add_theme_stylebox_override("hover", esbh)
 		if BluffEmoji.uses_custom() and BluffEmoji.has_tex(str(emoji)):
 			BluffEmoji.apply_button(btn, str(emoji), emoji_sz * 0.78)
 		else:
@@ -3700,28 +3684,22 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		btn.pressed.connect(func() -> void:
 			_set_bluff_animated(snap_player, snap_row, snap_col, snap_emoji)
 			backdrop.queue_free())
+		_style_overlay_button(btn, true)
 		hbox.add_child(btn)
 
 	var clear_btn := Button.new()
 	clear_btn.text = "✕  Remove Bluff"
 	clear_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	clear_btn.add_theme_font_size_override("font_size", int(14.0 * CTX_MENU_SCALE))
-	clear_btn.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
-	var csb := StyleBoxFlat.new()
-	csb.bg_color = Color(0.08, 0.08, 0.16, 1.0)
-	csb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
-	csb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
-	csb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
-	csb.corner_radius_bottom_left  = int(6.0 * CTX_MENU_SCALE)
-	clear_btn.add_theme_stylebox_override("normal", csb)
+	clear_btn.custom_minimum_size = Vector2(160.0 * CTX_MENU_SCALE, 36.0 * CTX_MENU_SCALE)
 	clear_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	clear_btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(snap_player, snap_row, snap_col, "")
 		_refresh_bluff_label(snap_player, snap_row, snap_col)
 		backdrop.queue_free())
+	_style_overlay_button(clear_btn, false)
 	vbox.add_child(clear_btn)
-	SFXManager.wire_prompt_buttons_in(vbox)
 
 func _hide_card_context() -> void:
 	if is_instance_valid(_context_backdrop):
@@ -4699,7 +4677,7 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	# ── Fullscreen backdrop ───────────────────────────────────
 	var backdrop := Control.new()
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.z_index = 9
+	backdrop.z_index = Z_CONTEXT_BACKDROP
 	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
 	backdrop.gui_input.connect(func(e: InputEvent) -> void:
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
@@ -4709,7 +4687,7 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 
 	# ── Popup panel ───────────────────────────────────────────
 	var popup := Panel.new()
-	popup.z_index = 10
+	popup.z_index = Z_CONTEXT_POPUP
 	popup.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.04, 0.07, 0.16, 0.97)
@@ -6180,45 +6158,41 @@ func _update_fog(delta: float) -> void:
 
 func _build_union_suggest_button() -> void:
 	const BTN_SIZE: float = 110.0
-	# Glow must be larger than the button — same-size glow sits fully under the opaque icon.
-	const GLOW_SIZE: float = BTN_SIZE * 1.55
 	const Y_NUDGE: float = -34.0
 
-	# Pulsing cyan halo behind the tappable icon.
-	var glow := TextureRect.new()
-	glow.texture = HudSkin.hud_tex("ui_icon_union.png")
-	glow.ignore_texture_size = true
-	glow.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
-	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
-	glow.offset_left   = -(GLOW_SIZE * 0.5)
-	glow.offset_right  =  (GLOW_SIZE * 0.5)
-	glow.offset_top    = -(GLOW_SIZE * 0.5) + Y_NUDGE
-	glow.offset_bottom =  (GLOW_SIZE * 0.5) + Y_NUDGE
-	glow.pivot_offset = Vector2(GLOW_SIZE * 0.5, GLOW_SIZE * 0.5)
-	glow.modulate    = Color(0.25, 0.90, 1.00, 0.0)
-	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	glow.z_index  = 3
-	glow.visible  = false
-	add_child(glow)
-	_union_suggest_glow = glow
-
-	# Tappable button on top (smaller than glow so the halo peeks around it).
 	var btn := TextureButton.new()
-	btn.texture_normal   = HudSkin.hud_tex("ui_icon_union.png")
+	btn.texture_normal = HudSkin.hud_tex("ui_icon_union.png")
 	btn.ignore_texture_size = true
 	btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	btn.anchor_left   = 0.5; btn.anchor_right  = 0.5
-	btn.anchor_top    = 0.5; btn.anchor_bottom = 0.5
-	btn.offset_left   = -(BTN_SIZE * 0.5); btn.offset_right  =  (BTN_SIZE * 0.5)
-	btn.offset_top    = -(BTN_SIZE * 0.5) + Y_NUDGE; btn.offset_bottom =  (BTN_SIZE * 0.5) + Y_NUDGE
-	btn.z_index  = 4
-	btn.visible  = false
+	btn.anchor_left = 0.5
+	btn.anchor_right = 0.5
+	btn.anchor_top = 0.5
+	btn.anchor_bottom = 0.5
+	btn.offset_left = -(BTN_SIZE * 0.5)
+	btn.offset_right = BTN_SIZE * 0.5
+	btn.offset_top = -(BTN_SIZE * 0.5) + Y_NUDGE
+	btn.offset_bottom = BTN_SIZE * 0.5 + Y_NUDGE
+	btn.z_index = 4
+	btn.visible = false
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	btn.pressed.connect(_on_union_suggest_pressed)
 	add_child(btn)
 	_union_suggest_btn = btn
+
+	# Pulse overlay — same rect as the button art, drawn on top (not a larger halo).
+	var glow := TextureRect.new()
+	glow.texture = HudSkin.hud_tex("ui_icon_union.png")
+	glow.ignore_texture_size = true
+	glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.z_index = 1
+	glow.modulate = Color(0.25, 0.90, 1.00, 0.0)
+	glow.visible = false
+	btn.add_child(glow)
+	_union_suggest_glow = glow
+
 	btn.mouse_entered.connect(func():
 		_show_hud_tooltip("Tap to summon a Union card")
 		_v3_hover_scale_enter(btn))
@@ -6344,20 +6318,28 @@ func _apply_battle_hud_skin_layout() -> void:
 func _apply_tech_void_stack_layout() -> void:
 	if HudSkin.version == "v3":
 		# Pink circular ports in the top dashboard chrome.
-		var chip_s: float = clampf(size.y * _V3_ZONE_CHIP_S, 64.0, 86.0)
+		# Grow from the locked (previous) center so position doesn't drift.
+		var lock_s: float = clampf(size.y * _V3_ZONE_CHIP_S_LOCK, 64.0, 86.0)
+		var chip_s: float = clampf(size.y * _V3_ZONE_CHIP_S, 66.0, 92.0)
 		var chip_y: float = size.y * _V3_ZONE_CHIP_Y
-		_place_v3_chip(_p1_void_stack, _V3_ZONE_VOID_X, chip_y, chip_s, false)
-		_place_v3_chip(_p1_tech_stack, _V3_ZONE_TECH_X, chip_y, chip_s, false)
-		_place_v3_chip(_p2_void_stack, _V3_ZONE_VOID_X, chip_y, chip_s, true)
-		_place_v3_chip(_p2_tech_stack, _V3_ZONE_TECH_X, chip_y, chip_s, true)
+		_place_v3_chip(_p1_void_stack, _V3_ZONE_VOID_X, chip_y, chip_s, false, lock_s)
+		_place_v3_chip(_p1_tech_stack, _V3_ZONE_TECH_X, chip_y, chip_s, false, lock_s)
+		_place_v3_chip(_p2_void_stack, _V3_ZONE_VOID_X, chip_y, chip_s, true, lock_s)
+		_place_v3_chip(_p2_tech_stack, _V3_ZONE_TECH_X, chip_y, chip_s, true, lock_s)
 		_nudge_v3_chip(_p2_void_stack, _V3_CHIP_P2_NUDGE)
 		_nudge_v3_chip(_p2_tech_stack, _V3_CHIP_P2_NUDGE)
+		_nudge_v3_chip(_p1_tech_stack, _V3_TECH_CHIP_NUDGE)
+		_nudge_v3_chip(_p2_tech_stack, _V3_TECH_CHIP_NUDGE)
+		_nudge_v3_chip(_p2_tech_stack, _V3_TECH_CHIP_P2_NUDGE)
 		return
-	# Restore v1/v2 corner stack geometry.
-	_layout_legacy_stack(_p1_void_stack, true, 8.0, 84.0)
-	_layout_legacy_stack(_p1_tech_stack, true, 88.0, 164.0)
-	_layout_legacy_stack(_p2_void_stack, false, -80.0, -4.0)
-	_layout_legacy_stack(_p2_tech_stack, false, -156.0, -80.0)
+	# Restore v1/v2 corner stack geometry (slightly larger, same centers).
+	_layout_legacy_stack(_p1_void_stack, true, 5.0, 87.0)
+	_layout_legacy_stack(_p1_tech_stack, true, 85.0, 167.0)
+	_layout_legacy_stack(_p2_void_stack, false, -83.0, -1.0)
+	_layout_legacy_stack(_p2_tech_stack, false, -159.0, -77.0)
+	_nudge_v3_chip(_p1_tech_stack, _V3_TECH_CHIP_NUDGE)
+	_nudge_v3_chip(_p2_tech_stack, _V3_TECH_CHIP_NUDGE)
+	_nudge_v3_chip(_p2_tech_stack, _V3_TECH_CHIP_P2_NUDGE)
 
 
 func _layout_legacy_stack(stack: Control, left_side: bool, x0: float, x1: float) -> void:
@@ -6373,28 +6355,40 @@ func _layout_legacy_stack(stack: Control, left_side: bool, x0: float, x1: float)
 	stack.anchor_bottom = 0.0
 	stack.offset_left = x0
 	stack.offset_right = x1
-	stack.offset_top = 100.0
-	stack.offset_bottom = 196.0
+	# Previous 100–196 (center 148, h 96) → slight grow keeping center.
+	stack.offset_top = 97.0
+	stack.offset_bottom = 199.0
 	stack.z_index = 4
 	var count := stack.get_node_or_null("CountLabel") as Label
 	if count:
 		_layout_stack_count_label(count)
 
 
-func _place_v3_chip(stack: Control, x_frac: float, y: float, side: float, mirror: bool) -> void:
+func _place_v3_chip(
+		stack: Control,
+		x_frac: float,
+		y: float,
+		side: float,
+		mirror: bool,
+		lock_side: float = -1.0) -> void:
 	if stack == null or not is_instance_valid(stack) or size.x <= 1.0:
 		return
+	# Anchor rect uses lock_side (old size) so the visual center stays put when `side` grows.
+	var anchor_s: float = side if lock_side <= 0.0 else lock_side
 	var x: float = size.x * x_frac
 	if mirror:
-		x = size.x - x - side
+		x = size.x - x - anchor_s
+	var cx: float = x + anchor_s * 0.5
+	var cy: float = y + anchor_s * 0.5
+	var half: float = side * 0.5
 	stack.anchor_left = 0.0
 	stack.anchor_right = 0.0
 	stack.anchor_top = 0.0
 	stack.anchor_bottom = 0.0
-	stack.offset_left = x
-	stack.offset_top = y
-	stack.offset_right = x + side
-	stack.offset_bottom = y + side
+	stack.offset_left = cx - half
+	stack.offset_top = cy - half
+	stack.offset_right = cx + half
+	stack.offset_bottom = cy + half
 	stack.z_index = 6
 	stack.clip_contents = false
 	var count := stack.get_node_or_null("CountLabel") as Label
@@ -6750,11 +6744,12 @@ func _update_union_suggest_button() -> void:
 	_union_suggest_btn.visible  = show
 	_union_suggest_glow.visible = show
 	if show and (_union_suggest_tween == null or not _union_suggest_tween.is_valid()):
-		_union_suggest_glow.modulate = Color(0.25, 0.90, 1.00, 0.20)
+		# Slow, subtle cyan wash — narrow alpha band, long ease (~5s cycle).
+		_union_suggest_glow.modulate = Color(0.25, 0.90, 1.00, 0.14)
 		_union_suggest_tween = create_tween().set_loops()
-		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.75, 0.7) \
+		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.34, 2.4) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.18, 0.7) \
+		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.12, 2.4) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	elif not show:
 		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
@@ -8233,15 +8228,17 @@ func _refresh_card_node(player: int, row: int, col: int) -> void:
 
 var _tech_hand_overlay: Control = null
 
-func _refresh_tech_hand() -> void:
+func _refresh_tech_hand(player: int = -1) -> void:
 	_dismiss_tech_hand_overlay()
 
-	var player   := GameState.current_player
-	var crystals : int   = GameState.crystals[player]
-	var hand     : Array = GameState.tech_hands[player]
+	if player < 0:
+		player = GameState.current_player
+	var crystals: int = GameState.crystals[player]
+	var hand: Array = GameState.tech_hands[player]
+	var conceal: bool = player != _battle_local_player()
 
-	const PAD : int = 20
-	const GAP : int = 12
+	const PAD: int = 20
+	const GAP: int = 12
 
 	# ── Fullscreen overlay ───────────────────────────────────────
 	_tech_hand_overlay = Control.new()
@@ -8257,28 +8254,28 @@ func _refresh_tech_hand() -> void:
 
 	# ── Panel filling screen (with small margin) ─────────────────
 	var panel_c := PanelContainer.new()
-	panel_c.anchor_left   = 0.0
-	panel_c.anchor_top    = 0.0
-	panel_c.anchor_right  = 1.0
+	panel_c.anchor_left = 0.0
+	panel_c.anchor_top = 0.0
+	panel_c.anchor_right = 1.0
 	panel_c.anchor_bottom = 1.0
-	panel_c.offset_left   = PAD
-	panel_c.offset_top    = PAD
-	panel_c.offset_right  = -PAD
+	panel_c.offset_left = PAD
+	panel_c.offset_top = PAD
+	panel_c.offset_right = -PAD
 	panel_c.offset_bottom = -PAD
 	var psb := StyleBoxFlat.new()
 	psb.bg_color = Color(0.05, 0.07, 0.17, 0.98)
-	psb.border_width_left   = 2
-	psb.border_width_top    = 2
-	psb.border_width_right  = 2
+	psb.border_width_left = 2
+	psb.border_width_top = 2
+	psb.border_width_right = 2
 	psb.border_width_bottom = 2
 	psb.border_color = Color(0.30, 0.85, 1.0, 0.50)
-	psb.corner_radius_top_left     = 8
-	psb.corner_radius_top_right    = 8
-	psb.corner_radius_bottom_left  = 8
+	psb.corner_radius_top_left = 8
+	psb.corner_radius_top_right = 8
+	psb.corner_radius_bottom_left = 8
 	psb.corner_radius_bottom_right = 8
-	psb.content_margin_left   = PAD
-	psb.content_margin_right  = PAD
-	psb.content_margin_top    = 12
+	psb.content_margin_left = PAD
+	psb.content_margin_right = PAD
+	psb.content_margin_top = 12
 	psb.content_margin_bottom = PAD
 	panel_c.add_theme_stylebox_override("panel", psb)
 	_tech_hand_overlay.add_child(panel_c)
@@ -8297,13 +8294,19 @@ func _refresh_tech_hand() -> void:
 		and "stone_age" in GameState.active_dungeon_modifiers
 	var _tech_royale: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 		and "tech_royale" in GameState.active_dungeon_modifiers
-	var can_use_tech: bool = (GameState.current_phase == GameState.Phase.MODE_SELECT
+	var can_use_tech: bool = (not conceal
+		and GameState.current_phase == GameState.Phase.MODE_SELECT
 		and (not _tech_used_this_turn[player] or _tech_royale)
 		and player == GameState.current_player
 		and not _stone_age)
 
 	var title := Label.new()
-	title.text = "TECH HAND  —  Choose a card to play" if can_use_tech else "TECH HAND  —  Viewing cards"
+	if conceal:
+		title.text = "ENEMY TECH  —  Unknown cards"
+	elif can_use_tech:
+		title.text = "TECH HAND  —  Choose a card to play"
+	else:
+		title.text = "TECH HAND  —  Viewing cards"
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title.add_theme_font_size_override("font_size", 17)
 	title.add_theme_color_override("font_color", Color(0.30, 0.85, 1.0))
@@ -8317,6 +8320,8 @@ func _refresh_tech_hand() -> void:
 	cancel.add_theme_font_size_override("font_size", 13)
 	cancel.pressed.connect(func() -> void:
 		_dismiss_tech_hand_overlay()
+		if conceal:
+			return
 		if selection_state == SelectionState.SELECTING_TECH_TARGET \
 				and pending_tech_filter.begins_with("own_units_up_to_"):
 			var picked: int = _tech_reveal_picked.size()
@@ -8334,7 +8339,7 @@ func _refresh_tech_hand() -> void:
 		if not mid_reveal and GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
 			_set_selection_state(SelectionState.SELECTING_ATTACKER)
 			_highlight_attackable_chars())
-	SFXManager.wire_prompt_button(cancel)
+	_style_overlay_button(cancel, true)
 	title_row.add_child(cancel)
 
 	# Card row — each card column grows to fill remaining height
@@ -8353,13 +8358,14 @@ func _refresh_tech_hand() -> void:
 		left_arr.custom_minimum_size = Vector2(40.0, 0.0)
 		left_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		left_arr.add_theme_font_size_override("font_size", 22)
+		SFXManager.wire_prompt_button(left_arr)
 		scroll_row.add_child(left_arr)
 
 		tech_scroll_c = ScrollContainer.new()
 		tech_scroll_c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		tech_scroll_c.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+		tech_scroll_c.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		tech_scroll_c.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-		tech_scroll_c.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_DISABLED
+		tech_scroll_c.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		scroll_row.add_child(tech_scroll_c)
 
 		var right_arr := Button.new()
@@ -8367,6 +8373,7 @@ func _refresh_tech_hand() -> void:
 		right_arr.custom_minimum_size = Vector2(40.0, 0.0)
 		right_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		right_arr.add_theme_font_size_override("font_size", 22)
+		SFXManager.wire_prompt_button(right_arr)
 		scroll_row.add_child(right_arr)
 
 		left_arr.pressed.connect(func() -> void:
@@ -8385,7 +8392,7 @@ func _refresh_tech_hand() -> void:
 	for i in range(hand.size()):
 		var tech_name: String = str(hand[i])
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
-		var can_use := data != null and crystals >= data.crystal_cost
+		var can_use := (not conceal) and data != null and crystals >= data.crystal_cost
 		# Reveal-type cards need at least 1 face-down opponent cell to be usable
 		# (includes dead_end cells — Radar can target blank slots)
 		if can_use and data != null and data.effect_type in [
@@ -8396,26 +8403,57 @@ func _refresh_tech_hand() -> void:
 
 		var col := VBoxContainer.new()
 		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		col.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+		col.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		col.add_theme_constant_override("separation", 8)
 		card_hbox.add_child(col)
 
-		var img := TextureRect.new()
-		img.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		img.size_flags_vertical   = Control.SIZE_EXPAND_FILL
-		img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		img.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		if not can_use:
-			img.modulate = Color(0.5, 0.5, 0.5, 0.8)
-		var snake: String = tech_name.to_lower() \
-			.replace(" ", "_").replace("'", "").replace("-", "_")
-		var path: String = "res://assets/textures/cards/full_cards/" + snake + ".png"
-		if not ResourceLoader.exists(path):
-			path = "res://assets/textures/cards/full_cards/tech_" + snake + ".png"
-		if ResourceLoader.exists(path):
-			img.texture = load(path)
-		col.add_child(img)
+		var card_wrap := Control.new()
+		card_wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card_wrap.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		card_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		col.add_child(card_wrap)
+
+		if conceal:
+			var aspect := AspectRatioContainer.new()
+			aspect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			aspect.ratio = 819.0 / 1126.0
+			aspect.stretch_mode = AspectRatioContainer.STRETCH_FIT
+			aspect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card_wrap.add_child(aspect)
+			var shadow := ColorRect.new()
+			shadow.color = Color(0.0, 0.0, 0.0, 1.0)
+			shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			aspect.add_child(shadow)
+			var mystery := Label.new()
+			mystery.text = "???"
+			mystery.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			mystery.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			mystery.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			mystery.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
+			mystery.add_theme_font_size_override("font_size", 48)
+			mystery.add_theme_color_override("font_color", Color.WHITE)
+			mystery.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+			mystery.add_theme_constant_override("shadow_offset_x", 2)
+			mystery.add_theme_constant_override("shadow_offset_y", 2)
+			mystery.add_theme_constant_override("shadow_outline_size", 3)
+			mystery.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card_wrap.add_child(mystery)
+		else:
+			var img := TextureRect.new()
+			img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			if not can_use:
+				img.modulate = Color(0.5, 0.5, 0.5, 0.8)
+			var snake: String = tech_name.to_lower() \
+				.replace(" ", "_").replace("'", "").replace("-", "_")
+			var path: String = "res://assets/textures/cards/full_cards/" + snake + ".png"
+			if not ResourceLoader.exists(path):
+				path = "res://assets/textures/cards/full_cards/tech_" + snake + ".png"
+			if ResourceLoader.exists(path):
+				img.texture = load(path)
+			card_wrap.add_child(img)
 
 		if can_use_tech:
 			var use_btn := Button.new()
@@ -8427,7 +8465,7 @@ func _refresh_tech_hand() -> void:
 			use_btn.set_meta("tut_tech", tech_name)
 			var captured: String = tech_name
 			use_btn.pressed.connect(func() -> void: _on_tech_use_pressed(captured, true))
-			SFXManager.wire_prompt_button(use_btn)
+			_style_overlay_button(use_btn, true)
 			col.add_child(use_btn)
 
 func _dismiss_tech_hand_overlay() -> void:
@@ -8547,6 +8585,7 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 			select_btn.pressed.connect(func() -> void:
 				_close_blackmail_tech_overlay()
 				turn_manager.resolve_blackmail_choice(captured))
+			_style_overlay_button(select_btn, true)
 			col.add_child(select_btn)
 
 	var end_turn_btn := Button.new()
@@ -8556,9 +8595,9 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 	end_turn_btn.pressed.connect(func() -> void:
 		_close_blackmail_tech_overlay()
 		turn_manager.resolve_blackmail_choice(""))
+	_style_overlay_button(end_turn_btn, true)
 	vbox.add_child(end_turn_btn)
 
-	SFXManager.wire_prompt_buttons_in(vbox)
 	SFXManager.play(SFXManager.SFX_POPUP)
 
 func _on_awaiting_blackmail_tech_select(player: int) -> void:
@@ -8878,7 +8917,7 @@ func _show_tax_confirm(player: int) -> void:
 	var confirm_btn := Button.new()
 	confirm_btn.text = "End Turn  (−%d◆)" % tax
 	confirm_btn.add_theme_font_size_override("font_size", 15)
-	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.3))
+	confirm_btn.custom_minimum_size = Vector2(180.0, 42.0)
 	confirm_btn.pressed.connect(func() -> void:
 		if _tax_confirm_panel != null:
 			_tax_confirm_panel.queue_free()
@@ -8890,18 +8929,20 @@ func _show_tax_confirm(player: int) -> void:
 			GameState.format_player_label(player), tax, GameState.skip_counts[player]])
 		await GameState.wait_crystal_animation()
 		turn_manager.end_attacks_early())
+	_style_overlay_button(confirm_btn, true)
 	row.add_child(confirm_btn)
 
 	var cancel_btn2 := Button.new()
 	cancel_btn2.text = "Cancel"
 	cancel_btn2.add_theme_font_size_override("font_size", 15)
+	cancel_btn2.custom_minimum_size = Vector2(120.0, 42.0)
 	cancel_btn2.pressed.connect(func() -> void:
 		if _tax_confirm_panel != null:
 			_tax_confirm_panel.queue_free()
 			_tax_confirm_panel = null
 		await _await_prompt_dismiss_delay())
+	_style_overlay_button(cancel_btn2, true)
 	row.add_child(cancel_btn2)
-	SFXManager.wire_prompt_buttons_in(panel)
 
 func _on_tech_card_btn(tech_name: String) -> void:
 	pending_tech_name = tech_name
@@ -12893,6 +12934,10 @@ func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
 			# Straight warm streaks only — never squiggly electric bolts.
 			spark = _vfx_make_fire_spark(rng.randf_range(14.0, 64.0), 12, rng)
 			spark.modulate = warm
+			# Helper uses absolute z for board-root bursts; under this overlay that
+			# would draw behind the dim (overlay z=100). Keep sparks as overlay kids.
+			spark.z_as_relative = true
+			spark.z_index = 12
 		else:
 			var cr := ColorRect.new()
 			var blen: float = rng.randf_range(14.0, 56.0) * rng.randf_range(0.55, 1.80)
@@ -12933,6 +12978,9 @@ func _spawn_union_landing_dust(overlay: Control, origin: Vector2) -> void:
 		if use_tex:
 			dust = _vfx_make_smoke_puff(r * 2.0, rng.randf() < 0.5, 8,
 					Color(0.78, 0.72, 0.58, 1.0))
+			# Same absolute-z trap as landing sparks — stay inside the overlay stack.
+			dust.z_as_relative = true
+			dust.z_index = 8
 		else:
 			var panel := Panel.new()
 			var side: float = r * 2.0
@@ -13263,13 +13311,14 @@ func _start_pre_endgame_shake_fx() -> void:
 	_pre_endgame_shake_fx = true
 	# Shake top dashboard + bottom vault strips and their widgets (not the grid).
 	_begin_pre_endgame_strip_shake()
-	# 1) Hide attack badge art; replace real counts with error ticks (both players).
-	_set_pre_endgame_attack_badge_art_visible(false)
-	_set_pre_endgame_attack_glitch_visible(true)
-	# 2) Jolt + dashboard short-circuit sparks/smoke (both sides).
+	# Hide attack-count number text for the shake beat (badge art can stay).
+	for lbl: Label in [_p1_attack_lbl, _p2_attack_lbl]:
+		if lbl != null and is_instance_valid(lbl):
+			lbl.visible = false
+	# 1) Jolt + dashboard short-circuit sparks/smoke (both sides).
 	SFXManager.play(_SFX_ELECTRIC_SHORT)
 	_pre_endgame_dashboard_short_circuit_loop()
-	# 3) Random error glyphs on crystal + attack count labels.
+	# 2) Random error glyphs on crystal amount labels only.
 	_pre_endgame_hud_glitch_loop()
 	# Crystal-break plate stays still (no jitter).
 
@@ -13350,12 +13399,6 @@ func _tick_pre_endgame_hud_glitch() -> void:
 		_p2_bottom_crystal.text = _random_glitch_token(3, 5)
 		_p2_bottom_crystal.modulate = Color(1.0, 0.75, 0.55, 1.0) if randf() < 0.35 \
 				else Color(0.85, 0.95, 1.0, 1.0)
-	if is_instance_valid(_p1_attack_lbl) and _p1_attack_lbl.get_parent() != null \
-			and (_p1_attack_lbl.get_parent() as Control).visible:
-		_p1_attack_lbl.text = _random_glitch_token(1, 3)
-	if is_instance_valid(_p2_attack_lbl) and _p2_attack_lbl.get_parent() != null \
-			and (_p2_attack_lbl.get_parent() as Control).visible:
-		_p2_attack_lbl.text = _random_glitch_token(1, 3)
 
 
 func _pre_endgame_hud_glitch_loop() -> void:
@@ -14706,13 +14749,13 @@ func _show_endgame_screen(winner: int) -> void:
 	_endgame_black_backdrop = ColorRect.new()
 	_endgame_black_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_endgame_black_backdrop.color = Color.BLACK
-	_endgame_black_backdrop.z_index = 9
+	_endgame_black_backdrop.z_index = Z_ENDGAME_BACKDROP
 	_endgame_black_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_endgame_black_backdrop)
 
 	var overlay := Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.z_index = 10
+	overlay.z_index = Z_ENDGAME_OVERLAY
 	overlay.modulate.a = 0.0
 	add_child(overlay)
 
@@ -14970,27 +15013,7 @@ func _make_defeat_choice_button(label_text: String) -> Button:
 	btn.custom_minimum_size = Vector2(440, 52)
 	btn.add_theme_font_size_override("font_size", 22)
 	_apply_endgame_serif_font(btn, 600)
-	var normal := StyleBoxFlat.new()
-	normal.bg_color = Color(0.08, 0.1, 0.18, 0.92)
-	normal.border_width_left = 2
-	normal.border_width_top = 2
-	normal.border_width_right = 2
-	normal.border_width_bottom = 2
-	normal.border_color = Color(0.45, 0.62, 0.95, 0.55)
-	normal.corner_radius_top_left = 8
-	normal.corner_radius_top_right = 8
-	normal.corner_radius_bottom_right = 8
-	normal.corner_radius_bottom_left = 8
-	var hover := normal.duplicate() as StyleBoxFlat
-	hover.bg_color = Color(0.12, 0.16, 0.28, 0.98)
-	hover.border_color = Color(0.55, 0.75, 1.0, 0.9)
-	btn.add_theme_stylebox_override("normal", normal)
-	btn.add_theme_stylebox_override("hover", hover)
-	btn.add_theme_stylebox_override("pressed", normal)
-	btn.add_theme_stylebox_override("focus", normal)
-	btn.add_theme_stylebox_override("disabled", normal)
-	btn.add_theme_color_override("font_color", Color(0.92, 0.96, 1.0, 1.0))
-	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.58, 0.65, 0.8))
+	_style_overlay_button(btn, true)
 	return btn
 
 func _fade_endgame_overlay_and_run(overlay: Control, action: Callable) -> void:

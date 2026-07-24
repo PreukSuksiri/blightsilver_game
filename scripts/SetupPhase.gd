@@ -1436,7 +1436,7 @@ func _on_confirm() -> void:
 	_flip_sequence()
 
 func _flip_sequence() -> void:
-	var facedown_tex: Texture2D = load("res://assets/textures/cards/frames/facedown_frame.png")
+	var facedown_tex: Texture2D = load("res://assets/textures/cards/frames/facedown_frame_medium.png")
 
 	# Collect occupied cells row-by-row
 	var occupied: Array = []

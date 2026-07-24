@@ -72,7 +72,7 @@ const FLAG_DEFS: Dictionary = {
 
 const ART_PLACEHOLDER: Texture2D    = preload("res://assets/textures/cards/placeholder.png")
 const VELLUM_FRAME: Texture2D       = preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
-const FACEDOWN_TEX: Texture2D       = preload("res://assets/textures/cards/frames/facedown_frame.png")
+const FACEDOWN_TEX: Texture2D       = preload("res://assets/textures/cards/frames/facedown_frame_medium.png")
 const BLANK_FRAME_TEX: Texture2D    = preload("res://assets/textures/cards/frames/vellum_card_frame_full.png")
 var ICON_BLANK_FOUND: Texture2D
 var ICON_TRAP: Texture2D
@@ -788,7 +788,7 @@ func _show_blank() -> void:
 func _show_revealed_dead_end() -> void:
 	# Face-up blank slot — keep the blank frame visible until dissolve (same cadence as traps).
 	_show_blank()
-	_blank_found_icon.visible = true
+	# No fish-bone / blank-found badge on card nodes (game design).
 
 # ─────────────────────────────────────────────────────────────
 # Empty slot (blank card while peeking — completely invisible)
@@ -808,8 +808,7 @@ func _show_empty_slot() -> void:
 	_set_attacked_icon(false)
 	_flag_bar.visible = false
 	_last_loaded_art = ""
-	var is_revealed_blank := card_data != null and card_data.face_up and not card_data.was_destroyed
-	_blank_found_icon.visible = is_revealed_blank
+	_blank_found_icon.visible = false
 	_trap_icon.visible        = false
 
 # ─────────────────────────────────────────────────────────────
@@ -1009,7 +1008,8 @@ func _show_trap_face_up() -> void:
 	_clear_rarity()
 	_flag_bar.visible = false
 	_blank_found_icon.visible = false
-	_trap_icon.visible        = true
+	# No trap-type badge on card nodes (game design).
+	_trap_icon.visible = false
 
 # ─────────────────────────────────────────────────────────────
 # Tech face-up

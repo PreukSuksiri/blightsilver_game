@@ -93,7 +93,7 @@ func _build_ui() -> void:
 	close_btn.custom_minimum_size = Vector2(100.0 * MENU_SCALE, 36.0 * MENU_SCALE)
 	close_btn.add_theme_font_size_override("font_size", int(13.0 * MENU_SCALE))
 	close_btn.pressed.connect(_on_cancel)
-	SFXManager.wire_prompt_button(close_btn)
+	_style_overlay_button(close_btn, true)
 	title_row.add_child(close_btn)
 
 	# ── Card row (with scroll when > 3 unions) ────────────
@@ -112,6 +112,7 @@ func _build_ui() -> void:
 		left_arr.custom_minimum_size = Vector2(40.0 * MENU_SCALE, 0.0)
 		left_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		left_arr.add_theme_font_size_override("font_size", int(22.0 * MENU_SCALE))
+		SFXManager.wire_prompt_button(left_arr)
 		scroll_row.add_child(left_arr)
 
 		scroll_c = ScrollContainer.new()
@@ -126,6 +127,7 @@ func _build_ui() -> void:
 		right_arr.custom_minimum_size = Vector2(40.0 * MENU_SCALE, 0.0)
 		right_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		right_arr.add_theme_font_size_override("font_size", int(22.0 * MENU_SCALE))
+		SFXManager.wire_prompt_button(right_arr)
 		scroll_row.add_child(right_arr)
 
 		left_arr.pressed.connect(func() -> void:
@@ -189,12 +191,22 @@ func _build_ui() -> void:
 		btn.pressed.connect(func() -> void:
 			union_selected.emit(_player, captured_name, captured_zone)
 			queue_free())
-		SFXManager.wire_prompt_button(btn)
+		_style_overlay_button(btn, true)
 		col.add_child(btn)
 
 # ─────────────────────────────────────────────────────────────
 # Interaction
 # ─────────────────────────────────────────────────────────────
+func _style_overlay_button(btn: Button, wire_sfx: bool = false) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", GameDialog.BTN_TEXT)
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
+	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.62, 0.72, 0.85))
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+
+
 func _on_cancel() -> void:
 	union_cancelled.emit()
 	queue_free()
