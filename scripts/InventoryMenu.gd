@@ -328,6 +328,8 @@ func _refresh_items(_new_amount: int = 0) -> void:
 		GameDialog.sync_button_chrome_disabled(_scroll_use_btn)
 
 func _on_use_union_scroll() -> void:
+	if not GameDialog.try_press(&"use_union_scroll"):
+		return
 	var res: Dictionary = UnionScrollManager.use_scroll(get_tree().root, true)
 	if not res["success"]:
 		GameDialog.accept_overlay(

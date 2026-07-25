@@ -152,6 +152,8 @@ func _load_dungeon(dungeon_id: String) -> void:
 	_set_status("Loaded: %s  (%d nodes)" % [dungeon_id, _positions.size()])
 
 func _save_layout() -> void:
+	if not GameDialog.try_press(&"admin_dd_save"):
+		return
 	# Auto-apply current node panel edits and dungeon meta before saving
 	_apply_node_changes()
 	_layout["mode"]       = "story_mode" if _dungeon_mode_opt.selected == 1 else "daily_dungeon"

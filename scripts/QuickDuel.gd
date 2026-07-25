@@ -615,6 +615,8 @@ func _refresh_reroll_button() -> void:
 
 
 func _on_reroll_pressed() -> void:
+	if not GameDialog.try_press(&"qd_reroll"):
+		return
 	var cost: int = QuickDuelRewards.get_reroll_cost()
 	if Collection.credits < cost:
 		_status_lbl.text = "Not enough credits (%d needed)." % cost
@@ -661,7 +663,12 @@ func _apply_protagonist_to_battle() -> void:
 func _apply_ai_identity_to_battle(tier: String) -> void:
 	while GameState.player_portraits.size() < 2:
 		GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
-	var identity_id: String = SaveManager.get_quick_duel_identity(tier)
+	# Capsule may still show an identity excluded for the current hero (e.g. after
+	# switching protagonist). Re-roll for this battle only — do not rewrite offers.
+	var preferred_id: String = SaveManager.get_quick_duel_identity(tier)
+	var hero_id: String = SaveManager.quick_duel_protagonist_id
+	var identity_id: String = AIIdentityVault.resolve_identity_for_battle(
+		tier, hero_id, preferred_id)
 	GameState.battle_ai_identity_id = identity_id
 	var identity: Dictionary = AIIdentityVault.get_entry(identity_id)
 	if identity.is_empty():
@@ -680,6 +687,8 @@ func _apply_ai_identity_to_battle(tier: String) -> void:
 
 
 func launch_tutorial() -> void:
+	if not GameDialog.try_press(&"qd_tutorial"):
+		return
 	var intro: String = QuickDuelRewards.get_tutorial_intro_vn()
 	if intro.is_empty():
 		_status_lbl.text = "Tutorial intro VN not configured."
@@ -758,6 +767,8 @@ func _apply_tutorial_intro_battle_display() -> void:
 
 
 func _begin_guided_tutorial_battle(battle_path: String) -> void:
+	if not GameDialog.try_press(&"launch_battle"):
+		return
 	_prepare_quick_duel_tutorial_context()
 	_apply_tutorial_intro_battle_display()
 	GameState.new_game(GameState.GameMode.VS_AI)
@@ -773,6 +784,8 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 
 
 func launch_vault_duel(tier: String) -> void:
+	if not GameDialog.try_press(&"launch_battle"):
+		return
 	if not SaveManager.is_active_deck_ready():
 		SaveManager.show_deck_not_ready_overlay(self)
 		return

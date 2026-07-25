@@ -3360,14 +3360,19 @@ func _on_load_file_selected(path: String) -> void:
 	_load_graph(path)
 
 func _on_save_pressed() -> void:
+	if not GameDialog.try_press(&"admin_expl_save"):
+		return
 	_collect_graph_props()
 	_commit_selected_node()
 	if _graph_path.is_empty():
-		_on_save_as_pressed()
+		# Open Save As directly (don't re-enter _on_save_as_pressed cooldown).
+		_save_dialog.popup_centered(Vector2(900, 600))
 	else:
 		_save_graph(_graph_path)
 
 func _on_save_as_pressed() -> void:
+	if not GameDialog.try_press(&"admin_expl_save_as"):
+		return
 	_collect_graph_props()
 	_commit_selected_node()
 	_save_dialog.popup_centered(Vector2(900, 600))

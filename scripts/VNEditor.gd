@@ -5304,6 +5304,8 @@ func _input(event: InputEvent) -> void:
 # Save
 # ─────────────────────────────────────────────────────────────
 func _save() -> void:
+	if not GameDialog.try_press(&"admin_vn_save"):
+		return
 	if _file_path.is_empty():
 		_status_lbl.text = "No file open — select a file first."
 		return

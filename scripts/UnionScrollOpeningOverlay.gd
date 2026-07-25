@@ -6,8 +6,13 @@ signal reveal_finished
 const SCROLL_TEX_PATH: String = "res://assets/textures/inventory/ui_union_scroll.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
 const FULL_CARDS_DIR: String = "res://assets/textures/cards/full_cards/"
+const FANFARE_UNION_PATH: String = "res://assets/audio/fanfare/pack_fanfare_union.mp3"
 const DISPLAY_HOLD_SECONDS: float = 30.0
 const CARD_SETTLE_SECONDS: float = 0.2
+const FANFARE_FADE_IN_SECONDS: float = 0.2
+const FANFARE_FADE_OUT_SECONDS: float = 0.5
+const BGM_FADE_OUT_BEFORE_FANFARE: float = 0.3
+const BGM_FADE_IN_AFTER_FANFARE: float = 0.5
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0
 const _WHITE_GLOW: Color = Color(1.0, 1.0, 1.0, 0.72)
@@ -23,6 +28,10 @@ var _dismiss_allowed: bool = false
 var _anim_done: bool = false
 var _glow_sb: StyleBoxFlat = null
 var _card_tex: Texture2D = null
+var _fanfare_player: AudioStreamPlayer = null
+var _fanfare_tween: Tween = null
+var _bgm_restored: bool = false
+var _should_restore_bgm: bool = true
 
 var _bg: ColorRect = null
 var _pack_root: Control = null
@@ -137,6 +146,7 @@ func _build_ui() -> void:
 
 func _run() -> void:
 	_card_tex = _load_union_tex(_union_name)
+	await _play_union_fanfare()
 
 	var screen: Vector2 = get_viewport_rect().size
 	var cx: float = screen.x * 0.5
@@ -194,6 +204,7 @@ func _run() -> void:
 		elapsed += 0.05
 
 	_skip_requested = false
+	_fade_out_union_fanfare(true)
 
 	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
 	var t9: Tween = create_tween().set_parallel(true)
@@ -211,8 +222,126 @@ func _finish_reveal() -> void:
 	if _anim_done:
 		return
 	_anim_done = true
+	# If dismiss already started a fanfare fade, let that callback restore BGM.
+	if _fanfare_player != null and is_instance_valid(_fanfare_player):
+		_fade_out_union_fanfare(true)
 	reveal_finished.emit()
 	queue_free()
+
+
+func _exit_tree() -> void:
+	# Safety net: fade callbacks that captured this overlay can die on queue_free.
+	if _should_restore_bgm and not _bgm_restored and BGMManager.has_suspended():
+		_bgm_restored = true
+		BGMManager.resume_suspended(BGM_FADE_IN_AFTER_FANFARE)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Opening audio (union fanfare + settle sparkle)
+# ──────────────────────────────────────────────────────────────────────────────
+func _play_union_fanfare() -> void:
+	_bgm_restored = false
+	_stop_union_fanfare_immediate()
+	await BGMManager.suspend_current(BGM_FADE_OUT_BEFORE_FANFARE)
+	if not is_instance_valid(self):
+		return
+	if not ResourceLoader.exists(FANFARE_UNION_PATH):
+		_restore_bgm_after_fanfare()
+		return
+	var stream: AudioStream = load(FANFARE_UNION_PATH) as AudioStream
+	if stream == null:
+		_restore_bgm_after_fanfare()
+		return
+	_disable_stream_loop(stream)
+	_fanfare_player = AudioStreamPlayer.new()
+	_fanfare_player.stream = stream
+	_fanfare_player.bus = &"Music"
+	_fanfare_player.volume_db = -80.0
+	add_child(_fanfare_player)
+	_fanfare_player.play()
+	_fanfare_player.finished.connect(_on_fanfare_finished, CONNECT_ONE_SHOT)
+	if _fanfare_tween and _fanfare_tween.is_valid():
+		_fanfare_tween.kill()
+	_fanfare_tween = create_tween()
+	_fanfare_tween.tween_property(_fanfare_player, "volume_db", 0.0, FANFARE_FADE_IN_SECONDS) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+func _disable_stream_loop(stream: AudioStream) -> void:
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = false
+	elif stream is AudioStreamOggVorbis:
+		(stream as AudioStreamOggVorbis).loop = false
+	elif stream is AudioStreamWAV:
+		(stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_DISABLED
+
+func _fade_out_union_fanfare(restore_bgm: bool = true) -> void:
+	if not restore_bgm:
+		_should_restore_bgm = false
+	if _fanfare_player == null or not is_instance_valid(_fanfare_player):
+		_fanfare_player = null
+		if restore_bgm:
+			_restore_bgm_after_fanfare()
+		return
+	if _fanfare_tween and _fanfare_tween.is_valid():
+		_fanfare_tween.kill()
+	var player: AudioStreamPlayer = _fanfare_player
+	_fanfare_player = null
+	if player.finished.is_connected(_on_fanfare_finished):
+		player.finished.disconnect(_on_fanfare_finished)
+	if not player.playing:
+		player.queue_free()
+		if restore_bgm:
+			_restore_bgm_after_fanfare()
+		return
+	if player.get_parent() == self:
+		remove_child(player)
+		var host: Node = get_tree().root if get_tree() != null else null
+		if host != null:
+			host.add_child(player)
+		else:
+			player.queue_free()
+			if restore_bgm:
+				_restore_bgm_after_fanfare()
+			return
+	# Do not capture `self` — overlay may be freed before this fires.
+	var should_restore: bool = restore_bgm
+	var fade_in_sec: float = BGM_FADE_IN_AFTER_FANFARE
+	var tw: Tween = player.create_tween()
+	tw.tween_property(player, "volume_db", -80.0, FANFARE_FADE_OUT_SECONDS) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(player):
+			player.stop()
+			player.queue_free()
+		if should_restore:
+			BGMManager.resume_suspended(fade_in_sec))
+
+func _stop_union_fanfare_immediate() -> void:
+	if _fanfare_tween and _fanfare_tween.is_valid():
+		_fanfare_tween.kill()
+	_fanfare_tween = null
+	if _fanfare_player != null and is_instance_valid(_fanfare_player):
+		if _fanfare_player.finished.is_connected(_on_fanfare_finished):
+			_fanfare_player.finished.disconnect(_on_fanfare_finished)
+		_fanfare_player.stop()
+		_fanfare_player.queue_free()
+	_fanfare_player = null
+
+func _on_fanfare_finished() -> void:
+	if not is_instance_valid(self):
+		return
+	if _fanfare_player != null and is_instance_valid(_fanfare_player):
+		_fanfare_player.queue_free()
+	_fanfare_player = null
+	_restore_bgm_after_fanfare()
+
+func _restore_bgm_after_fanfare() -> void:
+	if _bgm_restored or not _should_restore_bgm:
+		return
+	if not BGMManager.has_suspended():
+		_bgm_restored = true
+		return
+	_bgm_restored = true
+	BGMManager.resume_suspended(BGM_FADE_IN_AFTER_FANFARE)
 
 func _wiggle(ctrl: Control) -> void:
 	var tw: Tween = create_tween()

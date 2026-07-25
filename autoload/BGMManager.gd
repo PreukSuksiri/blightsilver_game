@@ -46,6 +46,8 @@ var _target_volume_db: float = 0.0
 var _loop_restart_sec: float = -1.0
 var _deferred_play: Dictionary = {}
 var _last_play: Dictionary = {}
+## Snapshot used by pack/union fanfare to restore menu (or other) BGM afterward.
+var _suspended: Dictionary = {}
 
 
 func _ready() -> void:
@@ -296,6 +298,58 @@ func fade_out_and_stop(duration: float) -> void:
 		return
 	if _fade_tween != null and _fade_tween.is_valid():
 		await _fade_tween.finished
+
+
+## Memorize the current track and fade it out (for fanfare overlays).
+## If already suspended, keeps the original snapshot and does nothing.
+func suspend_current(fade_out: float = DEFAULT_FADE) -> void:
+	if not _suspended.is_empty() and not is_playing():
+		return
+	var path: String = _current_path
+	var context: String = _current_context
+	if path.is_empty() and not _last_play.is_empty():
+		path = str(_last_play.get("path", ""))
+	if context.is_empty() and not _last_play.is_empty():
+		context = str(_last_play.get("context", ""))
+	if path.is_empty() and not context.is_empty():
+		path = get_default_path(context)
+	if path.is_empty() and not is_playing():
+		_suspended.clear()
+		return
+	_suspended = {
+		"path": path,
+		"context": context,
+		"position": get_playback_position(),
+		"loop_from_sec": float(_last_play.get("loop_from_sec", _loop_restart_sec)),
+		"volume_pct": float(_last_play.get("volume_pct", 100.0)),
+	}
+	await fade_out_and_stop(fade_out)
+
+
+## Fade the memorized track back in from the saved playback position.
+func resume_suspended(fade_in: float = DEFAULT_FADE) -> void:
+	if _suspended.is_empty():
+		return
+	var d: Dictionary = _suspended.duplicate()
+	_suspended.clear()
+	var path: String = str(d.get("path", ""))
+	var context: String = str(d.get("context", ""))
+	if path.is_empty() and not context.is_empty():
+		path = get_default_path(context)
+	if path.is_empty():
+		return
+	play_path(
+		path,
+		fade_in,
+		0.0,
+		float(d.get("volume_pct", 100.0)),
+		context,
+		float(d.get("loop_from_sec", -1.0)),
+		float(d.get("position", 0.0)))
+
+
+func has_suspended() -> bool:
+	return not _suspended.is_empty()
 
 
 func _begin_stream(stream: AudioStream, path: String, fade_in: float, start_sec: float) -> void:

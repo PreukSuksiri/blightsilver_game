@@ -53,6 +53,8 @@ func _load_data() -> void:
 
 
 func _save_data() -> void:
+	if not GameDialog.try_press(&"admin_cgallery_save"):
+		return
 	var f := FileAccess.open(GALLERY_PATH, FileAccess.WRITE)
 	if f == null:
 		_status("ERROR: could not write to " + GALLERY_PATH)

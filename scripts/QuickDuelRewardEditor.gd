@@ -87,6 +87,8 @@ func _ready() -> void:
 
 
 func _on_save() -> void:
+	if not GameDialog.try_press(&"admin_qd_reward_save"):
+		return
 	var parsed: Variant = JSON.parse_string(_json_edit.text)
 	if not parsed is Dictionary:
 		_status_lbl.text = "Invalid JSON."

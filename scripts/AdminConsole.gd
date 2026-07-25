@@ -15,6 +15,8 @@ func _ready() -> void:
 	input_line.grab_focus()
 
 func _on_send() -> void:
+	if not GameDialog.try_press(&"admin_console_send"):
+		return
 	_execute(input_line.text)
 	if not is_inside_tree():
 		return
@@ -22,6 +24,8 @@ func _on_send() -> void:
 	input_line.grab_focus()
 
 func _on_text_submitted(text: String) -> void:
+	if not GameDialog.try_press(&"admin_console_send"):
+		return
 	_execute(text)
 	input_line.clear()
 

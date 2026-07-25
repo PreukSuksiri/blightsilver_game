@@ -90,7 +90,7 @@ func pick_random_for_tier(tier: String, protagonist_id: String) -> Dictionary:
 		var entry: Dictionary = e as Dictionary
 		if str(entry.get("difficulty", "")).strip_edges().to_lower() != needle_tier:
 			continue
-		if _is_excluded_for_protagonist(entry, hero_id):
+		if is_excluded_for_protagonist(entry, hero_id):
 			continue
 		candidates.append(entry.duplicate(true))
 	if candidates.is_empty():
@@ -98,12 +98,32 @@ func pick_random_for_tier(tier: String, protagonist_id: String) -> Dictionary:
 	return (candidates[randi() % candidates.size()] as Dictionary).duplicate(true)
 
 
-func _is_excluded_for_protagonist(entry: Dictionary, protagonist_id: String) -> bool:
+## If [preferred_id] is excluded for the hero, pick another tier identity.
+## Returns preferred_id when valid or when no alternate exists.
+func resolve_identity_for_battle(
+		tier: String,
+		protagonist_id: String,
+		preferred_id: String) -> String:
+	var want: String = preferred_id.strip_edges()
+	var entry: Dictionary = get_entry(want)
+	if entry.is_empty():
+		var fresh: Dictionary = pick_random_for_tier(tier, protagonist_id)
+		return str(fresh.get("id", "")).strip_edges()
+	if not is_excluded_for_protagonist(entry, protagonist_id):
+		return want
+	var alt: Dictionary = pick_random_for_tier(tier, protagonist_id)
+	if alt.is_empty():
+		return want
+	return str(alt.get("id", "")).strip_edges()
+
+
+func is_excluded_for_protagonist(entry: Dictionary, protagonist_id: String) -> bool:
 	var exclude_raw: Variant = entry.get("exclude_protagonists", [])
 	if not exclude_raw is Array:
 		return false
+	var hero_id := ProtagonistVault.normalize_id(protagonist_id)
 	for ex: Variant in (exclude_raw as Array):
-		if ProtagonistVault.normalize_id(str(ex)) == protagonist_id:
+		if ProtagonistVault.normalize_id(str(ex)) == hero_id:
 			return true
 	return false
 

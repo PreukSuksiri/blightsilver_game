@@ -51,6 +51,12 @@ var _live_result: BattleResolver.BattleResult
 var _attacker_player_idx: int = 0
 var _left_inst: GameState.CardInstance = null
 var _right_inst: GameState.CardInstance = null
+## Shared modulate:a tween (enter / exit / mid-battle board-effect dim).
+var _alpha_tween: Tween = null
+var _alpha_tween_gen: int = 0
+var _board_effect_dim_depth: int = 0
+const BOARD_EFFECT_DIM_ALPHA: float = 0.1
+const BOARD_EFFECT_DIM_DUR: float = 0.25
 
 func _ready() -> void:
 	ICON_ATTACK   = HudSkin.hud_tex("ui_context_menu_attack.png")
@@ -85,6 +91,45 @@ func resume_with_result(new_result: BattleResolver.BattleResult) -> void:
 	_refresh_stat_display(new_result)
 	_paused = false
 	mouse_filter = MOUSE_FILTER_STOP
+
+## Dim the whole Reckoning UI (cards, text, chrome) so a mid-battle grid/card
+## effect (e.g. Vampire Servant) can read clearly on the board underneath.
+func fade_for_board_effect() -> void:
+	_board_effect_dim_depth += 1
+	if _board_effect_dim_depth > 1:
+		return
+	await _tween_overlay_alpha(BOARD_EFFECT_DIM_ALPHA, BOARD_EFFECT_DIM_DUR, true)
+
+## Restore full Reckoning opacity after the board/card effect finishes.
+func restore_after_board_effect() -> void:
+	_board_effect_dim_depth = maxi(0, _board_effect_dim_depth - 1)
+	if _board_effect_dim_depth > 0:
+		return
+	await _tween_overlay_alpha(1.0, BOARD_EFFECT_DIM_DUR, true)
+
+func _tween_overlay_alpha(target_a: float, duration: float, ease_inout: bool = false) -> void:
+	# Generation token so a killed tween cannot leave an await hanging forever.
+	_alpha_tween_gen += 1
+	var gen: int = _alpha_tween_gen
+	if _alpha_tween != null and is_instance_valid(_alpha_tween):
+		_alpha_tween.kill()
+		_alpha_tween = null
+	if duration <= 0.0 or is_equal_approx(modulate.a, target_a):
+		modulate.a = target_a
+		return
+	_alpha_tween = create_tween()
+	var tw: PropertyTweener = _alpha_tween.tween_property(self, "modulate:a", target_a, duration)
+	if ease_inout:
+		tw.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	elif target_a > modulate.a:
+		tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	else:
+		tw.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	await get_tree().create_timer(duration).timeout
+	if gen != _alpha_tween_gen:
+		return
+	modulate.a = target_a
+	_alpha_tween = null
 
 func _refresh_stat_display(result: BattleResolver.BattleResult) -> void:
 	var left_is_att: bool = _attacker_player_idx == 0
@@ -628,9 +673,7 @@ func _run_async(
 	_live_result = result
 
 	# Fade in
-	var tin := create_tween()
-	tin.tween_property(self, "modulate:a", 1.0, 0.25).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	await tin.finished
+	await _tween_overlay_alpha(1.0, 0.25)
 
 	# Wait for mid-resolve ability prompts (sacrifice / crystal pay). Re-check after each
 	# stage — pause can be requested after fade-in completes.
@@ -705,9 +748,7 @@ func _run_async(
 
 	# Brief hold then fade out
 	await get_tree().create_timer(0.2).timeout
-	var tout := create_tween()
-	tout.tween_property(self, "modulate:a", 0.0, 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	await tout.finished
+	await _tween_overlay_alpha(0.0, 0.4)
 
 	queue_free()
 

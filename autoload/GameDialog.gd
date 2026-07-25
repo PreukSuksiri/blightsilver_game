@@ -35,14 +35,106 @@ const OVERLAY_HOST_NAME := &"GameDialogHost"
 const REQUESTER_META := &"game_dialog_requester_id"
 const OVERLAY_CANVAS_LAYER := 500
 
+## Cooldown-only double-tap gate (never a permanent lock).
+const DEFAULT_PRESS_COOLDOWN := 0.45
+const _BTN_CD_ARMED := &"_gd_press_cd_armed"
+const _BTN_CD_TOKEN := &"_gd_press_cd_token"
+const _BTN_CD_SEC := &"_gd_press_cd_sec"
+
 var _overlay_layer: CanvasLayer = null
 var _overlay_host: Control = null
+## StringName -> msec deadline (Time.get_ticks_msec)
+var _press_until: Dictionary = {}
 
 
 func _ready() -> void:
 	var tree_root: Window = get_tree().root
 	if not tree_root.size_changed.is_connected(_on_viewport_resized):
 		tree_root.size_changed.connect(_on_viewport_resized)
+
+
+# ─────────────────────────────────────────────────────────────
+# Press cooldown (double-tap prevention)
+# ─────────────────────────────────────────────────────────────
+
+## Returns true if this press should run; false if still cooling down.
+func try_press(token: StringName, cooldown_sec: float = DEFAULT_PRESS_COOLDOWN) -> bool:
+	if token == &"":
+		return true
+	var now: int = Time.get_ticks_msec()
+	var until: int = int(_press_until.get(token, 0))
+	if now < until:
+		return false
+	var cd_ms: int = maxi(1, int(round(maxf(0.0, cooldown_sec) * 1000.0)))
+	_press_until[token] = now + cd_ms
+	return true
+
+
+func is_press_cooling(token: StringName) -> bool:
+	if token == &"":
+		return false
+	return Time.get_ticks_msec() < int(_press_until.get(token, 0))
+
+
+## Wraps a 0-arg callback so it only runs once per cooldown window.
+func wrap_callable(
+		cb: Callable,
+		token: StringName,
+		cooldown_sec: float = DEFAULT_PRESS_COOLDOWN) -> Callable:
+	return func() -> void:
+		if not try_press(token, cooldown_sec):
+			return
+		if cb.is_valid():
+			cb.call()
+
+
+## On each press: start cooldown and briefly disable the button, then re-enable.
+## Call before or after connecting handlers — disabled state blocks further presses.
+func arm_button(
+		btn: BaseButton,
+		token: StringName = &"",
+		cooldown_sec: float = DEFAULT_PRESS_COOLDOWN) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	if bool(btn.get_meta(_BTN_CD_ARMED, false)):
+		return
+	var t: StringName = token
+	if t == &"":
+		t = StringName("btn_%d" % btn.get_instance_id())
+	btn.set_meta(_BTN_CD_ARMED, true)
+	btn.set_meta(_BTN_CD_TOKEN, t)
+	btn.set_meta(_BTN_CD_SEC, cooldown_sec)
+	btn.pressed.connect(_on_armed_button_pressed.bind(btn))
+
+
+func _on_armed_button_pressed(btn: BaseButton) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	var t: StringName = btn.get_meta(_BTN_CD_TOKEN, &"") as StringName
+	var cd: float = float(btn.get_meta(_BTN_CD_SEC, DEFAULT_PRESS_COOLDOWN))
+	if not try_press(t, cd):
+		return
+	_disable_button_for_cooldown(btn, cd)
+
+
+func _disable_button_for_cooldown(btn: BaseButton, cooldown_sec: float) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	if btn.disabled:
+		return
+	btn.disabled = true
+	if btn is Button:
+		sync_button_chrome_disabled(btn as Button)
+	var tree := get_tree()
+	if tree == null:
+		return
+	var cd: float = maxf(0.05, cooldown_sec)
+	tree.create_timer(cd).timeout.connect(func() -> void:
+		if not is_instance_valid(btn):
+			return
+		btn.disabled = false
+		if btn is Button:
+			sync_button_chrome_disabled(btn as Button))
 
 
 func _on_viewport_resized() -> void:
@@ -405,8 +497,11 @@ func accept_overlay(
 	var shell: Dictionary = _make_overlay_shell(parent, min_width, z_index, overlay_name)
 	var vbox: VBoxContainer = shell["vbox"]
 	var root: Control = shell["root"]
+	var gate: StringName = _dialog_press_token(root)
 	_add_title_body(vbox, title, body)
 	_add_button_row(vbox, [_make_button_def(ok_text, func() -> void:
+		if not try_press(gate):
+			return
 		if on_ok.is_valid():
 			on_ok.call()
 		root.queue_free())])
@@ -428,12 +523,17 @@ func confirmation_overlay(
 	var vbox: VBoxContainer = shell["vbox"]
 	_add_title_body(vbox, title, body)
 	var root: Control = shell["root"]
+	var gate: StringName = _dialog_press_token(root)
 	_add_button_row(vbox, [
 		_make_button_def(ok_text, func() -> void:
+			if not try_press(gate):
+				return
 			root.queue_free()
 			if on_confirm.is_valid():
 				on_confirm.call()),
 		_make_button_def(cancel_text, func() -> void:
+			if not try_press(gate):
+				return
 			root.queue_free()
 			if on_cancel.is_valid():
 				on_cancel.call()),
@@ -457,6 +557,7 @@ func confirmation_overlay_delayed(
 	var shell: Dictionary = _make_overlay_shell(parent, min_width, z_index, overlay_name)
 	var vbox: VBoxContainer = shell["vbox"]
 	var root: Control = shell["root"]
+	var gate: StringName = _dialog_press_token(root)
 	_add_title_body(vbox, title, body)
 
 	var btn_row := HBoxContainer.new()
@@ -471,6 +572,8 @@ func confirmation_overlay_delayed(
 	style_button(confirm_btn)
 	_apply_disabled_button_style(confirm_btn)
 	confirm_btn.pressed.connect(func() -> void:
+		if not try_press(gate):
+			return
 		if on_confirm.is_valid():
 			on_confirm.call()
 		root.queue_free())
@@ -480,6 +583,8 @@ func confirmation_overlay_delayed(
 	cancel_btn.text = cancel_text
 	style_button(cancel_btn)
 	cancel_btn.pressed.connect(func() -> void:
+		if not try_press(gate):
+			return
 		if on_cancel.is_valid():
 			on_cancel.call()
 		root.queue_free())
@@ -519,6 +624,7 @@ func choices_overlay(
 	var vbox: VBoxContainer = shell["vbox"]
 	_add_title_body(vbox, title, body)
 	var root: Control = shell["root"]
+	var gate: StringName = _dialog_press_token(root)
 	var buttons: Array = []
 	for action: Variant in actions:
 		if not (action is Dictionary):
@@ -526,11 +632,15 @@ func choices_overlay(
 		var text: String = str(action.get("text", "OK"))
 		var callback: Callable = action.get("callback", Callable()) as Callable
 		buttons.append(_make_button_def(text, func() -> void:
+			if not try_press(gate):
+				return
 			root.queue_free()
 			if callback.is_valid():
 				callback.call()))
 	if not cancel_text.is_empty():
 		buttons.append(_make_button_def(cancel_text, func() -> void:
+			if not try_press(gate):
+				return
 			root.queue_free()
 			if on_cancel.is_valid():
 				on_cancel.call()))
@@ -552,6 +662,7 @@ func menu_overlay(
 	var shell: Dictionary = _make_overlay_shell(parent, min_width, z_index, overlay_name)
 	var vbox: VBoxContainer = shell["vbox"]
 	var root: Control = shell["root"]
+	var gate: StringName = _dialog_press_token(root)
 	_add_title_body(vbox, title, body)
 
 	var menu_col := VBoxContainer.new()
@@ -570,6 +681,8 @@ func menu_overlay(
 		btn.text = text
 		style_menu_button(btn)
 		btn.pressed.connect(func() -> void:
+			if not try_press(gate):
+				return
 			root.queue_free()
 			if callback.is_valid():
 				callback.call())
@@ -581,12 +694,18 @@ func menu_overlay(
 		style_menu_button(cancel_btn)
 		cancel_btn.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88, 1.0))
 		cancel_btn.pressed.connect(func() -> void:
+			if not try_press(gate):
+				return
 			root.queue_free()
 			if on_cancel.is_valid():
 				on_cancel.call())
 		menu_col.add_child(cancel_btn)
 
 	return root
+
+
+func _dialog_press_token(root: Control) -> StringName:
+	return StringName("dialog_%d" % root.get_instance_id())
 
 
 ## Shell for custom dialog content (scroll areas, lists). Returns { root, vbox, panel }.
@@ -620,6 +739,7 @@ func prompt_overlay(
 	var vbox: VBoxContainer = shell["vbox"]
 	_add_title_body(vbox, title, body)
 	var root: Control = shell["root"]
+	var gate: StringName = _dialog_press_token(root)
 
 	var line := LineEdit.new()
 	line.placeholder_text = placeholder
@@ -637,6 +757,8 @@ func prompt_overlay(
 	ok_btn.text = ok_text
 	style_button(ok_btn)
 	ok_btn.pressed.connect(func() -> void:
+		if not try_press(gate):
+			return
 		if on_confirm.is_valid():
 			if not on_confirm.call(line.text.strip_edges()):
 				return
@@ -647,6 +769,8 @@ func prompt_overlay(
 	cancel_btn.text = cancel_text
 	style_button(cancel_btn)
 	cancel_btn.pressed.connect(func() -> void:
+		if not try_press(gate):
+			return
 		if on_cancel.is_valid():
 			on_cancel.call()
 		root.queue_free())

@@ -624,6 +624,8 @@ func _has_displayable_modifiers(mods: Array) -> bool:
 # ─────────────────────────────────────────────────────────────
 
 func _on_battle_pressed() -> void:
+	if not GameDialog.try_press(&"dd_battle"):
+		return
 	if _selected_node_id.is_empty():
 		return
 	var nd: Dictionary = _find_node(_selected_node_id)
@@ -642,6 +644,8 @@ func _on_battle_pressed() -> void:
 
 ## Central launch point. Wheel nodes spin first; result reveal → battle.
 func _launch_battle(nd: Dictionary) -> void:
+	if not GameDialog.try_press(&"launch_battle"):
+		return
 	var spin_remaining: int = DailyDungeonManager.get_active_spin_remaining()
 	var needs_spin: bool = bool(nd.get("is_wheel_node", false)) and spin_remaining > 0
 	if needs_spin:

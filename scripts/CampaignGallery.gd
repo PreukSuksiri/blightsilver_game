@@ -573,6 +573,8 @@ func _add_saved_progress_badge(frame: Panel, save_kind: String) -> void:
 
 
 func _on_chapter_pressed(card: Dictionary) -> void:
+	if not GameDialog.try_press(&"campaign_chapter"):
+		return
 	if GameDialog.has_any_open_overlay():
 		return
 	if _is_chapter_locked(card):
@@ -770,6 +772,8 @@ func _play_vn_async(
 		fresh_start: bool = true,
 		card: Dictionary = {},
 		chapter_arc_key: String = "") -> void:
+	if not GameDialog.try_press(&"campaign_play_vn"):
+		return
 	if not _require_deck_ready_for_chapter():
 		return
 	GlobalStatManager.on_first_touch("story_vn")

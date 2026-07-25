@@ -314,10 +314,12 @@ func _sync_config_from_ui() -> void:
 func _on_checkbox_changed() -> void:
 	if not _auto_save:
 		return
-	_on_save()
+	_on_save(true)
 
 
-func _on_save() -> void:
+func _on_save(from_auto: bool = false) -> void:
+	if not from_auto and not GameDialog.try_press(&"admin_menu_btn_save"):
+		return
 	_sync_config_from_ui()
 	if MenuButtonConfig.save_config():
 		_set_status("Saved to %s" % MenuButtonConfig.get_save_path())
@@ -334,7 +336,7 @@ func _set_all_visible(visible: bool) -> void:
 		for sub_row: Dictionary in row.get("subs", {}).values():
 			sub_row["visible_check"].button_pressed = visible
 	_auto_save = true
-	_on_save()
+	_on_save(true)
 
 
 func _set_all_enabled(enabled: bool) -> void:
@@ -346,7 +348,7 @@ func _set_all_enabled(enabled: bool) -> void:
 		for sub_row: Dictionary in row.get("subs", {}).values():
 			sub_row["enabled_check"].button_pressed = enabled
 	_auto_save = true
-	_on_save()
+	_on_save(true)
 
 
 func _on_show_all() -> void:

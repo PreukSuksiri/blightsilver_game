@@ -640,6 +640,8 @@ func _load_pack_texture(pack: Dictionary) -> Texture2D:
 # Purchase flow
 # ─────────────────────────────────────────────────────────────
 func _on_buy(pack_id: String) -> void:
+	if not GameDialog.try_press(&"shop_buy"):
+		return
 	if pack_id == UnionScrollManager.PRODUCT_ID:
 		var scroll_res: Dictionary = ShopManager.purchase_shop_item(pack_id, get_tree().root)
 		_refresh_credits()

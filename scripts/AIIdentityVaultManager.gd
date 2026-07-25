@@ -474,6 +474,8 @@ func _on_new() -> void:
 
 
 func _on_delete() -> void:
+	if not GameDialog.try_press(&"admin_aiid_delete"):
+		return
 	if _selected_idx < 0 or _entries.size() <= 1:
 		return
 	_entries.remove_at(_selected_idx)
@@ -488,6 +490,8 @@ func _browse_illustration() -> void:
 
 
 func _on_save() -> void:
+	if not GameDialog.try_press(&"admin_aiid_save"):
+		return
 	_sync_current_entry()
 	if not AIIdentityVault.save_entries(_entries):
 		_set_status("ERROR: cannot write ai_identity_vault.json")

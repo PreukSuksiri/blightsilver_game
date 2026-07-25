@@ -574,6 +574,8 @@ func _on_reload() -> void:
 
 
 func _on_save() -> void:
+	if not GameDialog.try_press(&"admin_progress_save"):
+		return
 	_sync_current_achievement()
 	_sync_current_stat()
 	var ach_ok := _save_achievements(false)

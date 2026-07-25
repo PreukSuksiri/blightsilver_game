@@ -583,6 +583,8 @@ func _on_single_player() -> void:
 
 	if MenuButtonConfig.is_sub_visible("single_player", "vs_ai"):
 		_add_btn.call("VS AI", func() -> void:
+			if not GameDialog.try_press(&"menu_scene"):
+				return
 			picker.queue_free()
 			if not _is_deck_ready():
 				_show_deck_warning()
@@ -667,6 +669,8 @@ func _on_multiplayer() -> void:
 
 	if MenuButtonConfig.is_sub_visible("multiplayer", "matchmaking"):
 		_add_btn.call("MATCHMAKING", func() -> void:
+			if not GameDialog.try_press(&"launch_battle"):
+				return
 			picker.queue_free()
 			BGMManager.stop(0.0)
 			GameState.game_mode = GameState.GameMode.LOCAL_2P
@@ -676,6 +680,8 @@ func _on_multiplayer() -> void:
 
 	if MenuButtonConfig.is_sub_visible("multiplayer", "private"):
 		_add_btn.call("PRIVATE", func() -> void:
+			if not GameDialog.try_press(&"launch_battle"):
+				return
 			picker.queue_free()
 			BGMManager.stop(0.0)
 			GameState.game_mode = GameState.GameMode.LOCAL_2P
@@ -685,6 +691,8 @@ func _on_multiplayer() -> void:
 
 	if MenuButtonConfig.is_sub_visible("multiplayer", "hot_seat"):
 		_add_btn.call("HOT SEAT", func() -> void:
+			if not GameDialog.try_press(&"launch_battle"):
+				return
 			picker.queue_free()
 			if not _is_deck_ready():
 				_show_deck_warning()
@@ -696,6 +704,8 @@ func _on_multiplayer() -> void:
 			MenuButtonConfig.is_sub_enabled("multiplayer", "hot_seat"))
 
 func _on_deck_builder() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("DeckBuilderOverlay") != null:
 		return
@@ -703,19 +713,27 @@ func _on_deck_builder() -> void:
 	_open_menu_overlay(deck_builder, "DeckBuilderOverlay", _refresh_deck_status)
 
 func _on_shop() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	_open_menu_overlay(ShopMenuScene.instantiate(), "ShopMenuOverlay")
 
 func _on_gallery() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	_open_menu_overlay(CardGalleryScene.instantiate(), "CardGalleryOverlay")
 
 func _on_inventory() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	_open_menu_overlay(InventoryMenuScene.instantiate(), "InventoryMenuOverlay")
 
 
 func _on_mailbox_icon_pressed() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	var overlay: Control = _open_menu_overlay(
 		InventoryMenuScene.instantiate(), "InventoryMenuOverlay")
@@ -723,6 +741,8 @@ func _on_mailbox_icon_pressed() -> void:
 		overlay.call_deferred("show_mailbox_tab")
 
 func _on_credits() -> void:
+	if not GameDialog.try_press(&"menu_scene"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().change_scene_to_file("res://scenes/credits.tscn")
 
@@ -784,6 +804,8 @@ func _on_stack_secondary_pressed() -> void:
 
 
 func _on_quick_duel() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	GlobalStatManager.on_first_touch("quick_duel_menu")
 	_open_menu_overlay(QuickDuelOverlayScene.instantiate(), "QuickDuelOverlay")
 
@@ -793,15 +815,21 @@ func _on_local_play_pressed() -> void:
 
 
 func _on_campaign() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	_open_menu_overlay(CampaignGalleryScene.instantiate(), "CampaignGalleryOverlay")
 
 func _on_daily_dungeon() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	if get_node_or_null("DailyDungeonMapOverlay") != null:
 		return
 	DailyDungeonManager.begin_daily_session()
 	_open_menu_overlay(DailyDungeonMapScene.instantiate(), "DailyDungeonMapOverlay")
 
 func _on_settings() -> void:
+	if not GameDialog.try_press(&"menu_nav"):
+		return
 	SFXManager.play(SFXManager.SFX_BTN)
 	_open_menu_overlay(SettingsMenuScene.instantiate(), "SettingsMenuOverlay")
 

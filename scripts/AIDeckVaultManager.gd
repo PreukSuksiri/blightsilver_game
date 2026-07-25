@@ -107,6 +107,8 @@ func _sync_current_entry() -> void:
 
 
 func _save_vault() -> void:
+	if not GameDialog.try_press(&"admin_aideck_save"):
+		return
 	_sync_current_entry()
 	if not AIDeckVault.save_entries(_entries):
 		_set_status("ERROR: cannot write ai_deck_vault.json")
@@ -712,6 +714,8 @@ func _duplicate_entry() -> void:
 
 
 func _delete_entry() -> void:
+	if not GameDialog.try_press(&"admin_aideck_delete"):
+		return
 	if _entries.size() <= 1:
 		_set_status("Cannot delete the last vault entry.")
 		return

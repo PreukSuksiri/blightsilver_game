@@ -596,33 +596,6 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			emit_signal("attack_aborted")
 			return
 
-	# Pre-battle: INTERCEPT_ALLY_ATTACK (Armored Rhino / Bat Swarm) — may change target before reveals
-	if defender.card_type == "character":
-		var _ic_found: bool = false
-		for _ic_r: int in range(GameState.GRID_SIZE):
-			if _ic_found:
-				break
-			for _ic_c: int in range(GameState.GRID_SIZE):
-				if Vector2i(_ic_r, _ic_c) == target_pos:
-					continue
-				var _ic_cand: GameState.CardInstance = GameState.get_card(opponent, _ic_r, _ic_c)
-				if _ic_cand.card_type == "character" \
-						and _ic_cand.ability_type == CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK:
-					var _ic_aff: int = _ic_cand.ability_params.get("affinity", -1)
-					if _ic_aff == -1 or _ic_aff == defender.affinity:
-						await _witness_card(opponent, _ic_r, _ic_c)
-						await _witness_pause()
-						await await_card_effect_flash(_ic_cand.card_name)
-						emit_signal("awaiting_defender_choice",
-							"%s can intercept for %s!" % [_ic_cand.card_name, defender.card_name],
-							["Intercept", "Don't Intercept"])
-						var _ic_choice: int = await ability_choice_resolved
-						if _ic_choice == 0:
-							target_pos = Vector2i(_ic_r, _ic_c)
-							defender = _ic_cand
-						_ic_found = true
-						break
-
 	# Dungeon: Weapon Tax (100) and Frenzy Madness (200) per-attack crystal cost
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 		var _mods_tax: Array = GameState.active_dungeon_modifiers
@@ -636,19 +609,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	GameState.attacker_card = attacker
 	GameState.attacker_pos = attacker_pos
 
-	# Fire attack-initiated triggers
-	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_INITIATED_SELF,
-		{"source_player": player, "source_card": attacker, "attacker": attacker, "defender": defender})
-	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_INITIATED_ANY_OWNER,
-		{"source_player": player, "attacker": attacker, "defender": defender})
-	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_DEFEND_SELF,
-		{"source_player": opponent, "source_card": defender, "attacker": attacker, "defender": defender})
-	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_DEFEND_ANY_OWNER,
-		{"source_player": opponent, "attacker": attacker, "defender": defender})
-	# Emit GameState signal for target selection tracking
-	GameState.emit_signal("attack_target_selected", player, opponent, target_pos.x, target_pos.y)
-
-	# Exposed = already face-up BEFORE this attack began.
+	# Exposed = already face-up BEFORE this attack began (pre-reveal).
 	var defender_was_exposed: bool = defender.face_up
 
 	# Methanomancer: adjacent cell targeted → flip face-up + temp ATK/DEF
@@ -671,11 +632,63 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 						_mn_card.card_name,
 						_mn_card.ability_params.get("atk", 30)])
 
-	# Flip cards face-up now so the player sees revealed stats while deciding on optional prompts
+	# Flip attacker + target first so intercept prompts show the revealed target.
 	_attack_reveal_pending.clear()
 	_reveal_for_attack(player, attacker_pos.x, attacker_pos.y)
 	if defender.card_type != "dead_end":
 		_reveal_for_attack(opponent, target_pos.x, target_pos.y)
+	await _await_attack_reveal_animations()
+	attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
+	defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
+
+	# INTERCEPT_ALLY_ATTACK (Bat Swarm / Freya / …) — after target reveal so the prompt
+	# is not shown against an unknown face-down / blank-looking cell.
+	if defender.card_type == "character":
+		var _ic_found: bool = false
+		for _ic_r: int in range(GameState.GRID_SIZE):
+			if _ic_found:
+				break
+			for _ic_c: int in range(GameState.GRID_SIZE):
+				if Vector2i(_ic_r, _ic_c) == target_pos:
+					continue
+				var _ic_cand: GameState.CardInstance = GameState.get_card(opponent, _ic_r, _ic_c)
+				if _ic_cand.card_type != "character" \
+						or _ic_cand.ability_type != CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK:
+					continue
+				# Other INTERCEPT variants (dead-end swap / forced-taunt) use different params.
+				if bool(_ic_cand.ability_params.get("force_target_self", false)):
+					continue
+				if str(_ic_cand.ability_params.get("target", "")) == "dead_end":
+					continue
+				var _ic_aff: int = int(_ic_cand.ability_params.get("affinity", -1))
+				if _ic_aff != -1 and _ic_aff != defender.affinity:
+					continue
+				var _ic_was_exposed: bool = _ic_cand.face_up
+				await _witness_card(opponent, _ic_r, _ic_c)
+				await _witness_pause()
+				await await_card_effect_flash(_ic_cand.card_name)
+				emit_signal("awaiting_defender_choice",
+					"%s can intercept for %s!" % [_ic_cand.card_name, defender.card_name],
+					["Intercept", "Don't Intercept"])
+				var _ic_choice: int = await ability_choice_resolved
+				if _ic_choice == 0:
+					target_pos = Vector2i(_ic_r, _ic_c)
+					defender = _ic_cand
+					defender_was_exposed = _ic_was_exposed
+				_ic_found = true
+				break
+
+	# Fire attack-initiated triggers with the final (post-intercept) defender
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_INITIATED_SELF,
+		{"source_player": player, "source_card": attacker, "attacker": attacker, "defender": defender})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_INITIATED_ANY_OWNER,
+		{"source_player": player, "attacker": attacker, "defender": defender})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_DEFEND_SELF,
+		{"source_player": opponent, "source_card": defender, "attacker": attacker, "defender": defender})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_DEFEND_ANY_OWNER,
+		{"source_player": opponent, "attacker": attacker, "defender": defender})
+	# Emit GameState signal for target selection tracking
+	GameState.emit_signal("attack_target_selected", player, opponent, target_pos.x, target_pos.y)
 
 	# Update field-based bonuses before battle
 	BattleResolver.calculate_field_bonuses(player)

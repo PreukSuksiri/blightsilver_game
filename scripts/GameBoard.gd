@@ -4,7 +4,11 @@ extends Control
 const CARD_SCENE: PackedScene = preload("res://scenes/card.tscn")
 const BATTLE_CARD_MIN := Vector2(110.0, 150.0)
 const BATTLE_GRID_SEP := 4
-const BATTLE_CENTER_MIN_W := 160.0
+## Narrow center lane so both 5x5 boards sit close enough to slightly overlap the union button.
+const BATTLE_CENTER_MIN_W := 72.0
+## Extra equal inward pull after HBox layout (P1 → right, P2 → left). Playmat stays put.
+## Negative = boards sit farther from center.
+const BATTLE_GRID_INWARD_NUDGE := -18.0
 const BATTLE_CARD_FLOOR := 80.0
 const BATTLE_LAYOUT_TOP := 220.0
 const BATTLE_LAYOUT_BOTTOM := 174.0
@@ -427,6 +431,14 @@ const _TEX_VFX_FIRE_STREAK_G: Texture2D = preload(
 const _TEX_VFX_FIRE_SPARK_POOL: Array[Texture2D] = [
 	_TEX_VFX_FIRE_STREAK_C, _TEX_VFX_FIRE_STREAK_F, _TEX_VFX_FIRE_STREAK_G,
 ]
+## Expanding union shockwave rings — Kenney Particle Pack circles (CC0).
+const _TEX_VFX_RING_A: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_ring_a.png")
+const _TEX_VFX_RING_B: Texture2D = preload(
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_ring_b.png")
+const _TEX_VFX_RING_POOL: Array[Texture2D] = [
+	_TEX_VFX_RING_A, _TEX_VFX_RING_B,
+]
 const _PRE_ENDGAME_GLITCH_GLYPHS: Array[String] = [
 	"#", "@", "%", "&", "?", "/", "\\", "0", "1", "X", "!", "*", "=", "+",
 	"ERR", "??", "--", "Ø", "¡", "¤", "░", "▒", "▓", "§", "‡",
@@ -828,6 +840,7 @@ const GRID_LINE_W: int = 4
 const GRID_LINE_COLOR: Color = Color(0.65, 0.88, 0.95, 0.9)  # silver-cyan
 const _SHADER_GRID_LINE: Shader = preload("res://assets/shaders/magitech_grid_line.gdshader")
 const _SHADER_VFX_BOLT: Shader = preload("res://assets/shaders/magitech_vfx_bolt.gdshader")
+const _SHADER_VFX_RING: Shader = preload("res://assets/shaders/magitech_vfx_ring.gdshader")
 ## 2×2 white tex so grid-line ShaderMaterial gets real 0–1 UVs (ColorRect UVs are flat).
 var _grid_line_white_tex: ImageTexture = null
 
@@ -932,16 +945,22 @@ func _run_battle_layout() -> void:
 	var p1_side: VBoxContainer = ml.get_node("P1Side") as VBoxContainer
 	var p2_side: VBoxContainer = ml.get_node("P2Side") as VBoxContainer
 
-	center.custom_minimum_size.x = maxf(center.custom_minimum_size.x, BATTLE_CENTER_MIN_W)
+	# Symmetric lanes: both boards hug the center (P2 used to sit far-right via SHRINK_END).
+	center.custom_minimum_size.x = BATTLE_CENTER_MIN_W
 	center.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	center.size_flags_stretch_ratio = 0.0
 	center.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	p1_side.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	p1_side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p2_side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p1_side.size_flags_stretch_ratio = 1.0
+	p2_side.size_flags_stretch_ratio = 1.0
 	p1_side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	p2_side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	p1_grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	p2_grid.size_flags_horizontal = Control.SIZE_SHRINK_END
+	p1_side.alignment = BoxContainer.ALIGNMENT_BEGIN
+	p2_side.alignment = BoxContainer.ALIGNMENT_BEGIN
+	# Face each other across the center lane.
+	p1_grid.size_flags_horizontal = Control.SIZE_SHRINK_END
+	p2_grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	p1_grid.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	p2_grid.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 
@@ -978,13 +997,11 @@ func _run_battle_layout() -> void:
 				card.custom_minimum_size = card_size
 
 	if HudSkin.version == "v3":
-		# Re-apply after container layout settles — raw position.y gets overwritten otherwise,
+		# Re-apply after container layout settles — raw position gets overwritten otherwise,
 		# which left grid lines stranded away from the cards.
 		call_deferred("_apply_v3_grid_lift_and_borders")
 	else:
-		p1_grid.position.y = 0.0
-		p2_grid.position.y = 0.0
-		refresh_grid_borders()
+		call_deferred("_apply_battle_grid_inward_nudge_and_borders")
 
 	if BuildConfig.admin_tools_enabled():
 		print(
@@ -1423,12 +1440,14 @@ func _build_portraits() -> void:
 	# Scale each portrait to fill the full screen height at its natural aspect ratio,
 	# so the inner edge (right for P1, left for P2) is never cropped.
 	const REF_H: float = 720.0
+	## Display height as a fraction of REF_H (was 0.9 — dialed down a bit).
+	const HEIGHT_FRAC: float = 0.78
 
 	var p1_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
 	if p1_tex:
 		var sz := p1_tex.get_size()
 		var p1_scale: float = maxf(0.1, GameState.portrait_p1_size)
-		var p1h: float = REF_H * p1_scale * 0.9
+		var p1h: float = REF_H * p1_scale * HEIGHT_FRAC
 		var pw: float = p1h * sz.x / sz.y if sz.y > 0.0 else 300.0
 		var p1ox: float = GameState.portrait_p1_offset.x
 		var p1oy: float = GameState.portrait_p1_offset.y
@@ -1467,7 +1486,7 @@ func _build_portraits() -> void:
 	if p2_tex:
 		var sz := p2_tex.get_size()
 		var p2_scale: float = maxf(0.1, GameState.portrait_p2_size)
-		var p2h: float = REF_H * p2_scale * 0.9
+		var p2h: float = REF_H * p2_scale * HEIGHT_FRAC
 		var pw: float = p2h * sz.x / sz.y if sz.y > 0.0 else 300.0
 		var p2ox: float = GameState.portrait_p2_offset.x
 		var p2oy: float = GameState.portrait_p2_offset.y
@@ -2735,8 +2754,9 @@ func _build_reveal_buttons() -> void:
 			btn.offset_left   = -72.0; btn.offset_right = -8.0
 		btn.anchor_top    = 0.0
 		btn.anchor_bottom = 0.0
-		btn.offset_top    = 202.0
-		btn.offset_bottom = 266.0
+		# Sit under VOID/TECH stacks; nudged down slightly from 202.
+		btn.offset_top    = 220.0
+		btn.offset_bottom = 284.0
 
 		# Slash shadow (black, offset slightly) — shown only in "enemy view" icon state
 		var slash_shadow := ColorRect.new()
@@ -4637,30 +4657,71 @@ func _spawn_union_short_circuit_smoke(area: Vector2, epicenter: Rect2) -> void:
 
 func _spawn_union_shockwave(cell_center: Vector2) -> void:
 	SFXManager.play(SFXManager.SFX_UNION_SHOCKWAVE)
-	const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
-	# Three expanding rings with staggered start — cyan, white, cyan
-	var ring_colors: Array = [UNION_CYAN, Color(1.0, 1.0, 1.0, 0.9), UNION_CYAN]
+	# Radial gradients per staggered wave (inner → mid → outer).
+	var grads: Array[Dictionary] = [
+		{
+			"inner": Color(0.75, 1.0, 1.0, 1.0),
+			"mid": Color(0.30, 0.95, 1.0, 1.0),
+			"outer": Color(0.20, 0.45, 1.0, 1.0),
+			"flat": Color(0.30, 0.95, 1.0, 0.95),
+		},
+		{
+			"inner": Color(1.0, 1.0, 1.0, 1.0),
+			"mid": Color(0.85, 0.98, 1.0, 1.0),
+			"outer": Color(0.45, 0.75, 1.0, 1.0),
+			"flat": Color(1.0, 1.0, 1.0, 0.95),
+		},
+		{
+			"inner": Color(0.55, 1.0, 0.95, 1.0),
+			"mid": Color(0.25, 0.90, 1.0, 1.0),
+			"outer": Color(0.55, 0.35, 1.0, 1.0),
+			"flat": Color(0.35, 0.85, 1.0, 0.95),
+		},
+	]
 	var ring_delays: Array = [0.0, 0.10, 0.20]
+	var use_tex: bool = _v3_textured_vfx() and not _TEX_VFX_RING_POOL.is_empty()
 	for k: int in range(3):
-		var ring := Panel.new()
 		const RING_BASE: float = 80.0
-		ring.size        = Vector2(RING_BASE, RING_BASE)
+		var grad: Dictionary = grads[k]
+		var ring: Control
+		if use_tex:
+			var tr := TextureRect.new()
+			tr.texture = _TEX_VFX_RING_POOL[k % _TEX_VFX_RING_POOL.size()]
+			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			tr.size = Vector2(RING_BASE, RING_BASE)
+			var mat := ShaderMaterial.new()
+			mat.shader = _SHADER_VFX_RING
+			mat.set_shader_parameter("color_inner", grad["inner"])
+			mat.set_shader_parameter("color_mid", grad["mid"])
+			mat.set_shader_parameter("color_outer", grad["outer"])
+			mat.set_shader_parameter("mid_stop", 0.42)
+			mat.set_shader_parameter("intensity", 1.25)
+			tr.material = mat
+			tr.modulate = Color(1, 1, 1, 1)
+			ring = tr
+		else:
+			var panel := Panel.new()
+			panel.size = Vector2(RING_BASE, RING_BASE)
+			var rsb := StyleBoxFlat.new()
+			rsb.bg_color = Color(0, 0, 0, 0)
+			rsb.border_color = grad["flat"]
+			rsb.border_width_left = 4
+			rsb.border_width_right = 4
+			rsb.border_width_top = 4
+			rsb.border_width_bottom = 4
+			var rad: int = int(RING_BASE * 0.5)
+			rsb.corner_radius_top_left = rad
+			rsb.corner_radius_top_right = rad
+			rsb.corner_radius_bottom_left = rad
+			rsb.corner_radius_bottom_right = rad
+			panel.add_theme_stylebox_override("panel", rsb)
+			ring = panel
 		ring.pivot_offset = Vector2(RING_BASE * 0.5, RING_BASE * 0.5)
-		ring.position    = cell_center - Vector2(RING_BASE * 0.5, RING_BASE * 0.5)
-		ring.z_index     = 200
+		ring.position = cell_center - Vector2(RING_BASE * 0.5, RING_BASE * 0.5)
+		ring.z_index = 200
+		ring.z_as_relative = false
 		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var rsb := StyleBoxFlat.new()
-		rsb.bg_color            = Color(0, 0, 0, 0)
-		rsb.border_color        = ring_colors[k]
-		rsb.border_width_left   = 4
-		rsb.border_width_right  = 4
-		rsb.border_width_top    = 4
-		rsb.border_width_bottom = 4
-		rsb.corner_radius_top_left     = int(RING_BASE * 0.5)
-		rsb.corner_radius_top_right    = int(RING_BASE * 0.5)
-		rsb.corner_radius_bottom_left  = int(RING_BASE * 0.5)
-		rsb.corner_radius_bottom_right = int(RING_BASE * 0.5)
-		ring.add_theme_stylebox_override("panel", rsb)
 		ring.scale = Vector2(0.05, 0.05)
 		add_child(ring)
 		var t := create_tween()
@@ -6040,16 +6101,35 @@ func _sync_v3_chrome_visibility(in_battle_hud: bool = true) -> void:
 		_apply_v3_chrome_layout()
 
 
-func _apply_v3_grid_lift_and_borders() -> void:
+func _apply_battle_grid_inward_nudge() -> void:
 	if not is_instance_valid(p1_grid) or not is_instance_valid(p2_grid):
 		return
-	# Board down-shift is applied via MainLayout insets — keep grid local y at 0.
-	p1_grid.position.y = 0.0
-	p2_grid.position.y = 0.0
+	# Keep y at 0 (vertical board shift uses MainLayout insets). Pull both boards
+	# toward screen center equally from their container-aligned bases:
+	#   P1 = SHRINK_END (right of P1Side), P2 = SHRINK_BEGIN (left of P2Side).
+	# Must ADD to that base — assigning x=nudge alone parks P1 on the outer left.
+	# Playmat / steampunk backdrop is NOT moved.
+	var p1_side: Control = p1_grid.get_parent() as Control
+	var p2_side: Control = p2_grid.get_parent() as Control
+	if p1_side == null or p2_side == null:
+		return
+	var p1_base_x: float = maxf(0.0, p1_side.size.x - p1_grid.size.x)
+	var p2_base_x: float = 0.0
+	p1_grid.position = Vector2(p1_base_x + BATTLE_GRID_INWARD_NUDGE, 0.0)
+	p2_grid.position = Vector2(p2_base_x - BATTLE_GRID_INWARD_NUDGE, 0.0)
+
+
+func _apply_battle_grid_inward_nudge_and_borders() -> void:
+	if not is_instance_valid(p1_grid) or not is_instance_valid(p2_grid):
+		return
+	_apply_battle_grid_inward_nudge()
 	await get_tree().process_frame
-	p1_grid.position.y = 0.0
-	p2_grid.position.y = 0.0
+	_apply_battle_grid_inward_nudge()
 	refresh_grid_borders()
+
+
+func _apply_v3_grid_lift_and_borders() -> void:
+	await _apply_battle_grid_inward_nudge_and_borders()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -6802,15 +6882,18 @@ func _show_options_panel() -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
 	# Collapse hover slide under the modal (cursor still over the button rect).
 	_force_options_hover_exit()
+	var items: Array = [
+		{"text": "Battle Log", "callback": _show_battle_log_panel},
+		{"text": "Rules", "callback": _show_rules_panel},
+	]
+	# Only offer surrender on the acting player's turn (never during AI turn).
+	if _can_surrender_now():
+		items.append({"text": "Surrender", "callback": _show_surrender_confirm})
 	_options_panel = GameDialog.menu_overlay(
 		self,
 		"Options",
 		"",
-		[
-			{"text": "Battle Log", "callback": _show_battle_log_panel},
-			{"text": "Rules", "callback": _show_rules_panel},
-			{"text": "Surrender", "callback": _show_surrender_confirm},
-		],
+		items,
 		"Close",
 		func() -> void:
 			_options_panel = null
@@ -6877,6 +6960,8 @@ func _show_change_music_panel() -> void:
 		btn.disabled = not can_change
 		var track_path: String = track["path"]
 		btn.pressed.connect(func() -> void:
+			if not GameDialog.try_press(&"music_disc"):
+				return
 			if Collection.spend_music_disc():
 				_music_changed_this_turn = true
 				_change_battle_music(track_path)
@@ -7006,7 +7091,33 @@ func _show_rules_panel() -> void:
 # Surrender confirm
 # ─────────────────────────────────────────────────────────────
 
+## Player who would concede: human P0 in PvE; active seat in hot-seat / local 2P.
+func _surrendering_player() -> int:
+	if GameState.game_mode in [
+		GameState.GameMode.VS_AI,
+		GameState.GameMode.CAMPAIGN,
+		GameState.GameMode.DAILY_DUNGEON,
+		GameState.GameMode.EXPLORATION,
+	]:
+		return 0
+	return GameState.current_player
+
+
+func _can_surrender_now() -> bool:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return false
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return false
+	# Never concede while the opponent (AI) is acting — that used to award the win
+	# to the human via get_opponent(current_player).
+	if _is_ai_turn():
+		return false
+	return true
+
+
 func _show_surrender_confirm() -> void:
+	if not _can_surrender_now():
+		return
 	SFXManager.play(SFXManager.SFX_POPUP)
 	GameDialog.confirmation_overlay(
 		self,
@@ -7016,7 +7127,10 @@ func _show_surrender_confirm() -> void:
 		"Cancel",
 		func() -> void:
 			await _await_prompt_dismiss_delay()
-			var winner: int = GameState.get_opponent(GameState.current_player)
+			if not _can_surrender_now():
+				return
+			var surrenderer: int = _surrendering_player()
+			var winner: int = GameState.get_opponent(surrenderer)
 			GameState.game_over_reason = "surrender"
 			GameState._end_game(winner),
 		func() -> void:
@@ -8919,6 +9033,9 @@ func _show_tax_confirm(player: int) -> void:
 	confirm_btn.add_theme_font_size_override("font_size", 15)
 	confirm_btn.custom_minimum_size = Vector2(180.0, 42.0)
 	confirm_btn.pressed.connect(func() -> void:
+		if not GameDialog.try_press(&"tax_confirm"):
+			return
+		confirm_btn.disabled = true
 		if _tax_confirm_panel != null:
 			_tax_confirm_panel.queue_free()
 			_tax_confirm_panel = null
@@ -8949,6 +9066,8 @@ func _on_tech_card_btn(tech_name: String) -> void:
 	turn_manager.play_tech_card(tech_name)
 
 func _on_play_again_btn() -> void:
+	if not GameDialog.try_press(&"play_again"):
+		return
 	get_tree().reload_current_scene()
 
 # ─────────────────────────────────────────────────────────────
@@ -9477,6 +9596,8 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 		Color(1.0, 1.0, 1.0, 1.0), 0.35)
 
 func _confirm_attack() -> void:
+	if not GameDialog.try_press(&"attack_confirm"):
+		return
 	# Stop blink and restore target colour
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
@@ -12692,7 +12813,13 @@ func _maybe_flash_outside_reckoning_ability(prompt: String, filter: String) -> v
 	await _show_card_effect_flash(flash_name, flash_type)
 
 func _on_card_effect_triggered(card_name: String, card_type: String) -> void:
+	var dimmed_reckoning: bool = false
+	if is_instance_valid(_current_battle_overlay):
+		await _current_battle_overlay.fade_for_board_effect()
+		dimmed_reckoning = true
 	await _show_card_effect_flash(card_name, card_type)
+	if dimmed_reckoning and is_instance_valid(_current_battle_overlay):
+		await _current_battle_overlay.restore_after_board_effect()
 	turn_manager.emit_signal("card_effect_flash_done")
 
 func _show_card_effect_flash(card_name: String, card_type: String) -> void:
@@ -13023,6 +13150,8 @@ func _spawn_union_landing_dust(overlay: Control, origin: Vector2) -> void:
 # Game Over
 # ─────────────────────────────────────────────────────────────
 func _on_return_to_map() -> void:
+	if not GameDialog.try_press(&"return_to_map"):
+		return
 	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 
 func _process(delta: float) -> void:

@@ -18,8 +18,13 @@ const GAL_H   : float = 121.0
 const GAL_GAP : int   = 6
 const TUTORIAL_FORMATION_MSG := "Formation Change is unavailable in tutorial"
 const SP_PORTRAIT_REF_H: float = 720.0
-const SETUP_PANEL_SIDE_INSET: float = 172.0
-const BOTTOM_PANEL_SIDE_INSET: float = SETUP_PANEL_SIDE_INSET
+## Nudge setup portraits toward the right (into the open left lane after panel shift).
+const SP_PORTRAIT_NUDGE_X: float = 56.0
+# Park setup chrome on the far right (same total width as the old 172/172 insets at 1600px).
+const SETUP_PANEL_LEFT_INSET: float = 320.0
+const SETUP_PANEL_RIGHT_INSET: float = 24.0
+const BOTTOM_PANEL_LEFT_INSET: float = SETUP_PANEL_LEFT_INSET
+const BOTTOM_PANEL_RIGHT_INSET: float = SETUP_PANEL_RIGHT_INSET
 const BOTTOM_PANEL_H: float = 58.0
 const BOTTOM_PANEL_BODY_GAP: float = 6.0
 const FORMATION_BTN_MIN_W: float = 72.0
@@ -407,8 +412,8 @@ func _build_ui() -> void:
 	# ── Header bar ──────────────────────────────────────────
 	var header := Panel.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	header.offset_left   =  SETUP_PANEL_SIDE_INSET
-	header.offset_right  = -SETUP_PANEL_SIDE_INSET
+	header.offset_left   =  SETUP_PANEL_LEFT_INSET
+	header.offset_right  = -SETUP_PANEL_RIGHT_INSET
 	header.offset_bottom = 72.0
 	_skin_setup_panel(header, 0.0, false)
 	add_child(header)
@@ -437,8 +442,8 @@ func _build_ui() -> void:
 	body.set_anchors_preset(Control.PRESET_FULL_RECT)
 	body.offset_top    = 76.0
 	body.offset_bottom = -(BOTTOM_PANEL_H + BOTTOM_PANEL_BODY_GAP)
-	body.offset_left   = SETUP_PANEL_SIDE_INSET
-	body.offset_right  = -SETUP_PANEL_SIDE_INSET
+	body.offset_left   = SETUP_PANEL_LEFT_INSET
+	body.offset_right  = -SETUP_PANEL_RIGHT_INSET
 	body.add_theme_constant_override("separation", 14)
 	add_child(body)
 
@@ -455,8 +460,10 @@ func _build_ui() -> void:
 		_p1p.texture       = _sp_p1_tex
 		_p1p.anchor_left   = 0.0;  _p1p.anchor_top    = 1.0
 		_p1p.anchor_right  = 0.0;  _p1p.anchor_bottom = 1.0
-		_p1p.offset_left   = -_pw * 0.4; _p1p.offset_top    = -SP_PORTRAIT_REF_H
-		_p1p.offset_right  =  _pw * 0.6; _p1p.offset_bottom = 0.0
+		_p1p.offset_left   = -_pw * 0.4 + SP_PORTRAIT_NUDGE_X
+		_p1p.offset_top    = -SP_PORTRAIT_REF_H
+		_p1p.offset_right  =  _pw * 0.6 + SP_PORTRAIT_NUDGE_X
+		_p1p.offset_bottom = 0.0
 		_p1p.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p1p.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		_p1p.flip_h        = true
@@ -473,8 +480,10 @@ func _build_ui() -> void:
 		_p2p.texture       = _sp_p2_tex
 		_p2p.anchor_left   = 1.0;  _p2p.anchor_top    = 1.0
 		_p2p.anchor_right  = 1.0;  _p2p.anchor_bottom = 1.0
-		_p2p.offset_left   = -_pw * 0.6; _p2p.offset_top    = -SP_PORTRAIT_REF_H
-		_p2p.offset_right  =  _pw * 0.4; _p2p.offset_bottom = 0.0
+		_p2p.offset_left   = -_pw * 0.6 + SP_PORTRAIT_NUDGE_X
+		_p2p.offset_top    = -SP_PORTRAIT_REF_H
+		_p2p.offset_right  =  _pw * 0.4 + SP_PORTRAIT_NUDGE_X
+		_p2p.offset_bottom = 0.0
 		_p2p.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p2p.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		_p2p.mouse_filter  = Control.MOUSE_FILTER_IGNORE
@@ -558,8 +567,8 @@ func _skin_setup_panel(panel: Panel, content_margin: float = 12.0, enable_patrol
 func _build_bottom_panel() -> void:
 	_bottom_panel = Panel.new()
 	_bottom_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_bottom_panel.offset_left = BOTTOM_PANEL_SIDE_INSET
-	_bottom_panel.offset_right = -BOTTOM_PANEL_SIDE_INSET
+	_bottom_panel.offset_left = BOTTOM_PANEL_LEFT_INSET
+	_bottom_panel.offset_right = -BOTTOM_PANEL_RIGHT_INSET
 	_bottom_panel.offset_top = -BOTTOM_PANEL_H
 	_bottom_panel.offset_bottom = 0.0
 	_skin_setup_panel(_bottom_panel, 0.0, false)

@@ -2,185 +2,511 @@
 	"entries": [
 		{
 			"birth_name": "Mogganoth",
+			"bluff_reaction_chats": {},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "easy_green_wisp",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_green_wisp.png",
-			"name": "Foul Eye"
+			"name": "Foul Eye",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Glowing Roach",
+			"bluff_reaction_chats": {},
 			"difficulty": "easy",
 			"exclude_protagonists": [
 				"kelly"
 			],
 			"id": "easy_dusty_roach",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_dusty_roach.png",
-			"name": "Glowing Roach"
+			"name": "Glowing Roach",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Kelly Lastochkina",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Now die as you wish",
+					"avoid": "Death is just another roadtrip"
+				},
+				"❤️": {
+					"attack": "I love you too, now die",
+					"avoid": "Sorry, I have a commitment issue"
+				},
+				"👍": {
+					"attack": "*thumb down*",
+					"avoid": "*thumb up*"
+				},
+				"🖕": {
+					"attack": "You remind me of the bloody face I trampled yesterday",
+					"avoid": "I don't feel like breaking any finger today"
+				},
+				"😃": {
+					"attack": "I'll strip that cringe smile from your face",
+					"avoid": "Feeling happy today?"
+				},
+				"🤝": {
+					"attack": "Eww... Did you wash your hand?",
+					"avoid": "Is that a ceasefire deal?"
+				},
+				"🤣": {
+					"attack": "You remind me of the bloody face I trampled yesterday",
+					"avoid": "You laughed like a dog"
+				},
+				"🥺": {
+					"attack": "Stop crying, you brat. I'll spank you as hard as an Indian police.",
+					"avoid": "Don't cry. Mommy is here."
+				},
+				"🧨": {
+					"attack": "Time to defuse some bomb",
+					"avoid": "I don't feel like defusing any bomb"
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [
 				"kelly"
 			],
 			"id": "easy_kelly",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_kelly_easy.png",
-			"name": "Kelly Lastochkina"
+			"name": "Kelly Lastochkina",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Rick Stonefield",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_big_thug",
-			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_big_thug.png",
-			"name": "Big Thug"
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_thug_1.png",
+			"name": "Big Thug",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Canyon Warg",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [
 				"nex"
 			],
 			"id": "normal_canyon_warg",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_canyon_warg.png",
-			"name": "Canyon Warg"
+			"name": "Canyon Warg",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Mayu Kokawa",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Is that a trap or just a bluff... hmm...",
+					"avoid": "Looks dangerous..."
+				},
+				"❤️": {
+					"attack": "You'll learn a lesson soon for playing with a girl's heart",
+					"avoid": "I'll spare you if you become my fanclub"
+				},
+				"🖕": {
+					"attack": "Have not your mom taught you not to do that?",
+					"avoid": "You... you're so mean...! **cry**"
+				},
+				"😃": {
+					"attack": "**smile back** ....but anyway...",
+					"avoid": "**smile back**"
+				},
+				"🤣": {
+					"attack": "What's so funny?",
+					"avoid": "Good joke!"
+				},
+				"🥺": {
+					"attack": "I'm really sorry, but I'll have to do this...",
+					"avoid": "Oh no... Why are you crying?"
+				},
+				"🧨": {
+					"attack": "Is that a trap or just a bluff... hmm...",
+					"avoid": "Looks dangerous..."
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [
 				"mayu"
 			],
 			"id": "normal_mayu",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_mayu_normal.png",
-			"name": "Mayu Kokawa"
+			"name": "Mayu Kokawa",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Drigtholluch",
+			"bluff_reaction_chats": {},
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "hard_midnight_shadow",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/battler_midnight_shadow.png",
-			"name": "Midnight Shadow"
+			"name": "Midnight Shadow",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Nexus Crowmont",
+			"bluff_reaction_chats": {},
 			"difficulty": "hard",
 			"exclude_protagonists": [
 				"nex"
 			],
 			"id": "hard_nex",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_nex_hard.png",
-			"name": "Nex Crowmont"
+			"name": "Nex Crowmont",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Kelly Lastochkina",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Now die as you wish",
+					"avoid": "Death is just another roadtrip"
+				},
+				"❤️": {
+					"attack": "I love you too, now die",
+					"avoid": "Sorry, I have a commitment issue"
+				},
+				"👍": {
+					"attack": "*thumb down*",
+					"avoid": "*thumb up*"
+				},
+				"🖕": {
+					"attack": "You remind me of the bloody face I trampled yesterday",
+					"avoid": "I don't feel like breaking any finger today"
+				},
+				"😃": {
+					"attack": "I'll strip that cringe smile from your face",
+					"avoid": "Feeling happy today?"
+				},
+				"🤝": {
+					"attack": "Eww... Did you wash your hand?",
+					"avoid": "Is that a ceasefire deal?"
+				},
+				"🤣": {
+					"attack": "You remind me of the bloody face I trampled yesterday",
+					"avoid": "You laughed like a dog"
+				},
+				"🥺": {
+					"attack": "Stop crying, you brat. I'll spank you as hard as an Indian police.",
+					"avoid": "Don't cry. Mommy is here."
+				},
+				"🧨": {
+					"attack": "Time to defuse some bomb",
+					"avoid": "I don't feel like defusing any bomb"
+				}
+			},
 			"difficulty": "hard",
 			"exclude_protagonists": [
 				"kelly"
 			],
 			"id": "hard_kelly",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_kelly_hard.png",
-			"name": "Kelly Lastochkina"
+			"name": "Kelly Lastochkina",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Wicked Puppet",
+			"bluff_reaction_chats": {},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "easy_wicked_puppet",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_library_puppet.png",
-			"name": "Wicked Puppet"
+			"name": "Wicked Puppet",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Mayu Kokawa",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Is that a trap or just a bluff... hmm...",
+					"avoid": "Looks dangerous..."
+				},
+				"❤️": {
+					"attack": "You'll learn a lesson soon for playing with a girl's heart",
+					"avoid": "I'll spare you if you become my fanclub"
+				},
+				"🖕": {
+					"attack": "Have not your mom taught you not to do that?",
+					"avoid": "You... you're so mean...! **cry**"
+				},
+				"😃": {
+					"attack": "**smile back** ....but anyway...",
+					"avoid": "**smile back**"
+				},
+				"🤣": {
+					"attack": "What's so funny?",
+					"avoid": "Good joke!"
+				},
+				"🥺": {
+					"attack": "I'm really sorry, but I'll have to do this...",
+					"avoid": "Oh no... Why are you crying?"
+				},
+				"🧨": {
+					"attack": "Is that a trap or just a bluff... hmm...",
+					"avoid": "Looks dangerous..."
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [
 				"mayu"
 			],
 			"id": "easy_mayu",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_mayu_easy.png",
-			"name": "Mayu Kokawa"
+			"name": "Mayu Kokawa",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Nexus Crowmont",
+			"bluff_reaction_chats": {},
 			"difficulty": "easy",
 			"exclude_protagonists": [
 				"nex"
 			],
 			"id": "easy_nex_crowmont",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_nex_easy.png",
-			"name": "Nex Crowmont"
+			"name": "Nex Crowmont",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Shady Woman",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_shady_woman",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_univ_break_room_ghost.png",
-			"name": "Shady Woman"
+			"name": "Shady Woman",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Creepy Mascot",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_creepy_mascot",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_univ_mascot_ghost.png",
-			"name": "Creepy Mascot"
+			"name": "Creepy Mascot",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Lucid Man",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_diluted_man",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_univ_meeting_room_ghost.png",
-			"name": "Lucid Man"
+			"name": "Lucid Man",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Kelly Lastochkina",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Now die as you wish",
+					"avoid": "Death is just another roadtrip"
+				},
+				"❤️": {
+					"attack": "I love you too, now die",
+					"avoid": "Sorry, I have a commitment issue"
+				},
+				"👍": {
+					"attack": "*thumb down*",
+					"avoid": "*thumb up*"
+				},
+				"🖕": {
+					"attack": "You remind me of the bloody face I trampled yesterday",
+					"avoid": "I don't feel like breaking any finger today"
+				},
+				"😃": {
+					"attack": "I'll strip that cringe smile from your face",
+					"avoid": "Feeling happy today?"
+				},
+				"🤝": {
+					"attack": "Eww... Did you wash your hand?",
+					"avoid": "Is that a ceasefire deal?"
+				},
+				"🤣": {
+					"attack": "You remind me of the bloody face I trampled yesterday",
+					"avoid": "You laughed like a dog"
+				},
+				"🥺": {
+					"attack": "Stop crying, you brat. I'll spank you as hard as an Indian police.",
+					"avoid": "Don't cry. Mommy is here."
+				},
+				"🧨": {
+					"attack": "Time to defuse some bomb",
+					"avoid": "I don't feel like defusing any bomb"
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [
 				"kelly"
 			],
 			"id": "normal_kelly",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_kelly_normal.png",
-			"name": "Kelly Lastochkina"
+			"name": "Kelly Lastochkina",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Nexus Crowmont",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [
 				"nex"
 			],
 			"id": "normal_nex",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_nex_normal.png",
-			"name": "Nex Crowmont"
+			"name": "Nex Crowmont",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Theo Meunier",
+			"bluff_reaction_chats": {},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_hospital_director",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/vn_char_hospital_director.png",
-			"name": "Theo Meunier"
+			"name": "Theo Meunier",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Mayu Kokawa",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Is that a trap or just a bluff... hmm...",
+					"avoid": "Looks dangerous..."
+				},
+				"❤️": {
+					"attack": "You'll learn a lesson soon for playing with a girl's heart",
+					"avoid": "I'll spare you if you become my fanclub"
+				},
+				"🖕": {
+					"attack": "Have not your mom taught you not to do that?",
+					"avoid": "You... you're so mean...! **cry**"
+				},
+				"😃": {
+					"attack": "**smile back** ....but anyway...",
+					"avoid": "**smile back**"
+				},
+				"🤣": {
+					"attack": "What's so funny?",
+					"avoid": "Good joke!"
+				},
+				"🥺": {
+					"attack": "I'm really sorry, but I'll have to do this...",
+					"avoid": "Oh no... Why are you crying?"
+				},
+				"🧨": {
+					"attack": "Is that a trap or just a bluff... hmm...",
+					"avoid": "Looks dangerous..."
+				}
+			},
 			"difficulty": "hard",
 			"exclude_protagonists": [
 				"mayu"
 			],
 			"id": "hard_mayu",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_mayu_hard.png",
-			"name": "Mayu Kokawa"
+			"name": "Mayu Kokawa",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		},
 		{
 			"birth_name": "Vezgarez",
+			"bluff_reaction_chats": {},
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "identity_22",
-			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_fruit_granny.png",
-			"name": "Fruit Granny"
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/battler_fruit_granny_2.png",
+			"name": "Fruit Granny",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
+		},
+		{
+			"birth_name": "Mike Borri",
+			"bluff_reaction_chats": {},
+			"difficulty": "easy",
+			"exclude_protagonists": [],
+			"id": "thug_2",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_thug_2.png",
+			"name": "Thug 2",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
+		},
+		{
+			"birth_name": "Yoko Tanaka",
+			"bluff_reaction_chats": {},
+			"difficulty": "easy",
+			"exclude_protagonists": [],
+			"id": "student_1",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_rogue_girl_2.png",
+			"name": "Student1",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
+		},
+		{
+			"birth_name": "Leonard Pitcher",
+			"bluff_reaction_chats": {},
+			"difficulty": "easy",
+			"exclude_protagonists": [],
+			"id": "richguy_1",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_rich_guy_1.png",
+			"name": "Rick Guy 1",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
+		},
+		{
+			"birth_name": "Lucia Gomez",
+			"bluff_reaction_chats": {},
+			"difficulty": "hard",
+			"exclude_protagonists": [],
+			"id": "rogue_girl_1",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/battler_rogue_girl_1.png",
+			"name": "Rogue Girl 1",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": ""
 		}
 	]
 }

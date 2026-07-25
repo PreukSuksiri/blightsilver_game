@@ -76,6 +76,8 @@ func _load_positions() -> void:
 					_positions[id] = Vector2(float(arr[0]), float(arr[1]))
 
 func _save_positions() -> void:
+	if not GameDialog.try_press(&"admin_cmap_save"):
+		return
 	var data: Dictionary = {}
 	for id: String in _positions:
 		data[id] = [_positions[id].x, _positions[id].y]
