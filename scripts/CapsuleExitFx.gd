@@ -16,10 +16,11 @@ const STAMP_APPROVED_COLOR := Color(0.72, 0.07, 0.07)
 const STAMP_APPROVED_FONT_SIZE := 28
 const STAMP_OUTLINE_COLOR := Color(0.0, 0.0, 0.0, 1.0)
 ## Screen-space silhouette outline (8-dir offsets) — reliable vs large stamp textures.
-const STAMP_OUTLINE_SCREEN_PX := 2.0
-const STAMP_APPROVED_OUTLINE_SIZE := 4
-const STAMP_TILT_MIN_DEG := -28.0
-const STAMP_TILT_MAX_DEG := 28.0
+const STAMP_OUTLINE_SCREEN_PX := 0.5
+const STAMP_APPROVED_OUTLINE_SIZE := 3
+## Random cluster tilt — avoid near-zero so the stamp always reads as cocked.
+const STAMP_TILT_MIN_ABS_DEG := 12.0
+const STAMP_TILT_MAX_ABS_DEG := 28.0
 const CARD_FLY_SEC := 0.24
 const CARD_STAGGER_SEC := 0.05
 const STACK_SLIDE_SEC := 0.52
@@ -70,6 +71,18 @@ static func _stamp_host_for(card: Control) -> Control:
 	return card
 
 
+## Prefer a non-Container host so random tilt isn't fought by layout.
+static func _stamp_parent_for(card: Control) -> Control:
+	var anchor: Control = _stamp_host_for(card)
+	if anchor != null and not (anchor is Container):
+		return anchor
+	if card != null and is_instance_valid(card) and not (card is Container):
+		return card
+	if anchor != null:
+		return anchor
+	return card
+
+
 static func _play_logo_approved_stamp(
 		host: Control,
 		card: Control,
@@ -86,27 +99,25 @@ static func _play_logo_approved_stamp(
 	if tex == null:
 		return
 
-	var stamp_parent: Control = _stamp_host_for(card)
+	var stamp_parent: Control = _stamp_parent_for(card)
 	if stamp_parent == null:
 		return
 
-	var host_size: Vector2 = stamp_parent.size
-	if host_size.x < 1.0 or host_size.y < 1.0:
-		host_size = fallback_size
-
 	# Cluster: logo + APPROVED (no approver name), shared random tilt.
+	# Avoid PanelContainer parents — Container layout was zeroing the cocked look.
 	var cluster_w: float = STAMP_SIZE + 40.0
 	var cluster_h: float = STAMP_SIZE + 28.0
 	var cluster := Control.new()
 	cluster.name = "ExitStampCluster"
 	cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cluster.size = Vector2(cluster_w, cluster_h)
-	cluster.pivot_offset = cluster.size * 0.5
-	cluster.position = (host_size - cluster.size) * 0.5
-	# Logo + APPROVED share one cluster tilt (stronger than notebook stamps).
-	cluster.rotation = deg_to_rad(randf_range(STAMP_TILT_MIN_DEG, STAMP_TILT_MAX_DEG))
+	cluster.custom_minimum_size = Vector2(cluster_w, cluster_h)
+	cluster.pivot_offset = Vector2(cluster_w, cluster_h) * 0.5
 	cluster.z_index = 40
+	var tilt_deg: float = _roll_stamp_tilt_deg()
+	cluster.rotation_degrees = tilt_deg
 	stamp_parent.add_child(cluster)
+	_center_stamp_cluster(cluster, stamp_parent, fallback_size)
 
 	# Logo wrap: black 8-dir silhouette outline behind the colored stamp.
 	var logo_wrap := Control.new()
@@ -132,6 +143,9 @@ static func _play_logo_approved_stamp(
 	approved.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	approved.visible = false
 	cluster.add_child(approved)
+	# Re-assert after children land (Container parents can stomp transforms).
+	cluster.rotation_degrees = tilt_deg
+	_center_stamp_cluster(cluster, stamp_parent, fallback_size)
 
 	# 1) Logo fade + slam (outline included in wrap).
 	var fade := host.create_tween()
@@ -157,6 +171,28 @@ static func _play_logo_approved_stamp(
 	if not host.is_inside_tree():
 		return
 	await host.get_tree().create_timer(STAMP_HOLD_SEC).timeout
+
+
+static func _roll_stamp_tilt_deg() -> float:
+	var mag: float = randf_range(STAMP_TILT_MIN_ABS_DEG, STAMP_TILT_MAX_ABS_DEG)
+	return mag if randf() < 0.5 else -mag
+
+
+static func _center_stamp_cluster(
+		cluster: Control,
+		parent_ctrl: Control,
+		fallback_size: Vector2
+) -> void:
+	if cluster == null or parent_ctrl == null:
+		return
+	if not is_instance_valid(cluster) or not is_instance_valid(parent_ctrl):
+		return
+	var sz: Vector2 = parent_ctrl.size
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = parent_ctrl.get_combined_minimum_size()
+	if sz.x < 1.0 or sz.y < 1.0:
+		sz = fallback_size
+	cluster.position = (sz - cluster.size) * 0.5
 
 
 static func _make_stamp_tex_rect(tex: Texture2D, modulate: Color, pos: Vector2) -> TextureRect:

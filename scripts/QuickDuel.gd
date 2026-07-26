@@ -11,7 +11,7 @@ const CAPSULE_GAP := 40.0
 const CAPSULE_SIDE_MARGIN := 96.0
 const CAPSULE_REWARD_ROW_H := 36.0
 const TIER_FONT_SIZE := 34
-const HEADER_HEIGHT := 44.0
+const HEADER_HEIGHT := 56.0
 const TITLE_FONT_SIZE := 26
 const TITLE_COLOR := Color(0.40, 0.85, 1.0, 1.0)
 const REWARD_SHADOW_COLOR := Color(0, 0, 0, 1)
@@ -28,6 +28,28 @@ const CAPSULE_FRAME_RADIUS := 12.0
 const CAPSULE_FRAME_BORDER := 2.0
 const CAPSULE_IMAGE_RADIUS := CAPSULE_FRAME_RADIUS - CAPSULE_FRAME_BORDER
 const OVERLAY_Z_INDEX := 80
+const BG_PATH := "res://assets/textures/ui/battle/v3_magitech/ui_bg_quick_duel.png"
+## Grow backdrop past viewport edges so no seam / letterbox shows.
+const BG_OVERSCAN := 0.18
+## Thin streak traces — warm-tinted for molten fire sparks (not electric arcs).
+const _FIRE_SPARK_STREAK_PATHS: Array[String] = [
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_c.png",
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_f.png",
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_g.png",
+]
+const _SFX_JOLT: AudioStream = preload(
+	"res://assets/audio/sfx/sfx_electric_short_circuit.mp3")
+const _SPARK_INTERVAL_MIN := 3.0
+const _SPARK_INTERVAL_MAX := 5.0
+const _SPARK_GRAVITY := 1200.0
+const _SPARK_FLICKER_SEC := 0.05
+const _SPARK_FLASH_ALPHA := 0.1
+const _SPARK_FX_Z := 3
+const _SPARK_FLASH_Z := 45
+const _SPARK_BURST_COUNT_MIN := 18
+const _SPARK_BURST_COUNT_MAX := 32
+const _SPARK_SPEED_MIN := 220.0
+const _SPARK_SPEED_MAX := 620.0
 
 var _picker_panel: Control = null
 var _status_lbl: Label = null
@@ -38,6 +60,13 @@ var _player_portrait: TextureRect = null
 var _switch_char_btn: Button = null
 var _exit_anim_running: bool = false
 var _exit_anim_done: bool = false
+var _bg_rect: TextureRect = null
+var _spark_textures: Array[Texture2D] = []
+var _fx_layer: Control = null
+var _flash_rect: ColorRect = null
+var _active_sparks: Array = []
+var _spark_fx_running: bool = false
+var _spark_add_mat: CanvasItemMaterial = null
 
 
 func _ready() -> void:
@@ -46,6 +75,7 @@ func _ready() -> void:
 	VNPlayer.dismiss_overlay_if_present(get_tree())
 	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.6, 0.6)
 	_build_shell()
+	_start_ambient_spark_loop()
 	await OnboardingManager.wait_until_settled()
 	if not is_inside_tree():
 		return
@@ -60,12 +90,25 @@ func _open_initial_view() -> void:
 
 
 func _build_shell() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color(0.06, 0.06, 0.10, 1.0)
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = MOUSE_FILTER_IGNORE
-	add_child(bg)
+	# Black underlay so any overscan gap never shows through.
+	var underlay := ColorRect.new()
+	underlay.color = Color(0, 0, 0, 1)
+	underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	underlay.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(underlay)
 
+	_bg_rect = TextureRect.new()
+	_bg_rect.texture = load(BG_PATH) as Texture2D
+	_bg_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	# Rect is sized to image aspect; SCALE fills that rect with no distortion.
+	_bg_rect.stretch_mode = TextureRect.STRETCH_SCALE
+	_bg_rect.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(_bg_rect)
+	_layout_bg_cover()
+	resized.connect(_layout_bg_cover)
+	call_deferred("_layout_bg_cover")
+
+	_build_ambient_fx_layer()
 	_build_header()
 
 	_picker_panel = Control.new()
@@ -79,6 +122,236 @@ func _build_shell() -> void:
 	_build_player_portrait_zone()
 
 
+func _layout_bg_cover() -> void:
+	if _bg_rect == null or not is_instance_valid(_bg_rect):
+		return
+	# Prefer fresh disk texture in case editor still holds a padded import.
+	var tex: Texture2D = ResourceLoader.load(
+		BG_PATH, "", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+	if tex != null:
+		_bg_rect.texture = tex
+	else:
+		tex = _bg_rect.texture
+	if tex == null:
+		return
+	var area: Vector2 = get_viewport().get_visible_rect().size
+	if area.x < 8.0 or area.y < 8.0:
+		area = size
+	if area.x < 8.0 or area.y < 8.0:
+		return
+	var tex_sz: Vector2 = tex.get_size()
+	if tex_sz.x < 1.0 or tex_sz.y < 1.0:
+		return
+	var tex_aspect: float = tex_sz.x / tex_sz.y
+	var view_aspect: float = area.x / area.y
+	# Cover viewport (plus overscan), keep image ratio — crop the overflow side.
+	var cover_w: float
+	var cover_h: float
+	if view_aspect > tex_aspect:
+		cover_w = area.x * (1.0 + BG_OVERSCAN * 2.0)
+		cover_h = cover_w / tex_aspect
+	else:
+		cover_h = area.y * (1.0 + BG_OVERSCAN * 2.0)
+		cover_w = cover_h * tex_aspect
+	_bg_rect.set_anchors_preset(Control.PRESET_CENTER)
+	_bg_rect.anchor_left = 0.5
+	_bg_rect.anchor_top = 0.5
+	_bg_rect.anchor_right = 0.5
+	_bg_rect.anchor_bottom = 0.5
+	_bg_rect.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_bg_rect.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_bg_rect.offset_left = -cover_w * 0.5
+	_bg_rect.offset_top = -cover_h * 0.5
+	_bg_rect.offset_right = cover_w * 0.5
+	_bg_rect.offset_bottom = cover_h * 0.5
+	_bg_rect.custom_minimum_size = Vector2(cover_w, cover_h)
+	_bg_rect.size = Vector2(cover_w, cover_h)
+
+
+func _build_ambient_fx_layer() -> void:
+	_spark_textures.clear()
+	for path: String in _FIRE_SPARK_STREAK_PATHS:
+		var tex: Texture2D = load(path) as Texture2D
+		if tex != null:
+			_spark_textures.append(tex)
+	_spark_add_mat = CanvasItemMaterial.new()
+	_spark_add_mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+
+	_fx_layer = Control.new()
+	_fx_layer.name = "AmbientSparkFx"
+	_fx_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_fx_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fx_layer.z_index = _SPARK_FX_Z
+	_fx_layer.clip_contents = false
+	add_child(_fx_layer)
+
+	_flash_rect = ColorRect.new()
+	_flash_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_flash_rect.color = Color(1, 1, 1, 0)
+	_flash_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flash_rect.z_index = _SPARK_FLASH_Z
+	add_child(_flash_rect)
+
+
+func _start_ambient_spark_loop() -> void:
+	if _spark_textures.is_empty() or _spark_fx_running:
+		return
+	_spark_fx_running = true
+	set_process(true)
+	_ambient_spark_loop()
+
+
+func _stop_ambient_spark_fx() -> void:
+	_spark_fx_running = false
+	for entry: Variant in _active_sparks:
+		if entry is Dictionary:
+			var node: Variant = (entry as Dictionary).get("node")
+			if node is Node and is_instance_valid(node as Node):
+				(node as Node).queue_free()
+	_active_sparks.clear()
+	if _flash_rect != null and is_instance_valid(_flash_rect):
+		_flash_rect.color.a = 0.0
+
+
+func _ambient_spark_loop() -> void:
+	while _spark_fx_running and is_inside_tree():
+		var wait_sec: float = randf_range(_SPARK_INTERVAL_MIN, _SPARK_INTERVAL_MAX)
+		await get_tree().create_timer(wait_sec).timeout
+		if not _spark_fx_running or not is_inside_tree():
+			return
+		_play_fire_spark_burst()
+
+
+func _play_fire_spark_burst() -> void:
+	if _fx_layer == null or _spark_textures.is_empty():
+		return
+	SFXManager.play(_SFX_JOLT, 0.55)
+	_flash_white()
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var area: Vector2 = size
+	if area.x < 8.0 or area.y < 8.0:
+		area = get_viewport().get_visible_rect().size
+	# One origin per burst (random location); all sparks fan out from it.
+	var origin := Vector2(
+		rng.randf_range(area.x * 0.12, area.x * 0.88),
+		rng.randf_range(area.y * 0.12, area.y * 0.62))
+	# Cone aims mostly sideways / down-right or down-left.
+	var aim_right: bool = rng.randf() < 0.5
+	var cone_center: float = (-0.35 if aim_right else PI + 0.35) \
+			+ rng.randf_range(-0.25, 0.25)
+	var cone_half: float = rng.randf_range(0.70, 1.05)  # ~80–120° spread
+	var count: int = rng.randi_range(_SPARK_BURST_COUNT_MIN, _SPARK_BURST_COUNT_MAX)
+	for _i: int in range(count):
+		_spawn_falling_spark(rng, origin, cone_center, cone_half)
+
+
+func _flash_white() -> void:
+	if _flash_rect == null or not is_instance_valid(_flash_rect):
+		return
+	_flash_rect.color = Color(1, 1, 1, _SPARK_FLASH_ALPHA)
+	var tw := create_tween()
+	tw.tween_property(_flash_rect, "color:a", 0.0, 0.22) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
+
+func _fire_spark_ember_color(rng: RandomNumberGenerator, peak_a: float) -> Color:
+	# Hot metal: white-yellow core → orange as heat cools.
+	var heat: float = rng.randf()
+	return Color(
+		1.0,
+		lerpf(0.35, 0.98, heat),
+		lerpf(0.08, 0.55, heat * heat),
+		peak_a)
+
+
+func _spawn_falling_spark(
+		rng: RandomNumberGenerator,
+		origin: Vector2,
+		cone_center: float,
+		cone_half: float) -> void:
+	if _fx_layer == null or _spark_textures.is_empty():
+		return
+	var tr := TextureRect.new()
+	tr.texture = _spark_textures[rng.randi_range(0, _spark_textures.size() - 1)]
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.material = _spark_add_mat
+	# Thin elongated streak.
+	var len: float = rng.randf_range(16.0, 52.0)
+	if rng.randf() < 0.22:
+		len *= rng.randf_range(0.40, 0.70)
+	elif rng.randf() < 0.14:
+		len *= rng.randf_range(1.20, 1.70)
+	var tex_sz: Vector2 = tr.texture.get_size() if tr.texture != null else Vector2(1, 1)
+	var aspect: float = tex_sz.x / maxf(tex_sz.y, 1.0)
+	if aspect >= 1.0:
+		tr.size = Vector2(len, len / aspect)
+	else:
+		tr.size = Vector2(len * aspect, len)
+	tr.pivot_offset = tr.size * 0.5
+	tr.flip_h = rng.randf() < 0.5
+	tr.flip_v = rng.randf() < 0.5
+	var uni: float = rng.randf_range(0.70, 1.20)
+	tr.scale = Vector2(uni, uni)
+	var peak_a: float = rng.randf_range(0.75, 1.0)
+	tr.modulate = _fire_spark_ember_color(rng, peak_a)
+	# Fan velocity from the shared origin.
+	var ang: float = cone_center + rng.randf_range(-cone_half, cone_half)
+	var speed: float = rng.randf_range(_SPARK_SPEED_MIN, _SPARK_SPEED_MAX)
+	var vel := Vector2(cos(ang), sin(ang)) * speed
+	tr.position = origin - tr.size * 0.5
+	tr.rotation = ang - PI * 0.5
+	_fx_layer.add_child(tr)
+	_active_sparks.append({
+		"node": tr,
+		"vel": vel,
+		"peak_a": peak_a,
+		"flicker_t": 0.0,
+	})
+
+
+func _process(delta: float) -> void:
+	if _active_sparks.is_empty():
+		return
+	var area_h: float = size.y
+	if area_h < 8.0:
+		area_h = get_viewport().get_visible_rect().size.y
+	var area_w: float = size.x
+	if area_w < 8.0:
+		area_w = get_viewport().get_visible_rect().size.x
+	var keep: Array = []
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for entry: Variant in _active_sparks:
+		if not (entry is Dictionary):
+			continue
+		var d: Dictionary = entry
+		var node: Variant = d.get("node")
+		if not (node is TextureRect) or not is_instance_valid(node as TextureRect):
+			continue
+		var tr: TextureRect = node as TextureRect
+		var vel: Vector2 = d.get("vel", Vector2.ZERO) as Vector2
+		vel.y += _SPARK_GRAVITY * delta
+		d["vel"] = vel
+		tr.position += vel * delta
+		# Keep streak aligned with travel as gravity arcs it down.
+		tr.rotation = lerp_angle(tr.rotation, atan2(vel.y, vel.x) - PI * 0.5, 0.35)
+		var flicker_t: float = float(d.get("flicker_t", 0.0)) + delta
+		if flicker_t >= _SPARK_FLICKER_SEC:
+			flicker_t = 0.0
+			var peak_a: float = float(d.get("peak_a", 1.0))
+			tr.modulate = _fire_spark_ember_color(rng, peak_a * rng.randf_range(0.50, 1.0))
+		d["flicker_t"] = flicker_t
+		var center: Vector2 = tr.position + tr.size * 0.5
+		if center.y > area_h + 80.0 or center.x < -140.0 or center.x > area_w + 140.0:
+			tr.queue_free()
+		else:
+			keep.append(d)
+	_active_sparks = keep
+
+
 func _root_add_panel(panel: Control) -> void:
 	add_child(panel)
 
@@ -86,42 +359,52 @@ func _root_add_panel(panel: Control) -> void:
 func _build_header() -> void:
 	var top_bg := Panel.new()
 	top_bg.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	top_bg.offset_bottom = HEADER_HEIGHT
 	top_bg.custom_minimum_size.y = HEADER_HEIGHT
-	var top_sb := StyleBoxFlat.new()
-	top_sb.bg_color = Color(0.031, 0.051, 0.122, 1.0)
-	top_sb.border_width_bottom = 1
-	top_sb.border_color = Color(0.18, 0.549, 1.0, 0.2)
-	top_bg.add_theme_stylebox_override("panel", top_sb)
+	# Layout slot only — no fill/border; title + buttons stay visible.
+	top_bg.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	top_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(top_bg)
 
+	# Children of the bar so CENTER_* anchors vertically middle the header.
 	var title := Label.new()
 	MenuScreenHeader.style_title(title, "QUICK DUEL")
-	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	title.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	title.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	title.add_theme_constant_override("outline_size", 4)
+	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	title.offset_left = -240.0
-	title.offset_top = 8.0
+	title.offset_top = -18.0
 	title.offset_right = 240.0
-	title.offset_bottom = 36.0
-	add_child(title)
+	title.offset_bottom = 18.0
+	top_bg.add_child(title)
 
 	var close_btn := Button.new()
 	MenuScreenHeader.style_close_button(close_btn)
-	MenuScreenHeader.anchor_close_top_right(close_btn)
+	var close_inset: float = MenuScreenHeader.CLOSE_INSET
+	var close_sz: Vector2 = MenuScreenHeader.CLOSE_BTN_SIZE
+	close_btn.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+	close_btn.offset_left = -(close_inset + close_sz.x)
+	close_btn.offset_right = -close_inset
+	close_btn.offset_top = -close_sz.y * 0.5
+	close_btn.offset_bottom = close_sz.y * 0.5
 	close_btn.pressed.connect(_dismiss_overlay)
-	add_child(close_btn)
+	top_bg.add_child(close_btn)
 
 	var ach_btn := Button.new()
 	ach_btn.text = "Achievements"
-	var ach_h: float = MenuScreenHeader.CLOSE_BTN_SIZE.y
-	ach_btn.custom_minimum_size = Vector2(120.0, ach_h)
-	ach_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	ach_btn.offset_left = -178.0
-	ach_btn.offset_top = 6.0
-	ach_btn.offset_right = -58.0
-	ach_btn.offset_bottom = 6.0 + ach_h
+	var ach_h: float = close_sz.y
+	var ach_w: float = 120.0
+	ach_btn.custom_minimum_size = Vector2(ach_w, ach_h)
+	ach_btn.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+	ach_btn.offset_left = -(close_inset + close_sz.x + 8.0 + ach_w)
+	ach_btn.offset_right = -(close_inset + close_sz.x + 8.0)
+	ach_btn.offset_top = -ach_h * 0.5
+	ach_btn.offset_bottom = ach_h * 0.5
 	_skin_quick_duel_button(ach_btn)
 	ach_btn.pressed.connect(func() -> void:
 		AchievementListOverlay.open(self))
-	add_child(ach_btn)
+	top_bg.add_child(ach_btn)
 
 
 func _build_player_portrait_zone() -> void:
@@ -382,8 +665,8 @@ func _skin_capsule_frame(frame: PanelContainer) -> void:
 		return
 	mat.set_shader_parameter("fill_top", Color(0.0, 0.0, 0.0, 1.0))
 	mat.set_shader_parameter("fill_bottom", Color(0.0, 0.0, 0.0, 1.0))
-	mat.set_shader_parameter("border_a", Color(0.55, 0.92, 1.0, 0.90))
-	mat.set_shader_parameter("border_b", Color(0.35, 0.55, 0.9, 0.75))
+	mat.set_shader_parameter("border_a", Color(1.0, 1.0, 1.0, 0.95))
+	mat.set_shader_parameter("border_b", Color(1.0, 1.0, 1.0, 0.85))
 	mat.set_shader_parameter("border_px", 2.5)
 	mat.set_shader_parameter("corner_radius_px", CAPSULE_FRAME_RADIUS)
 	mat.set_shader_parameter("rim_speed", 0.40)
@@ -423,13 +706,14 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 	sb.set_corner_radius_all(int(CAPSULE_FRAME_RADIUS))
 	frame.add_theme_stylebox_override("panel", sb)
 	btn.add_child(frame)
-	btn.set_meta("_exit_stamp_host", frame)
 	_skin_capsule_frame(frame)
 
 	var inner := Control.new()
 	inner.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(inner)
+	# Stamp on plain Control (not PanelContainer) so cluster tilt is preserved.
+	btn.set_meta("_exit_stamp_host", inner)
 
 	var image_clip := Control.new()
 	image_clip.name = "ImageClip"
@@ -738,6 +1022,7 @@ func _set_overlay_battle_return() -> void:
 
 
 func _dismiss_overlay() -> void:
+	_stop_ambient_spark_fx()
 	GameDialog.close_overlay(self)
 	GameState.quick_duel_overlay_active = false
 	closed.emit()
@@ -745,6 +1030,7 @@ func _dismiss_overlay() -> void:
 
 
 func _exit_tree() -> void:
+	_stop_ambient_spark_fx()
 	GameDialog.close_overlay(self)
 	GameState.quick_duel_overlay_active = false
 
@@ -875,6 +1161,7 @@ func _ensure_quick_duel_exit_animation(tier: String) -> bool:
 	if _exit_anim_running:
 		return false
 	_exit_anim_running = true
+	_stop_ambient_spark_fx()
 
 	var selected: Control = null
 	var cards: Array[Control] = []

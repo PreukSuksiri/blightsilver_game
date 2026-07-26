@@ -1,13 +1,15 @@
 shader_type canvas_item;
 
 // Liminal carousel grade: crushed contrast, cold desat, soft vignette.
-uniform float contrast : hint_range(0.5, 3.0) = 3.0;
+uniform float contrast : hint_range(0.5, 3.0) = 2.0;
 uniform float saturation : hint_range(0.0, 1.5) = 0.38;
-uniform float crush_blacks : hint_range(0.0, 0.35) = 0.14;
-uniform vec4 grade_tint : source_color = vec4(0.72, 0.78, 0.82, 1.0);
-uniform float vignette : hint_range(0.0, 1.0) = 0.55;
+uniform float crush_blacks : hint_range(0.0, 0.35) = 0.05;
+uniform vec4 grade_tint : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform float vignette : hint_range(0.0, 1.0) = 0.1;
 
 void fragment() {
+	// COLOR arrives as node modulate (canvas_item has no MODULATE built-in).
+	vec4 modc = COLOR;
 	vec4 tex = texture(TEXTURE, UV);
 	vec3 c = tex.rgb;
 
@@ -28,6 +30,5 @@ void fragment() {
 	float vig = smoothstep(1.35, 0.25, length(q * vec2(1.05, 0.95)));
 	c *= mix(1.0 - vignette, 1.0, vig);
 
-	// Must multiply MODULATE — custom canvas_item shaders skip engine modulate otherwise.
-	COLOR = vec4(clamp(c, 0.0, 1.0), tex.a) * MODULATE;
+	COLOR = vec4(clamp(c, 0.0, 1.0), tex.a) * modc;
 }

@@ -27,7 +27,7 @@ const _FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
 const _FOG_TILE_REPEAT: float = 8.0
 const _FOG_TILE_REPEAT_DIAG: float = 3.0
 const _FOG_IMAGE_SCALE: float = 3.0
-const _FOG_ALPHA: float = 0.1
+const _FOG_ALPHA: float = 0.15
 ## Default fog X drift (restored between carousel slides).
 const _FOG_SCROLL_X_DEFAULT: float = 14.0
 const _FOG_DIAG_SCROLL_X_DEFAULT: float = 11.0
@@ -44,7 +44,7 @@ const _HEADER_Z := 4
 ## Liminal background: zoomed pan, fade, occasional flicker.
 const _CAROUSEL_ZOOM_MIN := 1.28
 const _CAROUSEL_ZOOM_MAX := 1.48
-const _CAROUSEL_PEAK_ALPHA := 0.25
+const _CAROUSEL_PEAK_ALPHA := 1.0
 const _CAROUSEL_MACABRE_SHADER: Shader = preload("res://assets/shaders/liminal_macabre.gdshader")
 const _CAROUSEL_PRE_FADE_MIN := 0.7
 const _CAROUSEL_PRE_FADE_MAX := 1.6
@@ -178,6 +178,8 @@ func _style_gallery_header(header: Dictionary) -> void:
 	var title: Label = header.get("title") as Label
 	if title != null:
 		title.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		title.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		title.add_theme_constant_override("outline_size", 4)
 
 
 func _raise_header_z(header: Dictionary) -> void:
@@ -225,6 +227,10 @@ func _build_liminal_carousel() -> void:
 	_carousel_img.modulate = Color(1, 1, 1, 1)
 	var macabre := ShaderMaterial.new()
 	macabre.shader = _CAROUSEL_MACABRE_SHADER
+	macabre.set_shader_parameter("contrast", 2.0)
+	macabre.set_shader_parameter("grade_tint", Color(1.0, 1.0, 1.0, 1.0))
+	macabre.set_shader_parameter("crush_blacks", 0.05)
+	macabre.set_shader_parameter("vignette", 0.1)
 	_carousel_img.material = macabre
 	_carousel_flicker.add_child(_carousel_img)
 
@@ -709,7 +715,9 @@ func _build_card(d: Dictionary) -> Control:
 	l1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	FontManager.tag_primary(l1)
 	l1.add_theme_font_size_override("font_size", 14)
-	l1.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.95))
+	l1.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	l1.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	l1.add_theme_constant_override("outline_size", 3)
 	card.add_child(l1)
 
 	# ── Line 2 (stage) ────────────────────────────────────────
@@ -718,7 +726,9 @@ func _build_card(d: Dictionary) -> Control:
 	l2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	FontManager.tag_primary(l2)
 	l2.add_theme_font_size_override("font_size", 12)
-	l2.add_theme_color_override("font_color", Color(0.60, 0.62, 0.68, 0.85))
+	l2.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1.0))
+	l2.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	l2.add_theme_constant_override("outline_size", 3)
 	card.add_child(l2)
 
 	_gallery_cards.append(card)

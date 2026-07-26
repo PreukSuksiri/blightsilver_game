@@ -29,10 +29,10 @@ Vendored filenames in this folder:
   ui_magitech_vfx_bolt_e.png   ← Particle Pack / trace_04
   ui_magitech_vfx_bolt_f.png   ← Particle Pack / trace_06
   ui_magitech_vfx_bolt_g.png   ← Particle Pack / trace_07
-  ui_magitech_vfx_fire_spark_a.png ← Particle Pack / spark_05
-  ui_magitech_vfx_fire_spark_b.png ← Particle Pack / spark_01
-  ui_magitech_vfx_fire_spark_c.png ← Particle Pack / spark_03
-  ui_magitech_vfx_fire_spark_d.png ← Particle Pack / spark_06
+  ui_magitech_vfx_fire_spark_a.png ← Particle Pack / flame_01
+  ui_magitech_vfx_fire_spark_b.png ← Particle Pack / flame_03
+  ui_magitech_vfx_fire_spark_c.png ← Particle Pack / fire_01
+  ui_magitech_vfx_fire_spark_d.png ← Particle Pack / star_04
   ui_magitech_vfx_ring_a.png   ← Particle Pack / circle_02
   ui_magitech_vfx_ring_b.png   ← Particle Pack / circle_03
 

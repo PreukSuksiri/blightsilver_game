@@ -7,8 +7,9 @@ uniform float outline_width : hint_range(0.5, 64.0) = 2.0;
 uniform bool  outline_fade_with_modulate = true;
 
 void fragment() {
+	// COLOR arrives as node modulate (canvas_item has no MODULATE built-in).
+	vec4 modc = COLOR;
 	vec4 texel = texture(TEXTURE, UV);
-	vec4 modc = MODULATE;
 
 	if (texel.a > 0.01) {
 		// Inside the logo — preserve inherited modulate fade
