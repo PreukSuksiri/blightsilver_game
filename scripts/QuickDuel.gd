@@ -36,6 +36,8 @@ var _reroll_btn: Button = null
 var _tier_capsules: Dictionary = {}
 var _player_portrait: TextureRect = null
 var _switch_char_btn: Button = null
+var _exit_anim_running: bool = false
+var _exit_anim_done: bool = false
 
 
 func _ready() -> void:
@@ -356,6 +358,7 @@ func _build_tier_capsule(tier: String) -> Dictionary:
 	return {
 		"root": root,
 		"btn": btn,
+		"tier": tier,
 	}
 
 
@@ -367,6 +370,25 @@ func _skin_quick_duel_button(btn: Button, wire_sfx: bool = true) -> void:
 	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
 	btn.add_theme_color_override("font_pressed_color", Color(0.82, 0.92, 1.0, 1.0))
 	GameDialog.apply_button_chrome(btn, wire_sfx)
+
+
+## Capsule chrome: magitech fill + always-on circuit patrol along the border.
+func _skin_capsule_frame(frame: PanelContainer) -> void:
+	if frame == null:
+		return
+	GameDialog.attach_panel_fx(frame)
+	var mat: ShaderMaterial = frame.material as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("fill_bottom", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("border_a", Color(0.55, 0.92, 1.0, 0.90))
+	mat.set_shader_parameter("border_b", Color(0.35, 0.55, 0.9, 0.75))
+	mat.set_shader_parameter("border_px", 2.5)
+	mat.set_shader_parameter("corner_radius_px", CAPSULE_FRAME_RADIUS)
+	mat.set_shader_parameter("rim_speed", 0.40)
+	mat.set_shader_parameter("rim_pulse", 0.68)
+	mat.set_shader_parameter("circuit_patrol", 1.0)
 
 
 func _apply_transparent_button_style(btn: Button) -> void:
@@ -396,13 +418,13 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 	var frame := PanelContainer.new()
 	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.08, 0.10, 0.18, 0.95)
-	sb.border_color = Color(0.35, 0.55, 0.9, 0.6)
-	sb.set_border_width_all(int(CAPSULE_FRAME_BORDER))
+	# Transparent StyleBox — fill/border + circuit patrol from magitech panel shader.
+	var sb := GameDialog.make_panel_stylebox(CAPSULE_FRAME_BORDER)
 	sb.set_corner_radius_all(int(CAPSULE_FRAME_RADIUS))
 	frame.add_theme_stylebox_override("panel", sb)
 	btn.add_child(frame)
+	btn.set_meta("_exit_stamp_host", frame)
+	_skin_capsule_frame(frame)
 
 	var inner := Control.new()
 	inner.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -417,7 +439,7 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 
 	if entry.is_empty():
 		btn.disabled = true
-		image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_IMAGE_RADIUS))
+		image_clip.add_child(_make_capsule_fill_panel(Color(0.0, 0.0, 0.0, 1.0), CAPSULE_IMAGE_RADIUS))
 	else:
 		btn.disabled = false
 		var tex: Texture2D = AIDeckVault.resolve_preview_texture(entry)
@@ -437,7 +459,7 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 							CAPSULE_H - 2.0 * CAPSULE_FRAME_BORDER))
 			image_clip.add_child(img)
 		else:
-			image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_IMAGE_RADIUS))
+			image_clip.add_child(_make_capsule_fill_panel(Color(0.0, 0.0, 0.0, 1.0), CAPSULE_IMAGE_RADIUS))
 
 	var tier_center := CenterContainer.new()
 	tier_center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -784,6 +806,12 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 
 
 func launch_vault_duel(tier: String) -> void:
+	_launch_vault_duel_async(tier)
+
+
+func _launch_vault_duel_async(tier: String) -> void:
+	if _exit_anim_running or _exit_anim_done:
+		return
 	if not GameDialog.try_press(&"launch_battle"):
 		return
 	if not SaveManager.is_active_deck_ready():
@@ -796,6 +824,9 @@ func launch_vault_duel(tier: String) -> void:
 	var cfg: Dictionary = AIDeckVault.build_ai_battle_config(entry_id, 0)
 	if not bool(cfg.get("ok", false)):
 		_status_lbl.text = "Invalid opponent deck."
+		return
+
+	if not await _ensure_quick_duel_exit_animation(tier):
 		return
 
 	_set_overlay_battle_return()
@@ -836,3 +867,53 @@ func launch_vault_duel(tier: String) -> void:
 	BGMManager.stop(0.0)
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
+
+
+func _ensure_quick_duel_exit_animation(tier: String) -> bool:
+	if _exit_anim_done:
+		return true
+	if _exit_anim_running:
+		return false
+	_exit_anim_running = true
+
+	var selected: Control = null
+	var cards: Array[Control] = []
+	for t: String in ["easy", "normal", "hard"]:
+		var cap: Dictionary = _tier_capsules.get(t, {})
+		var btn: Variant = cap.get("btn", null)
+		if btn is Control and is_instance_valid(btn as Control):
+			var ctrl: Control = btn as Control
+			cards.append(ctrl)
+			if t == tier:
+				selected = ctrl
+			# Block further presses while animating.
+			if btn is BaseButton:
+				(btn as BaseButton).disabled = true
+
+	if _reroll_btn != null:
+		_reroll_btn.disabled = true
+	if _casual_btn != null:
+		_casual_btn.disabled = true
+
+	await CapsuleExitFx.play(
+			self,
+			selected,
+			cards,
+			Vector2(CAPSULE_W, CAPSULE_H),
+			_stamp_id_for_quick_duel_protagonist())
+	_exit_anim_done = true
+	_exit_anim_running = false
+	return is_inside_tree()
+
+
+func _stamp_id_for_quick_duel_protagonist() -> String:
+	var pid: String = ProtagonistVault.normalize_id(SaveManager.quick_duel_protagonist_id)
+	match pid:
+		"kelly":
+			return "stamp_kelly"
+		"mayu":
+			return "stamp_mayu"
+		"nex":
+			return "stamp_nex"
+		_:
+			return "stamp_kelly"

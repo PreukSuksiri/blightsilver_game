@@ -15,7 +15,7 @@ const CARD_DIM_LABEL_COLOR   := Color(0.65, 0.65, 0.68)
 const CARD_DIM_LABEL_SIZE    := 13
 const GALLERY_SAVED_PROGRESS_DIALOG_MIN_W := 840.0
 const DUNGEON_MAP_SCENE := DailyDungeonManager.DUNGEON_MAP_SCENE
-const _SFX_MECH_HOVER: AudioStream = preload("res://assets/audio/sfx/scifi_ui_4B.mp3")
+const _SFX_MECH_HOVER: AudioStream = preload("res://assets/audio/sfx/sfx_clue_1.mp3")
 const _METAL_SHEEN_SHADER: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
 const _HOVER_SCALE: float = 1.08
 const _HOVER_SCALE_SEC: float = 0.14
@@ -27,26 +27,71 @@ const _FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
 const _FOG_TILE_REPEAT: float = 8.0
 const _FOG_TILE_REPEAT_DIAG: float = 3.0
 const _FOG_IMAGE_SCALE: float = 3.0
-const _FOG_ALPHA: float = 0.2
+const _FOG_ALPHA: float = 0.1
+## Default fog X drift (restored between carousel slides).
+const _FOG_SCROLL_X_DEFAULT: float = 14.0
+const _FOG_DIAG_SCROLL_X_DEFAULT: float = 11.0
 const _SPOTLIGHT_SHADER := preload("res://assets/shaders/shop_spotlight_cone.gdshader")
 const _SPOTLIGHT_COUNT := 5
-const _FOG_Z := 0
+## Spotlight cones kept in code; off for liminal-carousel readability.
+const _SPOTLIGHTS_ENABLED := false
+const _CAROUSEL_DIR := "res://assets/textures/liminal_carousel/"
+const _CAROUSEL_Z := 0
+const _FOG_Z := 1
 const _CONTENT_Z := 2
 const _SPOTLIGHT_Z := 3
 const _HEADER_Z := 4
-
+## Liminal background: zoomed pan, fade, occasional flicker.
+const _CAROUSEL_ZOOM_MIN := 1.28
+const _CAROUSEL_ZOOM_MAX := 1.48
+const _CAROUSEL_PEAK_ALPHA := 0.25
+const _CAROUSEL_MACABRE_SHADER: Shader = preload("res://assets/shaders/liminal_macabre.gdshader")
+const _CAROUSEL_PRE_FADE_MIN := 0.7
+const _CAROUSEL_PRE_FADE_MAX := 1.6
+const _CAROUSEL_FADE_IN_MIN := 1.6
+const _CAROUSEL_FADE_IN_MAX := 2.8
+const _CAROUSEL_HOLD_MIN := 6.5
+const _CAROUSEL_HOLD_MAX := 11.0
+const _CAROUSEL_FADE_OUT_MIN := 1.6
+const _CAROUSEL_FADE_OUT_MAX := 2.6
+const _CAROUSEL_PAN_MIN := 14.0
+const _CAROUSEL_PAN_MAX := 22.0
+const _CAROUSEL_FIRST_DELAY_MIN := 0.5
+const _CAROUSEL_FIRST_DELAY_MAX := 1.0
+const _CAROUSEL_BETWEEN_DELAY_MIN := 1.0
+const _CAROUSEL_BETWEEN_DELAY_MAX := 2.0
 var _data: Array = []
 var _sheen_tweens: Dictionary = {}  # card instance_id -> Tween
 var _fog_material: ShaderMaterial = null
 var _fog_material_diag: ShaderMaterial = null
 var _fog_scroll: Vector2 = Vector2.ZERO
 var _fog_scroll_diag: Vector2 = Vector2(0.37, 0.61)
-var _fog_scroll_x: float = 14.0
+var _fog_scroll_x: float = _FOG_SCROLL_X_DEFAULT
 var _fog_scroll_y: float = 0.0
-var _fog_diag_scroll_x: float = 11.0
+var _fog_diag_scroll_x: float = _FOG_DIAG_SCROLL_X_DEFAULT
 var _fog_diag_scroll_y: float = -11.0
 var _fog_dir_timer: float = 0.0
 var _spotlight_pivots: Array[Control] = []
+var _carousel_paths: PackedStringArray = PackedStringArray()
+var _carousel_clip: Control = null
+## Layer stack: fade (opacity) → flicker (uneasy alpha) → img (macabre shader + pan).
+var _carousel_fade: Control = null
+var _carousel_flicker: Control = null
+var _carousel_img: TextureRect = null
+var _carousel_pan_tween: Tween = null
+var _carousel_fade_tween: Tween = null
+var _carousel_last_path: String = ""
+var _carousel_flicker_enabled: bool = false
+var _carousel_flicker_cd: float = 0.0
+var _carousel_flicker_left: float = 0.0
+var _carousel_flicker_tick_cd: float = 0.0
+var _carousel_running: bool = false
+var _carousel_first_slide: bool = true
+var _gallery_cards: Array[Control] = []
+var _gallery_scroll: ScrollContainer = null
+var _selected_card_ctrl: Control = null
+var _exit_anim_running: bool = false
+var _exit_anim_done: bool = false
 
 
 func _ready() -> void:
@@ -56,6 +101,13 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_fog(delta)
+	_update_carousel_flicker(delta)
+
+
+func _exit_tree() -> void:
+	_carousel_running = false
+	_kill_carousel_tweens()
+	_restore_fog_scroll_defaults()
 
 
 func _load_data() -> void:
@@ -78,6 +130,8 @@ func _build_ui() -> void:
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
 
+	# Liminal Ken-Burns backgrounds (under fog / cards).
+	_build_liminal_carousel()
 	# Drifting smoke (battle playmat fog) — behind capsules / labels / header.
 	_build_fog()
 	# Soft spotlights swaying L/R (same as shop) — above smoke, below cards.
@@ -88,22 +142,23 @@ func _build_ui() -> void:
 	_raise_header_z(header)
 
 	# ── Scroll container (above smoke) ─────────────────────────
-	var scroll := ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	scroll.offset_top    = MenuScreenHeader.HEADER_HEIGHT + 8.0
-	scroll.offset_left   = 32.0
-	scroll.offset_right  = -32.0
-	scroll.offset_bottom = -24.0
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.z_index = _CONTENT_Z
-	add_child(scroll)
+	_gallery_scroll = ScrollContainer.new()
+	_gallery_scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_gallery_scroll.offset_top    = MenuScreenHeader.HEADER_HEIGHT + 8.0
+	_gallery_scroll.offset_left   = 32.0
+	_gallery_scroll.offset_right  = -32.0
+	_gallery_scroll.offset_bottom = -24.0
+	_gallery_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_gallery_scroll.z_index = _CONTENT_Z
+	add_child(_gallery_scroll)
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", int(ROW_GAP))
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(vbox)
+	_gallery_scroll.add_child(vbox)
 
 	# ── Cards ─────────────────────────────────────────────────
+	_gallery_cards.clear()
 	var current_row: HBoxContainer = null
 	for raw: Variant in _data:
 		var d: Dictionary = raw as Dictionary
@@ -130,6 +185,256 @@ func _raise_header_z(header: Dictionary) -> void:
 		var node: Variant = header.get(key)
 		if node is CanvasItem:
 			(node as CanvasItem).z_index = _HEADER_Z
+
+
+func _build_liminal_carousel() -> void:
+	_load_carousel_pool()
+	if _carousel_paths.is_empty():
+		return
+
+	_carousel_clip = Control.new()
+	_carousel_clip.name = "LiminalCarousel"
+	_carousel_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_carousel_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_carousel_clip.clip_contents = true
+	_carousel_clip.z_index = _CAROUSEL_Z
+	add_child(_carousel_clip)
+
+	# 1) Fade layer — only in/out opacity for the whole stack.
+	_carousel_fade = Control.new()
+	_carousel_fade.name = "CarouselFade"
+	_carousel_fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_carousel_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_carousel_fade.modulate = Color(1, 1, 1, 0)
+	_carousel_clip.add_child(_carousel_fade)
+
+	# 2) Flicker layer — occasional alpha glitches (independent of fade).
+	_carousel_flicker = Control.new()
+	_carousel_flicker.name = "CarouselFlicker"
+	_carousel_flicker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_carousel_flicker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_carousel_flicker.modulate = Color(1, 1, 1, 1)
+	_carousel_fade.add_child(_carousel_flicker)
+
+	# 3) Image layer — macabre grade shader + Ken Burns pan only.
+	_carousel_img = TextureRect.new()
+	_carousel_img.name = "CarouselImage"
+	_carousel_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_carousel_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_carousel_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_carousel_img.modulate = Color(1, 1, 1, 1)
+	var macabre := ShaderMaterial.new()
+	macabre.shader = _CAROUSEL_MACABRE_SHADER
+	_carousel_img.material = macabre
+	_carousel_flicker.add_child(_carousel_img)
+
+	_carousel_running = true
+	_carousel_first_slide = true
+	_run_liminal_carousel_loop()
+
+
+func _load_carousel_pool() -> void:
+	_carousel_paths.clear()
+	var dir := DirAccess.open(_CAROUSEL_DIR)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var fname := dir.get_next()
+	while fname != "":
+		if not dir.current_is_dir():
+			var lower := fname.to_lower()
+			if lower.ends_with(".jpg") or lower.ends_with(".jpeg") \
+					or lower.ends_with(".png") or lower.ends_with(".webp"):
+				_carousel_paths.append(_CAROUSEL_DIR.path_join(fname))
+		fname = dir.get_next()
+	dir.list_dir_end()
+	_carousel_paths.sort()
+
+
+func _pick_carousel_path() -> String:
+	if _carousel_paths.is_empty():
+		return ""
+	if _carousel_paths.size() == 1:
+		return _carousel_paths[0]
+	var path := _carousel_last_path
+	while path == _carousel_last_path:
+		path = _carousel_paths[randi() % _carousel_paths.size()]
+	return path
+
+
+func _load_carousel_texture(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if ResourceLoader.exists(path):
+		var loaded: Texture2D = load(path) as Texture2D
+		if loaded != null:
+			return loaded
+	# Fallback before Godot has written .import sidecars.
+	var abs_path := ProjectSettings.globalize_path(path)
+	if not FileAccess.file_exists(abs_path):
+		return null
+	var img := Image.new()
+	if img.load(abs_path) != OK:
+		return null
+	return ImageTexture.create_from_image(img)
+
+
+func _kill_carousel_tweens() -> void:
+	if _carousel_pan_tween != null and _carousel_pan_tween.is_valid():
+		_carousel_pan_tween.kill()
+	_carousel_pan_tween = null
+	if _carousel_fade_tween != null and _carousel_fade_tween.is_valid():
+		_carousel_fade_tween.kill()
+	_carousel_fade_tween = null
+
+
+func _carousel_alive() -> bool:
+	return _carousel_running \
+			and is_inside_tree() \
+			and _carousel_img != null \
+			and is_instance_valid(_carousel_img) \
+			and _carousel_fade != null \
+			and is_instance_valid(_carousel_fade) \
+			and _carousel_flicker != null \
+			and is_instance_valid(_carousel_flicker)
+
+
+func _run_liminal_carousel_loop() -> void:
+	# Black void first — don't start the liminal loop immediately.
+	var first_delay := randf_range(_CAROUSEL_FIRST_DELAY_MIN, _CAROUSEL_FIRST_DELAY_MAX)
+	await get_tree().create_timer(first_delay).timeout
+	while _carousel_alive():
+		await _play_liminal_carousel_slide()
+		if not _carousel_alive():
+			return
+		var gap := randf_range(_CAROUSEL_BETWEEN_DELAY_MIN, _CAROUSEL_BETWEEN_DELAY_MAX)
+		await get_tree().create_timer(gap).timeout
+
+
+func _play_liminal_carousel_slide() -> void:
+	if not _carousel_alive():
+		return
+
+	var path := _pick_carousel_path()
+	var tex: Texture2D = _load_carousel_texture(path)
+	if tex == null:
+		await get_tree().create_timer(1.0).timeout
+		return
+	_carousel_last_path = path
+
+	_kill_carousel_tweens()
+	_carousel_flicker_enabled = false
+	_carousel_fade.modulate = Color(1, 1, 1, 0)
+	_carousel_flicker.modulate = Color(1, 1, 1, 1)
+	_carousel_img.modulate = Color(1, 1, 1, 1)
+	_carousel_img.texture = tex
+	_carousel_img.visible = false
+
+	# Wait one frame so clip size / shader TEXTURE are valid before first fade.
+	await get_tree().process_frame
+	if not _carousel_alive():
+		return
+
+	var view := _carousel_clip.size
+	if view.x < 2.0 or view.y < 2.0:
+		view = get_viewport_rect().size
+	var zoom := randf_range(_CAROUSEL_ZOOM_MIN, _CAROUSEL_ZOOM_MAX)
+	var img_size := view * zoom
+	_carousel_img.size = img_size
+	_carousel_img.position = Vector2.ZERO
+
+	var max_x := maxf(0.0, img_size.x - view.x)
+	var y := (view.y - img_size.y) * 0.5
+	var pan_ltr: bool = randf() >= 0.5
+	var start_x := 0.0 if pan_ltr else -max_x
+	var end_x := -max_x if pan_ltr else 0.0
+	_carousel_img.position = Vector2(start_x, y)
+	_carousel_img.visible = true
+	# Fog drifts against the image's screen motion so smoke doesn't "stick" to the pan.
+	_apply_fog_oppose_carousel_pan(pan_ltr)
+
+	var pan_sec := randf_range(_CAROUSEL_PAN_MIN, _CAROUSEL_PAN_MAX)
+	_carousel_pan_tween = create_tween()
+	_carousel_pan_tween.tween_property(
+			_carousel_img, "position", Vector2(end_x, y), pan_sec) \
+		.set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+
+	# Pan is already moving before the image fades in.
+	# First slide: short head-start only so the opening fade is visible after the 0.5–1s delay.
+	var pre_fade: float
+	if _carousel_first_slide:
+		pre_fade = randf_range(0.12, 0.28)
+	else:
+		pre_fade = randf_range(_CAROUSEL_PRE_FADE_MIN, _CAROUSEL_PRE_FADE_MAX)
+	await get_tree().create_timer(pre_fade).timeout
+	if not _carousel_alive():
+		return
+
+	await _tween_carousel_fade(0.0, _CAROUSEL_PEAK_ALPHA,
+			randf_range(_CAROUSEL_FADE_IN_MIN, _CAROUSEL_FADE_IN_MAX), true)
+	_carousel_first_slide = false
+	if not _carousel_alive():
+		return
+
+	_carousel_flicker_enabled = true
+	_carousel_flicker_cd = randf_range(1.5, 4.5)
+	_carousel_flicker_left = 0.0
+	var hold := randf_range(_CAROUSEL_HOLD_MIN, _CAROUSEL_HOLD_MAX)
+	await get_tree().create_timer(hold).timeout
+	if not _carousel_alive():
+		return
+
+	_carousel_flicker_enabled = false
+	_carousel_flicker.modulate = Color(1, 1, 1, 1)
+
+	await _tween_carousel_fade(_CAROUSEL_PEAK_ALPHA, 0.0,
+			randf_range(_CAROUSEL_FADE_OUT_MIN, _CAROUSEL_FADE_OUT_MAX), false)
+	_restore_fog_scroll_defaults()
+
+
+func _tween_carousel_fade(from_a: float, to_a: float, duration: float, ease_out: bool) -> void:
+	if not _carousel_alive():
+		return
+	if _carousel_fade_tween != null and _carousel_fade_tween.is_valid():
+		_carousel_fade_tween.kill()
+	_carousel_fade.modulate = Color(1, 1, 1, from_a)
+	_carousel_fade_tween = create_tween()
+	var tw := _carousel_fade_tween.tween_method(
+			func(a: float) -> void:
+				if _carousel_fade != null and is_instance_valid(_carousel_fade):
+					_carousel_fade.modulate = Color(1, 1, 1, a),
+			from_a,
+			to_a,
+			duration
+		).set_trans(Tween.TRANS_SINE)
+	if ease_out:
+		tw.set_ease(Tween.EASE_OUT)
+	else:
+		tw.set_ease(Tween.EASE_IN)
+	await _carousel_fade_tween.finished
+
+
+func _update_carousel_flicker(delta: float) -> void:
+	if not _carousel_flicker_enabled or not _carousel_alive():
+		return
+	if _carousel_flicker_left > 0.0:
+		_carousel_flicker_left -= delta
+		_carousel_flicker_tick_cd -= delta
+		if _carousel_flicker_left <= 0.0:
+			_carousel_flicker.modulate = Color(1, 1, 1, 1)
+			_carousel_flicker_cd = randf_range(2.0, 7.5)
+			return
+		if _carousel_flicker_tick_cd <= 0.0:
+			_carousel_flicker_tick_cd = randf_range(0.025, 0.07)
+			var a := 1.0
+			if randf() < 0.65:
+				a = randf_range(0.12, 0.55)
+			_carousel_flicker.modulate = Color(1, 1, 1, a)
+		return
+	_carousel_flicker_cd -= delta
+	if _carousel_flicker_cd <= 0.0:
+		_carousel_flicker_left = randf_range(0.08, 0.32)
+		_carousel_flicker_tick_cd = 0.0
 
 
 func _build_fog() -> void:
@@ -194,6 +499,24 @@ func _pick_new_fog_vertical_dir() -> void:
 		_fog_scroll_y = 2.0 if randf() > 0.5 else -2.0
 
 
+## LTR pan moves image left (features drift left) — default +fog X cancels that.
+## Flip fog X during LTR; keep default +X during RTL so drift always opposes the pan.
+func _apply_fog_oppose_carousel_pan(pan_ltr: bool) -> void:
+	var fog_x: float = absf(_FOG_SCROLL_X_DEFAULT)
+	var diag_x: float = absf(_FOG_DIAG_SCROLL_X_DEFAULT)
+	if pan_ltr:
+		_fog_scroll_x = -fog_x
+		_fog_diag_scroll_x = -diag_x
+	else:
+		_fog_scroll_x = fog_x
+		_fog_diag_scroll_x = diag_x
+
+
+func _restore_fog_scroll_defaults() -> void:
+	_fog_scroll_x = _FOG_SCROLL_X_DEFAULT
+	_fog_diag_scroll_x = _FOG_DIAG_SCROLL_X_DEFAULT
+
+
 func _update_fog(delta: float) -> void:
 	if _fog_material == null:
 		return
@@ -213,6 +536,8 @@ func _update_fog(delta: float) -> void:
 
 ## Soft white spotlight cones rising from below, swaying left/right (shop match).
 func _build_spotlight_beams() -> void:
+	if not _SPOTLIGHTS_ENABLED:
+		return
 	var existing := get_node_or_null("SpotlightLayer") as Control
 	if existing != null:
 		existing.queue_free()
@@ -287,6 +612,7 @@ func _build_card(d: Dictionary) -> Control:
 	var card := VBoxContainer.new()
 	card.add_theme_constant_override("separation", 8)
 	card.custom_minimum_size = Vector2(CARD_IMG_W, 0.0)
+	card.set_meta("_gallery_card_data", d)
 
 	# ── Image frame ───────────────────────────────────────────
 	var frame := Panel.new()
@@ -300,6 +626,7 @@ func _build_card(d: Dictionary) -> Control:
 	sb.border_color     = Color(0.28, 0.28, 0.35)
 	frame.add_theme_stylebox_override("panel", sb)
 	card.add_child(frame)
+	card.set_meta("_gallery_frame", frame)
 
 	# Image texture
 	var img_path: String = str(d.get("image", ""))
@@ -367,7 +694,7 @@ func _build_card(d: Dictionary) -> Control:
 			if ev is InputEventMouseButton \
 					and (ev as InputEventMouseButton).pressed \
 					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-				_on_chapter_pressed(d))
+				_on_chapter_pressed(d, card))
 
 		var save_kind: String = _get_chapter_save_kind(d, vn_path)
 		if save_kind != "":
@@ -394,6 +721,7 @@ func _build_card(d: Dictionary) -> Control:
 	l2.add_theme_color_override("font_color", Color(0.60, 0.62, 0.68, 0.85))
 	card.add_child(l2)
 
+	_gallery_cards.append(card)
 	return card
 
 
@@ -572,7 +900,9 @@ func _add_saved_progress_badge(frame: Panel, save_kind: String) -> void:
 		lbl.tooltip_text = "Saved story progress is available for this chapter."
 
 
-func _on_chapter_pressed(card: Dictionary) -> void:
+func _on_chapter_pressed(card: Dictionary, card_ctrl: Control = null) -> void:
+	if _exit_anim_running or _exit_anim_done:
+		return
 	if not GameDialog.try_press(&"campaign_chapter"):
 		return
 	if GameDialog.has_any_open_overlay():
@@ -581,6 +911,7 @@ func _on_chapter_pressed(card: Dictionary) -> void:
 		return
 	if not _require_deck_ready_for_chapter():
 		return
+	_selected_card_ctrl = card_ctrl
 	var vn_path: String = str(card.get("vn_scene", "")).strip_edges()
 	if vn_path.is_empty():
 		return
@@ -709,7 +1040,13 @@ func _show_continue_or_restart_exploration_dialog(
 
 
 func _resume_exploration(graph_path: String) -> void:
+	_resume_exploration_async(graph_path)
+
+
+func _resume_exploration_async(graph_path: String) -> void:
 	if not _require_deck_ready_for_chapter():
+		return
+	if not await _ensure_gallery_exit_animation():
 		return
 	ExplorationManager.resume_saved_exploration(
 		graph_path,
@@ -758,7 +1095,13 @@ func _show_restart_warning_dialog(
 
 
 func _resume_story_dungeon(dungeon_id: String) -> void:
+	_resume_story_dungeon_async(dungeon_id)
+
+
+func _resume_story_dungeon_async(dungeon_id: String) -> void:
 	if not _require_deck_ready_for_chapter():
+		return
+	if not await _ensure_gallery_exit_animation():
 		return
 	DailyDungeonManager.resume_story_dungeon(dungeon_id)
 	get_tree().change_scene_to_file(DUNGEON_MAP_SCENE)
@@ -775,6 +1118,8 @@ func _play_vn_async(
 	if not GameDialog.try_press(&"campaign_play_vn"):
 		return
 	if not _require_deck_ready_for_chapter():
+		return
+	if not await _ensure_gallery_exit_animation():
 		return
 	GlobalStatManager.on_first_touch("story_vn")
 	if json_path.find("ch0_s1_pre_DEMO_PART1") >= 0:
@@ -793,6 +1138,32 @@ func _play_vn_async(
 		pass,
 		true,
 		arc_key)
+
+
+## Stamp selected capsule, stack all cards, slide off — once per committed play.
+func _ensure_gallery_exit_animation() -> bool:
+	if _exit_anim_done:
+		return true
+	if _exit_anim_running:
+		return false
+	_exit_anim_running = true
+	_carousel_running = false
+	_carousel_flicker_enabled = false
+	_restore_fog_scroll_defaults()
+	if _gallery_scroll != null and is_instance_valid(_gallery_scroll):
+		_gallery_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for card: Control in _gallery_cards:
+		if card != null and is_instance_valid(card):
+			_kill_card_scale_tween(card)
+			_kill_card_sheen_tween(card)
+	await CapsuleExitFx.play(
+			self,
+			_selected_card_ctrl,
+			_gallery_cards,
+			Vector2(CARD_IMG_W, CARD_IMG_H))
+	_exit_anim_done = true
+	_exit_anim_running = false
+	return is_inside_tree()
 
 
 func _get_prerequisite_vn(d: Dictionary) -> String:

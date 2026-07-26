@@ -997,12 +997,16 @@ func load_data() -> void:
 			elif val is Dictionary:
 				quick_duel_tier_rewards[tier] = [((val as Dictionary).duplicate(true))]
 
-	_migrate_quick_duel_offers()
-	var mp_changed: bool = _migrate_multi_protagonist()
-	if decks_sanitized or reconcile_protagonist_selection() or mp_changed:
-		save_data()
+	# Load progress/achievements BEFORE any save_data() so an early persist cannot
+	# wipe unlock flags while mailbox (already loaded) is preserved.
 	GlobalStatManager.load_from_save(parsed as Dictionary)
 	AchievementManager.load_from_save(parsed as Dictionary)
+	var ach_reconciled: bool = AchievementManager.reconcile_from_claimed_mail()
+
+	_migrate_quick_duel_offers()
+	var mp_changed: bool = _migrate_multi_protagonist()
+	if decks_sanitized or reconcile_protagonist_selection() or mp_changed or ach_reconciled:
+		save_data()
 	DetectiveNoteManager.load_from_save(parsed as Dictionary)
 	if RewardGranter.reconcile_claimed_union_formula_rewards():
 		save_data()

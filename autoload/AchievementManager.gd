@@ -82,6 +82,31 @@ func load_from_save(data: Dictionary) -> void:
 	call_deferred("check_threshold_achievements")
 
 
+## Restore unlock / rewards_granted flags from claimed achievement mail.
+## Repairs saves wiped by an early save_data() before achievements were loaded.
+## Does not emit unlock toasts or re-queue rewards.
+func reconcile_from_claimed_mail() -> bool:
+	var changed: bool = false
+	for item: Variant in MailboxManager.mail_items:
+		if not item is Dictionary:
+			continue
+		var mail: Dictionary = item as Dictionary
+		if not MailboxManager.is_achievement_reward_mail(mail):
+			continue
+		if not bool(mail.get("claimed", false)):
+			continue
+		var ach_id: String = str(mail.get("achievement_id", "")).strip_edges()
+		if ach_id.is_empty():
+			continue
+		if not bool(_unlocked.get(ach_id, false)):
+			_unlocked[ach_id] = true
+			changed = true
+		if not bool(_rewards_granted.get(ach_id, false)):
+			_rewards_granted[ach_id] = true
+			changed = true
+	return changed
+
+
 func to_save_dict() -> Dictionary:
 	var ids: Array = []
 	for key: Variant in _unlocked.keys():
