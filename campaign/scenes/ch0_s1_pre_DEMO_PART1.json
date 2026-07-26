@@ -1363,6 +1363,7 @@
 	},
 	{
 		"fade_out": 0.3,
+		"hidden": true,
 		"linger_characters": true
 	},
 	{
@@ -1377,10 +1378,12 @@
 			"zoom": 1.4
 		},
 		"fade_in": 0.3,
+		"hidden": true,
 		"text": "(She shove her feet into her shoes, ready to throw trantrum)"
 	},
 	{
 		"fade_out": 0.3,
+		"hidden": true,
 		"linger_characters": true
 	},
 	{

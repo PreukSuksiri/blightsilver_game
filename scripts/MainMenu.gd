@@ -35,6 +35,8 @@ const QuickDuelOverlayScene = preload("res://scenes/quick_duel_overlay.tscn")
 
 const MENU_BTN_Z := 1
 const TITLE_CHEAT_Z := -10
+## Above background / drifting cards; below menu buttons (MENU_BTN_Z).
+const TITLE_FOG_Z := 0
 const MENU_OVERLAY_Z := 25
 const MENU_LOADING_Z := 35
 const MENU_DROPDOWN_BACKDROP_Z := 40
@@ -42,6 +44,16 @@ const MENU_DROPDOWN_Z := 41
 const MENU_STACK_GAP := 14.0
 const MENU_FADE_IN_DUR := 1.2
 const SPLASH_FADE_IN_DUR := 1.0
+
+const _FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
+const _FOG_TILE_REPEAT: float = 8.0
+const _FOG_TILE_REPEAT_DIAG: float = 3.0
+const _FOG_IMAGE_SCALE: float = 3.0
+const _FOG_ALPHA: float = 0.1
+## Negative X = visual drift left → right.
+const _FOG_SCROLL_X: float = -14.0
+const _FOG_DIAG_SCROLL_X: float = -11.0
+const _FOG_DIAG_SCROLL_Y: float = 7.0
 
 const TITLE_BG_TEX_SIZE := Vector2(1216.0, 832.0)
 const TITLE_CHEAT_TAPS_REQUIRED := 20
@@ -60,6 +72,16 @@ var _title_cheat_credit_demo_taps: int = 0
 var _title_cheat_apartment_zone: Control = null
 var _title_cheat_moon_zone: Control = null
 var _title_cheat_credit_demo_zone: Control = null
+
+var _fog_material: ShaderMaterial = null
+var _fog_material_diag: ShaderMaterial = null
+var _fog_scroll: Vector2 = Vector2.ZERO
+var _fog_scroll_diag: Vector2 = Vector2.ZERO
+var _fog_scroll_x: float = _FOG_SCROLL_X
+var _fog_scroll_y: float = 2.0
+var _fog_diag_scroll_x: float = _FOG_DIAG_SCROLL_X
+var _fog_diag_scroll_y: float = _FOG_DIAG_SCROLL_Y
+var _fog_dir_timer: float = 0.0
 
 func _enter_tree() -> void:
 	StartupLoadDebug.log(
@@ -154,8 +176,10 @@ func _ready() -> void:
 		FontManager.fonts_changed.connect(_on_fonts_changed)
 	_reset_title_cheat_tap_counts()
 	_setup_title_cheat_hitboxes()
+	_build_fog()
 	if has_node("TitleLogo"):
 		$TitleLogo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		$TitleLogo.z_index = MENU_BTN_Z
 	call_deferred("_check_achievement_reward_mail_notice")
 
 	if return_load:
@@ -851,6 +875,97 @@ func _input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_layout_title_cheat_hitboxes()
+
+
+func _process(delta: float) -> void:
+	_update_fog(delta)
+
+
+func _build_fog() -> void:
+	if get_node_or_null("TitleFog") != null:
+		return
+	var fog_tex := load(_FOG_PATH) as Texture2D
+	if fog_tex == null:
+		return
+
+	var smoke_shader := Shader.new()
+	smoke_shader.code = """
+shader_type canvas_item;
+uniform vec2 scroll = vec2(0.0, 0.0);
+uniform float tile_repeat = 1.0;
+uniform float image_scale = 3.0;
+uniform float fog_alpha = 0.2;
+void fragment() {
+	vec2 uv = fract(UV * tile_repeat / image_scale + scroll);
+	vec4 tex = texture(TEXTURE, uv);
+	float smoke = 1.0 - tex.r;
+	COLOR = vec4(vec3(smoke), smoke * fog_alpha);
+}
+"""
+
+	var fog_clip := Control.new()
+	fog_clip.name = "TitleFog"
+	fog_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fog_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fog_clip.z_index = TITLE_FOG_Z
+	add_child(fog_clip)
+	# Sit above Background / drifting cards; scene UI (buttons at MENU_BTN_Z) stays on top.
+	var cards := get_node_or_null("DriftingCardsLayer")
+	if cards != null:
+		move_child(fog_clip, cards.get_index() + 1)
+	else:
+		move_child(fog_clip, get_node("Background").get_index() + 1)
+
+	_fog_material = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT)
+	_fog_material_diag = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT_DIAG)
+	fog_clip.add_child(_make_fog_layer(fog_tex, _fog_material))
+	fog_clip.add_child(_make_fog_layer(fog_tex, _fog_material_diag))
+
+	_fog_dir_timer = randf_range(3.0, 6.0)
+	_pick_new_fog_vertical_dir()
+
+
+func _make_fog_material(smoke_shader: Shader, tile_repeat: float) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = smoke_shader
+	mat.set_shader_parameter("tile_repeat", tile_repeat)
+	mat.set_shader_parameter("image_scale", _FOG_IMAGE_SCALE)
+	mat.set_shader_parameter("fog_alpha", _FOG_ALPHA)
+	return mat
+
+
+func _make_fog_layer(fog_tex: Texture2D, mat: ShaderMaterial) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.texture = fog_tex
+	tr.material = mat
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_SCALE
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return tr
+
+
+func _pick_new_fog_vertical_dir() -> void:
+	_fog_scroll_y = randf_range(-5.0, 5.0)
+	if absf(_fog_scroll_y) < 1.5:
+		_fog_scroll_y = 2.0 if randf() > 0.5 else -2.0
+
+
+func _update_fog(delta: float) -> void:
+	if _fog_material == null:
+		return
+	_fog_dir_timer -= delta
+	if _fog_dir_timer <= 0.0:
+		_fog_dir_timer = randf_range(3.0, 7.0)
+		_pick_new_fog_vertical_dir()
+	var step := delta * 0.002
+	_fog_scroll.x += _fog_scroll_x * step
+	_fog_scroll.y += _fog_scroll_y * step
+	_fog_material.set_shader_parameter("scroll", _fog_scroll)
+	if _fog_material_diag != null:
+		_fog_scroll_diag.x += _fog_diag_scroll_x * step
+		_fog_scroll_diag.y += _fog_diag_scroll_y * step
+		_fog_material_diag.set_shader_parameter("scroll", _fog_scroll_diag)
 
 
 func _reset_title_cheat_tap_counts() -> void:

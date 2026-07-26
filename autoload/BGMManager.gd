@@ -23,7 +23,7 @@ const DEFAULT_FADE := 0.8
 const LOOP_PLAY_ONCE := -2.0
 
 const BUILTIN_DEFAULT_PATHS := {
-	CONTEXT_MAIN_MENU: "res://assets/audio/bgm_storytelling_4.mp3",
+	CONTEXT_MAIN_MENU: "res://assets/audio/bgm_main_menu.mp3",
 	CONTEXT_PLACEMENT: "res://assets/audio/bgm_placement_2.mp3",
 	CONTEXT_BATTLE: "res://assets/audio/bgm_battle_3.mp3",
 	CONTEXT_BOSS: "res://assets/audio/bgm_boss_1.mp3",
@@ -35,6 +35,11 @@ const BUILTIN_DEFAULT_PATHS := {
 	CONTEXT_VN: "",
 	CONTEXT_CAMPAIGN_MAP: "res://assets/audio/bgm_mystery_2.mp3",
 	CONTEXT_RESULT: "res://assets/audio/bgm_ost_even_if_everything_flips.mp3",
+}
+
+## Optional intro-skip: first play + loop restarts from this timestamp (seconds).
+const CONTEXT_START_SEC := {
+	CONTEXT_MAIN_MENU: 20.0,
 }
 
 var _default_paths: Dictionary = {}
@@ -142,14 +147,19 @@ func play_context(
 		fade_in: float = DEFAULT_FADE,
 		fade_out: float = DEFAULT_FADE,
 		volume_pct: float = 100.0,
-		loop_from_sec: float = -1.0) -> void:
+		loop_from_sec: float = -1.0,
+		start_sec: float = -1.0) -> void:
 	var path: String = get_default_path(context)
 	if path.is_empty() and context != CONTEXT_VN:
 		push_warning("BGMManager: no default track for context '%s'" % context)
 		return
 	if path.is_empty():
 		return
-	play_path(path, fade_in, fade_out, volume_pct, context, loop_from_sec)
+	var resolved_start: float = start_sec
+	if resolved_start < 0.0:
+		resolved_start = float(CONTEXT_START_SEC.get(context, -1.0))
+	# Intro-skip only affects first play; default loop stays whole-track from 00:00.
+	play_path(path, fade_in, fade_out, volume_pct, context, loop_from_sec, resolved_start)
 
 
 func play_path(

@@ -60,6 +60,8 @@ const _CAROUSEL_FIRST_DELAY_MIN := 0.5
 const _CAROUSEL_FIRST_DELAY_MAX := 1.0
 const _CAROUSEL_BETWEEN_DELAY_MIN := 1.0
 const _CAROUSEL_BETWEEN_DELAY_MAX := 2.0
+## Avoid re-rolling any of the last N shown paths (pure-random was repeating too soon).
+const _CAROUSEL_RECENT_MEMORY := 10
 var _data: Array = []
 var _sheen_tweens: Dictionary = {}  # card instance_id -> Tween
 var _fog_material: ShaderMaterial = null
@@ -80,7 +82,7 @@ var _carousel_flicker: Control = null
 var _carousel_img: TextureRect = null
 var _carousel_pan_tween: Tween = null
 var _carousel_fade_tween: Tween = null
-var _carousel_last_path: String = ""
+var _carousel_recent_paths: PackedStringArray = PackedStringArray()
 var _carousel_flicker_enabled: bool = false
 var _carousel_flicker_cd: float = 0.0
 var _carousel_flicker_left: float = 0.0
@@ -228,8 +230,8 @@ func _build_liminal_carousel() -> void:
 	var macabre := ShaderMaterial.new()
 	macabre.shader = _CAROUSEL_MACABRE_SHADER
 	macabre.set_shader_parameter("contrast", 2.0)
-	macabre.set_shader_parameter("grade_tint", Color(1.0, 1.0, 1.0, 1.0))
-	macabre.set_shader_parameter("crush_blacks", 0.05)
+	macabre.set_shader_parameter("grade_tint", Color(0.88, 0.90, 0.92, 1.0))
+	macabre.set_shader_parameter("crush_blacks", 0.02)
 	macabre.set_shader_parameter("vignette", 0.1)
 	_carousel_img.material = macabre
 	_carousel_flicker.add_child(_carousel_img)
@@ -241,6 +243,7 @@ func _build_liminal_carousel() -> void:
 
 func _load_carousel_pool() -> void:
 	_carousel_paths.clear()
+	_carousel_recent_paths.clear()
 	var dir := DirAccess.open(_CAROUSEL_DIR)
 	if dir == null:
 		return
@@ -262,10 +265,42 @@ func _pick_carousel_path() -> String:
 		return ""
 	if _carousel_paths.size() == 1:
 		return _carousel_paths[0]
-	var path := _carousel_last_path
-	while path == _carousel_last_path:
-		path = _carousel_paths[randi() % _carousel_paths.size()]
-	return path
+	# Small pools: pure random (only avoid immediate repeat).
+	if _carousel_paths.size() < 20:
+		var last := ""
+		if not _carousel_recent_paths.is_empty():
+			last = _carousel_recent_paths[_carousel_recent_paths.size() - 1]
+		var path := last
+		while path == last:
+			path = _carousel_paths[randi() % _carousel_paths.size()]
+		return path
+	# Large pools: avoid any of the last N remembered paths.
+	var memory_cap: int = mini(_CAROUSEL_RECENT_MEMORY, _carousel_paths.size() - 1)
+	var blocked: Dictionary = {}
+	var recent_n: int = mini(memory_cap, _carousel_recent_paths.size())
+	for i: int in range(_carousel_recent_paths.size() - recent_n, _carousel_recent_paths.size()):
+		blocked[_carousel_recent_paths[i]] = true
+	var candidates: PackedStringArray = PackedStringArray()
+	for path: String in _carousel_paths:
+		if not blocked.has(path):
+			candidates.append(path)
+	if candidates.is_empty():
+		candidates = _carousel_paths.duplicate()
+	return candidates[randi() % candidates.size()]
+
+
+func _remember_carousel_path(path: String) -> void:
+	if path.is_empty():
+		return
+	# Only maintain the 10-deep memory when the pool is large enough.
+	if _carousel_paths.size() < 20:
+		_carousel_recent_paths.clear()
+		_carousel_recent_paths.append(path)
+		return
+	_carousel_recent_paths.append(path)
+	var max_keep: int = maxi(_CAROUSEL_RECENT_MEMORY, 1)
+	while _carousel_recent_paths.size() > max_keep:
+		_carousel_recent_paths.remove_at(0)
 
 
 func _load_carousel_texture(path: String) -> Texture2D:
@@ -326,7 +361,7 @@ func _play_liminal_carousel_slide() -> void:
 	if tex == null:
 		await get_tree().create_timer(1.0).timeout
 		return
-	_carousel_last_path = path
+	_remember_carousel_path(path)
 
 	_kill_carousel_tweens()
 	_carousel_flicker_enabled = false

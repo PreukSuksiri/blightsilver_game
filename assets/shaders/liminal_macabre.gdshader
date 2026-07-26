@@ -3,8 +3,8 @@ shader_type canvas_item;
 // Liminal carousel grade: crushed contrast, cold desat, soft vignette.
 uniform float contrast : hint_range(0.5, 3.0) = 2.0;
 uniform float saturation : hint_range(0.0, 1.5) = 0.38;
-uniform float crush_blacks : hint_range(0.0, 0.35) = 0.05;
-uniform vec4 grade_tint : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform float crush_blacks : hint_range(0.0, 0.35) = 0.02;
+uniform vec4 grade_tint : source_color = vec4(0.88, 0.90, 0.92, 1.0);
 uniform float vignette : hint_range(0.0, 1.0) = 0.1;
 
 void fragment() {

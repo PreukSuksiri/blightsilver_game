@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdy37y0vwa6vn"
-path="res://.godot/imported/carousel_24.jpg-f7b44cfe590d0ec1d875ca9f66f95bcb.ctex"
+uid="uid://b5hij64qwmw16"
+path="res://.godot/imported/carousel_55.jpg-d3a9ecfbd40c5b422ecc7548be52da07.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/liminal_carousel/carousel_24.jpg"
-dest_files=["res://.godot/imported/carousel_24.jpg-f7b44cfe590d0ec1d875ca9f66f95bcb.ctex"]
+source_file="res://assets/textures/liminal_carousel/carousel_55.jpg"
+dest_files=["res://.godot/imported/carousel_55.jpg-d3a9ecfbd40c5b422ecc7548be52da07.ctex"]
 
 [params]
 
