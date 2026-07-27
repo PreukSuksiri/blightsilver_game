@@ -23,12 +23,14 @@ const PORTRAIT_REF_H := 720.0
 const PORTRAIT_PEEK := 0.4
 const SettingsMenuScene := preload("res://scenes/settings_menu.tscn")
 const ProtagonistOverlayScene := preload("res://scripts/ProtagonistOverlay.gd")
+const _LiminalBackdropScript := preload("res://scripts/LiminalBackdrop.gd")
 const _ROUNDED_RECT_CLIP: Shader = preload("res://assets/shaders/rounded_rect_clip.gdshader")
 const CAPSULE_FRAME_RADIUS := 12.0
 const CAPSULE_FRAME_BORDER := 2.0
 const CAPSULE_IMAGE_RADIUS := CAPSULE_FRAME_RADIUS - CAPSULE_FRAME_BORDER
 const OVERLAY_Z_INDEX := 80
 const BG_PATH := "res://assets/textures/ui/battle/v3_magitech/ui_bg_quick_duel.png"
+const _LIMINAL_CAROUSEL_DIR := "res://assets/textures/quick_duel_carousel/"
 ## Grow backdrop past viewport edges so no seam / letterbox shows.
 const BG_OVERSCAN := 0.18
 ## Thin streak traces — warm-tinted for molten fire sparks (not electric arcs).
@@ -65,6 +67,7 @@ var _switch_char_btn: Button = null
 var _exit_anim_running: bool = false
 var _exit_anim_done: bool = false
 var _bg_rect: TextureRect = null
+var _liminal = null
 var _spark_textures: Array[Texture2D] = []
 var _fx_layer: Control = null
 var _flash_rect: ColorRect = null
@@ -108,6 +111,12 @@ func _build_shell() -> void:
 	underlay.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(underlay)
 
+	# Liminal Ken-Burns + fog (same system as Campaign Gallery).
+	_liminal = _LiminalBackdropScript.new()
+	_liminal.carousel_dir = _LIMINAL_CAROUSEL_DIR
+	_liminal.z_index = 0
+	add_child(_liminal)
+
 	_bg_rect = TextureRect.new()
 	_bg_rect.texture = load(BG_PATH) as Texture2D
 	_bg_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -115,9 +124,13 @@ func _build_shell() -> void:
 	_bg_rect.stretch_mode = TextureRect.STRETCH_SCALE
 	_bg_rect.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(_bg_rect)
-	_layout_bg_cover()
-	resized.connect(_layout_bg_cover)
-	call_deferred("_layout_bg_cover")
+	# Prefer liminal pool when present; keep static BG as fallback.
+	if _liminal != null and _liminal.has_carousel():
+		_bg_rect.visible = false
+	else:
+		_layout_bg_cover()
+		resized.connect(_layout_bg_cover)
+		call_deferred("_layout_bg_cover")
 
 	_build_ambient_fx_layer()
 
@@ -221,8 +234,7 @@ func _start_ambient_spark_loop() -> void:
 	_ambient_spark_loop()
 
 
-func _stop_ambient_spark_fx() -> void:
-	_spark_fx_running = false
+func _clear_active_sparks() -> void:
 	for entry: Variant in _active_sparks:
 		if entry is Dictionary:
 			var node: Variant = (entry as Dictionary).get("node")
@@ -233,16 +245,26 @@ func _stop_ambient_spark_fx() -> void:
 		_flash_rect.color.a = 0.0
 
 
+func _stop_ambient_spark_fx() -> void:
+	_spark_fx_running = false
+	_clear_active_sparks()
+
+
 func _ambient_spark_loop() -> void:
 	while _spark_fx_running and is_inside_tree():
 		var wait_sec: float = randf_range(_SPARK_INTERVAL_MIN, _SPARK_INTERVAL_MAX)
 		await get_tree().create_timer(wait_sec).timeout
 		if not _spark_fx_running or not is_inside_tree():
 			return
+		# Idle cinema: keep liminal backdrop clean — no sparks / SFX.
+		if _hud_cinema:
+			continue
 		_play_fire_spark_burst()
 
 
 func _play_fire_spark_burst() -> void:
+	if _hud_cinema:
+		return
 	if _fx_layer == null or _spark_textures.is_empty():
 		return
 	SFXManager.play(_SFX_JOLT, 0.55)
@@ -1059,6 +1081,8 @@ func _set_overlay_battle_return() -> void:
 
 
 func _dismiss_overlay() -> void:
+	if _liminal != null:
+		_liminal.stop()
 	_stop_ambient_spark_fx()
 	GameDialog.close_overlay(self)
 	GameState.quick_duel_overlay_active = false
@@ -1069,6 +1093,8 @@ func _dismiss_overlay() -> void:
 func _exit_tree() -> void:
 	_kill_hud_fade_tween()
 	GameState.set_cursor_cinema_hidden(false)
+	if _liminal != null:
+		_liminal.stop()
 	_stop_ambient_spark_fx()
 	GameDialog.close_overlay(self)
 	GameState.quick_duel_overlay_active = false
@@ -1216,7 +1242,7 @@ func _can_run_idle_cinema() -> bool:
 		return false
 	for child: Node in get_children():
 		if child == _hud_layer or child == _bg_rect or child == _fx_layer \
-				or child == _flash_rect:
+				or child == _flash_rect or child == _liminal:
 			continue
 		if child is ProtagonistOverlay:
 			return false
@@ -1260,6 +1286,7 @@ func _set_quick_duel_hud_cinema(hide_hud: bool) -> void:
 	_hud_cinema = hide_hud
 	GameState.set_cursor_cinema_hidden(hide_hud)
 	if hide_hud:
+		_clear_active_sparks()
 		_hud_layer.visible = true
 		_hud_fade_tween = create_tween()
 		_hud_fade_tween.tween_property(_hud_layer, "modulate:a", 0.0, _HUD_FADE_OUT_SEC) \
@@ -1284,6 +1311,8 @@ func _ensure_quick_duel_exit_animation(tier: String) -> bool:
 		return false
 	_exit_anim_running = true
 	_force_show_quick_duel_hud()
+	if _liminal != null:
+		_liminal.stop()
 	_stop_ambient_spark_fx()
 
 	var selected: Control = null

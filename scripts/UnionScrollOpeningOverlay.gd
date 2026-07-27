@@ -5,6 +5,7 @@ signal reveal_finished
 
 const SCROLL_TEX_PATH: String = "res://assets/textures/inventory/ui_union_scroll.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
+const CARD_BACK_PATH: String = "res://assets/textures/cards/sample/card_back.png"
 const FULL_CARDS_DIR: String = "res://assets/textures/cards/full_cards/"
 const FANFARE_UNION_PATH: String = "res://assets/audio/fanfare/pack_fanfare_union.mp3"
 const DISPLAY_HOLD_SECONDS: float = 30.0
@@ -13,8 +14,14 @@ const FANFARE_FADE_IN_SECONDS: float = 0.2
 const FANFARE_FADE_OUT_SECONDS: float = 0.5
 const BGM_FADE_OUT_BEFORE_FANFARE: float = 0.3
 const BGM_FADE_IN_AFTER_FANFARE: float = 0.5
+const FLIP_HALF_SEC: float = 0.16
+const FAN_MOVE_SEC: float = 0.38
+## Keep old tear-apart path in code; false = shatter + facedown reveal.
+const USE_LEGACY_TEAR_OPENING: bool = false
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
+const _REVEAL_GLOW_SHADER: Shader = preload("res://assets/shaders/pack_reveal_glow.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0
+const _GLOW_PAD_FRAC: float = 0.28
 const _WHITE_GLOW: Color = Color(1.0, 1.0, 1.0, 0.72)
 
 var _union_name: String = ""
@@ -27,6 +34,7 @@ var _skippable: bool = true
 var _dismiss_allowed: bool = false
 var _anim_done: bool = false
 var _glow_sb: StyleBoxFlat = null
+var _glow_mat: ShaderMaterial = null
 var _card_tex: Texture2D = null
 var _fanfare_player: AudioStreamPlayer = null
 var _fanfare_tween: Tween = null
@@ -37,6 +45,9 @@ var _bg: ColorRect = null
 var _pack_root: Control = null
 var _clip_top: Control = null
 var _clip_bot: Control = null
+var _pack_img: TextureRect = null
+var _pack_tex: Texture2D = null
+var _card_back_tex: Texture2D = null
 
 static func open(parent: Node, union_name: String, skippable: bool = true) -> UnionScrollOpeningOverlay:
 	var overlay := UnionScrollOpeningOverlay.new()
@@ -51,6 +62,8 @@ static func open(parent: Node, union_name: String, skippable: bool = true) -> Un
 
 func _ready() -> void:
 	_compute_sizes()
+	if ResourceLoader.exists(CARD_BACK_PATH):
+		_card_back_tex = load(CARD_BACK_PATH) as Texture2D
 	_build_ui()
 	_run.call_deferred()
 
@@ -91,14 +104,29 @@ func _build_ui() -> void:
 		_pack_w = _pack_h * (float(pack_tex.get_width()) / float(pack_tex.get_height()))
 	else:
 		_pack_w = _pack_h * (160.0 / 220.0)
+	_pack_tex = pack_tex
 
 	_pack_root = Control.new()
 	_pack_root.custom_minimum_size = Vector2(_pack_w, _pack_h)
 	_pack_root.size = Vector2(_pack_w, _pack_h)
 	_pack_root.pivot_offset = Vector2(_pack_w * 0.5, _pack_h * 0.5)
 	_pack_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pack_root.z_index = 5
 	add_child(_pack_root)
 
+	if USE_LEGACY_TEAR_OPENING:
+		_build_legacy_tear_halves(pack_tex)
+	else:
+		_pack_img = TextureRect.new()
+		_pack_img.texture = pack_tex
+		_pack_img.size = Vector2(_pack_w, _pack_h)
+		_pack_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_pack_img.stretch_mode = TextureRect.STRETCH_SCALE
+		_pack_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_pack_root.add_child(_pack_img)
+
+
+func _build_legacy_tear_halves(pack_tex: Texture2D) -> void:
 	var split_y: float = floor(_pack_h * 0.5)
 	var tex_w: float = float(pack_tex.get_width()) if pack_tex != null else 832.0
 	var tex_h: float = float(pack_tex.get_height()) if pack_tex != null else 1216.0
@@ -144,7 +172,173 @@ func _build_ui() -> void:
 	bot_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_clip_bot.add_child(bot_img)
 
+
 func _run() -> void:
+	if USE_LEGACY_TEAR_OPENING:
+		await _run_legacy_tear_scroll()
+		return
+	await _run_shatter_scroll()
+
+
+func _run_shatter_scroll() -> void:
+	_card_tex = _load_union_tex(_union_name)
+	await _play_union_fanfare()
+
+	var screen: Vector2 = get_viewport_rect().size
+	var cx: float = screen.x * 0.5
+	var cy: float = screen.y * 0.5
+	var pack_final_pos := Vector2(cx - _pack_w * 0.5, cy - _pack_h * 0.5)
+	_pack_root.position = Vector2(cx - _pack_w * 0.5, screen.y + 40.0)
+
+	var t1: Tween = create_tween().set_parallel(true)
+	t1.tween_property(_bg, "color:a", 0.75, 0.35)
+	t1.tween_property(_pack_root, "position:y", pack_final_pos.y, 0.42) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t1.finished
+
+	var stack_pos := Vector2(cx - _card_w * 0.5, cy - _card_h * 0.5)
+	var card_wrapper: Control = _make_flip_card_ctrl()
+	card_wrapper.position = stack_pos
+	card_wrapper.pivot_offset = Vector2(_card_w * 0.5, _card_h * 0.5)
+	card_wrapper.z_index = 2
+	add_child(card_wrapper)
+
+	SFXManager.play(SFXManager.SFX_PACK_SHAKE)
+	await _wiggle(_pack_root)
+
+	SFXManager.play(SFXManager.SFX_PACK_TEAR_OFF)
+	var shatter_rect := Rect2(_pack_root.position, Vector2(_pack_w, _pack_h))
+	_pack_root.visible = false
+	PackShatterFx.shake_screen(self)
+	await PackShatterFx.shatter_texture(self, _pack_tex, shatter_rect)
+
+	var card_y: float = cy - _card_h * 0.5
+	var fan_pos := Vector2(cx - _card_w * 0.5, card_y)
+	var t_fan: Tween = create_tween()
+	t_fan.tween_property(card_wrapper, "position", fan_pos, FAN_MOVE_SEC) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t_fan.finished
+
+	await _flip_card_face_up(card_wrapper)
+	_start_glow_pulse()
+
+	await get_tree().create_timer(CARD_SETTLE_SECONDS).timeout
+	_skip_requested = false
+	_dismiss_allowed = true
+
+	var elapsed: float = 0.0
+	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested:
+		await get_tree().create_timer(0.05).timeout
+		elapsed += 0.05
+
+	_skip_requested = false
+	_fade_out_union_fanfare(true)
+
+	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
+	var t9: Tween = create_tween().set_parallel(true)
+	t9.tween_property(card_wrapper, "position", dest, 0.48) \
+		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(card_wrapper, "scale", Vector2.ZERO, 0.48) \
+		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(_bg, "color:a", 0.0, 0.40)
+	await t9.finished
+	_finish_reveal()
+
+
+func _make_flip_card_ctrl() -> Control:
+	var wrapper := Control.new()
+	wrapper.custom_minimum_size = Vector2(_card_w, _card_h)
+	wrapper.size = Vector2(_card_w, _card_h)
+	wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrapper.clip_contents = false
+
+	var pad: float = maxf(_card_w, _card_h) * _GLOW_PAD_FRAC
+	var glow := ColorRect.new()
+	glow.color = Color(1, 1, 1, 1)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.z_index = 0
+	glow.position = Vector2(-pad, -pad)
+	glow.size = Vector2(_card_w + pad * 2.0, _card_h + pad * 2.0)
+	var mat := ShaderMaterial.new()
+	mat.shader = _REVEAL_GLOW_SHADER
+	mat.set_shader_parameter("rect_size", glow.size)
+	mat.set_shader_parameter("card_size", Vector2(_card_w, _card_h))
+	mat.set_shader_parameter(
+		"corner_radius_px", max(6.0, _card_w * (_CARD_CORNER_RADIUS_REF / 150.0)))
+	mat.set_shader_parameter("glow_color", _WHITE_GLOW)
+	mat.set_shader_parameter("intensity", 0.0)
+	mat.set_shader_parameter("glow_spread", maxf(28.0, pad * 1.15))
+	mat.set_shader_parameter("rim_speed", 0.55)
+	mat.set_shader_parameter("rim_pulse", 0.72)
+	mat.set_shader_parameter("circuit_patrol", 1.0)
+	glow.material = mat
+	wrapper.add_child(glow)
+	_glow_mat = mat
+
+	var flip_host := Control.new()
+	flip_host.size = Vector2(_card_w, _card_h)
+	flip_host.pivot_offset = Vector2(_card_w * 0.5, _card_h * 0.5)
+	flip_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flip_host.z_index = 1
+	wrapper.add_child(flip_host)
+
+	var corner: float = max(6.0, _card_w * (_CARD_CORNER_RADIUS_REF / 150.0))
+	var back_img := TextureRect.new()
+	back_img.size = Vector2(_card_w, _card_h)
+	back_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	back_img.stretch_mode = TextureRect.STRETCH_SCALE
+	back_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	back_img.texture = _card_back_tex if _card_back_tex != null else _card_tex
+	var back_mat := ShaderMaterial.new()
+	back_mat.shader = _ROUNDED_CLIP
+	back_mat.set_shader_parameter("corner_radius", corner)
+	back_img.material = back_mat
+	flip_host.add_child(back_img)
+
+	var front_img := TextureRect.new()
+	front_img.size = Vector2(_card_w, _card_h)
+	front_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	front_img.stretch_mode = TextureRect.STRETCH_SCALE
+	front_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	front_img.texture = _card_tex if _card_tex != null else load(FALLBACK_CARD_PATH) as Texture2D
+	front_img.visible = false
+	var front_mat := ShaderMaterial.new()
+	front_mat.shader = _ROUNDED_CLIP
+	front_mat.set_shader_parameter("corner_radius", corner)
+	front_img.material = front_mat
+	flip_host.add_child(front_img)
+
+	wrapper.set_meta("_flip_host", flip_host)
+	wrapper.set_meta("_flip_back", back_img)
+	wrapper.set_meta("_flip_front", front_img)
+	return wrapper
+
+
+func _flip_card_face_up(wrapper: Control) -> void:
+	if wrapper == null or not is_instance_valid(wrapper):
+		return
+	var flip_host: Control = wrapper.get_meta("_flip_host") as Control
+	var back_img: TextureRect = wrapper.get_meta("_flip_back") as TextureRect
+	var front_img: TextureRect = wrapper.get_meta("_flip_front") as TextureRect
+	if flip_host == null:
+		return
+	SFXManager.play(SFXManager.SFX_FLIP, SFXManager.SFX_FLIP_VOLUME)
+	var tw1 := create_tween()
+	tw1.tween_property(flip_host, "scale:x", 0.0, FLIP_HALF_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await tw1.finished
+	if back_img != null and is_instance_valid(back_img):
+		back_img.visible = false
+	if front_img != null and is_instance_valid(front_img):
+		front_img.visible = true
+	var tw2 := create_tween()
+	tw2.tween_property(flip_host, "scale:x", 1.0, FLIP_HALF_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await tw2.finished
+
+
+## Legacy tear-apart scroll opening (suppressed when USE_LEGACY_TEAR_OPENING is false).
+func _run_legacy_tear_scroll() -> void:
 	_card_tex = _load_union_tex(_union_name)
 	await _play_union_fanfare()
 
@@ -419,16 +613,33 @@ func _make_card_ctrl(card_name: String) -> Control:
 	return wrapper
 
 func _start_glow_pulse() -> void:
+	if _glow_mat != null and is_instance_valid(_glow_mat):
+		_glow_mat.set_shader_parameter("circuit_patrol", 1.0)
+		_glow_mat.set_shader_parameter("rim_pulse", 0.78)
+		var tw: Tween = create_tween().set_loops()
+		tw.tween_method(
+			func(v: float) -> void:
+				if _glow_mat != null and is_instance_valid(_glow_mat):
+					_glow_mat.set_shader_parameter("intensity", v),
+			0.72, 1.15, 0.70
+		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tw.tween_method(
+			func(v: float) -> void:
+				if _glow_mat != null and is_instance_valid(_glow_mat):
+					_glow_mat.set_shader_parameter("intensity", v),
+			1.15, 0.72, 0.70
+		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		return
 	if _glow_sb == null:
 		return
 	var lo: float = _card_h * 0.028
 	var hi: float = _card_h * 0.048
-	var tw: Tween = create_tween().set_loops()
-	tw.tween_method(
+	var tw2: Tween = create_tween().set_loops()
+	tw2.tween_method(
 		func(v: float) -> void: _glow_sb.shadow_size = int(v),
 		lo, hi, 0.65
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_method(
+	tw2.tween_method(
 		func(v: float) -> void: _glow_sb.shadow_size = int(v),
 		hi, lo, 0.65
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)

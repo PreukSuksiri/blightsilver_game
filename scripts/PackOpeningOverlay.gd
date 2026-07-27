@@ -19,6 +19,7 @@ signal reveal_finished
 
 const PACK_TEX_PATH     : String = "res://assets/textures/cards/booster_pack/booster_pack_basic.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
+const CARD_BACK_PATH    : String = "res://assets/textures/cards/sample/card_back.png"
 const FULL_CARDS_DIR    : String = "res://assets/textures/cards/full_cards/"
 const FANFARE_DIR       : String = "res://assets/audio/fanfare/"
 const DISPLAY_HOLD_SECONDS: float = 30.0
@@ -28,8 +29,14 @@ const FANFARE_FADE_IN_SECONDS: float = 0.2
 const FANFARE_FADE_OUT_SECONDS: float = 0.5
 const BGM_FADE_OUT_BEFORE_FANFARE: float = 0.3
 const BGM_FADE_IN_AFTER_FANFARE: float = 0.5
+const FLIP_HALF_SEC: float = 0.16
+const FAN_MOVE_SEC: float = 0.38
+## Keep old tear-apart path in code; false = shatter + facedown stack reveal.
+const USE_LEGACY_TEAR_OPENING: bool = false
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
+const _REVEAL_GLOW_SHADER: Shader = preload("res://assets/shaders/pack_reveal_glow.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
+const _GLOW_PAD_FRAC: float = 0.28
 const _POSE_FRAME_COLOR: Color = Color(0.40, 0.85, 1.0, 0.95)
 const _POSE_FRAME_BG_COLOR: Color = Color(0.02, 0.04, 0.10, 0.88)
 
@@ -58,7 +65,8 @@ var _pose_portrait_path: String = ""
 var _pose_label: String = ""
 var _pose_tex: Texture2D = null
 var _hold_skip_elapsed: float = 0.0
-var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs
+var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs (legacy tear path)
+var _glow_mats:        Array  = []                    # ShaderMaterial soft glow + circuit patrol
 var _card_tex_cache:   Array  = []                    # preloaded full-card textures
 var _fanfare_player:   AudioStreamPlayer = null
 var _fanfare_tween:    Tween = null
@@ -70,6 +78,9 @@ var _bg       : ColorRect = null
 var _pack_root: Control   = null
 var _clip_top : Control   = null
 var _clip_bot : Control   = null
+var _pack_img : TextureRect = null
+var _pack_tex : Texture2D = null
+var _card_back_tex: Texture2D = null
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Static entry point
@@ -129,13 +140,16 @@ static func open_pose_reveal(parent: Node, portrait_path: String, pose_label: St
 # ──────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
 	_compute_sizes()
+	if ResourceLoader.exists(CARD_BACK_PATH):
+		_card_back_tex = load(CARD_BACK_PATH) as Texture2D
 	if _single_pose_mode:
 		_load_pose_texture()
 		_compute_pose_sizes()
 		_build_single_pose_ui()
-	elif _single_card_mode:
+	elif _single_card_mode and USE_LEGACY_TEAR_OPENING:
 		_build_single_card_ui()
 	else:
+		# Pack + single-card shatter both need pack art to shake/shatter.
 		_build_ui()
 	_run.call_deferred()
 
@@ -202,61 +216,74 @@ func _build_ui() -> void:
 	else:
 		_pack_w = _pack_h * (160.0 / 220.0)
 
+	_pack_tex = pack_tex
+
 	# ── Pack root — pivot at centre ────────────────────────────────────────
 	_pack_root = Control.new()
 	_pack_root.custom_minimum_size = Vector2(_pack_w, _pack_h)
 	_pack_root.size                = Vector2(_pack_w, _pack_h)
 	_pack_root.pivot_offset        = Vector2(_pack_w * 0.5, _pack_h * 0.5)
 	_pack_root.mouse_filter        = Control.MOUSE_FILTER_IGNORE
+	_pack_root.z_index = 5
 	add_child(_pack_root)
 
-	# Split at the midpoint in source-texture pixel space
-	var split_y: float     = floor(_pack_h * 0.5)
-	var tex_w  : float     = float(pack_tex.get_width())  if pack_tex != null else 832.0
-	var tex_h  : float     = float(pack_tex.get_height()) if pack_tex != null else 1216.0
-	var tex_mid: float     = floor(tex_h * 0.5)
+	if USE_LEGACY_TEAR_OPENING:
+		_build_legacy_tear_halves(pack_tex)
+	else:
+		_pack_img = TextureRect.new()
+		_pack_img.texture = pack_tex
+		_pack_img.size = Vector2(_pack_w, _pack_h)
+		_pack_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_pack_img.stretch_mode = TextureRect.STRETCH_SCALE
+		_pack_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_pack_root.add_child(_pack_img)
 
-	# ── Top-half: AtlasTexture shows only the top portion of the source ────
-	# No clip_contents needed — the AtlasTexture itself limits what is drawn.
-	var atlas_top          := AtlasTexture.new()
-	atlas_top.atlas         = pack_tex
-	atlas_top.region        = Rect2(0.0, 0.0, tex_w, tex_mid)
-	atlas_top.filter_clip   = true
 
-	_clip_top              = Control.new()
-	_clip_top.size          = Vector2(_pack_w, split_y)
-	_clip_top.position      = Vector2(0.0, 0.0)
-	_clip_top.pivot_offset  = Vector2(_pack_w * 0.5, split_y)  # pivot at tear edge
-	_clip_top.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+## Legacy mid-pack tear art (kept for USE_LEGACY_TEAR_OPENING).
+func _build_legacy_tear_halves(pack_tex: Texture2D) -> void:
+	var split_y: float = floor(_pack_h * 0.5)
+	var tex_w: float = float(pack_tex.get_width()) if pack_tex != null else 832.0
+	var tex_h: float = float(pack_tex.get_height()) if pack_tex != null else 1216.0
+	var tex_mid: float = floor(tex_h * 0.5)
+
+	var atlas_top := AtlasTexture.new()
+	atlas_top.atlas = pack_tex
+	atlas_top.region = Rect2(0.0, 0.0, tex_w, tex_mid)
+	atlas_top.filter_clip = true
+
+	_clip_top = Control.new()
+	_clip_top.size = Vector2(_pack_w, split_y)
+	_clip_top.position = Vector2(0.0, 0.0)
+	_clip_top.pivot_offset = Vector2(_pack_w * 0.5, split_y)
+	_clip_top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_pack_root.add_child(_clip_top)
 
-	var top_img            := TextureRect.new()
-	top_img.texture         = atlas_top
+	var top_img := TextureRect.new()
+	top_img.texture = atlas_top
 	top_img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	top_img.expand_mode     = TextureRect.EXPAND_IGNORE_SIZE
-	top_img.stretch_mode    = TextureRect.STRETCH_SCALE
-	top_img.mouse_filter    = Control.MOUSE_FILTER_IGNORE
+	top_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	top_img.stretch_mode = TextureRect.STRETCH_SCALE
+	top_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_clip_top.add_child(top_img)
 
-	# ── Bottom-half: AtlasTexture shows only the bottom portion ────────────
-	var atlas_bot          := AtlasTexture.new()
-	atlas_bot.atlas         = pack_tex
-	atlas_bot.region        = Rect2(0.0, tex_mid, tex_w, tex_h - tex_mid)
-	atlas_bot.filter_clip   = true
+	var atlas_bot := AtlasTexture.new()
+	atlas_bot.atlas = pack_tex
+	atlas_bot.region = Rect2(0.0, tex_mid, tex_w, tex_h - tex_mid)
+	atlas_bot.filter_clip = true
 
-	_clip_bot              = Control.new()
-	_clip_bot.size          = Vector2(_pack_w, _pack_h - split_y)
-	_clip_bot.position      = Vector2(0.0, split_y)
-	_clip_bot.pivot_offset  = Vector2(_pack_w * 0.5, 0.0)  # pivot at tear edge
-	_clip_bot.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	_clip_bot = Control.new()
+	_clip_bot.size = Vector2(_pack_w, _pack_h - split_y)
+	_clip_bot.position = Vector2(0.0, split_y)
+	_clip_bot.pivot_offset = Vector2(_pack_w * 0.5, 0.0)
+	_clip_bot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_pack_root.add_child(_clip_bot)
 
-	var bot_img            := TextureRect.new()
-	bot_img.texture         = atlas_bot
+	var bot_img := TextureRect.new()
+	bot_img.texture = atlas_bot
 	bot_img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bot_img.expand_mode     = TextureRect.EXPAND_IGNORE_SIZE
-	bot_img.stretch_mode    = TextureRect.STRETCH_SCALE
-	bot_img.mouse_filter    = Control.MOUSE_FILTER_IGNORE
+	bot_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bot_img.stretch_mode = TextureRect.STRETCH_SCALE
+	bot_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_clip_bot.add_child(bot_img)
 
 func _build_single_card_ui() -> void:
@@ -296,9 +323,207 @@ func _run() -> void:
 	if _single_pose_mode:
 		await _run_single_pose_reveal()
 		return
-	if _single_card_mode:
-		await _run_single_card_reveal()
+	if USE_LEGACY_TEAR_OPENING:
+		if _single_card_mode:
+			await _run_legacy_single_card_reveal()
+		else:
+			await _run_legacy_tear_pack()
 		return
+	await _run_shatter_opening()
+
+
+## New: shake → triangle shatter → facedown stack → fan → flip L→R → glow.
+func _run_shatter_opening() -> void:
+	_reveal_glow_h = _card_h
+	var count: int = 1 if _single_card_mode else 3
+	while _card_names.size() < count:
+		_card_names.append("")
+	_glow_sbs.clear()
+	_glow_mats.clear()
+	for _i: int in range(count):
+		_glow_sbs.append(null)
+		_glow_mats.append(null)
+	_preload_card_textures_count(count)
+	await _play_pack_fanfare()
+
+	var screen: Vector2 = get_viewport_rect().size
+	var cx: float = screen.x * 0.5
+	var cy: float = screen.y * 0.5
+	var pack_final_pos := Vector2(cx - _pack_w * 0.5, cy - _pack_h * 0.5)
+	_pack_root.position = Vector2(cx - _pack_w * 0.5, screen.y + 40.0)
+	_pack_root.scale = Vector2.ONE
+	_pack_root.rotation = 0.0
+
+	var t1: Tween = create_tween().set_parallel(true)
+	t1.tween_property(_bg, "color:a", 0.75, 0.35)
+	t1.tween_property(_pack_root, "position:y", pack_final_pos.y, 0.42) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t1.finished
+
+	# Facedown stack sits under the pack before shatter.
+	var stack_pos := Vector2(cx - _card_w * 0.5, cy - _card_h * 0.5)
+	var card_wrappers: Array[Control] = []
+	for i: int in range(count):
+		var w: Control = _make_flip_card_ctrl(_card_names[i], i)
+		w.position = stack_pos + Vector2(float(i) * 3.0, float(i) * -3.0)
+		w.pivot_offset = Vector2(_card_w * 0.5, _card_h * 0.5)
+		w.z_index = 2 + i
+		add_child(w)
+		card_wrappers.append(w)
+
+	SFXManager.play(SFXManager.SFX_PACK_SHAKE)
+	await _wiggle(_pack_root)
+
+	SFXManager.play(SFXManager.SFX_PACK_TEAR_OFF)
+	var shatter_rect := Rect2(_pack_root.position, Vector2(_pack_w, _pack_h))
+	_pack_root.visible = false
+	PackShatterFx.shake_screen(self)
+	await PackShatterFx.shatter_texture(self, _pack_tex, shatter_rect)
+
+	var card_y: float = cy - _card_h * 0.5
+	var fan_positions: Array[Vector2] = _fan_positions_for_count(count, cx, card_y)
+	var t_fan: Tween = create_tween().set_parallel(true)
+	for i: int in range(count):
+		var w: Control = card_wrappers[i]
+		t_fan.tween_property(w, "position", fan_positions[i], FAN_MOVE_SEC) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		t_fan.tween_property(w, "z_index", 10 + i, 0.01)
+	await t_fan.finished
+
+	# Flip left → right; rarity glow starts after each successful flip.
+	for i: int in range(count):
+		await _flip_card_face_up(card_wrappers[i])
+		_start_glow_pulse(i)
+		if i < count - 1:
+			await get_tree().create_timer(0.08).timeout
+
+	await get_tree().create_timer(CARD_SETTLE_SECONDS).timeout
+	_skip_requested = false
+	_dismiss_allowed = true
+
+	var reroll_btn: Button = null
+	if not _single_card_mode and _reroll_pack_name != "":
+		reroll_btn = _make_reroll_btn(cx, card_y)
+
+	var elapsed: float = 0.0
+	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not _reroll_triggered \
+			and not GameState.quick_duel_reveal_skip_all:
+		await get_tree().create_timer(0.05).timeout
+		elapsed += 0.05
+
+	if _reroll_triggered:
+		return
+
+	_skip_requested = false
+	if reroll_btn and is_instance_valid(reroll_btn):
+		reroll_btn.queue_free()
+
+	_fade_out_pack_fanfare(true)
+	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
+	var t9: Tween = create_tween().set_parallel(true)
+	for w: Control in card_wrappers:
+		t9.tween_property(w, "position", dest, 0.48) \
+			.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+		t9.tween_property(w, "scale", Vector2(0.0, 0.0), 0.48) \
+			.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(_bg, "color:a", 0.0, 0.40)
+	await t9.finished
+	_finish_reveal()
+
+
+func _fan_positions_for_count(count: int, cx: float, card_y: float) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	if count <= 1:
+		positions.append(Vector2(cx - _card_w * 0.5, card_y))
+		return positions
+	var total_w: float = _card_w * float(count) + _card_gap * float(count - 1)
+	var left: float = cx - total_w * 0.5
+	for i: int in range(count):
+		positions.append(Vector2(left + float(i) * (_card_w + _card_gap), card_y))
+	return positions
+
+
+func _make_flip_card_ctrl(card_name: String, idx: int) -> Control:
+	var wrapper := Control.new()
+	wrapper.custom_minimum_size = Vector2(_card_w, _card_h)
+	wrapper.size = Vector2(_card_w, _card_h)
+	wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrapper.clip_contents = false
+
+	var glow: ColorRect = _make_reveal_glow_rect(_glow_color_for(card_name))
+	wrapper.add_child(glow)
+	_glow_mats[idx] = glow.material as ShaderMaterial
+
+	var flip_host := Control.new()
+	flip_host.size = Vector2(_card_w, _card_h)
+	flip_host.pivot_offset = Vector2(_card_w * 0.5, _card_h * 0.5)
+	flip_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flip_host.z_index = 1
+	wrapper.add_child(flip_host)
+
+	var back_img := TextureRect.new()
+	back_img.size = Vector2(_card_w, _card_h)
+	back_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	back_img.stretch_mode = TextureRect.STRETCH_SCALE
+	back_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	back_img.texture = _card_back_tex if _card_back_tex != null else _cached_card_tex(idx, card_name)
+	var back_mat := ShaderMaterial.new()
+	back_mat.shader = _ROUNDED_CLIP
+	back_mat.set_shader_parameter("corner_radius", _card_corner_radius())
+	back_img.material = back_mat
+	flip_host.add_child(back_img)
+
+	var front_img := TextureRect.new()
+	front_img.size = Vector2(_card_w, _card_h)
+	front_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	front_img.stretch_mode = TextureRect.STRETCH_SCALE
+	front_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	front_img.texture = _cached_card_tex(idx, card_name)
+	front_img.visible = false
+	var front_mat := ShaderMaterial.new()
+	front_mat.shader = _ROUNDED_CLIP
+	front_mat.set_shader_parameter("corner_radius", _card_corner_radius())
+	front_img.material = front_mat
+	flip_host.add_child(front_img)
+
+	wrapper.set_meta("_flip_host", flip_host)
+	wrapper.set_meta("_flip_back", back_img)
+	wrapper.set_meta("_flip_front", front_img)
+	return wrapper
+
+
+func _flip_card_face_up(wrapper: Control) -> void:
+	if wrapper == null or not is_instance_valid(wrapper):
+		return
+	var flip_host: Control = wrapper.get_meta("_flip_host") as Control
+	var back_img: TextureRect = wrapper.get_meta("_flip_back") as TextureRect
+	var front_img: TextureRect = wrapper.get_meta("_flip_front") as TextureRect
+	if flip_host == null:
+		return
+	SFXManager.play(SFXManager.SFX_FLIP, SFXManager.SFX_FLIP_VOLUME)
+	var tw1 := create_tween()
+	tw1.tween_property(flip_host, "scale:x", 0.0, FLIP_HALF_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await tw1.finished
+	if back_img != null and is_instance_valid(back_img):
+		back_img.visible = false
+	if front_img != null and is_instance_valid(front_img):
+		front_img.visible = true
+	var tw2 := create_tween()
+	tw2.tween_property(flip_host, "scale:x", 1.0, FLIP_HALF_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await tw2.finished
+
+
+func _preload_card_textures_count(count: int) -> void:
+	_card_tex_cache.clear()
+	for i: int in range(count):
+		var name: String = _card_names[i] if i < _card_names.size() else ""
+		_card_tex_cache.append(_load_card_tex(name))
+
+
+## Legacy tear-apart pack opening (suppressed when USE_LEGACY_TEAR_OPENING is false).
+func _run_legacy_tear_pack() -> void:
 	_reveal_glow_h = _card_h
 	_preload_card_textures()
 	await _play_pack_fanfare()
@@ -307,32 +532,26 @@ func _run() -> void:
 	var cx: float = screen.x * 0.5
 	var cy: float = screen.y * 0.5
 
-	# Start pack off the bottom
 	var pack_final_pos := Vector2(cx - _pack_w * 0.5, cy - _pack_h * 0.5)
 	_pack_root.position = Vector2(cx - _pack_w * 0.5, screen.y + 40.0)
 	_pack_root.scale    = Vector2.ONE
 	_pack_root.rotation = 0.0
 
-	# ── Phase 1: BG fade-in + pack slides up ──────────────────────────────
 	var t1: Tween = create_tween().set_parallel(true)
 	t1.tween_property(_bg, "color:a", 0.75, 0.35)
 	t1.tween_property(_pack_root, "position:y", pack_final_pos.y, 0.42) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await t1.finished
 
-	# ── Phase 2: Wiggle (like shaking a snack bag) ────────────────────────
 	await _wiggle(_pack_root)
 
-	# ── Phase 3: Tear — top flies upper-left, bottom flies lower-right ────
 	var t3: Tween = create_tween().set_parallel(true)
-	# Top half
 	t3.tween_property(_clip_top, "position:y",
 			_clip_top.position.y - screen.y * 0.75, 0.52) \
 		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
 	t3.tween_property(_clip_top, "position:x",
 			_clip_top.position.x - 90.0, 0.52)
 	t3.tween_property(_clip_top, "rotation", -0.55, 0.52)
-	# Bottom half
 	t3.tween_property(_clip_bot, "position:y",
 			_clip_bot.position.y + screen.y * 0.75, 0.52) \
 		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
@@ -342,11 +561,8 @@ func _run() -> void:
 	await t3.finished
 
 	_pack_root.visible = false
-
-	# ── Phase 4: Debris scatter ───────────────────────────────────────────
 	_spawn_debris(cx, cy)
 
-	# ── Phase 5: Cards rise stacked from centre ───────────────────────────
 	var total_w: float  = _card_w * 3.0 + _card_gap * 2.0
 	var card_y : float  = cy - _card_h * 0.5
 	var fan_positions: Array[Vector2] = [
@@ -375,7 +591,6 @@ func _run() -> void:
 
 	await get_tree().create_timer(0.07).timeout
 
-	# ── Phase 6: Fan out side by side ─────────────────────────────────────
 	var t6: Tween = create_tween().set_parallel(true)
 	for i: int in range(3):
 		var w: Control = card_wrappers[i] as Control
@@ -387,12 +602,9 @@ func _run() -> void:
 	_skip_requested = false
 	_dismiss_allowed = true
 
-	# ── Phase 7: Glow pulse on each card ──────────────────────────────────
 	for i: int in range(3):
 		_start_glow_pulse(i)
 
-	# ── Phase 8: Hold (skippable by click / Space) ─────────────────────────
-	# Show Re-roll button if player has winding keys and pack name is known
 	var reroll_btn: Button = null
 	if _reroll_pack_name != "":
 		reroll_btn = _make_reroll_btn(cx, card_y)
@@ -412,7 +624,6 @@ func _run() -> void:
 
 	_fade_out_pack_fanfare(true)
 
-	# ── Phase 9: Cards fly to top-right corner ────────────────────────────
 	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
 	var t9: Tween = create_tween().set_parallel(true)
 	for w: Control in card_wrappers:
@@ -424,7 +635,8 @@ func _run() -> void:
 	await t9.finished
 	_finish_reveal()
 
-func _run_single_card_reveal() -> void:
+
+func _run_legacy_single_card_reveal() -> void:
 	_reveal_glow_h = _card_h
 	_card_tex_cache.clear()
 	_card_tex_cache.append(_load_card_tex(_card_names[0] if _card_names.size() > 0 else ""))
@@ -482,6 +694,7 @@ func _run_single_card_reveal() -> void:
 
 func _run_single_pose_reveal() -> void:
 	_reveal_glow_h = _pose_h
+	await _play_named_fanfare("common")
 	var screen: Vector2 = get_viewport_rect().size
 	var cx: float = screen.x * 0.5
 	var cy: float = screen.y * 0.5
@@ -492,6 +705,7 @@ func _run_single_pose_reveal() -> void:
 	t1.tween_property(_bg, "color:a", 0.75, 0.35)
 	await t1.finished
 	if GameState.quick_duel_reveal_skip_all:
+		_fade_out_pack_fanfare(true)
 		_finish_reveal()
 		return
 
@@ -520,6 +734,7 @@ func _run_single_pose_reveal() -> void:
 		elapsed += 0.05
 
 	_skip_requested = false
+	_fade_out_pack_fanfare(true)
 	var dest: Vector2 = Vector2(screen.x + 60.0, -block_h - 60.0)
 	var t9: Tween = create_tween().set_parallel(true)
 	t9.tween_property(w, "position", dest, 0.48) \
@@ -778,22 +993,63 @@ func _make_pose_ctrl() -> Control:
 	return wrapper
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Glow pulse (looping, via shadow_size)
+# Soft SDF glow + circuit patrol (new reveal) / legacy StyleBox shadow pulse
 # ──────────────────────────────────────────────────────────────────────────────
+func _make_reveal_glow_rect(gc: Color) -> ColorRect:
+	var pad: float = maxf(_card_w, _card_h) * _GLOW_PAD_FRAC
+	var glow := ColorRect.new()
+	glow.color = Color(1, 1, 1, 1)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.z_index = 0
+	glow.position = Vector2(-pad, -pad)
+	glow.size = Vector2(_card_w + pad * 2.0, _card_h + pad * 2.0)
+	var mat := ShaderMaterial.new()
+	mat.shader = _REVEAL_GLOW_SHADER
+	mat.set_shader_parameter("rect_size", glow.size)
+	mat.set_shader_parameter("card_size", Vector2(_card_w, _card_h))
+	mat.set_shader_parameter("corner_radius_px", _card_corner_radius())
+	mat.set_shader_parameter("glow_color", Color(gc.r, gc.g, gc.b, 1.0))
+	mat.set_shader_parameter("intensity", 0.0)
+	mat.set_shader_parameter("glow_spread", maxf(28.0, pad * 1.15))
+	mat.set_shader_parameter("rim_speed", 0.55)
+	mat.set_shader_parameter("rim_pulse", 0.72)
+	mat.set_shader_parameter("circuit_patrol", 1.0)
+	glow.material = mat
+	return glow
+
+
 func _start_glow_pulse(idx: int) -> void:
-	var sb: Variant = _glow_sbs[idx]
+	if idx >= 0 and idx < _glow_mats.size() and _glow_mats[idx] is ShaderMaterial:
+		var mat: ShaderMaterial = _glow_mats[idx] as ShaderMaterial
+		mat.set_shader_parameter("circuit_patrol", 1.0)
+		mat.set_shader_parameter("rim_pulse", 0.78)
+		var tw: Tween = create_tween().set_loops()
+		tw.tween_method(
+			func(v: float) -> void:
+				if mat != null and is_instance_valid(mat):
+					mat.set_shader_parameter("intensity", v),
+			0.72, 1.15, 0.70
+		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tw.tween_method(
+			func(v: float) -> void:
+				if mat != null and is_instance_valid(mat):
+					mat.set_shader_parameter("intensity", v),
+			1.15, 0.72, 0.70
+		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		return
+	var sb: Variant = _glow_sbs[idx] if idx >= 0 and idx < _glow_sbs.size() else null
 	if sb == null:
 		return
 	var gp_sb: StyleBoxFlat = sb as StyleBoxFlat
 	var glow_h: float = _reveal_glow_h if _reveal_glow_h > 0.0 else _card_h
 	var lo: float = glow_h * 0.035
 	var hi: float = glow_h * 0.075
-	var tw: Tween = create_tween().set_loops()
-	tw.tween_method(
+	var tw2: Tween = create_tween().set_loops()
+	tw2.tween_method(
 		func(v: float) -> void: gp_sb.shadow_size = int(v),
 		lo, hi, 0.65
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_method(
+	tw2.tween_method(
 		func(v: float) -> void: gp_sb.shadow_size = int(v),
 		hi, lo, 0.65
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -858,12 +1114,15 @@ func _card_type_for(card_name: String) -> String:
 # Pack opening audio (fanfare + settle sparkle)
 # ──────────────────────────────────────────────────────────────────────────────
 func _play_pack_fanfare() -> void:
+	await _play_named_fanfare(_fanfare_key_for_pack())
+
+
+func _play_named_fanfare(key: String) -> void:
 	_bgm_restored = false
 	_stop_pack_fanfare_immediate()
 	await BGMManager.suspend_current(BGM_FADE_OUT_BEFORE_FANFARE)
 	if not is_instance_valid(self):
 		return
-	var key: String = _fanfare_key_for_pack()
 	var path: String = FANFARE_DIR + "pack_fanfare_%s.mp3" % key
 	if not ResourceLoader.exists(path):
 		_restore_bgm_after_fanfare()

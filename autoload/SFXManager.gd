@@ -37,6 +37,8 @@ const SFX_BATTLE_CALC := preload("res://assets/audio/sfx/chime_4.mp3")         #
 const SFX_MODIFIER_REVEAL := preload("res://assets/audio/sfx/scifi_ui_34.mp3") # wheel spin result reveal
 const SFX_FLIP := preload("res://assets/audio/sfx/flip3.mp3")                  # card flip / reveal
 const SFX_FLIP_VOLUME := 0.7
+const SFX_PACK_SHAKE := preload("res://assets/audio/sfx/sfx_pack_shake.mp3")   # pack / scroll shake
+const SFX_PACK_TEAR_OFF := preload("res://assets/audio/sfx/sfx_pack_tear_off.mp3") # pack / scroll shatter
 const SFX_STAMP := preload("res://assets/audio/sfx/clash.mp3")                 # detective note logo + APPROVED stamp
 const SFX_STAMP_VOLUME := 0.88
 
