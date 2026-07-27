@@ -408,6 +408,8 @@ var _software_cursor_ready: bool = false
 var _app_focused: bool = true
 var _mouse_over_game: bool = true
 var _finger_cursor_active: bool = false
+## Idle cinema (gallery / quick duel): hide software + OS cursor while HUD is down.
+var _cursor_cinema_hidden: bool = false
 var _popup_cursors: Dictionary = {}  # Window -> TextureRect
 # Optional cursor override (e.g. a held detective tool). When set, the main game
 # cursor sprite draws this texture/size/hotspot instead of the default finger.
@@ -576,6 +578,15 @@ func _make_cursor_sprite() -> TextureRect:
 func _activate_software_cursor() -> void:
 	_refresh_cursor_mode()
 
+
+## Hide/show the finger cursor for idle cinema mode (keeps OS cursor hidden too).
+func set_cursor_cinema_hidden(hidden: bool) -> void:
+	if _cursor_cinema_hidden == hidden:
+		return
+	_cursor_cinema_hidden = hidden
+	_refresh_cursor_mode()
+
+
 func _has_open_file_dialog() -> bool:
 	var stack: Array[Node] = [get_tree().root]
 	while not stack.is_empty():
@@ -593,6 +604,15 @@ func _should_use_finger_cursor() -> bool:
 
 func _refresh_cursor_mode() -> void:
 	if not _software_cursor_ready or _cursor_sprite == null:
+		return
+	if _cursor_cinema_hidden:
+		_cursor_sprite.visible = false
+		for sprite: Variant in _popup_cursors.values():
+			if sprite is TextureRect and is_instance_valid(sprite as TextureRect):
+				(sprite as TextureRect).visible = false
+		if not _finger_cursor_active:
+			Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		_finger_cursor_active = true
 		return
 	var screen_mouse := Vector2(DisplayServer.mouse_get_position())
 	var active_popup_sprite: TextureRect = null

@@ -62,6 +62,10 @@ const _CAROUSEL_BETWEEN_DELAY_MIN := 1.0
 const _CAROUSEL_BETWEEN_DELAY_MAX := 2.0
 ## Avoid re-rolling any of the last N shown paths (pure-random was repeating too soon).
 const _CAROUSEL_RECENT_MEMORY := 10
+## Idle cinema: hide HUD / capsules / header after no mouse movement.
+const _IDLE_HIDE_SEC := 5.0
+const _HUD_FADE_OUT_SEC := 0.7
+const _HUD_FADE_IN_SEC := 0.45
 var _data: Array = []
 var _sheen_tweens: Dictionary = {}  # card instance_id -> Tween
 var _fog_material: ShaderMaterial = null
@@ -91,24 +95,43 @@ var _carousel_running: bool = false
 var _carousel_first_slide: bool = true
 var _gallery_cards: Array[Control] = []
 var _gallery_scroll: ScrollContainer = null
+var _hud_layer: Control = null
 var _selected_card_ctrl: Control = null
 var _exit_anim_running: bool = false
 var _exit_anim_done: bool = false
+var _idle_timer: float = 0.0
+var _hud_cinema: bool = false
+var _hud_fade_tween: Tween = null
+var _last_mouse_pos: Vector2 = Vector2.INF
 
 
 func _ready() -> void:
 	_load_data()
 	_build_ui()
+	set_process_input(true)
 
 
 func _process(delta: float) -> void:
 	_update_fog(delta)
 	_update_carousel_flicker(delta)
+	_tick_idle_cinema(delta)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		var mm := event as InputEventMouseMotion
+		if _last_mouse_pos == Vector2.INF or mm.position.distance_squared_to(_last_mouse_pos) > 0.25:
+			_last_mouse_pos = mm.position
+			_on_gallery_mouse_activity()
+	elif event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		_on_gallery_mouse_activity()
 
 
 func _exit_tree() -> void:
 	_carousel_running = false
 	_kill_carousel_tweens()
+	_kill_hud_fade_tween()
+	GameState.set_cursor_cinema_hidden(false)
 	_restore_fog_scroll_defaults()
 
 
@@ -139,7 +162,15 @@ func _build_ui() -> void:
 	# Soft spotlights swaying L/R (same as shop) — above smoke, below cards.
 	_build_spotlight_beams()
 
-	var header: Dictionary = MenuScreenHeader.build_top_bar(self, "CAMPAIGN", queue_free)
+	# HUD layer (header + capsules) — fades out on idle for liminal cinema.
+	_hud_layer = Control.new()
+	_hud_layer.name = "GalleryHud"
+	_hud_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_hud_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud_layer.z_index = _CONTENT_Z
+	add_child(_hud_layer)
+
+	var header: Dictionary = MenuScreenHeader.build_top_bar(_hud_layer, "CAMPAIGN", queue_free)
 	_style_gallery_header(header)
 	_raise_header_z(header)
 
@@ -151,8 +182,8 @@ func _build_ui() -> void:
 	_gallery_scroll.offset_right  = -32.0
 	_gallery_scroll.offset_bottom = -24.0
 	_gallery_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_gallery_scroll.z_index = _CONTENT_Z
-	add_child(_gallery_scroll)
+	_gallery_scroll.z_index = 0
+	_hud_layer.add_child(_gallery_scroll)
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", int(ROW_GAP))
@@ -790,6 +821,8 @@ func _wire_card_hover(card: Control, frame: Panel, img: TextureRect, sb: StyleBo
 func _on_gallery_card_hover_entered(card: Control) -> void:
 	if card == null or not is_instance_valid(card) or not card.is_inside_tree():
 		return
+	if _exit_anim_running or _exit_anim_done:
+		return
 	var frame: Variant = _card_meta(card, "_gallery_hover_frame")
 	var sb: Variant = _card_meta(card, "_gallery_hover_sb")
 	if frame is Panel and sb is StyleBoxFlat:
@@ -811,6 +844,11 @@ func _on_gallery_card_hover_entered(card: Control) -> void:
 
 func _on_gallery_card_hover_exited(card: Control) -> void:
 	if card == null or not is_instance_valid(card) or not card.is_inside_tree():
+		return
+	if _exit_anim_running or _exit_anim_done:
+		_kill_card_scale_tween(card)
+		_kill_card_sheen_tween(card)
+		card.scale = Vector2.ONE
 		return
 	var frame: Variant = _card_meta(card, "_gallery_hover_frame")
 	var sb: Variant = _card_meta(card, "_gallery_hover_sb")
@@ -1185,6 +1223,86 @@ func _play_vn_async(
 		arc_key)
 
 
+func _tick_idle_cinema(delta: float) -> void:
+	if not _can_run_idle_cinema():
+		_idle_timer = 0.0
+		return
+	if _hud_cinema:
+		return
+	_idle_timer += delta
+	if _idle_timer >= _IDLE_HIDE_SEC:
+		_set_gallery_hud_cinema(true)
+
+
+func _can_run_idle_cinema() -> bool:
+	if _exit_anim_running or _exit_anim_done:
+		return false
+	if _hud_layer == null or not is_instance_valid(_hud_layer):
+		return false
+	if GameDialog.has_any_open_overlay():
+		return false
+	# VN / other full overlays parented under the gallery.
+	for child: Node in get_children():
+		if child is VNPlayer:
+			return false
+	return true
+
+
+func _on_gallery_mouse_activity() -> void:
+	_idle_timer = 0.0
+	if _hud_cinema:
+		_set_gallery_hud_cinema(false)
+
+
+func _kill_hud_fade_tween() -> void:
+	if _hud_fade_tween != null and _hud_fade_tween.is_valid():
+		_hud_fade_tween.kill()
+	_hud_fade_tween = null
+
+
+func _force_show_gallery_hud() -> void:
+	_idle_timer = 0.0
+	_kill_hud_fade_tween()
+	_hud_cinema = false
+	GameState.set_cursor_cinema_hidden(false)
+	if _hud_layer == null or not is_instance_valid(_hud_layer):
+		return
+	_hud_layer.visible = true
+	_hud_layer.modulate = Color(1, 1, 1, 1)
+
+
+func _set_gallery_hud_cinema(hide_hud: bool) -> void:
+	if _hud_layer == null or not is_instance_valid(_hud_layer):
+		return
+	if hide_hud == _hud_cinema and _hud_fade_tween == null:
+		return
+	_kill_hud_fade_tween()
+	_hud_cinema = hide_hud
+	GameState.set_cursor_cinema_hidden(hide_hud)
+	if hide_hud:
+		_hud_layer.visible = true
+		_hud_fade_tween = create_tween()
+		_hud_fade_tween.tween_property(_hud_layer, "modulate:a", 0.0, _HUD_FADE_OUT_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		_hud_fade_tween.finished.connect(func() -> void:
+			_hud_fade_tween = null
+			if _hud_cinema and _hud_layer != null and is_instance_valid(_hud_layer):
+				_hud_layer.visible = false
+				# Kill any mid-hover scale while hidden.
+				for card: Control in _gallery_cards:
+					if card != null and is_instance_valid(card):
+						_kill_card_scale_tween(card)
+						_kill_card_sheen_tween(card)
+						card.scale = Vector2.ONE)
+	else:
+		_hud_layer.visible = true
+		_hud_fade_tween = create_tween()
+		_hud_fade_tween.tween_property(_hud_layer, "modulate:a", 1.0, _HUD_FADE_IN_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		_hud_fade_tween.finished.connect(func() -> void:
+			_hud_fade_tween = null)
+
+
 ## Stamp selected capsule, stack all cards, slide off — once per committed play.
 func _ensure_gallery_exit_animation() -> bool:
 	if _exit_anim_done:
@@ -1195,12 +1313,10 @@ func _ensure_gallery_exit_animation() -> bool:
 	_carousel_running = false
 	_carousel_flicker_enabled = false
 	_restore_fog_scroll_defaults()
+	_force_show_gallery_hud()
 	if _gallery_scroll != null and is_instance_valid(_gallery_scroll):
 		_gallery_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for card: Control in _gallery_cards:
-		if card != null and is_instance_valid(card):
-			_kill_card_scale_tween(card)
-			_kill_card_sheen_tween(card)
+	_freeze_gallery_capsules_for_exit()
 	await CapsuleExitFx.play(
 			self,
 			_selected_card_ctrl,
@@ -1209,6 +1325,30 @@ func _ensure_gallery_exit_animation() -> bool:
 	_exit_anim_done = true
 	_exit_anim_running = false
 	return is_inside_tree()
+
+
+## Kill hover scale/sheen and hard-disable capsule input at original size.
+func _freeze_gallery_capsules_for_exit() -> void:
+	for card: Control in _gallery_cards:
+		if card == null or not is_instance_valid(card):
+			continue
+		_kill_card_scale_tween(card)
+		_kill_card_sheen_tween(card)
+		card.scale = Vector2.ONE
+		card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var frame: Variant = _card_meta(card, "_gallery_hover_frame")
+		if frame is Control:
+			var frame_ctrl: Control = frame as Control
+			frame_ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			for conn: Dictionary in frame_ctrl.mouse_entered.get_connections():
+				frame_ctrl.mouse_entered.disconnect(conn["callable"])
+			for conn: Dictionary in frame_ctrl.mouse_exited.get_connections():
+				frame_ctrl.mouse_exited.disconnect(conn["callable"])
+			for conn: Dictionary in frame_ctrl.gui_input.get_connections():
+				frame_ctrl.gui_input.disconnect(conn["callable"])
+		var mat: Variant = _card_meta(card, "_gallery_sheen_mat")
+		if mat is ShaderMaterial:
+			(mat as ShaderMaterial).set_shader_parameter("progress", _SHEEN_IDLE)
 
 
 func _get_prerequisite_vn(d: Dictionary) -> String:

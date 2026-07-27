@@ -23,7 +23,7 @@ const DEFAULT_FADE := 0.8
 const LOOP_PLAY_ONCE := -2.0
 
 const BUILTIN_DEFAULT_PATHS := {
-	CONTEXT_MAIN_MENU: "res://assets/audio/bgm_main_menu.mp3",
+	CONTEXT_MAIN_MENU: "res://assets/audio/bgm_main_menu_x_velvet_rug_w_effect.mp3",
 	CONTEXT_PLACEMENT: "res://assets/audio/bgm_placement_2.mp3",
 	CONTEXT_BATTLE: "res://assets/audio/bgm_battle_3.mp3",
 	CONTEXT_BOSS: "res://assets/audio/bgm_boss_1.mp3",
@@ -37,10 +37,8 @@ const BUILTIN_DEFAULT_PATHS := {
 	CONTEXT_RESULT: "res://assets/audio/bgm_ost_even_if_everything_flips.mp3",
 }
 
-## Optional intro-skip: first play + loop restarts from this timestamp (seconds).
-const CONTEXT_START_SEC := {
-	CONTEXT_MAIN_MENU: 20.0,
-}
+## Optional intro-skip: first play starts from this timestamp (seconds). Empty = 00:00.
+const CONTEXT_START_SEC := {}
 
 var _default_paths: Dictionary = {}
 var _player: AudioStreamPlayer = null

@@ -50,6 +50,10 @@ const _SPARK_BURST_COUNT_MIN := 18
 const _SPARK_BURST_COUNT_MAX := 32
 const _SPARK_SPEED_MIN := 220.0
 const _SPARK_SPEED_MAX := 620.0
+## Idle cinema: hide HUD / capsules / header after no mouse movement.
+const _IDLE_HIDE_SEC := 5.0
+const _HUD_FADE_OUT_SEC := 0.7
+const _HUD_FADE_IN_SEC := 0.45
 
 var _picker_panel: Control = null
 var _status_lbl: Label = null
@@ -67,11 +71,18 @@ var _flash_rect: ColorRect = null
 var _active_sparks: Array = []
 var _spark_fx_running: bool = false
 var _spark_add_mat: CanvasItemMaterial = null
+var _hud_layer: Control = null
+var _idle_timer: float = 0.0
+var _hud_cinema: bool = false
+var _hud_fade_tween: Tween = null
+var _last_mouse_pos: Vector2 = Vector2.INF
 
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
+	set_process(true)
+	set_process_input(true)
 	VNPlayer.dismiss_overlay_if_present(get_tree())
 	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.6, 0.6)
 	_build_shell()
@@ -109,6 +120,15 @@ func _build_shell() -> void:
 	call_deferred("_layout_bg_cover")
 
 	_build_ambient_fx_layer()
+
+	# HUD layer (header / capsules / portrait) — fades out on idle for cinema.
+	_hud_layer = Control.new()
+	_hud_layer.name = "QuickDuelHud"
+	_hud_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_hud_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud_layer.z_index = 5
+	add_child(_hud_layer)
+
 	_build_header()
 
 	_picker_panel = Control.new()
@@ -312,7 +332,18 @@ func _spawn_falling_spark(
 	})
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		var mm := event as InputEventMouseMotion
+		if _last_mouse_pos == Vector2.INF or mm.position.distance_squared_to(_last_mouse_pos) > 0.25:
+			_last_mouse_pos = mm.position
+			_on_quick_duel_mouse_activity()
+	elif event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		_on_quick_duel_mouse_activity()
+
+
 func _process(delta: float) -> void:
+	_tick_idle_cinema(delta)
 	if _active_sparks.is_empty():
 		return
 	var area_h: float = size.y
@@ -353,7 +384,10 @@ func _process(delta: float) -> void:
 
 
 func _root_add_panel(panel: Control) -> void:
-	add_child(panel)
+	if _hud_layer != null and is_instance_valid(_hud_layer):
+		_hud_layer.add_child(panel)
+	else:
+		add_child(panel)
 
 
 func _build_header() -> void:
@@ -364,7 +398,7 @@ func _build_header() -> void:
 	# Layout slot only — no fill/border; title + buttons stay visible.
 	top_bg.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	top_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(top_bg)
+	_root_add_panel(top_bg)
 
 	# Children of the bar so CENTER_* anchors vertically middle the header.
 	var title := Label.new()
@@ -424,7 +458,7 @@ func _build_player_portrait_zone() -> void:
 	_player_portrait.flip_h = true
 	_player_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_player_portrait.z_index = 2
-	add_child(_player_portrait)
+	_root_add_panel(_player_portrait)
 
 	_switch_char_btn = Button.new()
 	_switch_char_btn.text = "Switch Character"
@@ -438,7 +472,7 @@ func _build_player_portrait_zone() -> void:
 	_switch_char_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 	_skin_quick_duel_button(_switch_char_btn)
 	_switch_char_btn.pressed.connect(_open_protagonist_overlay)
-	add_child(_switch_char_btn)
+	_root_add_panel(_switch_char_btn)
 
 
 func _refresh_player_portrait() -> void:
@@ -804,6 +838,7 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 	hover_sb.set_content_margin_all(0)
 	hover.add_theme_stylebox_override("panel", hover_sb)
 	inner.add_child(hover)
+	btn.set_meta("_capsule_hover", hover)
 
 	_clear_button_hover_connections(btn)
 	btn.mouse_entered.connect(_on_capsule_mouse_entered.bind(hover))
@@ -846,6 +881,8 @@ func _clear_button_hover_connections(btn: Button) -> void:
 
 
 func _on_capsule_mouse_entered(hover: Panel) -> void:
+	if _exit_anim_running or _exit_anim_done:
+		return
 	if hover != null and is_instance_valid(hover):
 		hover.visible = true
 
@@ -1030,6 +1067,8 @@ func _dismiss_overlay() -> void:
 
 
 func _exit_tree() -> void:
+	_kill_hud_fade_tween()
+	GameState.set_cursor_cinema_hidden(false)
 	_stop_ambient_spark_fx()
 	GameDialog.close_overlay(self)
 	GameState.quick_duel_overlay_active = false
@@ -1155,12 +1194,96 @@ func _launch_vault_duel_async(tier: String) -> void:
 		get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 
 
+func _tick_idle_cinema(delta: float) -> void:
+	if not _can_run_idle_cinema():
+		_idle_timer = 0.0
+		return
+	if _hud_cinema:
+		return
+	_idle_timer += delta
+	if _idle_timer >= _IDLE_HIDE_SEC:
+		_set_quick_duel_hud_cinema(true)
+
+
+func _can_run_idle_cinema() -> bool:
+	if _exit_anim_running or _exit_anim_done:
+		return false
+	if _hud_layer == null or not is_instance_valid(_hud_layer):
+		return false
+	if _picker_panel == null or not _picker_panel.visible:
+		return false
+	if GameDialog.has_any_open_overlay() or GameDialog.has_open_overlay(self):
+		return false
+	for child: Node in get_children():
+		if child == _hud_layer or child == _bg_rect or child == _fx_layer \
+				or child == _flash_rect:
+			continue
+		if child is ProtagonistOverlay:
+			return false
+		# Settings / achievement overlays parented on this screen.
+		if child is Control and (child as Control).visible \
+				and (child as Control).mouse_filter == Control.MOUSE_FILTER_STOP \
+				and (child as Control).z_index >= OVERLAY_Z_INDEX:
+			return false
+	return true
+
+
+func _on_quick_duel_mouse_activity() -> void:
+	_idle_timer = 0.0
+	if _hud_cinema:
+		_set_quick_duel_hud_cinema(false)
+
+
+func _kill_hud_fade_tween() -> void:
+	if _hud_fade_tween != null and _hud_fade_tween.is_valid():
+		_hud_fade_tween.kill()
+	_hud_fade_tween = null
+
+
+func _force_show_quick_duel_hud() -> void:
+	_idle_timer = 0.0
+	_kill_hud_fade_tween()
+	_hud_cinema = false
+	GameState.set_cursor_cinema_hidden(false)
+	if _hud_layer == null or not is_instance_valid(_hud_layer):
+		return
+	_hud_layer.visible = true
+	_hud_layer.modulate = Color(1, 1, 1, 1)
+
+
+func _set_quick_duel_hud_cinema(hide_hud: bool) -> void:
+	if _hud_layer == null or not is_instance_valid(_hud_layer):
+		return
+	if hide_hud == _hud_cinema and _hud_fade_tween == null:
+		return
+	_kill_hud_fade_tween()
+	_hud_cinema = hide_hud
+	GameState.set_cursor_cinema_hidden(hide_hud)
+	if hide_hud:
+		_hud_layer.visible = true
+		_hud_fade_tween = create_tween()
+		_hud_fade_tween.tween_property(_hud_layer, "modulate:a", 0.0, _HUD_FADE_OUT_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		_hud_fade_tween.finished.connect(func() -> void:
+			_hud_fade_tween = null
+			if _hud_cinema and _hud_layer != null and is_instance_valid(_hud_layer):
+				_hud_layer.visible = false)
+	else:
+		_hud_layer.visible = true
+		_hud_fade_tween = create_tween()
+		_hud_fade_tween.tween_property(_hud_layer, "modulate:a", 1.0, _HUD_FADE_IN_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		_hud_fade_tween.finished.connect(func() -> void:
+			_hud_fade_tween = null)
+
+
 func _ensure_quick_duel_exit_animation(tier: String) -> bool:
 	if _exit_anim_done:
 		return true
 	if _exit_anim_running:
 		return false
 	_exit_anim_running = true
+	_force_show_quick_duel_hud()
 	_stop_ambient_spark_fx()
 
 	var selected: Control = null
@@ -1173,9 +1296,8 @@ func _ensure_quick_duel_exit_animation(tier: String) -> bool:
 			cards.append(ctrl)
 			if t == tier:
 				selected = ctrl
-			# Block further presses while animating.
-			if btn is BaseButton:
-				(btn as BaseButton).disabled = true
+
+	_freeze_quick_duel_capsules_for_exit(cards)
 
 	if _reroll_btn != null:
 		_reroll_btn.disabled = true
@@ -1191,6 +1313,23 @@ func _ensure_quick_duel_exit_animation(tier: String) -> bool:
 	_exit_anim_done = true
 	_exit_anim_running = false
 	return is_inside_tree()
+
+
+## Disable capsule presses/hover and keep rest size for the exit stamp sequence.
+func _freeze_quick_duel_capsules_for_exit(cards: Array[Control]) -> void:
+	for ctrl: Control in cards:
+		if ctrl == null or not is_instance_valid(ctrl):
+			continue
+		ctrl.scale = Vector2.ONE
+		ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if ctrl is BaseButton:
+			var btn: BaseButton = ctrl as BaseButton
+			btn.disabled = true
+			_clear_button_hover_connections(btn)
+		if ctrl.has_meta("_capsule_hover"):
+			var hover_v: Variant = ctrl.get_meta("_capsule_hover")
+			if hover_v is Panel and is_instance_valid(hover_v as Panel):
+				(hover_v as Panel).visible = false
 
 
 func _stamp_id_for_quick_duel_protagonist() -> String:

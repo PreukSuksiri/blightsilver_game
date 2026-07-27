@@ -49,6 +49,9 @@ static func play(
 				selected = c as Control
 				break
 
+	# Freeze capsules at rest size and block further clicks/hover for the whole exit.
+	_lock_capsules_for_exit(cards)
+
 	var resolved_stamp: String = stamp_id.strip_edges()
 	if resolved_stamp.is_empty() or not DetectiveNoteVault.has_stamp(resolved_stamp):
 		resolved_stamp = STAMP_ID
@@ -57,7 +60,42 @@ static func play(
 		await _play_logo_approved_stamp(host, selected, card_size, resolved_stamp)
 	if not host.is_inside_tree():
 		return
+	# Reassert rest size after stamp (in case a late hover tween snuck in).
+	_lock_capsules_for_exit(cards)
 	await _stack_and_slide(host, selected, cards, card_size)
+
+
+## No more capsule interaction; keep original (unscaled) size.
+static func _lock_capsules_for_exit(cards: Array) -> void:
+	for c: Variant in cards:
+		if not (c is Control):
+			continue
+		var card: Control = c as Control
+		if not is_instance_valid(card):
+			continue
+		card.scale = Vector2.ONE
+		card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if card is BaseButton:
+			(card as BaseButton).disabled = true
+		_disable_interactive_descendants(card)
+
+
+static func _disable_interactive_descendants(root: Control) -> void:
+	if root == null or not is_instance_valid(root):
+		return
+	for child: Node in root.get_children():
+		if not (child is Control):
+			continue
+		var ctrl: Control = child as Control
+		if not is_instance_valid(ctrl):
+			continue
+		# Keep stamp cluster drawable; only kill further input/hover targets.
+		if ctrl.name == "ExitStampCluster":
+			continue
+		ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if ctrl is BaseButton:
+			(ctrl as BaseButton).disabled = true
+		_disable_interactive_descendants(ctrl)
 
 
 static func _stamp_host_for(card: Control) -> Control:
