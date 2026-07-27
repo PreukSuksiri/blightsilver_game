@@ -1,10 +1,12 @@
 extends RefCounted
 class_name PackShatterFx
 ## Triangle shatter + light screen shake for pack / union-scroll opening.
+## Matches Reckoning / BattleCalculationOverlay fragmentation (textured Polygon2D).
 
 const SHAKE_AMP := 12.0
 const SHAKE_DUR := 0.38
-const SHATTER_LEVELS := 3
+## 4 levels → 2 / 8 / 32 / 128 triangles (same as Reckoning card shatter).
+const SHATTER_LEVELS := 4
 
 
 ## Fire-and-forget screen shake via offsets (works with full-rect anchors).
@@ -37,23 +39,33 @@ static func _apply_offsets(host: Control, left: float, top: float, right: float,
 
 
 ## Shatter a texture into flying triangles in `local_rect` (host-local space).
+## `hide_when_shown`: optional node (pack/scroll art) hidden when the first shards appear.
 static func shatter_texture(
 		host: Control,
 		tex: Texture2D,
 		local_rect: Rect2,
-		levels_count: int = SHATTER_LEVELS
+		levels_count: int = SHATTER_LEVELS,
+		hide_when_shown: CanvasItem = null
 ) -> void:
-	if host == null or not is_instance_valid(host) or tex == null:
+	if host == null or not is_instance_valid(host):
+		return
+	if tex == null:
+		if hide_when_shown != null and is_instance_valid(hide_when_shown):
+			hide_when_shown.visible = false
 		return
 	var aw: float = local_rect.size.x
 	var ah: float = local_rect.size.y
 	if aw < 2.0 or ah < 2.0:
+		if hide_when_shown != null and is_instance_valid(hide_when_shown):
+			hide_when_shown.visible = false
 		return
 	var ax: float = local_rect.position.x
 	var ay: float = local_rect.position.y
 	var tex_w: float = float(tex.get_width())
 	var tex_h: float = float(tex.get_height())
 	if tex_w < 1.0 or tex_h < 1.0:
+		if hide_when_shown != null and is_instance_valid(hide_when_shown):
+			hide_when_shown.visible = false
 		return
 
 	var tl := Vector2(ax, ay)
@@ -89,8 +101,9 @@ static func shatter_texture(
 			poly.polygon = local_verts
 			poly.uv = uvs
 			poly.position = centroid
-			poly.z_index = 40
-			poly.z_as_relative = false
+			# Relative z so shards draw above the overlay dim/bg (parent z + this).
+			poly.z_index = 60
+			poly.z_as_relative = true
 			poly.visible = false
 			host.add_child(poly)
 			level_polys.append(poly)
@@ -104,6 +117,10 @@ static func shatter_texture(
 						arr2[1] as PackedVector2Array):
 					next_tris.append(sub)
 			triangles = next_tris
+
+	# Hide the intact art only once shards are ready to show.
+	if hide_when_shown != null and is_instance_valid(hide_when_shown):
+		hide_when_shown.visible = false
 
 	for level_idx: int in range(levels.size()):
 		var cur: Array = levels[level_idx] as Array
@@ -132,9 +149,9 @@ static func shatter_texture(
 		var dir := Vector2(poly3.position.x - card_cx, poly3.position.y - card_cy)
 		if dir.length() < 1.0:
 			dir = Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
-		dir = (dir.normalized() + Vector2(0.0, -0.35)).normalized()
-		var speed: float = rng.randf_range(90.0, 280.0)
-		var duration: float = rng.randf_range(0.36, 0.62)
+		dir = (dir.normalized() + Vector2(0.0, -0.4)).normalized()
+		var speed: float = rng.randf_range(100.0, 360.0)
+		var duration: float = rng.randf_range(0.42, 0.75)
 		var rot_delta: float = rng.randf_range(-TAU, TAU)
 		var tw := host.create_tween()
 		tw.tween_property(poly3, "position", poly3.position + dir * speed, duration) \
@@ -149,7 +166,8 @@ static func shatter_texture(
 			if n != null and is_instance_valid(n):
 				n.queue_free())
 
-	await host.get_tree().create_timer(0.24).timeout
+	# Cover most of the fly-apart so shards are clearly visible (Reckoning waits ~0.8s).
+	await host.get_tree().create_timer(0.55).timeout
 
 
 static func _subdivide(verts: PackedVector2Array, uvs: PackedVector2Array) -> Array:
