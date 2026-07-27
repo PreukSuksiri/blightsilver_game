@@ -2,7 +2,48 @@
 	"entries": [
 		{
 			"birth_name": "Mogganoth",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"❤️": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"👍": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"🖕": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"😃": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"😎": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"🤝": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"🤣": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"🥺": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				},
+				"🧨": {
+					"attack": "Impressive. Now try this out, mortal.",
+					"avoid": "You're wasting my time, mortal."
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "easy_green_wisp",
@@ -10,11 +51,52 @@
 			"name": "Foul Eye",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Talkative"
 		},
 		{
 			"birth_name": "Glowing Roach",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"❤️": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"👍": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"🖕": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"😃": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"😎": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"🤝": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"🤣": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"🥺": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				},
+				"🧨": {
+					"attack": "*flaps its wings*",
+					"avoid": "*waving its feelers*"
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [
 				"kelly"
@@ -24,7 +106,7 @@
 			"name": "Glowing Roach",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Fiddly"
 		},
 		{
 			"birth_name": "Kelly Lastochkina",
@@ -48,6 +130,10 @@
 				"😃": {
 					"attack": "I'll strip that cringe smile from your face",
 					"avoid": "Feeling happy today?"
+				},
+				"😎": {
+					"attack": "Playing cool, huh? Let's see what you're made off.",
+					"avoid": "Playing cool, huh?"
 				},
 				"🤝": {
 					"attack": "Eww... Did you wash your hand?",
@@ -75,11 +161,52 @@
 			"name": "Kelly Lastochkina",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Daredevil"
 		},
 		{
 			"birth_name": "Rick Stonefield",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"❤️": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"👍": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"🖕": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"😃": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"😎": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"🤝": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"🤣": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"🥺": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				},
+				"🧨": {
+					"attack": "*psychotic smile*",
+					"avoid": "*hands in pocket*"
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_big_thug",
@@ -87,11 +214,52 @@
 			"name": "Big Thug",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Fiddly"
 		},
 		{
 			"birth_name": "Canyon Warg",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"❤️": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"👍": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"🖕": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"😃": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"😎": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"🤝": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"🤣": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"🥺": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				},
+				"🧨": {
+					"attack": "*growl*",
+					"avoid": "*scratches its ear*"
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [
 				"nex"
@@ -101,7 +269,7 @@
 			"name": "Canyon Warg",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Bully"
 		},
 		{
 			"birth_name": "Mayu Kokawa",
@@ -114,6 +282,10 @@
 					"attack": "You'll learn a lesson soon for playing with a girl's heart",
 					"avoid": "I'll spare you if you become my fanclub"
 				},
+				"👍": {
+					"attack": "Let's flip that up, and see if I like it.",
+					"avoid": "*thumb up* *wink*"
+				},
 				"🖕": {
 					"attack": "Have not your mom taught you not to do that?",
 					"avoid": "You... you're so mean...! **cry**"
@@ -121,6 +293,14 @@
 				"😃": {
 					"attack": "**smile back** ....but anyway...",
 					"avoid": "**smile back**"
+				},
+				"😎": {
+					"attack": "Wearing glasses doesn't make you any more handsome",
+					"avoid": "Looks sketchy..."
+				},
+				"🤝": {
+					"attack": "Japanese people don't do a handshake",
+					"avoid": "We can get along"
 				},
 				"🤣": {
 					"attack": "What's so funny?",
@@ -144,11 +324,52 @@
 			"name": "Mayu Kokawa",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Flirty"
 		},
 		{
 			"birth_name": "Drigtholluch",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"❤️": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"👍": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"🖕": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"😃": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"😎": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"🤝": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"🤣": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"🥺": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				},
+				"🧨": {
+					"attack": "Pretty... So pretty...",
+					"avoid": "*mumbling nonsense*"
+				}
+			},
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "hard_midnight_shadow",
@@ -156,11 +377,52 @@
 			"name": "Midnight Shadow",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Talkative"
 		},
 		{
 			"birth_name": "Nexus Crowmont",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "You're just acting tough. Time to lose.",
+					"avoid": "Gimme a break..."
+				},
+				"❤️": {
+					"attack": "Your love is cheaper than a plastic bottle.",
+					"avoid": "Umm.... Uhh....."
+				},
+				"👍": {
+					"attack": "What's that thumb for?",
+					"avoid": "*thumb up*"
+				},
+				"🖕": {
+					"attack": "Go to hell.",
+					"avoid": "Shove that up someone else"
+				},
+				"😃": {
+					"attack": "I'll strip that fake smile",
+					"avoid": "Keep smiling, while it lasts"
+				},
+				"😎": {
+					"attack": "You're just acting tough. Time to lose.",
+					"avoid": "Keep playing cool, while it lasts"
+				},
+				"🤝": {
+					"attack": "It's too late for a handshake.",
+					"avoid": "Umm.... Uhh....."
+				},
+				"🤣": {
+					"attack": "You're just acting funny on purpose. Time to lose.",
+					"avoid": "Is my face so funny??"
+				},
+				"🥺": {
+					"attack": "I won't fall for that puppy eye",
+					"avoid": "Are you 3 years old?"
+				},
+				"🧨": {
+					"attack": "You're just acting tough. There is no trap. Time to lose.",
+					"avoid": "I won't fall for that"
+				}
+			},
 			"difficulty": "hard",
 			"exclude_protagonists": [
 				"nex"
@@ -170,7 +432,7 @@
 			"name": "Nex Crowmont",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Skeptical"
 		},
 		{
 			"birth_name": "Kelly Lastochkina",
@@ -194,6 +456,10 @@
 				"😃": {
 					"attack": "I'll strip that cringe smile from your face",
 					"avoid": "Feeling happy today?"
+				},
+				"😎": {
+					"attack": "Playing cool, huh? Let's see what you're made off.",
+					"avoid": "Playing cool, huh?"
 				},
 				"🤝": {
 					"attack": "Eww... Did you wash your hand?",
@@ -221,11 +487,52 @@
 			"name": "Kelly Lastochkina",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Daredevil"
 		},
 		{
 			"birth_name": "Wicked Puppet",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"❤️": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"👍": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"🖕": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"😃": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"😎": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"🤝": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"🤣": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"🥺": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				},
+				"🧨": {
+					"attack": "Let's play! Hee hee!",
+					"avoid": "*dance*"
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "easy_wicked_puppet",
@@ -233,7 +540,7 @@
 			"name": "Wicked Puppet",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Fun Guy"
 		},
 		{
 			"birth_name": "Mayu Kokawa",
@@ -246,6 +553,10 @@
 					"attack": "You'll learn a lesson soon for playing with a girl's heart",
 					"avoid": "I'll spare you if you become my fanclub"
 				},
+				"👍": {
+					"attack": "Let's flip that up, and see if I like it.",
+					"avoid": "*thumb up* *wink*"
+				},
 				"🖕": {
 					"attack": "Have not your mom taught you not to do that?",
 					"avoid": "You... you're so mean...! **cry**"
@@ -253,6 +564,14 @@
 				"😃": {
 					"attack": "**smile back** ....but anyway...",
 					"avoid": "**smile back**"
+				},
+				"😎": {
+					"attack": "Wearing glasses doesn't make you any more handsome",
+					"avoid": "Looks sketchy..."
+				},
+				"🤝": {
+					"attack": "Japanese people don't do a handshake",
+					"avoid": "We can get along"
 				},
 				"🤣": {
 					"attack": "What's so funny?",
@@ -276,11 +595,52 @@
 			"name": "Mayu Kokawa",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Flirty"
 		},
 		{
 			"birth_name": "Nexus Crowmont",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "You're just acting tough. Time to lose.",
+					"avoid": "Gimme a break..."
+				},
+				"❤️": {
+					"attack": "Your love is cheaper than a plastic bottle.",
+					"avoid": "Umm.... Uhh....."
+				},
+				"👍": {
+					"attack": "What's that thumb for?",
+					"avoid": "*thumb up*"
+				},
+				"🖕": {
+					"attack": "Go to hell.",
+					"avoid": "Shove that up someone else"
+				},
+				"😃": {
+					"attack": "I'll strip that fake smile",
+					"avoid": "Keep smiling, while it lasts"
+				},
+				"😎": {
+					"attack": "You're just acting tough. Time to lose.",
+					"avoid": "Keep playing cool, while it lasts"
+				},
+				"🤝": {
+					"attack": "It's too late for a handshake.",
+					"avoid": "Umm.... Uhh....."
+				},
+				"🤣": {
+					"attack": "You're just acting funny on purpose. Time to lose.",
+					"avoid": "Is my face so funny??"
+				},
+				"🥺": {
+					"attack": "I won't fall for that puppy eye",
+					"avoid": "Are you 3 years old?"
+				},
+				"🧨": {
+					"attack": "You're just acting tough. There is no trap. Time to lose.",
+					"avoid": "I won't fall for that"
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [
 				"nex"
@@ -290,11 +650,52 @@
 			"name": "Nex Crowmont",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Skeptical"
 		},
 		{
 			"birth_name": "Shady Woman",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"❤️": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"👍": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"🖕": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"😃": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"😎": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"🤝": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"🤣": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"🥺": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				},
+				"🧨": {
+					"attack": "Die...",
+					"avoid": "It's cold... So cold..."
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_shady_woman",
@@ -302,11 +703,52 @@
 			"name": "Shady Woman",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Paranoid"
 		},
 		{
 			"birth_name": "Creepy Mascot",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"❤️": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"👍": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"🖕": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"😃": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"😎": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"🤝": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"🤣": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"🥺": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				},
+				"🧨": {
+					"attack": "*points a finger*",
+					"avoid": "*standing still*"
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_creepy_mascot",
@@ -314,11 +756,52 @@
 			"name": "Creepy Mascot",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Eager"
 		},
 		{
 			"birth_name": "Lucid Man",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"❤️": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"👍": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"🖕": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"😃": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"😎": {
+					"attack": "*laugh ominously*",
+					"avoid": "Impressive"
+				},
+				"🤝": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"🤣": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"🥺": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				},
+				"🧨": {
+					"attack": "*laugh ominously*",
+					"avoid": "*glaring quietly*"
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_diluted_man",
@@ -326,7 +809,7 @@
 			"name": "Lucid Man",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Introvert"
 		},
 		{
 			"birth_name": "Kelly Lastochkina",
@@ -350,6 +833,10 @@
 				"😃": {
 					"attack": "I'll strip that cringe smile from your face",
 					"avoid": "Feeling happy today?"
+				},
+				"😎": {
+					"attack": "Playing cool, huh? Let's see what you're made off.",
+					"avoid": "Playing cool, huh?"
 				},
 				"🤝": {
 					"attack": "Eww... Did you wash your hand?",
@@ -377,11 +864,52 @@
 			"name": "Kelly Lastochkina",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Daredevil"
 		},
 		{
 			"birth_name": "Nexus Crowmont",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "You're just acting tough. Time to lose.",
+					"avoid": "Gimme a break..."
+				},
+				"❤️": {
+					"attack": "Your love is cheaper than a plastic bottle.",
+					"avoid": "Umm.... Uhh....."
+				},
+				"👍": {
+					"attack": "What's that thumb for?",
+					"avoid": "*thumb up*"
+				},
+				"🖕": {
+					"attack": "Go to hell.",
+					"avoid": "Shove that up someone else"
+				},
+				"😃": {
+					"attack": "I'll strip that fake smile",
+					"avoid": "Keep smiling, while it lasts"
+				},
+				"😎": {
+					"attack": "You're just acting tough. Time to lose.",
+					"avoid": "Keep playing cool, while it lasts"
+				},
+				"🤝": {
+					"attack": "It's too late for a handshake.",
+					"avoid": "Umm.... Uhh....."
+				},
+				"🤣": {
+					"attack": "You're just acting funny on purpose. Time to lose.",
+					"avoid": "Is my face so funny??"
+				},
+				"🥺": {
+					"attack": "I won't fall for that puppy eye",
+					"avoid": "Are you 3 years old?"
+				},
+				"🧨": {
+					"attack": "You're just acting tough. There is no trap. Time to lose.",
+					"avoid": "I won't fall for that"
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [
 				"nex"
@@ -391,11 +919,52 @@
 			"name": "Nex Crowmont",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Skeptical"
 		},
 		{
 			"birth_name": "Theo Meunier",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"❤️": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"👍": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"🖕": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"😃": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"😎": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"🤝": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"🤣": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"🥺": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				},
+				"🧨": {
+					"attack": "You'll be a good experimental subject.",
+					"avoid": "I have some works to do... Let's quit already..."
+				}
+			},
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_hospital_director",
@@ -403,7 +972,7 @@
 			"name": "Theo Meunier",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Monk"
 		},
 		{
 			"birth_name": "Mayu Kokawa",
@@ -416,6 +985,10 @@
 					"attack": "You'll learn a lesson soon for playing with a girl's heart",
 					"avoid": "I'll spare you if you become my fanclub"
 				},
+				"👍": {
+					"attack": "Let's flip that up, and see if I like it.",
+					"avoid": "*thumb up* *wink*"
+				},
 				"🖕": {
 					"attack": "Have not your mom taught you not to do that?",
 					"avoid": "You... you're so mean...! **cry**"
@@ -423,6 +996,14 @@
 				"😃": {
 					"attack": "**smile back** ....but anyway...",
 					"avoid": "**smile back**"
+				},
+				"😎": {
+					"attack": "Wearing glasses doesn't make you any more handsome",
+					"avoid": "Looks sketchy..."
+				},
+				"🤝": {
+					"attack": "Japanese people don't do a handshake",
+					"avoid": "We can get along"
 				},
 				"🤣": {
 					"attack": "What's so funny?",
@@ -446,11 +1027,52 @@
 			"name": "Mayu Kokawa",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Flirty"
 		},
 		{
 			"birth_name": "Vezgarez",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": ""
+				},
+				"❤️": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"👍": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"🖕": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"😃": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"😎": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"🤝": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"🤣": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"🥺": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				},
+				"🧨": {
+					"attack": "Be a good kid and eat this...",
+					"avoid": "You're so mean with old granny... Hee Hee..."
+				}
+			},
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "identity_22",
@@ -458,11 +1080,52 @@
 			"name": "Fruit Granny",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Degen"
 		},
 		{
 			"birth_name": "Mike Borri",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "You want trouble...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"❤️": {
+					"attack": "You want trouble...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"👍": {
+					"attack": "You want trouble...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"🖕": {
+					"attack": "You want trouble...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"😃": {
+					"attack": "What's that face...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"😎": {
+					"attack": "What's that face...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"🤝": {
+					"attack": "You want trouble...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"🤣": {
+					"attack": "What's so funny...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"🥺": {
+					"attack": "What's that face...!? Huh...!?",
+					"avoid": "Fuck off"
+				},
+				"🧨": {
+					"attack": "You want trouble...!? Huh...!?",
+					"avoid": "Fuck off"
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "thug_2",
@@ -470,11 +1133,52 @@
 			"name": "Thug 2",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Fiddly"
 		},
 		{
 			"birth_name": "Yoko Tanaka",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"❤️": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"👍": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"🖕": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"😃": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"😎": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"🤝": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"🤣": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"🥺": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				},
+				"🧨": {
+					"attack": "Aww... That's cute... Let's do something fun.",
+					"avoid": "I'm not interested in emotional lads"
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "student_1",
@@ -482,23 +1186,105 @@
 			"name": "Student1",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Flirty"
 		},
 		{
 			"birth_name": "Leonard Pitcher",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"❤️": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"👍": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"🖕": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"😃": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"😎": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"🤝": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"🤣": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"🥺": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				},
+				"🧨": {
+					"attack": "I'll teach you to mind your status",
+					"avoid": "*chuckle* I'll sue you for that later."
+				}
+			},
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "richguy_1",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_rich_guy_1.png",
-			"name": "Rick Guy 1",
+			"name": "Rich Guy 1",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Ungrateful"
 		},
 		{
 			"birth_name": "Lucia Gomez",
-			"bluff_reaction_chats": {},
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"❤️": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"👍": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"🖕": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"😃": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"😎": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"🤝": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"🤣": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"🥺": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				},
+				"🧨": {
+					"attack": "You'll regret it",
+					"avoid": "Only weaklings talk too much"
+				}
+			},
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "rogue_girl_1",
@@ -506,7 +1292,60 @@
 			"name": "Rogue Girl 1",
 			"personality_defensive": "",
 			"personality_offensive": "",
-			"personality_social": ""
+			"personality_social": "Bully"
+		},
+		{
+			"birth_name": "Anna Tesla",
+			"bluff_reaction_chats": {
+				"☠️": {
+					"attack": "*stick tongue out* Bleh...!!",
+					"avoid": "Looks like a trap!"
+				},
+				"❤️": {
+					"attack": "*stick tongue out* Bleh...!!",
+					"avoid": "Yay!!"
+				},
+				"👍": {
+					"attack": "*stick tongue out* Bleh...!!",
+					"avoid": "Yay! *thumb up*"
+				},
+				"🖕": {
+					"attack": "I'll tell your dad you do this",
+					"avoid": "Do you hate me so much...?"
+				},
+				"😃": {
+					"attack": "Ha! That's cool! Let me try this.",
+					"avoid": "Looks like a trap!"
+				},
+				"😎": {
+					"attack": "Ha! That's cool! Let me try this.",
+					"avoid": "Looks like a trap!"
+				},
+				"🤝": {
+					"attack": "*stick tongue out* Bleh...!!",
+					"avoid": "Looks like a trap!"
+				},
+				"🤣": {
+					"attack": "Ha! That's cool! Let me try this.",
+					"avoid": "Looks like a trap!"
+				},
+				"🥺": {
+					"attack": "*stick tongue out* Bleh...!!",
+					"avoid": "No... Please don't cry...!!"
+				},
+				"🧨": {
+					"attack": "*stick tongue out* Bleh...!!",
+					"avoid": "Looks like a trap!"
+				}
+			},
+			"difficulty": "hard",
+			"exclude_protagonists": [],
+			"id": "hard_anna",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_anna.png",
+			"name": "Anna Tesla",
+			"personality_defensive": "",
+			"personality_offensive": "",
+			"personality_social": "Fun Guy"
 		}
 	]
 }

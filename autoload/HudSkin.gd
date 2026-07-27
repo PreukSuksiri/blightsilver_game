@@ -135,26 +135,42 @@ func _setup_phase_plate_tex(v1_filename: String) -> Texture2D:
 ## Returns the correct Texture2D for the given v1 filename.
 ## Resolution: active skin file → older Magitech → v1 decorations → any existing Magitech file.
 func hud_tex(v1_filename: String) -> Texture2D:
+	var path: String = path_for(v1_filename)
+	if path.is_empty():
+		push_warning("HudSkin: missing texture for %s" % v1_filename)
+		return null
+	return load(path) as Texture2D
+
+
+## Absolute res:// path for a HUD icon (same resolution order as hud_tex), or "".
+## Use this for RichTextLabel BBCode [img] tags.
+func path_for(v1_filename: String) -> String:
 	var mapped: String = str(_SKIN_MAP.get(v1_filename, ""))
 	var skip_v3: bool = _V3_DEFER_TO_V2.has(v1_filename)
 	if version == "v3" and mapped != "" and not skip_v3:
 		var v3_path := _V3_BASE + mapped
 		if ResourceLoader.exists(v3_path):
-			return load(v3_path) as Texture2D
+			return v3_path
 	if (version == "v2" or version == "v3") and mapped != "":
 		var v2_path := _V2_BASE + mapped
 		if ResourceLoader.exists(v2_path):
-			return load(v2_path) as Texture2D
+			return v2_path
 	var v1_path := _V1_BASE + v1_filename
 	if ResourceLoader.exists(v1_path):
-		return load(v1_path) as Texture2D
-	# Icons that exist only as Magitech (e.g. eye) — never crash on missing v1.
+		return v1_path
 	if mapped != "" and ResourceLoader.exists(_V2_BASE + mapped):
-		return load(_V2_BASE + mapped) as Texture2D
+		return _V2_BASE + mapped
 	if mapped != "" and not skip_v3 and ResourceLoader.exists(_V3_BASE + mapped):
-		return load(_V3_BASE + mapped) as Texture2D
-	push_warning("HudSkin: missing texture for %s" % v1_filename)
-	return null
+		return _V3_BASE + mapped
+	return ""
+
+
+## BBCode [img] for a HUD icon, or "" if missing.
+func img_bbcode(v1_filename: String, icon_px: int = 14) -> String:
+	var path: String = path_for(v1_filename)
+	if path.is_empty():
+		return ""
+	return "[img=%dx%d]%s[/img]" % [icon_px, icon_px, path]
 
 
 ## Card context-menu Attack — v3 small plaque; else full attack icon.

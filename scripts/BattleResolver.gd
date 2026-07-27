@@ -116,7 +116,8 @@ static func resolve_battle(
 
 	match defender.card_type:
 		"dead_end":
-			result.messages.append("Nothing happens — Dead End.")
+			var attacker_label: String = attacker.card_name if attacker != null and not attacker.card_name.is_empty() else "Unknown"
+			result.messages.append("%s hits Dead End — nothing happens." % attacker_label)
 			if attacker.card_type == "character":
 				_populate_attacker_reckoning_fields(
 					attacker, defender, dice_roll, attacker_player, defender_was_exposed, target_pos, result)

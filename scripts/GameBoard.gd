@@ -95,6 +95,10 @@ var _turn_number_hit: Control = null
 
 # Options menu & battle log
 var _battle_log_lines: Array[String] = []
+## 0 = small (default), 1 = medium, 2 = large — battle log panel text + inline icons.
+var _battle_log_text_tier: int = 0
+const _BATTLE_LOG_FONT_SIZES: Array[int] = [14, 22, 30]
+const _BATTLE_LOG_ICON_PX: Array[int] = [14, 18, 22]
 # File log for VS_AI / HOT_SEAT modes
 var _session_log_file: FileAccess = null
 var _session_log_start_msec: int = 0
@@ -289,11 +293,14 @@ var _thinking_bubble_body: Panel = null
 var _thinking_bubble_tail: Polygon2D = null
 var _thinking_bubble_shadow: Panel = null
 var _thinking_dots_hbox: HBoxContainer = null
-var _thinking_chat_label: Label = null
+var _thinking_chat_label: RichTextLabel = null
 var _thinking_dot_labels: Array[Label] = []
 var _thinking_dot_tween: Tween = null
 var _thinking_timer_active: bool = false
 var _chat_bubble_token: int = 0
+## Cell keys already scanned for bluff-reaction chat: "player,r,c" -> emoji last seen.
+## Cleared bluffs / emoji changes count as new again.
+var _bluff_reaction_scanned: Dictionary = {}
 var _portrait_last_tap: Array[float] = [0.0, 0.0]  # last tap timestamp per player
 
 # Tax confirmation overlay
@@ -828,6 +835,9 @@ func _connect_signals() -> void:
 	GameState.dice_rolled.connect(_on_dice_rolled)
 	GameState.game_over.connect(_on_game_over)
 	GameState.message_posted.connect(_on_message_posted)
+	GameState.turn_changed.connect(_on_battle_log_turn_changed)
+	if message_log:
+		message_log.bbcode_enabled = true
 	GameState.center_message_requested.connect(_on_center_message_requested)
 	GameState.tech_card_used.connect(func(p: int, tech_name: String) -> void:
 		_add_to_void_pile(p, tech_name, "tech")
@@ -1832,6 +1842,8 @@ func _p1_magitech_name() -> String:
 
 func _p2_magitech_name() -> String:
 	var iid := GameState.battle_ai_identity_id.strip_edges()
+	if iid.is_empty():
+		iid = _battle_ai_identity_id.strip_edges()
 	if iid.is_empty() and GameState.quick_duel_active:
 		iid = SaveManager.get_quick_duel_identity(GameState.quick_duel_battle_tier)
 	if not iid.is_empty() and not AIIdentityVault.get_entry(iid).is_empty():
@@ -4074,7 +4086,7 @@ func _perform_pending_union() -> void:
 		_notify_idle_vent_action()
 	# Battle log entry
 	var mat_list: String = ", ".join(material_labels)
-	GameState.post_message("Player %d summoned [%s] using: %s" % [player + 1, u.card_name, mat_list])
+	GameState.post_message("Player %d summons %s using %s." % [player + 1, u.card_name, mat_list])
 	# Clear pending state
 	_pending_union_data = null
 	_pending_union_player = -1
@@ -5025,22 +5037,27 @@ func _build_thinking_bubble() -> void:
 	_thinking_dot_labels.clear()
 	for _i: int in range(3):
 		var dot := Label.new()
-		dot.text = "●"
-		dot.add_theme_font_size_override("font_size", 15)
+		dot.text = "."
+		dot.add_theme_font_size_override("font_size", 28)
 		dot.add_theme_color_override("font_color", Color(0.28, 0.32, 0.42, 1.0))
-		dot.modulate.a = 0.0
+		dot.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		dot.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		dot.visible = false
 		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_thinking_dots_hbox.add_child(dot)
 		_thinking_dot_labels.append(dot)
 
-	_thinking_chat_label = Label.new()
+	_thinking_chat_label = RichTextLabel.new()
 	_thinking_chat_label.visible = false
 	_thinking_chat_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_thinking_chat_label.bbcode_enabled = true
+	_thinking_chat_label.fit_content = false
+	_thinking_chat_label.scroll_active = false
+	_thinking_chat_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_thinking_chat_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_thinking_chat_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_thinking_chat_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_thinking_chat_label.add_theme_font_size_override("font_size", 15)
-	_thinking_chat_label.add_theme_color_override("font_color", Color(0.12, 0.14, 0.20, 1.0))
+	_thinking_chat_label.add_theme_font_size_override("normal_font_size", 15)
+	_thinking_chat_label.add_theme_color_override("default_color", Color(0.12, 0.14, 0.20, 1.0))
 	_thinking_chat_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_thinking_bubble_body.add_child(_thinking_chat_label)
 
@@ -5066,13 +5083,65 @@ func _show_thinking_bubble(thinking_player: int) -> void:
 	_thinking_bubble.scale = Vector2.ONE
 	_start_dot_animation()
 
+## Linger duration for authored chat: short 2s / medium 4s / long 6s.
+func _chat_bubble_linger_duration(text: String) -> float:
+	var n: int = text.strip_edges().length()
+	if n <= 24:
+		return 2.0
+	if n <= 56:
+		return 4.0
+	return 6.0
+
+## Plain + BBCode forms for Curious/Avoid reaction chat (includes bluff emoticon).
+## Prefers Magitech v3 PNG via BBCode [img]; falls back to unicode.
+func _format_bluff_reaction_chat(text: String, trigger: String, emoji: String = "") -> Dictionary:
+	var body := text.strip_edges()
+	var t := trigger.strip_edges().to_lower()
+	var face := emoji.strip_edges()
+	var tag_color := ""
+	var label := ""
+	if t == "attack":
+		label = "Curious"
+		tag_color = "#1A6B3A"  # dark green
+	elif t == "avoid":
+		label = "Avoid"
+		tag_color = "#7A2F9E"  # purple
+	else:
+		return {"plain": body, "bbcode": body}
+	var face_plain := face
+	var face_bbcode := face
+	const ICON_PX := 18
+	if not face.is_empty() and BluffEmoji.uses_custom() and BluffEmoji.has_tex(face):
+		var path: String = BluffEmoji.path_for(face)
+		if not path.is_empty():
+			face_bbcode = "[img=%dx%d]%s[/img]" % [ICON_PX, ICON_PX, path]
+			# Wide placeholder so size measurement reserves room for the PNG.
+			face_plain = "■■"
+	var tag_plain := "[%s %s]" % [label, face_plain] if not face_plain.is_empty() else "[%s]" % label
+	var tag_bbcode := "[%s %s]" % [label, face_bbcode] if not face_bbcode.is_empty() else "[%s]" % label
+	return {
+		"plain": "%s %s" % [tag_plain, body],
+		"bbcode": "[color=%s]%s[/color] %s" % [tag_color, tag_bbcode, body],
+	}
+
 ## Show authored reaction / dialogue text in the battle speech bubble.
-func _show_chat_bubble(speaking_player: int, text: String, duration: float = 2.6) -> void:
+## Does not block the caller — AI turn flow continues while the bubble lingers.
+## trigger: "attack" (Curious) or "avoid" — adds a colored prefix + bluff emoticon when set.
+func _show_chat_bubble(
+		speaking_player: int,
+		text: String,
+		duration: float = -1.0,
+		trigger: String = "",
+		emoji: String = "") -> void:
 	if _thinking_bubble == null:
 		return
-	var cleaned := text.strip_edges()
-	if cleaned.is_empty():
+	var formatted: Dictionary = _format_bluff_reaction_chat(text, trigger, emoji)
+	var plain: String = str(formatted.get("plain", "")).strip_edges()
+	var bbcode: String = str(formatted.get("bbcode", "")).strip_edges()
+	if plain.is_empty():
 		return
+	if duration < 0.0:
+		duration = _chat_bubble_linger_duration(plain)
 	_thinking_timer_active = false
 	_chat_bubble_token += 1
 	var token := _chat_bubble_token
@@ -5080,13 +5149,13 @@ func _show_chat_bubble(speaking_player: int, text: String, duration: float = 2.6
 		_thinking_dot_tween.kill()
 		_thinking_dot_tween = null
 	for dot: Label in _thinking_dot_labels:
-		dot.modulate.a = 0.0
+		dot.visible = false
 	if _thinking_dots_hbox:
 		_thinking_dots_hbox.visible = false
 	if _thinking_chat_label:
-		_thinking_chat_label.text = cleaned
+		_thinking_chat_label.text = bbcode
 		_thinking_chat_label.visible = true
-	var size := _measure_chat_bubble_size(cleaned)
+	var size := _measure_chat_bubble_size(plain)
 	_layout_chat_bubble(speaking_player, size)
 	_thinking_bubble.visible = true
 	_thinking_bubble.modulate.a = 0.0
@@ -5101,20 +5170,24 @@ func _show_chat_bubble(speaking_player: int, text: String, duration: float = 2.6
 	_hide_thinking_bubble()
 
 func _measure_chat_bubble_size(text: String) -> Vector2:
-	const MIN_W := 120.0
-	const MAX_W := 260.0
-	const PAD_X := 28.0
+	# Wider max so "[Curious 😎] …" / "[Avoid 😎] …" tags + body fit without clipping.
+	const MIN_W := 140.0
+	const MAX_W := 320.0
+	const PAD_X := 32.0
 	const PAD_Y := 22.0
 	const MIN_H := 48.0
-	var font: Font = _thinking_chat_label.get_theme_font("font") if _thinking_chat_label else null
+	var font: Font = null
 	var font_size: int = 15
 	if _thinking_chat_label:
-		font_size = _thinking_chat_label.get_theme_font_size("font_size")
+		font = _thinking_chat_label.get_theme_font("normal_font")
+		font_size = _thinking_chat_label.get_theme_font_size("normal_font_size")
 	var measured := Vector2(MIN_W, MIN_H)
 	if font != null:
 		measured = font.get_multiline_string_size(
 			text, HORIZONTAL_ALIGNMENT_LEFT, MAX_W - PAD_X, font_size)
-	var w: float = clampf(measured.x + PAD_X, MIN_W, MAX_W)
+	# Emoticons / inline bluff icons need a little extra horizontal room.
+	var emoji_pad: float = 12.0 if text.contains("[Curious ") or text.contains("[Avoid ") else 0.0
+	var w: float = clampf(measured.x + PAD_X + emoji_pad, MIN_W, MAX_W)
 	var h: float = maxf(measured.y + PAD_Y, MIN_H)
 	return Vector2(w, h)
 
@@ -5124,39 +5197,36 @@ func _layout_chat_bubble(player: int, size: Vector2) -> void:
 	const MARGIN: float = 28.0
 	const TAIL_W: float = 16.0
 	const TAIL_H: float = 14.0
+	const VERTICAL_NUDGE: float = 18.0
 	var w: float = size.x
 	var h: float = size.y
 	_thinking_bubble.pivot_offset = Vector2(w * 0.5, h * 0.5)
+	# Tail sits on the bottom edge and points down-right toward the portrait.
+	var tail_base_x: float = w * 0.42 if player == 0 else w * 0.58
 	if player == 0:
 		_thinking_bubble.anchor_left = 0.0
 		_thinking_bubble.anchor_right = 0.0
-		_thinking_bubble.anchor_top = 0.34
-		_thinking_bubble.anchor_bottom = 0.34
-		_thinking_bubble.offset_left = MARGIN + TAIL_W
-		_thinking_bubble.offset_right = MARGIN + TAIL_W + w
-		_thinking_bubble.offset_top = -h * 0.5
-		_thinking_bubble.offset_bottom = h * 0.5
-		if _thinking_bubble_tail:
-			_thinking_bubble_tail.polygon = PackedVector2Array([
-				Vector2(2.0, h * 0.55),
-				Vector2(-TAIL_W, h * 0.72),
-				Vector2(2.0, h * 0.78),
-			])
+		_thinking_bubble.anchor_top = 0.38
+		_thinking_bubble.anchor_bottom = 0.38
+		_thinking_bubble.offset_left = MARGIN
+		_thinking_bubble.offset_right = MARGIN + w
+		_thinking_bubble.offset_top = -h * 0.5 + VERTICAL_NUDGE
+		_thinking_bubble.offset_bottom = h * 0.5 + VERTICAL_NUDGE
 	else:
 		_thinking_bubble.anchor_left = 1.0
 		_thinking_bubble.anchor_right = 1.0
-		_thinking_bubble.anchor_top = 0.34
-		_thinking_bubble.anchor_bottom = 0.34
-		_thinking_bubble.offset_right = -(MARGIN + TAIL_W)
-		_thinking_bubble.offset_left = -(MARGIN + TAIL_W + w)
-		_thinking_bubble.offset_top = -h * 0.5
-		_thinking_bubble.offset_bottom = h * 0.5
-		if _thinking_bubble_tail:
-			_thinking_bubble_tail.polygon = PackedVector2Array([
-				Vector2(w - 2.0, h * 0.55),
-				Vector2(w + TAIL_W, h * 0.72),
-				Vector2(w - 2.0, h * 0.78),
-			])
+		_thinking_bubble.anchor_top = 0.38
+		_thinking_bubble.anchor_bottom = 0.38
+		_thinking_bubble.offset_right = -MARGIN
+		_thinking_bubble.offset_left = -(MARGIN + w)
+		_thinking_bubble.offset_top = -h * 0.5 + VERTICAL_NUDGE
+		_thinking_bubble.offset_bottom = h * 0.5 + VERTICAL_NUDGE
+	if _thinking_bubble_tail:
+		_thinking_bubble_tail.polygon = PackedVector2Array([
+			Vector2(tail_base_x - TAIL_W * 0.35, h - 2.0),
+			Vector2(tail_base_x + TAIL_W * 0.55, h - 2.0),
+			Vector2(tail_base_x + TAIL_W * 0.85, h + TAIL_H),
+		])
 	if _thinking_bubble_shadow:
 		_thinking_bubble_shadow.position = Vector2(3.0, 4.0)
 		_thinking_bubble_shadow.size = Vector2(w, h)
@@ -5179,7 +5249,17 @@ func _hide_thinking_bubble() -> void:
 	if _thinking_dots_hbox:
 		_thinking_dots_hbox.visible = true
 	for dot: Label in _thinking_dot_labels:
-		dot.modulate.a = 0.0
+		dot.visible = false
+
+## Cancel thinking dots when the AI acts, but leave authored chat lingering on its own timer.
+func _hide_thinking_indicator() -> void:
+	_thinking_timer_active = false
+	if _thinking_chat_label != null and _thinking_chat_label.visible:
+		if _thinking_dot_tween and _thinking_dot_tween.is_valid():
+			_thinking_dot_tween.kill()
+			_thinking_dot_tween = null
+		return
+	_hide_thinking_bubble()
 
 ## Manual trigger: tapping a player's portrait shows the thinking bubble for 3 seconds.
 ## Only the human player's own portrait responds — opponent and AI portraits are ignored.
@@ -5201,24 +5281,34 @@ func _on_portrait_tapped(player: int) -> void:
 func _start_dot_animation() -> void:
 	if _thinking_dot_tween and _thinking_dot_tween.is_valid():
 		_thinking_dot_tween.kill()
+	if _thinking_dot_labels.is_empty():
+		return
 	for dot: Label in _thinking_dot_labels:
-		dot.modulate.a = 0.0
+		dot.visible = false
+		dot.modulate.a = 1.0
+	# Reveal ". . ." one dot at a time, then clear and loop.
 	_thinking_dot_tween = create_tween().set_loops()
-	# Dots fade in one by one
-	_thinking_dot_tween.tween_property(_thinking_dot_labels[0], "modulate:a", 1.0, 0.18)
-	_thinking_dot_tween.tween_interval(0.12)
-	_thinking_dot_tween.tween_property(_thinking_dot_labels[1], "modulate:a", 1.0, 0.18)
-	_thinking_dot_tween.tween_interval(0.12)
-	_thinking_dot_tween.tween_property(_thinking_dot_labels[2], "modulate:a", 1.0, 0.18)
-	_thinking_dot_tween.tween_interval(0.35)
-	# All fade out simultaneously
-	_thinking_dot_tween.tween_property(_thinking_dot_labels[0], "modulate:a", 0.0, 0.22)
-	_thinking_dot_tween.parallel().tween_property(_thinking_dot_labels[1], "modulate:a", 0.0, 0.22)
-	_thinking_dot_tween.parallel().tween_property(_thinking_dot_labels[2], "modulate:a", 0.0, 0.22)
-	_thinking_dot_tween.tween_interval(0.25)
+	_thinking_dot_tween.tween_callback(func() -> void:
+		_thinking_dot_labels[0].visible = true
+	)
+	_thinking_dot_tween.tween_interval(0.28)
+	_thinking_dot_tween.tween_callback(func() -> void:
+		_thinking_dot_labels[1].visible = true
+	)
+	_thinking_dot_tween.tween_interval(0.28)
+	_thinking_dot_tween.tween_callback(func() -> void:
+		_thinking_dot_labels[2].visible = true
+	)
+	_thinking_dot_tween.tween_interval(0.45)
+	_thinking_dot_tween.tween_callback(func() -> void:
+		for d: Label in _thinking_dot_labels:
+			d.visible = false
+	)
+	_thinking_dot_tween.tween_interval(0.22)
 
-## At AI turn start: roll among visible opponent bluffs the AI reacts to (Interested/Avoid)
-## and play authored reaction chat immediately. Returns true if a chat was shown.
+## At AI turn start: roll among *new* visible opponent bluffs the AI reacts to
+## (Interested/Avoid) and play authored reaction chat. Each bluff cell is scanned
+## once; already-seen bluffs are ignored until cleared or the emoji changes.
 func _roll_bluff_reaction_chat_at_turn_start(ai: AIPlayer) -> bool:
 	if ai == null or not is_instance_valid(ai):
 		return false
@@ -5229,28 +5319,50 @@ func _roll_bluff_reaction_chat_at_turn_start(ai: AIPlayer) -> bool:
 		return false
 	var candidates: Array[Dictionary] = []
 	var opp := GameState.get_opponent(ai.player_index)
-	var seen: Dictionary = {}  # emoji|trigger -> true (one candidate per emoji+trigger)
+	var seen_emoji_trigger: Dictionary = {}  # emoji|trigger -> true (dedupe candidates)
 	for r: int in range(GameState.GRID_SIZE):
 		for c: int in range(GameState.GRID_SIZE):
+			var cell_key: String = "%d,%d,%d" % [opp, r, c]
 			var emoji: String = GameState.get_bluff(opp, r, c)
 			if emoji.is_empty():
+				_bluff_reaction_scanned.erase(cell_key)
 				continue
+			# Already scanned this exact bluff — skip old ones.
+			if str(_bluff_reaction_scanned.get(cell_key, "")) == emoji:
+				continue
+			# Mark scanned now so this bluff is never considered again until it changes.
+			_bluff_reaction_scanned[cell_key] = emoji
 			var reaction: int = ai.get_emoji_reaction(emoji)
 			if reaction == 0:
 				continue
 			var trigger: String = "attack" if reaction > 0 else "avoid"
-			var key: String = "%s|%s" % [AIIdentityVault.normalize_bluff_emoji(emoji), trigger]
-			if seen.has(key):
+			var dedupe_key: String = "%s|%s" % [AIIdentityVault.normalize_bluff_emoji(emoji), trigger]
+			if seen_emoji_trigger.has(dedupe_key):
 				continue
 			var chat: String = AIIdentityVault.get_bluff_reaction_chat(identity_id, emoji, trigger)
 			if chat.is_empty():
 				continue
-			seen[key] = true
+			seen_emoji_trigger[dedupe_key] = true
 			candidates.append({"emoji": emoji, "trigger": trigger, "chat": chat})
 	if candidates.is_empty():
 		return false
 	var pick: Dictionary = candidates[randi() % candidates.size()]
-	_show_chat_bubble(ai.player_index, str(pick.get("chat", "")))
+	var pick_trigger: String = str(pick.get("trigger", ""))
+	var pick_emoji: String = str(pick.get("emoji", ""))
+	var speaker: String = _battle_display_name(ai.player_index)
+	var face_log: String = BluffEmoji.img_bbcode(pick_emoji, _battle_log_icon_px())
+	if face_log.is_empty():
+		face_log = pick_emoji
+	if pick_trigger == "attack":
+		GameState.post_message("%s is Curious about %s" % [speaker, face_log])
+	elif pick_trigger == "avoid":
+		GameState.post_message("%s Avoids %s" % [speaker, face_log])
+	_show_chat_bubble(
+		ai.player_index,
+		str(pick.get("chat", "")),
+		-1.0,
+		pick_trigger,
+		pick_emoji)
 	return true
 
 ## Creates a fixed-size Control with the attack-count icon and a centered number label.
@@ -6876,6 +6988,121 @@ func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 		_show_options_panel())
 	vbox.add_child(back_btn)
 
+func _battle_log_font_size() -> int:
+	return _BATTLE_LOG_FONT_SIZES[_battle_log_text_tier]
+
+func _battle_log_icon_px() -> int:
+	return _BATTLE_LOG_ICON_PX[_battle_log_text_tier]
+
+## Resize all BBCode [img] tags to the current battle-log icon dimension.
+func _rescale_bbcode_imgs(text: String, icon_px: int) -> String:
+	var out := ""
+	var i := 0
+	while i < text.length():
+		if text.substr(i, 5) == "[img=":
+			var close_br: int = text.find("]", i)
+			var end_img: int = text.find("[/img]", i)
+			if close_br >= 0 and end_img > close_br:
+				var path: String = text.substr(close_br + 1, end_img - close_br - 1)
+				out += "[img=%dx%d]%s[/img]" % [icon_px, icon_px, path]
+				i = end_img + 6
+				continue
+		out += text[i]
+		i += 1
+	return out
+
+func _populate_battle_log_rtl(rtl: RichTextLabel) -> void:
+	rtl.clear()
+	rtl.add_theme_font_size_override("normal_font_size", _battle_log_font_size())
+	var icon_px: int = _battle_log_icon_px()
+	if _battle_log_lines.is_empty():
+		rtl.append_text("[color=#888888](No log entries yet.)[/color]")
+	else:
+		for line: String in _battle_log_lines:
+			var shown: String = _rescale_bbcode_imgs(line, icon_px)
+			rtl.append_text(_format_log_line(shown) + "\n")
+
+func _append_battle_log_chronicle_line(line: String) -> void:
+	if line.is_empty():
+		return
+	print("[BATTLE LOG] ", _plain_battle_log_text(line))
+	message_log.append_text("\n" + line)
+	_battle_log_lines.append(line)
+
+func _battle_log_turn_divider_bbcode(turn_number: int, player_index: int) -> String:
+	var who: String = _battle_display_name(player_index)
+	return "[color=#9aa8c2]━━━━━━━━━━  Turn %d — %s  ━━━━━━━━━━[/color]" % [turn_number, who]
+
+func _on_battle_log_turn_changed(player_index: int) -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	_append_battle_log_chronicle_line(_battle_log_turn_divider_bbcode(
+		GameState.turn_number, player_index))
+
+func _add_battle_log_footer(
+		vbox: VBoxContainer,
+		dimmer: Control,
+		rtl: RichTextLabel,
+		scroll: ScrollContainer) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.alignment = BoxContainer.ALIGNMENT_END
+
+	var zoom_out := Button.new()
+	zoom_out.text = "Zoom Out"
+	zoom_out.tooltip_text = "Smaller text"
+	GameDialog.style_menu_button(zoom_out)
+
+	var zoom_in := Button.new()
+	zoom_in.text = "Zoom In"
+	zoom_in.tooltip_text = "Larger text"
+	GameDialog.style_menu_button(zoom_in)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var back_btn := Button.new()
+	back_btn.text = "Back"
+	GameDialog.style_menu_button(back_btn)
+	back_btn.pressed.connect(func() -> void:
+		dimmer.queue_free()
+		_show_options_panel())
+
+	row.add_child(zoom_out)
+	row.add_child(zoom_in)
+	row.add_child(spacer)
+	row.add_child(back_btn)
+	vbox.add_child(row)
+
+	var refresh := func() -> void:
+		zoom_out.disabled = _battle_log_text_tier <= 0
+		zoom_in.disabled = _battle_log_text_tier >= _BATTLE_LOG_FONT_SIZES.size() - 1
+		var scroll_bar: VScrollBar = scroll.get_v_scroll_bar()
+		var at_bottom: bool = scroll_bar.max_value <= 0.0 \
+			or scroll.scroll_vertical >= int(scroll_bar.max_value) - 8
+		_populate_battle_log_rtl(rtl)
+		if at_bottom:
+			call_deferred("_scroll_battle_log_to_bottom", scroll)
+
+	zoom_out.pressed.connect(func() -> void:
+		if _battle_log_text_tier > 0:
+			_battle_log_text_tier -= 1
+			refresh.call())
+
+	zoom_in.pressed.connect(func() -> void:
+		if _battle_log_text_tier < _BATTLE_LOG_FONT_SIZES.size() - 1:
+			_battle_log_text_tier += 1
+			refresh.call())
+
+	zoom_out.disabled = _battle_log_text_tier <= 0
+	zoom_in.disabled = _battle_log_text_tier >= _BATTLE_LOG_FONT_SIZES.size() - 1
+	SFXManager.wire_prompt_buttons_in(row)
+
+func _scroll_battle_log_to_bottom(scroll: ScrollContainer) -> void:
+	if scroll == null or not is_instance_valid(scroll):
+		return
+	scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
+
 func _show_options_panel() -> void:
 	if GameDialog.has_open_overlay(self):
 		return
@@ -6985,11 +7212,19 @@ func _change_battle_music(path: String) -> void:
 func _format_log_line(line: String) -> String:
 	# Walk character-by-character; replace card names with BBCode [url] links.
 	# Sort longest-first so "Iron Golem King" beats "Iron Golem".
+	# Preserve existing BBCode [img]...[/img] spans so bluff PNGs survive.
 	var sorted_names: Array = _card_name_to_type.keys()
 	sorted_names.sort_custom(func(a: String, b: String) -> bool: return a.length() > b.length())
 	var result := ""
 	var i := 0
 	while i < line.length():
+		if line.substr(i, 5) == "[img=":
+			var end_img: int = line.find("[/img]", i)
+			if end_img >= 0:
+				var span_end: int = end_img + 6
+				result += line.substr(i, span_end - i)
+				i = span_end
+				continue
 		var matched := false
 		for cname: String in sorted_names:
 			if line.substr(i, cname.length()) == cname:
@@ -7003,8 +7238,128 @@ func _format_log_line(line: String) -> String:
 			i += 1
 	return result
 
+## Replace [img] BBCode with plain text for session / console logs.
+## Bluff emoji PNGs become unicode; other HUD icons are omitted.
+func _plain_battle_log_text(text: String) -> String:
+	var out := ""
+	var i := 0
+	while i < text.length():
+		if text.substr(i, 5) == "[img=":
+			var close_br: int = text.find("]", i)
+			var end_img: int = text.find("[/img]", i)
+			if close_br >= 0 and end_img > close_br:
+				var path: String = text.substr(close_br + 1, end_img - close_br - 1)
+				var face: String = BluffEmoji.emoji_for_path(path)
+				out += face  # HUD icons → empty; bluff PNGs → unicode
+				i = end_img + 6
+				# Drop a single following space left by icon prefixes.
+				if i < text.length() and text[i] == " ":
+					if face.is_empty():
+						i += 1
+				continue
+		out += text[i]
+		i += 1
+	return out
+
+## True for UI prompts / validation — not chronicle-worthy battle events.
+func _is_battle_log_instruction(text: String) -> bool:
+	var t := _plain_battle_log_text(text).strip_edges()
+	if t.is_empty():
+		return true
+	var lower := t.to_lower()
+	# Legacy / turn guidance
+	if "play a tech" in lower and "attack" in lower:
+		return true
+	if ": tap a unit to attack" in lower:
+		return true
+	if t.begins_with("You must ") or t.begins_with("Tap "):
+		return true
+	if t.begins_with("Choose ") or ": Choose " in t or " — choose " in lower \
+			or " must choose " in lower:
+		return true
+	if t.begins_with("Cannot ") or t.begins_with("Invalid ") \
+			or t.begins_with("That square is locked"):
+		return true
+	if t.begins_with("No valid ") or t.begins_with("No empty ") \
+			or t.begins_with("No destroyed ") or t.begins_with("No attacks remaining") \
+			or t == "No valid units to flag.":
+		return true
+	if t.begins_with("Not enough") or t.begins_with("You don't have ") \
+			or t.begins_with("Unknown Tech"):
+		return true
+	if t.begins_with("Only the Berserk") or t.begins_with("Ability not implemented"):
+		return true
+	if " has already attacked this turn." in t or t.ends_with(" cannot attack yet."):
+		return true
+	if " cannot attack —" in t or t.ends_with(" more material(s) needed."):
+		return true
+	if t.begins_with("%d more material") or " more material(s) needed." in t:
+		return true
+	if t.begins_with("Tease: Choose") or t.begins_with("Bribe: Choose") \
+			or t.begins_with("Plant-29: Choose") or t.begins_with("Potent Poison: Choose"):
+		return true
+	if "has no units that can attack" in t:
+		return true
+	return false
+
+## Substitute display names for "Player 1" / "Player 2" in chronicle lines.
+func _polish_battle_log_text(text: String) -> String:
+	var out := text
+	for i: int in range(2):
+		var label: String = _battle_display_name(i).strip_edges()
+		if label.is_empty():
+			continue
+		out = out.replace("Player %d" % (i + 1), label)
+	return out
+
+## Prefix battle-log lines with small HUD activity icons (BBCode [img]).
+func _decorate_battle_log_icons(text: String) -> String:
+	if text.is_empty() or text.begins_with("[img="):
+		return text
+	var icon_px: int = _battle_log_icon_px()
+	var icon := ""
+	var plain := _plain_battle_log_text(text)
+	# Attack resolution (unit vs unit reckoning).
+	if plain.contains(" ATK ") and plain.contains(" vs ") and plain.contains(" DEF "):
+		icon = HudSkin.img_bbcode("ui_context_menu_attack.png", icon_px)
+	# Successful defense.
+	elif plain.ends_with(" defends successfully!"):
+		icon = HudSkin.img_bbcode("ui_icon_defend.png", icon_px)
+	# Union summon.
+	elif (" summons " in plain and " using " in plain) \
+			or (plain.contains(" summoned [") and plain.contains("] using:")):
+		icon = HudSkin.img_bbcode("ui_icon_union.png", icon_px)
+	# Tech play.
+	elif " plays " in plain:
+		var tech_speaker := plain.begins_with("Player ")
+		if not tech_speaker:
+			for i: int in range(2):
+				var n: String = _battle_display_name(i).strip_edges()
+				if not n.is_empty() and plain.begins_with(n):
+					tech_speaker = true
+					break
+		if tech_speaker:
+			icon = HudSkin.img_bbcode("ui_tech_stack_chip.png", icon_px)
+	# Trap triggered (resolver + TurnManager forms).
+	elif plain.begins_with("Trap triggered:") or (
+			plain.ends_with(" triggered!") and not plain.begins_with("Ability triggered")):
+		icon = HudSkin.img_bbcode("ui_icon_trap.png", icon_px)
+	# Dead End hit / revealed.
+	elif plain.contains("Dead End") or plain.contains("dead end") or plain.contains("dead-end"):
+		icon = HudSkin.img_bbcode("ui_icon_blank_found.png", icon_px)
+	if icon.is_empty():
+		return text
+	return "%s %s" % [icon, text]
+
+func _on_message_posted(text: String) -> void:
+	if _is_battle_log_instruction(text):
+		return
+	var polished: String = _polish_battle_log_text(text)
+	var decorated: String = _decorate_battle_log_icons(polished)
+	_append_battle_log_chronicle_line(decorated)
+
 func _show_battle_log_panel() -> void:
-	var ovl: Dictionary = _make_sub_overlay(460.0, 340.0)
+	var ovl: Dictionary = _make_sub_overlay(560.0, 340.0)
 	var dimmer: Control = ovl["dimmer"]
 	var vbox: VBoxContainer = ovl["vbox"]
 
@@ -7022,15 +7377,9 @@ func _show_battle_log_panel() -> void:
 	rtl.bbcode_enabled = true
 	rtl.fit_content = true
 	rtl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rtl.add_theme_font_size_override("normal_font_size", 14)
 	rtl.add_theme_color_override("default_color", Color(0.88, 0.88, 0.92))
 	scroll.add_child(rtl)
-
-	if _battle_log_lines.is_empty():
-		rtl.append_text("[color=#888888](No log entries yet.)[/color]")
-	else:
-		for line: String in _battle_log_lines:
-			rtl.append_text(_format_log_line(line) + "\n")
+	_populate_battle_log_rtl(rtl)
 
 	rtl.meta_clicked.connect(func(meta: Variant) -> void:
 		var parts: PackedStringArray = str(meta).split("|")
@@ -7038,7 +7387,7 @@ func _show_battle_log_panel() -> void:
 			CardDetailOverlay.open(self, parts[0], parts[1], null, false, false,
 				GameDialog.DEFAULT_Z_INDEX + 100))
 
-	_add_back_btn(vbox, dimmer)
+	_add_battle_log_footer(vbox, dimmer, rtl, scroll)
 	SFXManager.wire_prompt_buttons_in(vbox)
 
 	# Scroll to bottom after layout settles
@@ -7910,11 +8259,6 @@ func _tick_crystal(player_index: int, old_amount: int, new_amount: int) -> void:
 
 func _on_dice_rolled(result: int) -> void:
 	dice_display.text = "[%d]" % result
-
-func _on_message_posted(text: String) -> void:
-	print("[BATTLE LOG] ", text)
-	message_log.append_text("\n" + text)
-	_battle_log_lines.append(text)
 
 func _on_center_message_requested(text: String) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
@@ -8880,7 +9224,7 @@ func _on_ai_end_turn() -> void:
 	if _should_defer_turn_flow():
 		_deferred_ai_turn_flow = true
 		return
-	_hide_thinking_bubble()
+	_hide_thinking_indicator()
 	var player := GameState.current_player
 	var has_attacked := _player_has_attacked_this_turn(player)
 	var _tax_free: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
@@ -12727,7 +13071,7 @@ func _on_ai_mode_chosen(mode: GameState.TurnMode) -> void:
 			and not GameState.can_player_attack(GameState.current_player):
 		_on_ai_end_turn()
 		return
-	_hide_thinking_bubble()
+	_hide_thinking_indicator()
 	turn_manager.select_mode(mode)
 
 ## Briefly flash a card node to signal AI target selection (non-blocking).
@@ -15407,17 +15751,20 @@ func _session_on_turn_changed(player: int) -> void:
 	_session_log_prev_crystals[1] = c1
 
 func _session_on_message(text: String) -> void:
-	if text.contains("'s turn — play a Tech"):
+	var plain := _plain_battle_log_text(text)
+	if plain.contains("'s turn — play a Tech") or plain.contains("'s turn begins"):
 		return
-	if text.begins_with("Player ") and text.contains(" plays ") and text.ends_with("!"):
+	if " plays " in plain:
+		return  # tech_played signal
+	if plain.contains("ends their turn"):
 		return
-	if text.begins_with("Player ") and text.contains("ends their turn"):
+	if plain.contains(" ATK ") and plain.contains(" vs ") and plain.contains(" DEF "):
 		return
-	if text.contains(" ATK ") and text.contains(" vs ") and text.contains(" DEF "):
+	if plain.ends_with(" defends successfully!"):
 		return
-	if text.ends_with(" defends successfully!"):
-		return
-	_session_log("MSG: %s" % text)
+	if plain.contains(" summons ") and plain.contains(" using "):
+		return  # union_summoned signal
+	_session_log("MSG: %s" % plain)
 
 func _session_on_crystals(player: int, new_amount: int, reason: String) -> void:
 	var delta: int = new_amount - _session_log_prev_crystals[player]

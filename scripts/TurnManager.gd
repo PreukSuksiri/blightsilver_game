@@ -426,7 +426,7 @@ func start_turn(player_index: int) -> void:
 		{"source_player": GameState.get_opponent(player_index)})
 
 	GameState.set_phase(GameState.Phase.MODE_SELECT)
-	GameState.post_message("Player %d's turn — play a Tech (optional) then Attack." % (player_index + 1))
+	GameState.post_message("Player %d's turn begins." % (player_index + 1))
 
 func select_mode(mode: GameState.TurnMode) -> void:
 	var player := GameState.current_player
@@ -434,7 +434,7 @@ func select_mode(mode: GameState.TurnMode) -> void:
 		return
 
 	if mode == GameState.TurnMode.ATTACK and not GameState.can_player_attack(player):
-		GameState.post_message("Player %d has no units that can attack." % (player + 1))
+		GameState.show_center_message("Player %d has no units that can attack." % (player + 1))
 		return
 
 	GameState.current_mode = mode
@@ -449,7 +449,6 @@ func select_mode(mode: GameState.TurnMode) -> void:
 func _start_attack_mode(player: int) -> void:
 	GameState.set_phase(GameState.Phase.ATTACK)
 	emit_signal("attack_phase_started", player, GameState.attacks_remaining)
-	GameState.post_message("Player %d: tap a unit to attack." % (player + 1))
 
 func _battle_aborted() -> bool:
 	return GameState.current_phase == GameState.Phase.GAME_OVER
@@ -529,33 +528,33 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	var defender := GameState.get_card(opponent, target_pos.x, target_pos.y)
 
 	if attacker.card_type != "character":
-		GameState.post_message("You must attack with a Unit.")
+		GameState.show_center_message("You must attack with a Unit.")
 		emit_signal("attack_aborted")
 		return
 	if attacker.attacked_this_turn:
-		GameState.post_message("%s has already attacked this turn." % attacker.card_name)
+		GameState.show_center_message("%s has already attacked this turn." % attacker.card_name)
 		emit_signal("attack_aborted")
 		return
 	if GameState.attacks_remaining <= 0 and not attacker.has_pending_bonus_attack_chain():
-		GameState.post_message("No attacks remaining this turn.")
+		GameState.show_center_message("No attacks remaining this turn.")
 		emit_signal("attack_aborted")
 		return
 	if attacker.cannot_attack_until >= GameState.turn_number:
-		GameState.post_message("%s cannot attack yet." % attacker.card_name)
+		GameState.show_center_message("%s cannot attack yet." % attacker.card_name)
 		emit_signal("attack_aborted")
 		return
 
 	var _target_check: Dictionary = BattleResolver.validate_attack_target(
 		player, attacker_pos, attacker, opponent, target_pos, defender)
 	if not _target_check.get("ok", false):
-		GameState.post_message(_target_check.get("reason", "Invalid attack target."))
+		GameState.show_center_message(_target_check.get("reason", "Invalid attack target."))
 		emit_signal("attack_aborted")
 		return
 
 	if GameState.attack_cost_block_player == player \
 			and GameState.attack_cost_block_max >= 0 \
 			and attacker.crystal_cost <= GameState.attack_cost_block_max:
-		GameState.post_message(
+		GameState.show_center_message(
 			"Decoy Puppet: Units costing %d or less cannot attack this turn." % GameState.attack_cost_block_max)
 		emit_signal("attack_aborted")
 		return
@@ -563,7 +562,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	# Berserk: only berserk card can attack
 	if GameState.berserk_active[player] != null:
 		if GameState.berserk_active[player] != attacker:
-			GameState.post_message("Only the Berserk unit can attack!")
+			GameState.show_center_message("Only the Berserk unit can attack!")
 			emit_signal("attack_aborted")
 			return
 
@@ -576,7 +575,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				if _cs_ally == attacker or _cs_ally.card_type != "character" or not _cs_ally.face_up:
 					continue
 				if _cs_ally.affinity not in _allowed:
-					GameState.post_message("%s cannot attack — non-allowed affinity on own field!" % attacker.card_name)
+					GameState.show_center_message("%s cannot attack — non-allowed affinity on own field!" % attacker.card_name)
 					emit_signal("attack_aborted")
 					return
 
@@ -1125,16 +1124,16 @@ func play_tech_card(tech_name: String) -> void:
 				if _gt_u.is_union and _gt_u.face_up \
 						and _gt_u.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS \
 						and _gt_u.ability_params.get("block_tech_both_sides", false):
-					GameState.post_message("%s: Tech cannot be used while this union is exposed!" % _gt_u.card_name)
+					GameState.show_center_message("%s: Tech cannot be used while this union is exposed!" % _gt_u.card_name)
 					return
 
 	var data = CardDatabase.get_tech(tech_name) as TechCardData
 	if data == null:
-		GameState.post_message("Unknown Tech Card: %s" % tech_name)
+		GameState.show_center_message("Unknown Tech Card: %s" % tech_name)
 		return
 
 	if not tech_name in GameState.tech_hands[player]:
-		GameState.post_message("You don't have %s." % tech_name)
+		GameState.show_center_message("You don't have %s." % tech_name)
 		return
 
 	# Compute effective tech cost (dungeon modifiers)
@@ -1146,13 +1145,13 @@ func play_tech_card(tech_name: String) -> void:
 		if "intelligence_tax" in _tm: _eff_tech_cost += 500
 
 	if GameState.crystals[player] < _eff_tech_cost:
-		GameState.post_message("Not enough Crystals to play %s." % tech_name)
+		GameState.show_center_message("Not enough Crystals to play %s." % tech_name)
 		return
 
 	# Check chain requirement
 	if data.required_prior_card != "":
 		if not GameState.tech_name_played_this_game(player, data.required_prior_card):
-			GameState.post_message("%s requires %s to have been played first." % [tech_name, data.required_prior_card])
+			GameState.show_center_message("%s requires %s to have been played first." % [tech_name, data.required_prior_card])
 			return
 
 	# Pay cost
@@ -1167,7 +1166,7 @@ func play_tech_card(tech_name: String) -> void:
 		{"source_player": player, "tech_name": tech_name})
 	CardRuleEngine.emit_trigger(CardRule.TriggerType.TECH_CARD_USED_OPPONENT,
 		{"source_player": GameState.get_opponent(player), "tech_name": tech_name})
-	GameState.post_message("Player %d plays %s!" % [player + 1, tech_name])
+	GameState.post_message("Player %d plays %s." % [player + 1, tech_name])
 	GameState.emit_signal("card_effect_triggered", tech_name, "tech")
 	await card_effect_flash_done
 
@@ -1202,7 +1201,7 @@ func play_tech_card(tech_name: String) -> void:
 				"opponent_squares_3_risky")
 
 		TechCardData.TechEffectType.OPPONENT_REVEALS_SQUARE:
-			GameState.post_message("Opponent must choose and reveal 1 of their squares.")
+			GameState.show_center_message("Opponent must choose and reveal 1 of their squares.")
 			emit_signal("awaiting_target_selection", "Tease: Choose 1 of your face-down units to reveal.", "self_squares_1_opponent_turn")
 
 		TechCardData.TechEffectType.OPPONENT_REVEALS_OR_GAINS:
@@ -1398,7 +1397,7 @@ func play_tech_card(tech_name: String) -> void:
 					GameState.post_message("%s: Tails — no Crystals gained." % data.card_name)
 			else:
 				GameState.reroll_dice_available[player] = true
-				GameState.post_message("Lucky Break: You may re-roll the dice once before your next attack.")
+				GameState.post_message("Lucky Break: Dice re-roll available once before the next attack.")
 			after_tech_resolved(player)
 			return
 
@@ -2055,7 +2054,8 @@ func _handle_trap_effect(
 					GameState.locked_attack_positions.append(_hst_pos)
 
 		TrapData.TrapEffectType.NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE:
-			GameState.post_message("Hostage: Attack nullified — choose a cell to reveal and lock.")
+			GameState.show_center_message("Hostage: Attack nullified — choose a cell to reveal and lock.")
+			GameState.post_message("Hostage: Attack nullified.")
 			_pending_trap_hostage_lock = true
 			await _prompt_and_await_target_selection(
 				"Hostage: Choose 1 of your cells to reveal and lock until turn end.",
@@ -2096,7 +2096,7 @@ func _handle_trap_effect(
 				GameState.post_message("Blackmail: %s ended attacker's turn!" % trap_data.card_name)
 
 		TrapData.TrapEffectType.COPY_ATTACKER_EFFECT:
-			GameState.post_message("Cursed Reflection: Choose one of your face-up units to copy %s's effect." % attacker.card_name)
+			GameState.show_center_message("Cursed Reflection: Choose one of your face-up units to copy %s's effect." % attacker.card_name)
 			await _prompt_and_await_target_selection(
 				"Cursed Reflection: Choose target.", "self_faceup_for_copy")
 

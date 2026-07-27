@@ -1684,7 +1684,7 @@ func post_message(text: String) -> void:
 	emit_signal("message_posted", text)
 
 func show_center_message(text: String) -> void:
-	emit_signal("message_posted", text)
+	# Toast / guidance only — never pollute the battle chronicle.
 	emit_signal("center_message_requested", text)
 
 
