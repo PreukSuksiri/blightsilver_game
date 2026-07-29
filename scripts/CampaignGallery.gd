@@ -16,11 +16,20 @@ const CARD_DIM_LABEL_SIZE    := 13
 const GALLERY_SAVED_PROGRESS_DIALOG_MIN_W := 840.0
 const DUNGEON_MAP_SCENE := DailyDungeonManager.DUNGEON_MAP_SCENE
 const _SFX_MECH_HOVER: AudioStream = preload("res://assets/audio/sfx/sfx_clue_1.mp3")
-const _METAL_SHEEN_SHADER: Shader = preload("res://assets/shaders/magitech_metal_reflect.gdshader")
+const _CAPSULE_FOG_SHADER: Shader = preload("res://assets/shaders/capsule_fog_edge.gdshader")
 const _HOVER_SCALE: float = 1.08
 const _HOVER_SCALE_SEC: float = 0.14
+## Fog fringe clear / restore — fast but visibly gradual (independent of scale).
+const _CAPSULE_FOG_RELIEF_SEC: float = 0.28
 const _SHEEN_IDLE: float = 2.0
 const _SHEEN_DURATION: float = 0.42
+const _CAPSULE_FOG_WIDTH: float = 36.0
+const _CAPSULE_FOG_STRENGTH: float = 1.35
+const _CAPSULE_CORNER_RADIUS: float = 4.0
+## Capsule rim noise drift (UV-space units per second-ish; scaled in _update_fog).
+const _CAPSULE_FOG_SCROLL_SPEED: Vector2 = Vector2(0.12, 0.05)
+## Clear all capsule fog fringes when the exit logo stamp lands.
+const _CAPSULE_STAMP_FOG_RELIEF_SEC: float = 0.4
 
 ## Battle-matching drifting smoke (behind cards / text / header).
 const _FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
@@ -68,6 +77,10 @@ const _HUD_FADE_OUT_SEC := 0.7
 const _HUD_FADE_IN_SEC := 0.45
 var _data: Array = []
 var _sheen_tweens: Dictionary = {}  # card instance_id -> Tween
+var _capsule_fog_mats: Array[ShaderMaterial] = []
+var _capsule_fog_scroll: Vector2 = Vector2.ZERO
+var _capsule_stamp_fog_tween: Tween = null
+var _fog_noise_tex: Texture2D = null
 var _fog_material: ShaderMaterial = null
 var _fog_material_diag: ShaderMaterial = null
 var _fog_scroll: Vector2 = Vector2.ZERO
@@ -192,6 +205,7 @@ func _build_ui() -> void:
 
 	# ── Cards ─────────────────────────────────────────────────
 	_gallery_cards.clear()
+	_capsule_fog_mats.clear()
 	var current_row: HBoxContainer = null
 	for raw: Variant in _data:
 		var d: Dictionary = raw as Dictionary
@@ -590,6 +604,7 @@ func _restore_fog_scroll_defaults() -> void:
 
 
 func _update_fog(delta: float) -> void:
+	_update_capsule_fog_scroll(delta)
 	if _fog_material == null:
 		return
 	_fog_dir_timer -= delta
@@ -604,6 +619,37 @@ func _update_fog(delta: float) -> void:
 		_fog_scroll_diag.x += _fog_diag_scroll_x * step
 		_fog_scroll_diag.y += _fog_diag_scroll_y * step
 		_fog_material_diag.set_shader_parameter("scroll", _fog_scroll_diag)
+
+
+func _update_capsule_fog_scroll(delta: float) -> void:
+	if _capsule_fog_mats.is_empty():
+		return
+	_capsule_fog_scroll += _CAPSULE_FOG_SCROLL_SPEED * delta
+	for mat: ShaderMaterial in _capsule_fog_mats:
+		if mat != null:
+			mat.set_shader_parameter("scroll", _capsule_fog_scroll)
+
+
+func _make_capsule_fog_material(for_dim_overlay: bool = false) -> ShaderMaterial:
+	if _fog_noise_tex == null:
+		_fog_noise_tex = load(_FOG_PATH) as Texture2D
+	var mat := ShaderMaterial.new()
+	mat.shader = _CAPSULE_FOG_SHADER
+	mat.set_shader_parameter("rect_size", Vector2(CARD_IMG_W, CARD_IMG_H))
+	mat.set_shader_parameter("corner_radius", _CAPSULE_CORNER_RADIUS)
+	mat.set_shader_parameter("fog_width", _CAPSULE_FOG_WIDTH)
+	mat.set_shader_parameter("fog_strength", _CAPSULE_FOG_STRENGTH)
+	mat.set_shader_parameter("scroll", _capsule_fog_scroll)
+	mat.set_shader_parameter("relief", 0.0)
+	mat.set_shader_parameter("use_vertex_color", 1.0 if for_dim_overlay else 0.0)
+	mat.set_shader_parameter("progress", _SHEEN_IDLE)
+	# Dim overlays never get metal sheen.
+	mat.set_shader_parameter("intensity", 0.0 if for_dim_overlay else 1.2)
+	mat.set_shader_parameter("band_width", 0.20)
+	if _fog_noise_tex != null:
+		mat.set_shader_parameter("fog_noise", _fog_noise_tex)
+	_capsule_fog_mats.append(mat)
+	return mat
 
 
 ## Soft white spotlight cones rising from below, swaying left/right (shop match).
@@ -690,12 +736,12 @@ func _build_card(d: Dictionary) -> Control:
 	var frame := Panel.new()
 	frame.custom_minimum_size = Vector2(CARD_IMG_W, CARD_IMG_H)
 	var sb := StyleBoxFlat.new()
-	sb.bg_color         = Color(0.12, 0.12, 0.15)
-	sb.border_width_left   = 1
-	sb.border_width_right  = 1
-	sb.border_width_top    = 1
-	sb.border_width_bottom = 1
-	sb.border_color     = Color(0.28, 0.28, 0.35)
+	# Transparent so fog-edge alpha holes show gallery grey smoke behind.
+	sb.bg_color         = Color(0, 0, 0, 0)
+	sb.border_width_left   = 0
+	sb.border_width_right  = 0
+	sb.border_width_top    = 0
+	sb.border_width_bottom = 0
 	frame.add_theme_stylebox_override("panel", sb)
 	card.add_child(frame)
 	card.set_meta("_gallery_frame", frame)
@@ -714,11 +760,17 @@ func _build_card(d: Dictionary) -> Control:
 	img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	img.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var fog_mat := _make_capsule_fog_material()
+	img.material = fog_mat
+	card.set_meta("_gallery_fog_mat", fog_mat)
+	img.resized.connect(func() -> void:
+		if fog_mat != null and img.size.x > 1.0 and img.size.y > 1.0:
+			fog_mat.set_shader_parameter("rect_size", img.size))
 	frame.add_child(img)
 
 	# ── Locked overlay ────────────────────────────────────────
 	if is_locked:
-		_add_card_dim_overlay(frame)
+		_add_card_dim_overlay(frame, fog_mat)
 
 		var lock_icon: TextureRect = ChromeIcon.make_rect("locked", Vector2(22, 22), Color(0.9, 0.92, 0.95, 0.95))
 		lock_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -746,7 +798,7 @@ func _build_card(d: Dictionary) -> Control:
 
 	# ── Coming soon overlay (unlocked but no VN yet) ──────────
 	elif not has_vn:
-		_add_card_dim_overlay(frame)
+		_add_card_dim_overlay(frame, fog_mat)
 
 		var lbl_cs := Label.new()
 		var _ct: String = str(d.get("custom_text", "")).strip_edges()
@@ -802,14 +854,14 @@ func _build_card(d: Dictionary) -> Control:
 
 
 func _wire_card_hover(card: Control, frame: Panel, img: TextureRect, sb: StyleBoxFlat) -> void:
-	var sheen_mat := ShaderMaterial.new()
-	sheen_mat.shader = _METAL_SHEEN_SHADER
-	sheen_mat.set_shader_parameter("progress", _SHEEN_IDLE)
-	sheen_mat.set_shader_parameter("intensity", 1.2)
-	sheen_mat.set_shader_parameter("band_width", 0.20)
-	img.material = sheen_mat
+	# Portrait already has capsule fog material (includes metal sheen uniforms).
+	var fog_mat: ShaderMaterial = img.material as ShaderMaterial
+	if fog_mat == null:
+		fog_mat = _make_capsule_fog_material()
+		img.material = fog_mat
+		card.set_meta("_gallery_fog_mat", fog_mat)
 	# Keep refs on the card so hover tweens/signals don't capture freed locals.
-	card.set_meta("_gallery_sheen_mat", sheen_mat)
+	card.set_meta("_gallery_sheen_mat", fog_mat)
 	card.set_meta("_gallery_hover_sb", sb)
 	card.set_meta("_gallery_hover_frame", frame)
 
@@ -826,8 +878,7 @@ func _on_gallery_card_hover_entered(card: Control) -> void:
 	var frame: Variant = _card_meta(card, "_gallery_hover_frame")
 	var sb: Variant = _card_meta(card, "_gallery_hover_sb")
 	if frame is Panel and sb is StyleBoxFlat:
-		(sb as StyleBoxFlat).border_color = Color(0.75, 0.75, 0.85)
-		(sb as StyleBoxFlat).bg_color = Color(0.18, 0.18, 0.24)
+		(sb as StyleBoxFlat).bg_color = Color(0, 0, 0, 0)
 		(frame as Panel).add_theme_stylebox_override("panel", sb as StyleBoxFlat)
 	if card.size == Vector2.ZERO:
 		card.pivot_offset = Vector2(CARD_IMG_W * 0.5, CARD_IMG_H * 0.5)
@@ -836,10 +887,17 @@ func _on_gallery_card_hover_entered(card: Control) -> void:
 	SFXManager.play(_SFX_MECH_HOVER)
 	_kill_card_scale_tween(card)
 	_play_card_metal_sheen(card)
+	var fog_mat: ShaderMaterial = _card_fog_mat(card)
+	var from_relief: float = 0.0
+	if fog_mat != null:
+		from_relief = float(fog_mat.get_shader_parameter("relief"))
 	var tw := card.create_tween()
 	card.set_meta("_gallery_hover_tween", tw)
+	tw.set_parallel(true)
 	tw.tween_property(card, "scale", Vector2(_HOVER_SCALE, _HOVER_SCALE), _HOVER_SCALE_SEC) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	if fog_mat != null:
+		_tween_capsule_relief(tw, fog_mat, from_relief, 1.0, _CAPSULE_FOG_RELIEF_SEC)
 
 
 func _on_gallery_card_hover_exited(card: Control) -> void:
@@ -848,29 +906,99 @@ func _on_gallery_card_hover_exited(card: Control) -> void:
 	if _exit_anim_running or _exit_anim_done:
 		_kill_card_scale_tween(card)
 		_kill_card_sheen_tween(card)
+		_reset_capsule_relief(card)
 		card.scale = Vector2.ONE
 		return
 	var frame: Variant = _card_meta(card, "_gallery_hover_frame")
 	var sb: Variant = _card_meta(card, "_gallery_hover_sb")
 	if frame is Panel and sb is StyleBoxFlat:
-		(sb as StyleBoxFlat).border_color = Color(0.28, 0.28, 0.35)
-		(sb as StyleBoxFlat).bg_color = Color(0.12, 0.12, 0.15)
+		(sb as StyleBoxFlat).bg_color = Color(0, 0, 0, 0)
 		(frame as Panel).add_theme_stylebox_override("panel", sb as StyleBoxFlat)
 	var mat: Variant = _card_meta(card, "_gallery_sheen_mat")
 	if mat is ShaderMaterial:
 		(mat as ShaderMaterial).set_shader_parameter("progress", _SHEEN_IDLE)
 	_kill_card_scale_tween(card)
 	_kill_card_sheen_tween(card)
+	var fog_mat: ShaderMaterial = _card_fog_mat(card)
+	var from_relief: float = 1.0
+	if fog_mat != null:
+		from_relief = float(fog_mat.get_shader_parameter("relief"))
 	var tw := card.create_tween()
 	card.set_meta("_gallery_hover_tween", tw)
+	tw.set_parallel(true)
 	tw.tween_property(card, "scale", Vector2.ONE, _HOVER_SCALE_SEC) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	if fog_mat != null:
+		_tween_capsule_relief(tw, fog_mat, from_relief, 0.0, _CAPSULE_FOG_RELIEF_SEC)
 
 
 func _card_meta(card: Object, key: StringName) -> Variant:
 	if card == null or not is_instance_valid(card) or not card.has_meta(key):
 		return null
 	return card.get_meta(key)
+
+
+func _card_fog_mat(card: Control) -> ShaderMaterial:
+	var mat: Variant = _card_meta(card, "_gallery_fog_mat")
+	if mat is ShaderMaterial:
+		return mat as ShaderMaterial
+	mat = _card_meta(card, "_gallery_sheen_mat")
+	if mat is ShaderMaterial:
+		return mat as ShaderMaterial
+	return null
+
+
+func _tween_capsule_relief(tw: Tween, mat: ShaderMaterial, from_v: float, to_v: float, dur: float) -> void:
+	if tw == null or mat == null:
+		return
+	var hold: Array = [mat]
+	tw.tween_method(
+		func(v: float) -> void:
+			var m: Variant = hold[0]
+			if m is ShaderMaterial:
+				(m as ShaderMaterial).set_shader_parameter("relief", v),
+		from_v, to_v, dur
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+
+
+func _reset_capsule_relief(card: Control) -> void:
+	var fog_mat: ShaderMaterial = _card_fog_mat(card)
+	if fog_mat != null:
+		fog_mat.set_shader_parameter("relief", 0.0)
+
+
+## Called by CapsuleExitFx when the approved logo stamp slam begins.
+func on_capsule_exit_logo_stamp_landed() -> void:
+	_relieve_all_capsule_fog(_CAPSULE_STAMP_FOG_RELIEF_SEC)
+
+
+func _kill_capsule_stamp_fog_tween() -> void:
+	if _capsule_stamp_fog_tween != null and is_instance_valid(_capsule_stamp_fog_tween) \
+			and _capsule_stamp_fog_tween.is_valid():
+		_capsule_stamp_fog_tween.kill()
+	_capsule_stamp_fog_tween = null
+
+
+func _relieve_all_capsule_fog(dur: float) -> void:
+	if _capsule_fog_mats.is_empty():
+		return
+	_kill_capsule_stamp_fog_tween()
+	var mats: Array = []
+	for mat: ShaderMaterial in _capsule_fog_mats:
+		if mat != null:
+			mats.append(mat)
+	if mats.is_empty():
+		return
+	var tw := create_tween()
+	_capsule_stamp_fog_tween = tw
+	tw.set_parallel(true)
+	for mat_v: Variant in mats:
+		var mat: ShaderMaterial = mat_v as ShaderMaterial
+		var from_v: float = float(mat.get_shader_parameter("relief"))
+		_tween_capsule_relief(tw, mat, from_v, 1.0, dur)
+	tw.finished.connect(func() -> void:
+		if _capsule_stamp_fog_tween == tw:
+			_capsule_stamp_fog_tween = null)
 
 
 func _kill_card_scale_tween(card: Control) -> void:
@@ -922,11 +1050,21 @@ func _play_card_metal_sheen(card: Control) -> void:
 		_sheen_tweens.erase(id))
 
 
-func _add_card_dim_overlay(frame: Panel) -> void:
+func _add_card_dim_overlay(frame: Panel, fog_mat: ShaderMaterial = null) -> void:
 	var dim := ColorRect.new()
 	dim.color = CARD_DIM_OVERLAY_COLOR
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Own fog-edge material (vertex color path) so portrait art stays unmultiplied.
+	var dim_mat := _make_capsule_fog_material(true)
+	if fog_mat != null:
+		dim_mat.set_shader_parameter("rect_size", fog_mat.get_shader_parameter("rect_size"))
+		dim_mat.set_shader_parameter("scroll", fog_mat.get_shader_parameter("scroll"))
+		dim_mat.set_shader_parameter("relief", fog_mat.get_shader_parameter("relief"))
+	dim.material = dim_mat
+	dim.resized.connect(func() -> void:
+		if dim_mat != null and dim.size.x > 1.0 and dim.size.y > 1.0:
+			dim_mat.set_shader_parameter("rect_size", dim.size))
 	frame.add_child(dim)
 
 
@@ -1088,12 +1226,20 @@ func _continue_chapter_arc(card: Dictionary, chapter_key: String) -> void:
 				graph_path = str(expl_info.get("graph_path", "")).strip_edges()
 			if graph_path.is_empty():
 				return
+			# Shared library graph: refuse Continue when the snapshot belongs to
+			# another chapter (e.g. Act I overwrote Prologue's slot).
+			if not ExplorationManager.has_saved_session_for_chapter(
+					chapter_key, graph_path, card):
+				SaveManager.clear_chapter_arc_progress(chapter_key)
+				var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
+				_play_vn(entry_vn, true, card, chapter_key)
+				return
 			var pending: String = str(arc.get("pending_return_vn", "")).strip_edges()
 			if pending.is_empty():
 				var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(chapter_key)
 				pending = str(expl.get("exploration_on_return", "")).strip_edges()
 			ExplorationManager.pending_return_vn = pending
-			_resume_exploration(graph_path)
+			_resume_exploration(graph_path, chapter_key, card)
 		"vn":
 			var play_path: String = str(arc.get("vn_path", "")).strip_edges()
 			if play_path.is_empty():
@@ -1105,7 +1251,7 @@ func _continue_chapter_arc(card: Dictionary, chapter_key: String) -> void:
 			if not graph_path.is_empty() \
 					and ExplorationManager.has_saved_session_for_chapter(
 						chapter_key, graph_path, card):
-				_resume_exploration(graph_path)
+				_resume_exploration(graph_path, chapter_key, card)
 			else:
 				var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
 				_play_vn(entry_vn, true, card, chapter_key)
@@ -1122,18 +1268,32 @@ func _show_continue_or_restart_exploration_dialog(
 	_show_continue_or_restart_chapter_dialog(card, vn_path)
 
 
-func _resume_exploration(graph_path: String) -> void:
-	_resume_exploration_async(graph_path)
+func _resume_exploration(
+		graph_path: String,
+		chapter_key: String = "",
+		card: Dictionary = {}) -> void:
+	_resume_exploration_async(graph_path, chapter_key, card)
 
 
-func _resume_exploration_async(graph_path: String) -> void:
+func _resume_exploration_async(
+		graph_path: String,
+		chapter_key: String = "",
+		card: Dictionary = {}) -> void:
 	if not _require_deck_ready_for_chapter():
 		return
 	if not await _ensure_gallery_exit_animation():
 		return
-	ExplorationManager.resume_saved_exploration(
+	var restored: bool = ExplorationManager.resume_saved_exploration(
 		graph_path,
-		"res://scenes/main_menu.tscn")
+		"res://scenes/main_menu.tscn",
+		chapter_key,
+		card)
+	if not restored:
+		# Ownership mismatch — start the chapter VN fresh.
+		var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
+		if entry_vn.is_empty():
+			entry_vn = chapter_key
+		_play_vn(entry_vn, true, card, chapter_key)
 
 
 func _show_continue_or_restart_dialog(card: Dictionary, vn_path: String, dungeon_id: String) -> void:
@@ -1293,6 +1453,7 @@ func _set_gallery_hud_cinema(hide_hud: bool) -> void:
 					if card != null and is_instance_valid(card):
 						_kill_card_scale_tween(card)
 						_kill_card_sheen_tween(card)
+						_reset_capsule_relief(card)
 						card.scale = Vector2.ONE)
 	else:
 		_hud_layer.visible = true
@@ -1334,6 +1495,7 @@ func _freeze_gallery_capsules_for_exit() -> void:
 			continue
 		_kill_card_scale_tween(card)
 		_kill_card_sheen_tween(card)
+		_reset_capsule_relief(card)
 		card.scale = Vector2.ONE
 		card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var frame: Variant = _card_meta(card, "_gallery_hover_frame")

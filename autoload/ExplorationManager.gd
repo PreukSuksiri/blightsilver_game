@@ -223,13 +223,9 @@ func get_source_vn_scene() -> String:
 ## auto-resume, even if a saved session exists for the same graph.
 func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu.tscn", params: Dictionary = {}) -> void:
 	return_scene = p_return_scene
-	if not params.is_empty():
-		launch_params.merge(params, true)
-	# Drop reserved keys not supplied by this launch — merge is cumulative and stale
-	# values (e.g. keep_vn_bgm from a prior VN handoff) would otherwise block node music.
-	for reserved_key: String in ["keep_vn_bgm", "force_fresh"]:
-		if not params.has(reserved_key):
-			launch_params.erase(reserved_key)
+	# Each launch is self-contained. Cumulative merge leaked Ch1's `chapter`
+	# into Prologue force_fresh replays on the shared blackout library graph.
+	_apply_launch_params(params)
 
 	keep_vn_bgm = bool(launch_params.get("keep_vn_bgm", false))
 	var force_fresh: bool = bool(launch_params.get("force_fresh", false))
@@ -255,6 +251,16 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 		return
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
+
+
+## Replace launch_params for this launch (never inherit leftover keys).
+func _apply_launch_params(params: Dictionary) -> void:
+	launch_params = params.duplicate(true)
+	# Drop reserved keys not supplied by this launch — stale keep_vn_bgm would
+	# otherwise block node music after a prior VN handoff.
+	for reserved_key: String in ["keep_vn_bgm", "force_fresh"]:
+		if not params.has(reserved_key):
+			launch_params.erase(reserved_key)
 
 ## Resolve an exploration launch param to the string stored in session vars.
 ## Supports fixed values and {"random": [min, max]} inclusive integer ranges.
@@ -594,6 +600,12 @@ func _save_session_state(force: bool = false) -> void:
 		"bgm_position":      bgm["bgm_position"],
 		"bgm_loop_from_sec": bgm["bgm_loop_from_sec"],
 	}
+	# Single exploration_session slot — drop other chapters' Continue claims on
+	# this shared graph so Prologue↔Act I mid-progress switches cannot resume
+	# a foreign snapshot.
+	_invalidate_stale_exploration_arcs_for_graph(
+		str(SaveManager.exploration_session.get("graph_path", "")),
+		_source_vn_scene)
 	SaveManager.save_data()
 	emit_signal("session_saved")
 
@@ -731,17 +743,53 @@ func _saved_session_matches_launch(
 
 
 ## Restore saved progress and open the exploration player (campaign gallery continue).
-## Explicit continue — always restore this graph's snapshot (skip launch ownership gate).
-func resume_saved_exploration(graph_path: String, fallback_return_scene: String = "res://scenes/main_menu.tscn") -> void:
+## When chapter_vn_path is set, refuse foreign snapshots on shared graphs.
+func resume_saved_exploration(
+		graph_path: String,
+		fallback_return_scene: String = "res://scenes/main_menu.tscn",
+		chapter_vn_path: String = "",
+		card: Dictionary = {}) -> bool:
 	return_scene = fallback_return_scene
 	launch_params.clear()
 	launch_source_vn = ""
+	var chapter: String = chapter_vn_path.strip_edges()
+	if not chapter.is_empty() \
+			and not has_saved_session_for_chapter(chapter, graph_path, card):
+		# Stale Continue after another chapter overwrote the shared slot.
+		SaveManager.clear_chapter_arc_progress(chapter)
+		return false
 	if has_saved_session(graph_path) and restore_saved_session():
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
-		return
+		return true
 	# No usable snapshot — start fresh on this graph.
 	launch(graph_path, fallback_return_scene, {"force_fresh": true})
+	return true
+
+
+## Clear other chapters' arc segments that still claim exploration on this graph.
+func _invalidate_stale_exploration_arcs_for_graph(
+		graph_path: String, owner_chapter_key: String) -> void:
+	var norm_graph: String = normalize_graph_path(graph_path.strip_edges())
+	if norm_graph.is_empty():
+		return
+	var owner: String = owner_chapter_key.strip_edges()
+	var stale_keys: Array[String] = []
+	for raw_key: Variant in SaveManager.chapter_arc_progress.keys():
+		var chapter_key: String = str(raw_key).strip_edges()
+		if chapter_key.is_empty() or chapter_key == owner:
+			continue
+		var arc: Dictionary = SaveManager.get_chapter_arc(chapter_key)
+		if str(arc.get("segment", "")).strip_edges() != "exploration":
+			continue
+		var arc_graph: String = normalize_graph_path(
+			str(arc.get("exploration_graph", "")).strip_edges())
+		if arc_graph == norm_graph:
+			stale_keys.append(chapter_key)
+	for chapter_key: String in stale_keys:
+		# Erase without nested save_data — caller persists exploration_session.
+		if SaveManager.chapter_arc_progress.has(chapter_key):
+			SaveManager.chapter_arc_progress.erase(chapter_key)
 
 ## Clear any stored mid-session data from SaveManager.
 func _clear_saved_session() -> void:

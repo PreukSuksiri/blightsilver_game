@@ -150,7 +150,7 @@ var _pending_info_panel_close_cb: Callable   = Callable()
 var _pending_enter_vn_after_info: ExplorationNode = null
 var _pending_enter_vn_is_story: bool       = false
 var _enter_vn_after_info_scheduled: bool   = false
-var _enter_vn_hud_blocked: bool            = false   # blocks HUD until enter-VN finishes
+var _enter_vn_hud_blocked: bool            = false   # blocks HUD/spots/tools until queued enter-VN finishes
 var _info_panel_hovered: bool                = false   # polled each frame; guards auto-dismiss
 var _info_wait_for_mouse: bool               = false   # true after auto-open: dismiss blocked until mouse moves
 var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dismiss mode even without mouse move
@@ -819,7 +819,7 @@ func _on_var_changed(key: String, value: String) -> void:
 
 ## Re-evaluate clickable spot conditions after inventory or variable changes.
 func _refresh_spots_for_state() -> void:
-	if _vn_playing or _puzzle_playing or _transition_active:
+	if _interactions_locked():
 		return
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node != null:
@@ -1263,7 +1263,12 @@ func _navigate_with_fade(apply_navigation: Callable) -> void:
 		tw.tween_property(_nav_fade_rect, "modulate:a", 0.0, 0.3)
 		tw.tween_callback(func() -> void:
 			_transition_active = false
-			_set_spots_layer_visible(true)))
+			# Respect enter-VN lock; otherwise restore spots after the fade clear.
+			if _enter_vn_hud_blocked:
+				_set_spots_layer_visible(false)
+			else:
+				_set_spots_layer_visible(true)
+				_refresh_spots_for_state()))
 
 func _on_radial_item_selected(target_id: String) -> void:
 	_register_exploration_activity()
@@ -1980,6 +1985,7 @@ func _set_enter_vn_hud_blocked(blocked: bool) -> void:
 		return
 	_enter_vn_hud_blocked = blocked
 	if blocked:
+		_deactivate_tool()
 		_close_compass_menu(false)
 		_close_setting_menu(false)
 		_close_inventory_menu(false)
@@ -1987,7 +1993,18 @@ func _set_enter_vn_hud_blocked(blocked: bool) -> void:
 		_close_info_radial_menu(false)
 		_close_settings_menu_popup()
 		_close_exploration_options_popup()
+		# Spots/HUD must stay inert until the queued VN actually starts.
+		_clear_spots()
+		_set_spots_layer_visible(false)
+	else:
+		_set_spots_layer_visible(true)
+		if not _vn_playing and not _puzzle_playing and not _transition_active:
+			_refresh_spots_for_state()
 	_sync_enter_vn_hud_hits()
+
+
+func _interactions_locked() -> bool:
+	return _vn_playing or _puzzle_playing or _enter_vn_hud_blocked or _transition_active
 
 
 func _sync_enter_vn_hud_hits() -> void:
@@ -3934,6 +3951,8 @@ func _show_no_session_error() -> void:
 ## (item database / exploration item editor) and rebuild spots so tool-gated
 ## ones become discoverable by sweeping the cursor.
 func _activate_tool(item_id: String) -> void:
+	if _interactions_locked():
+		return
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
 	if item.is_empty() or not bool(item.get("detective_tool", false)):
 		return
@@ -4243,6 +4262,12 @@ func _log_skipped_spot(spot: Dictionary, spot_index: int) -> void:
 func _rebuild_spots(node: ExplorationNode) -> void:
 	if _spots_layer == null:
 		return
+	# Queued enter-VN: never leave investigable hits live.
+	# Do NOT gate on _transition_active — _refresh_node must still spawn destination
+	# spots during nav fade; _refresh_spots_for_state already skips mid-fade var rebuilds.
+	if _enter_vn_hud_blocked:
+		_clear_spots()
+		return
 	for child: Node in _spots_layer.get_children():
 		child.queue_free()
 	_tool_spots.clear()     # freed above; re-registered below for the active tool
@@ -4445,7 +4470,7 @@ func _hide_tooltip() -> void:
 
 func _on_spot_triggered(actions: Array, hide_on_success: Callable = Callable()) -> void:
 	_register_exploration_activity()
-	if _vn_playing or _puzzle_playing or actions.is_empty():
+	if _interactions_locked() or actions.is_empty():
 		return
 	_on_spot_hover_exit()   # restore cursor before any action takes over
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
