@@ -537,6 +537,30 @@ func _apply_yellow_button_fx(btn: Button) -> void:
 		mat.set_shader_parameter("brightness", 1.0)
 
 
+## Black fill + grey frame (bluff modal / overlays that match setup panels).
+func _skin_setup_button_black(btn: Button, wire_sfx: bool = true) -> void:
+	if btn == null:
+		return
+	btn.add_theme_color_override("font_color", TXT_BUTTON)
+	btn.add_theme_color_override("font_hover_color", TXT_BUTTON_HOVER)
+	btn.add_theme_color_override("font_pressed_color", TXT_BUTTON_PRESSED)
+	GameDialog.apply_button_chrome(btn, wire_sfx)
+	_apply_black_button_fx(btn)
+
+
+func _apply_black_button_fx(btn: Button) -> void:
+	if btn == null or not btn.has_meta(_BTN_FX_META):
+		return
+	var mat: ShaderMaterial = btn.get_meta(_BTN_FX_META) as ShaderMaterial
+	if mat == null:
+		return
+	mat.set_shader_parameter("fill_top", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("fill_bottom", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("border_a", Color(0.96, 0.96, 0.98, 0.92))
+	mat.set_shader_parameter("border_b", Color(0.52, 0.54, 0.58, 0.70))
+	mat.set_shader_parameter("brightness", 1.0)
+
+
 func _sync_setup_button_chrome(btn: Button) -> void:
 	GameDialog.sync_button_chrome_disabled(btn)
 	_apply_yellow_button_fx(btn)
@@ -1753,18 +1777,11 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	center_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	backdrop.add_child(center_wrap)
 
-	# Panel
+	# Panel — black chrome (match setup panels)
 	var panel := Panel.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.custom_minimum_size = BLUFF_MODAL_SIZE
-	var psb := StyleBoxFlat.new()
-	psb.bg_color     = Color(0.04, 0.07, 0.16, 0.98)
-	psb.border_width_left   = 2; psb.border_width_top    = 2
-	psb.border_width_right  = 2; psb.border_width_bottom = 2
-	psb.border_color = Color(0.55, 0.78, 1.0, 0.7)
-	psb.corner_radius_top_left     = 10; psb.corner_radius_top_right    = 10
-	psb.corner_radius_bottom_right = 10; psb.corner_radius_bottom_left  = 10
-	panel.add_theme_stylebox_override("panel", psb)
+	_skin_setup_panel(panel, 0.0, false)
 	center_wrap.add_child(panel)
 
 	var vbox := VBoxContainer.new()
@@ -1796,7 +1813,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 		btn.text = emoji
 		btn.custom_minimum_size = Vector2(46.0, 46.0)
 		btn.add_theme_font_size_override("font_size", 22)
-		_skin_setup_button(btn)
+		_skin_setup_button_black(btn)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
 			SFXManager.play(SFXManager.SFX_BLUFF_PLACE)
@@ -1811,7 +1828,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	clear_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	clear_btn.add_theme_font_size_override("font_size", 14)
 	clear_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	_skin_setup_button(clear_btn)
+	_skin_setup_button_black(clear_btn)
 	clear_btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(current_setup_player, snap_row, snap_col, "")

@@ -39475,7 +39475,7 @@
         "MSG:.*False",
         "MSG:"
       ],
-      "notes": "Tier 2: union False Prophet \u2014 summon logged and/or union attacks with ATK=30."
+      "notes": "Tier 2: union False Prophet \u2014 summon logged and/or union attacks with ATK=10."
     },
     {
       "tier": 1,

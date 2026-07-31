@@ -560,7 +560,7 @@ func _load_characters() -> void:
 
 		["Lab Crawler", CharacterData.Affinity.BIO, 95, 60, 1200,
 			CharacterData.AbilityType.MUTAGEN_IMMEDIATE_ATTACK,
-			{},
+			{"max_attacks": 3},
 			"With Mutagen Flag: this card can target 3 cards",
 			CharacterData.Rarity.EXOTIC],
 

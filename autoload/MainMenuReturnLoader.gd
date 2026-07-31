@@ -9,6 +9,7 @@ const LOADER_LAYER := 500
 var _root: Control = null
 var _coin: SplashCoinFlip = null
 var _visible_since_msec: int = -1
+var _scene_change_pending: String = ""
 
 
 func _ready() -> void:
@@ -39,20 +40,66 @@ func go_to_scene(path: String) -> void:
 	if is_main_menu_path(path):
 		return_to_main_menu()
 	else:
-		get_tree().change_scene_to_file(path)
+		_request_scene_change(path)
 
 
 func return_to_main_menu() -> void:
 	GameState.returning_to_main_menu = true
 	show_loading()
-	get_tree().change_scene_to_file(MAIN_MENU_PATH)
+	_request_scene_change(MAIN_MENU_PATH)
 
 
 func fade_out_to_main_menu() -> void:
 	GameState.returning_to_main_menu = true
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		show_loading()
-		get_tree().change_scene_to_file(MAIN_MENU_PATH))
+		_request_scene_change(MAIN_MENU_PATH))
+
+
+## Defer scene change so overlay EXIT_TREE / focus teardown can finish first.
+## Calling change_scene_to_file mid-EXIT_TREE causes CanvasItem/focus errors.
+func _request_scene_change(path: String) -> void:
+	var dest: String = path.strip_edges()
+	if dest.is_empty():
+		return
+	_scene_change_pending = dest
+	call_deferred("_flush_scene_change")
+
+
+func _flush_scene_change() -> void:
+	var dest: String = _scene_change_pending
+	_scene_change_pending = ""
+	if dest.is_empty():
+		return
+	_change_scene_safe(dest)
+
+
+func _change_scene_safe(path: String) -> void:
+	# Let the current frame finish freeing overlays (tree_exiting → tree_exited).
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	_release_gui_focus()
+	# One more idle tick after focus drop — avoids release_focus on exiting Controls.
+	await tree.process_frame
+	if not is_inside_tree():
+		return
+	tree = get_tree()
+	if tree == null:
+		return
+	tree.change_scene_to_file(path)
+
+
+func _release_gui_focus() -> void:
+	var vp := get_viewport()
+	if vp == null:
+		return
+	var focus: Control = vp.gui_get_focus_owner() as Control
+	if focus != null and is_instance_valid(focus) and focus.is_inside_tree():
+		focus.release_focus()
 
 
 func finish_and_hide(fade_sec: float = FADE_IN_DUR) -> void:

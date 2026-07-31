@@ -1645,9 +1645,8 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"characters": [],
-		"flash_color": "#ffffff",
-		"flash_count": 5.0,
+		"flash_color": "#000000",
+		"flash_count": 5,
 		"flash_delay": 0.25,
 		"flash_duration": 0.25,
 		"music_fade_out": 3.0,

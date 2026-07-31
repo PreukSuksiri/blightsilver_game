@@ -1429,6 +1429,34 @@
 					"tooltip": "???",
 					"x_norm": 0.74,
 					"y_norm": 0.638
+				},
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_break_room_invest_4_0.json"
+						},
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "10000"
+						}
+					],
+					"conditions": [],
+					"disabled_after_interact": false,
+					"hide_after_interact": true,
+					"hitbox_h": 96.0,
+					"hitbox_w": 96.0,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"mumbling_sound": "res://assets/audio/sfx/mumbling/sfx_radio_mumbling_3.mp3",
+					"requires_tool": "tool_translator",
+					"temperature": 12.0,
+					"tooltip": "???",
+					"x_norm": 0.282,
+					"y_norm": 0.737
 				}
 			],
 			"connections": [
@@ -1770,6 +1798,7 @@
 							"value": "act_1_ch_1"
 						}
 					],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -1792,6 +1821,7 @@
 							"value": "2"
 						}
 					],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -2056,6 +2086,7 @@
 							"value": "1"
 						}
 					],
+					"disabled_after_interact": false,
 					"hide_after_interact": false,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -2072,6 +2103,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,
@@ -2080,6 +2112,29 @@
 					"tooltip": "???",
 					"x_norm": 0.449,
 					"y_norm": 0.511
+				},
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_invest_3_0.json"
+						}
+					],
+					"conditions": [],
+					"disabled_after_interact": false,
+					"hide_after_interact": true,
+					"hitbox_h": 96.0,
+					"hitbox_w": 96.0,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"mumbling_sound": "res://assets/audio/sfx/mumbling/sfx_radio_mumbling_1.mp3",
+					"requires_tool": "tool_translator",
+					"temperature": 13.0,
+					"tooltip": "",
+					"x_norm": 0.448,
+					"y_norm": 0.525
 				}
 			],
 			"connections": [
@@ -2342,6 +2397,8 @@
 					"disabled_after_interact": true,
 					"disabled_tooltip": "Already investigated",
 					"hide_after_interact": false,
+					"hitbox_h": 96.0,
+					"hitbox_w": 96.0,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
 					"requires_tool": "tool_thermometer",
@@ -2411,6 +2468,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -2427,6 +2485,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -2443,6 +2502,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,
@@ -2461,6 +2521,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,
@@ -2469,6 +2530,34 @@
 					"tooltip": "???",
 					"x_norm": 0.676,
 					"y_norm": 0.61
+				},
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_manager_room_invest_4_0.json"
+						},
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "10000"
+						}
+					],
+					"conditions": [],
+					"disabled_after_interact": false,
+					"hide_after_interact": true,
+					"hitbox_h": 96.0,
+					"hitbox_w": 96.0,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"mumbling_sound": "res://assets/audio/sfx/mumbling/sfx_radio_mumbling_13.mp3",
+					"requires_tool": "tool_translator",
+					"temperature": 14.0,
+					"tooltip": "",
+					"x_norm": 0.5,
+					"y_norm": 0.5
 				}
 			],
 			"connections": [
@@ -3519,6 +3608,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,

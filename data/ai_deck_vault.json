@@ -1,15 +1,7 @@
 {
 	"entries": [
 		{
-			"id": "easy_diamond_unicorn",
-			"label": "Easy / Div - Diamond Unicorn",
-			"tags": [
-				"easy"
-			],
-			"featured_union": "Diamond Unicorn",
-			"featured_unit": "",
 			"deck": {
-				"deck_name": "Easy / Div - Diamond Unicorn",
 				"characters": [
 					"Ponycorn",
 					"Tiny Pixie",
@@ -21,104 +13,121 @@
 					"Bomber Fairy",
 					"Choir Lady Abigail"
 				],
-				"traps": [
-					"Bait",
-					"Decoy Puppet",
-					"Trap Hole",
-					"Red Card"
-				],
-				"techs": [
-					"Prayer",
-					"Spy",
-					"Radar"
-				],
+				"created_at": 1785316044,
+				"deck_id": "1785316044.36795_1428545395",
+				"deck_name": "Easy / Div - Diamond Unicorn",
+				"featured_card_name": "",
+				"featured_card_type": "",
 				"formations": [
 					{
 						"name": "Default Formation",
 						"placements": [
 							{
 								"c": 4.0,
-								"r": 2.0,
 								"name": "Ponycorn",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 1.0,
-								"r": 1.0,
 								"name": "Tiny Pixie",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
 								"r": 1.0,
-								"name": "Church Guard",
 								"type": "character"
 							},
 							{
 								"c": 3.0,
-								"r": 3.0,
+								"name": "Church Guard",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
 								"name": "Melissa the Healer",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
 								"c": 1.0,
-								"r": 3.0,
 								"name": "Joseph the Battle Priest",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 0.0,
 								"name": "Joan the Faithful Warrior",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 4.0,
 								"name": "Sniping Fairy",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 2.0,
 								"name": "Bomber Fairy",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 4.0,
-								"r": 4.0,
 								"name": "Choir Lady Abigail",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 0.0,
 								"name": "Bait",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 0.0,
-								"r": 4.0,
 								"name": "Decoy Puppet",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
 								"c": 4.0,
-								"r": 0.0,
 								"name": "Trap Hole",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 2.0,
-								"r": 2.0,
 								"name": "Red Card",
+								"r": 2.0,
 								"type": "trap"
 							}
 						]
 					}
+				],
+				"gallery_slot": -1,
+				"limited": false,
+				"limited_caps": {},
+				"preferred_formation_index": 0,
+				"reserved_slot": 0,
+				"techs": [
+					"Prayer",
+					"Spy",
+					"Radar"
+				],
+				"traps": [
+					"Bait",
+					"Decoy Puppet",
+					"Trap Hole",
+					"Red Card"
 				]
 			},
-			"quick_duel": true
+			"featured_union": "Diamond Unicorn",
+			"featured_unit": "",
+			"id": "easy_diamond_unicorn",
+			"label": "Easy / Div - Diamond Unicorn",
+			"quick_duel": true,
+			"tags": [
+				"easy"
+			]
 		},
 		{
 			"deck": {
@@ -242,11 +251,11 @@
 			"featured_unit": "",
 			"id": "easy_false_prophet_casino",
 			"label": "Easy / Div - False Prophet Casino",
+			"quick_duel": true,
 			"tags": [
 				"normal"
 			],
-			"union_formula": "2 Divine cards + 300 cost",
-			"quick_duel": true
+			"union_formula": "2 Divine cards + 300 cost"
 		},
 		{
 			"deck": {
@@ -356,10 +365,10 @@
 			"featured_unit": "",
 			"id": "easy_gamma",
 			"label": "Easy / Bio - Gamma",
+			"quick_duel": true,
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -483,22 +492,14 @@
 			"featured_unit": "",
 			"id": "easy_kiba",
 			"label": "Easy / Ani - Kiba",
+			"quick_duel": true,
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_surveillance_room_invest_4_0.json",
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
-			"id": "easy_kitsune",
-			"label": "Easy / Cha - Kitsune",
-			"tags": [
-				"easy"
-			],
-			"featured_union": "Kitsune",
-			"featured_unit": "",
 			"deck": {
-				"deck_name": "Easy / Cha - Kitsune",
 				"characters": [
 					"Dark Monk",
 					"Chaotic Wisp",
@@ -510,104 +511,121 @@
 					"Shredder Doll",
 					"Poltergeist"
 				],
-				"traps": [
-					"Bait",
-					"Red Card",
-					"Trap Hole",
-					"Hypnosis"
-				],
-				"techs": [
-					"Spy",
-					"Tease",
-					"Radar"
-				],
+				"created_at": 1785316094,
+				"deck_id": "1785316094.69928_4010843380",
+				"deck_name": "Easy / Cha - Kitsune",
+				"featured_card_name": "",
+				"featured_card_type": "",
 				"formations": [
 					{
 						"name": "Default Formation",
 						"placements": [
 							{
 								"c": 1.0,
-								"r": 2.0,
 								"name": "Dark Monk",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 2.0,
 								"name": "Chaotic Wisp",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 3.0,
-								"r": 2.0,
 								"name": "Foul Wisp",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 1.0,
 								"name": "Doom Wisp",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
 								"c": 4.0,
-								"r": 2.0,
 								"name": "Skeleton Scout",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 0.0,
 								"name": "Staircase Lady",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 3.0,
 								"name": "Bat Swarm",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
 								"c": 4.0,
-								"r": 3.0,
 								"name": "Shredder Doll",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
 								"c": 1.0,
-								"r": 4.0,
 								"name": "Poltergeist",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 4.0,
 								"name": "Bait",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
 								"c": 0.0,
-								"r": 0.0,
 								"name": "Red Card",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 4.0,
-								"r": 0.0,
 								"name": "Trap Hole",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 3.0,
-								"r": 4.0,
 								"name": "Hypnosis",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
 					}
+				],
+				"gallery_slot": -1,
+				"limited": false,
+				"limited_caps": {},
+				"preferred_formation_index": 0,
+				"reserved_slot": 0,
+				"techs": [
+					"Spy",
+					"Tease",
+					"Radar"
+				],
+				"traps": [
+					"Bait",
+					"Red Card",
+					"Trap Hole",
+					"Hypnosis"
 				]
 			},
-			"quick_duel": true
+			"featured_union": "Kitsune",
+			"featured_unit": "",
+			"id": "easy_kitsune",
+			"label": "Easy / Cha - Kitsune",
+			"quick_duel": true,
+			"tags": [
+				"easy"
+			]
 		},
 		{
 			"deck": {
@@ -724,11 +742,11 @@
 			"featured_unit": "Lab Zombie",
 			"id": "easy_lab_mutagen",
 			"label": "Easy / Bio - Lab Mutagen",
+			"quick_duel": true,
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_smoking_room_cond_got_usb_1.json",
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -845,22 +863,14 @@
 			"featured_unit": "",
 			"id": "easy_moon_lady_ninja",
 			"label": "Easy / Ani - Moon Lady Ninja",
+			"quick_duel": true,
 			"tags": [
 				"normal"
 			],
-			"union_formula": "Kiyoko the Death Whisper + 1 Anima card (\u2265 500 cost) + 800 cost",
-			"quick_duel": true
+			"union_formula": "Kiyoko the Death Whisper + 1 Anima card (≥ 500 cost) + 800 cost"
 		},
 		{
-			"id": "easy_pixie_queen",
-			"label": "Easy / Div - Pixie Queen",
-			"tags": [
-				"easy"
-			],
-			"featured_union": "Pixie Queen",
-			"featured_unit": "",
 			"deck": {
-				"deck_name": "Easy / Div - Pixie Queen",
 				"characters": [
 					"Tiny Pixie",
 					"Church Guard",
@@ -872,104 +882,121 @@
 					"Choir Lady Anna",
 					"Padmapani"
 				],
-				"traps": [
-					"Bait",
-					"Snare Trap",
-					"Alarm",
-					"Street Joke"
-				],
-				"techs": [
-					"Prayer",
-					"Spy",
-					"Radar"
-				],
+				"created_at": 1785316055,
+				"deck_id": "1785316055.71356_538014168",
+				"deck_name": "Easy / Div - Pixie Queen",
+				"featured_card_name": "",
+				"featured_card_type": "",
 				"formations": [
 					{
 						"name": "Default Formation",
 						"placements": [
 							{
-								"c": 1.0,
-								"r": 2.0,
-								"name": "Tiny Pixie",
-								"type": "character"
-							},
-							{
 								"c": 3.0,
-								"r": 2.0,
 								"name": "Church Guard",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 0.0,
 								"name": "Melissa the Healer",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 4.0,
-								"name": "Sniping Fairy",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 2.0,
 								"name": "Bomber Fairy",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 4.0,
-								"r": 2.0,
 								"name": "Ponycorn",
-								"type": "character"
-							},
-							{
-								"c": 1.0,
-								"r": 0.0,
-								"name": "Joseph the Battle Priest",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 3.0,
-								"r": 4.0,
 								"name": "Choir Lady Anna",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 4.0,
 								"name": "Padmapani",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 0.0,
 								"name": "Bait",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 4.0,
-								"r": 0.0,
 								"name": "Snare Trap",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 0.0,
-								"r": 1.0,
 								"name": "Alarm",
+								"r": 1.0,
 								"type": "trap"
 							},
 							{
 								"c": 4.0,
-								"r": 4.0,
 								"name": "Street Joke",
+								"r": 4.0,
 								"type": "trap"
+							},
+							{
+								"c": 0,
+								"name": "Tiny Pixie",
+								"r": 3,
+								"type": "character"
+							},
+							{
+								"c": 4,
+								"name": "Joseph the Battle Priest",
+								"r": 3,
+								"type": "character"
+							},
+							{
+								"c": 2,
+								"name": "Sniping Fairy",
+								"r": 3,
+								"type": "character"
 							}
 						]
 					}
+				],
+				"gallery_slot": -1,
+				"limited": false,
+				"limited_caps": {},
+				"preferred_formation_index": 0,
+				"reserved_slot": 0,
+				"techs": [
+					"Prayer",
+					"Spy",
+					"Radar"
+				],
+				"traps": [
+					"Bait",
+					"Snare Trap",
+					"Alarm",
+					"Street Joke"
 				]
 			},
-			"quick_duel": true
+			"featured_union": "Pixie Queen",
+			"featured_unit": "",
+			"id": "easy_pixie_queen",
+			"label": "Easy / Div - Pixie Queen",
+			"quick_duel": true,
+			"tags": [
+				"easy"
+			]
 		},
 		{
 			"deck": {
@@ -1093,10 +1120,10 @@
 			"featured_unit": "",
 			"id": "easy_pure_moon",
 			"label": "Easy / Cos - Pure Moon",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -1227,10 +1254,10 @@
 			"featured_unit": "",
 			"id": "easy_rebel_king",
 			"label": "Easy / Ani - Rebel King",
+			"quick_duel": true,
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -1360,10 +1387,10 @@
 			"featured_unit": "",
 			"id": "easy_skeleton",
 			"label": "Easy / Cha - Skeleton",
+			"quick_duel": true,
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -1378,7 +1405,11 @@
 					"Ponycorn",
 					"Tiny Pixie"
 				],
+				"created_at": 1785316046,
+				"deck_id": "1785316046.41263_3843527879",
 				"deck_name": "Easy / Div - Sky Protector",
+				"featured_card_name": "",
+				"featured_card_type": "",
 				"formations": [
 					{
 						"name": "Default Formation",
@@ -1464,6 +1495,11 @@
 						]
 					}
 				],
+				"gallery_slot": -1,
+				"limited": false,
+				"limited_caps": {},
+				"preferred_formation_index": 0,
+				"reserved_slot": 0,
 				"techs": [
 					"Spy",
 					"Radar",
@@ -1480,11 +1516,11 @@
 			"featured_unit": "",
 			"id": "easy_sky_protector",
 			"label": "Easy / Div - Sky Protector",
+			"quick_duel": true,
 			"tags": [
 				"easy"
 			],
-			"union_formula": "Sunrise Lady + Moonrise Gentleman + 400 cost",
-			"quick_duel": true
+			"union_formula": "Sunrise Lady + Moonrise Gentleman + 400 cost"
 		},
 		{
 			"deck": {
@@ -1615,10 +1651,10 @@
 			"featured_unit": "",
 			"id": "easy_ten_arms",
 			"label": "Easy / Cha - Ten Arms",
+			"quick_duel": true,
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -1770,11 +1806,11 @@
 			"featured_unit": "Immortal Vampire",
 			"id": "easy_vampire",
 			"label": "Easy / Cha - Vampire",
+			"quick_duel": true,
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_storage_invest_0_0.json",
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -1892,11 +1928,11 @@
 			"featured_unit": "Lab Crawler",
 			"id": "easy_wk17_roulette",
 			"label": "Easy / Bio - WK-17 Mutagen Roulette",
+			"quick_duel": true,
 			"tags": [
 				"normal"
 			],
-			"union_formula": "1 Bio (\u2265 800 cost) + 1 Arcane (\u2265 800 cost) + 800 cost",
-			"quick_duel": true
+			"union_formula": "1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost"
 		},
 		{
 			"deck": {
@@ -2040,10 +2076,10 @@
 			"featured_unit": "",
 			"id": "hard_barros",
 			"label": "Hard / Nat - Barros",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -2161,11 +2197,11 @@
 			"featured_unit": "",
 			"id": "hard_dimensional_virus",
 			"label": "Hard / Bio+Arc - Dimensional Virus",
+			"quick_duel": true,
 			"tags": [
 				"hard"
 			],
-			"union_formula": "1 Bio (\u2265 800 cost) + 1 Arcane (\u2265 800 cost) + 800 cost",
-			"quick_duel": true
+			"union_formula": "1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost"
 		},
 		{
 			"deck": {
@@ -2303,10 +2339,10 @@
 			"featured_unit": "",
 			"id": "hard_full_emental",
 			"label": "Hard / Arc - Full Elemental",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -2450,10 +2486,10 @@
 			"featured_unit": "",
 			"id": "hard_gaia_arcane",
 			"label": "Hard / Arc - Gaia Arcane",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -2571,10 +2607,10 @@
 			"featured_unit": "",
 			"id": "hard_gryphon",
 			"label": "Hard / Div - Gryphon",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -2718,21 +2754,13 @@
 			"featured_unit": "",
 			"id": "hard_helios",
 			"label": "Hard / Cos - Helios",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
-			"id": "hard_lord_of_terror",
-			"label": "Hard / Cha - Lord of Terror",
-			"tags": [
-				"hard"
-			],
-			"featured_union": "Lord of Terror",
-			"featured_unit": "",
 			"deck": {
-				"deck_name": "Hard / Cha - Lord of Terror",
 				"characters": [
 					"Pit Lord",
 					"Immortal Vampire",
@@ -2745,140 +2773,140 @@
 					"Chaotic Wisp",
 					"Bat Swarm"
 				],
-				"traps": [
-					"Hypnosis",
-					"Brainwash",
-					"Trap Hole",
-					"Acid Trap Hole",
-					"Explosive Barrels"
-				],
-				"techs": [
-					"Spy",
-					"Tease",
-					"Radar"
-				],
+				"deck_name": "Hard / Cha - Lord of Terror",
 				"formations": [
 					{
 						"name": "Default Formation",
 						"placements": [
 							{
 								"c": 2.0,
-								"r": 2.0,
 								"name": "Vampire Duchess",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 3.0,
-								"r": 2.0,
 								"name": "Immortal Vampire",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 1.0,
-								"r": 2.0,
 								"name": "Death Knight",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 4.0,
-								"r": 2.0,
 								"name": "Pit Lord",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
 								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
 								"name": "Night Whisperer",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
 								"c": 2.0,
-								"r": 0.0,
 								"name": "Chaotic Wisp",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 3.0,
-								"r": 0.0,
 								"name": "Jacob the Ski Mask",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 1.0,
-								"r": 4.0,
 								"name": "Skeleton Scout",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 3.0,
-								"r": 4.0,
 								"name": "Bat Swarm",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 0.0,
 								"name": "Dark Monk",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 4.0,
-								"r": 0.0,
 								"name": "Dark Monk",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
 								"c": 0.0,
-								"r": 4.0,
 								"name": "Hypnosis",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
 								"c": 4.0,
-								"r": 4.0,
 								"name": "Brainwash",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
 								"c": 1.0,
-								"r": 0.0,
 								"name": "Hypnosis",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
 								"c": 2.0,
-								"r": 4.0,
 								"name": "Trap Hole",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
 								"c": 0.0,
-								"r": 1.0,
 								"name": "Acid Trap Hole",
+								"r": 1.0,
 								"type": "trap"
 							},
 							{
 								"c": 4.0,
-								"r": 1.0,
 								"name": "Explosive Barrels",
+								"r": 1.0,
 								"type": "trap"
 							}
 						]
 					}
+				],
+				"techs": [
+					"Spy",
+					"Tease",
+					"Radar"
+				],
+				"traps": [
+					"Hypnosis",
+					"Brainwash",
+					"Trap Hole",
+					"Acid Trap Hole",
+					"Explosive Barrels"
 				]
 			},
-			"quick_duel": true
-		},
-		{
-			"id": "hard_rocket_peacock",
-			"label": "Hard / Nat - Rocket Peacock",
+			"featured_union": "Lord of Terror",
+			"featured_unit": "",
+			"id": "hard_lord_of_terror",
+			"label": "Hard / Cha - Lord of Terror",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"featured_union": "Rocket Peacock",
-			"featured_unit": "",
+			]
+		},
+		{
 			"deck": {
-				"deck_name": "Hard / Nat - Rocket Peacock",
 				"characters": [
 					"Ostrich Cannon",
 					"Lazy Troll",
@@ -2891,6 +2919,121 @@
 					"Needle Porcupine",
 					"Flame Lizard"
 				],
+				"deck_name": "Hard / Nat - Rocket Peacock",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Ostrich Cannon",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Flame Lizard",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Goblin Poacher",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Death Cobra",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Needle Porcupine",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Lazy Troll",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Armored Rhino",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Canyon Warg",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Nuki the Tanuki",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Mad Raccoon",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Mad Raccoon",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Snare Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Spike Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Defensive Pheromone",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Hard Scale",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Foul Gas",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Acid Trap Hole",
+								"r": 1.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Spy",
+					"Tease",
+					"Radar"
+				],
 				"traps": [
 					"Snare Trap",
 					"Spike Trap",
@@ -2898,134 +3041,19 @@
 					"Hard Scale",
 					"Foul Gas",
 					"Acid Trap Hole"
-				],
-				"techs": [
-					"Spy",
-					"Tease",
-					"Radar"
-				],
-				"formations": [
-					{
-						"name": "Default Formation",
-						"placements": [
-							{
-								"c": 2.0,
-								"r": 0.0,
-								"name": "Ostrich Cannon",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 4.0,
-								"name": "Flame Lizard",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"r": 0.0,
-								"name": "Goblin Poacher",
-								"type": "character"
-							},
-							{
-								"c": 4.0,
-								"r": 0.0,
-								"name": "Death Cobra",
-								"type": "character"
-							},
-							{
-								"c": 1.0,
-								"r": 2.0,
-								"name": "Needle Porcupine",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 2.0,
-								"name": "Lazy Troll",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"r": 4.0,
-								"name": "Armored Rhino",
-								"type": "character"
-							},
-							{
-								"c": 4.0,
-								"r": 4.0,
-								"name": "Canyon Warg",
-								"type": "character"
-							},
-							{
-								"c": 1.0,
-								"r": 4.0,
-								"name": "Nuki the Tanuki",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 0.0,
-								"name": "Mad Raccoon",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 4.0,
-								"name": "Mad Raccoon",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 2.0,
-								"name": "Snare Trap",
-								"type": "trap"
-							},
-							{
-								"c": 0.0,
-								"r": 2.0,
-								"name": "Spike Trap",
-								"type": "trap"
-							},
-							{
-								"c": 4.0,
-								"r": 2.0,
-								"name": "Defensive Pheromone",
-								"type": "trap"
-							},
-							{
-								"c": 1.0,
-								"r": 0.0,
-								"name": "Hard Scale",
-								"type": "trap"
-							},
-							{
-								"c": 0.0,
-								"r": 1.0,
-								"name": "Foul Gas",
-								"type": "trap"
-							},
-							{
-								"c": 1.0,
-								"r": 1.0,
-								"name": "Acid Trap Hole",
-								"type": "trap"
-							}
-						]
-					}
 				]
 			},
-			"quick_duel": true
-		},
-		{
-			"id": "hard_seraphim_fistmaster",
-			"label": "Hard / Div - Seraphim Fistmaster",
+			"featured_union": "Rocket Peacock",
+			"featured_unit": "",
+			"id": "hard_rocket_peacock",
+			"label": "Hard / Nat - Rocket Peacock",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"featured_union": "Seraphim Fistmaster",
-			"featured_unit": "",
+			]
+		},
+		{
 			"deck": {
-				"deck_name": "Hard / Div - Seraphim Fistmaster",
 				"characters": [
 					"Flame Seraph",
 					"Sonic Seraph",
@@ -3038,6 +3066,115 @@
 					"Tiny Pixie",
 					"Bomber Fairy"
 				],
+				"deck_name": "Hard / Div - Seraphim Fistmaster",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 1.0,
+								"name": "Flame Seraph",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Archbishop",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Sonic Seraph",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Goddess of Virtue",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Angel Gatekeeper",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Church Guard",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Joan the Faithful Warrior",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Bomber Fairy",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Tiny Pixie",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Joseph the Battle Priest",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Bunker",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Spike Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Snare Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Street Joke",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Red Card",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Alarm",
+								"r": 1.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Prayer",
+					"Spy",
+					"Radar"
+				],
 				"traps": [
 					"Bunker",
 					"Spike Trap",
@@ -3045,129 +3182,19 @@
 					"Street Joke",
 					"Red Card",
 					"Alarm"
-				],
-				"techs": [
-					"Prayer",
-					"Spy",
-					"Radar"
-				],
-				"formations": [
-					{
-						"name": "Default Formation",
-						"placements": [
-							{
-								"c": 1.0,
-								"r": 0.0,
-								"name": "Flame Seraph",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 0.0,
-								"name": "Archbishop",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"r": 0.0,
-								"name": "Sonic Seraph",
-								"type": "character"
-							},
-							{
-								"c": 4.0,
-								"r": 0.0,
-								"name": "Goddess of Virtue",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 2.0,
-								"name": "Angel Gatekeeper",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"r": 4.0,
-								"name": "Church Guard",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 1.0,
-								"name": "Joan the Faithful Warrior",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 3.0,
-								"name": "Bomber Fairy",
-								"type": "character"
-							},
-							{
-								"c": 4.0,
-								"r": 4.0,
-								"name": "Tiny Pixie",
-								"type": "character"
-							},
-							{
-								"c": 1.0,
-								"r": 4.0,
-								"name": "Joseph the Battle Priest",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 4.0,
-								"name": "Bunker",
-								"type": "trap"
-							},
-							{
-								"c": 1.0,
-								"r": 2.0,
-								"name": "Spike Trap",
-								"type": "trap"
-							},
-							{
-								"c": 3.0,
-								"r": 2.0,
-								"name": "Snare Trap",
-								"type": "trap"
-							},
-							{
-								"c": 0.0,
-								"r": 2.0,
-								"name": "Street Joke",
-								"type": "trap"
-							},
-							{
-								"c": 4.0,
-								"r": 2.0,
-								"name": "Red Card",
-								"type": "trap"
-							},
-							{
-								"c": 0.0,
-								"r": 1.0,
-								"name": "Alarm",
-								"type": "trap"
-							}
-						]
-					}
 				]
 			},
-			"quick_duel": true
-		},
-		{
-			"id": "hard_team_galaxos",
-			"label": "Hard / Cos+Ani - Team Galaxos",
+			"featured_union": "Seraphim Fistmaster",
+			"featured_unit": "",
+			"id": "hard_seraphim_fistmaster",
+			"label": "Hard / Div - Seraphim Fistmaster",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"featured_union": "Team Galaxos",
-			"featured_unit": "Satellite Cannon",
-			"union_formula": "1 Cosmic (\u2265 800 cost) + 1 Anima (\u2265 800 cost) + 800 cost",
+			]
+		},
+		{
 			"deck": {
-				"deck_name": "Hard / Cos+Ani - Team Galaxos",
 				"characters": [
 					"Space Boy",
 					"Echo Bringer",
@@ -3179,6 +3206,86 @@
 					"Huntress of Green Glade",
 					"Mafia Associates",
 					"Wandering Swordsman"
+				],
+				"deck_name": "Hard / Cos+Ani - Team Galaxos",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Space Boy",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Zealot",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Echo Bringer",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Huntress of Green Glade",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Miner Probe",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Scout Probe",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Mars Drill",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Satellite Cannon",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Snare Trap",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Spike Trap",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Trap Hole",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Hostage",
+								"r": 0.0,
+								"type": "trap"
+							}
+						]
+					}
 				],
 				"techs": [
 					"Spy",
@@ -3192,88 +3299,17 @@
 					"Hostage",
 					"Acid Trap Hole",
 					"Street Joke"
-				],
-				"formations": [
-					{
-						"name": "Default Formation",
-						"placements": [
-							{
-								"c": 2.0,
-								"r": 1.0,
-								"name": "Space Boy",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 2.0,
-								"name": "Zealot",
-								"type": "character"
-							},
-							{
-								"c": 3.0,
-								"r": 1.0,
-								"name": "Echo Bringer",
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"r": 3.0,
-								"name": "Huntress of Green Glade",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"r": 2.0,
-								"name": "Miner Probe",
-								"type": "character"
-							},
-							{
-								"c": 4.0,
-								"r": 2.0,
-								"name": "Scout Probe",
-								"type": "character"
-							},
-							{
-								"c": 1.0,
-								"r": 3.0,
-								"name": "Mars Drill",
-								"type": "character"
-							},
-							{
-								"c": 4.0,
-								"r": 0.0,
-								"name": "Satellite Cannon",
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"r": 0.0,
-								"name": "Snare Trap",
-								"type": "trap"
-							},
-							{
-								"c": 4.0,
-								"r": 4.0,
-								"name": "Spike Trap",
-								"type": "trap"
-							},
-							{
-								"c": 0.0,
-								"r": 4.0,
-								"name": "Trap Hole",
-								"type": "trap"
-							},
-							{
-								"c": 2.0,
-								"r": 0.0,
-								"name": "Hostage",
-								"type": "trap"
-							}
-						]
-					}
 				]
 			},
-			"quick_duel": true
+			"featured_union": "Team Galaxos",
+			"featured_unit": "Satellite Cannon",
+			"id": "hard_team_galaxos",
+			"label": "Hard / Cos+Ani - Team Galaxos",
+			"quick_duel": true,
+			"tags": [
+				"hard"
+			],
+			"union_formula": "1 Cosmic (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost"
 		},
 		{
 			"deck": {
@@ -3411,10 +3447,10 @@
 			"featured_unit": "",
 			"id": "hard_venom",
 			"label": "Hard / Nat - Venom",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -3550,10 +3586,10 @@
 			"featured_unit": "",
 			"id": "hard_zealot_kiba",
 			"label": "Hard / Anim - Zealot Kiba",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -3569,7 +3605,11 @@
 					"Bleacher Squad",
 					"Bladeshifter"
 				],
+				"created_at": 1785316109,
+				"deck_id": "1785316109.14824_1396381007",
 				"deck_name": "Norm / Bio - Bioterrorist",
+				"featured_card_name": "",
+				"featured_card_type": "",
 				"formations": [
 					{
 						"name": "Default Formation",
@@ -3629,12 +3669,6 @@
 								"type": "character"
 							},
 							{
-								"c": 2.0,
-								"name": "Bladeshifter",
-								"r": 4.0,
-								"type": "character"
-							},
-							{
 								"c": 4.0,
 								"name": "Acid Trap Hole",
 								"r": 4.0,
@@ -3663,10 +3697,21 @@
 								"name": "Trap Hole",
 								"r": 0.0,
 								"type": "trap"
+							},
+							{
+								"c": 2,
+								"name": "Bladeshifter",
+								"r": 3,
+								"type": "character"
 							}
 						]
 					}
 				],
+				"gallery_slot": -1,
+				"limited": false,
+				"limited_caps": {},
+				"preferred_formation_index": 0,
+				"reserved_slot": 0,
 				"techs": [
 					"Spy",
 					"Radar",
@@ -3684,10 +3729,10 @@
 			"featured_unit": "",
 			"id": "new_ai_deck_19",
 			"label": "Norm / Bio - Bioterrorist",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -3818,10 +3863,10 @@
 			"featured_unit": "",
 			"id": "norm_armored",
 			"label": "Norm / Nat - Armored",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -3938,11 +3983,11 @@
 			"featured_unit": "",
 			"id": "norm_choir_lead",
 			"label": "Norm / Div - Choir Lead Amber",
+			"quick_duel": true,
 			"tags": [
 				"easy"
 			],
-			"union_formula": "3 Choir Lady cards + 500 cost",
-			"quick_duel": true
+			"union_formula": "3 Choir Lady cards + 500 cost"
 		},
 		{
 			"deck": {
@@ -4054,11 +4099,11 @@
 			"featured_unit": "Mind Flayer",
 			"id": "norm_colormage_flayer",
 			"label": "Norm / Arc - Colormage Flayer",
+			"quick_duel": true,
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_meeting_room_char_???.json",
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -4175,11 +4220,11 @@
 			"featured_unit": "",
 			"id": "norm_grand_fort_captain",
 			"label": "Norm / Ani - Grand Fort Captain",
+			"quick_duel": true,
 			"tags": [
 				"easy"
 			],
-			"union_formula": "2 Grand Fort card + 500 cost",
-			"quick_duel": true
+			"union_formula": "2 Grand Fort card + 500 cost"
 		},
 		{
 			"deck": {
@@ -4296,11 +4341,11 @@
 			"featured_unit": "",
 			"id": "norm_greater_succubus",
 			"label": "Norm / Cha - Greater Succubus",
+			"quick_duel": true,
 			"tags": [
 				"easy"
 			],
-			"union_formula": "1 Succubus + 1 Chaos + 800 cost",
-			"quick_duel": true
+			"union_formula": "1 Succubus + 1 Chaos + 800 cost"
 		},
 		{
 			"deck": {
@@ -4417,11 +4462,11 @@
 			"featured_unit": "",
 			"id": "norm_legendary_locksmith",
 			"label": "Norm / Ani - Legendary Locksmith",
+			"quick_duel": true,
 			"tags": [
 				"normal"
 			],
-			"union_formula": "1 Lockpicker + 1 Anima + 800 cost",
-			"quick_duel": true
+			"union_formula": "1 Lockpicker + 1 Anima + 800 cost"
 		},
 		{
 			"deck": {
@@ -4534,10 +4579,10 @@
 			"featured_unit": "",
 			"id": "norm_leorudus",
 			"label": "Norm / Anim - Leorudus",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -4668,11 +4713,11 @@
 			"featured_unit": "Striker Comet",
 			"id": "norm_miner_moon",
 			"label": "Norm / Cos - Miner Moon",
+			"quick_duel": true,
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_technician_office_invest_0_2.json",
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -4824,10 +4869,10 @@
 			"featured_unit": "",
 			"id": "norm_phoenix",
 			"label": "Norm / Arc - Phoenix",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -4965,10 +5010,10 @@
 			"featured_unit": "",
 			"id": "norm_raijin_fujin",
 			"label": "Norm / Div - Raijin Fujin",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -5106,10 +5151,10 @@
 			"featured_unit": "",
 			"id": "norm_shark",
 			"label": "Norm / Nat - Shark",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -5254,10 +5299,10 @@
 			"featured_unit": "",
 			"id": "norm_thunder_elemental",
 			"label": "Norm / Arc - Thunder Elemental",
+			"quick_duel": true,
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -5386,11 +5431,11 @@
 			"featured_unit": "",
 			"id": "norm_volatile_slasher",
 			"label": "Norm / Bio - Volatile Slasher",
+			"quick_duel": true,
 			"tags": [
 				"normal"
 			],
-			"union_formula": "1 Bladeshifter + 1 Bio card + 1000 cost",
-			"quick_duel": true
+			"union_formula": "1 Bladeshifter + 1 Bio card + 1000 cost"
 		},
 		{
 			"deck": {
@@ -5429,10 +5474,10 @@
 			"featured_unit": "",
 			"id": "norm_wood_elemental",
 			"label": "Norm / Arc - Wood Elemental",
+			"quick_duel": true,
 			"tags": [
 				"hard"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -5557,10 +5602,10 @@
 			"featured_unit": "",
 			"id": "norm_xdeath",
 			"label": "Norm / Ani - X Death",
+			"quick_duel": true,
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"ai_personality_defensive": "Tomb Trap (Hard)",
@@ -5714,11 +5759,11 @@
 			"featured_unit": "Pit Lord",
 			"id": "normal_chaos_bio",
 			"label": "Norm / Mix - Chaos Bio",
+			"quick_duel": true,
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_cond_toilet_front_password_correct_1.json",
 			"tags": [
 				"normal"
-			],
-			"quick_duel": true
+			]
 		},
 		{
 			"deck": {
@@ -5834,10 +5879,10 @@
 			"featured_unit": "",
 			"id": "normal_vergaia",
 			"label": "Norm / Cos - Vergaia",
+			"quick_duel": true,
 			"tags": [
 				"easy"
-			],
-			"quick_duel": true
+			]
 		}
 	]
 }

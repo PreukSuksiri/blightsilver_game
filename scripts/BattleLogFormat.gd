@@ -91,6 +91,9 @@ static func format_overlay_status_lines(
 	if card.has_pending_multi_attack_non_char():
 		var chain_limit: int = card.get_multi_attack_non_char_chain_limit()
 		lines.append("Multi-Attack (%d/%d)" % [card.multi_attack_count, chain_limit])
+	elif card.has_pending_mutagen_immediate_multi_attack():
+		var mi_max: int = card.get_mutagen_immediate_attack_max()
+		lines.append("Mutagen Multi-Attack (%d/%d)" % [card.multi_attack_count, mi_max])
 	elif card.multi_attack_count > 0:
 		lines.append("Multi-Attack (%d used)" % card.multi_attack_count)
 
@@ -602,17 +605,4 @@ static func reckoning_ability_detail(
 
 
 static func _effective_union_summon_cost(base_cost: int) -> int:
-	if GameState.game_mode != GameState.GameMode.DAILY_DUNGEON:
-		return base_cost
-	var mods: Array = GameState.active_dungeon_modifiers
-	if "dimensional_fissure" in mods:
-		return int(base_cost * 0.2)
-	if "dimensional_gate" in mods:
-		return int(base_cost * 0.5)
-	if "dimensional_slippage" in mods:
-		return int(base_cost * 0.8)
-	if "sealing_talisman" in mods:
-		return int(base_cost * 1.2)
-	if "sealing_ceremony" in mods:
-		return int(base_cost * 1.5)
-	return base_cost
+	return GameState.effective_union_summon_cost(base_cost)

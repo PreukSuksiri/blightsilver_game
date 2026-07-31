@@ -48,7 +48,7 @@ enum AbilityType {
 	# Bio Mutagen abilities (activated by Release Mutagen tech card)
 	MUTAGEN_ATK_BOOST_VS_AFFINITIES, # Bio: +N ATK vs affinities when Mutagen Flag active
 	MUTAGEN_DESTROY_ATTACKER,        # Bio: Destroy attacker + no crystal loss when Mutagen Flag active
-	MUTAGEN_IMMEDIATE_ATTACK,        # Bio: Can attack immediately once when Mutagen Flag obtained
+	MUTAGEN_IMMEDIATE_ATTACK,        # Bio: With Mutagen Flag — can attack immediately and chain up to max_attacks (default 3) any targets
 	LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE, # Once: at foe turn start, coin flip; heads → foe can only attack once
 	NOT_IMPLEMENTED,                 # Ability exists but has no engine implementation yet
 
@@ -191,7 +191,7 @@ enum AbilityType {
 
 	# ── Demo sync additions ──
 	TURN_END_FOE_CRYSTAL_PER_MUTAGEN,    # Owner turn end: foe loses N crystals per mutagen flag on field
-	ON_EXPOSE_REVEAL_FOE_ONCE,           # Once when first exposed: reveal 1 foe cell (player chooses)
+	ON_EXPOSE_REVEAL_FOE_ONCE,           # Once when first exposed: reveal cells (foe by default; own_cell/count in params)
 	PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY, # WK-17: 2 coins; both heads → foe picks ally; attacker: ally fights in Siren's place; defender: redirect hit
 	TURN_END_REVEAL_OPPONENT_CELLS_ONCE, # Once at turn end: reveal N foe cells
 	ATK_BONUS_IF_TECH_PLAYED,            # +N ATK if a named tech was played this game (void stack)

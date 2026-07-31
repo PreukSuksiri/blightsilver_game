@@ -16,6 +16,8 @@ const MAX_BATTLE_NAME_LENGTH: int = 24
 const MAX_CRYSTALS: int = 5000
 const MAX_LOG_LINES: int = 60
 const PROMPT_DISMISS_DELAY: float = 0.5
+## Brief lock after the turn banner fully dismisses before input / AI may act.
+const TURN_BANNER_POST_DELAY: float = 0.2
 const SFX_CRYSTAL: AudioStream = preload("res://assets/audio/sound_crystal_1.mp3")
 # Absolute Control z on GameBoard (incl. z_as_relative=false children):
 #   grid bluff markers ........ Z_GRID_BLUFF (above cards, below menus)
@@ -67,6 +69,9 @@ var _vs_ai_deck: Variant = null    # captured before new_game() clears GameState
 var _vs_ai_player_deck: Variant = null
 var _vs_ai_player_forced_cells: Array = []
 var _battle_ai_identity_id: String = ""  # captured before new_game() clears identity
+var _battle_p1_identity_id: String = ""  # captured before new_game() clears identity
+var _battle_ai_union_maniac: bool = false  # captured before new_game() clears it
+var _battle_ai_union_enabled: bool = true
 
 # Player portrait illustration nodes
 var _p1_portrait: TextureRect = null
@@ -105,6 +110,9 @@ var _session_log_start_msec: int = 0
 var _session_log_prev_crystals: Array[int] = [0, 0]
 var _session_logged_destroy_slots: Dictionary = {}
 var _ai_watchdog: Timer = null
+## Human battle/tech prompt timeout — auto cancel-class choice (No/Pass/End Turn/Cancel).
+const HUMAN_PROMPT_TIMEOUT_SEC: float = 10.0
+var _human_prompt_timer: Timer = null
 var _ai_union_resolve_in_progress: bool = false  # suppress watchdog during long union cinematics
 var _card_name_to_type: Dictionary = {}   # card_name -> "character"|"trap"|"tech"
 var _options_panel: Control = null
@@ -486,6 +494,8 @@ var _attack_confirm_panel: Control = null
 var _end_turn_btn: TextureButton = null
 var _dungeon_mod_panel: PanelContainer = null
 var _last_banner_turn: int = -1
+## True while the "Player X's Turn" banner (and post-delay) is locking the board.
+var _turn_banner_blocking: bool = false
 
 # Card context menu (tap-to-open popup)
 var _context_popup: Panel = null     # created fresh per open, freed on close
@@ -495,6 +505,8 @@ var _context_card_player: int = -1
 var _context_card_pos: Vector2i = Vector2i(-1, -1)
 var pending_tech_filter: String = ""
 var _pending_human_defender_tech: bool = false
+## True while a human Yes/No (or multi-choice) ability overlay is waiting — e.g. Bat Swarm.
+var _pending_human_ability_choice: bool = false
 var _pending_ability_destroy_pos: Vector2i = Vector2i(-1, -1)
 var _pending_ability_destroy_player: int = -1
 var _pending_field_destroy_pos: Vector2i = Vector2i(-1, -1)
@@ -643,6 +655,9 @@ func _ready() -> void:
 	_vs_ai_player_deck = GameState.battle_player_deck
 	_vs_ai_player_forced_cells = GameState.battle_player_forced_cells.duplicate(true)
 	_battle_ai_identity_id = GameState.battle_ai_identity_id
+	_battle_p1_identity_id = GameState.battle_p1_identity_id
+	_battle_ai_union_maniac = GameState.battle_ai_union_maniac
+	_battle_ai_union_enabled = GameState.battle_ai_union_enabled
 	if TutorialBattleManager.is_prepared:
 		TutorialBattleManager.on_board_ready(self)
 	_start_game()
@@ -702,6 +717,12 @@ func _setup_ai() -> void:
 	_ai_watchdog.timeout.connect(_on_ai_watchdog_timeout)
 	add_child(_ai_watchdog)
 
+	_human_prompt_timer = Timer.new()
+	_human_prompt_timer.wait_time = HUMAN_PROMPT_TIMEOUT_SEC
+	_human_prompt_timer.one_shot = true
+	_human_prompt_timer.timeout.connect(_on_human_prompt_timeout)
+	add_child(_human_prompt_timer)
+
 	# Intermediate AI signals → restart the watchdog window (bot is still active)
 	ai_player.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _restart_ai_watchdog())
 	ai_player.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _restart_ai_watchdog())
@@ -748,15 +769,7 @@ func _max_unions_per_duel() -> int:
 
 ## Effective union summon cost after applying dungeon modifiers.
 func _effective_union_cost(base_cost: int) -> int:
-	if GameState.game_mode != GameState.GameMode.DAILY_DUNGEON:
-		return base_cost
-	var _um: Array = GameState.active_dungeon_modifiers
-	if "dimensional_fissure" in _um:  return int(base_cost * 0.2)
-	if "dimensional_gate"    in _um:  return int(base_cost * 0.5)
-	if "dimensional_slippage" in _um: return int(base_cost * 0.8)
-	if "sealing_talisman"    in _um:  return int(base_cost * 1.2)
-	if "sealing_ceremony"    in _um:  return int(base_cost * 1.5)
-	return base_cost
+	return GameState.effective_union_summon_cost(base_cost)
 
 func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
@@ -800,8 +813,73 @@ func _restart_ai_watchdog() -> void:
 		return
 	_ai_watchdog.start()
 
-func _on_ai_watchdog_timeout() -> void:
+func _start_human_prompt_timeout() -> void:
+	if _human_prompt_timer == null or GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	_human_prompt_timer.start()
+
+func _stop_human_prompt_timeout() -> void:
+	if _human_prompt_timer != null:
+		_human_prompt_timer.stop()
+
+func _on_human_prompt_timeout() -> void:
+	_force_cancel_pending_human_prompts(true)
+
+## Auto-pick cancel-class choice for an open human prompt.
+## timed_out: true when the 10s timer fired; false for turn-end / cleanup force-cancel.
+func _force_cancel_pending_human_prompts(timed_out: bool = false) -> void:
+	_stop_human_prompt_timeout()
+	if _pending_human_ability_choice \
+			or (_ability_choice_overlay != null and _ability_choice_overlay.visible):
+		if timed_out:
+			GameState.post_message("Prompt timed out — declined.")
+		_force_decline_pending_ability_choice()
+		return
+	if _bribe_overlay != null and _bribe_overlay.visible:
+		if timed_out:
+			GameState.post_message("Bribe: timed out — passed.")
+		_on_bribe_pass_pressed()
+		return
+	if _tech_overlay_mode == "blackmail":
+		if timed_out:
+			GameState.post_message("Blackmail: timed out — ended turn.")
+		_close_blackmail_tech_overlay()
+		if turn_manager != null:
+			turn_manager.resolve_blackmail_choice("")
+		return
+	if _tax_confirm_panel != null and is_instance_valid(_tax_confirm_panel):
+		_dismiss_tax_confirm_panel()
+		return
+	if selection_state == SelectionState.CONFIRMING_ATTACK \
+			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
+		_cancel_confirm_attack()
+		return
 	if _pending_human_defender_tech:
+		var filter: String = pending_tech_filter
+		var msg: String = "Selection timed out — effect cancelled." if timed_out \
+			else "Effect cancelled."
+		_cancel_cross_turn_target(filter, msg)
+
+func _human_prompt_blocks_ai_watchdog() -> bool:
+	if _pending_human_defender_tech:
+		return true
+	if _pending_human_ability_choice \
+			or (_ability_choice_overlay != null and _ability_choice_overlay.visible):
+		return true
+	if _bribe_overlay != null and _bribe_overlay.visible:
+		return true
+	if _tech_overlay_mode == "blackmail":
+		return true
+	if _tax_confirm_panel != null and is_instance_valid(_tax_confirm_panel):
+		return true
+	if selection_state == SelectionState.CONFIRMING_ATTACK \
+			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
+		return true
+	return false
+
+func _on_ai_watchdog_timeout() -> void:
+	# Human must answer Bat Swarm / Bribe / Blackmail / etc. during the AI's turn.
+	if _human_prompt_blocks_ai_watchdog():
 		_restart_ai_watchdog()
 		return
 	if not _is_ai_turn():
@@ -828,6 +906,7 @@ func _connect_signals() -> void:
 	GameState.phase_changed.connect(_on_phase_changed)
 	GameState.card_revealed.connect(_on_card_revealed)
 	GameState.card_flag_added.connect(_on_card_flag_added)
+	GameState.card_position_swapped.connect(_on_card_position_swapped)
 	GameState.card_destroyed.connect(_on_card_destroyed)
 	GameState.card_destruction_blocked.connect(_on_card_destruction_blocked)
 	GameState.field_bonuses_recalculated.connect(_refresh_all_grids)
@@ -1371,6 +1450,7 @@ func _build_ability_choice_overlay() -> void:
 
 func _show_ability_choice_overlay(title: String, choices: Array) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
+	_pending_human_ability_choice = true
 	_ability_choice_title_lbl.text = title
 	for i: int in range(_ability_choice_btns.size()):
 		var btn: Button = _ability_choice_btns[i]
@@ -1380,8 +1460,11 @@ func _show_ability_choice_overlay(title: String, choices: Array) -> void:
 		else:
 			btn.visible = false
 	_ability_choice_overlay.visible = true
+	_start_human_prompt_timeout()
 
 func _hide_ability_choice_overlay() -> void:
+	_stop_human_prompt_timeout()
+	_pending_human_ability_choice = false
 	_ability_choice_overlay.visible = false
 	for btn: Button in _ability_choice_btns:
 		btn.visible = false
@@ -1390,8 +1473,10 @@ func _show_bribe_overlay(opponent: int) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
 	_bribe_desc_lbl.text = "Player %d: Reveal one of your units to gain 700 Crystals, or pass." % (opponent + 1)
 	_bribe_overlay.visible = true
+	_start_human_prompt_timeout()
 
 func _hide_bribe_overlay() -> void:
+	_stop_human_prompt_timeout()
 	_bribe_overlay.visible = false
 
 func _on_bribe_reveal_pressed() -> void:
@@ -1581,6 +1666,10 @@ func _start_game() -> void:
 			GameState.battle_player_forced_cells = _vs_ai_player_forced_cells.duplicate(true)
 		if not _battle_ai_identity_id.is_empty():
 			GameState.battle_ai_identity_id = _battle_ai_identity_id
+		if not _battle_p1_identity_id.is_empty():
+			GameState.battle_p1_identity_id = _battle_p1_identity_id
+		GameState.battle_ai_union_maniac = _battle_ai_union_maniac
+		GameState.battle_ai_union_enabled = _battle_ai_union_enabled
 	# Apply campaign-supplied player names if VNPlayer set them
 	if GameState.campaign_player_names.size() == 2:
 		var n1: String = GameState.campaign_player_names[0]
@@ -1835,6 +1924,11 @@ func _apply_player_names() -> void:
 	if _p2_name_lbl: _p2_name_lbl.text = _p2_magitech_name()
 
 func _p1_magitech_name() -> String:
+	var iid := GameState.battle_p1_identity_id.strip_edges()
+	if iid.is_empty():
+		iid = _battle_p1_identity_id.strip_edges()
+	if not iid.is_empty() and not AIIdentityVault.get_entry(iid).is_empty():
+		return AIIdentityVault.get_birth_name(iid)
 	var pid := GameState.quick_duel_protagonist_id.strip_edges()
 	if ProtagonistVault.is_valid_id(pid):
 		return ProtagonistVault.get_birth_name(pid)
@@ -7022,10 +7116,13 @@ func _populate_battle_log_rtl(rtl: RichTextLabel) -> void:
 			var shown: String = _rescale_bbcode_imgs(line, icon_px)
 			rtl.append_text(_format_log_line(shown) + "\n")
 
+func _print_godot_battle_output(text: String) -> void:
+	## Full verbose dump for the Godot editor Output panel (not filtered).
+	print("[BATTLE LOG] ", _plain_battle_log_text(text))
+
 func _append_battle_log_chronicle_line(line: String) -> void:
 	if line.is_empty():
 		return
-	print("[BATTLE LOG] ", _plain_battle_log_text(line))
 	message_log.append_text("\n" + line)
 	_battle_log_lines.append(line)
 
@@ -7036,8 +7133,10 @@ func _battle_log_turn_divider_bbcode(turn_number: int, player_index: int) -> Str
 func _on_battle_log_turn_changed(player_index: int) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
-	_append_battle_log_chronicle_line(_battle_log_turn_divider_bbcode(
-		GameState.turn_number, player_index))
+	var divider: String = _battle_log_turn_divider_bbcode(
+		GameState.turn_number, player_index)
+	_print_godot_battle_output(divider)
+	_append_battle_log_chronicle_line(divider)
 
 func _add_battle_log_footer(
 		vbox: VBoxContainer,
@@ -7352,6 +7451,8 @@ func _decorate_battle_log_icons(text: String) -> String:
 	return "%s %s" % [icon, text]
 
 func _on_message_posted(text: String) -> void:
+	# Godot Output keeps the full verbose feed; in-game Battle Log stays curated.
+	_print_godot_battle_output(text)
 	if _is_battle_log_instruction(text):
 		return
 	var polished: String = _polish_battle_log_text(text)
@@ -7931,10 +8032,9 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p2_port.z_index       = 1
 		overlay.add_child(coin_p2_port)
 
-	# ── CenterContainer ensures true centering regardless of VBox size ──
+	# ── CenterContainer: coin + satellite labels at true screen center ──
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	center.offset_top = CONTENT_DOWN_SHIFT * 2.0  # recenter lower (coin + labels)
 	center.z_index = 10
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(center)
@@ -8261,6 +8361,8 @@ func _on_dice_rolled(result: int) -> void:
 	dice_display.text = "[%d]" % result
 
 func _on_center_message_requested(text: String) -> void:
+	# Old show_center_message also hit message_posted → Output; keep that dump here.
+	_print_godot_battle_output(text)
 	SFXManager.play(SFXManager.SFX_POPUP)
 	var lbl := Label.new()
 	lbl.text = text
@@ -8932,6 +9034,7 @@ func _dismiss_tech_hand_overlay() -> void:
 		_tech_hand_overlay = null
 
 func _close_blackmail_tech_overlay() -> void:
+	_stop_human_prompt_timeout()
 	_tech_overlay_mode = ""
 	_dismiss_tech_hand_overlay()
 	if _tech_resolve_blocker:
@@ -9057,6 +9160,7 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 	vbox.add_child(end_turn_btn)
 
 	SFXManager.play(SFXManager.SFX_POPUP)
+	_start_human_prompt_timeout()
 
 func _on_awaiting_blackmail_tech_select(player: int) -> void:
 	if is_instance_valid(_current_battle_overlay):
@@ -9213,6 +9317,7 @@ func _player_has_attacked_this_turn(player: int) -> bool:
 	return false
 
 func _dismiss_tax_confirm_panel() -> void:
+	_stop_human_prompt_timeout()
 	if _tax_confirm_panel != null:
 		_tax_confirm_panel.queue_free()
 		_tax_confirm_panel = null
@@ -9239,6 +9344,8 @@ func _on_ai_end_turn() -> void:
 	turn_manager.end_attacks_early()
 
 func _on_end_turn_requested() -> void:
+	if _turn_banner_blocking:
+		return
 	if _end_turn_request_busy:
 		return
 	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_end_turn_btn():
@@ -9299,6 +9406,7 @@ func _show_tax_confirm(player: int) -> void:
 	panel.offset_top    = -h_half; panel.offset_bottom = h_half
 	add_child(panel)
 	_tax_confirm_panel = panel
+	_start_human_prompt_timeout()
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 12)
@@ -9380,6 +9488,7 @@ func _show_tax_confirm(player: int) -> void:
 		if not GameDialog.try_press(&"tax_confirm"):
 			return
 		confirm_btn.disabled = true
+		_stop_human_prompt_timeout()
 		if _tax_confirm_panel != null:
 			_tax_confirm_panel.queue_free()
 			_tax_confirm_panel = null
@@ -9398,9 +9507,7 @@ func _show_tax_confirm(player: int) -> void:
 	cancel_btn2.add_theme_font_size_override("font_size", 15)
 	cancel_btn2.custom_minimum_size = Vector2(120.0, 42.0)
 	cancel_btn2.pressed.connect(func() -> void:
-		if _tax_confirm_panel != null:
-			_tax_confirm_panel.queue_free()
-			_tax_confirm_panel = null
+		_dismiss_tax_confirm_panel()
 		await _await_prompt_dismiss_delay())
 	_style_overlay_button(cancel_btn2, true)
 	row.add_child(cancel_btn2)
@@ -9418,6 +9525,8 @@ func _on_play_again_btn() -> void:
 # Turn-flow blocking — prevent AI/turn advance during pending selections
 # ─────────────────────────────────────────────────────────────
 func _should_defer_turn_flow() -> bool:
+	if _turn_banner_blocking:
+		return true
 	if turn_manager.is_flow_blocked():
 		return true
 	if selection_state in [
@@ -9427,6 +9536,13 @@ func _should_defer_turn_flow() -> bool:
 	]:
 		return true
 	if _pending_human_defender_tech:
+		return true
+	if _pending_human_ability_choice \
+			or (_ability_choice_overlay != null and _ability_choice_overlay.visible):
+		return true
+	if _bribe_overlay != null and _bribe_overlay.visible:
+		return true
+	if _tech_overlay_mode == "blackmail":
 		return true
 	if _ai_union_resolve_in_progress:
 		return true
@@ -9504,10 +9620,12 @@ func _enter_mode_select() -> void:
 	var resume_multi_attack_pos := _pending_multi_attack_pos
 	_pending_multi_attack_pos = Vector2i(-1, -1)
 	_clear_selection()
-	# Show turn banner once per new turn number.
+	# Show turn banner once per new turn number — lock board until dismissed + delay.
 	if GameState.turn_number != _last_banner_turn:
 		_last_banner_turn = GameState.turn_number
-		_show_turn_banner(GameState.current_player)
+		await _show_turn_banner(GameState.current_player)
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			return
 	# Notify tutorial manager when human player's turn begins.
 	if TutorialBattleManager.is_active and not _is_ai_turn():
 		TutorialBattleManager.on_player_turn_started()
@@ -9745,20 +9863,45 @@ func _resume_human_mode_select(resume_bonus: bool = false, bonus_pos: Vector2i =
 func _on_turn_ended(_player: int) -> void:
 	if _ai_watchdog != null:
 		_ai_watchdog.stop()
+	_stop_human_prompt_timeout()
 	_music_changed_this_turn = false
 	if _end_turn_blink_tween and _end_turn_blink_tween.is_valid():
 		_end_turn_blink_tween.kill()
 		_end_turn_blink_tween = null
 	if _end_turn_btn:
 		_end_turn_btn.modulate = Color.WHITE
+	# Unblock any mid-attack Yes/No await (Bat Swarm etc.) so it can abort cleanly.
+	if turn_manager != null:
+		turn_manager.request_abort_active_attack()
+	_force_cancel_pending_human_prompts(false)
 	_refresh_all_grids()
 	_clear_selection()
 
+func _force_decline_pending_ability_choice() -> void:
+	if not _pending_human_ability_choice \
+			and (_ability_choice_overlay == null or not _ability_choice_overlay.visible):
+		return
+	_hide_ability_choice_overlay()
+	# Index 1 = "Don't Intercept" / Skip on typical Yes/No prompts.
+	turn_manager.resolve_ability_choice(1)
+
+## Show the turn banner and lock all input until it dismisses (+ post-delay).
+## AI turn flow must await this before deciding any action.
 func _show_turn_banner(player: int) -> void:
 	SFXManager.play(SFXManager.SFX_TURN_BANNER)
+	_turn_banner_blocking = true
+
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	const BANNER_H: float = 80.0
 	const FONT_SIZE: int = 52
+
+	# Full-screen click sink so nothing under the banner is interactable.
+	var blocker := ColorRect.new()
+	blocker.set_anchors_preset(Control.PRESET_FULL_RECT)
+	blocker.color = Color(0.0, 0.0, 0.0, 0.0)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.z_index = 49
+	add_child(blocker)
 
 	var lbl := Label.new()
 	lbl.text = "%s's Turn" % _battle_display_name(player)
@@ -9784,12 +9927,22 @@ func _show_turn_banner(player: int) -> void:
 	# Fly out to right
 	tw.tween_property(lbl, "position:x", vp.x, 0.35) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	_queue_tween_free(tw, lbl)
+	await tw.finished
+	if is_instance_valid(lbl):
+		lbl.queue_free()
+	if is_instance_valid(blocker):
+		blocker.queue_free()
+
+	# Short lock after dismiss before human / AI may act.
+	await get_tree().create_timer(TURN_BANNER_POST_DELAY).timeout
+	_turn_banner_blocking = false
 
 # ─────────────────────────────────────────────────────────────
 # Card Click Handling
 # ─────────────────────────────────────────────────────────────
 func _on_card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int) -> void:
+	if _turn_banner_blocking:
+		return
 	if TutorialBattleManager.should_block_card_detail():
 		return
 	var inst: Variant = null
@@ -9798,6 +9951,8 @@ func _on_card_detail_requested(card_name: String, card_type: String, owner_playe
 	CardDetailOverlay.open(self, card_name, card_type, inst)
 
 func _on_card_node_clicked(player: int, row: int, col: int) -> void:
+	if _turn_banner_blocking:
+		return
 	# Allow clicks during the AI's turn only when the human must respond to a tech/trap
 	# effect (e.g. Tease forces the opponent to reveal one of their own squares).
 	if _is_ai_turn() and selection_state != SelectionState.SELECTING_TECH_TARGET:
@@ -9927,6 +10082,7 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 	_update_union_suggest_button()
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = true
+	_start_human_prompt_timeout()
 	_update_tutorial_hud_lock()
 	# Blink the target card red
 	var target_node: Control = grid_nodes[target_player][target_pos.x][target_pos.y]
@@ -9942,6 +10098,7 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 func _confirm_attack() -> void:
 	if not GameDialog.try_press(&"attack_confirm"):
 		return
+	_stop_human_prompt_timeout()
 	# Stop blink and restore target colour
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
@@ -9961,6 +10118,7 @@ func _confirm_attack() -> void:
 	turn_manager.perform_attack(atk_from, atk_to)
 
 func _cancel_confirm_attack() -> void:
+	_stop_human_prompt_timeout()
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
 		_blink_tween = null
@@ -10206,6 +10364,12 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		await _prepare_revive_from_graveyard(GameState.current_player, tech_data)
 		return
 
+	# Tease: opponent of the tech player must reveal one of their own face-down units.
+	# Handle here (like Bribe) so AI auto-resolve cannot stall in the shared filter chain.
+	if filter == "self_squares_1_opponent_turn":
+		await _resolve_tease_target_selection(prompt)
+		return
+
 	# pending_tech_filter + SELECTING_TECH_TARGET set synchronously in _begin_target_selection_blocking
 	# Parse reveal count for multi-reveal filters (e.g. "opponent_squares_3", "own_units_up_to_5")
 	if "opponent_squares" in filter:
@@ -10251,9 +10415,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_set_own_facedown_char_peek(true)
 
 	# Tease: human opponent must choose their own face-down card — let them peek their grid
+	# (AI auto-resolve is handled in the early-return path above.)
 	if filter == "self_squares_1_opponent_turn":
 		var tease_defender := GameState.get_opponent(GameState.current_player)
-		_set_own_facedown_char_peek(true, tease_defender)
+		if _local_human_is_selecting(tease_defender):
+			_set_own_facedown_char_peek(true, tease_defender)
 
 	# Brainwash: attacker may pick any own ally, including face-down units
 	if filter == "own_any_as_target":
@@ -10300,7 +10466,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				and GameState.current_phase == GameState.Phase.BATTLE:
 			_clear_after_pre_battle_ability()
 		elif _is_post_attack_ability_filter(filter) \
-				or filter in ["ability_lockpicker_reveal", "wk17_foe_pick_character", "rift_guardian_foe_pick"]:
+				or filter in ["ability_lockpicker_reveal", "ability_expose_reveal_own",
+					"wk17_foe_pick_character", "rift_guardian_foe_pick"]:
 			_clear_after_ability()
 		elif filter in _defender_response_filters():
 			if pending_tech_name != "":
@@ -10336,7 +10503,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
 			"ability_plant29_venom", "ability_plant29_mutagen", "ability_death_cobra_venom",
-			"ability_lockpicker_reveal", "wk17_foe_pick_character", "rift_guardian_foe_pick",
+			"ability_lockpicker_reveal", "ability_expose_reveal_own",
+			"wk17_foe_pick_character", "rift_guardian_foe_pick",
 			"opponent_any_hidden", "adjacent",
 			"any_field_card_destroy", "own_character_destroy_no_cost"]:
 		var _ai_responds: bool = _is_ai_turn()
@@ -10349,7 +10517,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
 					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
 					and _rk_owner == ai_player.player_index)
-		if filter == "ability_lockpicker_reveal":
+		if filter == "ability_lockpicker_reveal" or filter == "ability_expose_reveal_own":
 			var _lp_owner: int = turn_manager._pending_lockpicker_owner
 			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
@@ -10411,6 +10579,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			elif filter == "ability_lockpicker_reveal":
 				_ab_player = GameState.get_opponent(turn_manager._pending_lockpicker_owner)
 				_ab_target = _get_ai_for_player(turn_manager._pending_lockpicker_owner).decide_target(filter)
+			elif filter == "ability_expose_reveal_own":
+				_ab_player = turn_manager._pending_lockpicker_owner
+				_ab_target = _get_ai_for_player(turn_manager._pending_lockpicker_owner).decide_target(filter)
 			elif filter == "opponent_any_hidden":
 				var _rev_owner: int = turn_manager._pending_reveal_attacker_player
 				_ab_player = GameState.get_opponent(_rev_owner)
@@ -10441,10 +10612,16 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 					turn_manager._pending_rg_exclude_pos)
 			else:
 				_ab_target = _active_ai.decide_target(filter)
+			if filter in ["wk17_foe_pick_character", "rift_guardian_foe_pick"] and _ab_target.x < 0:
+				_ab_target = _first_highlighted_pos_for_player(_ab_player)
+			if filter in ["wk17_foe_pick_character", "rift_guardian_foe_pick"] and _ab_target.x < 0:
+				_cancel_cross_turn_target(filter)
+				return
 			if filter == "ability_rebel_king_swap":
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
-			elif filter in ["ability_false_prophet_reveal", "ability_lockpicker_reveal", "opponent_any_hidden",
+			elif filter in ["ability_false_prophet_reveal", "ability_lockpicker_reveal",
+					"ability_expose_reveal_own", "opponent_any_hidden",
 					"adjacent", "opponent_character_ability_destroy", "any_field_card_destroy",
 					"own_character_destroy_no_cost"]:
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
@@ -10458,6 +10635,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			else:
 				_flash_target_card(GameState.get_opponent(GameState.current_player), _ab_target.x, _ab_target.y)
 				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
+			return
+		# Human must pick (e.g. Lockpicker on-expose during AI Tease) — start 10s cancel timeout.
+		_begin_human_defender_tech_choice()
 		return
 
 	# If AI turn (AI is attacker), auto-resolve — but skip defender-response filters
@@ -10481,6 +10661,18 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			_prompt_ai_radar_pick()
 			return
 		var ai_target := _active_ai.decide_target(filter)
+		if ai_target.x < 0:
+			ai_target = _first_highlighted_pos_for_player(
+				GameState.get_opponent(GameState.current_player) \
+					if ("opponent" in filter or filter == "row_or_column" or filter == "adjacent") \
+					else GameState.current_player)
+		if ai_target.x < 0:
+			if filter == "own_any_as_target":
+				_cancel_cross_turn_target(filter)
+			else:
+				GameState.post_message("No valid target — effect cancelled.")
+				_finish_tech_action(GameState.current_player)
+			return
 		_active_ai.ai_target_chosen.emit(ai_target)  # log AI tech/trap target choice
 		# "row_or_column" targets a cell on the opponent's grid even though the word
 		# "opponent" doesn't appear in the filter string — handle it explicitly.
@@ -10514,10 +10706,22 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 					and GameState.get_opponent(GameState.current_player) == ai_player.player_index)):
 		# AI is the defending/responding player
 		await get_tree().create_timer(0.4).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			return
+		if pending_tech_filter != filter:
+			return
 		var def_player: int = GameState.get_opponent(GameState.current_player)
 		var def_ai: AIPlayer = _get_defending_ai()
-		var ai_target: Vector2i = def_ai.decide_target(filter)
-		def_ai.ai_target_chosen.emit(ai_target)  # log defender AI choice
+		var ai_target: Vector2i = Vector2i(-1, -1)
+		if def_ai != null:
+			ai_target = def_ai.decide_target(filter)
+		if ai_target.x < 0 or not grid_nodes[def_player][ai_target.x][ai_target.y].is_highlighted:
+			ai_target = _first_highlighted_pos_for_player(def_player)
+		if ai_target.x < 0:
+			_cancel_cross_turn_target(filter)
+			return
+		if def_ai != null:
+			def_ai.ai_target_chosen.emit(ai_target)  # log defender AI choice
 		_flash_target_card(def_player, ai_target.x, ai_target.y)
 		_handle_tech_target(def_player, ai_target)
 	elif _is_ai_turn() and filter in _defender_response_filters():
@@ -10538,6 +10742,59 @@ func _defender_response_filters() -> Array:
 		"bribe_reveal", "trap_hostage_reveal_lock", "trap_street_joke_reveal",
 	]
 
+func _player_is_ai(pi: int) -> bool:
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return true
+	if ai_player != null and pi == ai_player.player_index:
+		return true
+	if ai_player_0 != null and pi == ai_player_0.player_index:
+		return true
+	return false
+
+func _first_highlighted_pos_for_player(player: int) -> Vector2i:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if grid_nodes[player][r][c].is_highlighted:
+				return Vector2i(r, c)
+	return Vector2i(-1, -1)
+
+func _first_facedown_character_pos(player: int) -> Vector2i:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character" and not card.face_up:
+				return Vector2i(r, c)
+	return Vector2i(-1, -1)
+
+## Cancel a cross-turn target prompt without leaving the battle hung.
+func _cancel_cross_turn_target(filter: String, message: String = "No valid target — effect cancelled.") -> void:
+	if not message.is_empty():
+		GameState.post_message(message)
+	match filter:
+		"own_divine_character_redirect":
+			turn_manager.complete_archbishop_redirect()
+			_clear_after_tech()
+		"own_any_as_target":
+			turn_manager.complete_brainwash_redirect()
+			_clear_after_ability()
+		"wk17_foe_pick_character", "rift_guardian_foe_pick", "ability_lockpicker_reveal", \
+				"ability_expose_reveal_own", "ability_false_prophet_reveal", \
+				"opponent_any_hidden", "adjacent":
+			_clear_after_ability()
+		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct", \
+				"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature", \
+				"trap_hostage_reveal_lock", "trap_street_joke_reveal":
+			_finish_trap_target_selection()
+		"bribe_reveal", "opponent_facedown_forced", "self_squares_1_opponent_turn":
+			_finish_tech_action(GameState.current_player)
+		_:
+			if filter in _defender_response_filters():
+				_finish_trap_target_selection()
+			elif _is_post_attack_ability_filter(filter):
+				_clear_after_ability()
+			else:
+				_finish_tech_action(GameState.current_player)
+
 func _begin_human_defender_tech_choice() -> void:
 	_pending_human_defender_tech = true
 	if _ai_watchdog != null:
@@ -10546,12 +10803,72 @@ func _begin_human_defender_tech_choice() -> void:
 		_tech_resolve_blocker.visible = false
 	if _end_turn_btn:
 		_end_turn_btn.visible = false
+	_start_human_prompt_timeout()
+
+## Tease (OPPONENT_REVEALS_SQUARE): defender picks one of their face-down units.
+## Always finishes the tech — never leave SELECTING_TECH_TARGET hanging.
+func _resolve_tease_target_selection(prompt: String) -> void:
+	var tease_defender: int = GameState.get_opponent(GameState.current_player)
+	_show_guide(prompt)
+	_highlight_tech_targets("self_squares_1_opponent_turn")
+	if not _any_highlighted():
+		GameState.post_message("Tease: No face-down units to reveal — effect cancelled.")
+		_finish_tech_action(GameState.current_player)
+		return
+	var tease_ai_responds: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+		or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+			and ai_player != null and tease_defender == ai_player.player_index)
+	if not tease_ai_responds:
+		_set_own_facedown_char_peek(true, tease_defender)
+		_begin_human_defender_tech_choice()
+		return
+	await get_tree().create_timer(0.4).timeout
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	if pending_tech_filter != "self_squares_1_opponent_turn":
+		return
+	var tease_ai: AIPlayer = _get_ai_for_player(tease_defender)
+	if tease_ai == null:
+		tease_ai = _get_defending_ai()
+	var tease_target: Vector2i = Vector2i(-1, -1)
+	if tease_ai != null:
+		tease_target = tease_ai.decide_target("self_squares_1_opponent_turn")
+	var tease_ok: bool = false
+	if tease_target.x >= 0 and tease_target.y >= 0:
+		var tease_card: GameState.CardInstance = GameState.get_card(
+			tease_defender, tease_target.x, tease_target.y)
+		tease_ok = tease_card.card_type == "character" and not tease_card.face_up
+	if not tease_ok:
+		tease_target = _first_highlighted_pos_for_player(tease_defender)
+		if tease_target.x < 0:
+			tease_target = _first_facedown_character_pos(tease_defender)
+	if tease_target.x < 0:
+		GameState.post_message("Tease: No face-down units to reveal — effect cancelled.")
+		_finish_tech_action(GameState.current_player)
+		return
+	if tease_ai != null:
+		tease_ai.ai_target_chosen.emit(tease_target)
+	_flash_target_card(tease_defender, tease_target.x, tease_target.y)
+	_apply_tease_reveal(tease_defender, tease_target)
+
+## Reveal + finish Tease. Used by AI auto-resolve and human grid pick.
+## Must await full reveal (incl. Lockpicker on-expose) before finishing Tease,
+## otherwise AI/tech flow resumes mid Lockpicker pick and freezes.
+func _apply_tease_reveal(defender: int, pos: Vector2i) -> void:
+	var card: GameState.CardInstance = GameState.get_card(defender, pos.x, pos.y)
+	if card.card_type != "character" or card.face_up:
+		GameState.post_message("Tease: Choose a face-down unit.")
+		return
+	card = await _reveal_by_ability_and_await(defender, pos.x, pos.y)
+	GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
+	_finish_tech_action(GameState.current_player)
 
 func _get_target_selecting_player(filter: String) -> int:
 	if filter == "ability_rebel_king_swap":
 		var _rk_owner: int = turn_manager._pending_rebel_king_owner
 		return _rk_owner if _rk_owner >= 0 else GameState.current_player
-	if filter == "ability_lockpicker_reveal":
+	if filter == "ability_lockpicker_reveal" or filter == "ability_expose_reveal_own":
 		var _lp_owner: int = turn_manager._pending_lockpicker_owner
 		return _lp_owner if _lp_owner >= 0 else GameState.current_player
 	if filter == "opponent_any_hidden":
@@ -10617,22 +10934,31 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
 
 	if pending_tech_filter not in [
-		"ability_false_prophet_reveal", "ability_lockpicker_reveal",
-		"own_bio_character", "bribe_reveal", "own_character_destroy_no_cost",
+		"ability_false_prophet_reveal", "ability_lockpicker_reveal", "ability_expose_reveal_own",
+		"own_bio_character", "bribe_reveal", "self_squares_1_opponent_turn",
+		"own_character_destroy_no_cost",
 	] and card.card_type == "character" and GameState.is_immune_to_tech_cards(card):
 		GameState.post_message("%s is unaffected by Tech cards!" % card.card_name)
 		if pending_tech_filter == "any_field_card_destroy":
 			_clear_after_ability()
 		elif _is_post_attack_ability_filter(pending_tech_filter):
 			_clear_after_ability()
+		elif pending_tech_filter == "own_divine_character_redirect":
+			turn_manager.complete_archbishop_redirect()
+			_clear_after_tech()
+		elif pending_tech_filter in [
+			"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
+			"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
+			"trap_hostage_reveal_lock", "trap_street_joke_reveal",
+		]:
+			_finish_trap_target_selection()
 		else:
 			_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "ability_false_prophet_reveal":
 		if player == opponent and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
-			card = GameState.get_card(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			var _fp_pos: Vector2i = _find_own_card_pos(current_player, "False Prophet")
 			if card.card_type == "dead_end":
 				GameState.post_message("False Prophet: Dead End revealed — self-destructs!")
@@ -10652,16 +10978,24 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		_clear_after_ability()
 		return
 
-	if pending_tech_filter == "ability_lockpicker_reveal":
+	if pending_tech_filter == "ability_lockpicker_reveal" \
+			or pending_tech_filter == "ability_expose_reveal_own":
 		var _lp_owner: int = turn_manager._pending_lockpicker_owner
-		var _lp_foe: int = GameState.get_opponent(_lp_owner) if _lp_owner >= 0 else opponent
-		if player == _lp_foe and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
-			card = GameState.get_card(player, pos.x, pos.y)
+		var _lp_target_player: int
+		if pending_tech_filter == "ability_expose_reveal_own":
+			_lp_target_player = _lp_owner if _lp_owner >= 0 else current_player
+		else:
+			_lp_target_player = GameState.get_opponent(_lp_owner) if _lp_owner >= 0 else opponent
+		if player == _lp_target_player and not card.face_up:
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
+			turn_manager._expose_reveal_pick_ok = true
+			var _src_name: String = turn_manager._pending_expose_reveal_name
+			if _src_name.is_empty():
+				_src_name = "Lockpicker"
 			if card.card_type == "dead_end":
-				GameState.post_message("Lockpicker: Revealed Dead End.")
+				GameState.post_message("%s: Revealed Dead End." % _src_name)
 			else:
-				GameState.post_message("Lockpicker: Revealed %s!" % card.card_name)
+				GameState.post_message("%s: Revealed %s!" % [_src_name, card.card_name])
 		_clear_after_ability()
 		return
 
@@ -10670,6 +11004,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == _wk17_foe and card.card_type == "character":
 			if turn_manager._pending_wk17_mode == "redirect_attacker":
 				if pos == GameState.attacker_pos:
+					if _player_is_ai(player):
+						_cancel_cross_turn_target("wk17_foe_pick_character")
 					return
 				turn_manager._wk17_friendly_fire = true
 				turn_manager._wk17_friendly_fire_pos = pos
@@ -10680,6 +11016,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					GameState.post_message("WK-17: %s will attack %s!" % [_wk17_att.card_name, card.card_name])
 			elif turn_manager._pending_wk17_mode == "substitute_foe_attacker":
 				if pos == turn_manager._pending_wk17_defender_pos:
+					if _player_is_ai(player):
+						_cancel_cross_turn_target("wk17_foe_pick_character")
 					return
 				turn_manager._wk17_substitute_battle = true
 				turn_manager._wk17_substitute_grid_player = _wk17_foe
@@ -10692,12 +11030,16 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					GameState.post_message("WK-17: %s will fight in place of %s!" % [
 						card.card_name, _wk17_siren.card_name])
 			_clear_after_ability()
+		elif _player_is_ai(player):
+			_cancel_cross_turn_target("wk17_foe_pick_character")
 		return
 
 	if pending_tech_filter == "rift_guardian_foe_pick":
 		var _rg_att: int = turn_manager._pending_rg_attacker_player
 		if player == _rg_att and card.card_type == "character":
 			if pos == turn_manager._pending_rg_exclude_pos:
+				if _player_is_ai(player):
+					_cancel_cross_turn_target("rift_guardian_foe_pick")
 				return
 			turn_manager._rg_friendly_fire = true
 			turn_manager._rg_friendly_fire_pos = pos
@@ -10708,6 +11050,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				GameState.post_message("Rift Guardian: %s will fight in place of %s!" % [
 					card.card_name, _rg_init.card_name])
 			_clear_after_ability()
+		elif _player_is_ai(player):
+			_cancel_cross_turn_target("rift_guardian_foe_pick")
 		return
 
 	if pending_tech_filter == "any_field_card_destroy":
@@ -10816,7 +11160,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "adjacent":
 		if not card.was_destroyed and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			var _att_name: String = GameState.attacker_card.card_name if GameState.attacker_card != null else "Attacker"
 			if card.card_type == "dead_end":
 				GameState.post_message("%s: adjacent cell revealed (empty)." % _att_name)
@@ -10849,6 +11193,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			if not _tech_reveal_picked.has(pos):
 				_tech_reveal_picked.append(pos)
+			# Wait for reveal anim + any on-expose follow-up before next Radar pick / finish.
+			await _await_card_reveal_animation(player, pos.x, pos.y)
+			card = GameState.get_card(player, pos.x, pos.y)
 			# _on_card_revealed handles trap auto-void when a trap is found
 			# Risky reveal: pay 700 crystals for each character found
 			if "risky" in pending_tech_filter and card.card_type in ["character", "trap"]:
@@ -10878,6 +11225,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				return
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			_tech_reveal_picked.append(pos)
+			await _await_card_reveal_animation(player, pos.x, pos.y)
 			_tech_reveals_remaining -= 1
 			var picked: int = _tech_reveal_picked.size()
 			if _tech_reveals_remaining <= 0 \
@@ -10896,10 +11244,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "bribe_reveal":
 		var bribe_opponent := GameState.get_opponent(current_player)
 		if player == bribe_opponent and card.card_type == "character" and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			GameState.gain_crystals(player, 700, "ability")
 			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
 			_finish_tech_action(current_player)
+		elif _player_is_ai(bribe_opponent):
+			_cancel_cross_turn_target("bribe_reveal")
 		return
 
 	if pending_tech_filter.begins_with("own_units_flag_up_to_"):
@@ -10945,8 +11295,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if not GameState.card_name_has_any_token(card.card_name, _name_tokens):
 				return
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
-				card = GameState.get_card(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			if _name_data:
 				match _name_data.effect_type:
 					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
@@ -10968,8 +11317,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == current_player and card.card_type == "character" \
 				and (card.face_up or _allow_fd):
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
-				card = GameState.get_card(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			if data:
 				match data.effect_type:
 					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
@@ -11079,12 +11427,14 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.post_message("Archbishop redirected destruction to %s." % card.card_name)
 			turn_manager.complete_archbishop_redirect()
 			_clear_after_tech()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("own_divine_character_redirect")
 		return
 
 	if pending_tech_filter == "opponent_any_hidden":
 		var _rev_foe: int = _reveal_attacker_foe_player(opponent)
 		if player == _rev_foe and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			if card.card_type == "dead_end":
 				GameState.post_message("Revealed: (empty)")
 			else:
@@ -11113,56 +11463,65 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type == "character" and card.face_up:
 			turn_manager.resolve_trap_temp_def_boost(player, pos)
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("own_faceup_for_trap_temp_def_boost")
 		return
 
 	if pending_tech_filter == "own_character_for_trap_self_destruct":
 		if player == opponent and card.card_type == "character":
 			turn_manager.resolve_trap_self_destruct(player, pos)
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("own_character_for_trap_self_destruct")
 		return
 
 	if pending_tech_filter == "self_squares_1_opponent_turn":
 		# Opponent (of tech player) reveals 1 of their own face-down units
-		if player != opponent or card.card_type != "character" or card.face_up:
+		if player != opponent:
+			GameState.post_message("Tease: Choose a face-down unit.")
 			return
-		GameState.reveal_card_by_ability(player, pos.x, pos.y)
-		GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
-		_finish_tech_action(current_player)
+		_apply_tease_reveal(player, pos)
 		return
 
 	if pending_tech_filter == "self_reveal_choice":
 		# Trap: defending player (opponent = trap owner) reveals 1 of their own hidden squares
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			GameState.post_message("Bait: Defender revealed %s." % card.card_name)
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("self_reveal_choice")
 		return
 
 	if pending_tech_filter == "trap_hostage_reveal_lock":
 		if player == opponent and card.card_type != "dead_end":
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			if turn_manager._pending_trap_hostage_lock and pos not in GameState.locked_attack_positions:
 				GameState.locked_attack_positions.append(pos)
 			GameState.post_message("Hostage: %s revealed and locked until turn end." % card.card_name)
 			turn_manager._pending_trap_hostage_lock = false
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("trap_hostage_reveal_lock")
 		return
 
 	if pending_tech_filter == "trap_street_joke_reveal":
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			var _sj_gain: int = turn_manager._pending_street_joke_crystal
 			GameState.gain_crystals(player, _sj_gain, "trap")
 			GameState.post_message("Street Joke: Revealed %s — you gain %d Crystals!" % [card.card_name, _sj_gain])
 			turn_manager._pending_street_joke_crystal = 0
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("trap_street_joke_reveal")
 		return
 
 	if pending_tech_filter == "lock_own_monster":
 		if player == current_player and card.card_type == "character":
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is locked from attacking." % card.card_name)
 			# Opponent also picks a monster to lock — transition to opponent lock
@@ -11174,23 +11533,30 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				_begin_human_defender_tech_choice()
 			# In AI_VS_AI both players are AI — the defending AI auto-picks
 			# In VS_AI: if AI played, human picks (no auto); if human played, AI auto-picks
-			if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+			var _mf_def_is_ai: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and opponent == ai_player.player_index and not _is_ai_turn())
+			if _mf_def_is_ai:
 				await get_tree().create_timer(0.5).timeout
+				if pending_tech_filter != "lock_opponent_monster":
+					return
 				# Defending AI picks from its OWN field — use "own_faceup_character" so
 				# the defending AI's decide_target returns a position on its own grid
 				var ai_target := _get_defending_ai().decide_target("own_faceup_character")
-				_handle_tech_target(opponent, ai_target)
-			elif GameState.game_mode == GameState.GameMode.VS_AI and not _is_ai_turn():
-				# Human locked own; AI picks theirs (AI picks from its own field)
-				await get_tree().create_timer(0.5).timeout
-				var ai_target := ai_player.decide_target("own_faceup_character")
+				if ai_target.x < 0:
+					ai_target = _first_highlighted_pos_for_player(opponent)
+				if ai_target.x < 0:
+					GameState.post_message("Make Friend: Opponent has no monster to lock.")
+					_finish_tech_action(current_player)
+					return
 				_handle_tech_target(opponent, ai_target)
 		return
 
 	if pending_tech_filter == "lock_opponent_monster":
 		if player == opponent and card.card_type == "character":
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is also locked from attacking." % card.card_name)
 		else:
@@ -11202,7 +11568,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# REVEAL_OWN_AND_OPPONENT_REVEALS: reveal own chosen, then opponent reveals 1
 		if player == current_player and card.card_type == "character" and not card.face_up:
 			_set_own_facedown_char_peek(false)   # restore all others to face-down before reveal
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			GameState.post_message("Diplomacy Party: Revealed %s — opponent must reveal 1." % card.card_name)
 			pending_tech_filter = "opponent_facedown_forced"
 			_show_guide("Diplomacy Party: Opponent, choose 1 of your cards to reveal.")
@@ -11213,26 +11579,41 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			# Auto-resolve if opponent is AI (VS_AI or AI_VS_AI)
 			var _def_is_ai: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
-					GameState.GameMode.DAILY_DUNGEON] and opponent == ai_player.player_index)
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and opponent == ai_player.player_index)
 			if _def_is_ai:
 				await get_tree().create_timer(0.5).timeout
+				if pending_tech_filter != "opponent_facedown_forced":
+					return
+				if not _any_highlighted():
+					GameState.post_message("Diplomacy Party: Opponent has nothing to reveal.")
+					_finish_tech_action(current_player)
+					return
 				var ai_pos := _get_defending_ai().decide_target("opponent_facedown_forced")
+				if ai_pos.x < 0 or not grid_nodes[opponent][ai_pos.x][ai_pos.y].is_highlighted:
+					ai_pos = _first_highlighted_pos_for_player(opponent)
+				if ai_pos.x < 0:
+					GameState.post_message("Diplomacy Party: Opponent has nothing to reveal.")
+					_finish_tech_action(current_player)
+					return
 				_handle_tech_target(opponent, ai_pos)
 		return
 
 	if pending_tech_filter == "opponent_facedown_forced":
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			GameState.post_message("Diplomacy Party: Opponent revealed %s." % card.card_name)
 			_finish_tech_action(current_player)
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("opponent_facedown_forced",
+				"Diplomacy Party: Opponent has nothing to reveal.")
 		return
 
 	if pending_tech_filter == "own_faceup_character_source":
 		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 1: pick source
 		if player == current_player and card.card_type == "character":
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
-				card = GameState.get_card(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			_tech_buff_move_source = pos
 			pending_tech_filter = "own_faceup_character_target"
 			_show_guide("Essence Transfer: Choose target unit to receive buffs.")
@@ -11267,8 +11648,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 2: pick target, transfer buffs
 		if player == current_player and card.card_type == "character" and pos != _tech_buff_move_source:
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
-				card = GameState.get_card(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			var src: GameState.CardInstance = GameState.get_card(current_player, _tech_buff_move_source.x, _tech_buff_move_source.y)
 			card.perm_atk_bonus += src.perm_atk_bonus
 			card.perm_def_bonus += src.perm_def_bonus
@@ -11287,8 +11667,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# DESTROY_OWN_BASE_ZERO_OPPONENT phase 1: destroy own card, then target opponent
 		if player == current_player and card.card_type != "dead_end":
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
-				card = GameState.get_card(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			_tech_sacrifice_player = current_player
 			GameState.destroy_card(current_player, pos.x, pos.y, false)
 			GameState.post_message("Blood Ritual: Sacrificed %s — choose opponent exposed unit to zero out." % card.card_name)
@@ -11378,6 +11757,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				card.ability_params = _attacker_card.ability_params.duplicate()
 				GameState.post_message("Cursed Reflection: %s copied %s's ability!" % [card.card_name, _attacker_card.card_name])
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("self_faceup_for_copy")
 		return
 
 	if pending_tech_filter == "own_armored_nature":
@@ -11385,14 +11766,15 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type == "character" \
 				and card.affinity == CharacterData.Affinity.NATURE and "Armored" in card.card_name:
 			if not card.face_up:
-				GameState.reveal_card_by_ability(player, pos.x, pos.y)
-				card = GameState.get_card(player, pos.x, pos.y)
+				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			# Swap this card into the trap slot (trap already destroyed → dead_end)
 			# Find the trap position — stored in GameState.attacker_pos (attacker attacked it)
 			# Actually the target_pos is gone. Use a simpler approach: move card to first dead_end slot
 			# or just post a message that swap completed (complex without persistent trap pos)
 			GameState.post_message("Defensive Pheromone: %s swapped positions." % card.card_name)
 			_finish_trap_target_selection()
+		elif _player_is_ai(opponent):
+			_cancel_cross_turn_target("own_armored_nature")
 		return
 
 	if pending_tech_filter == "own_any_as_target":
@@ -11405,6 +11787,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_hide_guide()
 			_set_selection_state(SelectionState.NONE)
 			await turn_manager.resolve_brainwash_friendly_fire(current_player, pos)
+		elif _player_is_ai(current_player):
+			_cancel_cross_turn_target("own_any_as_target")
 		return
 
 	if pending_tech_filter == "row_or_column":
@@ -11515,9 +11899,14 @@ func _clear_after_ability_when_ready() -> void:
 	await GameState.wait_crystal_animation()
 	var resume_bonus: bool = _multi_attack_bonus_targeting
 	var bonus_pos: Vector2i = selected_attacker_pos
+	# Cross-turn Lockpicker (etc.) temporarily sets current_player to the ability owner.
+	# Resume mode-select only for the real turn player after TurnManager restores it.
+	var skip_mode_resume: bool = turn_manager != null \
+			and turn_manager._pending_lockpicker_owner >= 0
 	_clear_after_tech()
 	_emit_ability_selection_done_next_frame()
-	_resume_human_mode_select(resume_bonus, bonus_pos)
+	if not skip_mode_resume:
+		_resume_human_mode_select(resume_bonus, bonus_pos)
 
 func _finish_trap_target_selection() -> void:
 	_finish_trap_target_when_ready()
@@ -11547,6 +11936,7 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"opponent_any_hidden",
 		"own_character_for_swap",
 		"ability_lockpicker_reveal",
+		"ability_expose_reveal_own",
 		"wk17_foe_pick_character",
 		"rift_guardian_foe_pick",
 	]
@@ -11600,6 +11990,7 @@ func _find_own_card_name_by_ability(player: int, ability: CharacterData.AbilityT
 
 
 func _clear_after_tech() -> void:
+	_stop_human_prompt_timeout()
 	_pending_human_defender_tech = false
 	_set_own_facedown_char_peek(false)   # safety net — always clear temporary peek on tech end
 	# Restore YOUR VIEW auto-peek for human players (e.g. after Bribe/Tease defender choice).
@@ -11700,7 +12091,7 @@ func _own_unit_target_allows_facedown(filter: String, tech_data: TechCardData = 
 		"own_faceup_card_sacrifice", "own_armored_nature", "own_character_for_trap_self_destruct",
 		"lock_own_monster", "lock_opponent_monster", "own_any_card",
 		"self_reveal_choice", "trap_hostage_reveal_lock", "trap_street_joke_reveal",
-		"opponent_facedown_forced"]:
+		"opponent_facedown_forced", "ability_expose_reveal_own"]:
 		return true
 	if tech_data != null:
 		return tech_data.effect_params.get("allow_facedown", false) \
@@ -11713,6 +12104,7 @@ func _filter_peek_includes_traps(filter: String) -> bool:
 	return filter in [
 		"own_any_card", "self_reveal_choice", "trap_hostage_reveal_lock",
 		"trap_street_joke_reveal", "opponent_facedown_forced",
+		"ability_expose_reveal_own", "ability_lockpicker_reveal",
 	]
 
 
@@ -11956,6 +12348,16 @@ func _highlight_tech_targets(filter: String) -> void:
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(_lp_foe, r, c)
 				grid_nodes[_lp_foe][r][c].set_highlighted(
+					not card.face_up and not card.was_destroyed)
+
+	elif filter == "ability_expose_reveal_own":
+		var _ex_owner: int = turn_manager._pending_lockpicker_owner
+		if _ex_owner < 0:
+			_ex_owner = player
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(_ex_owner, r, c)
+				grid_nodes[_ex_owner][r][c].set_highlighted(
 					not card.face_up and not card.was_destroyed)
 
 	elif filter == "wk17_foe_pick_character":
@@ -12229,6 +12631,9 @@ func _forfeit_multi_attack_bonus() -> void:
 	if card != null:
 		card.attacked_this_turn = true
 		card.bonus_attack_pending = false
+		if card.ability_type == CharacterData.AbilityType.MUTAGEN_IMMEDIATE_ATTACK \
+				and card.has_mutagen_flag:
+			card.mutagen_attacked = true
 	_pending_multi_attack_pos = Vector2i(-1, -1)
 	_multi_attack_bonus_targeting = false
 
@@ -12523,6 +12928,12 @@ func _await_card_reveal_animation(player: int, row: int, col: int) -> void:
 	while _is_cell_revealing(player, row, col):
 		await get_tree().process_frame
 
+## Reveal then wait for animation + on-expose follow-ups (Lockpicker / Nebulomancer / …).
+func _reveal_by_ability_and_await(player: int, row: int, col: int) -> GameState.CardInstance:
+	GameState.reveal_card_by_ability(player, row, col)
+	await _await_card_reveal_animation(player, row, col)
+	return GameState.get_card(player, row, col)
+
 func _play_flag_pop_on_card(player: int, row: int, col: int, flag: String) -> void:
 	_refresh_card_node(player, row, col)
 	var node: Control = grid_nodes[player][row][col]
@@ -12553,6 +12964,10 @@ func _on_wait_badge_animation_requested(player: int, row: int, col: int) -> void
 	await _play_wait_badge_on_card(player, row, col)
 	turn_manager.wait_badge_animation_done.emit()
 
+func _on_card_position_swapped(player: int, row1: int, col1: int, row2: int, col2: int) -> void:
+	_refresh_card_node(player, row1, col1)
+	_refresh_card_node(player, row2, col2)
+
 func _on_card_flag_added(player: int, row: int, col: int, flag: String) -> void:
 	_pending_flag_pops.append({
 		"player": player,
@@ -12578,17 +12993,19 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 		_refresh_card_node(player, row, col)
 		if node.has_method("play_reveal_animation"):
 			await node.play_reveal_animation()
-	_revealing_cells.erase(reveal_key)
 	await _flush_flag_pops_for_cell(player, row, col)
 	if turn_manager != null:
 		await turn_manager.apply_on_reveal_abilities(player, row, col)
 	if turn_manager != null:
 		turn_manager.notify_card_reveal_animation_done(player, row, col)
+	# Keep revealing lock through Lockpicker-style on-expose follow-ups so callers
+	# (Tease / Radar) that await _await_card_reveal_animation do not resume early.
 	if inst != null and inst.card_type == "character" \
 			and inst.ability_type == CharacterData.AbilityType.ON_EXPOSE_REVEAL_FOE_ONCE \
 			and GameState.current_phase != GameState.Phase.BATTLE \
 			and turn_manager != null:
 		await turn_manager.maybe_apply_on_expose_reveal_foe(player, row, col)
+	_revealing_cells.erase(reveal_key)
 	# Revealed empty cell — brief blank flash then dissolve (Scout Probe, Radar, etc.).
 	# Battle attacks on dead_end skip here; destroy_card runs after Reckoning.
 	if inst != null and inst.card_type == "dead_end":
@@ -13568,6 +13985,7 @@ func _on_game_over(winner: int) -> void:
 	# Stop the AI watchdog so it cannot re-trigger another AI turn
 	if _ai_watchdog:
 		_ai_watchdog.stop()
+	_stop_human_prompt_timeout()
 	# Disconnect AI bluff signals so any fire-and-forget coroutines that are
 	# still awaiting a timer cannot place bluffs during the reveal animation
 	if is_instance_valid(ai_player) \
@@ -15090,7 +15508,10 @@ func _await_pack_opening_overlay() -> void:
 		if overlay != null:
 			break
 	if overlay != null and is_instance_valid(overlay):
-		await overlay.tree_exiting
+		# Wait until fully gone — tree_exiting races change_scene EXIT_TREE errors.
+		if overlay.is_inside_tree():
+			await overlay.tree_exited
+		await get_tree().process_frame
 
 
 func _await_union_opening_overlay() -> void:
@@ -15104,7 +15525,9 @@ func _await_union_opening_overlay() -> void:
 		if overlay != null:
 			break
 	if overlay != null and is_instance_valid(overlay):
-		await overlay.tree_exiting
+		if overlay.is_inside_tree():
+			await overlay.tree_exited
+		await get_tree().process_frame
 
 func _exit_tree() -> void:
 	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:

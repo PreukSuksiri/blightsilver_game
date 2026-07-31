@@ -1,0 +1,117 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/monsters/battler_univ_meeting_room_ghost_2.png"
+			}
+		],
+		"sfx": "res://assets/audio/sfx/laugh_2.mp3",
+		"sfx_volume": 120.0,
+		"speaker": "???",
+		"text": "(**mumbling**)"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_deck_vault": "hard_zealot_kiba",
+		"ai_forced_cells": [
+			{
+				"card_name": "Kiyoko the Death Whisper",
+				"col": 1,
+				"row": 1
+			},
+			{
+				"card_name": "Silver Spearman",
+				"col": 1,
+				"row": 2
+			},
+			{
+				"card_name": "Zealot",
+				"col": 1,
+				"row": 3
+			},
+			{
+				"card_name": "Grand Fort Archer",
+				"col": 3,
+				"row": 1
+			},
+			{
+				"card_name": "Grand Fort Footsoldier",
+				"col": 3,
+				"row": 2
+			},
+			{
+				"card_name": "Hairpin Assassin",
+				"col": 3,
+				"row": 3
+			},
+			{
+				"card_name": "Tomb Bandit",
+				"col": 2,
+				"row": 0
+			},
+			{
+				"card_name": "Lockpicker",
+				"col": 2,
+				"row": 4
+			},
+			{
+				"card_name": "Street Rogue",
+				"col": 4,
+				"row": 2
+			},
+			{
+				"card_name": "Ox Patrol",
+				"col": 0,
+				"row": 2
+			},
+			{
+				"card_name": "Ox Patrol",
+				"col": 4,
+				"row": 0
+			},
+			{
+				"card_name": "Tomb Bandit",
+				"col": 0,
+				"row": 0
+			},
+			{
+				"card_name": "Decoy Puppet",
+				"col": 0,
+				"row": 4
+			},
+			{
+				"card_name": "Cursed Reflection",
+				"col": 4,
+				"row": 4
+			},
+			{
+				"card_name": "Flame Trap",
+				"col": 2,
+				"row": 1
+			},
+			{
+				"card_name": "Bunker",
+				"col": 2,
+				"row": 3
+			}
+		],
+		"ai_forced_tech": [
+			"Release Mutagen",
+			"Radar",
+			"War Supply"
+		],
+		"linger_characters": true,
+		"player1_name": "Nexus Crowmont",
+		"player2_name": "Stained Doll",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png",
+		"start_battle": true
+	}
+]

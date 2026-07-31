@@ -193,6 +193,9 @@ static func _play_logo_approved_stamp(
 	if logo_wrap == null or not is_instance_valid(logo_wrap):
 		return
 	SFXManager.play(SFXManager.SFX_STAMP, SFXManager.SFX_STAMP_VOLUME)
+	# Logo slam = stamp land — clear capsule fog fringes (Campaign Gallery).
+	if host.has_method("on_capsule_exit_logo_stamp_landed"):
+		host.call("on_capsule_exit_logo_stamp_landed")
 	await _pulse_stamp_scale(host, logo_wrap, STAMP_GROW_SEC, STAMP_SHRINK_SEC)
 	if not host.is_inside_tree():
 		return

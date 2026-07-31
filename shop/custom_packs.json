@@ -567,7 +567,7 @@
 			{
 				"card_name": "Slug-11",
 				"card_type": "character",
-				"weight": 100
+				"weight": 5
 			},
 			{
 				"card_name": "Sonic Seraph",
@@ -834,7 +834,7 @@
 			{
 				"card_name": "Potent Poison",
 				"card_type": "tech",
-				"weight": 5.0
+				"weight": 1
 			},
 			{
 				"card_name": "Pyromancer",
@@ -939,7 +939,7 @@
 			{
 				"card_name": "Zealot",
 				"card_type": "unit",
-				"weight": 100.0
+				"weight": 5
 			}
 		],
 		"description": "",

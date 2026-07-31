@@ -116,6 +116,47 @@ func _on_opponent_union_summoned(player: int, _union_label: String, _material_la
 func _union_maniac_active() -> bool:
 	return GameState.battle_ai_union_maniac
 
+# ─────────────────────────────────────────────────────────────
+# Cost awareness (bypassed entirely in Union Maniac mode)
+# ─────────────────────────────────────────────────────────────
+## Crystals the AI insists on keeping after paying a union summon cost.
+const UNION_CRYSTAL_RESERVE: int = 500
+## Crystals the AI insists on keeping after paying a tech cost.
+const TECH_CRYSTAL_RESERVE: int = 300
+
+## True crystal hit of summoning this union (dungeon cost modifiers plus the
+## Risk & Reward 25% surcharge applied inside GameState.lose_crystals).
+func _union_crystal_hit(u: UnionData) -> int:
+	var cost: int = GameState.effective_union_summon_cost(u.summon_cost)
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "risk_and_reward" in GameState.active_dungeon_modifiers:
+		cost = int(cost * 1.25)
+	return cost
+
+## Can the AI pay for this union without dying or going nearly broke?
+## Union Maniac mode (and the E2E harness) only checks raw affordability.
+func _union_safely_affordable(u: UnionData) -> bool:
+	var remaining: int = GameState.crystals[player_index] - _union_crystal_hit(u)
+	if _union_maniac_active() or CardE2ERunner.is_active():
+		return remaining >= 0
+	return remaining >= UNION_CRYSTAL_RESERVE
+
+## Can the AI pay for this tech without dying or going nearly broke?
+func _tech_safely_affordable(data: TechCardData) -> bool:
+	var remaining: int = GameState.crystals[player_index] - data.crystal_cost
+	if _union_maniac_active() or CardE2ERunner.is_active():
+		return remaining >= 0
+	return remaining >= TECH_CRYSTAL_RESERVE
+
+## Score penalty so pricier tech needs a bigger board payoff, even at full life.
+func _tech_cost_penalty(data: TechCardData) -> int:
+	if _union_maniac_active():
+		return 0
+	var penalty: int = data.crystal_cost / 50
+	if data.crystal_cost * 2 > GameState.crystals[player_index]:
+		penalty += 30
+	return penalty
+
 ## Base union-summon attempt chance for this AI turn (0.0–1.0).
 func _union_summon_chance() -> float:
 	if _union_maniac_active():
@@ -126,6 +167,13 @@ func _union_summon_chance() -> float:
 	if _opponent_union_summoned and _ai_turn_count <= 3:
 		var less_hesitation: Array[float] = [0.30, 0.25, 0.20]
 		chance = minf(0.90, chance + less_hesitation[_ai_turn_count - 1])
+	# Cost awareness: when crystals run low, spending a big chunk on a summon
+	# gets much less tempting.
+	var my_crystals: int = GameState.crystals[player_index]
+	if my_crystals <= 2000:
+		chance *= 0.5
+	elif my_crystals <= 4000:
+		chance *= 0.75
 	return chance
 
 
@@ -312,6 +360,7 @@ func _choose_best_attack() -> Dictionary:
 		var attacker: GameState.CardInstance = GameState.get_card(
 				player_index, attacker_pos.x, attacker_pos.y)
 		var reveal_penalty: int = _REVEAL_ATTACKER_PENALTY if entry.get("needs_reveal", false) else 0
+		var quality_penalty: int = _attacker_quality_penalty_for_card(attacker)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var target_pos: Vector2i = Vector2i(r, c)
@@ -325,7 +374,8 @@ func _choose_best_attack() -> Dictionary:
 				if not BattleResolver.is_attack_target_allowed(
 						player_index, attacker_pos, attacker, opponent_index, target_pos, target):
 					continue
-				var sc: int = _score_attack(attacker_pos, target_pos) + randi() % 3 - reveal_penalty
+				var sc: int = _score_attack(attacker_pos, target_pos) + randi() % 3 \
+						- reveal_penalty - quality_penalty
 				if sc > best_score:
 					best_score = sc
 					best_attacker = attacker_pos
@@ -435,7 +485,7 @@ func _attacker_quality_penalty(attacker_pos: Vector2i) -> int:
 func _attacker_quality_penalty_for_card(attacker: GameState.CardInstance) -> int:
 	var atk: int = attacker.get_effective_atk()
 	if atk <= 0:
-		return 40
+		return 60
 	if atk < 20:
 		return 15
 	return 0
@@ -746,11 +796,11 @@ func _choose_tech() -> void:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
 		if data == null:
 			continue
-		if GameState.crystals[player_index] < data.crystal_cost:
+		if not _tech_safely_affordable(data):
 			continue
 		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(player_index, data.required_prior_card):
 			continue
-		var base_score: int = _score_tech(tech_name, snap)
+		var base_score: int = _score_tech(tech_name, snap) - _tech_cost_penalty(data)
 		if base_score <= 0:
 			continue
 		var sc: int = base_score + randi() % 5
@@ -769,11 +819,11 @@ func _has_useful_tech() -> bool:
 	var snap: Dictionary = _board_snapshot()
 	for tech_name: String in GameState.tech_hands[player_index]:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
-		if data == null or GameState.crystals[player_index] < data.crystal_cost:
+		if data == null or not _tech_safely_affordable(data):
 			continue
 		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(player_index, data.required_prior_card):
 			continue
-		if _score_tech(tech_name, snap) > 0:
+		if _score_tech(tech_name, snap) - _tech_cost_penalty(data) > 0:
 			return true
 	return false
 
@@ -985,6 +1035,8 @@ func decide_target(filter: String) -> Vector2i:
 			return decide_facedown_opponent_excluding([])
 		"opponent_any_hidden", "ability_false_prophet_reveal", "ability_lockpicker_reveal", "lock_opponent_monster":
 			return _random_unrevealed_opponent()
+		"ability_expose_reveal_own":
+			return _random_unrevealed_self()
 		"opponent_character_ability_destroy":
 			return _random_faceup_opponent()
 		"ability_rebel_king_swap":
@@ -1005,6 +1057,8 @@ func decide_target(filter: String) -> Vector2i:
 		"own_bio_character":
 			return _best_own_faceup_bio()
 		"self_squares_1_opponent_turn", "own_facedown_character":
+			return _random_unrevealed_self_character()
+		"bribe_reveal":
 			return _random_unrevealed_self_character()
 		"self_reveal_choice", "opponent_facedown_forced", \
 				"trap_hostage_reveal_lock", "trap_street_joke_reveal":
@@ -1261,7 +1315,7 @@ func _random_unrevealed_self() -> Vector2i:
 			if not card.face_up and card.card_type != "dead_end":
 				options.append(Vector2i(r, c))
 	if options.is_empty():
-		return Vector2i(0, 0)
+		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
 
 func _random_unrevealed_self_character() -> Vector2i:
@@ -1272,7 +1326,7 @@ func _random_unrevealed_self_character() -> Vector2i:
 			if card.card_type == "character" and not card.face_up:
 				options.append(Vector2i(r, c))
 	if options.is_empty():
-		return Vector2i(0, 0)
+		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
 
 func _worst_own_faceup() -> Vector2i:
@@ -1292,7 +1346,7 @@ func _worst_own_faceup_excluding(exclude_pos: Vector2i) -> Vector2i:
 				worst_atk = card.current_atk
 				worst_pos = pos
 	if worst_pos == Vector2i(-1, -1):
-		return Vector2i(0, 0)
+		return Vector2i(-1, -1)
 	return worst_pos
 
 func _worst_own_ally_excluding(exclude_pos: Vector2i) -> Vector2i:
@@ -1309,7 +1363,7 @@ func _worst_own_ally_excluding(exclude_pos: Vector2i) -> Vector2i:
 				worst_atk = card.current_atk
 				worst_pos = pos
 	if worst_pos == Vector2i(-1, -1):
-		return Vector2i(0, 0)
+		return Vector2i(-1, -1)
 	return worst_pos
 
 func _best_own_divine_sacrifice() -> Vector2i:
@@ -1326,7 +1380,7 @@ func _best_own_divine_sacrifice() -> Vector2i:
 				lowest_atk = card.current_atk
 				best_pos = Vector2i(r, c)
 	if best_pos == Vector2i(-1, -1):
-		return Vector2i(0, 0)
+		return Vector2i(-1, -1)
 	return best_pos
 
 func _first_own_revive_slot() -> Vector2i:
@@ -1550,7 +1604,7 @@ func _get_available_unions() -> Array:
 				var u: UnionData = entry["union"]
 				if seen.has(u.card_name):
 					continue
-				if GameState.crystals[player_index] < u.summon_cost:
+				if not _union_safely_affordable(u):
 					continue
 				seen[u.card_name] = true
 				var mats: Array = _solve_materials(u, entry["zone_cells"])
@@ -1622,6 +1676,14 @@ func _score_union(u: UnionData) -> int:
 	# Bonus if this union can beat the strongest revealed opponent card
 	if u.base_atk > _strongest_opp_def():
 		score += 30
+
+	# Cost awareness (skipped in Union Maniac mode): expensive summons must
+	# earn their price, and anything eating over half our crystals is scary.
+	if not _union_maniac_active():
+		var hit: int = _union_crystal_hit(u)
+		score -= hit / 50
+		if hit * 2 > GameState.crystals[player_index]:
+			score -= 40
 
 	return score
 

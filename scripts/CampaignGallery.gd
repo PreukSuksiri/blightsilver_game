@@ -1121,6 +1121,102 @@ func _add_saved_progress_badge(frame: Panel, save_kind: String) -> void:
 		lbl.tooltip_text = "Saved story progress is available for this chapter."
 
 
+func _chapter_display_label(card: Dictionary) -> String:
+	var line1: String = str(card.get("line1", "")).strip_edges()
+	var line2: String = str(card.get("line2", "")).strip_edges()
+	if line1 != "" and line2 != "":
+		return "%s — %s" % [line1, line2]
+	if line2 != "":
+		return line2
+	if line1 != "":
+		return line1
+	var vn: String = str(card.get("vn_scene", "")).strip_edges()
+	if vn != "" and ResourceLoader.exists(vn):
+		return vn.get_file().get_basename()
+	return "another chapter"
+
+
+func _find_other_ongoing_chapters(exclude_vn: String) -> Array[Dictionary]:
+	var exclude: String = exclude_vn.strip_edges()
+	var others: Array[Dictionary] = []
+	var seen: Dictionary = {}
+	for raw: Variant in _data:
+		if not raw is Dictionary:
+			continue
+		var card: Dictionary = raw as Dictionary
+		var key: String = str(card.get("vn_scene", "")).strip_edges()
+		if key.is_empty() or key == exclude or seen.has(key):
+			continue
+		if _get_chapter_save_kind(card, key).is_empty():
+			continue
+		seen[key] = true
+		others.append({
+			"vn_scene": key,
+			"card": card,
+			"label": _chapter_display_label(card),
+		})
+	# Arc keys that may not match a visible gallery card still count as ongoing.
+	for raw_key: Variant in SaveManager.chapter_arc_progress.keys():
+		var key: String = str(raw_key).strip_edges()
+		if key.is_empty() or key == exclude or seen.has(key):
+			continue
+		seen[key] = true
+		var fallback_label: String = _prerequisite_display_name(key)
+		if fallback_label.is_empty():
+			fallback_label = key.get_file().get_basename()
+		others.append({
+			"vn_scene": key,
+			"card": {},
+			"label": fallback_label,
+		})
+	return others
+
+
+func _clear_other_chapter_progress(exclude_vn: String) -> void:
+	var exclude: String = exclude_vn.strip_edges()
+	for entry: Dictionary in _find_other_ongoing_chapters(exclude):
+		var key: String = str(entry.get("vn_scene", "")).strip_edges()
+		var card: Dictionary = entry.get("card", {}) as Dictionary
+		if key.is_empty():
+			continue
+		SaveManager.reset_chapter_arc_progress(key, card)
+
+
+func _show_other_chapter_progress_warning(
+		target_card: Dictionary,
+		target_vn: String,
+		others: Array[Dictionary],
+		on_confirm: Callable) -> void:
+	if GameDialog.has_open_overlay(self):
+		return
+	var target_label: String = _chapter_display_label(target_card)
+	var other_labels: PackedStringArray = PackedStringArray()
+	for entry: Dictionary in others:
+		var lbl: String = str(entry.get("label", "")).strip_edges()
+		if not lbl.is_empty():
+			other_labels.append(lbl)
+	var others_text: String = ", ".join(other_labels) if not other_labels.is_empty() else "another chapter"
+	var body: String = (
+		"You have ongoing saved progress in:\n%s\n\n"
+		+ "Playing %s will erase that saved progress "
+		+ "(story, exploration, and dungeon saves for those chapters).\n\n"
+		+ "Continue?"
+	) % [others_text, target_label]
+	GameDialog.confirmation_overlay(
+		self,
+		"Other Chapter Progress",
+		body,
+		"Continue",
+		"Cancel",
+		func() -> void:
+			_clear_other_chapter_progress(target_vn)
+			if on_confirm.is_valid():
+				on_confirm.call(),
+		Callable(),
+		GALLERY_SAVED_PROGRESS_DIALOG_MIN_W,
+		30)
+
+
 func _on_chapter_pressed(card: Dictionary, card_ctrl: Control = null) -> void:
 	if _exit_anim_running or _exit_anim_done:
 		return
@@ -1136,15 +1232,21 @@ func _on_chapter_pressed(card: Dictionary, card_ctrl: Control = null) -> void:
 	var vn_path: String = str(card.get("vn_scene", "")).strip_edges()
 	if vn_path.is_empty():
 		return
-	match _get_chapter_save_kind(card, vn_path):
-		"dungeon":
-			var dungeon_info: Dictionary = _resolve_chapter_dungeon(card, vn_path)
-			var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
-			_show_continue_or_restart_dialog(card, vn_path, dungeon_id)
-		"exploration", "vn":
-			_show_continue_or_restart_chapter_dialog(card, vn_path)
-		_:
-			_play_vn(vn_path, true, card)
+	var proceed := func() -> void:
+		match _get_chapter_save_kind(card, vn_path):
+			"dungeon":
+				var dungeon_info: Dictionary = _resolve_chapter_dungeon(card, vn_path)
+				var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
+				_show_continue_or_restart_dialog(card, vn_path, dungeon_id)
+			"exploration", "vn":
+				_show_continue_or_restart_chapter_dialog(card, vn_path)
+			_:
+				_play_vn(vn_path, true, card)
+	var others: Array[Dictionary] = _find_other_ongoing_chapters(vn_path)
+	if others.is_empty():
+		proceed.call()
+	else:
+		_show_other_chapter_progress_warning(card, vn_path, others, proceed)
 
 
 func _resolve_chapter_dungeon(card: Dictionary, vn_path: String) -> Dictionary:

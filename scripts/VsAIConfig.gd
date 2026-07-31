@@ -34,6 +34,9 @@ var _portrait_browse_dirs: Array[String] = [
 	DEFAULT_PORTRAIT_BROWSE_DIR,
 ]
 var _portrait_previews: Array[TextureRect] = [null, null]
+## Selected AI Identity Vault entry id per side ("" = none).
+var _identity_ids: Array[String] = ["", ""]
+var _identity_hint_labels: Array[Label] = [null, null]
 
 # Union zone highlight
 var _union_highlighted_name: String = ""
@@ -127,6 +130,7 @@ func _build_player_column(parent: HBoxContainer) -> void:
 	col.add_child(hdr)
 
 	_add_name_row(col, 0)
+	_add_identity_row(col, 0)
 	_add_portrait_row(col, 0, "Your Illustration")
 
 	var player_vault_hdr := Label.new()
@@ -177,6 +181,7 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 	col.add_child(hdr)
 
 	_add_name_row(col, 1)
+	_add_identity_row(col, 1)
 	_add_portrait_row(col, 1, "AI Illustration")
 
 	# ── AI Deck Vault (overrides deck + formation when set) ───────────────────
@@ -331,6 +336,107 @@ func _add_name_row(parent: Control, player_index: int) -> void:
 	row.add_child(edit)
 	_name_edits[player_index] = edit
 
+
+func _add_identity_row(parent: Control, player_index: int) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	parent.add_child(row)
+
+	var lbl := Label.new()
+	lbl.text = "Identity:"
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(lbl)
+
+	var choose_btn := Button.new()
+	choose_btn.text = "From Identity Vault…"
+	choose_btn.add_theme_font_size_override("font_size", 12)
+	var idx := player_index
+	choose_btn.pressed.connect(func() -> void: _open_identity_picker(idx))
+	row.add_child(choose_btn)
+
+	var clear_btn := Button.new()
+	clear_btn.text = "Clear"
+	clear_btn.add_theme_font_size_override("font_size", 12)
+	clear_btn.pressed.connect(func() -> void: _clear_identity(idx))
+	row.add_child(clear_btn)
+
+	var hint := Label.new()
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.add_theme_color_override("font_color", Color(0.75, 0.9, 1.0, 0.75))
+	hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(hint)
+	_identity_hint_labels[player_index] = hint
+	_refresh_identity_hint(player_index)
+
+
+func _identity_summary_text(entry: Dictionary) -> String:
+	if entry.is_empty():
+		return "(none — set name & illustration manually)"
+	var birth: String = str(entry.get("birth_name", "")).strip_edges()
+	if birth.is_empty():
+		birth = AIIdentityVault.default_birth_name_for_entry(entry)
+	var difficulty: String = str(entry.get("difficulty", "")).strip_edges()
+	var parts: PackedStringArray = []
+	if not birth.is_empty():
+		parts.append("Birth: %s" % birth)
+	if not difficulty.is_empty():
+		parts.append(difficulty)
+	var pers: PackedStringArray = []
+	for key: String in ["personality_defensive", "personality_offensive", "personality_social"]:
+		var p: String = str(entry.get(key, "")).strip_edges()
+		if not p.is_empty():
+			pers.append(p)
+	if not pers.is_empty():
+		parts.append(", ".join(pers))
+	if parts.is_empty():
+		return str(entry.get("id", "Identity"))
+	return " · ".join(parts)
+
+
+func _refresh_identity_hint(player_index: int) -> void:
+	if player_index < 0 or player_index >= _identity_hint_labels.size():
+		return
+	var hint: Label = _identity_hint_labels[player_index]
+	if hint == null:
+		return
+	var entry_id: String = _identity_ids[player_index]
+	if entry_id.is_empty():
+		hint.text = "(none — set name & illustration manually)"
+		return
+	hint.text = _identity_summary_text(AIIdentityVault.get_entry(entry_id))
+
+
+func _clear_identity(player_index: int) -> void:
+	_identity_ids[player_index] = ""
+	_refresh_identity_hint(player_index)
+
+
+func _apply_identity_selection(player_index: int, entry_id: String) -> void:
+	var entry: Dictionary = AIIdentityVault.get_entry(entry_id)
+	if entry.is_empty():
+		return
+	_identity_ids[player_index] = entry_id.strip_edges()
+
+	var display_name: String = str(entry.get("name", "")).strip_edges()
+	if display_name.is_empty():
+		display_name = str(entry.get("id", "")).strip_edges()
+	if player_index < _name_edits.size():
+		var name_edit: LineEdit = _name_edits[player_index]
+		if name_edit != null and not display_name.is_empty():
+			name_edit.text = display_name
+
+	var illus: String = str(entry.get("illustration", "")).strip_edges()
+	if not illus.is_empty():
+		_portrait_paths[player_index] = illus
+		var new_tex: Texture2D = GameState.load_portrait_texture(illus)
+		var preview: TextureRect = _portrait_previews[player_index]
+		if new_tex and preview != null:
+			preview.texture = new_tex
+
+	_refresh_identity_hint(player_index)
+
 func _add_portrait_row(parent: Control, player_index: int, label_text: String) -> void:
 	var illus_row := HBoxContainer.new()
 	illus_row.add_theme_constant_override("separation", 10)
@@ -466,6 +572,18 @@ func _apply_battle_identity() -> void:
 			n = DEFAULT_PLAYER_NAMES[i]
 		names.append(n)
 	GameState.campaign_player_names = names
+	GameState.battle_p1_identity_id = _identity_ids[0].strip_edges()
+	GameState.battle_ai_identity_id = _identity_ids[1].strip_edges()
+	# Personality + bluff chats come from P2 (AI) identity.
+	if not GameState.battle_ai_identity_id.is_empty():
+		AIIdentityVault.apply_personality_to_battle(GameState.battle_ai_identity_id)
+	else:
+		for key: String in [
+			"ai_personality_defensive",
+			"ai_personality_offensive",
+			"ai_personality_social",
+		]:
+			GameState.campaign_enemy_config.erase(key)
 	GameState.battle_bgm_enabled = _bgm_enabled_chk.button_pressed if _bgm_enabled_chk != null else true
 	GameState.battle_ai_union_maniac = _union_maniac_chk.button_pressed if _union_maniac_chk != null else false
 	if GameState.battle_ai_union_maniac:
@@ -947,6 +1065,56 @@ func _collect_portrait_files(dir_path: String, recursive: bool) -> Array:
 		return str(a.get("label", "")) < str(b.get("label", "")))
 	return results
 
+func _get_identity_vault_options() -> Array:
+	var opts: Array = []
+	for entry_v: Variant in AIIdentityVault.get_entries():
+		if not entry_v is Dictionary:
+			continue
+		var entry: Dictionary = entry_v as Dictionary
+		var entry_id: String = str(entry.get("id", "")).strip_edges()
+		if entry_id.is_empty():
+			continue
+		var illus: String = str(entry.get("illustration", "")).strip_edges()
+		var display_name: String = str(entry.get("name", "")).strip_edges()
+		if display_name.is_empty():
+			display_name = entry_id
+		var difficulty: String = str(entry.get("difficulty", "")).strip_edges()
+		var label: String = display_name
+		if not difficulty.is_empty():
+			label = "%s (%s)" % [display_name, difficulty]
+		opts.append({
+			"label": label,
+			"path": illus if not illus.is_empty() else DEFAULT_PORTRAIT_PATHS[1],
+			"identity_id": entry_id,
+			"identity_name": display_name,
+		})
+	opts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return str(a.get("label", "")) < str(b.get("label", "")))
+	return opts
+
+
+func _apply_portrait_selection(
+		player_index: int,
+		path: String,
+		identity_id: String = "",
+		identity_name: String = "") -> void:
+	# Folder / default picks are illustration-only; vault picks apply the whole identity.
+	if not identity_id.is_empty():
+		_apply_identity_selection(player_index, identity_id)
+		return
+	_identity_ids[player_index] = ""
+	_refresh_identity_hint(player_index)
+	_portrait_paths[player_index] = path
+	var new_tex: Texture2D = GameState.load_portrait_texture(path)
+	var preview: TextureRect = _portrait_previews[player_index]
+	if new_tex and preview != null:
+		preview.texture = new_tex
+	if not identity_name.is_empty() and player_index < _name_edits.size():
+		var name_edit: LineEdit = _name_edits[player_index]
+		if name_edit != null:
+			name_edit.text = identity_name
+
+
 func _populate_portrait_picker_flow(
 		flow: HFlowContainer,
 		options: Array,
@@ -956,9 +1124,18 @@ func _populate_portrait_picker_flow(
 		thumb_h: float) -> void:
 	for child: Node in flow.get_children():
 		child.queue_free()
+	if options.is_empty():
+		var empty_lbl := Label.new()
+		empty_lbl.text = "No illustrations found."
+		empty_lbl.add_theme_font_size_override("font_size", 13)
+		empty_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
+		flow.add_child(empty_lbl)
+		return
 	for opt: Dictionary in options:
 		var opt_path: String = str(opt["path"])
 		var opt_label: String = str(opt["label"])
+		var opt_identity_id: String = str(opt.get("identity_id", ""))
+		var opt_identity_name: String = str(opt.get("identity_name", ""))
 
 		var cell := VBoxContainer.new()
 		cell.custom_minimum_size = Vector2(thumb_w, thumb_h + 24)
@@ -974,7 +1151,12 @@ func _populate_portrait_picker_flow(
 			thumb.texture = tex
 		else:
 			thumb.modulate = Color(0.3, 0.3, 0.3)
-		if opt_path == _portrait_paths[player_index]:
+		var selected: bool = false
+		if not opt_identity_id.is_empty():
+			selected = opt_identity_id == _identity_ids[player_index]
+		else:
+			selected = opt_path == _portrait_paths[player_index] and _identity_ids[player_index].is_empty()
+		if selected:
 			thumb.modulate = Color(0.4, 1.0, 0.6)
 		cell.add_child(thumb)
 
@@ -987,18 +1169,78 @@ func _populate_portrait_picker_flow(
 		cell.add_child(name_lbl)
 
 		var p_cap := opt_path
+		var id_cap := opt_identity_id
+		var n_cap := opt_identity_name
 		var idx := player_index
 		thumb.mouse_filter = Control.MOUSE_FILTER_STOP
 		thumb.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventMouseButton:
 				var mbe := event as InputEventMouseButton
 				if mbe.pressed and mbe.button_index == MOUSE_BUTTON_LEFT:
-					_portrait_paths[idx] = p_cap
-					var new_tex: Texture2D = GameState.load_portrait_texture(p_cap)
-					var preview: TextureRect = _portrait_previews[idx]
-					if new_tex and preview != null:
-						preview.texture = new_tex
+					_apply_portrait_selection(idx, p_cap, id_cap, n_cap)
 					overlay.queue_free())
+
+
+func _open_identity_picker(player_index: int) -> void:
+	var side_label: String = "Your" if player_index == 0 else "AI"
+
+	var overlay := ColorRect.new()
+	overlay.color = Color(0.0, 0.0, 0.0, 0.65)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 70
+	add_child(overlay)
+
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(620, 480)
+	center.add_child(panel)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 8)
+	panel.add_child(vb)
+
+	var title_hb := HBoxContainer.new()
+	vb.add_child(title_hb)
+	var title := Label.new()
+	title.text = "Choose %s Identity (AI Identity Vault)" % side_label
+	title.add_theme_font_size_override("font_size", 16)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_hb.add_child(title)
+	var close_btn := Button.new()
+	close_btn.text = "✕"
+	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
+	close_btn.add_theme_font_size_override("font_size", 14)
+	close_btn.pressed.connect(func() -> void: overlay.queue_free())
+	title_hb.add_child(close_btn)
+
+	var hint := Label.new()
+	hint.text = "Applies illustration, display name, birth name, personality, and bluff chats."
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
+	vb.add_child(hint)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vb.add_child(scroll)
+
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 8)
+	flow.add_theme_constant_override("v_separation", 8)
+	flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(flow)
+
+	_populate_portrait_picker_flow(
+		flow, _get_identity_vault_options(), player_index, overlay, 80.0, 110.0)
+
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			if not panel.get_global_rect().has_point(
+					(event as InputEventMouseButton).global_position):
+				overlay.queue_free())
 
 func _open_portrait_folder_dialog(player_index: int, overlay: Control, on_changed: Callable) -> void:
 	var fd := FileDialog.new()
@@ -1033,7 +1275,7 @@ func _open_portrait_picker(player_index: int) -> void:
 	overlay.add_child(center)
 
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(580, 420)
+	panel.custom_minimum_size = Vector2(580, 460)
 	center.add_child(panel)
 
 	var vb := VBoxContainer.new()
@@ -1053,6 +1295,23 @@ func _open_portrait_picker(player_index: int) -> void:
 	close_btn.add_theme_font_size_override("font_size", 14)
 	close_btn.pressed.connect(func() -> void: overlay.queue_free())
 	title_hb.add_child(close_btn)
+
+	# Source: folder browse vs AI Identity Vault (personalities + illustrations).
+	var source_row := HBoxContainer.new()
+	source_row.add_theme_constant_override("separation", 8)
+	vb.add_child(source_row)
+	var source_lbl := Label.new()
+	source_lbl.text = "Source:"
+	source_lbl.add_theme_font_size_override("font_size", 12)
+	source_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.7))
+	source_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	source_row.add_child(source_lbl)
+	var source_opt := OptionButton.new()
+	source_opt.add_theme_font_size_override("font_size", 12)
+	source_opt.add_item("Browse Folder", 0)
+	source_opt.add_item("AI Identity Vault", 1)
+	source_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	source_row.add_child(source_opt)
 
 	var folder_row := HBoxContainer.new()
 	folder_row.add_theme_constant_override("separation", 8)
@@ -1084,11 +1343,21 @@ func _open_portrait_picker(player_index: int) -> void:
 	const THUMB_H: float = 110.0
 
 	var refresh_picker := func() -> void:
-		folder_lbl.text = "Folder: %s" % _short_folder_label(_portrait_browse_dirs[player_index])
-		var options: Array = _get_portrait_options(
-			DEFAULT_PORTRAIT_PATHS[player_index], _portrait_browse_dirs[player_index])
-		_populate_portrait_picker_flow(flow, options, player_index, overlay, THUMB_W, THUMB_H)
+		var use_vault: bool = source_opt.selected == 1
+		folder_row.visible = not use_vault
+		folder_btn.disabled = use_vault
+		if use_vault:
+			folder_lbl.text = "AI Identity Vault — pick an identity illustration"
+			_populate_portrait_picker_flow(
+				flow, _get_identity_vault_options(),
+				player_index, overlay, THUMB_W, THUMB_H)
+		else:
+			folder_lbl.text = "Folder: %s" % _short_folder_label(_portrait_browse_dirs[player_index])
+			var options: Array = _get_portrait_options(
+				DEFAULT_PORTRAIT_PATHS[player_index], _portrait_browse_dirs[player_index])
+			_populate_portrait_picker_flow(flow, options, player_index, overlay, THUMB_W, THUMB_H)
 
+	source_opt.item_selected.connect(func(_i: int) -> void: refresh_picker.call())
 	folder_btn.pressed.connect(func() -> void:
 		_open_portrait_folder_dialog(player_index, overlay, refresh_picker))
 

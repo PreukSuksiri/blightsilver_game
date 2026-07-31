@@ -88,6 +88,10 @@ func _apply_pending_sacrifice_destroy() -> void:
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
 var _pending_target_resolve: Callable
+## Set while perform_attack is in flight; used to abort if the turn advances mid-await.
+var _active_attack_player: int = -1
+## Set when a turn ends while an attack coroutine is still awaiting a prompt.
+var _attack_force_abort: bool = false
 var _siege_cannon_attacker_player: int = -1
 # Pending trap/ability params for target-selection callbacks
 var _pending_trap_def_boost: int = 0
@@ -105,6 +109,14 @@ var _pending_rebel_king_foe_player: int = -1
 var _pending_trap_hostage_lock: bool = false
 var _pending_street_joke_crystal: int = 0
 var _pending_lockpicker_owner: int = -1
+## Set true by GameBoard when an on-expose reveal pick actually revealed a cell.
+var _expose_reveal_pick_ok: bool = false
+## Display name of the unit that triggered the on-expose reveal pick.
+var _pending_expose_reveal_name: String = ""
+## Nesting depth for on-expose reveal sessions (avoids ability_selection_done double-wake).
+var _expose_reveal_depth: int = 0
+## Queued on-expose sessions revealed while another expose pick is in progress.
+var _queued_on_expose: Array = []
 var _pending_reveal_attacker_player: int = -1
 var _pending_wk17_foe_player: int = -1
 var _pending_wk17_mode: String = ""
@@ -451,7 +463,24 @@ func _start_attack_mode(player: int) -> void:
 	emit_signal("attack_phase_started", player, GameState.attacks_remaining)
 
 func _battle_aborted() -> bool:
-	return GameState.current_phase == GameState.Phase.GAME_OVER
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return true
+	if _attack_force_abort:
+		return true
+	# AI watchdog (or any forced turn end) must not let a mid-prompt attack resume
+	# on the next player's turn (e.g. Bat Swarm intercept left waiting).
+	if _active_attack_player >= 0 and GameState.current_player != _active_attack_player:
+		return true
+	return false
+
+func _emit_attack_aborted() -> void:
+	_active_attack_player = -1
+	_attack_force_abort = false
+	emit_signal("attack_aborted")
+
+func request_abort_active_attack() -> void:
+	if _active_attack_player >= 0:
+		_attack_force_abort = true
 
 
 func _reveal_for_attack(player_index: int, row: int, col: int) -> void:
@@ -520,8 +549,12 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		return
 	var player := attacker_player if attacker_player >= 0 else GameState.current_player
 	var opponent := GameState.get_opponent(player)
+	_attack_force_abort = false
+	_active_attack_player = player
 
 	if GameState.current_phase not in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
+		_active_attack_player = -1
+		_attack_force_abort = false
 		return
 
 	var attacker := GameState.get_card(player, attacker_pos.x, attacker_pos.y)
@@ -529,26 +562,26 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 
 	if attacker.card_type != "character":
 		GameState.show_center_message("You must attack with a Unit.")
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 	if attacker.attacked_this_turn:
 		GameState.show_center_message("%s has already attacked this turn." % attacker.card_name)
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 	if GameState.attacks_remaining <= 0 and not attacker.has_pending_bonus_attack_chain():
 		GameState.show_center_message("No attacks remaining this turn.")
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 	if attacker.cannot_attack_until >= GameState.turn_number:
 		GameState.show_center_message("%s cannot attack yet." % attacker.card_name)
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 
 	var _target_check: Dictionary = BattleResolver.validate_attack_target(
 		player, attacker_pos, attacker, opponent, target_pos, defender)
 	if not _target_check.get("ok", false):
 		GameState.show_center_message(_target_check.get("reason", "Invalid attack target."))
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 
 	if GameState.attack_cost_block_player == player \
@@ -556,14 +589,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			and attacker.crystal_cost <= GameState.attack_cost_block_max:
 		GameState.show_center_message(
 			"Decoy Puppet: Units costing %d or less cannot attack this turn." % GameState.attack_cost_block_max)
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 
 	# Berserk: only berserk card can attack
 	if GameState.berserk_active[player] != null:
 		if GameState.berserk_active[player] != attacker:
 			GameState.show_center_message("Only the Berserk unit can attack!")
-			emit_signal("attack_aborted")
+			_emit_attack_aborted()
 			return
 
 	# Pre-battle: CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD (Keeper of the Sun)
@@ -576,7 +609,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 					continue
 				if _cs_ally.affinity not in _allowed:
 					GameState.show_center_message("%s cannot attack — non-allowed affinity on own field!" % attacker.card_name)
-					emit_signal("attack_aborted")
+					_emit_attack_aborted()
 					return
 
 	# Pre-battle: COIN_FLIP_CANCEL_ATTACK (Lazy Troll) — tails = own attack cancelled
@@ -592,7 +625,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			attacker.attacked_this_turn = true                  # shows hourglass icon on card
 			GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1)  # wasted attempt
 			await _await_wait_badge_animation(player, attacker_pos.x, attacker_pos.y)
-			emit_signal("attack_aborted")
+			_emit_attack_aborted()
 			return
 
 	# Dungeon: Weapon Tax (100) and Frenzy Madness (200) per-attack crystal cost
@@ -670,9 +703,19 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 					"%s can intercept for %s!" % [_ic_cand.card_name, defender.card_name],
 					["Intercept", "Don't Intercept"])
 				var _ic_choice: int = await ability_choice_resolved
+				if _battle_aborted():
+					_emit_attack_aborted()
+					return
 				if _ic_choice == 0:
-					target_pos = Vector2i(_ic_r, _ic_c)
-					defender = _ic_cand
+					# Physically swap grid positions so the board reflects the intercept.
+					var _ic_orig_defender: GameState.CardInstance = GameState.get_card(opponent, target_pos.x, target_pos.y)
+					GameState.set_card(opponent, target_pos.x, target_pos.y, _ic_cand)
+					GameState.set_card(opponent, _ic_r, _ic_c, _ic_orig_defender)
+					GameState.card_position_swapped.emit(opponent, target_pos.x, target_pos.y, _ic_r, _ic_c)
+					GameState.post_message("%s swapped positions with %s!" % [
+						_ic_cand.card_name, _ic_orig_defender.card_name])
+					# The attack still targets the original cell — which now holds the interceptor.
+					defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 					defender_was_exposed = _ic_was_exposed
 				_ic_found = true
 				break
@@ -700,7 +743,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	var _wk17_out: Dictionary = await _apply_wk17_pre_battle(
 		player, opponent, attacker, defender, attacker_pos, target_pos, defender_was_exposed)
 	if _wk17_out.get("abort", false):
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 	target_pos = _wk17_out.get("target_pos", target_pos)
 	defender_was_exposed = _wk17_out.get("defender_was_exposed", defender_was_exposed)
@@ -709,13 +752,15 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	var _rg_out: Dictionary = await _apply_rift_guardian_pre_battle(
 		player, opponent, attacker, defender, attacker_pos, target_pos)
 	if _rg_out.get("abort", false):
-		emit_signal("attack_aborted")
+		_emit_attack_aborted()
 		return
 	if _rg_friendly_fire and _rg_friendly_fire_pos != Vector2i(-1, -1):
 		var _rg_ff_pos: Vector2i = _rg_friendly_fire_pos
 		_rg_friendly_fire = false
 		_rg_friendly_fire_pos = Vector2i(-1, -1)
 		await resolve_rift_guardian_substitute(player, _rg_ff_pos, target_pos)
+		_active_attack_player = -1
+		_attack_force_abort = false
 		return
 
 	if _wk17_friendly_fire and _wk17_friendly_fire_pos != Vector2i(-1, -1):
@@ -723,6 +768,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		_wk17_friendly_fire = false
 		_wk17_friendly_fire_pos = Vector2i(-1, -1)
 		await resolve_brainwash_friendly_fire(player, _wk17_ff_pos)
+		_active_attack_player = -1
+		_attack_force_abort = false
 		return
 
 	if _wk17_substitute_battle \
@@ -734,6 +781,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		var _wk17_init_att: Vector2i = _wk17_initiating_attacker_pos
 		_clear_wk17_substitute_state()
 		await resolve_wk17_substitute_battle(player, _wk17_sub_grid, _wk17_sub_att, _wk17_sub_def, _wk17_init_att)
+		_active_attack_player = -1
+		_attack_force_abort = false
 		return
 
 	# OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT (X-Death Squad) — before overlay since it may abort
@@ -750,7 +799,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				await _wait_crystal_animation()
 				GameState.post_message("%s: %s is destroyed!" % [attacker.card_name, defender.card_name])
 				GameState.place_dead_end(opponent, target_pos.x, target_pos.y)
-				emit_signal("attack_aborted")
+				_emit_attack_aborted()
 				return
 
 	GameState.defender_pos = target_pos
@@ -1033,6 +1082,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 
 	# MULTI_ATTACK_VS_NON_CHARACTER: allow this card to keep attacking non-char cells within limit
 	# MULTI_ATTACK_ANY / MULTI_ATTACK_ANY_WITH_ATK_LOSS: allow multiple attacks any target
+	# MUTAGEN_IMMEDIATE_ATTACK + mutagen: Lab Crawler-style chain up to max_attacks any target
 	var _skip_mark: bool = false
 	var _consume_attack_slot: int = 1
 	if attacker.ability_type == CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER \
@@ -1050,6 +1100,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			and not result.attacker_destroyed:
 		var _ma_max2: int = attacker.ability_params.get("max_attacks", 2)
 		if attacker.multi_attack_count < _ma_max2:
+			_skip_mark = true
+	elif attacker.get_mutagen_immediate_attack_max() > 1 and not result.attacker_destroyed:
+		if attacker.multi_attack_count < attacker.get_mutagen_immediate_attack_max():
 			_skip_mark = true
 	elif _pb_extra > 0:
 		attacker.bonus_attack_pending = true
@@ -1096,6 +1149,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y)
 			await _wait_crystal_animation()
 			GameState.siege_cannon_active[player] = false
+
+	_active_attack_player = -1
+	_attack_force_abort = false
 
 func end_attacks_early() -> void:
 	if _battle_aborted():
@@ -1297,15 +1353,16 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.TEMP_DEF_BOOST_ALL:
 			var _garrison_def: int = data.effect_params.get("def", 0)
 			_temp_boost_all(player, 0, _garrison_def, true)
-			GameState.post_message("%s: All face-up units gain +%d DEF until end of next turn." % [data.card_name, _garrison_def])
+			GameState.post_message("%s: All your units gain +%d DEF until end of next turn." % [data.card_name, _garrison_def])
 			after_tech_resolved(player)
 			return
 
 		TechCardData.TechEffectType.TEMP_ATK_DEF_BOOST_ALL:
 			var _ws_atk: int = data.effect_params.get("atk", 0)
 			var _ws_def: int = data.effect_params.get("def", 0)
+			# Includes face-down units — card text is "in Reckoning" / "your units"
 			_temp_boost_all(player, _ws_atk, _ws_def, false)
-			GameState.post_message("%s: All face-up units gain +%d ATK & DEF until end of turn." % [data.card_name, _ws_atk])
+			GameState.post_message("%s: All your units gain +%d ATK & DEF until end of turn." % [data.card_name, _ws_atk])
 			after_tech_resolved(player)
 			return
 
@@ -1504,15 +1561,18 @@ func _boost_all_faceup(player: int, atk_bonus: int, def_bonus: int) -> void:
 				card.perm_def_bonus += def_bonus
 
 func _temp_boost_all(player: int, atk_bonus: int, def_bonus: int, carry: bool = false) -> void:
+	# Applies to all units, including face-down — card text is "in Reckoning" / "your units",
+	# so a unit revealed later this turn still carries the temp bonus into battle.
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
-			if card.card_type == "character" and card.face_up:
-				card.temp_atk_bonus += atk_bonus
-				if carry:
-					card.carry_def_bonus += def_bonus
-				else:
-					card.temp_def_bonus += def_bonus
+			if card.card_type != "character":
+				continue
+			card.temp_atk_bonus += atk_bonus
+			if carry:
+				card.carry_def_bonus += def_bonus
+			else:
+				card.temp_def_bonus += def_bonus
 
 # ─────────────────────────────────────────────────────────────
 # Apply battle results to game state
@@ -3075,6 +3135,15 @@ func _apply_post_battle_effects(
 		if attacker.multi_attack_count < _ma_max and not result.attacker_destroyed:
 			extra += 1
 
+	# MUTAGEN_IMMEDIATE_ATTACK (Lab Crawler): with mutagen, chain up to max_attacks any targets
+	var _mi_max: int = attacker.get_mutagen_immediate_attack_max()
+	if _mi_max > 1 and not result.attacker_destroyed:
+		attacker.multi_attack_count += 1
+		if attacker.multi_attack_count < _mi_max:
+			extra += 1
+			GameState.post_message("%s: Mutagen chain — choose target %d/%d." % [
+				attacker.card_name, attacker.multi_attack_count + 1, _mi_max])
+
 	# LOCK_ATTACKER_ON_DESTROYED: defender destroys attacker → lock further attacks this turn
 	if result.attacker_destroyed and defender.card_type == "character":
 		if defender.ability_type == CharacterData.AbilityType.LOCK_ATTACKER_ON_DESTROYED:
@@ -3252,18 +3321,70 @@ func maybe_apply_on_expose_reveal_foe(owner_player: int, row: int, col: int) -> 
 	if "expose_reveal_used" in card.flags:
 		return
 	card.flags.append("expose_reveal_used")
-	var foe: int = GameState.get_opponent(owner_player)
-	if not _has_hidden_cells(foe):
-		GameState.post_message("%s: No hidden foe cells to reveal." % card.card_name)
+	var own_cell: bool = bool(card.ability_params.get("own_cell", false))
+	var count: int = maxi(1, int(card.ability_params.get("count", 1)))
+	var target_player: int = owner_player if own_cell else GameState.get_opponent(owner_player)
+	if not _has_hidden_cells(target_player):
+		GameState.post_message("%s: No hidden %s cells to reveal." % [
+			card.card_name, "own" if own_cell else "foe"])
 		return
+	# Nested expose (e.g. Stratomancer reveals Lockpicker) must not await
+	# ability_selection_done while the outer session is also awaiting it.
+	if _expose_reveal_depth > 0:
+		_queued_on_expose.append({
+			"owner": owner_player,
+			"own_cell": own_cell,
+			"count": count,
+			"name": card.card_name,
+		})
+		return
+	await _run_expose_reveal_session(owner_player, own_cell, count, card.card_name)
+	while not _queued_on_expose.is_empty():
+		var q: Dictionary = _queued_on_expose.pop_front()
+		await _run_expose_reveal_session(
+			int(q.get("owner", -1)),
+			bool(q.get("own_cell", false)),
+			maxi(1, int(q.get("count", 1))),
+			str(q.get("name", "")))
+
+func _run_expose_reveal_session(
+		owner_player: int, own_cell: bool, count: int, card_name: String) -> void:
+	var target_player: int = owner_player if own_cell else GameState.get_opponent(owner_player)
+	var filter: String = "ability_expose_reveal_own" if own_cell else "ability_lockpicker_reveal"
+	if owner_player < 0 or not _has_hidden_cells(target_player):
+		if owner_player >= 0 and not card_name.is_empty():
+			GameState.post_message("%s: No hidden %s cells to reveal." % [
+				card_name, "own" if own_cell else "foe"])
+		return
+	_expose_reveal_depth += 1
+	var prev_owner: int = _pending_lockpicker_owner
+	var prev_name: String = _pending_expose_reveal_name
 	_pending_lockpicker_owner = owner_player
+	_pending_expose_reveal_name = card_name
 	var _saved_cp: int = GameState.current_player
 	GameState.current_player = owner_player
-	await _prompt_and_await_target_selection(
-		"%s: Choose 1 foe cell to reveal." % card.card_name,
-		"ability_lockpicker_reveal")
+	var revealed_n: int = 0
+	for _i: int in range(count):
+		if not _has_hidden_cells(target_player):
+			break
+		var _prompt: String
+		if own_cell:
+			if count > 1:
+				_prompt = "%s: Choose own cell to reveal (%d/%d)." % [
+					card_name, revealed_n + 1, count]
+			else:
+				_prompt = "%s: Choose 1 of your cells to reveal." % card_name
+		else:
+			_prompt = "%s: Choose 1 foe cell to reveal." % card_name
+		_expose_reveal_pick_ok = false
+		await _prompt_and_await_target_selection(_prompt, filter)
+		if not _expose_reveal_pick_ok:
+			break
+		revealed_n += 1
 	GameState.current_player = _saved_cp
-	_pending_lockpicker_owner = -1
+	_pending_lockpicker_owner = prev_owner
+	_pending_expose_reveal_name = prev_name
+	_expose_reveal_depth -= 1
 
 static func _has_hidden_cells(player_index: int) -> bool:
 	for r: int in range(GameState.GRID_SIZE):

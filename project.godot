@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Blightsilver"
 config/description="Hidden Grid Strategy Card Game"
-config/version="0.19"
+config/version="0.22"
 run/main_scene="res://scenes/splash_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
@@ -79,7 +79,8 @@ window/stretch/aspect="expand"
 
 [editor]
 
-movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/new_hud_magitech_v3_1.avi"
+movie_writer/ogv/audio_quality=1.0
+movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/v3_battle_22.avi"
 
 [editor_plugins]
 

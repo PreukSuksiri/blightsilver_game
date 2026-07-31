@@ -316,7 +316,7 @@ func _load_unions() -> void:
 		_z([[0,2], [1,0], [1,1], [1,2], [1,3], [1,4], [2,2], [3,2], [4,2]]),
 		_conds([{"affinity": A.DIVINE, "min_cost": 800}, {"affinity": A.DIVINE, "min_cost": 800}, {"affinity": A.DIVINE, "min_cost": 800}], 9))
 
-	_add("False Prophet", A.DIVINE, 30, 40, 300, R.RARE,
+	_add("False Prophet", A.DIVINE, 10, 60, 300, R.RARE,
 		AB.TURN_END_REVEAL_OPPONENT_CELL, {"gain": 600}, "End of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.",
 		"End of your turn: Reveal ???.",
 		"2 Divine cards + 300 cost",
@@ -420,7 +420,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Water Elemental"}, {"card_name": "Wind Elemental"}], 7))
 
 	_add("Sand Elemental", A.ARCANE, 40, 40, 1000, R.RARE,
-		AB.ATK_DEF_BONUS_VS_NON_AFFINITY, {"affinity": A.ARCANE, "atk": 50, "def": 50}, "+60 ATK&DEF vs Non-Arcane cards",
+		AB.ATK_DEF_BONUS_VS_NON_AFFINITY, {"affinity": A.ARCANE, "atk": 60, "def": 60}, "+60 ATK&DEF vs Non-Arcane cards",
 		"+??? vs Non-Arcane cards",
 		"Wind Elemental + Earth Elemental + 1000 cost",
 		"??? + ??? + 1000 cost",

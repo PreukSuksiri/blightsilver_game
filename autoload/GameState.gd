@@ -36,6 +36,7 @@ signal card_effect_triggered(card_name: String, card_type: String)
 signal attack_used(player_index: int, attacks_remaining: int)
 signal message_posted(text: String)
 signal center_message_requested(text: String)
+signal card_position_swapped(player_index: int, row1: int, col1: int, row2: int, col2: int)
 signal card_flag_added(player_index: int, row: int, col: int, flag: String)
 signal card_flag_removed(player_index: int, row: int, col: int, flag: String)
 signal card_atk_changed(player_index: int, row: int, col: int, old_val: int, new_val: int)
@@ -271,12 +272,29 @@ class CardInstance:
 		var max_attacks: int = int(ability_params.get("max_attacks", 2))
 		return multi_attack_count > 0 and multi_attack_count < max_attacks
 
+	## Lab Crawler (MUTAGEN_IMMEDIATE_ATTACK): with mutagen, chain up to max_attacks any targets.
+	func get_mutagen_immediate_attack_max() -> int:
+		if ability_type != CharacterData.AbilityType.MUTAGEN_IMMEDIATE_ATTACK:
+			return 0
+		if not has_mutagen_flag:
+			return 0
+		return int(ability_params.get("max_attacks", 3))
+
+	func has_pending_mutagen_immediate_multi_attack() -> bool:
+		if card_type != "character" or attacked_this_turn:
+			return false
+		var max_attacks: int = get_mutagen_immediate_attack_max()
+		if max_attacks <= 1:
+			return false
+		return multi_attack_count > 0 and multi_attack_count < max_attacks
+
 	## Golden Senju chain, bonus-attack flags, or multi-attack-any chain still available.
 	func has_pending_bonus_attack_chain() -> bool:
 		return (
 			has_pending_multi_attack_non_char()
 			or bonus_attack_pending
-			or has_pending_multi_attack_any())
+			or has_pending_multi_attack_any()
+			or has_pending_mutagen_immediate_multi_attack())
 
 # ─────────────────────────────────────────────────────────────
 # Runtime State
@@ -342,6 +360,8 @@ var quick_duel_rewards_settled: bool = false
 var pending_wishlist_cta: bool = false
 var quick_duel_protagonist_id: String = ""
 var battle_ai_identity_id: String = ""
+## Optional P1 identity from AI Identity Vault (VS AI config). Birth name / display.
+var battle_p1_identity_id: String = ""
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
 var vn_battle_rewards: Array = []  # VN start_battle / tutorial_battle beat rewards — granted to mailbox on win
@@ -779,6 +799,22 @@ func complete_crystal_animation() -> void:
 func wait_crystal_animation() -> void:
 	while _crystal_anim_pending > 0:
 		await crystal_animation_finished
+
+## Union summon cost after dungeon modifiers (shared by board, AI, and logs).
+func effective_union_summon_cost(base_cost: int) -> int:
+	if game_mode != GameMode.DAILY_DUNGEON:
+		return base_cost
+	if "dimensional_fissure" in active_dungeon_modifiers:
+		return int(base_cost * 0.2)
+	if "dimensional_gate" in active_dungeon_modifiers:
+		return int(base_cost * 0.5)
+	if "dimensional_slippage" in active_dungeon_modifiers:
+		return int(base_cost * 0.8)
+	if "sealing_talisman" in active_dungeon_modifiers:
+		return int(base_cost * 1.2)
+	if "sealing_ceremony" in active_dungeon_modifiers:
+		return int(base_cost * 1.5)
+	return base_cost
 
 func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
@@ -1580,6 +1616,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_ai_featured_union = ""
 		battle_featured_unions = ["", ""]
 		battle_ai_identity_id = ""
+		battle_p1_identity_id = ""
 		vn_launched_from_exploration = false
 		vn_battle_rewards.clear()
 		vn_battle_loss_rewards.clear()
@@ -1620,6 +1657,7 @@ func abort_quick_duel_battle() -> void:
 	pending_wishlist_cta = false
 	quick_duel_protagonist_id = ""
 	battle_ai_identity_id = ""
+	battle_p1_identity_id = ""
 
 ## Double numeric tech values when the target has DOUBLE_TECH_EFFECT (Mountain Sage).
 func scaled_tech_effect_for_unit(target: CardInstance, value: int) -> int:
