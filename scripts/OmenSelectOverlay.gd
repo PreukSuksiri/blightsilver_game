@@ -21,13 +21,6 @@ const _SHADOW_SCROLL_B: Vector2 = Vector2(-0.028, -0.017)
 ## Shadow pool diameter, as a multiple of the capsule box.
 const SHADOW_FOG_SPAN: float = 2.0
 
-const RARITY_RING: Dictionary = {
-	"common": Color(0.70, 0.74, 0.82, 1.0),
-	"uncommon": Color(0.36, 0.88, 0.52, 1.0),
-	"rare": Color(0.40, 0.68, 1.00, 1.0),
-	"epic": Color(0.78, 0.48, 1.00, 1.0),
-}
-
 const CIRCLE_D_MAX: float = 300.0
 const CIRCLE_D_MIN: float = 170.0
 const GLOW_PAD: float = 26.0
@@ -341,8 +334,7 @@ func _get_info_hud_global_center() -> Vector2:
 
 func _build_capsule(omen: Dictionary) -> Control:
 	var d: float = _circle_d
-	var rarity: String = str(omen.get("rarity", "common")).to_lower()
-	var ring: Color = RARITY_RING.get(rarity, RARITY_RING["common"]) as Color
+	var ring: Color = OmenVisuals.ring_color(omen)
 
 	var wrapper := Control.new()
 	wrapper.custom_minimum_size = Vector2(_box, _box)
@@ -411,7 +403,7 @@ func _build_capsule(omen: Dictionary) -> Control:
 		art.texture = load(illus_path) as Texture2D
 		art_mat.set_shader_parameter("use_texture", 1.0)
 	else:
-		art.texture = _make_placeholder_art_tex(ring)
+		art.texture = OmenVisuals.make_placeholder_art_tex(ring)
 		art.stretch_mode = TextureRect.STRETCH_SCALE
 		art_mat.set_shader_parameter("use_texture", 1.0)
 		art_mat.set_shader_parameter("tint_strength", 0.10)
@@ -421,6 +413,7 @@ func _build_capsule(omen: Dictionary) -> Control:
 	wrapper.set_meta("art_mat", art_mat)
 
 	# Text condenses in after the disc, so it lives on its own fade layer.
+	# Rarity is a subtle ★ row under the effect — never a chip on the disc.
 	var text_host := Control.new()
 	text_host.position = Vector2.ZERO
 	text_host.size = Vector2(_box, _box)
@@ -429,31 +422,12 @@ func _build_capsule(omen: Dictionary) -> Control:
 	wrapper.add_child(text_host)
 	wrapper.set_meta("text_host", text_host)
 
-	# Rarity chip sits on the equator as a divider.
-	var chip := Label.new()
-	chip.text = rarity.to_upper()
-	chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	chip.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	chip.position = Vector2(GLOW_PAD + d * 0.30, GLOW_PAD + d * 0.47)
-	chip.size = Vector2(d * 0.40, d * 0.075)
-	chip.add_theme_font_override("font", FontManager.make_font("primary", 600))
-	chip.add_theme_font_size_override("font_size", maxi(int(d * 0.042), 9))
-	chip.add_theme_color_override("font_color", ring.lightened(0.35))
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var chip_sb := StyleBoxFlat.new()
-	chip_sb.bg_color = Color(0.02, 0.03, 0.06, 0.92)
-	chip_sb.border_color = ring
-	chip_sb.set_border_width_all(1)
-	chip_sb.set_corner_radius_all(int(d * 0.038))
-	chip.add_theme_stylebox_override("normal", chip_sb)
-	text_host.add_child(chip)
-
 	var label := Label.new()
 	label.text = str(omen.get("label", omen.get("id", "Omen")))
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.position = Vector2(GLOW_PAD + d * 0.14, GLOW_PAD + d * 0.555)
+	label.position = Vector2(GLOW_PAD + d * 0.14, GLOW_PAD + d * 0.52)
 	label.size = Vector2(d * 0.72, d * 0.11)
 	label.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	label.add_theme_font_size_override("font_size", maxi(int(d * 0.070), 14))
@@ -464,15 +438,20 @@ func _build_capsule(omen: Dictionary) -> Control:
 	var desc := Label.new()
 	desc.text = str(omen.get("description", ""))
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	desc.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	desc.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.position = Vector2(GLOW_PAD + d * 0.19, GLOW_PAD + d * 0.665)
-	desc.size = Vector2(d * 0.62, d * 0.235)
+	desc.position = Vector2(GLOW_PAD + d * 0.16, GLOW_PAD + d * 0.635)
+	desc.size = Vector2(d * 0.68, d * 0.20)
 	desc.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	desc.add_theme_font_size_override("font_size", maxi(int(d * 0.046), 11))
 	desc.add_theme_color_override("font_color", Color(0.84, 0.89, 0.96, 0.95))
 	desc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	text_host.add_child(desc)
+
+	var stars: Control = OmenVisuals.build_rarity_stars(omen, maxi(int(d * 0.055), 12))
+	stars.position = Vector2(GLOW_PAD + d * 0.20, GLOW_PAD + d * 0.855)
+	stars.size = Vector2(d * 0.60, d * 0.08)
+	text_host.add_child(stars)
 
 	var hit := Button.new()
 	hit.position = Vector2.ZERO
@@ -516,30 +495,6 @@ func _build_shadow_fog() -> Control:
 	if _shadow_layer != null:
 		_shadow_layer.add_child(fog)
 	return fog
-
-
-## Stand-in artwork for omens without an illustration: a lit sky gradient with
-## faint arcane arcs, so an unauthored capsule still reads as finished art.
-func _make_placeholder_art_tex(ring: Color) -> Texture2D:
-	const W: int = 192
-	const H: int = 96
-	var img := Image.create(W, H, false, Image.FORMAT_RGBA8)
-	var top: Color = ring.lightened(0.20).darkened(0.30)
-	var bottom: Color = ring.darkened(0.78)
-	var center := Vector2(W * 0.5, float(H))
-	for y: int in range(H):
-		var base: Color = top.lerp(bottom, pow(float(y) / float(H - 1), 0.75))
-		for x: int in range(W):
-			var c: Color = base
-			# Soft halo behind where a sigil would sit.
-			var dist: float = Vector2(float(x), float(y)).distance_to(center) / float(H)
-			c = c.lerp(ring.lightened(0.45), clampf(0.30 - dist * 0.30, 0.0, 0.30))
-			# Concentric arcs for a faint ritual-circle read.
-			var arc: float = absf(sin(dist * 9.0))
-			c = c.lightened(clampf((arc - 0.92) * 1.6, 0.0, 0.12))
-			c.a = 1.0
-			img.set_pixel(x, y, c)
-	return ImageTexture.create_from_image(img)
 
 
 # ─────────────────────────────────────────────────────────────

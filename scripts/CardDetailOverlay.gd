@@ -69,6 +69,19 @@ static func _find_overlay_host(from: Node) -> Node:
 		node = node.get_parent()
 	return node
 
+## Highest z_index between `from` and the node the overlay will be parented to.
+static func _ancestor_max_z(from: Node, host: Node) -> int:
+	var best: int = 0
+	var node: Node = from
+	while node != null:
+		if node is CanvasItem:
+			best = maxi(best, (node as CanvasItem).z_index)
+		if node == host:
+			break
+		node = node.get_parent()
+	return best
+
+
 static func open(parent: Node, card_name: String, card_type: String,
 		card_inst: Variant = null, show_quantity: bool = false,
 		pin_to_parent: bool = false, z_index_override: int = -1) -> void:
@@ -90,7 +103,9 @@ static func open_and_return(parent: Node, card_name: String, card_type: String,
 	elif pin_to_parent and viewport_host is Control:
 		overlay.z_index = (viewport_host as Control).z_index + 50
 	else:
-		overlay.z_index = 101
+		# Clear any raised ancestor (e.g. the deck builder opened as a z=200 overlay
+		# inside exploration), otherwise the detail card renders behind its opener.
+		overlay.z_index = maxi(101, _ancestor_max_z(parent, viewport_host) + 50)
 	if use_gamedialog_host:
 		GameDialog.attach_viewport_overlay(overlay, parent)
 		overlay.move_to_front()
@@ -145,8 +160,7 @@ static func open_and_return(parent: Node, card_name: String, card_type: String,
 		if card_type in ["character", "trap", "tech"]:
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
 
-	overlay._append_omen_detail_labels(card_name, card_w, card_h)
-	overlay._attach_card_status_overlay(card_w, card_h)
+	overlay._append_side_status_panels(card_name, card_w, card_h)
 	return overlay
 
 
@@ -163,17 +177,15 @@ static func find_first_in_tree(root: Node) -> CardDetailOverlay:
 # UI construction — static image path (full_cards/ PNG/JPG)
 # ─────────────────────────────────────────────────────────────
 func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> void:
-	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_apply_full_rect_host()
 	mouse_filter = MOUSE_FILTER_STOP
 
-	# Dimmer – click outside card to close
+	# Dimmer – tap outside card to close
 	var dimmer := ColorRect.new()
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dimmer.color = Color(0.0, 0.0, 0.0, 0.82)
 	dimmer.mouse_filter = MOUSE_FILTER_STOP
-	dimmer.gui_input.connect(func(e: InputEvent) -> void:
-		if e is InputEventMouseButton and e.pressed:
-			_close())
+	_wire_dismiss_tap(dimmer)
 	add_child(dimmer)
 
 	# Card container – centred
@@ -184,9 +196,7 @@ func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> v
 	card.offset_right  =  card_w * 0.5
 	card.offset_bottom =  card_h * 0.5
 	card.mouse_filter  = MOUSE_FILTER_STOP
-	card.gui_input.connect(func(e: InputEvent) -> void:
-		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
-			_close())
+	_wire_dismiss_tap(card)
 	add_child(card)
 	_card_root = card
 	var img := TextureRect.new()
@@ -253,17 +263,15 @@ func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> v
 # UI construction — programmatic card (fallback when no full_cards/ image)
 # ─────────────────────────────────────────────────────────────
 func _build_ui(card_w: float, card_h: float) -> void:
-	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_apply_full_rect_host()
 	mouse_filter = MOUSE_FILTER_STOP
 
-	# Dimmer – click anywhere outside card to close
+	# Dimmer – tap anywhere outside card to close
 	var dimmer := ColorRect.new()
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dimmer.color = Color(0.0, 0.0, 0.0, 0.82)
 	dimmer.mouse_filter = MOUSE_FILTER_STOP
-	dimmer.gui_input.connect(func(e: InputEvent) -> void:
-		if e is InputEventMouseButton and e.pressed:
-			_close())
+	_wire_dismiss_tap(dimmer)
 	add_child(dimmer)
 
 	# Card container – centred in the overlay
@@ -274,11 +282,8 @@ func _build_ui(card_w: float, card_h: float) -> void:
 	card.offset_right  =  card_w * 0.5
 	card.offset_bottom =  card_h * 0.5
 	card.mouse_filter  = MOUSE_FILTER_STOP
-	# Click on blank areas within the card bounding rect (transparent corners,
-	# frame edges) also dismisses the overlay.
-	card.gui_input.connect(func(e: InputEvent) -> void:
-		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
-			_close())
+	# Blank areas within the card bounding rect (transparent corners / frame) dismiss.
+	_wire_dismiss_tap(card)
 	add_child(card)
 	_card_root = card
 
@@ -726,68 +731,331 @@ func _resolve_card_owner() -> Dictionary:
 	return {"owner": -1, "pos": Vector2i(-1, -1)}
 
 
-func _attach_card_status_overlay(card_w: float, card_h: float) -> void:
-	if _card_root == null or _card_inst == null:
+## Left: muted common tags (Waiting / Exposed). Right: Omens first, then other
+## modifiers, in a scrollable dossier beside the card.
+func _append_side_status_panels(card_name: String, card_w: float, card_h: float) -> void:
+	if _card_root == null:
 		return
 
 	var owner_info: Dictionary = _resolve_card_owner()
-	var lines: PackedStringArray = BattleLogFormat.format_overlay_status_lines(
-		_card_inst,
-		int(owner_info.get("owner", -1)),
-		owner_info.get("pos", Vector2i(-1, -1)) as Vector2i
-	)
-	if lines.is_empty():
-		return
+	var owner_player: int = int(owner_info.get("owner", -1))
+	var grid_pos: Vector2i = owner_info.get("pos", Vector2i(-1, -1)) as Vector2i
 
-	var art_l: float = ART_L_PCT * card_w
-	var art_r: float = ART_R_PCT * card_w
-	var art_t: float = ART_T_PCT * card_h
-	var art_b: float = INFO_TOP_PCT * card_h
-	var art_w_px: float = art_r - art_l
-	var art_h_px: float = art_b - art_t
-	var margin: float = 6.0
-	var panel_w: float = art_w_px * 0.44
+	var left_entries: Array = []
+	var right_mod_lines: PackedStringArray = PackedStringArray()
+	if _card_inst != null:
+		left_entries = BattleLogFormat.format_overlay_common_side_entries(
+				_card_inst, owner_player)
+		right_mod_lines = BattleLogFormat.format_overlay_detail_side_lines(
+				_card_inst, owner_player, grid_pos)
 
-	var panel := VBoxContainer.new()
+	var omen_rows: Array = OmenVisuals.rows_for_card(card_name)
+	var omen_fallback: PackedStringArray = PackedStringArray()
+	if omen_rows.is_empty():
+		omen_fallback = OmenBattleApplier.get_anoint_lines_for_card(card_name)
+
+	if not left_entries.is_empty():
+		_build_left_common_panel(left_entries, card_w, card_h)
+
+	if not omen_rows.is_empty() or not omen_fallback.is_empty() \
+			or not right_mod_lines.is_empty():
+		_build_right_detail_panel(omen_rows, omen_fallback, right_mod_lines, card_w, card_h)
+
+
+func _side_panel_metrics(card_w: float, card_h: float) -> Dictionary:
+	var vp: Vector2 = get_viewport_rect().size
+	var side_w: float = 292.0
+	var gap: float = 16.0
+	var beside: bool = (card_w * 0.5 + gap + side_w) <= (vp.x * 0.5 - 10.0)
+	var max_h: float = clampf(card_h - 64.0, 160.0, vp.y * 0.78)
+	return {
+		"side_w": side_w,
+		"gap": gap,
+		"beside": beside,
+		"max_h": max_h,
+	}
+
+
+func _build_left_common_panel(entries: Array, card_w: float, card_h: float) -> void:
+	var m: Dictionary = _side_panel_metrics(card_w, card_h)
+	var side_w: float = float(m["side_w"])
+	var gap: float = float(m["gap"])
+	var accent := Color(0.62, 0.68, 0.78, 1.0)
+
+	var panel := PanelContainer.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.position = Vector2(art_r - panel_w - margin, art_t + margin)
-	panel.size = Vector2(panel_w, maxf(art_h_px - margin * 2.0, 0.0))
-	panel.add_theme_constant_override("separation", 3)
-	_card_root.add_child(panel)
+	panel.add_theme_stylebox_override("panel", _make_side_plaque_style(accent, true))
 
-	var fsz: int = maxi(int(card_w * 0.028), 10)
-	for line: String in lines:
-		var lbl := Label.new()
-		lbl.text = line
-		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		lbl.add_theme_font_size_override("font_size", fsz)
-		lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
-		lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
-		lbl.add_theme_constant_override("shadow_offset_x", 1)
-		lbl.add_theme_constant_override("shadow_offset_y", 1)
-		FontManager.tag_primary(lbl)
-		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		panel.add_child(lbl)
+	if bool(m["beside"]):
+		panel.set_anchors_preset(Control.PRESET_CENTER)
+		panel.offset_right = -(card_w * 0.5 + gap)
+		panel.offset_left = panel.offset_right - side_w
+		panel.offset_top = -card_h * 0.5 + 48.0
+		panel.offset_bottom = panel.offset_top
+		panel.grow_vertical = Control.GROW_DIRECTION_END
+		add_child(panel)
+	else:
+		# Narrow viewports: stack under the right dossier if present; keep left of card.
+		panel.set_anchors_preset(Control.PRESET_CENTER)
+		panel.offset_left = -card_w * 0.5
+		panel.offset_right = -card_w * 0.5 + minf(side_w, card_w * 0.42)
+		panel.offset_top = card_h * 0.5 + 8.0
+		panel.offset_bottom = panel.offset_top
+		panel.grow_vertical = Control.GROW_DIRECTION_END
+		add_child(panel)
+
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(col)
+
+	var hdr := Label.new()
+	hdr.text = "STATUS"
+	hdr.add_theme_font_size_override("font_size", 12)
+	hdr.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.70))
+	FontManager.tag_font(hdr, "font", "primary", 600)
+	hdr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_child(hdr)
+
+	for i: int in range(entries.size()):
+		if i > 0:
+			col.add_child(_make_side_rule(accent, 0.14))
+		var entry: Dictionary = entries[i] as Dictionary
+		col.add_child(_make_simple_status_row(
+				str(entry.get("title", "")),
+				str(entry.get("detail", "")),
+				accent))
 
 
-func _append_omen_detail_labels(card_name: String, card_w: float, card_h: float) -> void:
-	var lines: PackedStringArray = OmenBattleApplier.get_anoint_lines_for_card(card_name)
-	if lines.is_empty() or _card_root == null:
+func _build_right_detail_panel(
+		omen_rows: Array,
+		omen_fallback: PackedStringArray,
+		mod_lines: PackedStringArray,
+		card_w: float,
+		card_h: float) -> void:
+	var m: Dictionary = _side_panel_metrics(card_w, card_h)
+	var side_w: float = float(m["side_w"])
+	var gap: float = float(m["gap"])
+	var max_h: float = float(m["max_h"])
+	var accent := Color(0.45, 0.72, 1.0, 1.0)
+	if not omen_rows.is_empty():
+		accent = OmenVisuals.ring_color(
+				(omen_rows[0] as Dictionary).get("omen", {}) as Dictionary)
+
+	var panel := PanelContainer.new()
+	# Scroll receives input; plaque itself stays IGNORE so outside taps still dismiss.
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_theme_stylebox_override("panel", _make_side_plaque_style(accent, false))
+	panel.custom_minimum_size = Vector2(side_w, 0.0)
+	panel.custom_maximum_size = Vector2(side_w, max_h)
+
+	if bool(m["beside"]):
+		panel.set_anchors_preset(Control.PRESET_CENTER)
+		panel.offset_left = card_w * 0.5 + gap
+		panel.offset_right = card_w * 0.5 + gap + side_w
+		panel.offset_top = -card_h * 0.5 + 48.0
+		panel.offset_bottom = panel.offset_top
+		panel.grow_vertical = Control.GROW_DIRECTION_END
+		add_child(panel)
+	else:
+		var margin: float = card_w * 0.05
+		panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+		panel.offset_left = margin
+		panel.offset_right = -margin
+		panel.offset_bottom = -margin
+		panel.offset_top = panel.offset_bottom
+		panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		panel.custom_maximum_size = Vector2(0.0, minf(max_h, 220.0))
+		_card_root.add_child(panel)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.add_child(scroll)
+
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 10)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	scroll.add_child(col)
+
+	var has_omen: bool = not omen_rows.is_empty() or not omen_fallback.is_empty()
+	if has_omen:
+		var omen_hdr := Label.new()
+		omen_hdr.text = "OMEN" if omen_rows.size() + omen_fallback.size() <= 1 else "OMENS"
+		omen_hdr.add_theme_font_size_override("font_size", 13)
+		omen_hdr.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.85))
+		FontManager.tag_font(omen_hdr, "font", "primary", 600)
+		omen_hdr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		col.add_child(omen_hdr)
+
+		for i: int in range(omen_rows.size()):
+			if i > 0:
+				col.add_child(_make_side_rule(accent, 0.22))
+			col.add_child(_make_omen_row(
+					(omen_rows[i] as Dictionary).get("omen", {}) as Dictionary))
+		for line: String in omen_fallback:
+			col.add_child(_make_modifier_row(line, accent))
+
+	if not mod_lines.is_empty():
+		if has_omen:
+			col.add_child(_make_side_rule(accent, 0.35))
+		var mod_hdr := Label.new()
+		mod_hdr.text = "MODIFIERS" if mod_lines.size() != 1 else "MODIFIER"
+		mod_hdr.add_theme_font_size_override("font_size", 13)
+		mod_hdr.add_theme_color_override("font_color", Color(0.72, 0.80, 0.92, 0.88))
+		FontManager.tag_font(mod_hdr, "font", "primary", 600)
+		mod_hdr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		col.add_child(mod_hdr)
+
+		var mod_accent := Color(0.70, 0.78, 0.92, 1.0)
+		for i: int in range(mod_lines.size()):
+			if i > 0:
+				col.add_child(_make_side_rule(mod_accent, 0.16))
+			col.add_child(_make_modifier_row(mod_lines[i], mod_accent))
+
+	# ScrollContainer mins at 0 until laid out — size it to content, capped at max_h.
+	var scroll_max: float = max_h if bool(m["beside"]) else minf(max_h, 220.0)
+	call_deferred("_fit_side_scroll_height", scroll, col, scroll_max)
+
+
+func _fit_side_scroll_height(scroll: ScrollContainer, col: Control, max_h: float) -> void:
+	if scroll == null or not is_instance_valid(scroll) or col == null or not is_instance_valid(col):
 		return
-	var y: float = card_h - 42.0
-	for line: String in lines:
-		var lbl := Label.new()
-		lbl.text = "Omen: %s" % line
-		lbl.position = Vector2(12.0, y)
-		lbl.size = Vector2(card_w - 24.0, 18.0)
-		lbl.add_theme_font_size_override("font_size", maxi(int(card_w * 0.028), 10))
-		lbl.add_theme_color_override("font_color", Color(0.78, 0.88, 1.0, 1.0))
-		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		FontManager.tag_primary(lbl)
-		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_card_root.add_child(lbl)
-		y -= 20.0
+	await get_tree().process_frame
+	if scroll == null or not is_instance_valid(scroll) or col == null or not is_instance_valid(col):
+		return
+	var content_h: float = col.get_combined_minimum_size().y
+	scroll.custom_minimum_size.y = clampf(content_h, 48.0, max_h)
+
+
+func _make_side_plaque_style(accent: Color, muted: bool) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	if muted:
+		sb.bg_color = Color(0.04, 0.05, 0.08, 0.92)
+		sb.border_color = Color(accent.r, accent.g, accent.b, 0.35)
+	else:
+		sb.bg_color = Color(0.015, 0.025, 0.055, 1.0)
+		sb.border_color = Color(accent.r, accent.g, accent.b, 0.8)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(7)
+	sb.set_content_margin_all(12.0 if muted else 14.0)
+	return sb
+
+
+func _make_side_rule(accent: Color, alpha: float) -> Control:
+	var rule := ColorRect.new()
+	rule.color = Color(accent.r, accent.g, accent.b, alpha)
+	rule.custom_minimum_size = Vector2(0.0, 1.0)
+	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return rule
+
+
+## Muted left-side tag — same dossier bones as Omens, quieter chrome.
+func _make_simple_status_row(title: String, detail: String, accent: Color) -> Control:
+	var row := VBoxContainer.new()
+	row.add_theme_constant_override("separation", 2)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var title_lbl := Label.new()
+	title_lbl.text = title
+	title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title_lbl.add_theme_font_size_override("font_size", 15)
+	title_lbl.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.92))
+	FontManager.tag_font(title_lbl, "font", "primary", 600)
+	title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(title_lbl)
+
+	if not detail.is_empty():
+		var detail_lbl := Label.new()
+		detail_lbl.text = detail
+		detail_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		detail_lbl.add_theme_font_size_override("font_size", 12)
+		detail_lbl.add_theme_color_override("font_color", Color(0.72, 0.76, 0.84, 0.88))
+		FontManager.tag_primary(detail_lbl)
+		detail_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(detail_lbl)
+	return row
+
+
+func _make_omen_row(omen: Dictionary) -> Control:
+	var ring: Color = OmenVisuals.ring_color(omen)
+	const SIGIL_PX: float = 26.0
+
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var sigil_host := Control.new()
+	sigil_host.custom_minimum_size = Vector2(SIGIL_PX, SIGIL_PX)
+	sigil_host.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	sigil_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(sigil_host)
+	var badge := OmenBadge.new()
+	badge.size = Vector2(SIGIL_PX, SIGIL_PX)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.set_ring(ring)
+	sigil_host.add_child(badge)
+
+	var text := VBoxContainer.new()
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text.add_theme_constant_override("separation", 3)
+	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(text)
+
+	var title := Label.new()
+	title.text = "%s  ·  %s" % [
+		str(omen.get("label", omen.get("id", "Omen"))),
+		str(omen.get("rarity", "common")).to_upper(),
+	]
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title.add_theme_font_size_override("font_size", 15)
+	title.add_theme_color_override("font_color", ring.lightened(0.45))
+	FontManager.tag_font(title, "font", "primary", 600)
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	text.add_child(title)
+
+	var desc := Label.new()
+	desc.text = str(omen.get("description", ""))
+	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc.add_theme_font_size_override("font_size", 13)
+	desc.add_theme_color_override("font_color", Color(0.86, 0.92, 1.0, 0.95))
+	FontManager.tag_primary(desc)
+	desc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	text.add_child(desc)
+	return row
+
+
+## Right-side modifier row — dossier layout without the omen sigil.
+func _make_modifier_row(line: String, accent: Color) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var mark := ColorRect.new()
+	mark.custom_minimum_size = Vector2(4.0, 4.0)
+	mark.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	mark.color = Color(accent.r, accent.g, accent.b, 0.75)
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(mark)
+
+	var text := VBoxContainer.new()
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text.add_theme_constant_override("separation", 2)
+	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(text)
+
+	var title := Label.new()
+	title.text = line
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title.add_theme_font_size_override("font_size", 14)
+	title.add_theme_color_override("font_color", accent.lightened(0.25))
+	FontManager.tag_font(title, "font", "primary", 600)
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	text.add_child(title)
+	return row
 
 
 # ─────────────────────────────────────────────────────────────
@@ -1162,6 +1430,49 @@ func _open_bug_input(card_name: String, bug_btn: Button) -> void:
 func _close() -> void:
 	AudioManager.tts_stop()
 	queue_free()
+
+
+func _apply_full_rect_host() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var parent_ctrl := get_parent() as Control
+	if parent_ctrl != null and parent_ctrl.size.x > 1.0 and parent_ctrl.size.y > 1.0:
+		position = Vector2.ZERO
+		size = parent_ctrl.size
+	else:
+		var vp: Vector2 = get_viewport_rect().size
+		if vp.x > 1.0 and vp.y > 1.0:
+			position = Vector2.ZERO
+			size = vp
+
+
+## Mouse and touch — emulate_mouse_from_touch is not always on for every export.
+func _is_dismiss_press(event: InputEvent) -> bool:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		return mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).pressed
+	return false
+
+
+func _wire_dismiss_tap(control: Control) -> void:
+	if control == null:
+		return
+	control.gui_input.connect(func(e: InputEvent) -> void:
+		if _is_dismiss_press(e):
+			control.accept_event()
+			_close())
+
+
+## Fallback when the dimmer has not received a size yet (PRESET_FULL_RECT before the
+## parent lays out). The card still centres from viewport math, so the overlay can
+## look correct while outside taps hit this root and would otherwise do nothing.
+func _gui_input(event: InputEvent) -> void:
+	if not _is_dismiss_press(event):
+		return
+	accept_event()
+	_close()
+
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:

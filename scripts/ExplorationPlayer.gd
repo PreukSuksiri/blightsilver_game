@@ -163,6 +163,10 @@ var _info_menu_open: bool          = false
 var _info_menu_animating: bool     = false
 var _info_radial_items: Array      = []
 var _note_overlay: DetectiveNoteOverlay = null
+var _omen_detail_overlay: OmenDetailOverlay = null
+var _deck_view_overlay: DeckViewOverlay = null
+## Above the HUD (40), radial chips and the deck builder overlay (200).
+const HUD_OVERLAY_Z: int = 210
 
 # ── Item preview overlay (inventory tap-to-inspect) ──────────────────────
 var _item_preview: Control        = null
@@ -1494,13 +1498,18 @@ func _spawn_info_radial_items(center: Vector2) -> void:
 	var cy: float  = center.y + INFO_ICON_SIZE * 0.5
 	var vp: Vector2 = get_viewport_rect().size
 	var pad: float  = 8.0
-	var choices: Array = [
-		{"label": "Detective Note", "action": "detective_note"},
-		{"label": "Location Info",  "action": "location_info"},
-	]
+	var choices: Array = []
+	# Detective Note only exists where a chapter authored one.
+	if not DetectiveNoteManager.resolve_active_chapter().is_empty():
+		choices.append({"label": "Detective Note", "action": "detective_note"})
+	choices.append({"label": "Location Info", "action": "location_info"})
+	choices.append({"label": "Omens", "action": "omens"})
+	choices.append({"label": "View Deck", "action": "view_deck"})
 	var n: int = choices.size()
+	# Half-step rotation once there are four chips, so none lands on the bottom HUD.
+	var base_angle: float = -PI * 0.5 + (PI / float(n) if n >= 4 else 0.0)
 	for i: int in range(n):
-		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
+		var angle: float = base_angle + float(i) * (TAU / float(n))
 		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
 		var panel: PanelContainer = _make_radial_panel(
@@ -1536,6 +1545,33 @@ func _on_info_menu_action(action: String) -> void:
 			_open_info_panel()
 		"detective_note":
 			_open_detective_note_overlay()
+		"omens":
+			_open_omen_detail_overlay()
+		"view_deck":
+			_open_deck_view_overlay()
+
+
+func _open_omen_detail_overlay() -> void:
+	if _omen_detail_overlay != null and is_instance_valid(_omen_detail_overlay):
+		return
+	_close_info_panel()
+	_omen_detail_overlay = OmenDetailOverlay.open(self, HUD_OVERLAY_Z)
+	if _omen_detail_overlay == null:
+		return
+	_omen_detail_overlay.closed.connect(func() -> void:
+		_omen_detail_overlay = null, CONNECT_ONE_SHOT)
+
+
+func _open_deck_view_overlay() -> void:
+	if _deck_view_overlay != null and is_instance_valid(_deck_view_overlay):
+		return
+	_close_info_panel()
+	_deck_view_overlay = DeckViewOverlay.open(self, HUD_OVERLAY_Z)
+	if _deck_view_overlay == null:
+		return
+	_deck_view_overlay.closed.connect(func() -> void:
+		_deck_view_overlay = null, CONNECT_ONE_SHOT)
+
 
 func _open_detective_note_overlay() -> void:
 	if _note_overlay != null and is_instance_valid(_note_overlay):
@@ -2020,10 +2056,6 @@ func _on_info_clicked() -> void:
 		_close_info_radial_menu()
 		return
 	_close_other_hud_menus("info")
-	# No detective note authored for this location → open location info directly.
-	if DetectiveNoteManager.resolve_active_chapter().is_empty():
-		_open_info_panel()
-		return
 	_open_info_radial_menu()
 
 func _open_enter_info_then_vn(node: ExplorationNode, is_story: bool) -> void:
@@ -3103,6 +3135,7 @@ func _is_point_on_open_menu_ui(global_pos: Vector2) -> bool:
 	all_panels.append_array(_setting_radial_items)
 	all_panels.append_array(_inv_radial_items)
 	all_panels.append_array(_chat_radial_items)
+	all_panels.append_array(_info_radial_items)
 	for p: Variant in all_panels:
 		if p is Control and (p as Control).visible:
 			var c: Control = p as Control

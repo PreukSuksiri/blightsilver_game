@@ -3433,6 +3433,7 @@ func _make_pool_tile(card_name: String, card_type: String) -> Control:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
+	OmenBadge.attach_to_tile(tile, card_name, 20.0)
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -3508,6 +3509,7 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 		star.offset_top = -18.0
 		star.offset_bottom = -1.0
 		tile.add_child(star)
+	OmenBadge.attach_to_tile(tile, card_name, 18.0)
 	# Temporary yellow only while choosing a featured card.
 	if _featured_pick_mode:
 		tile.modulate = Color(1.2, 1.15, 0.55, 1.0)

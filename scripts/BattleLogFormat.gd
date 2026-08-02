@@ -25,8 +25,33 @@ static func format_unit_at(player: int, row: int, col: int, fallback_name: Strin
 	return format_card(GameState.get_card(player, row, col), fallback_name)
 
 
-## Human-readable status lines for the full-card detail overlay (right-side art labels).
-static func format_overlay_status_lines(
+## Very common board states — shown as muted tags on the LEFT of the card art.
+## Face Down is intentionally omitted.
+static func format_overlay_common_side_entries(
+		card: GameState.CardInstance,
+		owner_player: int = -1
+) -> Array:
+	var entries: Array = []
+	if card == null or card.was_destroyed:
+		return entries
+	if card.card_type == "character" and card.face_up:
+		entries.append({
+			"title": "Exposed",
+			"detail": "Identity is revealed on the board.",
+		})
+	if card.card_type == "character" and card.attacked_this_turn \
+			and not is_decoy_puppet_blocked(card, owner_player) \
+			and not is_echo_barrier_blocked(card, owner_player):
+		entries.append({
+			"title": "Waiting",
+			"detail": "Already attacked this turn.",
+		})
+	return entries
+
+
+## Detail modifiers for the RIGHT of the card art (Once-used, buffs, locks, …).
+## Omens are appended separately and always listed above these.
+static func format_overlay_detail_side_lines(
 		card: GameState.CardInstance,
 		owner_player: int = -1,
 		grid_pos: Vector2i = Vector2i(-1, -1)
@@ -35,14 +60,6 @@ static func format_overlay_status_lines(
 		return PackedStringArray()
 
 	var lines: PackedStringArray = PackedStringArray()
-
-	if not card.face_up:
-		lines.append("Face Down")
-
-	if card.card_type == "character" and card.attacked_this_turn \
-			and not is_decoy_puppet_blocked(card, owner_player) \
-			and not is_echo_barrier_blocked(card, owner_player):
-		lines.append("Waiting")
 
 	if is_decoy_puppet_blocked(card, owner_player):
 		lines.append("Decoy Puppet (cannot attack)")
@@ -97,6 +114,20 @@ static func format_overlay_status_lines(
 	elif card.multi_attack_count > 0:
 		lines.append("Multi-Attack (%d used)" % card.multi_attack_count)
 
+	return lines
+
+
+## Back-compat: common left tags + right detail lines (no Face Down, no Omens).
+static func format_overlay_status_lines(
+		card: GameState.CardInstance,
+		owner_player: int = -1,
+		grid_pos: Vector2i = Vector2i(-1, -1)
+) -> PackedStringArray:
+	var lines: PackedStringArray = PackedStringArray()
+	for entry: Variant in format_overlay_common_side_entries(card, owner_player):
+		if entry is Dictionary:
+			lines.append(str((entry as Dictionary).get("title", "")))
+	lines.append_array(format_overlay_detail_side_lines(card, owner_player, grid_pos))
 	return lines
 
 
