@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "group": "chapter_1",
+    "count": 137,
+    "aspect_ratio": "2:1 landscape (author at 900x450, crop top-weighted)",
+    "style_suffix": "Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark",
+    "composition_glue": "centered iconic composition, plain dark ground behind, corners fading to shadow",
+    "negative": "text, lettering, inscriptions, ornate frame, border, watermark, signature, modern objects, photorealism, bright white background, anime, cartoon",
+    "notes": "Subject sits in upper-middle third. Bottom ~28% will dissolve into capsule metal. Corners are masked away."
+  },
+  "prompts": []
+}

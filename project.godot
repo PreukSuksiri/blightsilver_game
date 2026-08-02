@@ -41,6 +41,7 @@ ShopManager="*res://autoload/ShopManager.gd"
 CampaignManager="*res://autoload/CampaignManager.gd"
 DailyDungeonManager="*res://autoload/DailyDungeonManager.gd"
 ExplorationManager="*res://autoload/ExplorationManager.gd"
+OmenDatabase="*res://autoload/OmenDatabase.gd"
 ExplorationItemDatabase="*res://autoload/ExplorationItemDatabase.gd"
 ExplorationPuzzleDatabase="*res://autoload/ExplorationPuzzleDatabase.gd"
 CheckerTransition="*res://autoload/CheckerTransition.gd"
@@ -80,7 +81,7 @@ window/stretch/aspect="expand"
 [editor]
 
 movie_writer/ogv/audio_quality=1.0
-movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/v3_battle_22.avi"
+movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/omen_system_2.avi"
 
 [editor_plugins]
 

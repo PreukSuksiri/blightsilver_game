@@ -87,6 +87,9 @@ var _debug_lbl: RichTextLabel      = null
 var _content_panel: Panel          = null   # right-side content area (layout_mode=0, sized by _reflow_layout)
 var _who_section: VBoxContainer    = null   # "Who is here" section inside the info panel
 var _who_grid: GridContainer       = null   # 2-column grid of character thumbnails + names
+var _omens_section: VBoxContainer  = null   # Active omens section inside the info panel
+var _omens_list: VBoxContainer     = null
+var _safe_zone_lbl: Label          = null
 var _nav_fade_rect: ColorRect      = null   # full-screen black rect for node-transition fade
 var _nav_fade_tween: Tween         = null
 var _transition_active: bool       = false   # true while fade-out/in is running
@@ -308,6 +311,19 @@ func _build_ui() -> void:
 	_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_vignette)
 
+	_safe_zone_lbl = Label.new()
+	_safe_zone_lbl.text = "Safe Zone"
+	_safe_zone_lbl.anchor_left = 0.0
+	_safe_zone_lbl.anchor_top = 0.0
+	_safe_zone_lbl.offset_left = 16.0
+	_safe_zone_lbl.offset_top = 16.0
+	_safe_zone_lbl.add_theme_font_size_override("font_size", 22)
+	_safe_zone_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	_safe_zone_lbl.visible = false
+	_safe_zone_lbl.z_index = 30
+	_safe_zone_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_safe_zone_lbl)
+
 	# ── Flashlight dim overlay (full screen incl. info panel; session var flashlight=1) ──
 	_flashlight_mat = ShaderMaterial.new()
 	_flashlight_mat.shader = FLASHLIGHT_SHADER
@@ -411,6 +427,23 @@ func _build_ui() -> void:
 	_who_grid.add_theme_constant_override("v_separation", 10)
 	_who_section.add_child(_who_grid)
 
+	_omens_section = VBoxContainer.new()
+	_omens_section.add_theme_constant_override("separation", 8)
+	_omens_section.visible = false
+	vbox.add_child(_omens_section)
+	var omens_hdr := Label.new()
+	omens_hdr.text = "Active Omens"
+	_tag_ui(omens_hdr, "font", 700)
+	omens_hdr.add_theme_font_size_override("font_size", 30)
+	omens_hdr.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
+	_omens_section.add_child(omens_hdr)
+	var omens_spacer := Control.new()
+	omens_spacer.custom_minimum_size = Vector2(0, 8)
+	_omens_section.add_child(omens_spacer)
+	_omens_list = VBoxContainer.new()
+	_omens_list.add_theme_constant_override("separation", 6)
+	_omens_section.add_child(_omens_list)
+
 	# Back button
 	_back_btn = Button.new()
 	_back_btn.text = "← Go Back"
@@ -461,12 +494,13 @@ func _build_ui() -> void:
 	_build_compass_system()
 
 	# ── Toast label ───────────────────────────────────────────
+	# Sized from the viewport in _reflow_layout / _show_toast — same pattern as
+	# the compass HUD. Anchor-to-parent is unreliable here because this Control
+	# is a bare scene root until reflow runs.
 	_toast_lbl = Label.new()
-	_toast_lbl.anchor_left  = 0.0;  _toast_lbl.anchor_right  = 1.0
-	_toast_lbl.anchor_top   = 0.0;  _toast_lbl.anchor_bottom = 0.0
-	_toast_lbl.offset_left  = 16.0; _toast_lbl.offset_right  = -16.0
-	_toast_lbl.offset_top   = 16.0; _toast_lbl.offset_bottom = 80.0
+	_toast_lbl.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_toast_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_tag_ui(_toast_lbl, "font", 700)
 	_toast_lbl.add_theme_font_size_override("font_size", 28)
 	_toast_lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.30))
@@ -476,6 +510,7 @@ func _build_ui() -> void:
 	_toast_lbl.modulate.a    = 0.0
 	_toast_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast_lbl.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	_toast_lbl.z_index = 60
 	add_child(_toast_lbl)
 
 	_save_toast_lbl = Label.new()
@@ -537,6 +572,19 @@ func _reflow_layout() -> void:
 		_radial_menu_layer.size = vp_size
 	if _compass_root != null:
 		_layout_compass_hud(vp_size, true)
+	_layout_toast_lbl(vp_size)
+
+## Pin the yellow toast across the full viewport width (centered text).
+func _layout_toast_lbl(vp: Vector2 = Vector2.ZERO) -> void:
+	if _toast_lbl == null:
+		return
+	if vp.x <= 0.0 or vp.y <= 0.0:
+		vp = get_viewport().get_visible_rect().size
+	if vp.x <= 0.0 or vp.y <= 0.0:
+		return
+	_toast_lbl.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_toast_lbl.position = Vector2(16.0, 16.0)
+	_toast_lbl.size = Vector2(maxf(vp.x - 32.0, 80.0), 64.0)
 
 ## Recompute and apply bottom HUD icon positions from the current viewport size.
 func _layout_compass_hud(vp: Vector2, close_open_menus: bool = false) -> void:
@@ -1898,6 +1946,14 @@ func _flash_empty_inventory() -> void:
 # Info Panel
 # ─────────────────────────────────────────────────────────────
 
+func _rebuild_active_omens() -> void:
+	if _omens_list == null or _omens_section == null:
+		return
+	var held: Array = ExplorationManager.get_active_omens()
+	OmenListPanel.build_list(_omens_list, held)
+	_omens_section.visible = not held.is_empty()
+
+
 ## Rebuild the "Who is here" grid from the node's character list.
 ## Shows up to 8 characters; hides the section if none are present or feature is off.
 func _rebuild_who_is_here(node: ExplorationNode) -> void:
@@ -2069,6 +2125,7 @@ func _open_info_panel(
 	_info_wait_for_mouse     = wait_for_mouse_move
 	_info_on_close_cb = on_close
 	_info_open = true
+	_rebuild_active_omens()
 	# 5-second fallback: if player still hasn't moved the mouse, release the wait-lock anyway
 	if wait_for_mouse_move:
 		_info_mouse_wait_timer = get_tree().create_timer(5.0)
@@ -3378,6 +3435,10 @@ func _refresh_node(node: ExplorationNode, after_battle: bool = false) -> void:
 
 	# "Who is here" section in info panel
 	_rebuild_who_is_here(node)
+	_rebuild_active_omens()
+
+	if _safe_zone_lbl != null:
+		_safe_zone_lbl.visible = node.is_safe_zone
 
 	var will_enter_vn: bool = node.vn_trigger_on_enter() and _would_play_node_vn(node)
 	if not will_enter_vn:
@@ -3904,8 +3965,11 @@ func _on_back_pressed() -> void:
 	_navigate_with_fade(func() -> bool: return ExplorationManager.apply_go_back())
 
 func _show_toast(text: String) -> void:
+	if _toast_lbl == null:
+		return
 	if _toast_tween and _toast_tween.is_valid():
 		_toast_tween.kill()
+	_layout_toast_lbl()
 	_toast_lbl.text      = text
 	_toast_lbl.modulate.a = 1.0
 	_toast_tween = create_tween()
@@ -4639,8 +4703,62 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			_abort_pending_spot_interaction()
 			if not value.is_empty():
 				_do_end_exploration_with_vn(value)
+		"grant_omen":
+			_run_grant_omen(value, next)
+		"open_deck_builder":
+			_open_deck_builder_overlay(next)
 		_:
 			next.call()
+
+
+func _run_grant_omen(group_csv: String, on_done: Callable) -> void:
+	var deck_meta: Array = ExplorationManager.build_deck_card_meta_for_omens()
+	var held: Array = ExplorationManager.get_held_omen_ids()
+	var offer: Array = OmenDatabase.roll_offer(group_csv, held, 3, [], deck_meta)
+	if offer.is_empty():
+		_show_toast("No Omens available.")
+		if on_done.is_valid():
+			on_done.call()
+		return
+	var chosen: Dictionary = await OmenSelectOverlay.await_selection(self, offer)
+	if chosen.is_empty():
+		if on_done.is_valid():
+			on_done.call()
+		return
+	var anointed: String = ""
+	if OmenDatabase.is_anoint(chosen):
+		var eligible: Array = OmenDatabase.get_eligible_deck_cards(chosen, deck_meta)
+		if eligible.is_empty():
+			_show_toast("No eligible cards for that Omen.")
+			if on_done.is_valid():
+				on_done.call()
+			return
+		anointed = await OmenAnointPicker.await_selection(self, chosen, eligible)
+		if anointed.is_empty():
+			if on_done.is_valid():
+				on_done.call()
+			return
+	ExplorationManager.add_omen(str(chosen.get("id", "")), anointed)
+	_show_toast("Omen gained: %s" % str(chosen.get("label", chosen.get("id", ""))))
+	if on_done.is_valid():
+		on_done.call()
+
+
+func _open_deck_builder_overlay(on_done: Callable) -> void:
+	if get_node_or_null("DeckBuilderOverlay") != null:
+		if on_done.is_valid():
+			on_done.call()
+		return
+	ExplorationManager.save_session_now()
+	var deck_builder: Control = load("res://scenes/deck_builder.tscn").instantiate()
+	deck_builder.name = "DeckBuilderOverlay"
+	deck_builder.z_index = 200
+	add_child(deck_builder)
+	deck_builder.tree_exiting.connect(func() -> void:
+		if on_done.is_valid():
+			on_done.call()
+	)
+
 
 func _process(delta: float) -> void:
 	if not _active_tool_id.is_empty() and not _tool_spots.is_empty():

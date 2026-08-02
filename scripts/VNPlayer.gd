@@ -1948,6 +1948,7 @@ func _show_beat() -> void:
 			_accepting_input = true
 			_show_beat()
 			return
+		OmenBattleApplier.clear()
 		GameState.apply_tutorial_opponent_crystals()
 		_apply_beat_battle_display(beat, true)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
@@ -1979,6 +1980,11 @@ func _show_beat() -> void:
 		GameState.apply_battle_start_crystals(beat)
 		if exploration_overlay and ExplorationManager.is_session_active:
 			GameState.vn_launched_from_exploration = true
+			OmenBattleApplier.prepare_from_exploration()
+		else:
+			OmenBattleApplier.clear()
+		_apply_battle_exploration_backdrop(beat)
+		OmenBattleApplier.apply_pre_battle_crystal_and_flags()
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
@@ -2664,6 +2670,27 @@ func _input(event: InputEvent) -> void:
 	if advance:
 		get_viewport().set_input_as_handled()
 		_show_beat()
+
+
+## Memorize exploration room BG for battle when beat requests it.
+## Outside exploration (or missing BG file) leaves normal playmat/setup art.
+func _apply_battle_exploration_backdrop(beat: Dictionary) -> void:
+	GameState.battle_use_exploration_bg = false
+	GameState.battle_exploration_bg_path = ""
+	if not bool(beat.get("battle_use_exploration_bg", false)):
+		return
+	if not exploration_overlay or not ExplorationManager.is_session_active:
+		return
+	var path: String = ""
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node != null:
+		path = node.resolve_background(ExplorationManager.get_all_vars()).strip_edges()
+	if path.is_empty() and get_parent() != null and get_parent().get("_current_bg_path") != null:
+		path = str(get_parent().get("_current_bg_path")).strip_edges()
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return
+	GameState.battle_use_exploration_bg = true
+	GameState.battle_exploration_bg_path = path
 
 
 ## Apply optional P1/P2 display names and battle illustrations from a VN beat.

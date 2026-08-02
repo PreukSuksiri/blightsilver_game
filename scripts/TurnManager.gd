@@ -228,7 +228,10 @@ func _apply_foe_coin_flip_traps(results: Array, source_player: int) -> Array:
 		return results
 	GameState.reveal_card(trap_owner, trap_pos.x, trap_pos.y)
 	if trap_data.crystal_cost > 0:
-		GameState.lose_crystals(trap_owner, trap_data.crystal_cost, "trap")
+		var _place_trap_cost: int = trap_data.crystal_cost
+		if trap_owner == 0 and GameState.omen_trap_cost_pct != 0.0:
+			_place_trap_cost = int(round(float(_place_trap_cost) * (1.0 + GameState.omen_trap_cost_pct / 100.0)))
+		GameState.lose_crystals(trap_owner, _place_trap_cost, "trap")
 		await _wait_crystal_animation()
 	GameState.post_message("%s triggered!" % trap_data.card_name)
 	var mode: String = str(trap_data.effect_params.get("coin_manipulation", ""))
@@ -291,6 +294,16 @@ func start_turn(player_index: int) -> void:
 	GameState.turn_changed.emit(player_index)
 	GameState.current_mode = GameState.TurnMode.NONE
 	GameState.attacks_remaining = 2
+
+	if player_index == 0:
+		if GameState.omen_block_p0_first_turn_attacks:
+			GameState.omen_block_p0_first_turn_attacks = false
+			GameState.attacks_remaining = 0
+		else:
+			if GameState.turn_number == 1 and GameState.omen_max_attacks_first_turn_only != 0:
+				GameState.attacks_remaining += GameState.omen_max_attacks_first_turn_only
+			if GameState.omen_max_attacks_bonus != 0:
+				GameState.attacks_remaining += GameState.omen_max_attacks_bonus
 
 	# Frenzy Strike: +1 attack per turn for both players
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
@@ -1169,6 +1182,9 @@ func after_tech_resolved(player: int) -> void:
 
 func play_tech_card(tech_name: String) -> void:
 	var player := GameState.current_player
+	if player == 0 and GameState.omen_cannot_tech:
+		GameState.show_center_message("An Omen prevents using Tech this battle.")
+		return
 	if GameState.current_phase != GameState.Phase.MODE_SELECT:
 		return
 
@@ -1199,8 +1215,8 @@ func play_tech_card(tech_name: String) -> void:
 		if "tech_broker" in _tm: _eff_tech_cost = 0
 		elif "tech_dealer" in _tm: _eff_tech_cost = int(_eff_tech_cost * 0.5)
 		if "intelligence_tax" in _tm: _eff_tech_cost += 500
-
-	if GameState.crystals[player] < _eff_tech_cost:
+	if player == 0 and GameState.omen_tech_cost_pct != 0.0:
+		_eff_tech_cost = int(round(float(_eff_tech_cost) * (1.0 + GameState.omen_tech_cost_pct / 100.0)))
 		GameState.show_center_message("Not enough Crystals to play %s." % tech_name)
 		return
 
@@ -2084,6 +2100,8 @@ func _handle_trap_effect(
 		var _trap_mods: Array = GameState.active_dungeon_modifiers
 		if "trap_broker" in _trap_mods: _eff_trap_cost = 0
 		elif "trap_dealer" in _trap_mods: _eff_trap_cost = int(_eff_trap_cost * 0.5)
+	if opponent == 0 and GameState.omen_trap_cost_pct != 0.0:
+		_eff_trap_cost = int(round(float(_eff_trap_cost) * (1.0 + GameState.omen_trap_cost_pct / 100.0)))
 	GameState.lose_crystals(opponent, _eff_trap_cost, "trap cost")
 	await _wait_crystal_animation()
 

@@ -166,6 +166,8 @@ var _current_node_id: String = ""
 var _node_history: Array[String] = []
 var _inventory: Array[String] = []
 var _vars: Dictionary = {}
+## Held Omens for this exploration stage: Array of { "id": String, "anointed_card": String }.
+var _active_omens: Array = []
 var _played_vn_scenes: Dictionary = {}   # path → true; tracks once-only VN scenes played this session
 var _interacted_spots: Dictionary = {}   # "node_id:spot_index" → true; one-time spots already used
 var _spots_in_progress: Dictionary = {}  # "node_id:spot_index" → true; hide-after spots mid-action (not saved)
@@ -349,6 +351,7 @@ func _clear_session_memory() -> void:
 	_node_history.clear()
 	_inventory.clear()
 	_vars.clear()
+	_active_omens.clear()
 	_played_vn_scenes.clear()
 	_interacted_spots.clear()
 	_spots_in_progress.clear()
@@ -588,6 +591,7 @@ func _save_session_state(force: bool = false) -> void:
 		"history":           _node_history.duplicate(),
 		"inventory":         _inventory.duplicate(),
 		"vars":              _vars.duplicate(),
+		"active_omens":      _active_omens.duplicate(true),
 		"played_vn_scenes":  _played_vn_scenes.keys(),
 		"interacted_spots":  _interacted_spots.keys(),
 		"talked_characters": _talked_characters.keys(),
@@ -822,6 +826,15 @@ func restore_saved_session() -> bool:
 		_inventory.assign(inv)
 	var vs: Variant   = sd.get("vars", {})
 	_vars             = vs as Dictionary if vs is Dictionary else {}
+	_active_omens.clear()
+	var omens_raw: Variant = sd.get("active_omens", [])
+	if omens_raw is Array:
+		for entry: Variant in omens_raw as Array:
+			if entry is Dictionary:
+				_active_omens.append({
+					"id": str((entry as Dictionary).get("id", "")),
+					"anointed_card": str((entry as Dictionary).get("anointed_card", "")),
+				})
 	_played_vn_scenes.clear()
 	var pvn: Variant  = sd.get("played_vn_scenes", [])
 	if pvn is Array:
@@ -1103,6 +1116,90 @@ func has_item(item: String) -> bool:
 ## Returns a copy of the current session inventory.
 func get_inventory() -> Array:
 	return _inventory.duplicate()
+
+# ─────────────────────────────────────────────────────────────
+# Omens — Public API
+# ─────────────────────────────────────────────────────────────
+
+signal omens_changed(omens: Array)
+
+## Append a held omen for this stage. Duplicates by id are not prevented here —
+## the offer roller excludes already-held ids.
+func add_omen(id: String, anointed_card_name: String = "") -> void:
+	if id.is_empty():
+		return
+	_active_omens.append({
+		"id": id,
+		"anointed_card": anointed_card_name,
+	})
+	emit_signal("omens_changed", get_active_omens())
+	_save_session_state()
+
+
+func get_active_omens() -> Array:
+	return _active_omens.duplicate(true)
+
+
+func has_omen(id: String) -> bool:
+	for entry: Variant in _active_omens:
+		if entry is Dictionary and str((entry as Dictionary).get("id", "")) == id:
+			return true
+	return false
+
+
+func get_held_omen_ids() -> Array:
+	var ids: Array = []
+	for entry: Variant in _active_omens:
+		if entry is Dictionary:
+			var oid: String = str((entry as Dictionary).get("id", ""))
+			if not oid.is_empty() and oid not in ids:
+				ids.append(oid)
+	return ids
+
+
+## Build deck card meta for OmenDatabase.roll_offer / get_eligible_deck_cards.
+func build_deck_card_meta_for_omens() -> Array:
+	var out: Array = []
+	var deck = SaveManager.get_active_deck()
+	if deck == null:
+		return out
+	var names: Array = []
+	for n: Variant in deck.characters:
+		names.append({"name": str(n), "type": "unit"})
+	for n: Variant in deck.traps:
+		names.append({"name": str(n), "type": "trap"})
+	for n: Variant in deck.techs:
+		names.append({"name": str(n), "type": "tech"})
+	for entry: Dictionary in names:
+		var card_name: String = entry["name"]
+		var card_type: String = entry["type"]
+		var meta: Dictionary = {
+			"name": card_name,
+			"type": card_type,
+			"affinity": "",
+			"cost": 0,
+			"atk": 0,
+			"def": 0,
+			"ability_none": false,
+		}
+		if card_type == "unit":
+			var ch = CardDatabase.get_character(card_name)
+			if ch != null:
+				meta["affinity"] = ch.get_affinity_name()
+				meta["cost"] = int(ch.crystal_cost)
+				meta["atk"] = int(ch.base_atk)
+				meta["def"] = int(ch.base_def)
+				meta["ability_none"] = ch.ability_type == CharacterData.AbilityType.NONE
+		elif card_type == "trap":
+			var tr = CardDatabase.get_trap(card_name)
+			if tr != null:
+				meta["cost"] = int(tr.crystal_cost)
+		elif card_type == "tech":
+			var te = CardDatabase.get_tech(card_name)
+			if te != null:
+				meta["cost"] = int(te.crystal_cost)
+		out.append(meta)
+	return out
 
 # ─────────────────────────────────────────────────────────────
 # Variables — Public API
@@ -1494,6 +1591,8 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 		GameState.battle_ai_forced_tech.clear()
 		GameState.battle_ai_featured_union = ""
 	GameState.new_game(GameState.GameMode.EXPLORATION)
+	OmenBattleApplier.prepare_from_exploration()
+	OmenBattleApplier.apply_pre_battle_crystal_and_flags()
 	GameState.quick_duel_protagonist_id = SaveManager.current_protagonist_id
 	if _current_graph != null:
 		GameState.analytics_graph_path = str(_current_graph._source_path)

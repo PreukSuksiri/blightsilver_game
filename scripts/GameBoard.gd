@@ -369,6 +369,8 @@ var _attack_hover_node: Control = null  # card node currently showing attack-tar
 var grid_nodes: Array = [[], []]
 # bluff_labels[player][row][col] -> Label overlaid on card node
 var bluff_labels: Array = [[], []]
+# rune_labels[player][row][col] -> Label glyph in cell corner
+var rune_labels: Array = [[], []]
 # bluff_icons[player][row][col] -> TextureRect (v3 custom emoji) or null
 var bluff_icons: Array = [[], []]
 var _battle_layout_pending: bool = false
@@ -493,6 +495,7 @@ var _end_turn_blink_tween: Tween = null
 var _attack_confirm_panel: Control = null
 var _end_turn_btn: TextureButton = null
 var _dungeon_mod_panel: PanelContainer = null
+var _omen_hud_panel: PanelContainer = null
 var _last_banner_turn: int = -1
 ## True while the "Player X's Turn" banner (and post-delay) is locking the board.
 var _turn_banner_blocking: bool = false
@@ -629,6 +632,7 @@ func _ready() -> void:
 	_build_reveal_buttons()
 	_build_end_turn_button()
 	_build_dungeon_modifier_panel()
+	_build_omen_hud_panel()
 	_build_attack_confirm_panel()
 
 	_build_card_name_lookup()
@@ -647,6 +651,7 @@ func _ready() -> void:
 	CTX_ICON_UNION  = HudSkin.context_menu_union_tex()
 	HudSkin.skin_changed.connect(_reload_hud_skin)
 	_reload_hud_skin()
+	_apply_exploration_battle_backdrop()
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
@@ -768,8 +773,8 @@ func _max_unions_per_duel() -> int:
 	return 1
 
 ## Effective union summon cost after applying dungeon modifiers.
-func _effective_union_cost(base_cost: int) -> int:
-	return GameState.effective_union_summon_cost(base_cost)
+func _effective_union_cost(base_cost: int, player: int = 0) -> int:
+	return GameState.effective_union_summon_cost(base_cost, player)
 
 func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
@@ -782,7 +787,7 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null or not UnionDatabase.is_playable_in_demo(u) \
-			or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost):
+			or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost, cp):
 		await get_tree().create_timer(0.3).timeout
 		if GameState.current_phase != GameState.Phase.GAME_OVER:
 			_request_ai_continue_after_union()
@@ -948,10 +953,12 @@ func _build_grids() -> void:
 		grid_nodes[p] = []
 		bluff_labels[p] = []
 		bluff_icons[p] = []
+		rune_labels[p] = []
 		for r in range(GameState.GRID_SIZE):
 			var row_arr: Array = []
 			var lbl_row: Array = []
 			var icon_row: Array = []
+			var rune_row: Array = []
 			for c in range(GameState.GRID_SIZE):
 				var card_node: Control = CARD_SCENE.instantiate()
 				card_node.rarity_fx_enabled = false
@@ -997,12 +1004,32 @@ func _build_grids() -> void:
 					bluff_icon.clip_contents = false
 					bluff_icon.visible = false
 					card_node.add_child(bluff_icon)
+				var rune_lbl := Label.new()
+				rune_lbl.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+				rune_lbl.offset_left = 2.0
+				rune_lbl.offset_top = -22.0
+				rune_lbl.offset_right = 28.0
+				rune_lbl.offset_bottom = -2.0
+				rune_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+				rune_lbl.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+				rune_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				rune_lbl.z_as_relative = false
+				rune_lbl.z_index = Z_GRID_BLUFF
+				rune_lbl.text = ""
+				rune_lbl.add_theme_font_size_override("font_size", 16)
+				rune_lbl.add_theme_color_override("font_color", Color(0.85, 0.72, 1.0, 1.0))
+				rune_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+				rune_lbl.add_theme_constant_override("shadow_offset_x", 1)
+				rune_lbl.add_theme_constant_override("shadow_offset_y", 1)
+				card_node.add_child(rune_lbl)
 				row_arr.append(card_node)
 				lbl_row.append(bluff_lbl)
 				icon_row.append(bluff_icon)
+				rune_row.append(rune_lbl)
 			grid_nodes[p].append(row_arr)
 			bluff_labels[p].append(lbl_row)
 			bluff_icons[p].append(icon_row)
+			rune_labels[p].append(rune_row)
 	call_deferred("_add_grid_line_panels")
 	call_deferred("_refresh_all_bluff_labels")
 
@@ -1659,7 +1686,10 @@ func _start_game() -> void:
 		# VNPlayer already ran new_game() and applied battle config — avoid a second reset.
 		GameState._vn_battle_pending = false
 	else:
+		if GameState.active_omens.is_empty():
+			OmenBattleApplier.clear()
 		GameState.new_game(GameState.game_mode)
+		OmenBattleApplier.apply_pre_battle_crystal_and_flags()
 		if _vs_ai_player_deck != null:
 			GameState.battle_player_deck = _vs_ai_player_deck
 		if not _vs_ai_player_forced_cells.is_empty():
@@ -1959,6 +1989,7 @@ func _on_setup_complete_p1() -> void:
 			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			or GameState.game_mode == GameState.GameMode.EXPLORATION:
 		_do_ai_setup()
+		GameState.omen_intel_lines = OmenBattleApplier.collect_intel_lines(ai_player)
 		_begin_game()
 	elif GameState.game_mode == GameState.GameMode.HOT_SEAT:
 		_show_handoff(1,
@@ -2051,7 +2082,11 @@ func _begin_game() -> void:
 	if setup_phase:
 		setup_phase.visible = false
 	_stop_setup_music()
+	OmenBattleApplier.apply_begin_game(self)
+	for intel_line: Variant in GameState.omen_intel_lines:
+		GameState.post_message(str(intel_line))
 	_refresh_all_bluff_labels()
+	_refresh_all_rune_labels()
 	if _p1_portrait:
 		_p1_portrait.visible = true
 	if _p2_portrait:
@@ -3250,6 +3285,97 @@ func _build_dungeon_modifier_panel() -> void:
 	add_child(_dungeon_mod_panel)
 	call_deferred("_resize_dungeon_modifier_panel")
 
+
+func _build_omen_hud_panel() -> void:
+	if GameState.active_omens.is_empty():
+		return
+
+	const PANEL_HALF_W: float = 76.0
+	_omen_hud_panel = PanelContainer.new()
+	_omen_hud_panel.anchor_left   = 0.5
+	_omen_hud_panel.anchor_top    = 0.0
+	_omen_hud_panel.anchor_right  = 0.5
+	_omen_hud_panel.anchor_bottom = 0.0
+	_omen_hud_panel.offset_left   = -PANEL_HALF_W
+	_omen_hud_panel.offset_top    = 194.0
+	_omen_hud_panel.offset_right  =  PANEL_HALF_W
+	_omen_hud_panel.offset_bottom = 194.0
+	_omen_hud_panel.z_index = 4
+	_omen_hud_panel.visible = true
+	_omen_hud_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.06, 0.14, 1.0)
+	sb.border_width_left = 2
+	sb.border_width_top = 2
+	sb.border_width_right = 2
+	sb.border_width_bottom = 2
+	sb.border_color = Color(0.78, 0.62, 1.0, 1.0)
+	sb.corner_radius_top_left = 8
+	sb.corner_radius_top_right = 8
+	sb.corner_radius_bottom_left = 8
+	sb.corner_radius_bottom_right = 8
+	sb.content_margin_left = 6
+	sb.content_margin_top = 5
+	sb.content_margin_right = 6
+	sb.content_margin_bottom = 5
+	_omen_hud_panel.add_theme_stylebox_override("panel", sb)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 4)
+	_omen_hud_panel.add_child(vbox)
+
+	var hdr := Label.new()
+	hdr.text = "Omens"
+	hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hdr.add_theme_font_size_override("font_size", 10)
+	hdr.add_theme_color_override("font_color", Color(0.82, 0.72, 1.0, 1.0))
+	vbox.add_child(hdr)
+
+	for entry: Variant in GameState.active_omens:
+		if not entry is Dictionary:
+			continue
+		var lbl := Label.new()
+		lbl.text = OmenDatabase.format_omen_line(entry as Dictionary)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.add_theme_font_size_override("font_size", 9)
+		lbl.add_theme_color_override("font_color", Color(0.88, 0.93, 0.98, 1.0))
+		vbox.add_child(lbl)
+
+	if not GameState.omen_intel_lines.is_empty():
+		var sep := HSeparator.new()
+		vbox.add_child(sep)
+		for intel_line: Variant in GameState.omen_intel_lines:
+			var intel_lbl := Label.new()
+			intel_lbl.text = str(intel_line)
+			intel_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			intel_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			intel_lbl.add_theme_font_size_override("font_size", 8)
+			intel_lbl.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
+			vbox.add_child(intel_lbl)
+
+	add_child(_omen_hud_panel)
+	call_deferred("_resize_omen_hud_panel")
+
+
+func _resize_omen_hud_panel() -> void:
+	if _omen_hud_panel == null:
+		return
+	var vbox: VBoxContainer = _omen_hud_panel.get_child(0) as VBoxContainer
+	if vbox == null:
+		return
+	var sb := _omen_hud_panel.get_theme_stylebox("panel") as StyleBoxFlat
+	var panel_w: float = _omen_hud_panel.offset_right - _omen_hud_panel.offset_left
+	var inner_w: float = panel_w
+	var margin_v: float = 0.0
+	if sb:
+		inner_w = panel_w - sb.content_margin_left - sb.content_margin_right
+		margin_v = sb.content_margin_top + sb.content_margin_bottom
+	_apply_dungeon_mod_label_widths(vbox, inner_w)
+	var content_h: float = _measure_dungeon_mod_vbox_height(vbox, inner_w) + margin_v
+	_omen_hud_panel.offset_bottom = _omen_hud_panel.offset_top + content_h
+
 func _apply_dungeon_mod_label_widths(node: Node, inner_w: float) -> void:
 	for child in node.get_children():
 		if child is Label:
@@ -3448,6 +3574,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
 	var _available_unions: Array = []
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
+			and not (ctx_player == 0 and GameState.omen_cannot_union) \
 			and (SaveManager.union_mechanism_unlocked or GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.LOCAL_2P, GameState.GameMode.HOT_SEAT]) and GameState.battle_player_union_enabled \
 			and _union_summoned_this_duel[ctx_player] < _max_unions_per_duel():
 		var _ctx_seen: Dictionary = {}
@@ -3669,6 +3796,22 @@ func _refresh_all_bluff_labels() -> void:
 			for c in range(GameState.GRID_SIZE):
 				_apply_bluff_visual(p, r, c, GameState.get_bluff(p, r, c))
 
+
+func _refresh_all_rune_labels() -> void:
+	if rune_labels.is_empty() or rune_labels[0].is_empty():
+		return
+	for p in range(2):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var lbl: Label = rune_labels[p][r][c] as Label
+				if lbl == null:
+					continue
+				var rune_id: String = OmenBattleApplier.get_cell_rune(p, r, c)
+				var glyph: String = OmenBattleApplier.rune_glyph(rune_id)
+				lbl.text = glyph
+				lbl.visible = not glyph.is_empty()
+
+
 func _refresh_bluff_label(player: int, row: int, col: int) -> void:
 	_apply_bluff_visual(player, row, col, GameState.get_bluff(player, row, col))
 
@@ -3863,13 +4006,16 @@ func _on_union_modal_cancelled() -> void:
 
 func _on_union_selected(player: int, union_name: String, zone_cells: Array) -> void:
 	_union_modal = null
+	if player == 0 and GameState.omen_cannot_union:
+		GameState.post_message("An Omen prevents Union summon this battle.")
+		return
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("union_selected", {"union_name": union_name, "player": player})
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null:
 		push_error("Union not found: " + union_name)
 		return
-	if GameState.crystals[player] < _effective_union_cost(u.summon_cost):
+	if GameState.crystals[player] < _effective_union_cost(u.summon_cost, player):
 		GameState.post_message("Not enough crystals.")
 		return
 	_enter_union_material_selection(player, u, zone_cells)
@@ -4120,7 +4266,7 @@ func _perform_pending_union() -> void:
 		var _card: GameState.CardInstance = GameState.get_card(player, _mc.x, _mc.y)
 		material_labels.append(BattleLogFormat.format_card(_card))
 	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost)
-	GameState.lose_crystals(player, _effective_union_cost(u.summon_cost), "union")
+	GameState.lose_crystals(player, _effective_union_cost(u.summon_cost, player), "union")
 	await GameState.wait_crystal_animation()
 	if _is_ai_turn():
 		_restart_ai_watchdog()
@@ -6500,7 +6646,7 @@ func _collect_all_available_unions(player: int) -> Array:
 				continue
 			for entry: Dictionary in UnionDatabase.find_available_unions(player, r, c):
 				var u: UnionData = entry["union"]
-				if GameState.crystals[player] < _effective_union_cost(u.summon_cost):
+				if GameState.crystals[player] < _effective_union_cost(u.summon_cost, player):
 					continue
 				if seen.has(u.card_name):
 					continue
@@ -6538,8 +6684,36 @@ func _apply_playmat_v2_scale(playmat_rect: TextureRect) -> void:
 func _reload_hud_skin(_new_version: String = "") -> void:
 	var playmat_rect: TextureRect = get_node_or_null("Background") as TextureRect
 	if playmat_rect:
-		playmat_rect.texture = HudSkin.hud_tex("ui_playmat_default.png")
-		_apply_playmat_skin_layout(playmat_rect)
+		if GameState.has_exploration_battle_backdrop():
+			_apply_exploration_battle_backdrop()
+		else:
+			playmat_rect.texture = HudSkin.hud_tex("ui_playmat_default.png")
+			_apply_playmat_skin_layout(playmat_rect)
+
+
+## Show memorized exploration room as battle backdrop; hide black playmat underlay.
+## Falls back to normal playmat when no valid path is stored.
+func _apply_exploration_battle_backdrop() -> void:
+	var playmat_bg: CanvasItem = get_node_or_null("PlaymatBg") as CanvasItem
+	var playmat_rect: TextureRect = get_node_or_null("Background") as TextureRect
+	if not GameState.has_exploration_battle_backdrop():
+		if playmat_bg != null:
+			playmat_bg.visible = true
+		return
+	var tex: Texture2D = load(GameState.battle_exploration_bg_path) as Texture2D
+	if tex == null:
+		if playmat_bg != null:
+			playmat_bg.visible = true
+		return
+	if playmat_bg != null:
+		playmat_bg.visible = false
+	if playmat_rect != null:
+		playmat_rect.visible = true
+		playmat_rect.texture = tex
+		playmat_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		playmat_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		playmat_rect.scale = Vector2.ONE
+		playmat_rect.pivot_offset = Vector2.ZERO
 	CTX_ICON_ATTACK = HudSkin.context_menu_attack_tex()
 	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
@@ -7212,6 +7386,12 @@ func _show_options_panel() -> void:
 		{"text": "Battle Log", "callback": _show_battle_log_panel},
 		{"text": "Rules", "callback": _show_rules_panel},
 	]
+	if not GameState.active_omens.is_empty():
+		items.append({
+			"text": "Omens",
+			"callback": func() -> void:
+				OmenListPanel.show_dialog(self, GameState.active_omens),
+		})
 	# Only offer surrender on the acting player's turn (never during AI turn).
 	if _can_surrender_now():
 		items.append({"text": "Surrender", "callback": _show_surrender_confirm})
@@ -7960,13 +8140,17 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 
 	var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
 	var bg: Control
-	# Black underlay behind scenic art (covers any edge gaps).
+	var use_expl_bg: bool = GameState.has_exploration_battle_backdrop()
+	# Transparent catcher when using exploration backdrop; else black + setup plate.
 	var underlay := ColorRect.new()
 	underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	underlay.color = Color(0.0, 0.0, 0.0, 1.0)
+	underlay.color = Color(0.0, 0.0, 0.0, 0.0) if use_expl_bg else Color(0.0, 0.0, 0.0, 1.0)
 	underlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(underlay)
-	if setup_bg_tex != null:
+	if use_expl_bg:
+		underlay.mouse_filter = Control.MOUSE_FILTER_STOP
+		bg = underlay
+	elif setup_bg_tex != null:
 		var bg_tex := TextureRect.new()
 		bg_tex.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		bg_tex.texture = setup_bg_tex
@@ -15611,6 +15795,7 @@ func _show_endgame_screen(winner: int) -> void:
 					if mode == GameState.GameMode.CAMPAIGN else null
 				var reward: int = node_data.data.get("reward_credits", 0) \
 					if node_data != null else 0
+				reward = OmenBattleApplier.apply_reward_credit_bonus(reward)
 				title_text = "You've Won the Duel." if reward == 0 \
 					else "You've Won the Duel.  +%d cr" % reward
 		else:
@@ -15625,11 +15810,12 @@ func _show_endgame_screen(winner: int) -> void:
 		elif not GameState.vn_battle_rewards.is_empty():
 			_grant_vn_battle_rewards()
 		else:
+			var reward_amount: int = OmenBattleApplier.apply_reward_credit_bonus(50)
 			MailboxManager.send_mail(
 				"Battle Reward",
 				"Credits Earned!",
-				"You won and received 50 Credits.",
-				{"type": "credits", "amount": 50}
+				"You won and received %d Credits." % reward_amount,
+				{"type": "credits", "amount": reward_amount}
 			)
 	elif not is_win_screen and is_ai_game and not is_dungeon and not is_exploration:
 		if GameState.quick_duel_active:

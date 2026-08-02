@@ -321,6 +321,33 @@ var battle_ask_player_name: String = ""
 var active_dungeon_node_id: String = ""
 var active_dungeon_modifiers: Array = []
 
+# Exploration Omens active for the current battle (copied from ExplorationManager at launch).
+# Each entry: { "id": String, "anointed_card": String }
+var active_omens: Array = []
+## cell_runes[player][row][col] -> rune id string ("" if none).
+var cell_runes: Array = []
+## Cached intel strings for setup/HUD (bluff prefs, personalities).
+var omen_intel_lines: Array = []
+## Runtime flags from omens this battle.
+var omen_cannot_attack_first_turn: bool = false
+var omen_cannot_union: bool = false
+var omen_cannot_tech: bool = false
+var omen_max_attacks_bonus: int = 0
+var omen_max_attacks_first_turn_only: int = 0
+var omen_crystal_loss_pct: float = 0.0
+var omen_unit_destroy_loss_pct: float = 0.0
+var omen_crystal_gain_pct: float = 1.0  # 0 = cannot gain
+var omen_trap_cost_pct: float = 0.0
+var omen_tech_cost_pct: float = 0.0
+var omen_crystal_loss_multiplier: float = 1.0
+var omen_reckoning_loss_pct: float = 0.0
+var omen_affinity_destroy_loss: Dictionary = {}  # affinity name -> pct
+## Anoint runtime: card_name -> Array of effect dicts (merged from held omens).
+var omen_anoint_effects: Dictionary = {}
+var omen_union_cost_multiplier: float = 1.0
+var omen_reward_credit_pct: float = 0.0
+var omen_block_p0_first_turn_attacks: bool = false
+
 var crystals: Array = [STARTING_CRYSTALS, STARTING_CRYSTALS]
 var grids: Array = []           # grids[player][row][col] -> CardInstance
 var bluff_emoticons: Array = []  # bluff_emoticons[player][row][col] -> String ("")
@@ -368,6 +395,9 @@ var vn_battle_rewards: Array = []  # VN start_battle / tutorial_battle beat rewa
 var vn_battle_loss_rewards: Array = []  # VN start_battle beat rewards — granted to mailbox on loss (optional once_flag)
 var vn_battle_loss_reward_once: String = ""  # SaveManager.exploration_flags key — skip loss rewards if already "1"
 var vn_launched_from_exploration: bool = false
+## VN start_battle: use memorized exploration room image instead of setup art / playmat.
+var battle_use_exploration_bg: bool = false
+var battle_exploration_bg_path: String = ""
 var game_over_reason: String = ""  # "crystals" | "all_destroyed" | "no_moves" | "surrender"
 var portrait_p1_offset: Vector2 = Vector2.ZERO
 var portrait_p1_size:   float   = 1.0
@@ -800,23 +830,40 @@ func wait_crystal_animation() -> void:
 	while _crystal_anim_pending > 0:
 		await crystal_animation_finished
 
-## Union summon cost after dungeon modifiers (shared by board, AI, and logs).
-func effective_union_summon_cost(base_cost: int) -> int:
-	if game_mode != GameMode.DAILY_DUNGEON:
-		return base_cost
-	if "dimensional_fissure" in active_dungeon_modifiers:
-		return int(base_cost * 0.2)
-	if "dimensional_gate" in active_dungeon_modifiers:
-		return int(base_cost * 0.5)
-	if "dimensional_slippage" in active_dungeon_modifiers:
-		return int(base_cost * 0.8)
-	if "sealing_talisman" in active_dungeon_modifiers:
-		return int(base_cost * 1.2)
-	if "sealing_ceremony" in active_dungeon_modifiers:
-		return int(base_cost * 1.5)
-	return base_cost
+## Union summon cost after dungeon modifiers and omens (shared by board, AI, and logs).
+func effective_union_summon_cost(base_cost: int, player_index: int = -1) -> int:
+	var cost: int = base_cost
+	if game_mode == GameMode.DAILY_DUNGEON:
+		if "dimensional_fissure" in active_dungeon_modifiers:
+			cost = int(base_cost * 0.2)
+		elif "dimensional_gate" in active_dungeon_modifiers:
+			cost = int(base_cost * 0.5)
+		elif "dimensional_slippage" in active_dungeon_modifiers:
+			cost = int(base_cost * 0.8)
+		elif "sealing_talisman" in active_dungeon_modifiers:
+			cost = int(base_cost * 1.2)
+		elif "sealing_ceremony" in active_dungeon_modifiers:
+			cost = int(base_cost * 1.5)
+	if player_index in [-1, 0] and omen_union_cost_multiplier != 1.0:
+		cost = int(round(float(cost) * omen_union_cost_multiplier))
+	return cost
 
 func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
+	if amount > 0 and player_index == 0 and not active_omens.is_empty():
+		if omen_crystal_loss_multiplier != 1.0:
+			amount = int(round(float(amount) * omen_crystal_loss_multiplier))
+		var pct_total: float = 0.0
+		if reason == "card lost":
+			pct_total += omen_unit_destroy_loss_pct
+			var aff_name: String = _omen_last_destroyed_affinity(player_index)
+			if not aff_name.is_empty():
+				pct_total += float(omen_affinity_destroy_loss.get(aff_name, 0.0))
+		elif reason == "battle":
+			pct_total += omen_reckoning_loss_pct
+		pct_total += omen_crystal_loss_pct
+		if pct_total != 0.0:
+			amount = int(round(float(amount) * (1.0 + pct_total / 100.0)))
+		amount = maxi(0, amount)
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
 	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
 		amount = int(amount * 1.25)
@@ -861,9 +908,28 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	_check_crystal_win_condition()
 
 func gain_crystals(player_index: int, amount: int, reason: String = "") -> void:
+	if amount > 0 and player_index == 0 and omen_crystal_gain_pct <= 0.0:
+		return
+	if amount > 0 and player_index == 0 and omen_crystal_gain_pct != 1.0:
+		amount = int(round(float(amount) * omen_crystal_gain_pct))
 	crystals[player_index] += amount
 	_begin_crystal_animation()
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
+
+
+func _omen_last_destroyed_affinity(player_index: int) -> String:
+	if player_index < 0 or player_index >= graveyards.size():
+		return ""
+	var pile: Array = graveyards[player_index]
+	if pile.is_empty():
+		return ""
+	for i: int in range(pile.size() - 1, -1, -1):
+		var entry: Variant = pile[i]
+		if entry is GameState.CardInstance:
+			var inst: GameState.CardInstance = entry as GameState.CardInstance
+			if inst.card_type == "character" and inst.affinity >= 0:
+				return CharacterData.Affinity.keys()[inst.affinity]
+	return ""
 
 
 ## Admin/dev: set a player's crystal total directly (no card side-effects). May end the duel.
@@ -1605,6 +1671,10 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	echo_barrier_player = -1
 	guerrilla_tactics_owner = -1
 	if not _vn_battle_pending:
+		if active_omens.is_empty():
+			OmenBattleApplier.clear()
+		else:
+			OmenBattleApplier.reset_runtime_fields()
 		battle_ai_union_enabled = true
 		battle_ai_union_maniac = false
 		battle_player_union_enabled = true
@@ -1618,6 +1688,8 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_ai_identity_id = ""
 		battle_p1_identity_id = ""
 		vn_launched_from_exploration = false
+		battle_use_exploration_bg = false
+		battle_exploration_bg_path = ""
 		vn_battle_rewards.clear()
 		vn_battle_loss_rewards.clear()
 		vn_battle_loss_reward_once = ""
@@ -1634,6 +1706,14 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	quick_duel_rewards_settled = false
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
+
+
+## True when a VN battle should show a memorized exploration room as backdrop.
+func has_exploration_battle_backdrop() -> bool:
+	if not battle_use_exploration_bg:
+		return false
+	var path: String = battle_exploration_bg_path.strip_edges()
+	return not path.is_empty() and ResourceLoader.exists(path)
 
 func apply_casual_mode_crystals() -> void:
 	crystals[0] = STARTING_CRYSTALS

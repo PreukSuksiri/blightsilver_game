@@ -115,6 +115,7 @@ class GridCell extends Panel:
 	var locked:         bool        = false  # forced placement — cannot be moved or removed
 	var _card_tex:      TextureRect = null
 	var _emoticon_lbl:  Label       = null
+	var _rune_lbl:      Label       = null
 	var _flash_overlay: ColorRect   = null
 	var _drag_started:  bool        = false
 
@@ -129,6 +130,27 @@ class GridCell extends Panel:
 			_emoticon_lbl.z_index = 5
 			add_child(_emoticon_lbl)
 		_emoticon_lbl.text = emoji
+
+	func set_rune_glyph(glyph: String) -> void:
+		if _rune_lbl == null:
+			_rune_lbl = Label.new()
+			_rune_lbl.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+			_rune_lbl.offset_left = 2.0
+			_rune_lbl.offset_top = -22.0
+			_rune_lbl.offset_right = 28.0
+			_rune_lbl.offset_bottom = -2.0
+			_rune_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+			_rune_lbl.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+			_rune_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_rune_lbl.z_index = 6
+			_rune_lbl.add_theme_font_size_override("font_size", 16)
+			_rune_lbl.add_theme_color_override("font_color", Color(0.85, 0.72, 1.0, 1.0))
+			_rune_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+			_rune_lbl.add_theme_constant_override("shadow_offset_x", 1)
+			_rune_lbl.add_theme_constant_override("shadow_offset_y", 1)
+			add_child(_rune_lbl)
+		_rune_lbl.text = glyph
+		_rune_lbl.visible = not glyph.is_empty()
 
 	func occupy(p_name: String, p_type: String, tex: Texture2D) -> void:
 		occupied_name = p_name
@@ -269,6 +291,7 @@ var _hover_hold_hint: CardHoverHoldHint = null
 var _flash_cells: Array          = []
 var _confirm_in_progress: bool = false
 var _setup_complete_emitted: bool = false
+var _omen_intel_lbl: Label = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -307,6 +330,10 @@ func start_setup(player_index: int) -> void:
 	_clear_card_info()
 
 	_reset_grid()
+	if player_index == 0 and not GameState.active_omens.is_empty():
+		OmenBattleApplier.apply_setup_runes()
+	_refresh_omen_intel_label()
+	_refresh_rune_glyphs()
 
 	var deck: DeckData = null
 	if _uses_player_collection_deck():
@@ -363,6 +390,30 @@ func start_setup(player_index: int) -> void:
 	if _is_tutorial_setup():
 		_apply_tutorial_formation_lock()
 
+
+func _refresh_omen_intel_label() -> void:
+	if _omen_intel_lbl == null:
+		return
+	if GameState.omen_intel_lines.is_empty():
+		_omen_intel_lbl.visible = false
+		_omen_intel_lbl.text = ""
+		return
+	_omen_intel_lbl.text = "\n".join(PackedStringArray(GameState.omen_intel_lines))
+	_omen_intel_lbl.visible = true
+
+
+func _refresh_rune_glyphs() -> void:
+	if _grid_cells.is_empty():
+		return
+	var player: int = current_setup_player
+	for r: int in range(GRID_N):
+		for c: int in range(GRID_N):
+			var cell: GridCell = _grid_cells[r][c] as GridCell
+			if cell == null:
+				continue
+			var rune_id: String = OmenBattleApplier.get_cell_rune(player, r, c)
+			cell.set_rune_glyph(OmenBattleApplier.rune_glyph(rune_id))
+
 # ─────────────────────────────────────────────────────────────
 # UI build
 # ─────────────────────────────────────────────────────────────
@@ -371,43 +422,46 @@ func _build_ui() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	# ── Background (v3: setup-phase art; else solid + side margins) ──
-	var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
-	if setup_bg_tex != null:
-		# Black underlay so letterbox/gap never shows through.
-		var underlay := ColorRect.new()
-		underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		underlay.color = Color(0.0, 0.0, 0.0, 1.0)
-		underlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(underlay)
-		var bg := TextureRect.new()
-		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.texture = setup_bg_tex
-		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		# Cropped plate → stretch edge-to-edge (may distort slightly).
-		bg.stretch_mode = TextureRect.STRETCH_SCALE
-		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(bg)
-	else:
-		var bg := ColorRect.new()
-		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-		bg.offset_left  =  160.0
-		bg.offset_right = -160.0
-		bg.color = Color(0.04, 0.05, 0.12, 1.0)
-		add_child(bg)
-		var lm := ColorRect.new()
-		lm.anchor_left    = 0.0;  lm.anchor_top    = 0.0
-		lm.anchor_right   = 0.0;  lm.anchor_bottom = 1.0
-		lm.offset_left    = 0.0;  lm.offset_top    = 0.0
-		lm.offset_right   = 160.0; lm.offset_bottom = 0.0
-		lm.color          = Color(0.0, 0.0, 0.0, 1.0)
-		add_child(lm)
-		var rm := ColorRect.new()
-		rm.anchor_left    = 1.0;  rm.anchor_top    = 0.0
-		rm.anchor_right   = 1.0;  rm.anchor_bottom = 1.0
-		rm.offset_left    = -160.0; rm.offset_top  = 0.0
-		rm.offset_right   = 0.0;  rm.offset_bottom = 0.0
-		rm.color          = Color(0.0, 0.0, 0.0, 1.0)
-		add_child(rm)
+	# Exploration-backdrop battles keep this layer transparent so GameBoard's
+	# memorized room image shows through (no setup plate / black underlay).
+	if not GameState.has_exploration_battle_backdrop():
+		var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
+		if setup_bg_tex != null:
+			# Black underlay so letterbox/gap never shows through.
+			var underlay := ColorRect.new()
+			underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			underlay.color = Color(0.0, 0.0, 0.0, 1.0)
+			underlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			add_child(underlay)
+			var bg := TextureRect.new()
+			bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			bg.texture = setup_bg_tex
+			bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			# Cropped plate → stretch edge-to-edge (may distort slightly).
+			bg.stretch_mode = TextureRect.STRETCH_SCALE
+			bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			add_child(bg)
+		else:
+			var bg := ColorRect.new()
+			bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+			bg.offset_left  =  160.0
+			bg.offset_right = -160.0
+			bg.color = Color(0.04, 0.05, 0.12, 1.0)
+			add_child(bg)
+			var lm := ColorRect.new()
+			lm.anchor_left    = 0.0;  lm.anchor_top    = 0.0
+			lm.anchor_right   = 0.0;  lm.anchor_bottom = 1.0
+			lm.offset_left    = 0.0;  lm.offset_top    = 0.0
+			lm.offset_right   = 160.0; lm.offset_bottom = 0.0
+			lm.color          = Color(0.0, 0.0, 0.0, 1.0)
+			add_child(lm)
+			var rm := ColorRect.new()
+			rm.anchor_left    = 1.0;  rm.anchor_top    = 0.0
+			rm.anchor_right   = 1.0;  rm.anchor_bottom = 1.0
+			rm.offset_left    = -160.0; rm.offset_top  = 0.0
+			rm.offset_right   = 0.0;  rm.offset_bottom = 0.0
+			rm.color          = Color(0.0, 0.0, 0.0, 1.0)
+			add_child(rm)
 
 	# ── Header bar ──────────────────────────────────────────
 	var header := Panel.new()
@@ -426,6 +480,17 @@ func _build_ui() -> void:
 	_player_lbl.add_theme_font_size_override("font_size", 24)
 	_player_lbl.add_theme_color_override("font_color", TXT_PRIMARY)
 	header.add_child(_player_lbl)
+
+	_omen_intel_lbl = Label.new()
+	_omen_intel_lbl.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_omen_intel_lbl.offset_top = 42.0
+	_omen_intel_lbl.offset_bottom = 72.0
+	_omen_intel_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_omen_intel_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_omen_intel_lbl.add_theme_font_size_override("font_size", 14)
+	_omen_intel_lbl.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
+	_omen_intel_lbl.visible = false
+	header.add_child(_omen_intel_lbl)
 
 	_instr_lbl = Label.new()
 	_instr_lbl.set_anchors_preset(Control.PRESET_TOP_WIDE)

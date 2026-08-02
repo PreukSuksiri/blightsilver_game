@@ -169,6 +169,7 @@ var _f_battle_bgm_start: SpinBox = null
 var _f_almost_win_enabled: CheckBox = null
 var _f_battle_bgm_vol: SpinBox = null
 var _f_start_battle:  CheckBox = null
+var _f_battle_use_exploration_bg: CheckBox = null
 var _f_call_tutorial: CheckBox = null
 var _f_tutorial_opt:  OptionButton = null
 var _f_tutorial_on_win:  LineEdit = null
@@ -1025,6 +1026,8 @@ func _build_fields() -> void:
 	# ── Battle ────────────────────────────────────────────────
 	_section(v, "BATTLE")
 	_f_start_battle = _row_cb(v, "Start Battle", "Launch battle (VS AI) immediately after this beat's effects")
+	_f_battle_use_exploration_bg = _row_cb(v, "Use exploration BG",
+		"Memorize the current exploration room image as battle backdrop (hides setup art + playmat). No-op outside exploration / if no BG.")
 	_f_player1_name = _row_le(v, "Player 1 Name", "e.g. Nex  (blank = keep default)")
 	_f_player2_name = _row_le(v, "Player 2 Name", "e.g. Midnight Shadow  (blank = keep default)")
 	_f_ask_player_name_cb = _row_cb(v, "Ask Player Name",
@@ -1552,6 +1555,8 @@ func _connect_static_signals() -> void:
 		if on and _f_call_tutorial != null:
 			_f_call_tutorial.button_pressed = false
 		ch.call())
+	if _f_battle_use_exploration_bg != null:
+		_f_battle_use_exploration_bg.toggled.connect(func(_b: bool) -> void: ch.call())
 	if _f_call_tutorial != null:
 		_f_call_tutorial.toggled.connect(func(on: bool) -> void:
 			if on:
@@ -4176,6 +4181,8 @@ func _populate_fields() -> void:
 	_f_center_text_hold.value       = float(b.get("center_text_hold",     1.5))
 	_f_center_text_fade_out.value   = float(b.get("center_text_fade_out", 0.8))
 	_f_start_battle.button_pressed  = b.get("start_battle",  false)
+	if _f_battle_use_exploration_bg != null:
+		_f_battle_use_exploration_bg.button_pressed = bool(b.get("battle_use_exploration_bg", false))
 	_f_go_to_credits.button_pressed = b.get("go_to_credits", false)
 	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
 	_f_go_to_campaign_gallery.button_pressed = b.get("go_to_campaign_gallery", false)
@@ -4656,6 +4663,8 @@ func _collect_beat() -> Dictionary:
 
 	if _f_start_battle.button_pressed:
 		b["start_battle"] = true
+		if _f_battle_use_exploration_bg != null and _f_battle_use_exploration_bg.button_pressed:
+			b["battle_use_exploration_bg"] = true
 		if _f_force_starting_crystals != null and _f_force_starting_crystals.button_pressed:
 			b["force_starting_crystals"] = true
 			b["starting_crystals_p1"] = int(_f_start_crystals_p1.value)

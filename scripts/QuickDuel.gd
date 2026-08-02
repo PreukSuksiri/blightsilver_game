@@ -1144,6 +1144,7 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 		return
 	_prepare_quick_duel_tutorial_context()
 	_apply_tutorial_intro_battle_display()
+	OmenBattleApplier.clear()
 	GameState.new_game(GameState.GameMode.VS_AI)
 	var err: String = TutorialBattleManager.configure_battle_from_path(battle_path, true)
 	if not err.is_empty():
@@ -1189,6 +1190,7 @@ func _launch_vault_duel_async(tier: String) -> void:
 	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:
 		TutorialBattleManager.stop()
 
+	OmenBattleApplier.clear()
 	GameState.new_game(GameState.GameMode.VS_AI)
 	GameState.battle_player_deck = null
 	GameState.battle_player_forced_cells.clear()

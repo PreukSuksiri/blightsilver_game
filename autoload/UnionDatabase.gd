@@ -1235,6 +1235,8 @@ func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool
 	used.resize(zone_cells.size())
 	used.fill(false)
 
+	# Mannaz rune: at most one material condition may be satisfied as a wildcard.
+	var mannaz_wildcard_used: bool = false
 	for cond: Dictionary in sorted_conds:
 		var found: bool = false
 		for i: int in range(zone_cells.size()):
@@ -1244,6 +1246,13 @@ func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool
 			var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
 			if _card_satisfies(card, cond):
 				used[i] = true
+				found = true
+				break
+			if not mannaz_wildcard_used \
+					and OmenBattleApplier.get_cell_rune(player, pos.x, pos.y) == "mannaz" \
+					and card.card_type == "character" and not card.is_union:
+				used[i] = true
+				mannaz_wildcard_used = true
 				found = true
 				break
 		if not found:

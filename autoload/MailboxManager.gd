@@ -293,6 +293,8 @@ func admin_command(raw: String) -> String:
 				+ "  dungeon_builder [dungeon_id]\n"
 				+ "  dungeon_activator\n"
 				+ "  modifier_editor\n"
+				+ "  omen_editor\n"
+				+ "  omen [group_csv]\n"
 				+ "  dungeon_reset\n"
 				+ "  dungeon_reset_wheel\n"
 				+ "  dungeon_reset_all_wheels\n"
@@ -1023,6 +1025,27 @@ func admin_command(raw: String) -> String:
 			editor.name = "ModifierEditorOverlay"
 			scene.add_child(editor)
 			return "Modifier Editor opened."
+
+		"omen_editor":
+			var scene_omen: Node = get_tree().current_scene
+			if scene_omen.get_node_or_null("OmenEditorOverlay") != null:
+				return "Omen Editor is already open."
+			_dismiss_admin_console(scene_omen)
+			var omen_editor: Node = load("res://scripts/OmenEditorOverlay.gd").new()
+			omen_editor.name = "OmenEditorOverlay"
+			scene_omen.add_child(omen_editor)
+			return "Omen Editor opened."
+
+		"omen":
+			if parts.size() < 2:
+				return "Usage: omen <group_csv>"
+			if not ExplorationManager.is_session_active:
+				return "No active exploration session."
+			var scene_grant: Node = get_tree().current_scene
+			if scene_grant != null and scene_grant.has_method("_run_grant_omen"):
+				scene_grant.call("_run_grant_omen", parts[1], Callable())
+				return "Omen grant started."
+			return "Current scene cannot grant omens."
 
 		"dungeon_reset":
 			var dungeon_id: String = DailyDungeonManager.get_current_dungeon_id()

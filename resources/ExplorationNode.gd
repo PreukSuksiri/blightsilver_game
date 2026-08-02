@@ -99,6 +99,9 @@ enum NodeType {
 ## Behaviour type — controls what happens when the player enters this node.
 @export var node_type: NodeType = NodeType.NORMAL
 
+## When true, show white "Safe Zone" HUD text (top-left). Independent of HUB type.
+@export var is_safe_zone: bool = false
+
 ## Path to a background image (res:// path). Empty = keep the previous background.
 @export var background: String = ""
 
@@ -344,6 +347,7 @@ func to_dict() -> Dictionary:
 		"description":     description,
 		"description_conditions": description_conditions.duplicate(true),
 		"node_type":       NodeType.keys()[node_type],
+		"is_safe_zone":    is_safe_zone,
 		"background":            background,
 		"background_conditions": background_conditions.duplicate(true),
 		"vn_scene":           vn_scene,
@@ -402,6 +406,9 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	var vaa: Variant = d.get("vn_after_actions", [])
 	node.vn_after_actions = vaa if vaa is Array else []
 	node.show_info_on_enter = bool(d.get("show_info_on_enter", true))
+	node.is_safe_zone = bool(d.get("is_safe_zone", false))
+	if node.node_type == NodeType.HUB and not d.has("is_safe_zone"):
+		node.is_safe_zone = true
 	node.show_who_is_here   = bool(d.get("show_who_is_here",   true))
 	node.music       = str(d.get("music",       ""))
 	var msc: Variant = d.get("music_conditions", [])

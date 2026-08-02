@@ -604,5 +604,5 @@ static func reckoning_ability_detail(
 	return ""
 
 
-static func _effective_union_summon_cost(base_cost: int) -> int:
-	return GameState.effective_union_summon_cost(base_cost)
+static func _effective_union_summon_cost(base_cost: int, player_index: int = 0) -> int:
+	return GameState.effective_union_summon_cost(base_cost, player_index)

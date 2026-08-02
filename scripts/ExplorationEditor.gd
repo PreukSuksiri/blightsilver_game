@@ -83,6 +83,7 @@ var _prop_vn_keep_bgm_chk:    CheckBox    = null
 var _prop_vn_after_vbox:    VBoxContainer = null
 var _prop_show_info_chk:      CheckBox    = null
 var _prop_show_who_chk:       CheckBox    = null
+var _prop_safe_zone_chk:      CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
 var _prop_music_cond_vbox:  VBoxContainer = null
 var _prop_room_temp_spin:   SpinBox     = null
@@ -519,6 +520,11 @@ func _build_props_panel() -> Control:
 	_prop_show_who_chk.button_pressed = true
 	_prop_show_who_chk.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_prop_show_who_chk)
+	_prop_safe_zone_chk = CheckBox.new()
+	_prop_safe_zone_chk.text = "Safe Zone"
+	_prop_safe_zone_chk.tooltip_text = "Show white Safe Zone label (top-left). HUB defaults on when loading old graphs."
+	_prop_safe_zone_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_prop_safe_zone_chk)
 	_prop_music_edit = _add_file_field(vbox, "Music (res:// path)",
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]), "res://assets/audio")
 	var music_play_btn := Button.new()
@@ -2292,7 +2298,9 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	var _spot_actions: Array[String] = [
 		"give_item", "give_booster_pack", "give_union_scroll", "remove_item", "set_var", "give_credits", "set_flag",
 		"note_add_clue", "note_unlock_topic", "note_upgrade_topic",
-		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle", "end_exploration", "end_exploration_vn"
+		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle",
+		"grant_omen", "open_deck_builder",
+		"end_exploration", "end_exploration_vn"
 	]
 	var action_btn := OptionButton.new()
 	for a: String in _spot_actions:
@@ -2927,6 +2935,8 @@ func _populate_props(en: ExplorationNode) -> void:
 				bool(ad.get("play_once", true)))
 	_prop_show_info_chk.button_pressed = en.show_info_on_enter
 	_prop_show_who_chk.button_pressed  = en.show_who_is_here
+	if _prop_safe_zone_chk != null:
+		_prop_safe_zone_chk.button_pressed = en.is_safe_zone
 	_prop_music_edit.text = en.music
 
 	for child: Node in _prop_music_cond_vbox.get_children():
@@ -3073,6 +3083,8 @@ func _collect_props(en: ExplorationNode) -> void:
 	en.vn_after_actions   = _collect_events(_prop_vn_after_vbox)
 	en.show_info_on_enter = _prop_show_info_chk.button_pressed
 	en.show_who_is_here   = _prop_show_who_chk.button_pressed
+	if _prop_safe_zone_chk != null:
+		en.is_safe_zone = _prop_safe_zone_chk.button_pressed
 	en.music       = _prop_music_edit.text.strip_edges()
 	en.music_conditions.clear()
 	for frame: Node in _prop_music_cond_vbox.get_children():
@@ -3106,6 +3118,17 @@ func _collect_props(en: ExplorationNode) -> void:
 	# Investigable Points
 	en.clickable_spots.clear()
 	en.clickable_spots = _collect_spots(_prop_spots_vbox)
+	if not en.is_safe_zone:
+		for spot_v: Variant in en.clickable_spots:
+			if not spot_v is Dictionary:
+				continue
+			for act_v: Variant in (spot_v as Dictionary).get("actions", []):
+				if act_v is Dictionary \
+						and str((act_v as Dictionary).get("action", "")) == "open_deck_builder":
+					push_warning(
+						"ExplorationEditor: open_deck_builder on non–Safe Zone node '%s' (allowed, but Safe Zones are the intended mid-stage deck edit)."
+						% en.id)
+					break
 
 	# Connections
 	en.connections.clear()

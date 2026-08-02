@@ -98,6 +98,8 @@ var _expose_mode:    String  = "normal"      # "all" | "cautious" | "kill_trigge
 var _skip_turns:     int     = 0             # skip N turns if opp has nothing revealed
 var _bluff_freq:     float   = 0.30          # per-turn bluff probability
 var _bluff_pool:     Array   = []            # weighted emoji pool (strings)
+var _bluff_prefer:   Array   = []
+var _bluff_avoid:    Array   = []
 var _emoji_reactions: Dictionary = {}        # emoji -> int (-1 avoid / 0 neutral / 1 interested)
 var _cluster_origin: Vector2i = Vector2i(1, 1)
 var _line_axis:      int     = 0             # 0 = row line, 1 = column line
@@ -127,7 +129,7 @@ const TECH_CRYSTAL_RESERVE: int = 300
 ## True crystal hit of summoning this union (dungeon cost modifiers plus the
 ## Risk & Reward 25% surcharge applied inside GameState.lose_crystals).
 func _union_crystal_hit(u: UnionData) -> int:
-	var cost: int = GameState.effective_union_summon_cost(u.summon_cost)
+	var cost: int = GameState.effective_union_summon_cost(u.summon_cost, player_index)
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "risk_and_reward" in GameState.active_dungeon_modifiers:
 		cost = int(cost * 1.25)
@@ -745,6 +747,10 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	# Personality: emoji reaction bias
 	var opp_emoji: String = GameState.get_bluff(opponent_index, target_pos.x, target_pos.y)
 	var reaction: int = get_emoji_reaction(opp_emoji)
+	var rune_bias: int = OmenBattleApplier.rune_biases_bluff_reaction(
+		opponent_index, target_pos.x, target_pos.y)
+	if rune_bias != 0 and opp_emoji != "":
+		reaction = rune_bias
 	if _trailer_offensive:
 		# Always attack 💩/🖕 cells first — massive priority override
 		if AIIdentityVault.normalize_bluff_emoji(opp_emoji) == "🖕":
@@ -753,6 +759,14 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 		base += reaction * 15
 
 	return base
+
+
+func get_bluff_prefer_emojis() -> Array:
+	return _bluff_prefer.duplicate()
+
+
+func get_bluff_avoid_emojis() -> Array:
+	return _bluff_avoid.duplicate()
 
 
 ## Returns -1 (Avoid), 0 (Neutral/unknown), or +1 (Interested / attack) for an opponent bluff emoji.
@@ -2497,7 +2511,9 @@ func _pick_personalities() -> void:
 			var soc_pick: Dictionary = soc_list[soc_idx]
 			_bluff_freq      = soc_pick["freq"] as float
 			_emoji_reactions = soc_pick["reactions"] as Dictionary
-			_bluff_pool      = _build_bluff_pool(soc_pick["prefer"] as Array, soc_pick["avoid_emoji"] as Array)
+			_bluff_prefer    = (soc_pick["prefer"] as Array).duplicate()
+			_bluff_avoid     = (soc_pick["avoid_emoji"] as Array).duplicate()
+			_bluff_pool      = _build_bluff_pool(_bluff_prefer, _bluff_avoid)
 			personality_social = SOC_PERSONALITY_NAMES[soc_idx] as String
 		_apply_union_maniac_overrides()
 		return   # skip normal trait application below
@@ -2539,9 +2555,9 @@ func _pick_personalities() -> void:
 	# ── Apply social traits ──
 	_bluff_freq      = soc_pick["freq"] as float
 	_emoji_reactions = soc_pick["reactions"] as Dictionary
-	_bluff_pool      = _build_bluff_pool(
-		soc_pick["prefer"] as Array,
-		soc_pick["avoid_emoji"] as Array)
+	_bluff_prefer    = (soc_pick["prefer"] as Array).duplicate()
+	_bluff_avoid     = (soc_pick["avoid_emoji"] as Array).duplicate()
+	_bluff_pool      = _build_bluff_pool(_bluff_prefer, _bluff_avoid)
 
 	# Store names for external logging
 	personality_defensive = DEF_PERSONALITY_NAMES[def_idx] as String

@@ -145,6 +145,7 @@ static func open_and_return(parent: Node, card_name: String, card_type: String,
 		if card_type in ["character", "trap", "tech"]:
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
 
+	overlay._append_omen_detail_labels(card_name, card_w, card_h)
 	overlay._attach_card_status_overlay(card_w, card_h)
 	return overlay
 
@@ -768,6 +769,25 @@ func _attach_card_status_overlay(card_w: float, card_h: float) -> void:
 		FontManager.tag_primary(lbl)
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(lbl)
+
+
+func _append_omen_detail_labels(card_name: String, card_w: float, card_h: float) -> void:
+	var lines: PackedStringArray = OmenBattleApplier.get_anoint_lines_for_card(card_name)
+	if lines.is_empty() or _card_root == null:
+		return
+	var y: float = card_h - 42.0
+	for line: String in lines:
+		var lbl := Label.new()
+		lbl.text = "Omen: %s" % line
+		lbl.position = Vector2(12.0, y)
+		lbl.size = Vector2(card_w - 24.0, 18.0)
+		lbl.add_theme_font_size_override("font_size", maxi(int(card_w * 0.028), 10))
+		lbl.add_theme_color_override("font_color", Color(0.78, 0.88, 1.0, 1.0))
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		FontManager.tag_primary(lbl)
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_card_root.add_child(lbl)
+		y -= 20.0
 
 
 # ─────────────────────────────────────────────────────────────

@@ -125,6 +125,7 @@
 				"y": 160.0
 			},
 			"id": "start",
+			"is_safe_zone": false,
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
 			"music_conditions": [
 				{
@@ -290,6 +291,7 @@
 				"y": -60.0
 			},
 			"id": "node_book_aisle",
+			"is_safe_zone": false,
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -396,6 +398,7 @@
 				"y": 200.0
 			},
 			"id": "node_group_study",
+			"is_safe_zone": false,
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -559,6 +562,7 @@
 				"y": 500.0
 			},
 			"id": "node_magazine_lounge",
+			"is_safe_zone": false,
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -805,6 +809,7 @@
 				"y": -280.0
 			},
 			"id": "node_exhibition",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [
 				{
@@ -886,6 +891,7 @@
 				"y": 640.0
 			},
 			"id": "node_observatory",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1014,6 +1020,7 @@
 				"y": -160.0
 			},
 			"id": "node_deeper_aisle",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1192,6 +1199,7 @@
 				"y": -480.0
 			},
 			"id": "node_exhibition_storage",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1295,6 +1303,7 @@
 				"y": -160.0
 			},
 			"id": "node_back_hallway",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1475,6 +1484,7 @@
 				"y": -340.0
 			},
 			"id": "node_break_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1622,6 +1632,7 @@
 				"y": 140.0
 			},
 			"id": "node_preservation_department",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1726,6 +1737,7 @@
 				"y": -60.0
 			},
 			"id": "node_book_repair_unit",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -1846,6 +1858,7 @@
 				"y": 380.0
 			},
 			"id": "node_chemical_process_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2003,6 +2016,7 @@
 				"y": 340.0
 			},
 			"id": "node_technician_office",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2198,6 +2212,7 @@
 				"y": -400.0
 			},
 			"id": "node_toilet_front",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2296,6 +2311,7 @@
 				"y": -740.0
 			},
 			"id": "node_staff_area",
+			"is_safe_zone": false,
 			"music": "res://assets/audio/bgm_horror_2.mp3",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2424,6 +2440,7 @@
 				"y": -180.0
 			},
 			"id": "node_meeting_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2576,6 +2593,7 @@
 				"y": -380.0
 			},
 			"id": "node_manager_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2684,6 +2702,7 @@
 				"y": -1020.0
 			},
 			"id": "node_maintenance_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -2831,6 +2850,7 @@
 				"y": -1320.0
 			},
 			"id": "node_server_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -3124,6 +3144,7 @@
 				"y": -1320.0
 			},
 			"id": "node_surveillance_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -3174,6 +3195,7 @@
 							"value": "1"
 						}
 					],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -3190,6 +3212,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,
@@ -3198,6 +3221,23 @@
 					"tooltip": "???",
 					"x_norm": 0.764,
 					"y_norm": 0.061
+				},
+				{
+					"actions": [
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
+						}
+					],
+					"conditions": [],
+					"disabled_after_interact": false,
+					"hide_after_interact": false,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "",
+					"x_norm": 0.192,
+					"y_norm": 0.439
 				}
 			],
 			"connections": [
@@ -3216,6 +3256,7 @@
 				"y": -80.0
 			},
 			"id": "node_male_toilet",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [
 				{
@@ -3272,6 +3313,7 @@
 							"value": "2"
 						}
 					],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
@@ -3288,6 +3330,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,
@@ -3306,6 +3349,7 @@
 						}
 					],
 					"conditions": [],
+					"disabled_after_interact": false,
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,
@@ -3339,6 +3383,7 @@
 				"y": -860.0
 			},
 			"id": "node_smoking_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -3366,6 +3411,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "1000"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"equals": "1",
@@ -3447,6 +3497,7 @@
 				"y": -1000.0
 			},
 			"id": "node_back_room",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -3558,6 +3609,7 @@
 				"y": -1120.0
 			},
 			"id": "node_back_storage",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -3635,6 +3687,7 @@
 				"y": -560.0
 			},
 			"id": "female_toilet",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",
@@ -3825,6 +3878,7 @@
 				"y": -440.0
 			},
 			"id": "node_quiet_study",
+			"is_safe_zone": false,
 			"music": "",
 			"music_conditions": [],
 			"node_type": "NORMAL",

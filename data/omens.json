@@ -1,0 +1,5126 @@
+{
+	"omens": [
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Reveal 1 enemy cell at the start of battle.",
+			"effects": [
+				{
+					"target": "enemy",
+					"type": "reveal_cells",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"insights",
+				"chapter_1"
+			],
+			"id": "third_eye",
+			"illustration": "res://assets/textures/omens/third_eye.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Third Eye",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Reveal 3 enemy cells at the start of battle.",
+			"effects": [
+				{
+					"target": "enemy",
+					"type": "reveal_cells",
+					"value": 3.0
+				}
+			],
+			"groups": [
+				"insights"
+			],
+			"id": "clairvoyance",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Clairvoyance",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Know 1 bluff emoji the enemy is drawn to.",
+			"effects": [
+				{
+					"type": "reveal_enemy_bluff_preference",
+					"value": "interested"
+				}
+			],
+			"groups": [
+				"insights",
+				"chapter_1"
+			],
+			"id": "provocative",
+			"illustration": "res://assets/textures/omens/provocative.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Provocative",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Know 1 bluff emoji the enemy avoids.",
+			"effects": [
+				{
+					"type": "reveal_enemy_bluff_preference",
+					"value": "avoid"
+				}
+			],
+			"groups": [
+				"insights",
+				"chapter_1"
+			],
+			"id": "disgusting",
+			"illustration": "res://assets/textures/omens/disgusting.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Disgusting",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Learn the enemy's offensive personality name.",
+			"effects": [
+				{
+					"type": "reveal_enemy_personality",
+					"value": "offensive"
+				}
+			],
+			"groups": [
+				"insights",
+				"chapter_1"
+			],
+			"id": "open_book",
+			"illustration": "res://assets/textures/omens/open_book.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Open Book",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Learn the enemy's defensive personality name.",
+			"effects": [
+				{
+					"type": "reveal_enemy_personality",
+					"value": "defensive"
+				}
+			],
+			"groups": [
+				"insights"
+			],
+			"id": "soft_underbelly",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Soft Underbelly",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "At the end of each of your turns, 1 random enemy cell is revealed.",
+			"effects": [
+				{
+					"target": "enemy",
+					"timing": "end_of_player_turn",
+					"type": "reveal_cells",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"insights"
+			],
+			"id": "whispering_walls",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Whispering Walls",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "2 enemy cells revealed at battle start, but 1 of yours is too.",
+			"effects": [
+				{
+					"target": "enemy",
+					"type": "reveal_cells",
+					"value": 2.0
+				},
+				{
+					"target": "player",
+					"type": "reveal_cells",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"insights",
+				"chapter_1"
+			],
+			"id": "broken_mirror",
+			"illustration": "res://assets/textures/omens/broken_mirror.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Broken Mirror",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1000 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 1000.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "unwavering",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Unwavering",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Enemy starts with -500 crystals.",
+			"effects": [
+				{
+					"target": "enemy",
+					"type": "crystal_bonus",
+					"value": -500.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "beggars_curse",
+			"illustration": "res://assets/textures/omens/beggars_curse.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Beggar's Curse",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+2500 starting crystals, but the enemy gains +1000.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 2500.0
+				},
+				{
+					"target": "enemy",
+					"type": "crystal_bonus",
+					"value": 1000.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "windfall",
+			"illustration": "res://assets/textures/omens/windfall.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Windfall",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+2000 starting crystals, but all your units get -10% DEF.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 2000.0
+				},
+				{
+					"def_pct": -10.0,
+					"filter": "all",
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains"
+			],
+			"id": "blood_pact",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Blood Pact",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+50% credits from battle victories.",
+			"effects": [
+				{
+					"type": "reward_credit_pct",
+					"value": 50.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "silver_tongue",
+			"illustration": "res://assets/textures/omens/silver_tongue.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Silver Tongue",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+50 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 50.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "pocket_change",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Pocket Change",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+100 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 100.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "small_tithe",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Small Tithe",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+200 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 200.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "modest_hoard",
+			"illustration": "res://assets/textures/omens/modest_hoard.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Modest Hoard",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+300 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 300.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "full_purse",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Full Purse",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+500 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 500.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "heavy_purse",
+			"illustration": "res://assets/textures/omens/heavy_purse.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Heavy Purse",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+800 starting crystals.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 800.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "war_chest",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "War Chest",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1000 starting crystals; you cannot attack on your first turn.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 1000.0
+				},
+				{
+					"type": "cannot_attack_first_turn",
+					"value": true
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "hesitant_fortune",
+			"illustration": "res://assets/textures/omens/hesitant_fortune.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Hesitant Fortune",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1000 starting crystals; you cannot Union summon.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 1000.0
+				},
+				{
+					"type": "cannot_union",
+					"value": true
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains"
+			],
+			"id": "sealed_fortune",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Sealed Fortune",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1000 starting crystals; you cannot play tech cards.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 1000.0
+				},
+				{
+					"type": "cannot_tech",
+					"value": true
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "mute_fortune",
+			"illustration": "res://assets/textures/omens/mute_fortune.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Mute Fortune",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+3000 starting crystals; all your crystal losses and taxes are doubled.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": 3000.0
+				},
+				{
+					"type": "crystal_loss_multiplier",
+					"value": 2.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains"
+			],
+			"id": "gilded_ruin",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Gilded Ruin",
+			"positive": null,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "5% reduction to all crystal loss.",
+			"effects": [
+				{
+					"scope": "all",
+					"type": "crystal_loss_pct",
+					"value": -5.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "soft_landing",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Soft Landing",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "10% reduction to all crystal loss.",
+			"effects": [
+				{
+					"scope": "all",
+					"type": "crystal_loss_pct",
+					"value": -10.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "soft_landing_ii",
+			"illustration": "res://assets/textures/omens/soft_landing_ii.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Soft Landing II",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% all crystal loss; crystal gains -50%.",
+			"effects": [
+				{
+					"scope": "all",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": -50.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains"
+			],
+			"id": "soft_landing_bargain",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Soft Landing Bargain",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-20% all crystal loss; you cannot gain crystals.",
+			"effects": [
+				{
+					"scope": "all",
+					"type": "crystal_loss_pct",
+					"value": -20.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains"
+			],
+			"id": "soft_landing_lock",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Soft Landing Lock",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "5% reduction to crystal loss from unit destruction only.",
+			"effects": [
+				{
+					"scope": "unit_destroy",
+					"type": "crystal_loss_pct",
+					"value": -5.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "quiet_funeral",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Quiet Funeral",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "10% reduction to crystal loss from unit destruction only.",
+			"effects": [
+				{
+					"scope": "unit_destroy",
+					"type": "crystal_loss_pct",
+					"value": -10.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "quiet_funeral_ii",
+			"illustration": "res://assets/textures/omens/quiet_funeral_ii.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Quiet Funeral II",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% unit-destruction crystal loss; crystal gains -50%.",
+			"effects": [
+				{
+					"scope": "unit_destroy",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": -50.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "quiet_funeral_bargain",
+			"illustration": "res://assets/textures/omens/quiet_funeral_bargain.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Quiet Funeral Bargain",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-20% unit-destruction crystal loss; you cannot gain crystals.",
+			"effects": [
+				{
+					"scope": "unit_destroy",
+					"type": "crystal_loss_pct",
+					"value": -20.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "quiet_funeral_lock",
+			"illustration": "res://assets/textures/omens/quiet_funeral_lock.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Quiet Funeral Lock",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "5% trap cost reduction.",
+			"effects": [
+				{
+					"type": "trap_cost_pct",
+					"value": -5.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "cheap_snare",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Snare",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "10% trap cost reduction.",
+			"effects": [
+				{
+					"type": "trap_cost_pct",
+					"value": -10.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "cheap_snare_ii",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Snare II",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% trap costs; crystal gains -50%.",
+			"effects": [
+				{
+					"type": "trap_cost_pct",
+					"value": -15.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": -50.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "cheap_snare_bargain",
+			"illustration": "res://assets/textures/omens/cheap_snare_bargain.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Snare Bargain",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-20% trap costs; you cannot gain crystals.",
+			"effects": [
+				{
+					"type": "trap_cost_pct",
+					"value": -20.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "cheap_snare_lock",
+			"illustration": "res://assets/textures/omens/cheap_snare_lock.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Snare Lock",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "8% tech cost reduction.",
+			"effects": [
+				{
+					"type": "tech_cost_pct",
+					"value": -8.0
+				}
+			],
+			"groups": [
+				"fortunes"
+			],
+			"id": "cheap_circuit",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Circuit",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "14% tech cost reduction.",
+			"effects": [
+				{
+					"type": "tech_cost_pct",
+					"value": -14.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "cheap_circuit_ii",
+			"illustration": "res://assets/textures/omens/cheap_circuit_ii.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Circuit II",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-25% tech costs; crystal gains -50%.",
+			"effects": [
+				{
+					"type": "tech_cost_pct",
+					"value": -25.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": -50.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "cheap_circuit_bargain",
+			"illustration": "res://assets/textures/omens/cheap_circuit_bargain.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Circuit Bargain",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-30% tech costs; you cannot gain crystals.",
+			"effects": [
+				{
+					"type": "tech_cost_pct",
+					"value": -30.0
+				},
+				{
+					"type": "crystal_gain_pct",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"bargains"
+			],
+			"id": "cheap_circuit_lock",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cheap Circuit Lock",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Divine units are destroyed.",
+			"effects": [
+				{
+					"affinity": "DIVINE",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "divine_requiem",
+			"illustration": "res://assets/textures/omens/divine_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Divine Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Chaos units are destroyed.",
+			"effects": [
+				{
+					"affinity": "CHAOS",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "chaos_requiem",
+			"illustration": "res://assets/textures/omens/chaos_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Chaos Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Arcane units are destroyed.",
+			"effects": [
+				{
+					"affinity": "ARCANE",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "arcane_requiem",
+			"illustration": "res://assets/textures/omens/arcane_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Arcane Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Bio units are destroyed.",
+			"effects": [
+				{
+					"affinity": "BIO",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "bio_requiem",
+			"illustration": "res://assets/textures/omens/bio_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Bio Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Nature units are destroyed.",
+			"effects": [
+				{
+					"affinity": "NATURE",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "nature_requiem",
+			"illustration": "res://assets/textures/omens/nature_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Nature Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Cosmic units are destroyed.",
+			"effects": [
+				{
+					"affinity": "COSMIC",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "cosmic_requiem",
+			"illustration": "res://assets/textures/omens/cosmic_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Cosmic Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "-15% crystal loss when your Anima units are destroyed.",
+			"effects": [
+				{
+					"affinity": "ANIMA",
+					"scope": "affinity",
+					"type": "crystal_loss_pct",
+					"value": -15.0
+				}
+			],
+			"groups": [
+				"fortunes",
+				"chapter_1"
+			],
+			"id": "anima_requiem",
+			"illustration": "res://assets/textures/omens/anima_requiem.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Anima Requiem",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Chaos units +10 DEF.",
+			"effects": [
+				{
+					"def": 10.0,
+					"filter": {
+						"affinity": "CHAOS"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"wards"
+			],
+			"id": "ominous_fog",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Ominous Fog",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Divine units +10 ATK.",
+			"effects": [
+				{
+					"atk": 10.0,
+					"filter": {
+						"affinity": "DIVINE"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"wards"
+			],
+			"id": "halo_fragment",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Halo Fragment",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your border-cell units +20% DEF.",
+			"effects": [
+				{
+					"def_pct": 20.0,
+					"filter": "border",
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"wards"
+			],
+			"id": "iron_coffin",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Iron Coffin",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your center-cell unit +100% ATK & DEF.",
+			"effects": [
+				{
+					"atk_pct": 100.0,
+					"def_pct": 100.0,
+					"filter": "center",
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"wards"
+			],
+			"id": "throne_of_bone",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Throne of Bone",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your units +20% ATK, but enemy units +10% ATK.",
+			"effects": [
+				{
+					"atk_pct": 20.0,
+					"filter": "all",
+					"target": "player",
+					"type": "unit_stat_pct"
+				},
+				{
+					"atk_pct": 10.0,
+					"filter": "all",
+					"target": "enemy",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"wards",
+				"bargains"
+			],
+			"id": "faustian_echo",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Faustian Echo",
+			"positive": null,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Bio units gain a free Mutagen flag when revealed.",
+			"effects": [
+				{
+					"filter": {
+						"affinity": "BIO"
+					},
+					"flag": "mutagen",
+					"target": "player",
+					"type": "grant_flag_on_reveal"
+				}
+			],
+			"groups": [
+				"wards",
+				"bio"
+			],
+			"id": "plague_bearer",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Plague Bearer",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Once per battle, one of your Bio units survives being destroyed.",
+			"effects": [
+				{
+					"filter": {
+						"affinity": "BIO"
+					},
+					"target": "player",
+					"type": "survive_destruction_once"
+				}
+			],
+			"groups": [
+				"wards",
+				"bio"
+			],
+			"id": "undying_strain",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Undying Strain",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your units survive Reckoning ties.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "survive_reckoning_ties"
+				}
+			],
+			"groups": [
+				"wards",
+				"chapter_1"
+			],
+			"id": "stubborn_soul",
+			"illustration": "res://assets/textures/omens/stubborn_soul.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Stubborn Soul",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your units unaffected by 0-cost traps become unaffected by ALL traps and tech.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "extend_trap_immunity"
+				}
+			],
+			"groups": [
+				"wards",
+				"chapter_1"
+			],
+			"id": "null_aegis",
+			"illustration": "res://assets/textures/omens/null_aegis.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Null Aegis",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your swap-in defenders survive their first destruction.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "swap_defender_survival"
+				}
+			],
+			"groups": [
+				"wards"
+			],
+			"id": "martyrs_reward",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Martyr's Reward",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Nature units gain a free Venom flag when revealed.",
+			"effects": [
+				{
+					"filter": {
+						"affinity": "NATURE"
+					},
+					"flag": "venom",
+					"target": "player",
+					"type": "grant_flag_on_reveal"
+				}
+			],
+			"groups": [
+				"wards",
+				"nature"
+			],
+			"id": "serpents_kiss",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Serpent's Kiss",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Cosmic units grant +200 crystals when they win a Reckoning.",
+			"effects": [
+				{
+					"filter": {
+						"affinity": "COSMIC"
+					},
+					"target": "player",
+					"type": "crystal_on_reckoning_win",
+					"value": 200.0
+				}
+			],
+			"groups": [
+				"wards",
+				"cosmic",
+				"chapter_1"
+			],
+			"id": "golden_reckoning",
+			"illustration": "res://assets/textures/omens/golden_reckoning.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Golden Reckoning",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Once per turn, your Anima units' winning attacks grant +1 extra attack that turn.",
+			"effects": [
+				{
+					"filter": {
+						"affinity": "ANIMA"
+					},
+					"target": "player",
+					"type": "extra_attack_on_kill"
+				}
+			],
+			"groups": [
+				"wards",
+				"anima"
+			],
+			"id": "pack_instinct",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Pack Instinct",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "BIO"
+			},
+			"description": "Choose 1 Bio unit. It gains Mutagen when flipped face-up.",
+			"effects": [
+				{
+					"flag": "mutagen",
+					"type": "grant_flag_on_reveal"
+				}
+			],
+			"groups": [
+				"anoint",
+				"bio",
+				"chapter_1"
+			],
+			"id": "contagion_mark",
+			"illustration": "res://assets/textures/omens/contagion_mark.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Contagion Mark",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +5 ATK.",
+			"effects": [
+				{
+					"atk": 5.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "keen_edge",
+			"illustration": "res://assets/textures/omens/keen_edge.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Keen Edge",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. Halve its cost.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "shortcut_circuit",
+			"illustration": "res://assets/textures/omens/shortcut_circuit.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Shortcut Circuit",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "NATURE"
+			},
+			"description": "Choose 1 Nature unit. Each Reckoning, coin flip: Heads → +10 ATK & +10 DEF.",
+			"effects": [
+				{
+					"atk": 10.0,
+					"def": 10.0,
+					"type": "coin_flip_reckoning_stat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "wild_bloom",
+			"illustration": "res://assets/textures/omens/wild_bloom.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Wild Bloom",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. A foe unit that wins Reckoning against it is also destroyed.",
+			"effects": [
+				{
+					"foe_pays_no_cost": true,
+					"type": "destroy_reckoning_winner"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "spiteful_echo",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Spiteful Echo",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Summon cost +20%, but +50% ATK & DEF.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 1.2
+				},
+				{
+					"atk_pct": 50.0,
+					"def_pct": 50.0,
+					"type": "anoint_stat_pct"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "blood_forge",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Blood Forge",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "CHAOS"
+			},
+			"description": "Choose 1 Chaos unit. It can attack 1 additional time.",
+			"effects": [
+				{
+					"type": "extra_attack_on_card",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "frenzy_brand",
+			"illustration": "res://assets/textures/omens/frenzy_brand.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Frenzy Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. Its cost becomes 0.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "free_snare",
+			"illustration": "res://assets/textures/omens/free_snare.jpg",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Free Snare",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +5 ATK & +5 DEF.",
+			"effects": [
+				{
+					"atk": 5.0,
+					"def": 5.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "twin_tip",
+			"illustration": "res://assets/textures/omens/twin_tip.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Twin Tip",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +5 DEF.",
+			"effects": [
+				{
+					"def": 5.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "soft_plate",
+			"illustration": "res://assets/textures/omens/soft_plate.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Soft Plate",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +10 ATK.",
+			"effects": [
+				{
+					"atk": 10.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "keen_edge_ii",
+			"illustration": "res://assets/textures/omens/keen_edge_ii.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Keen Edge II",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +10 ATK & +10 DEF.",
+			"effects": [
+				{
+					"atk": 10.0,
+					"def": 10.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "twin_edge",
+			"illustration": "res://assets/textures/omens/twin_edge.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Twin Edge",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +10 DEF.",
+			"effects": [
+				{
+					"def": 10.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "iron_skin",
+			"illustration": "res://assets/textures/omens/iron_skin.jpg",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Iron Skin",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +20 ATK.",
+			"effects": [
+				{
+					"atk": 20.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "keen_edge_iii",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Keen Edge III",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +20 ATK & +20 DEF.",
+			"effects": [
+				{
+					"atk": 20.0,
+					"def": 20.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "twin_edge_ii",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Twin Edge II",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +20 DEF.",
+			"effects": [
+				{
+					"def": 20.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "iron_skin_ii",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Iron Skin II",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +50 ATK; DEF becomes 0.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"type": "anoint_stat_flat"
+				},
+				{
+					"type": "anoint_set_def",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "razor_idol",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Razor Idol",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +50 DEF; -50 ATK.",
+			"effects": [
+				{
+					"atk": -50.0,
+					"def": 50.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "turtle_idol",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Turtle Idol",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Summon cost halved.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "lightweight",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Lightweight",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"ability_none": true
+			},
+			"description": "Choose 1 unit with no ability. +25 ATK & +25 DEF.",
+			"effects": [
+				{
+					"atk": 25.0,
+					"def": 25.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "bargain_bin",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Bargain Bin",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"cost_min": 800.0
+			},
+			"description": "Choose 1 unit with cost >= 800. +30% ATK & DEF.",
+			"effects": [
+				{
+					"atk_pct": 30.0,
+					"def_pct": 30.0,
+					"type": "anoint_stat_pct"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "heavy_relic",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Heavy Relic",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +40 ATK, -20 DEF.",
+			"effects": [
+				{
+					"atk": 40.0,
+					"def": -20.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "glass_cannon",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Glass Cannon",
+			"positive": null,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Cost becomes 0, but -30% ATK & DEF.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 0.0
+				},
+				{
+					"atk_pct": -30.0,
+					"def_pct": -30.0,
+					"type": "anoint_stat_pct"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "hollow_offering",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Hollow Offering",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "NATURE"
+			},
+			"description": "Choose 1 Nature unit. It gains Venom when flipped face-up.",
+			"effects": [
+				{
+					"flag": "venom",
+					"type": "grant_flag_on_reveal"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "serpent_mark",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Serpent Mark",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "NATURE"
+			},
+			"description": "Choose 1 Nature unit. Foe units in Reckoning with it gain Venom before calculation.",
+			"effects": [
+				{
+					"type": "apply_venom_pre_reckoning"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "venom_priming",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Venom Priming",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "NATURE"
+			},
+			"description": "Choose 1 Nature unit. If it destroys a unit, it can attack one more time.",
+			"effects": [
+				{
+					"type": "extra_attack_on_kill"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "natures_second_wind",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Nature's Second Wind",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "CHAOS"
+			},
+			"description": "Choose 1 Chaos unit. +5 ATK & +5 DEF for each card in your void.",
+			"effects": [
+				{
+					"atk": 5.0,
+					"def": 5.0,
+					"type": "stat_per_void_card"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "void_hunger",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Void Hunger",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "CHAOS"
+			},
+			"description": "Choose 1 Chaos unit. Foe units in Reckoning with it have ability None for that clash.",
+			"effects": [
+				{
+					"type": "nullify_foe_ability_in_reckoning"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "silence_brand",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Silence Brand",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "DIVINE"
+			},
+			"description": "Choose 1 Divine unit. +12 ATK & +12 DEF.",
+			"effects": [
+				{
+					"atk": 12.0,
+					"def": 12.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "halo_brand",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Halo Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "DIVINE"
+			},
+			"description": "Choose 1 Divine unit. Not destroyed while another Divine card is on your field.",
+			"effects": [
+				{
+					"condition": "ally_divine_on_field",
+					"type": "conditional_survival"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "martyrs_halo",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Martyr's Halo",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "DIVINE"
+			},
+			"description": "Choose 1 Divine unit. Once per battle, revive it at end of turn it was destroyed.",
+			"effects": [
+				{
+					"type": "revive_once_end_of_turn"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "divine_return",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Divine Return",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "COSMIC"
+			},
+			"description": "Choose 1 Cosmic unit. Gain +300 crystals whenever it destroys a unit.",
+			"effects": [
+				{
+					"type": "crystal_on_kill",
+					"value": 300.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "star_ledger",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Star Ledger",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "COSMIC"
+			},
+			"description": "Choose 1 Cosmic unit. After Reckoning with a unit, reveal 1 foe cell.",
+			"effects": [
+				{
+					"type": "reveal_after_reckoning",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "star_peek",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Star Peek",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "COSMIC"
+			},
+			"description": "Choose 1 Cosmic unit. After hitting a trap or dead end, reveal 1 foe cell.",
+			"effects": [
+				{
+					"type": "reveal_after_trap_or_dead_end",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "star_probe",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Star Probe",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ANIMA"
+			},
+			"description": "Choose 1 Anima unit. On a successful kill, gain +1 attack count once that turn.",
+			"effects": [
+				{
+					"type": "extra_attack_on_kill"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "pack_brand",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Pack Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ANIMA"
+			},
+			"description": "Choose 1 Anima unit. +10 ATK & +10 DEF for each face-up Anima on your side.",
+			"effects": [
+				{
+					"affinity": "ANIMA",
+					"atk": 10.0,
+					"def": 10.0,
+					"type": "stat_per_field_affinity"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "pack_presence",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Pack Presence",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ANIMA"
+			},
+			"description": "Choose 1 Anima unit. Unaffected by other units' abilities.",
+			"effects": [
+				{
+					"type": "ability_immunity_vs_units"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "lone_will",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Lone Will",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "BIO"
+			},
+			"description": "Choose 1 Bio unit. While it has Mutagen, unaffected by units, traps, and tech.",
+			"effects": [
+				{
+					"type": "mutagen_immunity"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "mutagen_aegis",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Mutagen Aegis",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "BIO"
+			},
+			"description": "Choose 1 Bio unit. When destroyed, discard Mutagen to revive it.",
+			"effects": [
+				{
+					"type": "spend_mutagen_revive"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "mutagen_lazarus",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Mutagen Lazarus",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ARCANE"
+			},
+			"description": "Choose 1 Arcane unit. First attack nullifies defender's ability for that clash.",
+			"effects": [
+				{
+					"type": "nullify_defender_first_attack"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "hex_seal",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Hex Seal",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ARCANE"
+			},
+			"description": "Choose 1 Arcane unit. Surrounding Arcane units gain +50% ATK & DEF.",
+			"effects": [
+				{
+					"affinity": "ARCANE",
+					"atk_pct": 50.0,
+					"def_pct": 50.0,
+					"type": "adjacent_aura"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "arcane_nimbus",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Arcane Nimbus",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ARCANE"
+			},
+			"description": "Choose 1 Arcane unit. Cannot be destroyed in Reckoning vs non-Arcane units.",
+			"effects": [
+				{
+					"affinity": "ARCANE",
+					"type": "reckoning_survival_vs_non_affinity"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "arcane_absolute",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Arcane Absolute",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Union summons using this card as material cost half.",
+			"effects": [
+				{
+					"type": "union_material_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "cheap_catalyst",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Cheap Catalyst",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "All units on your side become Anima affinity.",
+			"effects": [
+				{
+					"affinity": "ANIMA",
+					"type": "affinity_override_all"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "mass_transfiguration",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Mass Transfiguration",
+			"positive": null,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. It survives Reckoning ties.",
+			"effects": [
+				{
+					"type": "survive_reckoning_ties"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "stubborn_brand",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Stubborn Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Survives its first destruction once per battle.",
+			"effects": [
+				{
+					"type": "survive_destruction_once"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "second_skin",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Second Skin",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. When it attacks, reveal 1 adjacent enemy cell.",
+			"effects": [
+				{
+					"type": "reveal_adjacent_on_attack",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "scout_brand",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Scout Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Foe units it destroys cost the foe +50% crystal loss.",
+			"effects": [
+				{
+					"type": "foe_crystal_loss_multiplier_on_kill",
+					"value": 1.5
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "tax_collector",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Tax Collector",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Unaffected by 0-cost traps.",
+			"effects": [
+				{
+					"type": "negate_zero_cost_traps"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "quiet_ward",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Quiet Ward",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Counts as any one Union material requirement.",
+			"effects": [
+				{
+					"type": "union_material_wildcard"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "substitute_seal",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Substitute Seal",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. When it triggers, also reveal the attacking cell.",
+			"effects": [
+				{
+					"type": "reveal_on_trap_trigger",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "mirror_trap",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Mirror Trap",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. Cost becomes 0.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 0.0
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "overclock_chip",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Overclock Chip",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. Cost halved.",
+			"effects": [
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "half_snare",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Half Snare",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"name_contains": "Moon"
+			},
+			"description": "Choose 1 Moon unit. +15 ATK & +15 DEF.",
+			"effects": [
+				{
+					"atk": 15.0,
+					"def": 15.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "moon_brand",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Moon Brand",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"name_contains": "Wisp"
+			},
+			"description": "Choose 1 Wisp unit. +40 ATK & +40 DEF.",
+			"effects": [
+				{
+					"atk": 40.0,
+					"def": 40.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "wisp_brand",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Wisp Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"name_contains": "Tank"
+			},
+			"description": "Choose 1 Tank. +30 DEF.",
+			"effects": [
+				{
+					"def": 30.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "tank_brand",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Tank Brand",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Immune to traps in cells carrying a bluff icon.",
+			"effects": [
+				{
+					"type": "trap_immunity_on_bluff_cell"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "skeptics_charm",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Skeptic's Charm",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Once per battle, survives Reckoning vs a bluffed cell.",
+			"effects": [
+				{
+					"type": "survive_reckoning_vs_bluff_once"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "gamblers_grace",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Gambler's Grace",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +15 ATK when attacking a cell with a bluff icon.",
+			"effects": [
+				{
+					"atk": 15.0,
+					"type": "conditional_stat_vs_bluff"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "bluff_hunter",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Bluff Hunter",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Its affinity becomes Divine.",
+			"effects": [
+				{
+					"affinity": "DIVINE",
+					"type": "affinity_override"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "baptism",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Baptism",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Its affinity becomes Arcane.",
+			"effects": [
+				{
+					"affinity": "ARCANE",
+					"type": "affinity_override"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "transmutation",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Transmutation",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "DIVINE"
+			},
+			"description": "Choose 1 Divine unit. Destroys Chaos units in Reckoning with it.",
+			"effects": [
+				{
+					"target_affinity": "CHAOS",
+					"type": "bane_counter_kill"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "chaosbane_sigil",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Chaosbane Sigil",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "CHAOS"
+			},
+			"description": "Choose 1 Chaos unit. Destroys Divine units in Reckoning with it.",
+			"effects": [
+				{
+					"target_affinity": "DIVINE",
+					"type": "bane_counter_kill"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "divinebane_sigil",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Divinebane Sigil",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "BIO"
+			},
+			"description": "Choose 1 Bio unit. Destroys Anima units in Reckoning with it.",
+			"effects": [
+				{
+					"target_affinity": "ANIMA",
+					"type": "bane_counter_kill"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "animabane_sigil",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Animabane Sigil",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "ARCANE"
+			},
+			"description": "Choose 1 Arcane unit. Destroys Nature units in Reckoning with it.",
+			"effects": [
+				{
+					"target_affinity": "NATURE",
+					"type": "bane_counter_kill"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "naturebane_sigil",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Naturebane Sigil",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. While exposed, the opponent can only attack it.",
+			"effects": [
+				{
+					"type": "taunt"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "dread_magnet",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Dread Magnet",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. In Reckoning, discard 1 Tech to destroy the foe's unit.",
+			"effects": [
+				{
+					"type": "discard_tech_destroy_foe"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "executioners_pact",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Executioner's Pact",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "NATURE"
+			},
+			"description": "Choose 1 Nature unit. Foe units in Reckoning with it gain Venom.",
+			"effects": [
+				{
+					"type": "apply_venom_in_reckoning"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "venom_lash",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Venom Lash",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. After its effect resolves, reveal 1 face-down card on either side.",
+			"effects": [
+				{
+					"type": "reveal_after_tech",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "echo_lens",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Echo Lens",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. When consumed as Union material, gain +300 crystals.",
+			"effects": [
+				{
+					"type": "union_material_crystal_gain",
+					"value": 300.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "tithe_of_souls",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Tithe of Souls",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Units it attacks cannot attack on their next turn.",
+			"effects": [
+				{
+					"type": "lock_target_on_attack"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "hypnotic_gaze",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Hypnotic Gaze",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Dead-end attacks are refunded.",
+			"effects": [
+				{
+					"type": "refund_dead_end_attack"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "dowsers_instinct",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Dowser's Instinct",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. You lose 0 crystals when it is destroyed.",
+			"effects": [
+				{
+					"type": "zero_crystal_loss_on_destroy"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "grave_rebate",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Grave Rebate",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. First play each battle returns to hand.",
+			"effects": [
+				{
+					"type": "tech_returns_to_hand_once"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "second_charge",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Second Charge",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. When it triggers, attacker cannot attack next turn.",
+			"effects": [
+				{
+					"type": "lock_attacker_on_trap"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "tripwire_echo",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Tripwire Echo",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {
+				"affinity": "BIO"
+			},
+			"description": "Choose 1 Bio unit. While it has Mutagen, +30 ATK.",
+			"effects": [
+				{
+					"atk": 30.0,
+					"flag": "mutagen",
+					"type": "conditional_stat_with_flag"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "mutant_apex",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Mutant Apex",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Counts as a Moon card for Union material requirements.",
+			"effects": [
+				{
+					"tribe": "Moon",
+					"type": "union_material_tribe_spoof"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "moon_vessel",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Moon Vessel",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Ability becomes None; +50 DEF.",
+			"effects": [
+				{
+					"type": "anoint_set_ability_none"
+				},
+				{
+					"def": 50.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "severed_instinct",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Severed Instinct",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Ability becomes None; +50 ATK.",
+			"effects": [
+				{
+					"type": "anoint_set_ability_none"
+				},
+				{
+					"atk": 50.0,
+					"type": "anoint_stat_flat"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "severed_fang",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Severed Fang",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. When used as Union material, summoned Union gains +50 ATK & DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"type": "union_material_stat_boost"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "union_catalyst",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Union Catalyst",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Coin effects always Heads; summon cost +20%.",
+			"effects": [
+				{
+					"type": "coin_bias",
+					"value": "always_heads"
+				},
+				{
+					"type": "anoint_cost_multiplier",
+					"value": 1.2
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "loaded_dice",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Loaded Dice",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Coin effects more likely to land Heads (75%).",
+			"effects": [
+				{
+					"type": "coin_bias",
+					"value": "soft_heads"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "lucky_streak",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Lucky Streak",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Destroy it to force all coins in a flip to Heads.",
+			"effects": [
+				{
+					"type": "sacrifice_force_heads"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "oracles_sacrifice",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Oracle's Sacrifice",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. All coin flips from its effect always Heads.",
+			"effects": [
+				{
+					"type": "coin_bias",
+					"value": "always_heads"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "rigged_snare",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Rigged Snare",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. When it hits a foe trap, foe coin Tails = trap does nothing.",
+			"effects": [
+				{
+					"type": "trap_coin_negate"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "soft_step",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Soft Step",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. ATK/DEF changes it causes become permanent.",
+			"effects": [
+				{
+					"mode": "permanent",
+					"type": "stat_duration"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "etched_brand",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Etched Brand",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. ATK/DEF changes it causes become permanent.",
+			"effects": [
+				{
+					"mode": "permanent",
+					"type": "stat_duration"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "etched_trap",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Etched Trap",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. ATK/DEF changes it causes become permanent.",
+			"effects": [
+				{
+					"mode": "permanent",
+					"type": "stat_duration"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "etched_circuit",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Etched Circuit",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. ATK/DEF changes it causes last +1 turn.",
+			"effects": [
+				{
+					"mode": "extend",
+					"turns": 1.0,
+					"type": "stat_duration"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "lingering_brand",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Lingering Brand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. ATK/DEF changes it causes last +1 turn.",
+			"effects": [
+				{
+					"mode": "extend",
+					"turns": 1.0,
+					"type": "stat_duration"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "lingering_trap",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Lingering Trap",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. ATK/DEF changes it causes last +1 turn.",
+			"effects": [
+				{
+					"mode": "extend",
+					"turns": 1.0,
+					"type": "stat_duration"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "lingering_circuit",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Lingering Circuit",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. +100 ATK; destroyed at end of turn it becomes exposed.",
+			"effects": [
+				{
+					"atk": 100.0,
+					"type": "anoint_stat_flat"
+				},
+				{
+					"type": "destroy_at_expose_turn_end"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "burning_idol",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Burning Idol",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"description": "Choose 1 unit. Ability None. Revive if destroyed by own/Omen effect.",
+			"effects": [
+				{
+					"type": "anoint_set_ability_none"
+				},
+				{
+					"type": "conditional_revive_omen_or_self"
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "phoenix_bargain",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Phoenix Bargain",
+			"positive": null,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. Foe crystal loss from this trap is doubled.",
+			"effects": [
+				{
+					"type": "trap_crystal_loss_multiplier",
+					"value": 2.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "taxing_snare",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Taxing Snare",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. Affinity conditions on this trap are ignored.",
+			"effects": [
+				{
+					"type": "ignore_trap_affinity"
+				}
+			],
+			"groups": [
+				"anoint"
+			],
+			"id": "blind_eye",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Blind Eye",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "trap",
+			"anoint_filter": {},
+			"description": "Choose 1 trap. Its effect becomes Reveal 1 foe cell.",
+			"effects": [
+				{
+					"effect": "reveal_foe_cell",
+					"type": "effect_override",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "spyglass_snare",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Spyglass Snare",
+			"positive": null,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "tech",
+			"anoint_filter": {},
+			"description": "Choose 1 tech. Its effect becomes Reveal 2 foe cells.",
+			"effects": [
+				{
+					"effect": "reveal_foe_cell",
+					"type": "effect_override",
+					"value": 2.0
+				}
+			],
+			"groups": [
+				"anoint",
+				"chapter_1"
+			],
+			"id": "twin_spyglass",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Twin Spyglass",
+			"positive": null,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Moon units +15 ATK & +15 DEF.",
+			"effects": [
+				{
+					"atk": 15.0,
+					"def": 15.0,
+					"filter": {
+						"name_contains": "Moon"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems"
+			],
+			"id": "moonlit_path",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Moonlit Path",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Wisp units +30 ATK & +30 DEF.",
+			"effects": [
+				{
+					"atk": 30.0,
+					"def": 30.0,
+					"filter": {
+						"name_contains": "Wisp"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems"
+			],
+			"id": "will_o_wisp",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Will-o'-Wisp",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Princess units +20% ATK & DEF.",
+			"effects": [
+				{
+					"atk_pct": 20.0,
+					"def_pct": 20.0,
+					"filter": {
+						"name_contains": "Princess"
+					},
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"totems"
+			],
+			"id": "royal_decree",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Royal Decree",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Skeleton and Zombie units +15 ATK.",
+			"effects": [
+				{
+					"atk": 15.0,
+					"filter": {
+						"name_contains_any": [
+							"Skeleton",
+							"Zombie"
+						]
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "bone_march",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Bone March",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Tank units +25% DEF.",
+			"effects": [
+				{
+					"def_pct": 25.0,
+					"filter": {
+						"name_contains": "Tank"
+					},
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"totems"
+			],
+			"id": "iron_column",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Iron Column",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Dragon units +15% ATK & DEF.",
+			"effects": [
+				{
+					"atk_pct": 15.0,
+					"def_pct": 15.0,
+					"filter": {
+						"name_contains": "Dragon"
+					},
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"totems"
+			],
+			"id": "dragons_hoard",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Dragon's Hoard",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your units with ATK+DEF <= 30 gain +40 ATK & +40 DEF.",
+			"effects": [
+				{
+					"atk": 40.0,
+					"def": 40.0,
+					"filter": {
+						"stat_sum_max": 30.0
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen"
+			],
+			"id": "underdog_spirit",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Underdog Spirit",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your units with no ability gain +20 ATK & +20 DEF.",
+			"effects": [
+				{
+					"atk": 20.0,
+					"def": 20.0,
+					"filter": {
+						"ability_none": true
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "salt_of_the_earth",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Salt of the Earth",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Shepherd Detective gains +30 ATK & +30 DEF.",
+			"effects": [
+				{
+					"atk": 30.0,
+					"def": 30.0,
+					"filter": {
+						"name_contains": "Shepherd Detective"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen"
+			],
+			"id": "shepherds_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Shepherd's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your starting crystals change by a random amount between -500 and +2000.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value_max": 2000.0,
+					"value_min": -500.0
+				}
+			],
+			"groups": [
+				"pandemonium"
+			],
+			"id": "spinning_coin",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Spinning Coin",
+			"positive": null,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Each of your units has 25% chance +50% stats and 25% chance -25%.",
+			"effects": [
+				{
+					"alt_atk_pct": -25.0,
+					"alt_def_pct": -25.0,
+					"atk_pct": 50.0,
+					"chance": 0.25,
+					"def_pct": 50.0,
+					"filter": "all",
+					"target": "player",
+					"type": "unit_stat_pct"
+				}
+			],
+			"groups": [
+				"pandemonium"
+			],
+			"id": "fever_dream",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Fever Dream",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "At battle start, every unit on both grids shuffles to a new random cell.",
+			"effects": [
+				{
+					"type": "shuffle_all_units"
+				}
+			],
+			"groups": [
+				"pandemonium"
+			],
+			"id": "poltergeist",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Poltergeist",
+			"positive": null,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Union summon costs are halved.",
+			"effects": [
+				{
+					"type": "union_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "united_we_stand",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "United We Stand",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your unit summon costs -50%.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "summon_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "grave_discount",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Grave Discount",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Summon cost of your units with no ability is halved.",
+			"effects": [
+				{
+					"filter": {
+						"ability_none": true
+					},
+					"target": "player",
+					"type": "summon_cost_multiplier",
+					"value": 0.5
+				}
+			],
+			"groups": [
+				"rites"
+			],
+			"id": "simple_rites",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Simple Rites",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your trap cards cost 0.",
+			"effects": [
+				{
+					"type": "trap_cost_pct",
+					"value": -100.0
+				}
+			],
+			"groups": [
+				"rites"
+			],
+			"id": "trapsmiths_favor",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Trapsmith's Favor",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "You may play 2 tech cards per turn.",
+			"effects": [
+				{
+					"type": "extra_tech_per_turn",
+					"value": 2.0
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "overclock",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Overclock",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Start battles with 1 extra random tech card in hand.",
+			"effects": [
+				{
+					"type": "extra_tech",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"rites"
+			],
+			"id": "spirit_cache",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Spirit Cache",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1 attack per turn, but each attack costs +100 crystals.",
+			"effects": [
+				{
+					"type": "max_attacks_bonus",
+					"value": 1.0
+				},
+				{
+					"type": "attack_crystal_cost",
+					"value": 100.0
+				}
+			],
+			"groups": [
+				"rites",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "adrenal_surge",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Adrenal Surge",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "You have +1 attack count per turn.",
+			"effects": [
+				{
+					"type": "max_attacks_bonus",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "war_drums",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "War Drums",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your units' end-of-turn abilities trigger twice.",
+			"effects": [
+				{
+					"type": "double_turn_end_abilities"
+				}
+			],
+			"groups": [
+				"rites"
+			],
+			"id": "witching_hour",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Witching Hour",
+			"positive": true,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1 attack count per turn; unit crystal loss in Reckoning +60%.",
+			"effects": [
+				{
+					"type": "max_attacks_bonus",
+					"value": 1.0
+				},
+				{
+					"type": "reckoning_loss_pct",
+					"value": 60.0
+				}
+			],
+			"groups": [
+				"rites",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "blood_tempo",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Blood Tempo",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1 attack count per turn; defenders you hit wait 2 turns to attack.",
+			"effects": [
+				{
+					"type": "max_attacks_bonus",
+					"value": 1.0
+				},
+				{
+					"type": "attack_lock_defender_turns",
+					"value": 2.0
+				}
+			],
+			"groups": [
+				"rites",
+				"bargains"
+			],
+			"id": "exhausting_barrage",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Exhausting Barrage",
+			"positive": null,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1 attack count per turn; -1000 starting crystals.",
+			"effects": [
+				{
+					"type": "max_attacks_bonus",
+					"value": 1.0
+				},
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": -1000.0
+				}
+			],
+			"groups": [
+				"rites",
+				"bargains",
+				"chapter_1"
+			],
+			"id": "hungry_tempo",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Hungry Tempo",
+			"positive": null,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+1 attack count on your first turn only.",
+			"effects": [
+				{
+					"first_turn_only": true,
+					"type": "max_attacks_bonus",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "opening_strike",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Opening Strike",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "+2 attack count on your first turn only; -2000 starting crystals.",
+			"effects": [
+				{
+					"first_turn_only": true,
+					"type": "max_attacks_bonus",
+					"value": 2.0
+				},
+				{
+					"target": "player",
+					"type": "crystal_bonus",
+					"value": -2000.0
+				}
+			],
+			"groups": [
+				"rites",
+				"bargains"
+			],
+			"id": "desperate_opening",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Desperate Opening",
+			"positive": null,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Each time your unit attacks a Dead End cell, gain +300 crystals.",
+			"effects": [
+				{
+					"type": "crystal_on_dead_end_attack",
+					"value": 300.0
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "grave_dividend",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Grave Dividend",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Each non-Unit attack stacks +10% foe crystal loss; resets on Unit hit.",
+			"effects": [
+				{
+					"type": "escalating_foe_crystal_loss",
+					"value": 10.0
+				}
+			],
+			"groups": [
+				"rites"
+			],
+			"id": "escalating_toll",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Escalating Toll",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Each time a foe attacks your Dead End cell, you gain +300 crystals.",
+			"effects": [
+				{
+					"type": "crystal_on_foe_dead_end",
+					"value": 300.0
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "bait_purse",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Bait Purse",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Each time a foe attacks your Dead End, that attacker cannot attack next foe turn.",
+			"effects": [
+				{
+					"type": "lock_attacker_on_foe_dead_end"
+				}
+			],
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"id": "staggering_bait",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Staggering Bait",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All of your traps' effects become Explosive Barrels.",
+			"effects": [
+				{
+					"effect": "explosive_barrel",
+					"type": "trap_effect_override_all"
+				}
+			],
+			"groups": [
+				"rites",
+				"pandemonium",
+				"chapter_1"
+			],
+			"id": "barrel_gospel",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Barrel Gospel",
+			"positive": null,
+			"rarity": "epic",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "3 runes under random cells of yours; crystal loss halved when unit on rune is destroyed.",
+			"effects": [
+				{
+					"count": 3.0,
+					"rune": "fehu",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_fehu",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Rune - Fehu",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "3 runes under random cells of yours; units on rune cells gain +20 ATK.",
+			"effects": [
+				{
+					"count": 3.0,
+					"rune": "uruz",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_uruz",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Rune - Uruz",
+			"positive": true,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "1 rune under a random cell of yours; unit on it revives once when destroyed.",
+			"effects": [
+				{
+					"count": 1.0,
+					"rune": "thurisaz",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_thurisaz",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Rune - Thurisaz",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "3 runes under random enemy cells; crystal loss doubled when unit on rune is destroyed.",
+			"effects": [
+				{
+					"count": 3.0,
+					"rune": "hagalaz",
+					"target": "enemy",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_hagalaz",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Rune - Hagalaz",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "3 runes under random cells of yours; units on rune cells get -50% DEF.",
+			"effects": [
+				{
+					"count": 3.0,
+					"rune": "nauthiz",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"runes_cursed"
+			],
+			"id": "rune_nauthiz",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Rune - Nauthiz",
+			"positive": false,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "3 runes under random cells of yours; units on rune cells always lose to Divine in Reckoning.",
+			"effects": [
+				{
+					"count": 3.0,
+					"rune": "jera",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"runes_cursed"
+			],
+			"id": "rune_jera",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Rune - Jera",
+			"positive": false,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "1 rune above a random cell of yours; bluff there is especially interesting to the enemy.",
+			"effects": [
+				{
+					"count": 1.0,
+					"placement": "setup_visible",
+					"rune": "berkano",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_berkano",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Rune - Berkano",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "1 rune above a random cell of yours; bluff there is especially repellent to the enemy.",
+			"effects": [
+				{
+					"count": 1.0,
+					"placement": "setup_visible",
+					"rune": "laguz",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_laguz",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Rune - Laguz",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "2 runes above random occupied cells of yours; unit counts as any one Union material.",
+			"effects": [
+				{
+					"count": 2.0,
+					"rune": "mannaz",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes"
+			],
+			"id": "rune_mannaz",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Rune - Mannaz",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "1 rune above a random occupied cell of yours; if used as Union material, it survives the summon.",
+			"effects": [
+				{
+					"count": 1.0,
+					"rune": "algiz",
+					"target": "player",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes"
+			],
+			"id": "rune_algiz",
+			"illustration": "",
+			"implemented": false,
+			"include_in_demo": true,
+			"label": "Rune - Algiz",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "3 runes under random occupied enemy cells; units there have ability sealed.",
+			"effects": [
+				{
+					"count": 3.0,
+					"rune": "isa",
+					"target": "enemy",
+					"type": "cell_runes"
+				}
+			],
+			"groups": [
+				"runes",
+				"chapter_1"
+			],
+			"id": "rune_isa",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Rune - Isa",
+			"positive": true,
+			"rarity": "rare",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Your Union summon costs +20%.",
+			"effects": [
+				{
+					"type": "union_cost_multiplier",
+					"value": 1.2
+				}
+			],
+			"groups": [
+				"curses"
+			],
+			"id": "heavy_silver",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Heavy Silver",
+			"positive": false,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "1 of your cells starts revealed.",
+			"effects": [
+				{
+					"target": "player",
+					"type": "reveal_cells",
+					"value": 1.0
+				}
+			],
+			"groups": [
+				"curses"
+			],
+			"id": "static_veil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Static Veil",
+			"positive": false,
+			"rarity": "common",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Diamond Unicorn gains +45 ATK.",
+			"effects": [
+				{
+					"atk": 45.0,
+					"def": 0.0,
+					"filter": {
+						"name_contains": "Diamond Unicorn"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "diamond_unicorn_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Diamond Unicorn's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "False Prophet gains +50 DEF.",
+			"effects": [
+				{
+					"atk": 0.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "False Prophet"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "false_prophet_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "False Prophet's Vigil (Copy)",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Choir Lead Amber gains +50 DEF.",
+			"effects": [
+				{
+					"atk": 0.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Diamond Unicorn"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "choir_lead_amber_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Choir Lead Amber's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Kitsune gains +30 ATK and +40 DEF.",
+			"effects": [
+				{
+					"atk": 30.0,
+					"def": 40.0,
+					"filter": {
+						"name_contains": "Kitsune"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "kitsune_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Kitsune's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Bioterrorist gains +100 ATK",
+			"effects": [
+				{
+					"atk": 100.0,
+					"def": 0.0,
+					"filter": {
+						"name_contains": "Bioterrorist"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "bioterrorist_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Bioterrorist's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Grand Fort Captain gains +40 ATK and +20 ATK",
+			"effects": [
+				{
+					"atk": 40.0,
+					"def": 20.0,
+					"filter": {
+						"name_contains": "Grand Fort Captain"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "grand_fort_captain_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Grand Fort Captain's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Moon Tribe Shaman gains +50 ATK",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 0.0,
+					"filter": {
+						"name_contains": "Moon Tribe Shaman"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "moon_tribe_shaman_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Moon Tribe Shaman's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "Colorful Mage gains +40 ATK and +40 DEF",
+			"effects": [
+				{
+					"atk": 40.0,
+					"def": 40.0,
+					"filter": {
+						"name_contains": "Colorful Mage"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"chosen",
+				"chapter_1"
+			],
+			"id": "colorful_mage_vigil",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": false,
+			"label": "Colorful Mage's Vigil",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		}
+	]
+}
