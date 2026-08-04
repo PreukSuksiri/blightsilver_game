@@ -28,7 +28,7 @@ func _ready() -> void:
 	get_tree().quit(1 if failed > 0 else 0)
 
 func run_all_tests() -> void:
-	test_apply_exploration_actions_detects_give_item()
+	await test_apply_exploration_actions_detects_give_item()
 	test_item_overlay_idle_signal()
 	test_vn_beat_waits_on_give_item()
 
@@ -36,10 +36,10 @@ func test_apply_exploration_actions_detects_give_item() -> void:
 	print("-- test_apply_exploration_actions_detects_give_item")
 	var vn: VNPlayer = load("res://scripts/VNPlayer.gd").new()
 	var only_var: Array = [{"action": "set_var", "key": "foo", "value": "bar"}]
-	assert_true(not vn._apply_exploration_actions(only_var),
+	assert_true(not await vn._apply_exploration_actions(only_var),
 		"set_var-only actions are not item grants")
 	var with_item: Array = [{"action": "give_item", "key": "tool_translator", "value": ""}]
-	assert_true(vn._apply_exploration_actions(with_item),
+	assert_true(await vn._apply_exploration_actions(with_item),
 		"give_item action is detected")
 	vn.free()
 

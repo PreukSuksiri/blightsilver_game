@@ -168,9 +168,13 @@ var _inventory: Array[String] = []
 var _vars: Dictionary = {}
 ## Held Omens for this exploration stage: Array of { "id": String, "anointed_card": String }.
 var _active_omens: Array = []
+## Omens granted before a session exists (e.g. chapter-open VN). Seeded into
+## _active_omens when start_session runs so force_fresh launches keep them.
+var _pending_omens: Array = []
 var _played_vn_scenes: Dictionary = {}   # path → true; tracks once-only VN scenes played this session
 var _interacted_spots: Dictionary = {}   # "node_id:spot_index" → true; one-time spots already used
 var _spots_in_progress: Dictionary = {}  # "node_id:spot_index" → true; hide-after spots mid-action (not saved)
+var _camera_shuttered_nodes: Dictionary = {}  # node_id → true; Polaroid Mode 2 taken in room (saved)
 var _talked_characters: Dictionary = {}  # "node_id:char_index" → true; characters removed from room after talk
 var _pending_spot_on_complete: Callable = Callable()
 var _pending_spot_interaction: Dictionary = {}  # { node_id, spot_index, hide_after, disable_after }
@@ -297,6 +301,8 @@ func start_session(graph_path: String, source_vn_scene: String = "") -> void:
 		push_error("ExplorationManager.start_session: failed to load graph at '%s'." % graph_path)
 		return
 	var preserve_keep_bgm: bool = bool(launch_params.get("keep_vn_bgm", false))
+	# Carry omens granted in pre-exploration VN (session was not active yet).
+	var carry_omens: Array = _snapshot_pre_session_omens()
 	_clear_session_memory()
 	keep_vn_bgm = preserve_keep_bgm
 	_source_vn_scene = source_vn_scene.strip_edges()
@@ -308,6 +314,7 @@ func start_session(graph_path: String, source_vn_scene: String = "") -> void:
 			continue
 		_vars[k] = resolve_launch_param_value(launch_params.get(k))
 	_seed_initial_inventory(graph.initial_inventory, launch_params.get("initial_inventory", null))
+	_seed_carried_omens(carry_omens)
 	emit_signal("session_started", graph)
 	_navigate_to(graph.resolve_start_node_id(_vars), false)
 	_save_session_state(true)
@@ -352,9 +359,11 @@ func _clear_session_memory() -> void:
 	_inventory.clear()
 	_vars.clear()
 	_active_omens.clear()
+	_pending_omens.clear()
 	_played_vn_scenes.clear()
 	_interacted_spots.clear()
 	_spots_in_progress.clear()
+	_camera_shuttered_nodes.clear()
 	_talked_characters.clear()
 	_pending_spot_on_complete = Callable()
 	_pending_spot_interaction = {}
@@ -395,6 +404,18 @@ func mark_spot_interacted(node_id: String, spot_index: int) -> void:
 ## Returns true if the given spot has already been interacted with this session.
 func is_spot_interacted(node_id: String, spot_index: int) -> bool:
 	return _interacted_spots.has(node_id + ":" + str(spot_index))
+
+## Mark that a Polaroid Mode 2 shutter was taken in this room (unlocks camera-hidden spots).
+func mark_room_camera_shuttered(node_id: String) -> void:
+	var nid: String = node_id.strip_edges()
+	if nid.is_empty() or _camera_shuttered_nodes.has(nid):
+		return
+	_camera_shuttered_nodes[nid] = true
+	_save_session_state()
+
+## True when any Polaroid Mode 2 photo has been taken in this room this session.
+func is_room_camera_shuttered(node_id: String) -> bool:
+	return _camera_shuttered_nodes.has(node_id.strip_edges())
 
 ## Track a hide-after spot while its action queue is running (not persisted).
 func begin_spot_interaction(node_id: String, spot_index: int) -> void:
@@ -594,6 +615,7 @@ func _save_session_state(force: bool = false) -> void:
 		"active_omens":      _active_omens.duplicate(true),
 		"played_vn_scenes":  _played_vn_scenes.keys(),
 		"interacted_spots":  _interacted_spots.keys(),
+		"camera_shuttered_nodes": _camera_shuttered_nodes.keys(),
 		"talked_characters": _talked_characters.keys(),
 		"rewards":           _session_rewards.duplicate(true),
 		"return_scene":      return_scene,
@@ -826,6 +848,7 @@ func restore_saved_session() -> bool:
 		_inventory.assign(inv)
 	var vs: Variant   = sd.get("vars", {})
 	_vars             = vs as Dictionary if vs is Dictionary else {}
+	_pending_omens.clear()
 	_active_omens.clear()
 	var omens_raw: Variant = sd.get("active_omens", [])
 	if omens_raw is Array:
@@ -845,6 +868,13 @@ func restore_saved_session() -> bool:
 	if isp is Array:
 		for s: Variant in (isp as Array):
 			_interacted_spots[str(s)] = true
+	_camera_shuttered_nodes.clear()
+	var csn: Variant = sd.get("camera_shuttered_nodes", [])
+	if csn is Array:
+		for n: Variant in (csn as Array):
+			var nid: String = str(n).strip_edges()
+			if not nid.is_empty():
+				_camera_shuttered_nodes[nid] = true
 	_talked_characters.clear()
 	var tc: Variant = sd.get("talked_characters", [])
 	if tc is Array:
@@ -1125,23 +1155,34 @@ signal omens_changed(omens: Array)
 
 ## Append a held omen for this stage. Duplicates by id are not prevented here —
 ## the offer roller excludes already-held ids.
+## Before a session exists, omens are queued in _pending_omens and applied on start_session.
 func add_omen(id: String, anointed_card_name: String = "") -> void:
 	if id.is_empty():
 		return
-	_active_omens.append({
+	var entry: Dictionary = {
 		"id": id,
 		"anointed_card": anointed_card_name,
-	})
+	}
+	if not _session_active:
+		_pending_omens.append(entry)
+		emit_signal("omens_changed", get_active_omens())
+		return
+	_active_omens.append(entry)
 	emit_signal("omens_changed", get_active_omens())
 	_save_session_state()
 
 
 func get_active_omens() -> Array:
-	return _active_omens.duplicate(true)
+	if _session_active:
+		return _active_omens.duplicate(true)
+	return _pending_omens.duplicate(true)
 
 
 func has_omen(id: String) -> bool:
 	for entry: Variant in _active_omens:
+		if entry is Dictionary and str((entry as Dictionary).get("id", "")) == id:
+			return true
+	for entry: Variant in _pending_omens:
 		if entry is Dictionary and str((entry as Dictionary).get("id", "")) == id:
 			return true
 	return false
@@ -1154,13 +1195,48 @@ func get_held_omen_ids() -> Array:
 			var oid: String = str((entry as Dictionary).get("id", ""))
 			if not oid.is_empty() and oid not in ids:
 				ids.append(oid)
+	for entry: Variant in _pending_omens:
+		if entry is Dictionary:
+			var oid: String = str((entry as Dictionary).get("id", ""))
+			if not oid.is_empty() and oid not in ids:
+				ids.append(oid)
 	return ids
+
+
+func _snapshot_pre_session_omens() -> Array:
+	var carry: Array = []
+	for entry: Variant in _pending_omens:
+		if entry is Dictionary:
+			carry.append((entry as Dictionary).duplicate(true))
+	# Safety: grants that landed in _active_omens before a session existed.
+	if not _session_active:
+		for entry: Variant in _active_omens:
+			if entry is Dictionary:
+				carry.append((entry as Dictionary).duplicate(true))
+	return carry
+
+
+func _seed_carried_omens(carry: Array) -> void:
+	_active_omens.clear()
+	for entry: Variant in carry:
+		if not entry is Dictionary:
+			continue
+		var d: Dictionary = entry as Dictionary
+		var oid: String = str(d.get("id", "")).strip_edges()
+		if oid.is_empty():
+			continue
+		_active_omens.append({
+			"id": oid,
+			"anointed_card": str(d.get("anointed_card", "")),
+		})
+	if not _active_omens.is_empty():
+		emit_signal("omens_changed", get_active_omens())
 
 
 ## Build deck card meta for OmenDatabase.roll_offer / get_eligible_deck_cards.
 func build_deck_card_meta_for_omens() -> Array:
 	var out: Array = []
-	var deck = SaveManager.get_active_deck()
+	var deck = SaveManager.get_battle_deck()
 	if deck == null:
 		return out
 	var names: Array = []

@@ -351,9 +351,7 @@ func _rebuild_detail() -> void:
 			chips.add_child(_make_chip("BOON", Color(0.36, 0.88, 0.52)))
 		else:
 			chips.add_child(_make_chip("BANE", Color(1.0, 0.42, 0.42)))
-	for group_name: Variant in omen.get("groups", []):
-		chips.add_child(_make_chip(str(group_name).to_upper().replace("_", " "),
-				Color(0.55, 0.70, 0.92)))
+	# groups[] (rites, chapter_1, …) are author-only offer filters — not shown to players.
 	if chips.get_child_count() > 0:
 		_detail_host.add_child(chips)
 

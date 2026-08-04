@@ -1021,8 +1021,10 @@ func load_data() -> void:
 ## Checks admin override first, then gallery entries with unlock_deckbuilding=true.
 func is_deckbuilding_unlocked() -> bool:
 	if deckbuilding_admin_locked:
-		return false
-	return true
+		return false  # hard lock overrides everything
+	if deckbuilding_unlocked:
+		return true
+	return _gallery_unlocks_deckbuilding()
 
 func set_attack_tutorial_complete(enabled: bool) -> void:
 	if attack_tutorial_complete == enabled:

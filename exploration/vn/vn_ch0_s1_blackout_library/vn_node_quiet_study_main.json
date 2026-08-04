@@ -335,6 +335,18 @@
 				"action": "unlock_topic",
 				"chapter": "ch1_s1",
 				"id": "library_quiet_study_ghost_or_demon"
+			},
+			{
+				"action": "add_clue",
+				"chapter": "ch1_s1",
+				"id": "anomaly_quiet_study_ghost",
+				"silent": true
+			},
+			{
+				"action": "add_clue",
+				"chapter": "ch1_s1",
+				"id": "anomaly_quiet_study_demon",
+				"silent": true
 			}
 		],
 		"linger_characters": true

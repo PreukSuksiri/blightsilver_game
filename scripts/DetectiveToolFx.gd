@@ -6,8 +6,8 @@ signal polaroid_overlay_dismissed
 signal polaroid_shot_finished  ## Mode 2 photo shown — leave tool active mode (overlay may remain)
 signal photo_vn_requested(path: String)
 
-const CROSSHAIR_SIZE := 240.0
-const CROSSHAIR_RADIUS := 108.0
+const CROSSHAIR_SIZE := 480.0
+const CROSSHAIR_RADIUS := 216.0
 const PRINT_SFX_DELAY := 0.5
 
 const TOOL_POLAROID := "tool_polaroid_camera"
@@ -50,6 +50,7 @@ const SMOKE_PATHS: PackedStringArray = [
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_smoke_g.png",
 	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_smoke_h.png",
 ]
+const DEFAULT_LENS_FLARE := "res://assets/textures/exploration/decorations/icon_lens_flare.png"
 
 var _tool_id: String = ""
 var _spots: Array = []  # {center, radius, temperature?, mumbling_sound?}
@@ -58,6 +59,7 @@ var _photo_alt_bg: String = ""
 var _photo_vn: String = ""
 var _bg_tex: Texture2D = null
 var _photo_smoke_spots: Array = []  # all tool-gated spots in the room (any tool)
+var _photo_lens_flare_spots: Array = []  # camera-hidden spots → small flare on photo
 
 var _ui_layer: CanvasLayer = null
 var _ui_root: Control = null
@@ -149,6 +151,8 @@ func start_tool(tool_id: String, spots: Array, opts: Dictionary = {}) -> void:
 	_bg_tex = opts.get("background_texture", null) as Texture2D
 	var smoke_var: Variant = opts.get("photo_smoke_spots", [])
 	_photo_smoke_spots = (smoke_var as Array).duplicate(true) if smoke_var is Array else []
+	var flare_var: Variant = opts.get("photo_lens_flare_spots", [])
+	_photo_lens_flare_spots = (flare_var as Array).duplicate(true) if flare_var is Array else []
 	_display_temp = _room_temp
 	_last_temp_band = int(floor(_display_temp / 10.0))
 	_thermo_flicker_cd = _rng.randf_range(5.0, 20.0)
@@ -176,6 +180,7 @@ func stop_tool() -> void:
 	_tool_id = ""
 	_spots.clear()
 	_photo_smoke_spots.clear()
+	_photo_lens_flare_spots.clear()
 	_stop_loops()
 	_hide_all_hud()
 	_set_film_grain_opacity(0.0)
@@ -926,7 +931,36 @@ func _compose_photo_texture() -> Texture2D:
 		if not spot_var is Dictionary:
 			continue
 		_blit_smoke_for_spot(img, spot_var as Dictionary, mouse, w, h)
+	# Small lens flares for spots still hidden until camera shutter.
+	for flare_var: Variant in _photo_lens_flare_spots:
+		if not flare_var is Dictionary:
+			continue
+		_blit_lens_flare_for_spot(img, flare_var as Dictionary, w, h)
 	return ImageTexture.create_from_image(img)
+
+
+func _blit_lens_flare_for_spot(img: Image, spot: Dictionary, w: int, h: int) -> void:
+	var spath: String = str(spot.get("lens_flare_image", "")).strip_edges()
+	if spath.is_empty() or not ResourceLoader.exists(spath):
+		spath = DEFAULT_LENS_FLARE
+	var si: Image = _load_rgba_image(spath)
+	if si == null:
+		return
+	# Keep default/custom flares as a small photo marker (~3% of frame).
+	var sw: int = clampi(int(float(w) * 0.03), 16, 48)
+	var sh: int = clampi(int(float(h) * 0.03), 16, 48)
+	si = si.duplicate()
+	si.resize(sw, sh, Image.INTERPOLATE_BILINEAR)
+	var xn: float = float(spot.get("x_norm", -1.0))
+	var yn: float = float(spot.get("y_norm", -1.0))
+	if xn < 0.0 or yn < 0.0:
+		var center: Vector2 = spot.get("center", Vector2.ZERO)
+		var vp: Vector2 = get_viewport_rect().size
+		xn = clampf(center.x / maxf(1.0, vp.x), 0.0, 1.0)
+		yn = clampf(center.y / maxf(1.0, vp.y), 0.0, 1.0)
+	var px: int = int(xn * float(w)) - sw / 2
+	var py: int = int(yn * float(h)) - sh / 2
+	_blit_alpha(img, si, Vector2i(px, py), 0.95)
 
 
 func _blit_smoke_for_spot(img: Image, spot: Dictionary, mouse: Vector2, w: int, h: int) -> void:

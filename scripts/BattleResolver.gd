@@ -89,6 +89,11 @@ static func _roll_battle_coin() -> bool:
 			if not _silent_mode:
 				GameState.post_message("Maria the Battle Priest: Coin flip forced to heads!")
 			return true
+		var _bias: int = OmenBattleApplier.biased_coin_result(_coin_flip_source_card.card_name)
+		if _bias >= 0:
+			return _bias == 1
+	if OmenBattleApplier.consume_force_heads():
+		return true
 	return randf() >= 0.5
 
 # When true, suppress inline GameState.post_message() calls inside helpers.
@@ -157,6 +162,7 @@ static func _resolve_character_vs_character(
 		return
 
 	_apply_pre_battle_perm_debuffs(attacker, defender, attacker_player, defender_player, result)
+	OmenBattleApplier.apply_pre_reckoning_effects(attacker, defender, attacker_player, defender_player)
 
 	var base_atk: int = attacker.get_effective_atk()
 	var eff_atk: int = _get_effective_atk(
@@ -312,6 +318,59 @@ static func _resolve_character_vs_character(
 		result.attacker_crystal_loss = attacker.crystal_cost
 		result.defender_crystal_loss = defender.crystal_cost
 		result.messages.append("Both cards are destroyed!")
+		# Omen survive_reckoning_ties
+		if OmenBattleApplier.should_survive_reckoning_tie(attacker, attacker_player):
+			result.attacker_destroyed = false
+			result.attacker_crystal_loss = 0
+			result.messages.append("Omen: %s survives the tie!" % attacker.card_name)
+		if OmenBattleApplier.should_survive_reckoning_tie(defender, defender_player):
+			result.defender_destroyed = false
+			result.defender_crystal_loss = 0
+			result.messages.append("Omen: %s survives the tie!" % defender.card_name)
+
+	# Omen rune jera — unit on jera always loses to Divine
+	if defender.card_type == "character" and attacker.card_type == "character":
+		if OmenBattleApplier.jera_loses_to_divine(attacker, attacker_player, defender):
+			result.attacker_destroyed = true
+			result.defender_destroyed = false
+			result.attacker_crystal_loss = attacker.crystal_cost
+			result.defender_crystal_loss = 0
+			result.messages.append("Rune Jera: %s falls to Divine!" % attacker.card_name)
+		elif OmenBattleApplier.jera_loses_to_divine(defender, defender_player, attacker):
+			result.defender_destroyed = true
+			result.attacker_destroyed = false
+			result.defender_crystal_loss = defender.crystal_cost
+			result.attacker_crystal_loss = 0
+			result.messages.append("Rune Jera: %s falls to Divine!" % defender.card_name)
+
+	# Omen bane_counter_kill — anointed attacker destroys matching-affinity defender in Reckoning.
+	_apply_omen_bane_counter_kill(attacker, defender, result, attacker_player)
+	# Omen spiteful_echo — foe that wins vs anointed is also destroyed
+	if result.attacker_destroyed and not result.defender_destroyed \
+			and OmenBattleApplier.anoint_has_type(defender.card_name, "destroy_reckoning_winner"):
+		result.defender_destroyed = true
+		var _se: Dictionary = OmenBattleApplier.anoint_effect(
+			defender.card_name, "destroy_reckoning_winner")
+		result.defender_crystal_loss = 0 if bool(_se.get("foe_pays_no_cost", false)) else defender.crystal_cost
+		result.messages.append("Omen: Spiteful Echo destroys %s!" % defender.card_name)
+
+	# Omen gamblers_grace — survive once when destroyed while on a bluff cell
+	if result.attacker_destroyed and attacker_player >= 0:
+		var _ag_pos: Vector2i = GameState.find_card_position(attacker_player, attacker)
+		if _ag_pos.x >= 0 and OmenBattleApplier.try_survive_reckoning_vs_bluff(
+				attacker, not GameState.get_bluff(attacker_player, _ag_pos.x, _ag_pos.y).is_empty()):
+			result.attacker_destroyed = false
+			result.attacker_crystal_loss = 0
+			result.destruction_blocked_attacker = true
+			result.messages.append("Omen Gambler's Grace: %s survives on a bluff!" % attacker.card_name)
+	if result.defender_destroyed and defender_player >= 0:
+		var _dg_pos: Vector2i = GameState.find_card_position(defender_player, defender)
+		if _dg_pos.x >= 0 and OmenBattleApplier.try_survive_reckoning_vs_bluff(
+				defender, not GameState.get_bluff(defender_player, _dg_pos.x, _dg_pos.y).is_empty()):
+			result.defender_destroyed = false
+			result.defender_crystal_loss = 0
+			result.destruction_blocked_defender = true
+			result.messages.append("Omen Gambler's Grace: %s survives on a bluff!" % defender.card_name)
 
 	# "When this card defends" — fire regardless of battle outcome (win/loss/tie).
 	_apply_on_defend_triggers(defender, attacker, result, defender_player)
@@ -363,6 +422,32 @@ static func _resolve_character_vs_character(
 
 	# Pit Lord: destroyed after Reckoning with Divine regardless of role or outcome.
 	_apply_destroy_after_divine_battle(attacker, defender, result)
+
+static func _apply_omen_bane_counter_kill(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResult,
+		attacker_player: int) -> void:
+	if attacker == null or defender == null:
+		return
+	if attacker.effect_nullified_until >= GameState.turn_number:
+		return
+	for entry: Variant in OmenBattleApplier.effects_of_type("bane_counter_kill"):
+		if not entry is Dictionary:
+			continue
+		var e: Dictionary = entry as Dictionary
+		if not OmenBattleApplier._card_matches_effect_unit(attacker, e, attacker_player):
+			continue
+		var want: String = str((e.get("effect", {}) as Dictionary).get("target_affinity", "")).to_upper()
+		var def_aff: String = OmenBattleApplier._affinity_name(defender.affinity)
+		if want.is_empty() or def_aff != want:
+			continue
+		if not result.defender_destroyed:
+			result.defender_destroyed = true
+			result.defender_crystal_loss = defender.crystal_cost
+			result.messages.append("Omen bane: %s destroys %s!" % [attacker.card_name, defender.card_name])
+		# Attacker is not required to win ATK/DEF — bane forces the kill.
+		break
 
 # ─────────────────────────────────────────────────────────────
 # Divine battle ability helpers
@@ -537,7 +622,8 @@ static func _resolve_trap(
 
 	# Immune to zero-cost traps
 	if trap_data.crystal_cost == 0:
-		if attacker.ability_type == CharacterData.AbilityType.IMMUNE_ZERO_COST_TRAPS:
+		if attacker.ability_type == CharacterData.AbilityType.IMMUNE_ZERO_COST_TRAPS \
+				or OmenBattleApplier.has_negate_zero_cost_traps(attacker):
 			result.messages.append("%s is immune to 0-cost Traps!" % attacker.card_name)
 			result.special_trigger = "trap_nullified"
 			return
@@ -546,13 +632,35 @@ static func _resolve_trap(
 			result.special_trigger = "trap_nullified"
 			return
 
-	# Immune to all traps
-	if attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS:
+	# Immune to all traps (ability, mutagen aegis, null_aegis)
+	if attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS \
+			or OmenBattleApplier.has_full_trap_tech_immunity(attacker):
 		result.messages.append("%s cannot be destroyed by Traps!" % attacker.card_name)
-		if not _silent_mode:
+		if not _silent_mode and attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS:
 			attacker.current_def = max(0, attacker.current_def - 20)
 			result.messages.append("%s permanently loses 20 DEF from trap attack!" % attacker.card_name)
 		result.special_trigger = "trap_nullified"
+		return
+
+	# Omen skeptics_charm — immune to traps while standing on a bluff cell
+	var _atk_pos: Vector2i = GameState.find_card_position(attacker_player, attacker)
+	if _atk_pos.x >= 0 and OmenBattleApplier.has_trap_immunity_on_bluff(
+			attacker, attacker_player, _atk_pos):
+		result.messages.append("Omen: %s ignores traps on a bluff cell!" % attacker.card_name)
+		result.special_trigger = "trap_nullified"
+		return
+
+	# Omen soft_step — force a coin; Tails nullifies the trap
+	if OmenBattleApplier.has_trap_coin_negate(attacker):
+		result.special_params = {
+			"trap_name": trap.card_name,
+			"trap_data": trap_data,
+			"attacker_player": attacker_player,
+			"omen_soft_step": true,
+		}
+		result.special_trigger = "trap_effect"
+		var _tc_soft: int = trap_data.crystal_cost
+		result.defender_crystal_loss = _tc_soft
 		return
 
 	# Trap crystal loss to trap owner (defender pays trap cost); apply dungeon discounts
@@ -681,6 +789,13 @@ static func _get_effective_atk(
 			and attacker_player >= 0:
 		var _avg_atk: Dictionary = _average_field_atk_def(attacker_player)
 		atk = int(_avg_atk.get("atk", atk))
+
+	# Omen conditional_stat_with_flag / coin_flip_reckoning_stat (ATK portion)
+	atk += OmenBattleApplier.conditional_atk_bonus(attacker, attacker_player)
+	var _dyn: Vector2i = OmenBattleApplier.dynamic_stat_bonuses(attacker, attacker_player)
+	atk += _dyn.x
+	if target_pos.x >= 0:
+		atk += OmenBattleApplier.bluff_atk_bonus(attacker, GameState.get_opponent(attacker_player), target_pos)
 
 	match attacker.ability_type:
 		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
@@ -936,6 +1051,13 @@ static func _get_effective_def(
 			and defender_player >= 0:
 		var _def_avg: Dictionary = _average_field_atk_def(defender_player)
 		def_val = int(_def_avg.get("def", def_val))
+
+	if defender_player >= 0:
+		def_val += OmenBattleApplier.def_bonus_vs_different_affinity(
+			defender, attacker, defender_player)
+		def_val += OmenBattleApplier.conditional_def_bonus(defender, defender_player)
+		var _dyn_d: Vector2i = OmenBattleApplier.dynamic_stat_bonuses(defender, defender_player)
+		def_val += _dyn_d.y
 
 	match defender.ability_type:
 		CharacterData.AbilityType.DEF_BONUS_VS_AFFINITY:
@@ -1550,6 +1672,14 @@ static func validate_attack_target(
 				"ok": false,
 				"reason": "Magnet Elemental: Non-Arcane units must target it instead of other exposed units.",
 			}
+
+	# Omen dread_magnet taunt
+	var _omen_taunt: GameState.CardInstance = OmenBattleApplier.omen_taunt_target(defender_player)
+	if _omen_taunt != null and defender != _omen_taunt:
+		return {
+			"ok": false,
+			"reason": "Omen: You must attack %s." % _omen_taunt.card_name,
+		}
 
 	return {"ok": true, "reason": ""}
 

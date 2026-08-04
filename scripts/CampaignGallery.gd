@@ -109,6 +109,7 @@ var _carousel_first_slide: bool = true
 var _gallery_cards: Array[Control] = []
 var _gallery_scroll: ScrollContainer = null
 var _hud_layer: Control = null
+var _header_title: Label = null
 var _selected_card_ctrl: Control = null
 var _exit_anim_running: bool = false
 var _exit_anim_done: bool = false
@@ -184,6 +185,7 @@ func _build_ui() -> void:
 	add_child(_hud_layer)
 
 	var header: Dictionary = MenuScreenHeader.build_top_bar(_hud_layer, "CAMPAIGN", queue_free)
+	_header_title = header.get("title") as Label
 	_style_gallery_header(header)
 	_raise_header_z(header)
 
@@ -837,6 +839,7 @@ func _build_card(d: Dictionary) -> Control:
 	l1.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
 	l1.add_theme_constant_override("outline_size", 3)
 	card.add_child(l1)
+	card.set_meta("_gallery_line1", l1)
 
 	# ── Line 2 (stage) ────────────────────────────────────────
 	var l2 := Label.new()
@@ -848,6 +851,7 @@ func _build_card(d: Dictionary) -> Control:
 	l2.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
 	l2.add_theme_constant_override("outline_size", 3)
 	card.add_child(l2)
+	card.set_meta("_gallery_line2", l2)
 
 	_gallery_cards.append(card)
 	return card
@@ -970,6 +974,20 @@ func _reset_capsule_relief(card: Control) -> void:
 ## Called by CapsuleExitFx when the approved logo stamp slam begins.
 func on_capsule_exit_logo_stamp_landed() -> void:
 	_relieve_all_capsule_fog(_CAPSULE_STAMP_FOG_RELIEF_SEC)
+	_hide_gallery_chrome_for_stamp_exit()
+
+
+## Drop CAMPAIGN title + line1/line2 under every capsule during exit stamp.
+func _hide_gallery_chrome_for_stamp_exit() -> void:
+	if _header_title != null and is_instance_valid(_header_title):
+		_header_title.visible = false
+	for card: Control in _gallery_cards:
+		if card == null or not is_instance_valid(card):
+			continue
+		for key: StringName in [&"_gallery_line1", &"_gallery_line2"]:
+			var lbl_v: Variant = _card_meta(card, key)
+			if lbl_v is CanvasItem and is_instance_valid(lbl_v as Object):
+				(lbl_v as CanvasItem).visible = false
 
 
 func _kill_capsule_stamp_fog_tween() -> void:

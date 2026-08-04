@@ -13,6 +13,7 @@ const ANIMATION_REGISTRY: Array = [
 	{"label": "(none)",                                "key": ""},
 	{"label": "Vellum Card Commence — flip",           "key": "animation_vellum_card_commence_flip"},
 	{"label": "Vellum Card Commence — facedown",       "key": "animation_vellum_card_commence_facedown"},
+	{"label": "Omen Thought Flow",                     "key": "animation_omen_thought_flow"},
 ]
 const COLOR_PRESETS: Array = [
 	["R", "#FF4444"],
@@ -30,7 +31,7 @@ const CHOICE_COND_TYPES: Array[String] = [
 	"var_greater", "var_less", "at_node",
 	"flag_equals", "flag_not_equals"]
 const CHOICE_ACTION_TYPES: Array[String] = [
-	"set_var", "give_item", "remove_item", "set_flag", "show_message"]
+	"set_var", "give_item", "remove_item", "set_flag", "show_message", "grant_omen"]
 
 # ─────────────────────────────────────────────────────────────
 # State
@@ -197,6 +198,9 @@ var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
 var _f_call_scene_keep_bgm: CheckBox = null
 var _f_show_messenger: OptionButton = null
+var _f_show_polaroid: LineEdit = null
+var _f_polaroid_dismiss_mode: OptionButton = null
+var _f_dismiss_polaroid: CheckBox = null
 var _detective_note_rows: Array = []
 var _detective_note_rows_vbox: VBoxContainer = null
 var _f_detective_note_icon: OptionButton = null
@@ -769,7 +773,7 @@ func _build_fields() -> void:
 	# ── Exploration actions (during active session) ───────────
 	_section(v, "EXPLORATION ACTIONS")
 	var expl_act_hint := Label.new()
-	expl_act_hint.text = "Runs when this beat is shown during an active exploration session (set_flag → SaveManager.exploration_flags)."
+	expl_act_hint.text = "Runs when this beat is shown (set_flag → SaveManager.exploration_flags). grant_omen value = omen group CSV (e.g. chapter_1)."
 	expl_act_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	expl_act_hint.add_theme_font_size_override("font_size", 12)
 	expl_act_hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
@@ -1345,6 +1349,27 @@ func _build_fields() -> void:
 			"Messenger Vault conversation shown by this beat")
 	MessengerVault.populate_conversation_option(_f_show_messenger)
 
+	# ── Polaroid photo overlay ────────────────────────────────
+	_section(v, "POLAROID PHOTO  (show a framed photo overlay)")
+	var polaroid_hint := Label.new()
+	polaroid_hint.text = (
+		"Shows a polaroid-framed photo after the beat's text. "
+		+ "Dismiss on click: playback waits until the player clicks / presses a key. "
+		+ "Keep until dismiss command: photo stays up while beats continue — close it with Dismiss Polaroid on a later beat.")
+	polaroid_hint.add_theme_font_size_override("font_size", 12)
+	polaroid_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	polaroid_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(polaroid_hint)
+	_f_show_polaroid = _row_le(v, "Photo", "res://path/to/photo.png  |  empty = none")
+	_add_browse(_f_show_polaroid,
+		PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp;Image"]),
+		"res://assets/textures/")
+	_f_polaroid_dismiss_mode = _row_opt(v, "Dismiss",
+		["Dismiss on click", "Keep until dismiss command"],
+		"How the polaroid photo is closed")
+	_f_dismiss_polaroid = _row_cb(v, "Dismiss polaroid",
+		"Close a polaroid that was shown with Keep until dismiss command")
+
 	# ── Detective Note ────────────────────────────────────────
 	_section(v, "DETECTIVE NOTE  (grant clues / topics when this beat is shown)")
 	var note_hint := Label.new()
@@ -1587,6 +1612,12 @@ func _connect_static_signals() -> void:
 	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_show_messenger != null:
 		_f_show_messenger.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_show_polaroid != null:
+		_f_show_polaroid.text_changed.connect(func(_s: String) -> void: ch.call())
+	if _f_polaroid_dismiss_mode != null:
+		_f_polaroid_dismiss_mode.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_dismiss_polaroid != null:
+		_f_dismiss_polaroid.toggled.connect(func(_on: bool) -> void: ch.call())
 	if _f_detective_note_icon != null:
 		_f_detective_note_icon.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_show_detective_note != null:
@@ -2986,6 +3017,26 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 	if beat.get("show_note_stamp", null) is Dictionary:
 		var stamp_spec: Dictionary = beat["show_note_stamp"] as Dictionary
 		return prefix + "[note stamp: %s]" % str(stamp_spec.get("stamp", "?"))
+	if bool(beat.get("dismiss_polaroid", false)):
+		return prefix + "[dismiss polaroid]"
+	var polaroid_raw: Variant = beat.get("show_polaroid", null)
+	var polaroid_path: String = ""
+	var polaroid_manual: bool = false
+	if polaroid_raw is Dictionary:
+		var pd: Dictionary = polaroid_raw as Dictionary
+		polaroid_path = str(pd.get("path", pd.get("photo", ""))).strip_edges()
+		if pd.has("dismiss_on_click"):
+			polaroid_manual = not bool(pd.get("dismiss_on_click", true))
+		elif str(pd.get("dismiss", "")).strip_edges().to_lower() in ["manual", "command"]:
+			polaroid_manual = true
+	else:
+		polaroid_path = str(polaroid_raw).strip_edges()
+	if not polaroid_path.is_empty():
+		var mode_tag: String = "keep" if polaroid_manual else "click"
+		return prefix + "[polaroid/%s: %s]" % [mode_tag, polaroid_path.get_file()]
+	var msgr_id: String = str(beat.get("show_messenger", "")).strip_edges()
+	if not msgr_id.is_empty():
+		return prefix + "[messenger: %s]" % msgr_id
 
 	var choices: Variant = beat.get("choices", null)
 	if choices is Array and not (choices as Array).is_empty():
@@ -3321,6 +3372,9 @@ func _update_action_row_placeholders(
 		"show_message":
 			key_le.placeholder_text = "unused"
 			val_le.placeholder_text = "message text"
+		"grant_omen":
+			key_le.placeholder_text = "unused"
+			val_le.placeholder_text = "group CSV (e.g. chapter_1)"
 		_:
 			key_le.placeholder_text = "key"
 			val_le.placeholder_text = "value"
@@ -4227,6 +4281,24 @@ func _populate_fields() -> void:
 		MessengerVault.populate_conversation_option(_f_show_messenger)
 		MessengerVault.select_conversation_option(
 			_f_show_messenger, str(b.get("show_messenger", "")).strip_edges())
+	if _f_show_polaroid != null:
+		var polaroid_raw: Variant = b.get("show_polaroid", null)
+		var polaroid_path: String = ""
+		var dismiss_on_click: bool = true
+		if polaroid_raw is Dictionary:
+			var pd: Dictionary = polaroid_raw as Dictionary
+			polaroid_path = str(pd.get("path", pd.get("photo", ""))).strip_edges()
+			if pd.has("dismiss_on_click"):
+				dismiss_on_click = bool(pd.get("dismiss_on_click", true))
+			elif str(pd.get("dismiss", "")).strip_edges().to_lower() in ["manual", "command"]:
+				dismiss_on_click = false
+		else:
+			polaroid_path = str(polaroid_raw).strip_edges()
+		_f_show_polaroid.text = polaroid_path
+		if _f_polaroid_dismiss_mode != null:
+			_f_polaroid_dismiss_mode.selected = 0 if dismiss_on_click else 1
+	if _f_dismiss_polaroid != null:
+		_f_dismiss_polaroid.button_pressed = bool(b.get("dismiss_polaroid", false))
 
 	var note_raw: Variant = b.get("detective_note", [])
 	_rebuild_detective_note_rows(note_raw if note_raw is Array else [])
@@ -4731,6 +4803,21 @@ func _collect_beat() -> Dictionary:
 		var msgr_id: String = MessengerVault.option_conversation_id(_f_show_messenger)
 		if not msgr_id.is_empty():
 			b["show_messenger"] = msgr_id
+	if _f_show_polaroid != null:
+		var polaroid_path: String = _f_show_polaroid.text.strip_edges()
+		if not polaroid_path.is_empty():
+			var dismiss_on_click: bool = true
+			if _f_polaroid_dismiss_mode != null and _f_polaroid_dismiss_mode.selected == 1:
+				dismiss_on_click = false
+			if dismiss_on_click:
+				b["show_polaroid"] = polaroid_path
+			else:
+				b["show_polaroid"] = {
+					"path": polaroid_path,
+					"dismiss_on_click": false,
+				}
+	if _f_dismiss_polaroid != null and _f_dismiss_polaroid.button_pressed:
+		b["dismiss_polaroid"] = true
 
 	var note_actions: Array = _collect_detective_note_actions()
 	if not note_actions.is_empty():

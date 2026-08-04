@@ -226,6 +226,12 @@ enum NodeType {
 ##                                           (empty = random from assets/audio/sfx/mumbling/)
 ##     "smoke_image": String                — optional Polaroid Mode 2 smoke texture for this spot
 ##                                           (empty = random from magitech smoke VFX pool)
+##     "hidden_until_camera_shutter": bool  — completely hidden until any Polaroid Mode 2 photo
+##                                           is taken in this room. After shutter: invisible
+##                                           hitbox-only in the room; Polaroid photos show a
+##                                           lens flare until hide_after_interact dismisses it.
+##     "lens_flare_image": String           — optional texture for that Polaroid lens flare
+##                                           (empty = exploration/decorations/icon_lens_flare.png)
 ##     "vn_scene": String                  — legacy field; treated as play_vn action if actions empty
 ##   }
 @export var clickable_spots: Array = []

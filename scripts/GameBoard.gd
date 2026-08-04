@@ -351,6 +351,7 @@ var _observer_peek_mode: int = 0
 var _observer_peek_panel: Control = null
 var _observer_peek_btns: Array[Button] = []
 var _tech_used_this_turn: Array[bool] = [false, false]
+var _tech_plays_this_turn: Array[int] = [0, 0]
 var _tech_reset_turn: int = -1   # turn_number when _tech_used_this_turn was last cleared
 var _ai_turn_action_started: Array[bool] = [false, false]  # AI already began this player's turn
 
@@ -472,6 +473,7 @@ var _handoff_callback: Callable = Callable()
 # ── Bribe choice overlay (built at runtime)
 var _bribe_overlay: Control = null
 var _bribe_desc_lbl: Label = null
+var _bribe_pass_btn: Button = null
 
 # ── Binary ability-choice overlay (awaiting_trap_choice prompts)
 var _ability_choice_overlay: Control = null
@@ -841,11 +843,30 @@ func _force_cancel_pending_human_prompts(timed_out: bool = false) -> void:
 		_force_decline_pending_ability_choice()
 		return
 	if _bribe_overlay != null and _bribe_overlay.visible:
+		if OmenBattleApplier.cannot_decline_named("Bribe"):
+			if timed_out:
+				GameState.post_message("Bribe: timed out — must reveal (Omen).")
+			# Force reveal path when possible; otherwise finish without declining.
+			if _has_bribe_reveal_targets(GameState.get_opponent(GameState.current_player)):
+				_on_bribe_reveal_pressed()
+			else:
+				_hide_bribe_overlay()
+				_finish_tech_action(GameState.current_player)
+			return
 		if timed_out:
 			GameState.post_message("Bribe: timed out — passed.")
 		_on_bribe_pass_pressed()
 		return
 	if _tech_overlay_mode == "blackmail":
+		if OmenBattleApplier.cannot_decline_named("Blackmail"):
+			if timed_out:
+				GameState.post_message("Blackmail: timed out — discard forced (Omen).")
+			_close_blackmail_tech_overlay()
+			if turn_manager != null:
+				var hand: Array = GameState.tech_hands[GameState.current_player]
+				var pick: String = str(hand[0]) if not hand.is_empty() else ""
+				turn_manager.resolve_blackmail_choice(pick)
+			return
 		if timed_out:
 			GameState.post_message("Blackmail: timed out — ended turn.")
 		_close_blackmail_tech_overlay()
@@ -1407,13 +1428,13 @@ func _build_bribe_overlay() -> void:
 	hbox.add_child(reveal_btn)
 
 	# "Pass" button
-	var pass_btn := Button.new()
-	pass_btn.text = "Pass"
-	pass_btn.custom_minimum_size = Vector2(120.0, 48.0)
-	pass_btn.add_theme_font_size_override("font_size", 14)
-	pass_btn.pressed.connect(_on_bribe_pass_pressed)
-	_style_overlay_button(pass_btn, true)
-	hbox.add_child(pass_btn)
+	_bribe_pass_btn = Button.new()
+	_bribe_pass_btn.text = "Pass"
+	_bribe_pass_btn.custom_minimum_size = Vector2(120.0, 48.0)
+	_bribe_pass_btn.add_theme_font_size_override("font_size", 14)
+	_bribe_pass_btn.pressed.connect(_on_bribe_pass_pressed)
+	_style_overlay_button(_bribe_pass_btn, true)
+	hbox.add_child(_bribe_pass_btn)
 
 func _build_ability_choice_overlay() -> void:
 	_ability_choice_overlay = Control.new()
@@ -1498,7 +1519,15 @@ func _hide_ability_choice_overlay() -> void:
 
 func _show_bribe_overlay(opponent: int) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
-	_bribe_desc_lbl.text = "Player %d: Reveal one of your units to gain 700 Crystals, or pass." % (opponent + 1)
+	var force: bool = OmenBattleApplier.cannot_decline_named("Bribe")
+	if force:
+		_bribe_desc_lbl.text = "Player %d: Reveal one of your units to gain 700 Crystals. (Cannot decline)" % (opponent + 1)
+		if _bribe_pass_btn != null:
+			_bribe_pass_btn.visible = false
+	else:
+		_bribe_desc_lbl.text = "Player %d: Reveal one of your units to gain 700 Crystals, or pass." % (opponent + 1)
+		if _bribe_pass_btn != null:
+			_bribe_pass_btn.visible = true
 	_bribe_overlay.visible = true
 	_start_human_prompt_timeout()
 
@@ -1522,6 +1551,9 @@ func _on_bribe_reveal_pressed() -> void:
 	_highlight_tech_targets("bribe_reveal")
 
 func _on_bribe_pass_pressed() -> void:
+	if OmenBattleApplier.cannot_decline_named("Bribe"):
+		GameState.show_center_message("Omen: Bribe cannot be declined.")
+		return
 	_hide_bribe_overlay()
 	await _await_prompt_dismiss_delay()
 	GameState.post_message("Bribe: Opponent passed.")
@@ -4262,11 +4294,16 @@ func _perform_pending_union() -> void:
 	var first_cell: Vector2i = _pending_union_selected_materials[0]
 	# Collect material labels BEFORE removal for the battle log
 	var material_labels: Array[String] = []
+	var material_names: Array = []
 	for _mc: Vector2i in _pending_union_selected_materials:
 		var _card: GameState.CardInstance = GameState.get_card(player, _mc.x, _mc.y)
 		material_labels.append(BattleLogFormat.format_card(_card))
-	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost)
-	GameState.lose_crystals(player, _effective_union_cost(u.summon_cost, player), "union")
+		material_names.append(_card.card_name)
+	var _omen_mat: Dictionary = OmenBattleApplier.union_material_bonuses(material_names)
+	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost + omen material mult)
+	var _union_pay: int = _effective_union_cost(u.summon_cost, player)
+	_union_pay = int(round(float(_union_pay) * float(_omen_mat.get("cost_mult", 1.0))))
+	GameState.lose_crystals(player, _union_pay, "union")
 	await GameState.wait_crystal_animation()
 	if _is_ai_turn():
 		_restart_ai_watchdog()
@@ -4274,12 +4311,16 @@ func _perform_pending_union() -> void:
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
 		var _mat_card: GameState.CardInstance = GameState.get_card(player, cell.x, cell.y)
+		# Omen rune algiz — material on rune survives the summon
+		if OmenBattleApplier.algiz_protects_material(player, cell.x, cell.y):
+			GameState.post_message("Rune Algiz: %s survives as material!" % _mat_card.card_name)
+			continue
 		GameState.queue_union_material_turn_end_revive(player, cell.x, cell.y, _mat_card)
 		GameState.remove_union_material(player, cell.x, cell.y)
 	# Material abilities (Zealot, Crystal Rabbit, etc.)
-	var _union_atk_boost: int = 0
-	var _union_def_boost: int = 0
-	var _union_crystal_gain: int = 0
+	var _union_atk_boost: int = int(_omen_mat.get("atk", 0))
+	var _union_def_boost: int = int(_omen_mat.get("def", 0))
+	var _union_crystal_gain: int = int(_omen_mat.get("crystals", 0))
 	for _zm: Vector2i in _pending_union_selected_materials:
 		var _zm_card: GameState.CardInstance = GameState.get_card(player, _zm.x, _zm.y)
 		if _zm_card.card_type != "character":
@@ -6689,31 +6730,9 @@ func _reload_hud_skin(_new_version: String = "") -> void:
 		else:
 			playmat_rect.texture = HudSkin.hud_tex("ui_playmat_default.png")
 			_apply_playmat_skin_layout(playmat_rect)
-
-
-## Show memorized exploration room as battle backdrop; hide black playmat underlay.
-## Falls back to normal playmat when no valid path is stored.
-func _apply_exploration_battle_backdrop() -> void:
-	var playmat_bg: CanvasItem = get_node_or_null("PlaymatBg") as CanvasItem
-	var playmat_rect: TextureRect = get_node_or_null("Background") as TextureRect
-	if not GameState.has_exploration_battle_backdrop():
-		if playmat_bg != null:
-			playmat_bg.visible = true
-		return
-	var tex: Texture2D = load(GameState.battle_exploration_bg_path) as Texture2D
-	if tex == null:
-		if playmat_bg != null:
-			playmat_bg.visible = true
-		return
-	if playmat_bg != null:
-		playmat_bg.visible = false
-	if playmat_rect != null:
-		playmat_rect.visible = true
-		playmat_rect.texture = tex
-		playmat_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		playmat_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		playmat_rect.scale = Vector2.ONE
-		playmat_rect.pivot_offset = Vector2.ZERO
+	# Always refresh HUD chrome / widgets. (Previously this block lived only inside
+	# `_apply_exploration_battle_backdrop`, so Quick Duel / non-exploration battles
+	# never applied v3 Tech/Void socket layout and chips stayed at create offsets.)
 	CTX_ICON_ATTACK = HudSkin.context_menu_attack_tex()
 	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
@@ -6751,12 +6770,40 @@ func _apply_exploration_battle_backdrop() -> void:
 		_apply_stack_chip_skin(_p2_void_stack, "ui_void_stack_chip.png")
 	_refresh_v3_chrome_textures()
 	_apply_battle_hud_skin_layout()
+	# Size may still be 0 during _ready — re-seat chips after the first layout pass.
+	call_deferred("_apply_tech_void_stack_layout")
 	_v3_sync_circuit_patrol_skin()
 	# Match current battle HUD visibility (setup / battle / game over).
 	var hud_show: bool = false
 	if is_instance_valid(_p1_crystal_row):
 		hud_show = _p1_crystal_row.visible
 	_sync_v3_chrome_visibility(hud_show)
+
+
+## Show memorized exploration room as battle backdrop; hide black playmat underlay.
+## Falls back to normal playmat when no valid path is stored.
+## Playmat only — HUD chrome/layout is always applied by `_reload_hud_skin`.
+func _apply_exploration_battle_backdrop() -> void:
+	var playmat_bg: CanvasItem = get_node_or_null("PlaymatBg") as CanvasItem
+	var playmat_rect: TextureRect = get_node_or_null("Background") as TextureRect
+	if not GameState.has_exploration_battle_backdrop():
+		if playmat_bg != null:
+			playmat_bg.visible = true
+		return
+	var tex: Texture2D = load(GameState.battle_exploration_bg_path) as Texture2D
+	if tex == null:
+		if playmat_bg != null:
+			playmat_bg.visible = true
+		return
+	if playmat_bg != null:
+		playmat_bg.visible = false
+	if playmat_rect != null:
+		playmat_rect.visible = true
+		playmat_rect.texture = tex
+		playmat_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		playmat_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		playmat_rect.scale = Vector2.ONE
+		playmat_rect.pivot_offset = Vector2.ZERO
 
 
 ## Skin-dependent HUD geometry / chrome (v3 layouts + hover wiring targets).
@@ -9038,9 +9085,12 @@ func _refresh_tech_hand(player: int = -1) -> void:
 		and "stone_age" in GameState.active_dungeon_modifiers
 	var _tech_royale: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 		and "tech_royale" in GameState.active_dungeon_modifiers
+	var _max_techs: int = 1
+	if player == 0:
+		_max_techs = maxi(1, OmenBattleApplier.max_tech_per_turn())
 	var can_use_tech: bool = (not conceal
 		and GameState.current_phase == GameState.Phase.MODE_SELECT
-		and (not _tech_used_this_turn[player] or _tech_royale)
+		and (_tech_plays_this_turn[player] < _max_techs or _tech_royale)
 		and player == GameState.current_player
 		and not _stone_age)
 
@@ -9333,15 +9383,22 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 			_style_overlay_button(select_btn, true)
 			col.add_child(select_btn)
 
-	var end_turn_btn := Button.new()
-	end_turn_btn.custom_minimum_size = Vector2(0.0, 52.0)
-	end_turn_btn.text = "END TURN"
-	end_turn_btn.add_theme_font_size_override("font_size", 16)
-	end_turn_btn.pressed.connect(func() -> void:
-		_close_blackmail_tech_overlay()
-		turn_manager.resolve_blackmail_choice(""))
-	_style_overlay_button(end_turn_btn, true)
-	vbox.add_child(end_turn_btn)
+	var force_blackmail: bool = OmenBattleApplier.cannot_decline_named("Blackmail")
+	if force_blackmail:
+		title.text = "BLACKMAIL — Select a Tech to discard (Cannot decline)"
+	if not force_blackmail or hand.is_empty():
+		var end_turn_btn := Button.new()
+		end_turn_btn.custom_minimum_size = Vector2(0.0, 52.0)
+		end_turn_btn.text = "END TURN"
+		end_turn_btn.add_theme_font_size_override("font_size", 16)
+		end_turn_btn.pressed.connect(func() -> void:
+			if OmenBattleApplier.cannot_decline_named("Blackmail") and not hand.is_empty():
+				GameState.show_center_message("Omen: Blackmail cannot be declined.")
+				return
+			_close_blackmail_tech_overlay()
+			turn_manager.resolve_blackmail_choice(""))
+		_style_overlay_button(end_turn_btn, true)
+		vbox.add_child(end_turn_btn)
 
 	SFXManager.play(SFXManager.SFX_POPUP)
 	_start_human_prompt_timeout()
@@ -9352,6 +9409,10 @@ func _on_awaiting_blackmail_tech_select(player: int) -> void:
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
 		var discarded: String = _active_ai.decide_blackmail_tech()
+		if OmenBattleApplier.cannot_decline_named("Blackmail") and discarded == "":
+			var hand: Array = GameState.tech_hands[player]
+			if not hand.is_empty():
+				discarded = str(hand[0])
 		turn_manager.resolve_blackmail_choice(discarded)
 	else:
 		_show_blackmail_tech_overlay(player)
@@ -9766,7 +9827,11 @@ func _start_ai_turn_flow() -> void:
 	_active_ai.decide_bluff()
 	if not showed_reaction_chat:
 		_start_ai_thinking()
-	if (_tech_used_this_turn[GameState.current_player] and not _tech_royale_ai) \
+	var _ai_max_tech: int = 1
+	if GameState.current_player == 0:
+		_ai_max_tech = maxi(1, OmenBattleApplier.max_tech_per_turn())
+	var _ai_tech_done: bool = _tech_plays_this_turn[GameState.current_player] >= _ai_max_tech
+	if (_ai_tech_done and not _tech_royale_ai) \
 			or _ai_turn_action_started[GameState.current_player]:
 		_request_ai_continue_after_union()
 	else:
@@ -9858,6 +9923,7 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 		if GameState.turn_number != _tech_reset_turn:
 			_tech_reset_turn = GameState.turn_number
 			_tech_used_this_turn[GameState.current_player] = false
+			_tech_plays_this_turn[GameState.current_player] = 0
 			_ai_turn_action_started[GameState.current_player] = false
 	_update_tech_stacks()
 	_update_void_stacks()
@@ -9993,7 +10059,12 @@ func _on_battle_overlay_pause_requested() -> void:
 		_current_battle_overlay.pause_for_choice()
 
 func _on_tech_played(player: int, tech_name: String) -> void:
-	_tech_used_this_turn[player] = true
+	_tech_plays_this_turn[player] += 1
+	var _max_techs_p: int = 1
+	if player == 0:
+		_max_techs_p = maxi(1, OmenBattleApplier.max_tech_per_turn())
+	_tech_used_this_turn[player] = _tech_plays_this_turn[player] >= _max_techs_p
+	GameState.omen_stat_source_card = tech_name
 	_update_tech_stacks()
 	_refresh_all_grids()
 	if _tech_resolve_blocker != null:
@@ -11607,6 +11678,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type == "character" and card.face_up \
 				and card.affinity == CharacterData.Affinity.DIVINE \
 				and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY):
+			if not OmenBattleApplier.effects_of_type("swap_defender_survival").is_empty() \
+					and "omen_swap_defender" not in card.flags:
+				card.flags.append("omen_swap_defender")
 			GameState.destroy_card(opponent, pos.x, pos.y)
 			GameState.post_message("Archbishop redirected destruction to %s." % card.card_name)
 			turn_manager.complete_archbishop_redirect()
@@ -12058,6 +12132,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	_finish_tech_action(current_player)
 
 func _finish_tech_action(player: int) -> void:
+	GameState.omen_stat_source_card = ""
 	_finish_tech_action_when_ready(player)
 
 func _finish_tech_action_when_ready(player: int) -> void:

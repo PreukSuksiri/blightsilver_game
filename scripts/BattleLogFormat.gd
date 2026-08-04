@@ -411,10 +411,12 @@ static func _is_resurrection_revive(card: GameState.CardInstance) -> bool:
 
 
 static func _overlay_flag_label(flag: String) -> String:
-	match flag:
+	match flag.strip_edges().to_lower():
 		"venom": return "Venom Flag"
 		"mutagen": return "Mutagen Flag"
 		"berserk": return "Berserk Flag"
+		"princess": return "Princess Flag"
+		"europa": return "Europa Flag"
 		"expose_destroy_pending": return "Expose Destroy Pending"
 		"indestructible_used": return "Indestructible Used"
 		_: return "%s Flag" % flag.capitalize().replace("_", " ")

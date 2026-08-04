@@ -79,7 +79,7 @@ const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
 const EMBEDDED_POPUP_LAYER: int = 1024
 const CURSOR_LAYER: int = EMBEDDED_POPUP_LAYER + 1  # above dropdowns; below editor popup overlays
 const POPUP_CURSOR_LAYER: int = 4096
-const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
+const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk", "princess", "Europa"]
 
 # Decoy Puppet / Echo Barrier / Guerrilla Tactics battle flow (declared before inner class)
 var attack_cost_block_max: int = -1
@@ -215,6 +215,16 @@ class CardInstance:
 		return base
 
 	func clear_temp_buffs() -> void:
+		# Omen lingering_*: keep temp stats for +1 clear cycle.
+		var _extend_idx: int = -1
+		for _fi: int in range(flags.size()):
+			var _fl: String = str(flags[_fi])
+			if _fl.begins_with("omen_temp_extend_"):
+				_extend_idx = _fi
+				break
+		if _extend_idx >= 0:
+			flags.remove_at(_extend_idx)
+			return
 		temp_atk_bonus = 0
 		temp_def_bonus = 0
 		atk_debuff = 0
@@ -288,13 +298,29 @@ class CardInstance:
 			return false
 		return multi_attack_count > 0 and multi_attack_count < max_attacks
 
+	func get_omen_extra_attack_max(owner_player: int = 0) -> int:
+		var extra: int = OmenBattleApplier.get_unit_extra_attacks(self, owner_player)
+		if extra <= 0:
+			return 0
+		return 1 + extra
+
+	func has_pending_omen_extra_attacks(owner_player: int = 0) -> bool:
+		if card_type != "character" or attacked_this_turn:
+			return false
+		var max_attacks: int = get_omen_extra_attack_max(owner_player)
+		if max_attacks <= 1:
+			return false
+		return multi_attack_count > 0 and multi_attack_count < max_attacks
+
 	## Golden Senju chain, bonus-attack flags, or multi-attack-any chain still available.
 	func has_pending_bonus_attack_chain() -> bool:
 		return (
 			has_pending_multi_attack_non_char()
 			or bonus_attack_pending
 			or has_pending_multi_attack_any()
-			or has_pending_mutagen_immediate_multi_attack())
+			or has_pending_mutagen_immediate_multi_attack()
+			or has_pending_omen_extra_attacks(0)
+			or has_pending_omen_extra_attacks(1))
 
 # ─────────────────────────────────────────────────────────────
 # Runtime State
@@ -347,6 +373,16 @@ var omen_anoint_effects: Dictionary = {}
 var omen_union_cost_multiplier: float = 1.0
 var omen_reward_credit_pct: float = 0.0
 var omen_block_p0_first_turn_attacks: bool = false
+var omen_attack_crystal_cost: int = 0
+var omen_max_tech_per_turn: int = 1
+## Last destroy source tag for phoenix_bargain: own_tech | own_ability | omen | foe | other
+var omen_destruction_source: String = ""
+## Card name whose anointed stat_duration should apply to the next temp ATK/DEF change.
+var omen_stat_source_card: String = ""
+## escalating_toll stacks (+10% foe crystal loss per non-unit attack).
+var omen_escalating_toll_stacks: int = 0
+## Remaining coin flips forced to Heads (oracles_sacrifice).
+var omen_force_heads_flips: int = 0
 
 var crystals: Array = [STARTING_CRYSTALS, STARTING_CRYSTALS]
 var grids: Array = []           # grids[player][row][col] -> CardInstance
@@ -849,21 +885,26 @@ func effective_union_summon_cost(base_cost: int, player_index: int = -1) -> int:
 	return cost
 
 func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
-	if amount > 0 and player_index == 0 and not active_omens.is_empty():
-		if omen_crystal_loss_multiplier != 1.0:
-			amount = int(round(float(amount) * omen_crystal_loss_multiplier))
-		var pct_total: float = 0.0
-		if reason == "card lost":
-			pct_total += omen_unit_destroy_loss_pct
-			var aff_name: String = _omen_last_destroyed_affinity(player_index)
-			if not aff_name.is_empty():
-				pct_total += float(omen_affinity_destroy_loss.get(aff_name, 0.0))
-		elif reason == "battle":
-			pct_total += omen_reckoning_loss_pct
-		pct_total += omen_crystal_loss_pct
-		if pct_total != 0.0:
-			amount = int(round(float(amount) * (1.0 + pct_total / 100.0)))
-		amount = maxi(0, amount)
+	if amount > 0 and not active_omens.is_empty():
+		if player_index == 0:
+			if omen_crystal_loss_multiplier != 1.0:
+				amount = int(round(float(amount) * omen_crystal_loss_multiplier))
+			var pct_total: float = 0.0
+			if reason == "card lost":
+				pct_total += omen_unit_destroy_loss_pct
+				var aff_name: String = _omen_last_destroyed_affinity(player_index)
+				if not aff_name.is_empty():
+					pct_total += float(omen_affinity_destroy_loss.get(aff_name, 0.0))
+			elif reason == "battle":
+				pct_total += omen_reckoning_loss_pct
+			pct_total += omen_crystal_loss_pct
+			if pct_total != 0.0:
+				amount = int(round(float(amount) * (1.0 + pct_total / 100.0)))
+			amount = maxi(0, amount)
+		# Omen escalating_toll — foe (player 1) pays stacked bonus
+		elif player_index == 1 and omen_escalating_toll_stacks > 0:
+			amount = int(round(float(amount) * (1.0 + 0.10 * float(omen_escalating_toll_stacks))))
+			amount = maxi(0, amount)
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
 	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
 		amount = int(amount * 1.25)
@@ -1066,6 +1107,10 @@ func reveal_card(player_index: int, row: int, col: int, from_card_ability: bool 
 					and "venom" not in card.flags:
 				card.flags.append("venom")
 				post_message("Nature Triumph: %s receives Venom flag!" % card.display_name)
+
+		# Omen grant_flag_on_reveal (anointed + field filters like plague_bearer)
+		if card.card_type == "character":
+			OmenBattleApplier.apply_grant_flag_on_reveal(card, player_index, row, col)
 
 
 func reveal_card_by_ability(player_index: int, row: int, col: int) -> void:
@@ -1332,6 +1377,32 @@ func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 		return true
 	if _card_matches_destruction_immunity(card, player_index):
 		return true
+	if OmenBattleApplier.blocks_destruction_by_affinity(card, player_index):
+		return true
+	if OmenBattleApplier.conditional_survival_blocks(card, player_index):
+		return true
+	if "omen_survive_used" not in card.flags:
+		# Preview only — do not consume the once-per-battle omen here.
+		if not OmenBattleApplier.effects_of_type("survive_destruction_once").is_empty() \
+				or GameState.omen_anoint_effects.has(card.card_name):
+			# Cheap check: would try_consume succeed without mutating?
+			if _omen_would_survive_once(card, player_index):
+				return true
+	return false
+
+
+func _omen_would_survive_once(card: CardInstance, player_index: int) -> bool:
+	if "omen_survive_used" in card.flags:
+		return false
+	var anoint_bucket: Variant = omen_anoint_effects.get(card.card_name, [])
+	if anoint_bucket is Array:
+		for eff_v: Variant in anoint_bucket as Array:
+			if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == "survive_destruction_once":
+				return true
+	for entry: Variant in OmenBattleApplier.effects_of_type("survive_destruction_once"):
+		if entry is Dictionary and OmenBattleApplier._card_matches_effect_unit(
+				card, entry as Dictionary, player_index):
+			return true
 	return false
 
 func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> bool:
@@ -1365,6 +1436,27 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 			post_message("%s is protected from destruction!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
+		if OmenBattleApplier.blocks_destruction_by_affinity(card, player_index):
+			post_message("%s: Omen wards off destruction!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
+		if OmenBattleApplier.try_consume_survive_destruction_once(card):
+			post_message("%s survives destruction (Omen)!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
+		if OmenBattleApplier.conditional_survival_blocks(card, player_index):
+			post_message("%s: Martyr's Halo — another Divine ally protects them!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
+		if OmenBattleApplier.try_spend_mutagen_revive(card):
+			post_message("Omen Mutagen Lazarus: %s discards Mutagen and survives!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
+		if "omen_swap_defender" in card.flags and "omen_swap_survive_used" not in card.flags:
+			card.flags.append("omen_swap_survive_used")
+			post_message("Omen Martyr's Reward: swap-in defender %s survives!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
 		# Track destroyed characters in graveyard
 		if card.ability_type == CharacterData.AbilityType.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION \
 				and not destruction_from_tech_self_destruct \
@@ -1381,14 +1473,58 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 					"col": col,
 					"card_name": card.card_name,
 				})
+		# Omen phoenix_bargain — revive only if destroyed by own tech/ability/omen
+		var _omen_src: String = omen_destruction_source
+		if _omen_src.is_empty():
+			if destruction_from_tech_self_destruct:
+				_omen_src = "own_tech"
+			elif analytics_destroy_source == "tech" and analytics_destroy_by_player == player_index:
+				_omen_src = "own_tech"
+			elif analytics_destroy_source == "omen":
+				_omen_src = "omen"
+			else:
+				_omen_src = "foe"
+		if OmenBattleApplier.should_phoenix_revive(card, _omen_src) \
+				and "omen_phoenix_used" not in card.flags:
+			card.flags.append("omen_phoenix_used")
+			turn_start_revives.append({
+				"player": player_index,
+				"row": row,
+				"col": col,
+				"card_name": card.card_name,
+				"omen_phoenix": true,
+			})
+			post_message("Omen Phoenix Bargain: %s will return!" % card.card_name)
+		# Omen divine_return
+		OmenBattleApplier.queue_divine_return(card, player_index, row, col)
+		# Omen rune thurisaz — revive once on this cell
+		if OmenBattleApplier.rune_thurisaz_revive(player_index, row, col, card):
+			turn_start_revives.append({
+				"player": player_index,
+				"row": row,
+				"col": col,
+				"card_name": card.card_name,
+				"thurisaz": true,
+			})
+			post_message("Rune Thurisaz: %s will revive!" % card.card_name)
 		graveyards[player_index].append(card)
 		_offer_ancestral_spirit_if_applicable(player_index, row, col, card)
 		emit_signal("character_destroyed", player_index, row, col, card)
 	if pay_cost and card.card_type != "dead_end":
 		var _dc_cost: int = card.crystal_cost
+		# Omen grave_rebate / zero_crystal_loss_on_destroy (anointed unit)
+		var _zr_bucket: Variant = omen_anoint_effects.get(card.card_name, [])
+		if _zr_bucket is Array:
+			for _zr: Variant in _zr_bucket as Array:
+				if _zr is Dictionary and str((_zr as Dictionary).get("type", "")) == "zero_crystal_loss_on_destroy":
+					_dc_cost = 0
+					break
 		if game_mode == GameMode.DAILY_DUNGEON:
 			if "coffin_broker" in active_dungeon_modifiers: _dc_cost = 0
 			elif "coffin_dealer" in active_dungeon_modifiers: _dc_cost = int(_dc_cost * 0.5)
+		# Omen runes fehu / hagalaz
+		_dc_cost = int(round(float(_dc_cost) * OmenBattleApplier.rune_crystal_loss_multiplier(
+			player_index, row, col)))
 		lose_crystals(player_index, _dc_cost, "card lost")
 	emit_signal("card_destroyed", player_index, row, col)
 	place_dead_end(player_index, row, col)

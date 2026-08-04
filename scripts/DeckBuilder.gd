@@ -65,6 +65,12 @@ const _DeckSwitchGallery := preload("res://scripts/DeckSwitchGallery.gd")
 @onready var remove_tech_btn:   Button      = $MainLayout/RightPanel/Inner/TechSection/RemoveBtn
 
 # ── State ─────────────────────────────────────────────────────
+## When true (exploration overlay), edit the equipped battle deck only inside a
+## centered Magitech shell — no vault Switch/New/Delete/equip/import UI.
+var exploration_mode: bool = false
+var _expl_panel: PanelContainer = null
+var _expl_content: Control = null
+var _expl_dim: ColorRect = null
 var current_deck: DeckData = null
 var _filter: String = "all"   # "all" | "character" | "trap" | "tech" | "union"
 var _filter_union_btn: Button = null
@@ -372,8 +378,151 @@ func _ready() -> void:
 	# Prologue lock check — show overlay if deckbuilding not yet unlocked
 	if not SaveManager.is_deckbuilding_unlocked():
 		_show_deckbuilding_lock_overlay()
+	if exploration_mode:
+		_apply_exploration_mode()
 	if _deferring_initial_load:
 		call_deferred("_grab_loading_blocker_focus")
+
+
+## Call before add_child when hosting under ExplorationPlayer.
+func configure_for_exploration() -> void:
+	exploration_mode = true
+
+
+func _apply_exploration_mode() -> void:
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var title_lbl: Label = get_node_or_null("TitleLabel") as Label
+	if title_lbl != null:
+		title_lbl.text = "EDIT DECK"
+	if import_btn != null:
+		import_btn.visible = false
+	if export_btn != null:
+		export_btn.visible = false
+	var header_actions: Node = get_node_or_null("PageHeaderActions")
+	if header_actions is CanvasItem:
+		(header_actions as CanvasItem).visible = false
+	if deck_select != null:
+		deck_select.visible = false
+	if _switch_deck_btn != null:
+		_switch_deck_btn.visible = false
+	if _featured_star_btn != null:
+		_featured_star_btn.visible = false
+	if _protagonist_bar is CanvasItem:
+		(_protagonist_bar as CanvasItem).visible = false
+	_apply_exploration_shell()
+
+
+func _apply_exploration_shell() -> void:
+	var bg := get_node_or_null("Background") as ColorRect
+	if bg != null:
+		bg.color = Color(0.01, 0.02, 0.05, 0.72)
+		bg.mouse_filter = Control.MOUSE_FILTER_STOP
+		if not bg.gui_input.is_connected(_on_exploration_dim_gui_input):
+			bg.gui_input.connect(_on_exploration_dim_gui_input)
+		_expl_dim = bg
+
+	_expl_panel = PanelContainer.new()
+	_expl_panel.name = "ExplorationShell"
+	_expl_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_expl_panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox(0.0))
+	GameDialog.attach_panel_fx(_expl_panel)
+	add_child(_expl_panel)
+	if bg != null:
+		move_child(_expl_panel, bg.get_index() + 1)
+
+	var pad := MarginContainer.new()
+	for side: String in ["left", "right", "top", "bottom"]:
+		pad.add_theme_constant_override("margin_" + side, 12)
+	pad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pad.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_expl_panel.add_child(pad)
+
+	_expl_content = Control.new()
+	_expl_content.name = "ExplorationContent"
+	_expl_content.clip_contents = true
+	_expl_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_expl_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	pad.add_child(_expl_content)
+
+	for node_name: String in [
+		"TopBarBg", "TitleLabel", "PageHeaderActions", "CloseBtn", "MainLayout"
+	]:
+		var n: Node = get_node_or_null(node_name)
+		if n != null:
+			n.reparent(_expl_content)
+
+	var left_panel: Panel = _expl_content.get_node_or_null("MainLayout/LeftPanel") as Panel
+	var right_panel: Panel = _expl_content.get_node_or_null("MainLayout/RightPanel") as Panel
+	if left_panel != null:
+		left_panel.custom_minimum_size = Vector2(340.0, 0.0)
+		left_panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox(0.0))
+		GameDialog.attach_panel_fx(left_panel)
+	if right_panel != null:
+		right_panel.custom_minimum_size = Vector2(380.0, 0.0)
+		right_panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox(0.0))
+		GameDialog.attach_panel_fx(right_panel)
+
+	var main_layout: Control = _expl_content.get_node_or_null("MainLayout") as Control
+	if main_layout != null:
+		main_layout.offset_left = 10.0
+		main_layout.offset_top = 48.0
+		main_layout.offset_right = -10.0
+		main_layout.offset_bottom = -10.0
+
+	if close_btn != null:
+		MenuScreenHeader.anchor_close_top_right(close_btn)
+
+	_relayout_exploration_shell()
+	if _loading_blocker != null and is_instance_valid(_loading_blocker):
+		move_child(_loading_blocker, get_child_count() - 1)
+	var vp: Viewport = get_viewport()
+	if vp != null and not vp.size_changed.is_connected(_relayout_exploration_shell):
+		vp.size_changed.connect(_relayout_exploration_shell)
+
+
+func _relayout_exploration_shell() -> void:
+	if not exploration_mode or _expl_panel == null or not is_instance_valid(_expl_panel):
+		return
+	var vp: Vector2 = get_viewport_rect().size
+	if vp.x < 2.0 or vp.y < 2.0:
+		vp = Vector2(1280.0, 720.0)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	position = Vector2.ZERO
+	size = vp
+	if _expl_dim != null:
+		_expl_dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var w: float = clampf(vp.x - 64.0, 720.0, 1200.0)
+	var h: float = clampf(vp.y - 48.0, 480.0, 860.0)
+	_expl_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_expl_panel.anchor_right = 0.0
+	_expl_panel.anchor_bottom = 0.0
+	_expl_panel.size = Vector2(w, h)
+	_expl_panel.position = (vp - Vector2(w, h)) * 0.5
+	_expl_panel.pivot_offset = Vector2(w, h) * 0.5
+
+
+func _on_exploration_dim_gui_input(event: InputEvent) -> void:
+	if not exploration_mode:
+		return
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_on_back()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not exploration_mode:
+		return
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	accept_event()
+	if _fe_overlay != null and is_instance_valid(_fe_overlay):
+		_fe_on_close_requested()
+		return
+	if GameDialog.has_open_overlay(self):
+		return
+	_on_back()
+
 
 # ── Button wiring ─────────────────────────────────────────────
 const _BTN_FX_META := &"magitech_btn_fx_mat"
@@ -622,8 +771,11 @@ func _load_deck(index: int) -> void:
 
 
 func _apply_deck_state(index: int) -> bool:
-	SaveManager.active_deck_index = index
+	if not exploration_mode:
+		SaveManager.active_deck_index = index
 	var deck: DeckData = SaveManager.get_active_deck()
+	if exploration_mode:
+		deck = SaveManager.get_battle_deck()
 	if deck == null:
 		return false
 	current_deck = deck.clone_for_edit()
@@ -632,7 +784,21 @@ func _apply_deck_state(index: int) -> bool:
 	_update_limited_edit_ui()
 	return true
 
+
+func _load_exploration_battle_deck() -> bool:
+	var deck: DeckData = SaveManager.get_battle_deck()
+	if deck == null:
+		return false
+	current_deck = deck.clone_for_edit()
+	deck_name_field.text = current_deck.deck_name
+	_refresh_protagonist_capsules()
+	_update_limited_edit_ui()
+	return true
+
+
 func _on_new_deck() -> void:
+	if exploration_mode:
+		return
 	if not SaveManager.can_create_free_deck():
 		status_label.text = "Free deck slots full (max %d)." % SaveManager.MAX_FREE_DECK_SLOTS
 		return
@@ -644,6 +810,8 @@ func _on_new_deck() -> void:
 	_load_deck(SaveManager.active_deck_index)
 
 func _on_delete_deck() -> void:
+	if exploration_mode:
+		return
 	if SaveManager.decks.size() <= 1:
 		status_label.text = "Cannot delete the last deck."
 		return
@@ -666,6 +834,8 @@ func _on_delete_deck() -> void:
 			_load_deck(SaveManager.active_deck_index))
 
 func _on_duplicate_deck() -> void:
+	if exploration_mode:
+		return
 	if not SaveManager.can_create_free_deck():
 		status_label.text = "Free deck slots full (max %d)." % SaveManager.MAX_FREE_DECK_SLOTS
 		return
@@ -2491,6 +2661,8 @@ func _update_limited_edit_ui() -> void:
 
 
 func _open_deck_switch_gallery() -> void:
+	if exploration_mode:
+		return
 	if not ShopManager.is_tutorial_requirement_met():
 		GameDialog.accept_overlay(
 			self,
@@ -2511,6 +2683,8 @@ func _open_deck_switch_gallery() -> void:
 
 
 func _on_protagonist_equip_requested(pid: String) -> void:
+	if exploration_mode:
+		return
 	if current_deck == null:
 		return
 	if current_deck.limited and current_deck.reserved_slot != 0:
@@ -2566,6 +2740,8 @@ func _set_featured_card(card_name: String, card_type: String) -> void:
 
 func _persist_featured_to_save() -> void:
 	## Keep Switch Deck gallery in sync without requiring a full Save click.
+	if exploration_mode:
+		return
 	if current_deck == null:
 		return
 	current_deck.ensure_identity()
@@ -2611,6 +2787,9 @@ func _try_save(exit_after: bool) -> void:
 	if _deck_cost_is_high(current_deck):
 		_confirm_high_cost_save(exit_after)
 		return
+	if exploration_mode:
+		_perform_save(exit_after)
+		return
 	_show_save_equip_prompt(exit_after)
 
 
@@ -2621,7 +2800,11 @@ func _confirm_high_cost_save(exit_after: bool = false) -> void:
 		"The unit and trap costs in this deck are too high. Consider replacing some cards with lower-cost options.",
 		"Save",
 		"Edit Deck",
-		func() -> void: _show_save_equip_prompt(exit_after))
+		func() -> void:
+			if exploration_mode:
+				_perform_save(exit_after)
+			else:
+				_show_save_equip_prompt(exit_after))
 
 
 ## Width of the in-page equip bar (RightPanel Inner), so the save prompt matches it.
@@ -3119,7 +3302,12 @@ func _run_initial_gallery_load_async(gen: int) -> void:
 
 
 func _initial_load_deck_async(gallery_gen: int) -> bool:
-	if not _apply_deck_state(SaveManager.active_deck_index):
+	var ok: bool = false
+	if exploration_mode:
+		ok = _load_exploration_battle_deck()
+	else:
+		ok = _apply_deck_state(SaveManager.active_deck_index)
+	if not ok:
 		return false
 	_trunk_list_rebuild_gen += 1
 	var trunk_gen := _trunk_list_rebuild_gen

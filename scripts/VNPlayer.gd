@@ -8,6 +8,7 @@ class_name VNPlayer
 # ─────────────────────────────────────────────────────────────
 const SLOT_NAMES  := ["far_left", "left", "center", "right", "far_right"]
 const _ANIMATION_SCENE := preload("res://scripts/VellumCardCommenceAnimation.gd")
+const _OMEN_THOUGHT_ANIM := preload("res://scripts/OmenThoughtFlowAnimation.gd")
 const _VNChoiceConditions := preload("res://scripts/VNChoiceConditions.gd")
 const SLOT_X      := [0.0,        200.0,  640.0,    1080.0,  1280.0]
 const CHAR_W      := 320.0
@@ -110,6 +111,10 @@ var _note_chapter_id: String = ""             # chapter mapped to this scene; ""
 var _note_icon_allowed: bool = false          # author must show via detective_note_icon beat
 var _note_hover_time: float = 0.0             # 0.5s hover-to-open accumulator
 var _note_overlay: DetectiveNoteOverlay = null
+var _vn_polaroid_layer: CanvasLayer = null
+var _vn_polaroid_root: Control = null
+var _vn_polaroid_awaiting_click: bool = false
+var _vn_polaroid_click_closed: bool = false
 var _choices_above_group: Control = null
 var _choices_above_host: PanelContainer = null
 var _choices_above_scroll: ScrollContainer = null
@@ -527,6 +532,10 @@ func _beat_has_blocking_handoff(beat: Dictionary) -> bool:
 		return true
 	if str(beat.get("show_messenger", "")).strip_edges() != "":
 		return true
+	if not _show_polaroid_path(beat).is_empty():
+		return true
+	if bool(beat.get("dismiss_polaroid", false)):
+		return true
 	var open_note: Variant = beat.get("show_detective_note", null)
 	if open_note is Dictionary or open_note == true:
 		return true
@@ -719,7 +728,7 @@ func _run_choice_actions(choice: Dictionary) -> void:
 	var actions: Variant = choice.get("actions", null)
 	if not (actions is Array):
 		return
-	var gave_item: bool = _apply_exploration_actions(actions as Array)
+	var gave_item: bool = await _apply_exploration_actions(actions as Array)
 	if gave_item:
 		_accepting_input = false
 		_hide_hint_icon()
@@ -733,7 +742,14 @@ func _apply_exploration_actions(actions: Array) -> bool:
 		if not ea is Dictionary:
 			continue
 		var ead: Dictionary = ea as Dictionary
-		if str(ead.get("action", "")).strip_edges() == "give_item":
+		var action: String = str(ead.get("action", "")).strip_edges()
+		if action == "grant_omen":
+			_accepting_input = false
+			_hide_hint_icon()
+			await _run_grant_omen(str(ead.get("value", "")))
+			_accepting_input = true
+			continue
+		if action == "give_item":
 			gave_item = true
 		_apply_vn_exploration_action(ead)
 	return gave_item
@@ -751,11 +767,12 @@ func _wait_for_item_obtained_overlays() -> void:
 ## Apply a VN exploration_actions / choice action.
 ## set_var / set_flag always run (so gallery & standalone VN can break go_to loops).
 ## Item / credit / node actions still need an active exploration session.
+## grant_omen is handled async in _apply_exploration_actions (not via dispatch_event).
 func _apply_vn_exploration_action(ead: Dictionary) -> void:
 	var action: String = str(ead.get("action", "")).strip_edges()
 	var key: String = str(ead.get("key", ""))
 	var value: String = str(ead.get("value", ""))
-	if action.is_empty():
+	if action.is_empty() or action == "grant_omen":
 		return
 	if ExplorationManager.is_session_active:
 		ExplorationManager.dispatch_event(action, key, value)
@@ -767,6 +784,30 @@ func _apply_vn_exploration_action(ead: Dictionary) -> void:
 			ExplorationManager.set_exploration_flag(key, value)
 		_:
 			pass
+
+
+## Same flow as ExplorationPlayer._run_grant_omen — pick omen, optional anoint, add to session.
+func _run_grant_omen(group_csv: String) -> void:
+	var deck_meta: Array = ExplorationManager.build_deck_card_meta_for_omens()
+	var held: Array = ExplorationManager.get_held_omen_ids()
+	var offer: Array = OmenDatabase.roll_offer(group_csv, held, 3, [], deck_meta)
+	if offer.is_empty():
+		_show_vn_toast("No Omens available.")
+		return
+	var chosen: Dictionary = await OmenSelectOverlay.await_selection(self, offer)
+	if chosen.is_empty():
+		return
+	var anointed: String = ""
+	if OmenDatabase.is_anoint(chosen):
+		var eligible: Array = OmenDatabase.get_eligible_deck_cards(chosen, deck_meta)
+		if eligible.is_empty():
+			_show_vn_toast("No eligible cards for that Omen.")
+			return
+		anointed = await OmenAnointPicker.await_selection(self, chosen, eligible)
+		if anointed.is_empty():
+			return
+	ExplorationManager.add_omen(str(chosen.get("id", "")), anointed)
+	_show_vn_toast("Omen gained: %s" % str(chosen.get("label", chosen.get("id", ""))))
 
 func _beat_group_id(beat: Dictionary) -> int:
 	if not beat.has("group"):
@@ -1381,6 +1422,145 @@ func _open_detective_note() -> void:
 	_note_overlay = null
 	_accepting_input = true
 
+## Beat key "show_polaroid" — framed photo overlay.
+## Spec: path string (legacy, dismiss on click) OR
+##   { "path": String, "dismiss_on_click": bool }  (false = keep until dismiss_polaroid)
+func _run_show_polaroid_beat(spec: Variant) -> void:
+	var parsed: Dictionary = _parse_show_polaroid_spec(spec)
+	var path: String = str(parsed.get("path", "")).strip_edges()
+	var dismiss_on_click: bool = bool(parsed.get("dismiss_on_click", true))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		push_warning("VNPlayer: show_polaroid missing image '%s' — skipped." % path)
+		return
+	var tex: Texture2D = load(path) as Texture2D
+	if tex == null:
+		push_warning("VNPlayer: show_polaroid failed to load '%s' — skipped." % path)
+		return
+	_dismiss_vn_polaroid(false)
+	_play_sfx("res://assets/audio/sfx/sfx_camera_shutter.mp3")
+
+	var canvas := CanvasLayer.new()
+	canvas.name = "VNPolaroidOverlay"
+	canvas.layer = 128
+	add_child(canvas)
+	_vn_polaroid_layer = canvas
+
+	var root := Control.new()
+	root.mouse_filter = Control.MOUSE_FILTER_STOP if dismiss_on_click \
+			else Control.MOUSE_FILTER_IGNORE
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	canvas.add_child(root)
+	_vn_polaroid_root = root
+	_layout_vn_polaroid_root()
+
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP if dismiss_on_click \
+			else Control.MOUSE_FILTER_IGNORE
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(dim)
+
+	var card: Control = PhotoScatter.make_polaroid_card(tex, 1.85)
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(card)
+	_center_vn_polaroid_card(card)
+
+	var hint := Label.new()
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85))
+	hint.add_theme_font_size_override("font_size", 16)
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if dismiss_on_click:
+		hint.text = "Click to dismiss"
+	else:
+		hint.text = ""
+		hint.visible = false
+	root.add_child(hint)
+	hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	hint.offset_left = -200.0
+	hint.offset_right = 200.0
+	hint.offset_top = -56.0
+	hint.offset_bottom = -28.0
+
+	# Layout settle — CenterContainer can leave the card at (0,0) before size is known.
+	await get_tree().process_frame
+	if not is_instance_valid(root):
+		return
+	_layout_vn_polaroid_root()
+	_center_vn_polaroid_card(card)
+
+	if not dismiss_on_click:
+		# Stay up until dismiss_polaroid (or scene end); do not block beat advance.
+		return
+
+	# Brief settle so a leftover click from advancing the beat cannot dismiss instantly.
+	await get_tree().create_timer(0.25).timeout
+	if not is_instance_valid(root):
+		return
+	_vn_polaroid_click_closed = false
+	_vn_polaroid_awaiting_click = true
+	while _vn_polaroid_awaiting_click and not _vn_polaroid_click_closed \
+			and is_instance_valid(root):
+		await get_tree().process_frame
+	_vn_polaroid_awaiting_click = false
+	_dismiss_vn_polaroid(false)
+
+
+func _layout_vn_polaroid_root() -> void:
+	if _vn_polaroid_root == null or not is_instance_valid(_vn_polaroid_root):
+		return
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	_vn_polaroid_root.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_vn_polaroid_root.position = Vector2.ZERO
+	_vn_polaroid_root.size = vp
+
+
+func _center_vn_polaroid_card(card: Control) -> void:
+	if card == null or not is_instance_valid(card):
+		return
+	if _vn_polaroid_root == null or not is_instance_valid(_vn_polaroid_root):
+		return
+	var sz: Vector2 = card.custom_minimum_size
+	if sz.x <= 0.0 or sz.y <= 0.0:
+		sz = card.size
+	var area: Vector2 = _vn_polaroid_root.size
+	if area.x <= 1.0 or area.y <= 1.0:
+		area = get_viewport().get_visible_rect().size
+	card.position = (area - sz) * 0.5
+
+
+func _parse_show_polaroid_spec(spec: Variant) -> Dictionary:
+	var out := {"path": "", "dismiss_on_click": true}
+	if spec is Dictionary:
+		var d: Dictionary = spec as Dictionary
+		var path: String = str(d.get("path", "")).strip_edges()
+		if path.is_empty():
+			path = str(d.get("photo", "")).strip_edges()
+		out["path"] = path
+		if d.has("dismiss_on_click"):
+			out["dismiss_on_click"] = bool(d.get("dismiss_on_click", true))
+		elif d.has("dismiss"):
+			var mode: String = str(d.get("dismiss", "click")).strip_edges().to_lower()
+			out["dismiss_on_click"] = mode != "manual" and mode != "command"
+		return out
+	out["path"] = str(spec).strip_edges()
+	return out
+
+
+func _show_polaroid_path(beat: Dictionary) -> String:
+	return str(_parse_show_polaroid_spec(beat.get("show_polaroid", "")).get("path", ""))
+
+
+func _dismiss_vn_polaroid(_unused: bool = false) -> void:
+	_vn_polaroid_awaiting_click = false
+	_vn_polaroid_click_closed = true
+	if _vn_polaroid_layer != null and is_instance_valid(_vn_polaroid_layer):
+		_vn_polaroid_layer.queue_free()
+	_vn_polaroid_layer = null
+	_vn_polaroid_root = null
+
+
 ## Beat key "show_detective_note" — open the interactive notebook and block until closed.
 ## Spec: true | { "chapter": optional chapter id, "topic": optional topic id }
 func _run_show_detective_note_beat(spec: Variant) -> void:
@@ -1488,11 +1668,8 @@ func _is_vn_overlay() -> bool:
 	var host: Node = get_parent()
 	return host != null and host.name == "VNOverlayLayer"
 
-## Vellum commence must render above overlay VNs (layer 300) — not on current_scene.
+## VN beat animations — render above overlay VNs (layer 300) when hosted there.
 func _spawn_vn_animation(anim_key: String) -> void:
-	var anim: CanvasLayer = _ANIMATION_SCENE.new()
-	anim.name = "VNAnimation"
-	var flip: bool = anim_key == "animation_vellum_card_commence_flip"
 	var parent: Node
 	if _is_vn_overlay():
 		parent = get_tree().root
@@ -1500,10 +1677,40 @@ func _spawn_vn_animation(anim_key: String) -> void:
 		parent = get_tree().current_scene
 		if parent == null:
 			parent = self
-	parent.add_child(anim)
-	if _is_vn_overlay():
-		anim.layer = 310
-	anim.call("launch", flip)
+	match anim_key:
+		"animation_vellum_card_commence_flip", "animation_vellum_card_commence_facedown":
+			var anim: CanvasLayer = _ANIMATION_SCENE.new()
+			anim.name = "VNAnimation"
+			parent.add_child(anim)
+			if _is_vn_overlay():
+				anim.layer = 310
+			anim.call("launch", anim_key == "animation_vellum_card_commence_flip")
+		"animation_omen_thought_flow":
+			var omen_anim: CanvasLayer = _OMEN_THOUGHT_ANIM.new()
+			omen_anim.name = "VNAnimation"
+			parent.add_child(omen_anim)
+			if _is_vn_overlay():
+				omen_anim.layer = 310
+			omen_anim.call("launch", _resolve_thought_screen_pos())
+		_:
+			push_warning("VNPlayer: unknown animation '%s'" % anim_key)
+
+
+## Screen-space locus for "thought" — upper third of the active protagonist portrait.
+func _resolve_thought_screen_pos() -> Vector2:
+	var preferred: Array[String] = ["center", "left", "right", "far_left", "far_right"]
+	for sn: String in preferred:
+		if not _char_slots.has(sn):
+			continue
+		var slot: TextureRect = _char_slots[sn] as TextureRect
+		if slot == null or slot.texture == null or slot.modulate.a < 0.05:
+			continue
+		var r: Rect2 = slot.get_global_rect()
+		return Vector2(r.position.x + r.size.x * 0.5, r.position.y + r.size.y * 0.16)
+	if _stage != null and is_instance_valid(_stage):
+		var sr: Rect2 = _stage.get_global_rect()
+		return Vector2(sr.position.x + sr.size.x * 0.5, sr.position.y + sr.size.y * 0.30)
+	return get_viewport().get_visible_rect().size * Vector2(0.5, 0.34)
 
 func play_scene(
 		json_path: String,
@@ -2215,7 +2422,7 @@ func _show_beat() -> void:
 	var expl_actions: Variant = beat.get("exploration_actions", null)
 	if expl_actions is Array and not (expl_actions as Array).is_empty():
 		ran_side_effects = true
-		var gave_item: bool = _apply_exploration_actions(expl_actions as Array)
+		var gave_item: bool = await _apply_exploration_actions(expl_actions as Array)
 		if gave_item:
 			_accepting_input = false
 			_hide_hint_icon()
@@ -2231,6 +2438,24 @@ func _show_beat() -> void:
 		if msgr != null and is_instance_valid(msgr):
 			await msgr.closed
 		_accepting_input = true
+
+	# ── Polaroid photo overlay ──
+	# dismiss_on_click (default): blocks until click / key.
+	# dismiss_on_click false: stays up until dismiss_polaroid (or scene end).
+	var polaroid_spec: Variant = beat.get("show_polaroid", null)
+	if not _show_polaroid_path(beat).is_empty():
+		var polaroid_parsed: Dictionary = _parse_show_polaroid_spec(polaroid_spec)
+		var wait_click: bool = bool(polaroid_parsed.get("dismiss_on_click", true))
+		if wait_click:
+			_accepting_input = false
+			_hide_hint_icon()
+		await _run_show_polaroid_beat(polaroid_spec)
+		if wait_click:
+			_accepting_input = true
+
+	# ── Dismiss polaroid (manual close for dismiss_on_click=false overlays) ──
+	if bool(beat.get("dismiss_polaroid", false)):
+		_dismiss_vn_polaroid()
 
 	# ── Detective note grants (clues / topic unlocks — toasts handle feedback) ──
 	var ran_note_commands: bool = false
@@ -2305,6 +2530,9 @@ func _is_silent_redirect_beat(beat: Dictionary) -> bool:
 		return false
 	if beat.has("show_messenger") and not str(beat.get("show_messenger", "")).strip_edges().is_empty():
 		return false
+	if not _show_polaroid_path(beat).is_empty() \
+			and bool(_parse_show_polaroid_spec(beat.get("show_polaroid", "")).get("dismiss_on_click", true)):
+		return false
 	var open_note: Variant = beat.get("show_detective_note", null)
 	if open_note is Dictionary or open_note == true:
 		return false
@@ -2321,6 +2549,7 @@ func _on_video_finished() -> void:
 
 func _finish() -> void:
 	_hide_hint_icon()
+	_dismiss_vn_polaroid()
 	if not exploration_overlay:
 		_set_music("", 0.0, 0.0)
 	if _on_complete.is_valid():
@@ -2396,11 +2625,11 @@ func _handle_vn_command(raw: String) -> void:
 		var note: String = trimmed.substr(7).strip_edges()  # everything after "tag_bug"
 		_tag_current_beat(note)
 	else:
-		_show_vn_toast("Unknown command: " + raw)
+		_show_vn_toast("Unknown command: " + raw, Color(1.0, 0.3, 0.3))
 
 func _tag_current_beat(note: String) -> void:
 	if _beat_index <= 0 or _beat_index > _beat_raw_indices.size():
-		_show_vn_toast("Nothing to tag.")
+		_show_vn_toast("Nothing to tag.", Color(1.0, 0.3, 0.3))
 		return
 	var raw_idx: int = _beat_raw_indices[_beat_index - 1]
 	var tags: Dictionary = _vn_load_bug_tags()
@@ -2413,7 +2642,7 @@ func _tag_current_beat(note: String) -> void:
 	var msg: String = "Bug tagged  —  beat #%d  (%s)" % [raw_idx + 1, _scene_path.get_file()]
 	if not note.is_empty():
 		msg += "\n" + note
-	_show_vn_toast(msg)
+	_show_vn_toast(msg, Color(1.0, 0.3, 0.3))
 
 func _vn_load_bug_tags() -> Dictionary:
 	if not FileAccess.file_exists(_BUG_TAGS_PATH):
@@ -2432,13 +2661,27 @@ func _vn_save_bug_tags(tags: Dictionary) -> void:
 	f.store_string(JSON.stringify(tags, "\t"))
 	f.close()
 
-func _show_vn_toast(msg: String) -> void:
+func _show_vn_toast(msg: String, color: Color = Color.WHITE) -> void:
 	var lbl := Label.new()
 	lbl.text = msg
-	lbl.add_theme_font_size_override("font_size", 18)
-	lbl.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
-	lbl.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	lbl.offset_top = 60.0
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", 22)
+	lbl.add_theme_color_override("font_color", color)
+	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+	lbl.add_theme_constant_override("shadow_offset_x", 2)
+	lbl.add_theme_constant_override("shadow_offset_y", 2)
+	# Full-width top band so the text is truly horizontally centered.
+	lbl.anchor_left = 0.0
+	lbl.anchor_right = 1.0
+	lbl.anchor_top = 0.0
+	lbl.anchor_bottom = 0.0
+	lbl.offset_left = 24.0
+	lbl.offset_right = -24.0
+	lbl.offset_top = 48.0
+	lbl.offset_bottom = 120.0
 	lbl.z_index = 201
 	add_child(lbl)
 	var tw := create_tween()
@@ -2638,6 +2881,25 @@ func _input(event: InputEvent) -> void:
 	# Block beat advance while command panel is open
 	if _cmd_panel != null and _cmd_panel.visible:
 		return
+	# Polaroid click-dismiss must work while _accepting_input is false.
+	if _vn_polaroid_awaiting_click:
+		var dismiss_press := false
+		if event is InputEventMouseButton:
+			var mb := event as InputEventMouseButton
+			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+				dismiss_press = true
+		elif event is InputEventKey:
+			var kek := event as InputEventKey
+			if kek.pressed and not kek.echo:
+				dismiss_press = true
+		elif event is InputEventScreenTouch:
+			if (event as InputEventScreenTouch).pressed:
+				dismiss_press = true
+		if dismiss_press:
+			_vn_polaroid_click_closed = true
+			_vn_polaroid_awaiting_click = false
+			get_viewport().set_input_as_handled()
+			return
 	if not _accepting_input:
 		return
 	if _choices_above_group != null and _choices_above_group.visible:
@@ -2663,9 +2925,9 @@ func _input(event: InputEvent) -> void:
 		if mbe.pressed and mbe.button_index == MOUSE_BUTTON_LEFT:
 			advance = true
 	elif event is InputEventKey:
-		var ke := event as InputEventKey
-		if ke.pressed and not ke.echo:
-			if ke.keycode == KEY_SPACE or ke.keycode == KEY_ENTER:
+		var ke2 := event as InputEventKey
+		if ke2.pressed and not ke2.echo:
+			if ke2.keycode == KEY_SPACE or ke2.keycode == KEY_ENTER:
 				advance = true
 	if advance:
 		get_viewport().set_input_as_handled()

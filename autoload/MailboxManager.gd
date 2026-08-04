@@ -284,6 +284,7 @@ func admin_command(raw: String) -> String:
 				+ "  card_editor\n"
 				+ "  animation_vellum_card_commence_flip\n"
 				+ "  animation_vellum_card_commence_facedown\n"
+				+ "  animation_omen_thought_flow\n"
 				+ "  animation_pack_opening <pack_image> | <card1> | <card2> | <card3>\n"
 				+ "  set_card_qty <card_name> | <quantity>\n"
 				+ "  grant_card <card_name> [count]\n"
@@ -808,6 +809,21 @@ func admin_command(raw: String) -> String:
 			scene.add_child(anim)
 			anim.call("launch", false)
 			return "Vellum Card Commence (face-down) animation started."
+
+		"animation_omen_thought_flow":
+			var omen_scene: Node = get_tree().current_scene
+			if omen_scene.get_node_or_null("OmenThoughtFlowAnim") != null:
+				return "Animation is already running."
+			var thought: Vector2 = Vector2.ZERO
+			for n: Node in omen_scene.find_children("*", "VNPlayer", true, false):
+				if n.has_method("_resolve_thought_screen_pos"):
+					thought = n.call("_resolve_thought_screen_pos")
+					break
+			var omen_anim: Node = load("res://scripts/OmenThoughtFlowAnimation.gd").new()
+			omen_anim.name = "OmenThoughtFlowAnim"
+			omen_scene.add_child(omen_anim)
+			omen_anim.call("launch", thought)
+			return "Omen Thought Flow animation started."
 
 		"list_unions":
 			var all_unions: Array = UnionDatabase.get_all_unions()

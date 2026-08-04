@@ -282,7 +282,7 @@ func _build_footer() -> Control:
 		row.add_child(legend_lbl)
 
 	var hint := Label.new()
-	hint.text = "Tap any card to view it full size   •   Reach a Safe Zone to edit this deck."
+	hint.text = "Tap any card to view it full size."
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER

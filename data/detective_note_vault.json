@@ -366,10 +366,7 @@
 			],
 			"hidden": false,
 			"id": "ch1_s1",
-			"start_clues": [
-				"anomaly_quiet_study_ghost",
-				"anomaly_quiet_study_demon"
-			],
+			"start_clues": [],
 			"title": "Chapter 1 - Silver Path",
 			"topics": [
 				{

@@ -61,13 +61,16 @@ const RARITY_SHADOW: Dictionary = {
 }
 
 # ─────────────────────────────────────────────────────────────
-# Flag badge definitions  (flag_name → {emoji, color})
-# Add new entries here to support future flags.
+# Flag badge definitions  (normalized lowercase key → icon + accent)
+# Keys are matched case-insensitively ("Europa" → "europa").
+# Icons are full shield badges in decorations/ (via HudSkin).
 # ─────────────────────────────────────────────────────────────
 const FLAG_DEFS: Dictionary = {
-	"mutagen": {"emoji": "🧬", "color": Color(0.55, 0.95, 0.55, 0.92)},
-	"venom":   {"emoji": "☣", "color": Color(0.55, 0.85, 0.30, 0.92), "icon_color": Color(0.15, 0.22, 0.05, 1.0), "font_scale": 1.2},
-	"berserk": {"emoji": "💢", "color": Color(0.95, 0.30, 0.25, 0.92)},
+	"mutagen":  {"icon": "ui_icon_flag_mutagen.png",  "color": Color(0.55, 0.95, 0.55, 0.92)},
+	"venom":    {"icon": "ui_icon_flag_venom.png",    "color": Color(0.55, 0.85, 0.30, 0.92)},
+	"berserk":  {"icon": "ui_icon_flag_berserk.png",  "color": Color(0.95, 0.30, 0.25, 0.92)},
+	"princess": {"icon": "ui_icon_flag_princess.png", "color": Color(0.95, 0.45, 0.70, 0.92)},
+	"europa":   {"icon": "ui_icon_flag_europa.png",   "color": Color(0.35, 0.55, 0.95, 0.92)},
 }
 
 const ART_PLACEHOLDER: Texture2D    = preload("res://assets/textures/cards/placeholder.png")
@@ -157,13 +160,14 @@ const WAIT_ICON_SIZE: float = 44.0
 const WAIT_GLOW_SIZE: float = 54.0
 const WAIT_ICON_SHADOW_DROP: float = 2.0
 const FLAG_DESIGN_CARD_WIDTH: float = 110.0
-const FLAG_BAR_HEIGHT: float = 34.0
+const FLAG_BAR_HEIGHT: float = 42.0
 const FLAG_BAR_SIDE_MARGIN: float = 6.0
-const FLAG_BADGE_HEIGHT: float = 32.0
-const FLAG_BADGE_MIN_WIDTH: float = 28.0
-const FLAG_BADGE_MAX_WIDTH: float = 44.0
-const FLAG_BADGE_WIDTH_HEIGHT_RATIO: float = 1.2
-const FLAG_BADGE_SEPARATION: int = 4
+const FLAG_BADGE_HEIGHT: float = 40.0
+const FLAG_BADGE_MIN_WIDTH: float = 24.0
+const FLAG_BADGE_MAX_WIDTH: float = 34.0
+## Shield icons are portrait — width ≈ 0.72 × height.
+const FLAG_BADGE_WIDTH_HEIGHT_RATIO: float = 0.72
+const FLAG_BADGE_SEPARATION: int = 3
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
@@ -335,14 +339,16 @@ func _flag_badge_metrics(badge_count: int) -> Dictionary:
 	var spread_w: float = (avail_w - sep * float(maxi(1, badge_count) - 1)) / float(maxi(1, badge_count))
 	var badge_w: float = clampf(spread_w, min_w, max_w)
 	badge_w = minf(badge_w, badge_h * FLAG_BADGE_WIDTH_HEIGHT_RATIO)
-	var font_size: int = maxi(12, int(round(badge_h * 0.68)))
 	return {
 		"bar_height": bar_h,
 		"badge_height": badge_h,
 		"badge_width": badge_w,
-		"font_size": font_size,
 		"separation": maxi(2, int(round(sep))),
 	}
+
+
+static func _normalize_flag_key(flag_name: String) -> String:
+	return flag_name.strip_edges().to_lower()
 
 
 func _layout_flag_bar() -> void:
@@ -379,8 +385,10 @@ func _refresh_flag_badges() -> void:
 	# Collect active flags — new generic system + legacy bool bridge
 	var active_flags: Array[String] = []
 	for f: String in card_data.flags:
-		if f not in active_flags:
-			active_flags.append(f)
+		var key: String = _normalize_flag_key(str(f))
+		if key.is_empty() or key in active_flags:
+			continue
+		active_flags.append(key)
 	if card_data.has_mutagen_flag and "mutagen" not in active_flags:
 		active_flags.append("mutagen")
 
@@ -401,50 +409,33 @@ func _refresh_flag_badges() -> void:
 	var metrics: Dictionary = _flag_badge_metrics(badge_count)
 	var badge_w: float = metrics["badge_width"]
 	var badge_h: float = metrics["badge_height"]
-	var font_size: int = metrics["font_size"]
 
 	for flag_name: String in defined_flags:
 		var def: Dictionary = FLAG_DEFS[flag_name]
-		var badge_color: Color = def["color"]
-		var emoji: String      = def["emoji"]
+		var icon_name: String = str(def.get("icon", ""))
+		var tex: Texture2D = HudSkin.hud_tex(icon_name) if not icon_name.is_empty() else null
+		if tex == null:
+			continue
 
-		var panel := Panel.new()
-		panel.mouse_filter = MOUSE_FILTER_IGNORE
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = badge_color
-		# Rounded top corners → flag-tab look; flat bottom sits on card edge
-		sb.corner_radius_top_left     = 7
-		sb.corner_radius_top_right    = 7
-		sb.corner_radius_bottom_left  = 0
-		sb.corner_radius_bottom_right = 0
-		sb.shadow_color  = Color(badge_color.r * 0.5, badge_color.g * 0.5, badge_color.b * 0.5, 0.6)
-		sb.shadow_offset = Vector2(0.0, 1.0)
-		sb.shadow_size   = 3
-		sb.border_color        = Color(0, 0, 0, 0.85)
-		sb.border_width_left   = 2
-		sb.border_width_right  = 2
-		sb.border_width_top    = 2
-		sb.border_width_bottom = 2
-		panel.add_theme_stylebox_override("panel", sb)
-		panel.custom_minimum_size = Vector2(badge_w, badge_h)
-		panel.set_meta("flag_name", flag_name)
+		# Icons are full shield badges — no extra colored tab chrome.
+		var host := Control.new()
+		host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		host.custom_minimum_size = Vector2(badge_w, badge_h)
+		host.pivot_offset = Vector2(badge_w, badge_h) * 0.5
+		host.set_meta("flag_name", flag_name)
 
-		var lbl := Label.new()
-		lbl.text = emoji
-		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-		var flag_font_size: int = font_size
-		if def.has("font_scale"):
-			flag_font_size = maxi(12, int(round(float(font_size) * float(def["font_scale"]))))
-		lbl.add_theme_font_size_override("font_size", flag_font_size)
-		if def.has("icon_color"):
-			lbl.add_theme_color_override("font_color", def["icon_color"])
-		lbl.mouse_filter = MOUSE_FILTER_IGNORE
-		panel.add_child(lbl)
-		_flag_bar.add_child(panel)
+		var icon := TextureRect.new()
+		icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.texture = tex
+		if def.has("icon_modulate"):
+			icon.modulate = def["icon_modulate"]
+		host.add_child(icon)
+		_flag_bar.add_child(host)
 
-	_flag_bar.visible = true
+	_flag_bar.visible = _flag_bar.get_child_count() > 0
 
 func _setup_overlay_styles() -> void:
 	# Highlight border: border-only cyan outline (used for tech target selection)
@@ -539,10 +530,11 @@ func _play_badge_pop(nodes: Array) -> void:
 	await get_tree().create_timer(BADGE_POST_ANIM_DELAY).timeout
 
 func play_flag_badge_pop(flag_name: String) -> void:
-	if flag_name not in FLAG_DEFS or _flag_bar == null:
+	var key: String = _normalize_flag_key(flag_name)
+	if key not in FLAG_DEFS or _flag_bar == null:
 		return
 	for child: Node in _flag_bar.get_children():
-		if child is Panel and str(child.get_meta("flag_name", "")) == flag_name:
+		if child is Control and str(child.get_meta("flag_name", "")) == key:
 			await _play_badge_pop([child as Control])
 			return
 

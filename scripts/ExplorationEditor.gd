@@ -2273,12 +2273,48 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	smoke_preview_btn.tooltip_text = "Preview smoke image"
 	smoke_preview_btn.pressed.connect(func() -> void: _preview_image(smoke_edit.text.strip_edges()))
 	smoke_edit.get_parent().add_child(smoke_preview_btn)
+
+	# Hidden until any Polaroid shutter in this room (meta-collected).
+	var camera_hide_row := HBoxContainer.new()
+	var camera_hide_cb := CheckBox.new()
+	camera_hide_cb.text = "Hidden until camera shutter"
+	camera_hide_cb.button_pressed = bool(spot_data.get("hidden_until_camera_shutter", false))
+	camera_hide_cb.add_theme_font_size_override("font_size", 12)
+	camera_hide_cb.tooltip_text = (
+		"Completely hidden in the room until any Polaroid Mode 2 photo is taken here. "
+		+ "After shutter: invisible hitbox-only in the room; lens flare on Polaroid photos "
+		+ "until Hide after interact dismisses it.")
+	camera_hide_row.add_child(camera_hide_cb)
+	vb.add_child(camera_hide_row)
+	var flare_edit := _add_file_field(vb, "Lens flare image (optional)",
+		PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Images"]),
+		"res://assets/textures/exploration/decorations")
+	flare_edit.text = str(spot_data.get("lens_flare_image", "")).strip_edges()
+	flare_edit.placeholder_text = "blank = default icon_lens_flare.png"
+	flare_edit.tooltip_text = (
+		"Texture drawn on Polaroid photos while this spot is still available. "
+		+ "Not shown in the room. "
+		+ "Empty = res://assets/textures/exploration/decorations/icon_lens_flare.png")
+	var flare_preview_btn := Button.new()
+	flare_preview_btn.text = "Preview"
+	flare_preview_btn.custom_minimum_size = Vector2(60, 0)
+	flare_preview_btn.add_theme_font_size_override("font_size", 12)
+	flare_preview_btn.tooltip_text = "Preview lens flare image"
+	flare_preview_btn.pressed.connect(func() -> void:
+		var p: String = flare_edit.text.strip_edges()
+		if p.is_empty():
+			p = "res://assets/textures/exploration/decorations/icon_lens_flare.png"
+		_preview_image(p))
+	flare_edit.get_parent().add_child(flare_preview_btn)
+
 	frame.set_meta("temp_enable_chk", temp_enable)
 	frame.set_meta("temp_spot_spin", temp_spot_spin)
 	frame.set_meta("mumbling_edit", mumble_edit)
 	frame.set_meta("smoke_edit", smoke_edit)
+	frame.set_meta("camera_hide_chk", camera_hide_cb)
+	frame.set_meta("lens_flare_edit", flare_edit)
 
-	# Index 10: Remove button
+	# Remove button (after meta-collected tool / camera fields)
 	var del_btn := Button.new()
 	del_btn.text = "Remove Point"
 	del_btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
@@ -2544,6 +2580,16 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 				var spath: String = smoke_edit.text.strip_edges()
 				if not spath.is_empty():
 					entry["smoke_image"] = spath
+		if frame.has_meta("camera_hide_chk"):
+			var cam_chk := frame.get_meta("camera_hide_chk") as CheckBox
+			if cam_chk != null and cam_chk.button_pressed:
+				entry["hidden_until_camera_shutter"] = true
+		if frame.has_meta("lens_flare_edit"):
+			var flare_edit := frame.get_meta("lens_flare_edit") as LineEdit
+			if flare_edit != null:
+				var fpath: String = flare_edit.text.strip_edges()
+				if not fpath.is_empty():
+					entry["lens_flare_image"] = fpath
 		result.append(entry)
 	return result
 

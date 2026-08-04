@@ -155,7 +155,7 @@
 			],
 			"id": "whispering_walls",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Whispering Walls",
 			"positive": true,
@@ -165,7 +165,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "2 enemy cells revealed at battle start, but 1 of yours is too.",
+			"description": "2 enemy cells are revealed at battle start, but 1 of yours is too.",
 			"effects": [
 				{
 					"target": "enemy",
@@ -624,7 +624,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "-15% all crystal loss; crystal gains -50%.",
+			"description": "-15% to all crystal loss; crystal gains reduced by 50%.",
 			"effects": [
 				{
 					"scope": "all",
@@ -652,7 +652,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "-20% all crystal loss; you cannot gain crystals.",
+			"description": "-20% to all crystal loss; you cannot gain crystals.",
 			"effects": [
 				{
 					"scope": "all",
@@ -727,7 +727,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "-15% unit-destruction crystal loss; crystal gains -50%.",
+			"description": "-15% unit-destruction crystal loss; crystal gains reduced by 50%.",
 			"effects": [
 				{
 					"scope": "unit_destroy",
@@ -829,7 +829,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "-15% trap costs; crystal gains -50%.",
+			"description": "-15% trap costs; crystal gains reduced by 50%.",
 			"effects": [
 				{
 					"type": "trap_cost_pct",
@@ -930,7 +930,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "-25% tech costs; crystal gains -50%.",
+			"description": "-25% tech costs; crystal gains reduced by 50%.",
 			"effects": [
 				{
 					"type": "tech_cost_pct",
@@ -1226,7 +1226,7 @@
 			],
 			"id": "iron_coffin",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Iron Coffin",
 			"positive": true,
@@ -1251,7 +1251,7 @@
 			],
 			"id": "throne_of_bone",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Throne of Bone",
 			"positive": true,
@@ -1309,7 +1309,7 @@
 			],
 			"id": "plague_bearer",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Plague Bearer",
 			"positive": true,
@@ -1335,7 +1335,7 @@
 			],
 			"id": "undying_strain",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Undying Strain",
 			"positive": true,
@@ -1358,7 +1358,7 @@
 			],
 			"id": "stubborn_soul",
 			"illustration": "res://assets/textures/omens/stubborn_soul.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Stubborn Soul",
 			"positive": true,
@@ -1381,7 +1381,7 @@
 			],
 			"id": "null_aegis",
 			"illustration": "res://assets/textures/omens/null_aegis.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Null Aegis",
 			"positive": true,
@@ -1403,7 +1403,7 @@
 			],
 			"id": "martyrs_reward",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Martyr's Reward",
 			"positive": true,
@@ -1430,7 +1430,7 @@
 			],
 			"id": "serpents_kiss",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Serpent's Kiss",
 			"positive": true,
@@ -1458,7 +1458,7 @@
 			],
 			"id": "golden_reckoning",
 			"illustration": "res://assets/textures/omens/golden_reckoning.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Golden Reckoning",
 			"positive": true,
@@ -1484,7 +1484,7 @@
 			],
 			"id": "pack_instinct",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Pack Instinct",
 			"positive": true,
@@ -1510,7 +1510,7 @@
 			],
 			"id": "contagion_mark",
 			"illustration": "res://assets/textures/omens/contagion_mark.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Contagion Mark",
 			"positive": true,
@@ -1556,7 +1556,7 @@
 			],
 			"id": "shortcut_circuit",
 			"illustration": "res://assets/textures/omens/shortcut_circuit.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Shortcut Circuit",
 			"positive": true,
@@ -1582,7 +1582,7 @@
 			],
 			"id": "wild_bloom",
 			"illustration": "res://assets/textures/omens/wild_bloom.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Wild Bloom",
 			"positive": true,
@@ -1604,7 +1604,7 @@
 			],
 			"id": "spiteful_echo",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Spiteful Echo",
 			"positive": true,
@@ -1656,7 +1656,7 @@
 			],
 			"id": "frenzy_brand",
 			"illustration": "res://assets/textures/omens/frenzy_brand.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Frenzy Brand",
 			"positive": true,
@@ -1679,7 +1679,7 @@
 			],
 			"id": "free_snare",
 			"illustration": "res://assets/textures/omens/free_snare.jpg",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Free Snare",
 			"positive": true,
@@ -1927,10 +1927,10 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Summon cost halved.",
+			"description": "Choose 1 unit. Union summons using this card as material cost half.",
 			"effects": [
 				{
-					"type": "anoint_cost_multiplier",
+					"type": "union_material_cost_multiplier",
 					"value": 0.5
 				}
 			],
@@ -1939,7 +1939,7 @@
 			],
 			"id": "lightweight",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Lightweight",
 			"positive": true,
@@ -2041,7 +2041,7 @@
 			],
 			"id": "hollow_offering",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Hollow Offering",
 			"positive": null,
@@ -2066,7 +2066,7 @@
 			],
 			"id": "serpent_mark",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Serpent Mark",
 			"positive": true,
@@ -2090,7 +2090,7 @@
 			],
 			"id": "venom_priming",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Venom Priming",
 			"positive": true,
@@ -2114,7 +2114,7 @@
 			],
 			"id": "natures_second_wind",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Nature's Second Wind",
 			"positive": true,
@@ -2140,7 +2140,7 @@
 			],
 			"id": "void_hunger",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Void Hunger",
 			"positive": true,
@@ -2152,7 +2152,7 @@
 			"anoint_filter": {
 				"affinity": "CHAOS"
 			},
-			"description": "Choose 1 Chaos unit. Foe units in Reckoning with it have ability None for that clash.",
+			"description": "Choose 1 Chaos unit. Foe units in Reckoning with it have their ability set to None for that clash.",
 			"effects": [
 				{
 					"type": "nullify_foe_ability_in_reckoning"
@@ -2164,7 +2164,7 @@
 			],
 			"id": "silence_brand",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Silence Brand",
 			"positive": true,
@@ -2202,7 +2202,7 @@
 			"anoint_filter": {
 				"affinity": "DIVINE"
 			},
-			"description": "Choose 1 Divine unit. Not destroyed while another Divine card is on your field.",
+			"description": "Choose 1 Divine unit. It is not destroyed while another Divine card is on your field.",
 			"effects": [
 				{
 					"condition": "ally_divine_on_field",
@@ -2215,7 +2215,7 @@
 			],
 			"id": "martyrs_halo",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Martyr's Halo",
 			"positive": true,
@@ -2227,7 +2227,7 @@
 			"anoint_filter": {
 				"affinity": "DIVINE"
 			},
-			"description": "Choose 1 Divine unit. Once per battle, revive it at end of turn it was destroyed.",
+			"description": "Choose 1 Divine unit. Once per battle, revive it at the end of the turn it was destroyed.",
 			"effects": [
 				{
 					"type": "revive_once_end_of_turn"
@@ -2239,7 +2239,7 @@
 			],
 			"id": "divine_return",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Divine Return",
 			"positive": true,
@@ -2264,7 +2264,7 @@
 			],
 			"id": "star_ledger",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Star Ledger",
 			"positive": true,
@@ -2289,7 +2289,7 @@
 			],
 			"id": "star_peek",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Star Peek",
 			"positive": true,
@@ -2314,7 +2314,7 @@
 			],
 			"id": "star_probe",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Star Probe",
 			"positive": true,
@@ -2338,7 +2338,7 @@
 			],
 			"id": "pack_brand",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Pack Brand",
 			"positive": true,
@@ -2365,7 +2365,7 @@
 			],
 			"id": "pack_presence",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Pack Presence",
 			"positive": true,
@@ -2377,7 +2377,7 @@
 			"anoint_filter": {
 				"affinity": "ANIMA"
 			},
-			"description": "Choose 1 Anima unit. Unaffected by other units' abilities.",
+			"description": "Choose 1 Anima unit. It is unaffected by other units' abilities.",
 			"effects": [
 				{
 					"type": "ability_immunity_vs_units"
@@ -2389,7 +2389,7 @@
 			],
 			"id": "lone_will",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Lone Will",
 			"positive": true,
@@ -2413,7 +2413,7 @@
 			],
 			"id": "mutagen_aegis",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Mutagen Aegis",
 			"positive": true,
@@ -2436,7 +2436,7 @@
 			],
 			"id": "mutagen_lazarus",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Mutagen Lazarus",
 			"positive": true,
@@ -2460,7 +2460,7 @@
 			],
 			"id": "hex_seal",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Hex Seal",
 			"positive": true,
@@ -2486,7 +2486,7 @@
 			],
 			"id": "arcane_nimbus",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Arcane Nimbus",
 			"positive": true,
@@ -2511,7 +2511,7 @@
 			],
 			"id": "arcane_absolute",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Arcane Absolute",
 			"positive": true,
@@ -2534,7 +2534,7 @@
 			],
 			"id": "cheap_catalyst",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Cheap Catalyst",
 			"positive": true,
@@ -2544,7 +2544,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "All units on your side become Anima affinity.",
+			"description": "All units on your side change to Anima affinity.",
 			"effects": [
 				{
 					"affinity": "ANIMA",
@@ -2557,7 +2557,7 @@
 			],
 			"id": "mass_transfiguration",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Mass Transfiguration",
 			"positive": null,
@@ -2578,7 +2578,7 @@
 			],
 			"id": "stubborn_brand",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Stubborn Brand",
 			"positive": true,
@@ -2600,7 +2600,7 @@
 			],
 			"id": "second_skin",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Second Skin",
 			"positive": true,
@@ -2623,7 +2623,7 @@
 			],
 			"id": "scout_brand",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Scout Brand",
 			"positive": true,
@@ -2646,7 +2646,7 @@
 			],
 			"id": "tax_collector",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Tax Collector",
 			"positive": true,
@@ -2668,7 +2668,7 @@
 			],
 			"id": "quiet_ward",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Quiet Ward",
 			"positive": true,
@@ -2712,7 +2712,7 @@
 			],
 			"id": "mirror_trap",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Mirror Trap",
 			"positive": true,
@@ -2734,7 +2734,7 @@
 			],
 			"id": "overclock_chip",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Overclock Chip",
 			"positive": true,
@@ -2757,7 +2757,7 @@
 			],
 			"id": "half_snare",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Half Snare",
 			"positive": true,
@@ -2855,7 +2855,7 @@
 			],
 			"id": "skeptics_charm",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Skeptic's Charm",
 			"positive": true,
@@ -2877,7 +2877,7 @@
 			],
 			"id": "gamblers_grace",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Gambler's Grace",
 			"positive": true,
@@ -2900,7 +2900,7 @@
 			],
 			"id": "bluff_hunter",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Bluff Hunter",
 			"positive": true,
@@ -2923,7 +2923,7 @@
 			],
 			"id": "baptism",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Baptism",
 			"positive": true,
@@ -2946,7 +2946,7 @@
 			],
 			"id": "transmutation",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Transmutation",
 			"positive": true,
@@ -2971,7 +2971,7 @@
 			],
 			"id": "chaosbane_sigil",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Chaosbane Sigil",
 			"positive": true,
@@ -2996,7 +2996,7 @@
 			],
 			"id": "divinebane_sigil",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Divinebane Sigil",
 			"positive": true,
@@ -3021,7 +3021,7 @@
 			],
 			"id": "animabane_sigil",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Animabane Sigil",
 			"positive": true,
@@ -3046,7 +3046,7 @@
 			],
 			"id": "naturebane_sigil",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Naturebane Sigil",
 			"positive": true,
@@ -3068,7 +3068,7 @@
 			],
 			"id": "dread_magnet",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Dread Magnet",
 			"positive": null,
@@ -3090,7 +3090,7 @@
 			],
 			"id": "executioners_pact",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Executioner's Pact",
 			"positive": true,
@@ -3114,7 +3114,7 @@
 			],
 			"id": "venom_lash",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Venom Lash",
 			"positive": true,
@@ -3137,7 +3137,7 @@
 			],
 			"id": "echo_lens",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Echo Lens",
 			"positive": true,
@@ -3160,7 +3160,7 @@
 			],
 			"id": "tithe_of_souls",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Tithe of Souls",
 			"positive": true,
@@ -3182,7 +3182,7 @@
 			],
 			"id": "hypnotic_gaze",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Hypnotic Gaze",
 			"positive": true,
@@ -3204,7 +3204,7 @@
 			],
 			"id": "dowsers_instinct",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Dowser's Instinct",
 			"positive": true,
@@ -3226,7 +3226,7 @@
 			],
 			"id": "grave_rebate",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Grave Rebate",
 			"positive": true,
@@ -3247,7 +3247,7 @@
 			],
 			"id": "second_charge",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Second Charge",
 			"positive": true,
@@ -3268,7 +3268,7 @@
 			],
 			"id": "tripwire_echo",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Tripwire Echo",
 			"positive": true,
@@ -3294,7 +3294,7 @@
 			],
 			"id": "mutant_apex",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Mutant Apex",
 			"positive": true,
@@ -3392,7 +3392,7 @@
 			],
 			"id": "union_catalyst",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Union Catalyst",
 			"positive": true,
@@ -3402,14 +3402,14 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Coin effects always Heads; summon cost +20%.",
+			"description": "Choose 1 unit. Coin effects always Heads; Union cost +20% when used as material.",
 			"effects": [
 				{
 					"type": "coin_bias",
 					"value": "always_heads"
 				},
 				{
-					"type": "anoint_cost_multiplier",
+					"type": "union_material_cost_multiplier",
 					"value": 1.2
 				}
 			],
@@ -3419,7 +3419,7 @@
 			],
 			"id": "loaded_dice",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Loaded Dice",
 			"positive": null,
@@ -3442,7 +3442,7 @@
 			],
 			"id": "lucky_streak",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Lucky Streak",
 			"positive": true,
@@ -3463,7 +3463,7 @@
 			],
 			"id": "oracles_sacrifice",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Oracle's Sacrifice",
 			"positive": true,
@@ -3486,7 +3486,7 @@
 			],
 			"id": "rigged_snare",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Rigged Snare",
 			"positive": true,
@@ -3496,7 +3496,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. When it hits a foe trap, foe coin Tails = trap does nothing.",
+			"description": "Choose 1 unit. When it hits a foe trap, if the foe's coin is Tails, the trap does nothing.",
 			"effects": [
 				{
 					"type": "trap_coin_negate"
@@ -3508,7 +3508,7 @@
 			],
 			"id": "soft_step",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Soft Step",
 			"positive": true,
@@ -3531,7 +3531,7 @@
 			],
 			"id": "etched_brand",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Etched Brand",
 			"positive": true,
@@ -3554,7 +3554,7 @@
 			],
 			"id": "etched_trap",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Etched Trap",
 			"positive": true,
@@ -3577,7 +3577,7 @@
 			],
 			"id": "etched_circuit",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Etched Circuit",
 			"positive": true,
@@ -3600,7 +3600,7 @@
 			],
 			"id": "lingering_brand",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Lingering Brand",
 			"positive": true,
@@ -3623,7 +3623,7 @@
 			],
 			"id": "lingering_trap",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Lingering Trap",
 			"positive": true,
@@ -3647,7 +3647,7 @@
 			],
 			"id": "lingering_circuit",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Lingering Circuit",
 			"positive": true,
@@ -3657,7 +3657,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. +100 ATK; destroyed at end of turn it becomes exposed.",
+			"description": "Choose 1 unit. +100 ATK; destroyed at the end of the turn it becomes exposed.",
 			"effects": [
 				{
 					"atk": 100.0,
@@ -3672,7 +3672,7 @@
 			],
 			"id": "burning_idol",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Burning Idol",
 			"positive": null,
@@ -3682,7 +3682,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Ability None. Revive if destroyed by own/Omen effect.",
+			"description": "Choose 1 unit. Ability None. Revive if destroyed by its own effect or an Omen effect.",
 			"effects": [
 				{
 					"type": "anoint_set_ability_none"
@@ -3697,7 +3697,7 @@
 			],
 			"id": "phoenix_bargain",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Phoenix Bargain",
 			"positive": null,
@@ -3720,7 +3720,7 @@
 			],
 			"id": "taxing_snare",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Taxing Snare",
 			"positive": true,
@@ -3741,7 +3741,7 @@
 			],
 			"id": "blind_eye",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Blind Eye",
 			"positive": true,
@@ -3751,7 +3751,7 @@
 		{
 			"anoint_card_type": "trap",
 			"anoint_filter": {},
-			"description": "Choose 1 trap. Its effect becomes Reveal 1 foe cell.",
+			"description": "Choose 1 trap. Its effect becomes: reveal 1 foe cell.",
 			"effects": [
 				{
 					"effect": "reveal_foe_cell",
@@ -3765,7 +3765,7 @@
 			],
 			"id": "spyglass_snare",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Spyglass Snare",
 			"positive": null,
@@ -3775,7 +3775,7 @@
 		{
 			"anoint_card_type": "tech",
 			"anoint_filter": {},
-			"description": "Choose 1 tech. Its effect becomes Reveal 2 foe cells.",
+			"description": "Choose 1 tech. Its effect becomes: reveal 2 foe cells.",
 			"effects": [
 				{
 					"effect": "reveal_foe_cell",
@@ -3789,7 +3789,7 @@
 			],
 			"id": "twin_spyglass",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Twin Spyglass",
 			"positive": null,
@@ -4069,7 +4069,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Each of your units has 25% chance +50% stats and 25% chance -25%.",
+			"description": "Each of your units has a 25% chance of +50% stats and a 25% chance of -25% stats.",
 			"effects": [
 				{
 					"alt_atk_pct": -25.0,
@@ -4108,7 +4108,7 @@
 			],
 			"id": "poltergeist",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Poltergeist",
 			"positive": null,
@@ -4141,12 +4141,12 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your unit summon costs -50%.",
+			"description": "Crystal loss when your units are destroyed is halved.",
 			"effects": [
 				{
-					"target": "player",
-					"type": "summon_cost_multiplier",
-					"value": 0.5
+					"scope": "unit_destroy",
+					"type": "crystal_loss_pct",
+					"value": -50.0
 				}
 			],
 			"groups": [
@@ -4155,7 +4155,7 @@
 			],
 			"id": "grave_discount",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Grave Discount",
 			"positive": true,
@@ -4165,15 +4165,15 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Summon cost of your units with no ability is halved.",
+			"description": "Crystal loss is halved when your units with no ability are destroyed.",
 			"effects": [
 				{
+					"type": "unit_destroy_cost_multiplier",
+					"value": 0.5,
+					"target": "player",
 					"filter": {
 						"ability_none": true
-					},
-					"target": "player",
-					"type": "summon_cost_multiplier",
-					"value": 0.5
+					}
 				}
 			],
 			"groups": [
@@ -4181,7 +4181,7 @@
 			],
 			"id": "simple_rites",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Simple Rites",
 			"positive": true,
@@ -4203,7 +4203,7 @@
 			],
 			"id": "trapsmiths_favor",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Trapsmith's Favor",
 			"positive": true,
@@ -4226,7 +4226,7 @@
 			],
 			"id": "overclock",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Overclock",
 			"positive": true,
@@ -4276,7 +4276,7 @@
 			],
 			"id": "adrenal_surge",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Adrenal Surge",
 			"positive": null,
@@ -4320,7 +4320,7 @@
 			],
 			"id": "witching_hour",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Witching Hour",
 			"positive": true,
@@ -4330,7 +4330,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "+1 attack count per turn; unit crystal loss in Reckoning +60%.",
+			"description": "+1 attack count per turn; crystal loss from your units in Reckoning is increased by 60%.",
 			"effects": [
 				{
 					"type": "max_attacks_bonus",
@@ -4375,7 +4375,7 @@
 			],
 			"id": "exhausting_barrage",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Exhausting Barrage",
 			"positive": null,
@@ -4480,7 +4480,7 @@
 			],
 			"id": "grave_dividend",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Grave Dividend",
 			"positive": true,
@@ -4502,7 +4502,7 @@
 			],
 			"id": "escalating_toll",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Escalating Toll",
 			"positive": true,
@@ -4525,7 +4525,7 @@
 			],
 			"id": "bait_purse",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Bait Purse",
 			"positive": true,
@@ -4535,7 +4535,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Each time a foe attacks your Dead End, that attacker cannot attack next foe turn.",
+			"description": "Each time a foe attacks your Dead End cell, that attacker cannot attack during the foe's next turn.",
 			"effects": [
 				{
 					"type": "lock_attacker_on_foe_dead_end"
@@ -4547,7 +4547,7 @@
 			],
 			"id": "staggering_bait",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Staggering Bait",
 			"positive": true,
@@ -4571,7 +4571,7 @@
 			],
 			"id": "barrel_gospel",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Barrel Gospel",
 			"positive": null,
@@ -4581,7 +4581,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random cells of yours; crystal loss halved when unit on rune is destroyed.",
+			"description": "3 runes under random cells of yours; crystal loss is halved when a unit on a rune is destroyed.",
 			"effects": [
 				{
 					"count": 3.0,
@@ -4596,7 +4596,7 @@
 			],
 			"id": "rune_fehu",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Rune - Fehu",
 			"positive": true,
@@ -4631,7 +4631,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "1 rune under a random cell of yours; unit on it revives once when destroyed.",
+			"description": "1 rune under a random cell of yours; the unit on it revives once when destroyed.",
 			"effects": [
 				{
 					"count": 1.0,
@@ -4646,7 +4646,7 @@
 			],
 			"id": "rune_thurisaz",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Rune - Thurisaz",
 			"positive": true,
@@ -4671,7 +4671,7 @@
 			],
 			"id": "rune_hagalaz",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Rune - Hagalaz",
 			"positive": true,
@@ -4721,7 +4721,7 @@
 			],
 			"id": "rune_jera",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Rune - Jera",
 			"positive": false,
@@ -4783,7 +4783,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "2 runes above random occupied cells of yours; unit counts as any one Union material.",
+			"description": "2 runes above random occupied cells of yours; that unit counts as any one Union material.",
 			"effects": [
 				{
 					"count": 2.0,
@@ -4821,7 +4821,7 @@
 			],
 			"id": "rune_algiz",
 			"illustration": "",
-			"implemented": false,
+			"implemented": true,
 			"include_in_demo": true,
 			"label": "Rune - Algiz",
 			"positive": true,
@@ -4831,7 +4831,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random occupied enemy cells; units there have ability sealed.",
+			"description": "3 runes under random occupied enemy cells; units there have their abilities sealed.",
 			"effects": [
 				{
 					"count": 3.0,
@@ -5013,7 +5013,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Bioterrorist gains +100 ATK",
+			"description": "Bioterrorist gains +100 ATK.",
 			"effects": [
 				{
 					"atk": 100.0,
@@ -5041,7 +5041,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Grand Fort Captain gains +40 ATK and +20 ATK",
+			"description": "Grand Fort Captain gains +40 ATK and +20 DEF.",
 			"effects": [
 				{
 					"atk": 40.0,
@@ -5069,7 +5069,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Moon Tribe Shaman gains +50 ATK",
+			"description": "Moon Tribe Shaman gains +50 ATK.",
 			"effects": [
 				{
 					"atk": 50.0,
@@ -5097,7 +5097,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Colorful Mage gains +40 ATK and +40 DEF",
+			"description": "Colorful Mage gains +40 ATK and +40 DEF.",
 			"effects": [
 				{
 					"atk": 40.0,
@@ -5121,6 +5121,566 @@
 			"positive": true,
 			"rarity": "uncommon",
 			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Mutant\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Mutant"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "mutant_host",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Mutant Host",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Shark\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Shark"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "shark_shoal",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Shark Shoal",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Seraph\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Seraph"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "seraph_choir",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Seraph Choir",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Nanomite\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Nanomites"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "nanomite_swarm",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Nanomite Swarm",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Mage\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Mage"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "mage_circle",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Mage Circle",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Fairy\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Fairy"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "fairy_ring",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Fairy Ring",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Probe\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Probe"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "probe_network",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Probe Network",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Grand Fort\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Grand Fort"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "grand_fort_banner",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Grand Fort Banner",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"description": "All your \"Knight\" units gain +50 ATK and +50 DEF.",
+			"effects": [
+				{
+					"atk": 50.0,
+					"def": 50.0,
+					"filter": {
+						"name_contains": "Knight"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			],
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"id": "knight_order",
+			"illustration": "",
+			"implemented": true,
+			"include_in_demo": true,
+			"label": "Knight Order",
+			"positive": true,
+			"rarity": "uncommon",
+			"stackable": true
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "cannonade_ruin",
+			"label": "Cannonade Ruin",
+			"description": "After Reckoning with your \"Cannon\" unit, destroy 1 card on the field.",
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "destroy_after_reckoning",
+					"value": 1.0,
+					"target": "field",
+					"filter": {
+						"name_contains": "Cannon"
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "mine_survey",
+			"label": "Mine Survey",
+			"description": "After Reckoning with your \"Mine\" or \"Drill\" unit, reveal 2 cells on the field.",
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "reveal_after_reckoning",
+					"value": 2.0,
+					"filter": {
+						"name_contains_any": [
+							"Mine",
+							"Drill"
+						]
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "guard_crossguard",
+			"label": "Guard Crossguard",
+			"description": "All your Guard units gain +100 DEF vs units of a different affinity.",
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "unit_def_vs_different_affinity",
+					"def": 100.0,
+					"target": "player",
+					"filter": {
+						"name_contains": "Guard"
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "vampire_dusk",
+			"label": "Vampire Dusk",
+			"description": "All your Vampire units are not destroyed by Divine-affinity units.",
+			"groups": [
+				"wards",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "destruction_immunity_vs_affinity",
+					"affinity": "DIVINE",
+					"target": "player",
+					"filter": {
+						"name_contains": "Vampire"
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "armored_plating",
+			"label": "Armored Plating",
+			"description": "All your Armored units gain +60 DEF.",
+			"groups": [
+				"totems",
+				"chapter_1"
+			],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{
+					"atk": 0.0,
+					"def": 60.0,
+					"filter": {
+						"name_contains": "Armored"
+					},
+					"target": "player",
+					"type": "unit_stat_flat"
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "slime_filth",
+			"label": "Slime Filth",
+			"description": "All your \"Slime\" or \"Blob\" units are not destroyed by non-Bio affinity units.",
+			"groups": [
+				"wards",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "destruction_immunity_vs_non_affinity",
+					"affinity": "BIO",
+					"target": "player",
+					"filter": {
+						"name_contains_any": [
+							"Slime",
+							"Blob"
+						]
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "royal_second_chance",
+			"label": "Royal Second Chance",
+			"description": "Your \"Princess\", \"Prince\", \"King\", or \"Queen\" units survive destruction once.",
+			"groups": [
+				"wards",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "survive_destruction_once",
+					"target": "player",
+					"filter": {
+						"name_contains_any": [
+							"Princess",
+							"Prince",
+							"King",
+							"Queen"
+						]
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "bone_second_chance",
+			"label": "Bone Second Chance",
+			"description": "Your \"Skeleton\" units survive destruction once.",
+			"groups": [
+				"wards",
+				"chapter_1"
+			],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "survive_destruction_once",
+					"target": "player",
+					"filter": {
+						"name_contains": "Skeleton"
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "comet_barrage",
+			"label": "Comet Barrage",
+			"description": "Your \"Meteor\" or \"Comet\" units can attack 2 additional times.",
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "unit_extra_attacks",
+					"value": 2.0,
+					"target": "player",
+					"filter": {
+						"name_contains_any": [
+							"Meteor",
+							"Comet"
+						]
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "trap_hole_snare",
+			"label": "Trap Hole Snare",
+			"description": "A foe unit that hits your \"Trap Hole\" cards cannot attack during the foe's next turn.",
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "lock_attacker_on_trap",
+					"filter": {
+						"name_contains": "Trap Hole"
+					}
+				}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "forced_confession",
+			"label": "Forced Confession",
+			"description": "Your opponent cannot decline your \"Bribe\" or \"Blackmail\".",
+			"groups": [
+				"rites",
+				"chapter_1"
+			],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{
+					"type": "cannot_decline_tech",
+					"filter": {
+						"name_contains_any": [
+							"Bribe",
+							"Blackmail"
+						]
+					}
+				}
+			]
 		}
 	]
 }

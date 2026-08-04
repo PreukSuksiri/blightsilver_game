@@ -165,7 +165,8 @@ var _info_radial_items: Array      = []
 var _note_overlay: DetectiveNoteOverlay = null
 var _omen_detail_overlay: OmenDetailOverlay = null
 var _deck_view_overlay: DeckViewOverlay = null
-## Above the HUD (40), radial chips and the deck builder overlay (200).
+var _deck_builder_overlay: Control = null
+## Above the HUD (40), radial chips and the deck builder overlay.
 const HUD_OVERLAY_Z: int = 210
 
 # ── Item preview overlay (inventory tap-to-inspect) ──────────────────────
@@ -201,7 +202,7 @@ var _hovered_nav_panel: Control    = null   # nav-choice panel currently being h
 
 # ── Detective tool (active-cursor state) ──────────────────────────────────
 const TOOL_REVEAL_RADIUS: float = 90.0      # default proximity reveal radius (px)
-const TOOL_CURSOR_SIZE: Vector2 = Vector2(64.0, 64.0)
+const TOOL_CURSOR_SIZE: Vector2 = Vector2(128.0, 128.0)
 const DetectiveToolFxScript = preload("res://scripts/DetectiveToolFx.gd")
 var _active_tool_id: String        = ""     # empty = no tool active
 # Entries: { "hit": Control, "center": Vector2, "radius": float, "revealed": bool, ... }
@@ -1503,11 +1504,14 @@ func _spawn_info_radial_items(center: Vector2) -> void:
 	if not DetectiveNoteManager.resolve_active_chapter().is_empty():
 		choices.append({"label": "Detective Note", "action": "detective_note"})
 	choices.append({"label": "Location Info", "action": "location_info"})
-	choices.append({"label": "Omens", "action": "omens"})
-	choices.append({"label": "View Deck", "action": "view_deck"})
+	# Deck / Omens stay hidden until prologue clears the deckbuilding gate.
+	if SaveManager.is_deckbuilding_unlocked():
+		choices.append({"label": "Omens", "action": "omens"})
+		choices.append({"label": "Edit Deck", "action": "edit_deck"})
+		# View Deck kept for possible re-enable: {"label": "View Deck", "action": "view_deck"}
 	var n: int = choices.size()
-	# Half-step rotation once there are four chips, so none lands on the bottom HUD.
-	var base_angle: float = -PI * 0.5 + (PI / float(n) if n >= 4 else 0.0)
+	# Start at top (-PI/2). With 4 chips this is top/right/bottom/left (+), not diagonal (X).
+	var base_angle: float = -PI * 0.5
 	for i: int in range(n):
 		var angle: float = base_angle + float(i) * (TAU / float(n))
 		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
@@ -1547,7 +1551,10 @@ func _on_info_menu_action(action: String) -> void:
 			_open_detective_note_overlay()
 		"omens":
 			_open_omen_detail_overlay()
+		"edit_deck":
+			_open_deck_builder_overlay(Callable())
 		"view_deck":
+			# Kept for re-enable; radial currently offers Edit Deck instead.
 			_open_deck_view_overlay()
 
 
@@ -1983,11 +1990,12 @@ func _flash_empty_inventory() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _rebuild_active_omens() -> void:
-	if _omens_list == null or _omens_section == null:
-		return
-	var held: Array = ExplorationManager.get_active_omens()
-	OmenListPanel.build_list(_omens_list, held)
-	_omens_section.visible = not held.is_empty()
+	# Omens are no longer shown in the location info panel.
+	if _omens_section != null:
+		_omens_section.visible = false
+	if _omens_list != null:
+		for child: Node in _omens_list.get_children():
+			child.queue_free()
 
 
 ## Rebuild the "Who is here" grid from the node's character list.
@@ -2391,6 +2399,7 @@ func _on_item_obtained(item_id: String) -> void:
 		_show_next_obtained()
 
 func _on_mailbox_reward_granted(info: Dictionary) -> void:
+	ExplorationManager.mark_item_obtained_overlay_busy()
 	var entry := info.duplicate()
 	entry["_mailbox_type"] = true
 	_obtained_queue.append(entry)
@@ -2398,6 +2407,8 @@ func _on_mailbox_reward_granted(info: Dictionary) -> void:
 		_show_next_obtained()
 
 func _show_next_obtained() -> void:
+	if _is_deck_builder_open():
+		return
 	if _obtained_queue.is_empty():
 		_notify_item_obtained_overlay_idle()
 		return
@@ -4108,6 +4119,7 @@ func _start_tool_fx(item_id: String) -> void:
 		"photo_vn_scene": "",
 		"background_texture": _bg_rect.texture if _bg_rect != null else null,
 		"photo_smoke_spots": _all_tool_gated_spots_for_photo(),
+		"photo_lens_flare_spots": _camera_hidden_spots_for_photo(),
 	}
 	if node != null:
 		opts["room_temperature"] = node.room_temperature
@@ -4156,6 +4168,42 @@ func _all_tool_gated_spots_for_photo() -> Array:
 	return out
 
 
+## Camera-hidden spots not yet dismissed — drawn as lens flares on Polaroid photos.
+## Shown before shutter (hint) and after, until hide_after_interact clears the spot.
+func _camera_hidden_spots_for_photo() -> Array:
+	var out: Array = []
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return out
+	var node_id: String = ExplorationManager.current_node_id
+	var vp: Vector2 = get_viewport_rect().size
+	for i: int in node.clickable_spots.size():
+		var spot_var: Variant = node.clickable_spots[i]
+		if not spot_var is Dictionary:
+			continue
+		var spot: Dictionary = spot_var as Dictionary
+		if not bool(spot.get("hidden_until_camera_shutter", false)):
+			continue
+		if not ExplorationManager.is_connection_unlocked(spot):
+			continue
+		if bool(spot.get("hide_after_interact", false)) \
+				and (ExplorationManager.is_spot_interacted(node_id, i) \
+					or ExplorationManager.is_spot_in_progress(node_id, i)):
+			continue
+		var xn: float = float(spot.get("x_norm", 0.5))
+		var yn: float = float(spot.get("y_norm", 0.5))
+		var entry: Dictionary = {
+			"center": Vector2(xn * vp.x, yn * vp.y),
+			"x_norm": xn,
+			"y_norm": yn,
+		}
+		var flare_path: String = str(spot.get("lens_flare_image", "")).strip_edges()
+		if not flare_path.is_empty():
+			entry["lens_flare_image"] = flare_path
+		out.append(entry)
+	return out
+
+
 func _stop_tool_fx() -> void:
 	if _tool_fx != null and is_instance_valid(_tool_fx):
 		_tool_fx.call("stop_tool")
@@ -4196,9 +4244,14 @@ func _on_tool_fx_photo_vn(path: String) -> void:
 func _on_tool_fx_polaroid_shot_finished() -> void:
 	# Leave polaroid active mode immediately after a Mode 2 picture; keep the overlay.
 	_tool_dismiss_pending = false
+	var node_id: String = ExplorationManager.current_node_id
+	if not node_id.is_empty():
+		ExplorationManager.mark_room_camera_shuttered(node_id)
 	if _active_tool_id.is_empty():
 		if _tool_fx != null and is_instance_valid(_tool_fx):
 			_tool_fx.call("exit_active_keep_overlay")
+		if is_inside_tree() and ExplorationManager.current_node != null:
+			_rebuild_spots(ExplorationManager.current_node)
 		return
 	_active_tool_id = ""
 	_tool_spots.clear()
@@ -4397,6 +4450,10 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	if not ExplorationManager.is_connection_unlocked(spot):
 		_log_skipped_spot(spot, spot_index)
 		return
+	# Camera-hidden: invisible/uninteractable until any Polaroid Mode 2 shutter in this room.
+	if bool(spot.get("hidden_until_camera_shutter", false)) \
+			and not ExplorationManager.is_room_camera_shuttered(ExplorationManager.current_node_id):
+		return
 	# Detective-tool gating:
 	#   • No tool active → normal spots only (requires_tool empty).
 	#   • Tool active → matching tool-gated spots only; normal spots hidden.
@@ -4420,9 +4477,12 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 
 	var xn: float         = float(spot.get("x_norm",    0.5))
 	var yn: float         = float(spot.get("y_norm",    0.5))
-	var icon_path: String = str(spot.get("icon",        ""))
-	if is_disabled:
-		icon_path = str(spot.get("disabled_icon", "")).strip_edges()
+	# Camera-hidden spots stay hitbox-only in the room (lens flare is Polaroid-only).
+	var icon_path: String = ""
+	if not bool(spot.get("hidden_until_camera_shutter", false)):
+		icon_path = str(spot.get("icon", ""))
+		if is_disabled:
+			icon_path = str(spot.get("disabled_icon", "")).strip_edges()
 	var icon_scale: float = float(spot.get("icon_scale", 100.0))
 	var tip: String       = str(spot.get("tooltip",     ""))
 	if is_disabled:
@@ -4662,6 +4722,7 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			var item_id: String = key if not key.is_empty() else value
 			if not item_id.is_empty():
 				ExplorationManager.add_item(item_id)
+			await _wait_for_reward_overlays()
 			next.call()
 		"remove_item":
 			var rem_id: String = key if not key.is_empty() else value
@@ -4671,7 +4732,11 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 		"set_var":
 			ExplorationManager.set_var(key, value)
 			next.call()
-		"give_credits", "set_flag", "give_booster_pack", "give_union_scroll", "note_add_clue", "note_unlock_topic", "note_upgrade_topic":
+		"give_credits", "give_booster_pack", "give_union_scroll":
+			ExplorationManager.process_events([act])
+			await _wait_for_reward_overlays()
+			next.call()
+		"set_flag", "note_add_clue", "note_unlock_topic", "note_upgrade_topic":
 			ExplorationManager.process_events([act])
 			next.call()
 		"show_message":
@@ -4744,6 +4809,20 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			next.call()
 
 
+## Wait until item / mailbox reward obtain overlays finish (same gate as VNPlayer).
+func _wait_for_reward_overlays() -> void:
+	if not is_inside_tree():
+		return
+	await get_tree().process_frame
+	while ExplorationManager.is_item_obtained_overlay_busy() \
+			or _is_item_obtained_overlay_active():
+		if not is_inside_tree():
+			return
+		if ExplorationManager.is_item_obtained_overlay_busy():
+			await ExplorationManager.item_obtained_overlay_idle
+		await get_tree().process_frame
+
+
 func _run_grant_omen(group_csv: String, on_done: Callable) -> void:
 	var deck_meta: Array = ExplorationManager.build_deck_card_meta_for_omens()
 	var held: Array = ExplorationManager.get_held_omen_ids()
@@ -4778,22 +4857,50 @@ func _run_grant_omen(group_csv: String, on_done: Callable) -> void:
 
 
 func _open_deck_builder_overlay(on_done: Callable) -> void:
-	if get_node_or_null("DeckBuilderOverlay") != null:
+	if _is_deck_builder_open():
 		if on_done.is_valid():
 			on_done.call()
 		return
+	_close_info_panel()
 	ExplorationManager.save_session_now()
 	var deck_builder: Control = load("res://scenes/deck_builder.tscn").instantiate()
 	deck_builder.name = "DeckBuilderOverlay"
-	deck_builder.z_index = 200
+	if deck_builder.has_method("configure_for_exploration"):
+		deck_builder.call("configure_for_exploration")
+	deck_builder.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	deck_builder.mouse_filter = Control.MOUSE_FILTER_STOP
+	deck_builder.z_index = HUD_OVERLAY_Z
+	_deck_builder_overlay = deck_builder
 	add_child(deck_builder)
+	move_child(deck_builder, get_child_count() - 1)
+	if deck_builder.has_signal("closed"):
+		var on_closed := func() -> void:
+			_deck_builder_overlay = null
+			_resume_obtained_queue_after_deck_builder()
+		deck_builder.closed.connect(on_closed, CONNECT_ONE_SHOT)
 	deck_builder.tree_exiting.connect(func() -> void:
+		if _deck_builder_overlay == deck_builder:
+			_deck_builder_overlay = null
+			_resume_obtained_queue_after_deck_builder()
 		if on_done.is_valid():
 			on_done.call()
 	)
 
 
+func _is_deck_builder_open() -> bool:
+	return _deck_builder_overlay != null and is_instance_valid(_deck_builder_overlay)
+
+
+func _resume_obtained_queue_after_deck_builder() -> void:
+	if _obtained_overlay != null:
+		return
+	if not _obtained_queue.is_empty():
+		_show_next_obtained()
+
+
 func _process(delta: float) -> void:
+	if _is_deck_builder_open():
+		return
 	if not _active_tool_id.is_empty() and not _tool_spots.is_empty():
 		_update_tool_reveal()
 
@@ -4878,8 +4985,12 @@ func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
 func _input(event: InputEvent) -> void:
+	if _is_deck_builder_open():
+		return
 	# Polaroid overlay can outlive active mode — always route presses to it first.
-	if _is_press_event(event) and _tool_fx != null and is_instance_valid(_tool_fx) \
+	# While a VN is playing, never steal clicks (VN polaroid / dialog need them).
+	if not _vn_playing and _is_press_event(event) and _tool_fx != null \
+			and is_instance_valid(_tool_fx) \
 			and bool(_tool_fx.call("is_polaroid_overlay_open")):
 		var gp_overlay: Vector2 = _get_press_global_position(event)
 		_tool_fx.call("handle_press", gp_overlay, false)
@@ -4934,6 +5045,8 @@ func _is_modified_key(key: InputEventKey) -> bool:
 	return key.meta_pressed or key.ctrl_pressed or key.alt_pressed or key.shift_pressed
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _is_deck_builder_open():
+		return
 	# Dismiss info panel when tapping outside HUD / panel (overlay is IGNORE while info-only).
 	if _is_press_event(event) and _is_info_panel_showing():
 		var gp: Vector2 = _get_press_global_position(event)

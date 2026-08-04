@@ -225,10 +225,27 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
 		"group": 2.0,
+		"sfx": "res://assets/audio/sound_axe1.mp3",
+		"sfx_volume": 60.0,
+		"shake_screen": 10.0,
+		"text": "His kick landed perfectly on the mad girl"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_being_kicked.png",
+		"bg_ken_burns": {
+			"duration": 0.5,
+			"pan_x": 0.0,
+			"pan_y": -200.0,
+			"start_pan_x": -400.0,
+			"start_pan_y": -600.0,
+			"start_zoom": 2.0,
+			"zoom": 1.0
+		},
+		"group": 2.0,
 		"sfx": "res://assets/audio/sfx/slam2.mp3",
 		"sfx_volume": 60.0,
 		"shake_screen": 10.0,
-		"text": "He kicked and knock the mad girl off-balance"
+		"text": "Her body went off balance and crashed into one of the bookshelves."
 	},
 	{
 		"exploration_actions": [
@@ -322,8 +339,9 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"sfx": "res://assets/audio/sound_glass_2.mp3",
 		"shake_screen": 20.0,
-		"text": "Mayu tried to reach for Nex again. She ransacked and threw everything off shelves along the way, resulting in a mess"
+		"text": "The mad girl tried to reach for Nex again. She ransacked and threw everything off shelves along the way, resulting in a mess"
 	},
 	{
 		"wait": 0.5
@@ -473,14 +491,14 @@
 		"wait": 0.001
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
 		"fade_color": "#ffffff",
 		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_sexy_1.mp3",
 		"wait": 0.001
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
 		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
 		"sfx_volume": 140.0,
 		"shake": "all",
@@ -490,16 +508,16 @@
 		"wait": 1.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
 		"text": "!!!!",
 		"wait": 1.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
 		"text": "(He stumbled forward, his frantic fall abruptly halted as his face plunged directly into a “soft, yielding curves”.)"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
 		"text": "(He is too bamboozled to realize what it is. His nose was perfectly wedged right between “them”.)"
 	},
 	{
