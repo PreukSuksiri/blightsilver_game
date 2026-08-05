@@ -412,7 +412,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Earth Elemental"}], 9))
 
 	_add("Ice Elemental", A.ARCANE, 80, 50, 1000, R.RARE,
-		AB.LOCK_TARGET_ON_ATTACK, {}, "Card that battles this card cannot perform attack until the end of their next turn.",
+		AB.LOCK_TARGET_ON_ATTACK, {"on_battle": true}, "Card that battles this card cannot perform attack until the end of their next turn.",
 		"Card that battles this card cannot ??? until the end of their next turn.",
 		"Water Elemental + Wind Elemental + 1000 cost",
 		"??? + ??? + 1000 cost",

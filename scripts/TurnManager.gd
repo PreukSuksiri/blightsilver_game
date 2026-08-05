@@ -460,6 +460,10 @@ func start_turn(player_index: int) -> void:
 			else:
 				GameState.post_message("%s: Tails — no effect." % _fs_card.card_name)
 
+	# Omen anoint start-turn coin buffs.
+	await _apply_omen_turn_start_coin_atk(player_index)
+	await _apply_omen_foe_turn_start_coin_def(player_index)
+
 	# Handle skip turn (Ceasefire)
 	if GameState.skip_next_turn[player_index]:
 		GameState.skip_next_turn[player_index] = false
@@ -3177,6 +3181,14 @@ func _apply_post_battle_effects(
 		GameState.post_message("%s: ATK bonus reset after attack (-%d)." % [
 			attacker.card_name, _eot_reset])
 
+	# Ice Elemental / on_battle: lock whoever battles this card (even if it is destroyed).
+	if defender.card_type == "character" \
+			and defender.ability_type == CharacterData.AbilityType.LOCK_TARGET_ON_ATTACK \
+			and defender.ability_params.get("on_battle", false):
+		attacker.cannot_attack_until = GameState.turn_number + 2
+		GameState.post_message("%s: %s cannot attack until end of next turn!" % [
+			defender.card_name, attacker.card_name])
+
 	match attacker.ability_type:
 		CharacterData.AbilityType.PERM_DEF_BOOST_PER_ATTACK_SURVIVE:
 			if not result.attacker_destroyed and defender.card_type == "character":
@@ -3207,9 +3219,12 @@ func _apply_post_battle_effects(
 				GameState.post_message("%s copies %s's stats!" % [attacker.card_name, defender.card_name])
 
 		CharacterData.AbilityType.LOCK_TARGET_ON_ATTACK:
-			if not result.defender_destroyed and defender.card_type == "character":
-				defender.cannot_attack_until = GameState.turn_number + 1
-				GameState.post_message("%s locked — cannot attack until end of next turn." % defender.card_name)
+			if defender.card_type == "character":
+				var _lock_on_destroy: bool = attacker.ability_params.get("on_battle", false)
+				if not result.defender_destroyed or _lock_on_destroy:
+					defender.cannot_attack_until = GameState.turn_number + (
+						2 if _lock_on_destroy else 1)
+					GameState.post_message("%s locked — cannot attack until end of next turn." % defender.card_name)
 
 		CharacterData.AbilityType.LOCK_SELF_AFTER_ATTACK:
 			attacker.cannot_attack_until = GameState.turn_number + 2
@@ -3511,6 +3526,20 @@ func _apply_post_battle_effects(
 		extra += 1
 		GameState.post_message("Omen: Dead-end attack refunded!")
 
+	# Omen anoint: post-attack coin flip -> extra attack on Heads.
+	for entry_cfea: Variant in OmenBattleApplier.effects_of_type("post_attack_coin_extra_attack"):
+		if not entry_cfea is Dictionary:
+			continue
+		if not OmenBattleApplier._card_matches_effect_unit(attacker, entry_cfea as Dictionary, player):
+			continue
+		var _cfea_vals: Array = await _do_coin_flips(1, player, attacker_pos.x, attacker_pos.y)
+		if bool(_cfea_vals[0]):
+			extra += 1
+			GameState.post_message("Omen: Heads — %s may attack again!" % attacker.card_name)
+		else:
+			GameState.post_message("Omen: Tails — no extra attack.")
+		break
+
 	# Omen golden_reckoning — Cosmic win crystals
 	if result.defender_destroyed and defender.card_type == "character" \
 			and not result.attacker_destroyed and player == 0:
@@ -3550,6 +3579,42 @@ func _apply_post_battle_effects(
 		else:
 			GameState.omen_escalating_toll_stacks += 1
 			GameState.post_message("Omen Escalating Toll: stack %d." % GameState.omen_escalating_toll_stacks)
+
+	# Omen anoint: after defending successfully, gain DEF permanently.
+	if result.attacker_destroyed and defender.card_type == "character" and not result.defender_destroyed:
+		for entry5: Variant in OmenBattleApplier.effects_of_type("anoint_on_defend_success_gain_def"):
+			if not entry5 is Dictionary:
+				continue
+			if not OmenBattleApplier._card_matches_effect_unit(defender, entry5 as Dictionary, opponent):
+				continue
+			var _gain_def: int = int((entry5 as Dictionary).get("effect", {}).get("def", 0))
+			if _gain_def > 0:
+				defender.current_def += _gain_def
+				GameState.post_message("Omen: %s gains +%d DEF." % [defender.card_name, _gain_def])
+			break
+
+	# Omen anoint: after attacking successfully, gain ATK permanently.
+	if result.defender_destroyed and defender.card_type == "character" and not result.attacker_destroyed:
+		for entry6: Variant in OmenBattleApplier.effects_of_type("anoint_on_attack_success_gain_atk"):
+			if not entry6 is Dictionary:
+				continue
+			if not OmenBattleApplier._card_matches_effect_unit(attacker, entry6 as Dictionary, player):
+				continue
+			var _gain_atk: int = int((entry6 as Dictionary).get("effect", {}).get("atk", 0))
+			if _gain_atk > 0:
+				attacker.current_atk += _gain_atk
+				GameState.post_message("Omen: %s gains +%d ATK." % [attacker.card_name, _gain_atk])
+			break
+
+	# Omen anoint: after any attack, halve own ATK/DEF once.
+	for entry7: Variant in OmenBattleApplier.effects_of_type("anoint_post_attack_half_stats"):
+		if not entry7 is Dictionary:
+			continue
+		if not OmenBattleApplier._card_matches_effect_unit(attacker, entry7 as Dictionary, player):
+			continue
+		attacker.halve_stats()
+		GameState.post_message("Omen: %s halves its ATK/DEF after attacking." % attacker.card_name)
+		break
 
 	return extra
 
@@ -4131,6 +4196,27 @@ func _emit_post_attack_target_selections(
 				"adjacent")
 			break
 
+	# Omen anoint: post-attack coin flip -> reveal adjacent cells.
+	for entry5: Variant in OmenBattleApplier.effects_of_type("post_attack_coin_reveal_adjacent"):
+		if not entry5 is Dictionary:
+			continue
+		if not OmenBattleApplier._card_matches_effect_unit(attacker, entry5 as Dictionary, player):
+			continue
+		var _pcra_eff: Dictionary = (entry5 as Dictionary).get("effect", {}) as Dictionary
+		var _pcra_heads_n: int = maxi(1, int(_pcra_eff.get("heads", 2)))
+		var _pcra_tails_n: int = maxi(1, int(_pcra_eff.get("tails", 1)))
+		var _pcra_vals: Array = await _do_coin_flips(1, player, attacker_pos.x, attacker_pos.y)
+		var _pcra_count: int = _pcra_heads_n if bool(_pcra_vals[0]) else _pcra_tails_n
+		GameState.post_message(
+			"Omen: %s — reveal %d adjacent cell(s)." % [
+				"Heads" if bool(_pcra_vals[0]) else "Tails", _pcra_count])
+		for _pcra_i: int in range(_pcra_count):
+			await _await_attacker_anchored_target_selection(
+				player,
+				"Omen: Choose an adjacent square to reveal.",
+				"adjacent")
+		break
+
 func _apply_omen_dead_end_effects(player: int, opponent: int, attacker: GameState.CardInstance) -> void:
 	for entry: Variant in OmenBattleApplier.effects_of_type("crystal_on_dead_end_attack"):
 		if not entry is Dictionary:
@@ -4175,6 +4261,61 @@ func _apply_omen_reveal_after_trap_or_dead_end(attacker: GameState.CardInstance,
 			for _i: int in range(maxi(1, n)):
 				await _await_reveal_opponent_hidden_selection(attacker, player)
 			break
+
+
+func _apply_omen_turn_start_coin_atk(player_index: int) -> void:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type != "character" or not card.face_up:
+				continue
+			for entry: Variant in OmenBattleApplier.effects_of_type("anoint_turn_start_coin_atk"):
+				if not entry is Dictionary:
+					continue
+				if not OmenBattleApplier._card_matches_effect_unit(card, entry as Dictionary, player_index):
+					continue
+				var eff: Dictionary = (entry as Dictionary).get("effect", {}) as Dictionary
+				var coin_n: int = maxi(1, int(eff.get("coins", 3)))
+				var per_head: int = int(eff.get("atk_per_head", 25))
+				var rolls: Array = await _do_coin_flips(coin_n, player_index, r, c)
+				var heads: int = 0
+				for v: Variant in rolls:
+					if bool(v):
+						heads += 1
+				var gain: int = heads * per_head
+				if gain > 0:
+					card.temp_atk_bonus += gain
+				GameState.post_message("Omen: %s gets +%d ATK this turn (%d/%d heads)." % [
+					card.card_name, gain, heads, coin_n])
+				break
+
+
+func _apply_omen_foe_turn_start_coin_def(current_player: int) -> void:
+	var owner: int = GameState.get_opponent(current_player)
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(owner, r, c)
+			if card.card_type != "character" or not card.face_up:
+				continue
+			for entry: Variant in OmenBattleApplier.effects_of_type("anoint_foe_turn_start_coin_def"):
+				if not entry is Dictionary:
+					continue
+				if not OmenBattleApplier._card_matches_effect_unit(card, entry as Dictionary, owner):
+					continue
+				var eff: Dictionary = (entry as Dictionary).get("effect", {}) as Dictionary
+				var coin_n: int = maxi(1, int(eff.get("coins", 3)))
+				var per_head: int = int(eff.get("def_per_head", 25))
+				var rolls: Array = await _do_coin_flips(coin_n, owner, r, c)
+				var heads: int = 0
+				for v: Variant in rolls:
+					if bool(v):
+						heads += 1
+				var gain: int = heads * per_head
+				if gain > 0:
+					card.temp_def_bonus += gain
+				GameState.post_message("Omen: %s gets +%d DEF this turn (%d/%d heads)." % [
+					card.card_name, gain, heads, coin_n])
+				break
 
 func _plant29_has_valid_targets(player: int, heads: bool) -> bool:
 	if heads:

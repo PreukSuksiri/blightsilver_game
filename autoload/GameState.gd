@@ -407,6 +407,7 @@ var void_pile_entries: Array = [[], []]
 # Special global flags
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
 var open_campaign_gallery_on_menu: bool = false
+var show_deckbuilder_unlock_dialog_on_gallery: bool = false
 var open_quick_duel_overlay_on_menu: bool = false
 var entered_main_menu_from_splash: bool = false
 var returning_to_main_menu: bool = false

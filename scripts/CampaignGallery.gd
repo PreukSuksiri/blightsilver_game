@@ -122,6 +122,7 @@ var _last_mouse_pos: Vector2 = Vector2.INF
 func _ready() -> void:
 	_load_data()
 	_build_ui()
+	_maybe_show_deckbuilder_unlock_dialog()
 	set_process_input(true)
 
 
@@ -159,6 +160,17 @@ func _load_data() -> void:
 	f.close()
 	if parsed is Array:
 		_data = parsed as Array
+
+
+func _maybe_show_deckbuilder_unlock_dialog() -> void:
+	if not GameState.show_deckbuilder_unlock_dialog_on_gallery:
+		return
+	GameState.show_deckbuilder_unlock_dialog_on_gallery = false
+	GameDialog.accept_overlay(
+		self,
+		"Deck Builder Unlocked",
+		"Deck Builder mode is now available. Please return to the Main Menu to craft your deck. Don't forget to open your booster packs in the Mailbox or Shop.",
+		"OK")
 
 
 func _build_ui() -> void:

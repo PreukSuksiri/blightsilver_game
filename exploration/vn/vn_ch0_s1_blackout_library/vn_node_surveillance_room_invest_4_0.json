@@ -119,6 +119,7 @@
 		"player1_name": "Nexus Crowmont",
 		"player2_name": "Shady Woman",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_break_room_ghost.png",
+		"battle_use_exploration_bg": true,
 		"start_battle": true
 	}
 ]

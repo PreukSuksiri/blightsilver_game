@@ -276,7 +276,7 @@ func _build_ui() -> void:
 	_bg_base = ColorRect.new()
 	_bg_base.position = Vector2.ZERO
 	_bg_base.size     = STAGE_DESIGN_SIZE
-	_bg_base.color    = Color(0.04, 0.06, 0.14, 1.0)
+	_bg_base.color    = Color(0.0, 0.0, 0.0, 1.0)
 	_stage.add_child(_bg_base)
 
 	# Full-screen background image
@@ -2347,9 +2347,12 @@ func _show_beat() -> void:
 	# ── Campaign gallery unlock + navigation ──
 	var ran_side_effects: bool = false
 	var complete_gallery: String = _resolve_gallery_chapter_end(beat)
+	var deckbuilder_was_unlocked: bool = SaveManager.is_deckbuilding_unlocked()
 	if not complete_gallery.is_empty():
 		var card: Dictionary = SaveManager.get_gallery_card_for_chapter(complete_gallery)
 		SaveManager.finalize_chapter_arc(complete_gallery, card)
+		if not deckbuilder_was_unlocked and SaveManager.is_deckbuilding_unlocked():
+			GameState.show_deckbuilder_unlock_dialog_on_gallery = true
 		ran_side_effects = true
 
 	if beat.get("go_to_campaign_gallery", false):

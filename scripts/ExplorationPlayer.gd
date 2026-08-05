@@ -203,6 +203,14 @@ var _hovered_nav_panel: Control    = null   # nav-choice panel currently being h
 # ── Detective tool (active-cursor state) ──────────────────────────────────
 const TOOL_REVEAL_RADIUS: float = 90.0      # default proximity reveal radius (px)
 const TOOL_CURSOR_SIZE: Vector2 = Vector2(128.0, 128.0)
+const TOOL_CURSOR_HOTSPOT_DEFAULT: Vector2 = TOOL_CURSOR_SIZE * 0.5
+const TOOL_CURSOR_HOTSPOT_BY_ID: Dictionary = {
+	# Click point should be at the sensing tip/end of each tool art.
+	"tool_thermometer": Vector2(14.0, 30.0),      # tip of barrel (left side)
+	"tool_etf_meter": Vector2(64.0, 8.0),         # tip of antenna
+	"tool_polaroid_camera": Vector2(64.0, 12.0),  # top middle of camera
+	"tool_translator": Vector2(64.0, 10.0),       # top middle of translator
+}
 const DetectiveToolFxScript = preload("res://scripts/DetectiveToolFx.gd")
 var _active_tool_id: String        = ""     # empty = no tool active
 # Entries: { "hit": Control, "center": Vector2, "radius": float, "revealed": bool, ... }
@@ -299,7 +307,7 @@ func _build_ui() -> void:
 	# ── Background ────────────────────────────────────────────
 	_bg_base = ColorRect.new()
 	_bg_base.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_bg_base.color        = Color(0.04, 0.06, 0.14, 1.0)
+	_bg_base.color        = Color(0.0, 0.0, 0.0, 1.0)
 	_bg_base.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg_base)
 
@@ -3484,11 +3492,14 @@ func _refresh_node(node: ExplorationNode, after_battle: bool = false) -> void:
 	if _safe_zone_lbl != null:
 		_safe_zone_lbl.visible = node.is_safe_zone
 
-	var will_enter_vn: bool = node.vn_trigger_on_enter() and _would_play_node_vn(node)
+	var will_enter_vn: bool = (not after_battle) \
+			and node.vn_trigger_on_enter() and _would_play_node_vn(node)
 	if not will_enter_vn:
 		_set_enter_vn_hud_blocked(false)
 
 	# Node-type routing: BATTLE/EXIT get inline action buttons; all others use compass.
+	# After a battle, only refresh UI — do not re-fire on_enter VN (play_once is marked
+	# later when deferred after_actions finish; replaying here causes a second battle).
 	_close_all_menus(false)
 	match node.node_type:
 		ExplorationNode.NodeType.BATTLE:
@@ -3504,8 +3515,9 @@ func _refresh_node(node: ExplorationNode, after_battle: bool = false) -> void:
 		ExplorationNode.NodeType.STORY:
 			_content_panel.visible = false
 			_choices_vbox.visible = false
-			_compass_set_visible(false)   # hidden while VN plays; restored in _on_vn_finished
-			if node.vn_trigger_on_enter():
+			if after_battle:
+				_compass_set_visible(true)
+			elif node.vn_trigger_on_enter():
 				if node.show_info_on_enter:
 					_open_enter_info_then_vn(node, true)
 				else:
@@ -3519,7 +3531,9 @@ func _refresh_node(node: ExplorationNode, after_battle: bool = false) -> void:
 		_:
 			_content_panel.visible = false
 			_choices_vbox.visible = false
-			if node.vn_trigger_on_enter():
+			if after_battle:
+				_compass_set_visible(true)
+			elif node.vn_trigger_on_enter():
 				if node.show_info_on_enter:
 					_compass_set_visible(true)
 					_open_enter_info_then_vn(node, false)
@@ -4079,12 +4093,19 @@ func _activate_tool(item_id: String) -> void:
 	# Ignore the activating click (and a short tail) so the tool does not
 	# immediately dismiss itself via _input.
 	_tool_activate_grace_msec = Time.get_ticks_msec() + 400
-	GameState.set_cursor_override(tex, TOOL_CURSOR_SIZE * 0.5, TOOL_CURSOR_SIZE)
+	GameState.set_cursor_override(tex, _tool_cursor_hotspot(item_id), TOOL_CURSOR_SIZE)
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_show_tool_banner(str(item.get("name", item_id)))
 	if ExplorationManager.current_node != null:
 		_rebuild_spots(ExplorationManager.current_node)
 	_start_tool_fx(item_id)
+
+
+func _tool_cursor_hotspot(item_id: String) -> Vector2:
+	var custom: Variant = TOOL_CURSOR_HOTSPOT_BY_ID.get(item_id, null)
+	if custom is Vector2:
+		return custom as Vector2
+	return TOOL_CURSOR_HOTSPOT_DEFAULT
 
 ## Leave "tool active" state: restore the finger cursor and remove tool-gated spots.
 func _deactivate_tool() -> void:
@@ -4120,6 +4141,8 @@ func _start_tool_fx(item_id: String) -> void:
 		"background_texture": _bg_rect.texture if _bg_rect != null else null,
 		"photo_smoke_spots": _all_tool_gated_spots_for_photo(),
 		"photo_lens_flare_spots": _camera_hidden_spots_for_photo(),
+		"cursor_hotspot": _tool_cursor_hotspot(item_id),
+		"cursor_size": TOOL_CURSOR_SIZE,
 	}
 	if node != null:
 		opts["room_temperature"] = node.room_temperature
@@ -4141,8 +4164,7 @@ func _all_tool_gated_spots_for_photo() -> Array:
 		if not spot_var is Dictionary:
 			continue
 		var spot: Dictionary = spot_var as Dictionary
-		var required: String = str(spot.get("requires_tool", "")).strip_edges()
-		if required.is_empty():
+		if ExplorationNode.required_tools_from_spot(spot).is_empty():
 			continue
 		if not ExplorationManager.is_connection_unlocked(spot):
 			continue
@@ -4159,7 +4181,6 @@ func _all_tool_gated_spots_for_photo() -> Array:
 			"x_norm": xn,
 			"y_norm": yn,
 			"radius": radius,
-			"requires_tool": required,
 		}
 		var smoke_path: String = str(spot.get("smoke_image", "")).strip_edges()
 		if not smoke_path.is_empty():
@@ -4210,18 +4231,57 @@ func _stop_tool_fx() -> void:
 
 
 func _tool_spots_for_fx() -> Array:
+	## Sensor points for the active tool HUD/SFX.
+	## Includes tool-gated reveal spots, plus any unlocked spot that carries a
+	## reading for this tool (custom emf / temperature / mumbling) even when
+	## requires_tool is a different detective tool.
 	var out: Array = []
-	for entry_var: Variant in _tool_spots:
-		if not entry_var is Dictionary:
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null or _active_tool_id.is_empty():
+		return out
+	var node_id: String = ExplorationManager.current_node_id
+	var vp: Vector2 = get_viewport_rect().size
+	for i: int in node.clickable_spots.size():
+		var spot_var: Variant = node.clickable_spots[i]
+		if not spot_var is Dictionary:
 			continue
-		var e: Dictionary = entry_var as Dictionary
+		var spot: Dictionary = spot_var as Dictionary
+		if not ExplorationManager.is_connection_unlocked(spot):
+			continue
+		if bool(spot.get("hide_after_interact", false)) \
+				and (ExplorationManager.is_spot_interacted(node_id, i) \
+					or ExplorationManager.is_spot_in_progress(node_id, i)):
+			continue
+		if bool(spot.get("hidden_until_camera_shutter", false)) \
+				and not ExplorationManager.is_room_camera_shuttered(node_id):
+			continue
+		var matches_tool: bool = ExplorationNode.spot_matches_active_tool(spot, _active_tool_id)
+		var has_sensor: bool = false
+		match _active_tool_id:
+			"tool_etf_meter":
+				has_sensor = spot.has("emf")
+			"tool_thermometer":
+				has_sensor = spot.has("temperature")
+			"tool_translator":
+				has_sensor = not str(spot.get("mumbling_sound", "")).strip_edges().is_empty()
+			_:
+				has_sensor = false
+		if not matches_tool and not has_sensor:
+			continue
+		var xn: float = float(spot.get("x_norm", 0.5))
+		var yn: float = float(spot.get("y_norm", 0.5))
+		var radius: float = float(spot.get("reveal_radius", 0.0))
+		if radius <= 0.0:
+			radius = TOOL_REVEAL_RADIUS
 		var copy: Dictionary = {
-			"center": e.get("center", Vector2.ZERO),
-			"radius": float(e.get("radius", TOOL_REVEAL_RADIUS)),
+			"center": Vector2(xn * vp.x, yn * vp.y),
+			"radius": radius,
 		}
-		if e.has("temperature"):
-			copy["temperature"] = float(e.get("temperature"))
-		var mumble: String = str(e.get("mumbling_sound", "")).strip_edges()
+		if spot.has("temperature"):
+			copy["temperature"] = float(spot.get("temperature"))
+		if spot.has("emf"):
+			copy["emf"] = float(spot.get("emf"))
+		var mumble: String = str(spot.get("mumbling_sound", "")).strip_edges()
 		if not mumble.is_empty():
 			copy["mumbling_sound"] = mumble
 		out.append(copy)
@@ -4457,12 +4517,9 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	# Detective-tool gating:
 	#   • No tool active → normal spots only (requires_tool empty).
 	#   • Tool active → matching tool-gated spots only; normal spots hidden.
-	var required_tool: String = str(spot.get("requires_tool", "")).strip_edges()
-	if _active_tool_id.is_empty():
-		if not required_tool.is_empty():
-			return
-	elif required_tool != _active_tool_id:
+	if not ExplorationNode.spot_matches_active_tool(spot, _active_tool_id):
 		return
+	var required_tools: Array = ExplorationNode.required_tools_from_spot(spot)
 	# Skip hide-after spots already used or currently running an action queue.
 	# Disabled-after spots stay spawned (non-interactable) so tools/Polaroid still see them.
 	var spot_key_node: String = ExplorationManager.current_node_id
@@ -4498,21 +4555,28 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	if actions.is_empty() and not vn_legacy.is_empty():
 		actions = [{"action": "play_vn", "key": "", "value": vn_legacy}]
 
-	# Compute hit size: optional override, else image (scaled), else 24×24 invisible fallback
+	# Hit size: optional override, else scaled icon, else 24×24 invisible fallback.
+	# Icon display size always follows icon_scale — never stretches with Hit W/H.
 	var hit_w: float = 24.0
 	var hit_h: float = 24.0
+	var icon_w: float = 0.0
+	var icon_h: float = 0.0
 	var custom_w: float = float(spot.get("hitbox_w", 0.0))
 	var custom_h: float = float(spot.get("hitbox_h", 0.0))
 	var has_icon: bool = not icon_path.is_empty() and ResourceLoader.exists(icon_path)
+	var icon_tex: Texture2D = null
+	if has_icon:
+		icon_tex = load(icon_path) as Texture2D
+		if icon_tex != null:
+			var nat: Vector2 = icon_tex.get_size()
+			icon_w = nat.x * icon_scale / 100.0
+			icon_h = nat.y * icon_scale / 100.0
 	if custom_w > 0.0 and custom_h > 0.0:
 		hit_w = custom_w
 		hit_h = custom_h
-	elif has_icon:
-		var tex: Texture2D = load(icon_path) as Texture2D
-		if tex != null:
-			var nat: Vector2 = tex.get_size()
-			hit_w = nat.x * icon_scale / 100.0
-			hit_h = nat.y * icon_scale / 100.0
+	elif icon_w > 0.0 and icon_h > 0.0:
+		hit_w = icon_w
+		hit_h = icon_h
 
 	var hit := Control.new()
 	hit.position     = Vector2(xn * bg_w - hit_w * 0.5, yn * bg_h - hit_h * 0.5)
@@ -4522,12 +4586,13 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 			else Control.MOUSE_FILTER_IGNORE
 	_spots_layer.add_child(hit)
 
-	if has_icon:
+	if has_icon and icon_tex != null and icon_w > 0.0 and icon_h > 0.0:
 		var icon_tr := TextureRect.new()
-		icon_tr.set_anchors_preset(Control.PRESET_FULL_RECT)
 		icon_tr.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		icon_tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon_tr.texture      = load(icon_path) as Texture2D
+		icon_tr.stretch_mode = TextureRect.STRETCH_SCALE
+		icon_tr.texture      = icon_tex
+		icon_tr.size         = Vector2(icon_w, icon_h)
+		icon_tr.position     = Vector2((hit_w - icon_w) * 0.5, (hit_h - icon_h) * 0.5)
 		icon_tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hit.add_child(icon_tr)
 
@@ -4570,7 +4635,7 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 
 	# Tool-gated spot: start hidden and reveal by proximity (see _process).
 	# Disabled spots stay detectable / photo-smokeable but never become clickable.
-	if not required_tool.is_empty():
+	if not required_tools.is_empty():
 		hit.visible      = false
 		hit.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var radius: float = float(spot.get("reveal_radius", 0.0))
@@ -4586,6 +4651,8 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 		}
 		if spot.has("temperature"):
 			tool_entry["temperature"] = float(spot.get("temperature"))
+		if spot.has("emf"):
+			tool_entry["emf"] = float(spot.get("emf"))
 		var mumble: String = str(spot.get("mumbling_sound", "")).strip_edges()
 		if not mumble.is_empty():
 			tool_entry["mumbling_sound"] = mumble

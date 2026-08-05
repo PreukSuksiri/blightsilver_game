@@ -5375,6 +5375,364 @@
 			"stackable": true
 		},
 		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "heads_rush_brand",
+			"label": "Heads Rush Brand",
+			"description": "Choose 1 unit. After it attacks, flip a coin. Heads: it can attack again.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "post_attack_coin_extra_attack"}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "oracle_lane_brand",
+			"label": "Oracle Lane Brand",
+			"description": "Choose 1 unit. After it attacks, flip a coin. Heads: reveal 2 adjacent cells. Tails: reveal 1 adjacent cell.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "post_attack_coin_reveal_adjacent", "heads": 2, "tails": 1}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "mirror_duelist_brand",
+			"label": "Mirror Duelist Brand",
+			"description": "Choose 1 unit. +50 ATK & +50 DEF against same-affinity foes.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_bonus_vs_same_affinity", "atk": 50, "def": 50}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "colossus_bloom_brand",
+			"label": "Colossus Bloom Brand",
+			"description": "Choose 1 unit. +80 ATK & +80 DEF. After it attacks, halve its ATK & DEF.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "epic",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_stat_flat", "atk": 80, "def": 80},
+				{"type": "anoint_post_attack_half_stats"}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "shadow_hunter_mark",
+			"label": "Shadow Hunter Mark",
+			"description": "Choose 1 unit. +50 ATK against face-down cards.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_bonus_vs_facedown", "atk": 50}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "solar_fervor_brand",
+			"label": "Solar Fervor Brand",
+			"description": "Choose 1 unit. At the start of your turn, flip 3 coins. Gain +25 ATK this turn per heads.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_turn_start_coin_atk", "coins": 3, "atk_per_head": 25}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "moon_bastion_brand",
+			"label": "Moon Bastion Brand",
+			"description": "Choose 1 unit. At the start of opponent's turn, flip 3 coins. Gain +25 DEF this turn per heads.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_foe_turn_start_coin_def", "coins": 3, "def_per_head": 25}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "hidden_bane_brand",
+			"label": "Hidden Bane Brand",
+			"description": "Choose 1 unit. +50 ATK against face-down cards.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_bonus_vs_facedown", "atk": 50}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "guardian_growth_brand",
+			"label": "Guardian Growth Brand",
+			"description": "Choose 1 unit. After it defends successfully, it gains +30 DEF.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_on_defend_success_gain_def", "def": 30}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "victor_growth_brand",
+			"label": "Victor Growth Brand",
+			"description": "Choose 1 unit. After it attacks successfully, it gains +20 ATK.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "anoint_on_attack_success_gain_atk", "atk": 20}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "battle_drill_totem",
+			"label": "Battle Drill Totem",
+			"description": "Choose 1 unit. Ally units surrounding it gain +5 ATK.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "adjacent_aura_flat", "atk": 5}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "shield_drill_totem",
+			"label": "Shield Drill Totem",
+			"description": "Choose 1 unit. Ally units surrounding it gain +10 DEF.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "adjacent_aura_flat", "def": 10}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "guardian_ring_totem",
+			"label": "Guardian Ring Totem",
+			"description": "Choose 1 unit. Once per battle, ally units surrounding it survive destruction once.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "adjacent_aura_survive_once"}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "quartermaster_ring_small",
+			"label": "Quartermaster Ring (Small)",
+			"description": "Choose 1 unit. Once per battle, ally units surrounding it get -10% cost.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "adjacent_aura_cost_multiplier_once", "value": 0.9}
+			]
+		},
+		{
+			"anoint_card_type": "unit",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "quartermaster_ring_major",
+			"label": "Quartermaster Ring (Major)",
+			"description": "Choose 1 unit. Once per battle, ally units surrounding it get -25% cost.",
+			"groups": ["anoint", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "adjacent_aura_cost_multiplier_once", "value": 0.75}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "intel_strongest_unit_1",
+			"label": "Predator Census",
+			"description": "Know 1 enemy's strongest unit.",
+			"groups": ["insight", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "reveal_enemy_top_stats", "kind": "strongest_unit", "count": 1}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "intel_highest_spell_1",
+			"label": "Spell Ledger",
+			"description": "Know 1 enemy's highest cost spell.",
+			"groups": ["insight", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "reveal_enemy_top_stats", "kind": "highest_cost_tech", "count": 1}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "intel_highest_trap_1",
+			"label": "Trap Ledger",
+			"description": "Know 1 enemy's highest cost trap.",
+			"groups": ["insight", "chapter_1"],
+			"rarity": "uncommon",
+			"implemented": true,
+			"effects": [
+				{"type": "reveal_enemy_top_stats", "kind": "highest_cost_trap", "count": 1}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "intel_strongest_unit_and_union",
+			"label": "War Census",
+			"description": "Know 1 enemy's strongest unit and 1 strongest union.",
+			"groups": ["insight", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "reveal_enemy_top_stats", "kind": "strongest_unit_and_union", "count": 1}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "intel_highest_spell_2",
+			"label": "Spell Ledger II",
+			"description": "Know 2 enemy's highest cost spell.",
+			"groups": ["insight", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "reveal_enemy_top_stats", "kind": "highest_cost_tech", "count": 2}
+			]
+		},
+		{
+			"anoint_card_type": "",
+			"anoint_filter": {},
+			"illustration": "",
+			"include_in_demo": true,
+			"positive": true,
+			"stackable": true,
+			"id": "intel_highest_trap_2",
+			"label": "Trap Ledger II",
+			"description": "Know 2 enemy's highest cost trap.",
+			"groups": ["insight", "chapter_1"],
+			"rarity": "rare",
+			"implemented": true,
+			"effects": [
+				{"type": "reveal_enemy_top_stats", "kind": "highest_cost_trap", "count": 2}
+			]
+		},
+		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
 			"illustration": "",

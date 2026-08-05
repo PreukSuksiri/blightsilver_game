@@ -53,13 +53,15 @@ const SMOKE_PATHS: PackedStringArray = [
 const DEFAULT_LENS_FLARE := "res://assets/textures/exploration/decorations/icon_lens_flare.png"
 
 var _tool_id: String = ""
-var _spots: Array = []  # {center, radius, temperature?, mumbling_sound?}
+var _spots: Array = []  # {center, radius, temperature?, emf?, mumbling_sound?}
 var _room_temp: float = DEFAULT_ROOM_TEMP
 var _photo_alt_bg: String = ""
 var _photo_vn: String = ""
 var _bg_tex: Texture2D = null
 var _photo_smoke_spots: Array = []  # all tool-gated spots in the room (any tool)
 var _photo_lens_flare_spots: Array = []  # camera-hidden spots → small flare on photo
+var _cursor_hotspot: Vector2 = Vector2.ZERO
+var _cursor_size: Vector2 = Vector2.ZERO
 
 var _ui_layer: CanvasLayer = null
 var _ui_root: Control = null
@@ -153,6 +155,8 @@ func start_tool(tool_id: String, spots: Array, opts: Dictionary = {}) -> void:
 	_photo_smoke_spots = (smoke_var as Array).duplicate(true) if smoke_var is Array else []
 	var flare_var: Variant = opts.get("photo_lens_flare_spots", [])
 	_photo_lens_flare_spots = (flare_var as Array).duplicate(true) if flare_var is Array else []
+	_cursor_hotspot = opts.get("cursor_hotspot", Vector2.ZERO) as Vector2
+	_cursor_size = opts.get("cursor_size", Vector2.ZERO) as Vector2
 	_display_temp = _room_temp
 	_last_temp_band = int(floor(_display_temp / 10.0))
 	_thermo_flicker_cd = _rng.randf_range(5.0, 20.0)
@@ -181,6 +185,8 @@ func stop_tool() -> void:
 	_spots.clear()
 	_photo_smoke_spots.clear()
 	_photo_lens_flare_spots.clear()
+	_cursor_hotspot = Vector2.ZERO
+	_cursor_size = Vector2.ZERO
 	_stop_loops()
 	_hide_all_hud()
 	_set_film_grain_opacity(0.0)
@@ -248,7 +254,12 @@ func _process(delta: float) -> void:
 	_time += delta
 	var mouse: Vector2 = get_viewport().get_mouse_position()
 	if is_polaroid():
-		_crosshair.position = mouse - _crosshair.size * 0.5
+		# Center green circle / divider on the middle of the camera cursor art
+		# (not the click hotspot, which sits at the top of the art).
+		var art_center: Vector2 = mouse
+		if _cursor_size.x > 0.0 and _cursor_size.y > 0.0:
+			art_center = mouse - _cursor_hotspot + _cursor_size * 0.5
+		_crosshair.position = art_center - _crosshair.size * 0.5
 	if is_polaroid_overlay_open() or _polaroid_busy:
 		_stop_loops()
 		return
@@ -258,7 +269,7 @@ func _process(delta: float) -> void:
 	_update_proximity_audio(mouse, false, spot, dist_ratio)
 	match _tool_id:
 		TOOL_EMF:
-			_update_emf(dist_ratio, delta)
+			_update_emf(spot, dist_ratio, delta)
 		TOOL_THERMOMETER:
 			_update_thermometer(spot, dist_ratio, delta)
 		TOOL_TRANSLATOR:
@@ -524,9 +535,14 @@ func _restore_music_if_ducked() -> void:
 
 # ── EMF ───────────────────────────────────────────────────────
 
-func _update_emf(dist_ratio: float, delta: float) -> void:
-	var target: float = _proximity_01(dist_ratio) * EMF_MAX
-	# Five equal arcs: orange = 4th (12–16), red = 5th (16–20).
+func _update_emf(spot: Dictionary, dist_ratio: float, delta: float) -> void:
+	# Peak reading: custom spot emf when set, else full gauge (20).
+	# Proximity blends ambient 0 → peak (same fashion as thermometer → room/spot temp).
+	var peak: float = EMF_MAX
+	if not spot.is_empty() and spot.has("emf") and dist_ratio < INF:
+		peak = clampf(float(spot.get("emf", EMF_MAX)), 0.0, EMF_MAX)
+	var target: float = _proximity_01(dist_ratio) * peak
+	# Five equal arcs: orange = 4th (12–16), red = 5th (16–20) of full gauge.
 	var t01: float = target / EMF_MAX
 	var spike_chance: float = 0.0
 	if t01 >= 0.8:
@@ -534,10 +550,10 @@ func _update_emf(dist_ratio: float, delta: float) -> void:
 	elif t01 >= 0.6:
 		spike_chance = 0.20  # orange
 	if spike_chance > 0.0:
-		# Every 3–5s, roll chance to slam pin to max briefly.
+		# Every 3–5s, roll chance to slam pin to this spot's peak briefly.
 		if _emf_spike_left > 0.0:
 			_emf_spike_left -= delta
-			_emf_value = EMF_MAX
+			_emf_value = peak
 			if _emf_spike_left <= 0.0:
 				_emf_spike_left = 0.0
 				_emf_spike_cd = _rng.randf_range(3.0, 5.0)
@@ -547,7 +563,7 @@ func _update_emf(dist_ratio: float, delta: float) -> void:
 				_emf_spike_cd = _rng.randf_range(3.0, 5.0)
 				if _rng.randf() < spike_chance:
 					_emf_spike_left = _rng.randf_range(0.22, 0.40)
-					_emf_value = EMF_MAX
+					_emf_value = peak
 			if _emf_spike_left <= 0.0:
 				# Snap back toward live reading after a spike (faster than idle lerp).
 				_emf_value = lerpf(_emf_value, target, 0.45)

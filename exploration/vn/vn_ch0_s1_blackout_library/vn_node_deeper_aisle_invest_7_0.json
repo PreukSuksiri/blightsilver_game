@@ -1,0 +1,31 @@
+[
+	{
+		"hide_dialog": true,
+		"linger_characters": true,
+		"show_polaroid": {
+			"dismiss_on_click": false,
+			"path": "res://assets/textures/exploration/background/university/bg_explo_university_deep_aisle_book_gap_ghost.png"
+		},
+		"suppress_dialog_ui": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 1.0
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "I felt like something was moving in the bookshelf when I pressed the shutter..."
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "A rat, maybe."
+	},
+	{
+		"dismiss_polaroid": true,
+		"linger_characters": true,
+		"show_polaroid": "<null>",
+		"text": "Something's fallen nearby..."
+	}
+]

@@ -264,7 +264,6 @@ func _lock_host_chrome(lock: bool) -> void:
 	for prop_name: String in [
 		"_inv_icon", "_inv_hit", "_setting_icon", "_setting_hit",
 		"_info_icon", "_info_hit", "_chat_icon", "_chat_hit",
-		"_safe_zone_lbl",
 	]:
 		var node: Variant = host.get(prop_name)
 		if node is CanvasItem:

@@ -1706,7 +1706,7 @@ def suggest_character(name: str, ability: str, affinity: str) -> dict | None:
 
     # Lock target on attack
     if "cannot attack" in ab and "battles this card" in ab:
-        return {"ability_type": "LOCK_TARGET_ON_ATTACK", "ability_params": {}}
+        return {"ability_type": "LOCK_TARGET_ON_ATTACK", "ability_params": {"on_battle": True}}
 
     # ATK bonus if union on field
     if "union" in ab and "+20" in ab:

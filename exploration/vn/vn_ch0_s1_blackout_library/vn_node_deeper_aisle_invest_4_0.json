@@ -1,0 +1,20 @@
+[
+	{
+		"linger_characters": true,
+		"show_polaroid": "res://assets/textures/exploration/background/university/bg_explo_university_deep_aisle_book_gap_ghost.png"
+	},
+	{
+		"linger_characters": true,
+		"wait": 1.0
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "I felt like something was moving in the bookshelf when I pressed the shutter..."
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "A rat, maybe."
+	}
+]

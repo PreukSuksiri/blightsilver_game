@@ -796,6 +796,8 @@ static func _get_effective_atk(
 	atk += _dyn.x
 	if target_pos.x >= 0:
 		atk += OmenBattleApplier.bluff_atk_bonus(attacker, GameState.get_opponent(attacker_player), target_pos)
+	atk += OmenBattleApplier.same_affinity_atk_bonus(attacker, defender, attacker_player)
+	atk += OmenBattleApplier.facedown_atk_bonus(attacker, attacker_player, defender_was_exposed)
 
 	match attacker.ability_type:
 		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
@@ -1058,6 +1060,7 @@ static func _get_effective_def(
 		def_val += OmenBattleApplier.conditional_def_bonus(defender, defender_player)
 		var _dyn_d: Vector2i = OmenBattleApplier.dynamic_stat_bonuses(defender, defender_player)
 		def_val += _dyn_d.y
+		def_val += OmenBattleApplier.same_affinity_def_bonus(defender, attacker, defender_player)
 
 	match defender.ability_type:
 		CharacterData.AbilityType.DEF_BONUS_VS_AFFINITY:

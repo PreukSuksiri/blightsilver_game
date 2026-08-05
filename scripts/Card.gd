@@ -151,6 +151,7 @@ var _blank_found_icon: TextureRect
 var _trap_icon: TextureRect
 var _crystal_cost_icon: TextureRect = null
 var _flag_bar: HBoxContainer = null
+var _omen_badge: OmenBadge = null
 var _wait_icon_shadow: TextureRect = null
 # Source art is 1024px; on a ~110px-wide card the wait icon needs a wide
 # texture-pixel outline (~24px) to read as ~2-3 screen pixels.
@@ -436,6 +437,24 @@ func _refresh_flag_badges() -> void:
 		_flag_bar.add_child(host)
 
 	_flag_bar.visible = _flag_bar.get_child_count() > 0
+
+func _refresh_omen_badge() -> void:
+	_clear_omen_badge()
+	if card_data == null or card_data.card_name.is_empty():
+		return
+	if card_data.card_type == "dead_end" or card_data.was_destroyed:
+		return
+	var badge_size: float = clampf(minf(size.x, size.y) * 0.16, 16.0, 28.0)
+	if badge_size < 1.0:
+		badge_size = 20.0
+	_omen_badge = OmenBadge.attach_to_tile(self, card_data.card_name, badge_size)
+	if _omen_badge != null:
+		_omen_badge.z_index = 10
+
+func _clear_omen_badge() -> void:
+	if _omen_badge != null and is_instance_valid(_omen_badge):
+		_omen_badge.queue_free()
+	_omen_badge = null
 
 func _setup_overlay_styles() -> void:
 	# Highlight border: border-only cyan outline (used for tech target selection)
@@ -734,6 +753,7 @@ func set_enemy_view(value: bool) -> void:
 func _refresh_display() -> void:
 	if card_data == null:
 		_show_empty_slot()
+		_refresh_omen_badge()
 		return
 	match card_data.card_type:
 		"dead_end":
@@ -755,6 +775,7 @@ func _refresh_display() -> void:
 		"tech":
 			if card_data.face_up: _show_tech_face_up()
 			else:                 _show_face_down()
+	_refresh_omen_badge()
 
 # ─────────────────────────────────────────────────────────────
 # Blank

@@ -24,83 +24,83 @@
 		"ai_forced_cells": [
 			{
 				"card_name": "Flame Seraph",
-				"col": 1.0,
-				"row": 0.0
+				"col": 1,
+				"row": 0
 			},
 			{
 				"card_name": "Archbishop",
-				"col": 3.0,
-				"row": 0.0
+				"col": 3,
+				"row": 0
 			},
 			{
 				"card_name": "Sonic Seraph",
-				"col": 0.0,
-				"row": 0.0
+				"col": 0,
+				"row": 0
 			},
 			{
 				"card_name": "Goddess of Virtue",
-				"col": 4.0,
-				"row": 0.0
+				"col": 4,
+				"row": 0
 			},
 			{
 				"card_name": "Angel Gatekeeper",
-				"col": 2.0,
-				"row": 2.0
+				"col": 2,
+				"row": 2
 			},
 			{
 				"card_name": "Church Guard",
-				"col": 0.0,
-				"row": 4.0
+				"col": 0,
+				"row": 4
 			},
 			{
 				"card_name": "Joan the Faithful Warrior",
-				"col": 2.0,
-				"row": 1.0
+				"col": 2,
+				"row": 1
 			},
 			{
 				"card_name": "Bomber Fairy",
-				"col": 2.0,
-				"row": 3.0
+				"col": 2,
+				"row": 3
 			},
 			{
 				"card_name": "Tiny Pixie",
-				"col": 4.0,
-				"row": 4.0
+				"col": 4,
+				"row": 4
 			},
 			{
 				"card_name": "Joseph the Battle Priest",
-				"col": 1.0,
-				"row": 4.0
+				"col": 1,
+				"row": 4
 			},
 			{
 				"card_name": "Bunker",
-				"col": 3.0,
-				"row": 4.0
+				"col": 3,
+				"row": 4
 			},
 			{
 				"card_name": "Spike Trap",
-				"col": 1.0,
-				"row": 2.0
+				"col": 1,
+				"row": 2
 			},
 			{
 				"card_name": "Snare Trap",
-				"col": 3.0,
-				"row": 2.0
+				"col": 3,
+				"row": 2
 			},
 			{
 				"card_name": "Street Joke",
-				"col": 0.0,
-				"row": 2.0
+				"col": 0,
+				"row": 2
 			},
 			{
 				"card_name": "Red Card",
-				"col": 4.0,
-				"row": 2.0
+				"col": 4,
+				"row": 2
 			},
 			{
 				"card_name": "Alarm",
-				"col": 0.0,
-				"row": 1.0
+				"col": 0,
+				"row": 1
 			}
 		],
 		"ai_forced_tech": [

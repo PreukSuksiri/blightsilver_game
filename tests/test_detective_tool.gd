@@ -87,20 +87,24 @@ func test_cursor_override_toggle() -> void:
 
 # Mirror of the gating rule in ExplorationPlayer._spawn_spot.
 func _spot_shown(spot: Dictionary, active_tool_id: String) -> bool:
-	var required: String = str(spot.get("requires_tool", "")).strip_edges()
-	if active_tool_id.is_empty():
-		return required.is_empty()
-	return required == active_tool_id
+	return ExplorationNode.spot_matches_active_tool(spot, active_tool_id)
 
 func test_requires_tool_gating() -> void:
 	print("-- test_requires_tool_gating")
 	var normal_spot: Dictionary = {"x_norm": 0.5, "y_norm": 0.5}
 	var gated_spot: Dictionary = {"x_norm": 0.5, "y_norm": 0.5, "requires_tool": "tool_thermometer"}
+	var multi_spot: Dictionary = {
+		"x_norm": 0.5, "y_norm": 0.5,
+		"requires_tool": ["tool_thermometer", "tool_translator"],
+	}
 	assert_true(_spot_shown(normal_spot, ""), "normal spot shown with no tool")
 	assert_false(_spot_shown(normal_spot, "tool_thermometer"), "normal spot hidden while tool active")
 	assert_false(_spot_shown(gated_spot, ""), "gated spot hidden with no tool")
 	assert_false(_spot_shown(gated_spot, "tool_translator"), "gated spot hidden with wrong tool")
 	assert_true(_spot_shown(gated_spot, "tool_thermometer"), "gated spot shown with matching tool")
+	assert_true(_spot_shown(multi_spot, "tool_thermometer"), "multi-tool spot shown with first tool")
+	assert_true(_spot_shown(multi_spot, "tool_translator"), "multi-tool spot shown with second tool")
+	assert_false(_spot_shown(multi_spot, "tool_etf_meter"), "multi-tool spot hidden with unrelated tool")
 
 
 func test_node_tool_fx_fields() -> void:

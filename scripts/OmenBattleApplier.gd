@@ -178,6 +178,14 @@ static func collect_intel_lines(ai_player: Node) -> Array:
 					var axis_label: String = "Defensive" if axis == "defensive" else "Offensive"
 					lines.append("%s: foe %s — %s" % [
 						str(omen.get("label", omen.get("id", ""))), axis_label, pname])
+				"reveal_enemy_top_stats":
+					var kind: String = str(eff.get("kind", "strongest_unit")).strip_edges().to_lower()
+					var amount: int = maxi(1, int(eff.get("count", 1)))
+					var intel_line: String = _build_enemy_top_stats_line(
+						str(omen.get("label", omen.get("id", ""))),
+						kind, amount)
+					if not intel_line.is_empty():
+						lines.append(intel_line)
 	return lines
 
 
@@ -599,6 +607,34 @@ static func _format_anoint_effect_line(effect: Dictionary) -> String:
 			return "Cost ×%.2f" % float(effect.get("value", 1.0))
 		"anoint_set_def":
 			return "DEF set to %d" % int(effect.get("value", 0))
+		"anoint_bonus_vs_same_affinity":
+			return "+%d ATK / +%d DEF vs same affinity" % [
+				int(effect.get("atk", 0)), int(effect.get("def", 0))]
+		"anoint_bonus_vs_facedown":
+			return "+%d ATK vs face-down" % int(effect.get("atk", 0))
+		"anoint_turn_start_coin_atk":
+			return "Turn start: %d coin(s), +%d ATK per heads" % [
+				int(effect.get("coins", 3)), int(effect.get("atk_per_head", 25))]
+		"anoint_foe_turn_start_coin_def":
+			return "Foe turn start: %d coin(s), +%d DEF per heads" % [
+				int(effect.get("coins", 3)), int(effect.get("def_per_head", 25))]
+		"anoint_on_defend_success_gain_def":
+			return "Defend success: +%d DEF" % int(effect.get("def", 0))
+		"anoint_on_attack_success_gain_atk":
+			return "Attack success: +%d ATK" % int(effect.get("atk", 0))
+		"anoint_post_attack_half_stats":
+			return "After attack: halve own ATK/DEF"
+		"post_attack_coin_extra_attack":
+			return "After attack: coin heads => extra attack"
+		"post_attack_coin_reveal_adjacent":
+			return "After attack: coin reveal adjacent"
+		"adjacent_aura_flat":
+			return "Adjacent allies: %+d ATK, %+d DEF" % [
+				int(effect.get("atk", 0)), int(effect.get("def", 0))]
+		"adjacent_aura_survive_once":
+			return "Adjacent allies survive destruction once"
+		"adjacent_aura_cost_multiplier_once":
+			return "Adjacent allies cost ×%.2f (once)" % float(effect.get("value", 1.0))
 	return ""
 
 
@@ -660,6 +696,19 @@ const _ANPOINT_RUNTIME_TYPES: Array[String] = [
 	"spend_mutagen_revive",
 	"survive_reckoning_ties",
 	"adjacent_aura",
+	"post_attack_coin_extra_attack",
+	"post_attack_coin_reveal_adjacent",
+	"anoint_bonus_vs_same_affinity",
+	"anoint_bonus_vs_facedown",
+	"anoint_post_attack_half_stats",
+	"anoint_turn_start_coin_atk",
+	"anoint_foe_turn_start_coin_def",
+	"anoint_on_defend_success_gain_def",
+	"anoint_on_attack_success_gain_atk",
+	"adjacent_aura_flat",
+	"adjacent_aura_survive_once",
+	"adjacent_aura_cost_multiplier_once",
+	"reveal_enemy_top_stats",
 ]
 
 
@@ -836,7 +885,102 @@ static func try_consume_survive_destruction_once(card: GameState.CardInstance) -
 			if _card_matches_effect_unit(card, e, owner_guess):
 				card.flags.append("omen_survive_used")
 				return true
+	# Adjacent aura once: if this card is adjacent to an anointed hub.
+	for entry2: Variant in effects_of_type("adjacent_aura_survive_once"):
+		if not entry2 is Dictionary:
+			continue
+		var e2: Dictionary = entry2 as Dictionary
+		var anointed: String = str(e2.get("anointed", "")).strip_edges()
+		if anointed.is_empty():
+			continue
+		for p: int in range(2):
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var hub: GameState.CardInstance = GameState.get_card(p, r, c)
+					if hub.card_type != "character" or hub.card_name != anointed:
+						continue
+					for adj: Vector2i in GameState.get_adjacent_positions(r, c):
+						var ally: GameState.CardInstance = GameState.get_card(p, adj.x, adj.y)
+						if ally == card:
+							card.flags.append("omen_survive_used")
+							return true
 	return false
+
+
+static func _build_enemy_top_stats_line(omen_label: String, kind: String, amount: int) -> String:
+	var enemy: int = 1
+	var unit_rows: Array[Dictionary] = []
+	var trap_rows: Array[Dictionary] = []
+	var tech_rows: Array[Dictionary] = []
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(enemy, r, c)
+			if card.card_type == "character":
+				unit_rows.append({
+					"name": card.card_name,
+					"atk": card.base_atk,
+					"def": card.base_def,
+					"sum": card.base_atk + card.base_def,
+					"is_union": card.is_union,
+				})
+			elif card.card_type == "trap":
+				trap_rows.append({
+					"name": card.card_name,
+					"cost": card.crystal_cost,
+				})
+	for tech_name_v: Variant in GameState.tech_hands[enemy]:
+		var tech_name: String = str(tech_name_v)
+		var td: TechCardData = CardDatabase.get_tech(tech_name)
+		if td != null:
+			tech_rows.append({"name": tech_name, "cost": td.crystal_cost})
+	if kind == "strongest_unit":
+		unit_rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("sum", 0)) > int(b.get("sum", 0)))
+		var top_units: PackedStringArray = PackedStringArray()
+		for i: int in range(mini(amount, unit_rows.size())):
+			var u: Dictionary = unit_rows[i]
+			top_units.append("%s(%d/%d)" % [str(u.get("name", "")), int(u.get("atk", 0)), int(u.get("def", 0))])
+		if top_units.is_empty():
+			return ""
+		return "%s: foe strongest unit(s) — %s" % [omen_label, ", ".join(top_units)]
+	if kind == "highest_cost_tech":
+		tech_rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("cost", 0)) > int(b.get("cost", 0)))
+		var top_techs: PackedStringArray = PackedStringArray()
+		for i2: int in range(mini(amount, tech_rows.size())):
+			var t: Dictionary = tech_rows[i2]
+			top_techs.append("%s(%d)" % [str(t.get("name", "")), int(t.get("cost", 0))])
+		if top_techs.is_empty():
+			return ""
+		return "%s: foe highest-cost tech — %s" % [omen_label, ", ".join(top_techs)]
+	if kind == "highest_cost_trap":
+		trap_rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("cost", 0)) > int(b.get("cost", 0)))
+		var top_traps: PackedStringArray = PackedStringArray()
+		for i3: int in range(mini(amount, trap_rows.size())):
+			var tr: Dictionary = trap_rows[i3]
+			top_traps.append("%s(%d)" % [str(tr.get("name", "")), int(tr.get("cost", 0))])
+		if top_traps.is_empty():
+			return ""
+		return "%s: foe highest-cost trap — %s" % [omen_label, ", ".join(top_traps)]
+	if kind == "strongest_unit_and_union":
+		unit_rows.sort_custom(func(a2: Dictionary, b2: Dictionary) -> bool: return int(a2.get("sum", 0)) > int(b2.get("sum", 0)))
+		var strongest_unit: String = ""
+		if not unit_rows.is_empty():
+			var uu: Dictionary = unit_rows[0]
+			strongest_unit = "%s(%d/%d)" % [str(uu.get("name", "")), int(uu.get("atk", 0)), int(uu.get("def", 0))]
+		var unions: Array[Dictionary] = []
+		for row: Dictionary in unit_rows:
+			if bool(row.get("is_union", false)):
+				unions.append(row)
+		unions.sort_custom(func(a3: Dictionary, b3: Dictionary) -> bool: return int(a3.get("sum", 0)) > int(b3.get("sum", 0)))
+		var strongest_union: String = ""
+		if not unions.is_empty():
+			var un: Dictionary = unions[0]
+			strongest_union = "%s(%d/%d)" % [str(un.get("name", "")), int(un.get("atk", 0)), int(un.get("def", 0))]
+		if strongest_unit.is_empty() and strongest_union.is_empty():
+			return ""
+		if strongest_union.is_empty():
+			return "%s: foe strongest unit — %s (no union found)" % [omen_label, strongest_unit]
+		return "%s: foe strongest unit/union — %s | %s" % [omen_label, strongest_unit, strongest_union]
+	return ""
 
 
 static func get_unit_extra_attacks(card: GameState.CardInstance, owner_player: int) -> int:
@@ -995,6 +1139,55 @@ static func conditional_def_bonus(card: GameState.CardInstance, owner_player: in
 		var key: String = "omen_coin_bloom_%s_t%d" % [str(e2.get("omen_id", "")), GameState.turn_number]
 		if key + "_heads" in card.flags:
 			bonus += int((e2.get("effect", {}) as Dictionary).get("def", 0))
+	return bonus
+
+
+static func same_affinity_atk_bonus(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		attacker_player: int) -> int:
+	if attacker == null or defender == null:
+		return 0
+	if attacker.affinity != defender.affinity:
+		return 0
+	var bonus: int = 0
+	for entry: Variant in effects_of_type("anoint_bonus_vs_same_affinity"):
+		if not entry is Dictionary:
+			continue
+		if _card_matches_effect_unit(attacker, entry as Dictionary, attacker_player):
+			bonus += int((entry as Dictionary).get("effect", {}).get("atk", 0))
+	return bonus
+
+
+static func same_affinity_def_bonus(
+		defender: GameState.CardInstance,
+		attacker: GameState.CardInstance,
+		defender_player: int) -> int:
+	if attacker == null or defender == null:
+		return 0
+	if attacker.affinity != defender.affinity:
+		return 0
+	var bonus: int = 0
+	for entry: Variant in effects_of_type("anoint_bonus_vs_same_affinity"):
+		if not entry is Dictionary:
+			continue
+		if _card_matches_effect_unit(defender, entry as Dictionary, defender_player):
+			bonus += int((entry as Dictionary).get("effect", {}).get("def", 0))
+	return bonus
+
+
+static func facedown_atk_bonus(
+		attacker: GameState.CardInstance,
+		attacker_player: int,
+		defender_was_exposed: bool) -> int:
+	if attacker == null or defender_was_exposed:
+		return 0
+	var bonus: int = 0
+	for entry: Variant in effects_of_type("anoint_bonus_vs_facedown"):
+		if not entry is Dictionary:
+			continue
+		if _card_matches_effect_unit(attacker, entry as Dictionary, attacker_player):
+			bonus += int((entry as Dictionary).get("effect", {}).get("atk", 0))
 	return bonus
 
 
@@ -1359,6 +1552,8 @@ static func apply_begin_game_extra(board: Node) -> void:
 						if card.card_name == str(card_name):
 							card.flags.append("omen_burn_on_expose_eot")
 	apply_adjacent_auras()
+	apply_adjacent_flat_auras()
+	apply_adjacent_cost_auras_once()
 	shuffle_all_units_if_needed()
 	if board != null:
 		pass
@@ -1421,6 +1616,54 @@ static func apply_adjacent_auras() -> void:
 							continue
 						ally.perm_atk_bonus += int(round(float(ally.base_atk) * atk_pct / 100.0))
 						ally.perm_def_bonus += int(round(float(ally.base_def) * def_pct / 100.0))
+
+
+static func apply_adjacent_flat_auras() -> void:
+	for entry: Variant in effects_of_type("adjacent_aura_flat"):
+		if not entry is Dictionary:
+			continue
+		var e: Dictionary = entry as Dictionary
+		var anointed: String = str(e.get("anointed", ""))
+		if anointed.is_empty():
+			continue
+		var eff: Dictionary = e.get("effect", {}) as Dictionary
+		var add_atk: int = int(eff.get("atk", 0))
+		var add_def: int = int(eff.get("def", 0))
+		for p: int in range(2):
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var hub: GameState.CardInstance = GameState.get_card(p, r, c)
+					if hub.card_name != anointed or hub.card_type != "character":
+						continue
+					for adj: Vector2i in GameState.get_adjacent_positions(r, c):
+						var ally: GameState.CardInstance = GameState.get_card(p, adj.x, adj.y)
+						if ally.card_type != "character":
+							continue
+						ally.perm_atk_bonus += add_atk
+						ally.perm_def_bonus += add_def
+
+
+static func apply_adjacent_cost_auras_once() -> void:
+	for entry: Variant in effects_of_type("adjacent_aura_cost_multiplier_once"):
+		if not entry is Dictionary:
+			continue
+		var e: Dictionary = entry as Dictionary
+		var anointed: String = str(e.get("anointed", ""))
+		if anointed.is_empty():
+			continue
+		var eff: Dictionary = e.get("effect", {}) as Dictionary
+		var mult: float = maxf(0.0, float(eff.get("value", 1.0)))
+		for p: int in range(2):
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var hub: GameState.CardInstance = GameState.get_card(p, r, c)
+					if hub.card_name != anointed or hub.card_type != "character":
+						continue
+					for adj: Vector2i in GameState.get_adjacent_positions(r, c):
+						var ally: GameState.CardInstance = GameState.get_card(p, adj.x, adj.y)
+						if ally.card_type != "character":
+							continue
+						ally.crystal_cost = int(round(float(ally.crystal_cost) * mult))
 
 
 static func shuffle_all_units_if_needed() -> void:

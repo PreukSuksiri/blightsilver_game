@@ -2012,7 +2012,8 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	hit_h_spin.add_theme_font_size_override("font_size", 12)
 	hitbox_row.add_child(hit_h_spin)
 	var hit_note := Label.new()
-	hit_note.text = "px (empty = auto)"
+	hit_note.text = "px (empty = auto; click only — does not resize icon)"
+	hit_note.tooltip_text = "Hit W/H change the clickable area only. Icon size is controlled by Icon scale."
 	hit_note.add_theme_font_size_override("font_size", 11)
 	hit_note.add_theme_color_override("font_color", Color(0.55, 0.58, 0.68, 0.75))
 	hitbox_row.add_child(hit_note)
@@ -2168,16 +2169,13 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	var tool_row := HBoxContainer.new()
 	tool_row.add_theme_constant_override("separation", 4)
 	var tool_lbl := Label.new()
-	tool_lbl.text = "Requires tool"
-	tool_lbl.tooltip_text = "If set, this spot only appears while that detective tool is active, revealed by sweeping the cursor near it."
+	tool_lbl.text = "Requires tools"
+	tool_lbl.tooltip_text = "If set, this spot only appears while any selected detective tool is active, revealed by sweeping the cursor near it."
 	tool_lbl.add_theme_font_size_override("font_size", 12)
 	tool_row.add_child(tool_lbl)
-	var tool_opt := OptionButton.new()
-	tool_opt.add_theme_font_size_override("font_size", 12)
-	tool_opt.add_item("(none)")
-	tool_opt.set_item_metadata(0, "")
-	var cur_tool: String = str(spot_data.get("requires_tool", "")).strip_edges()
-	var sel_idx: int = 0
+	var tool_checks: Dictionary = {}
+	var cur_tools: Array = ExplorationNode.required_tools_from_spot(spot_data)
+	var known_tool_ids: Array[String] = []
 	for it_var: Variant in ExplorationItemDatabase.all_items():
 		if not it_var is Dictionary:
 			continue
@@ -2187,19 +2185,27 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 		var tid: String = str(it.get("id", ""))
 		if tid.is_empty():
 			continue
-		var new_idx: int = tool_opt.item_count
-		tool_opt.add_item("%s  [%s]" % [str(it.get("name", tid)), tid])
-		tool_opt.set_item_metadata(new_idx, tid)
-		if tid == cur_tool:
-			sel_idx = new_idx
-	# Preserve an unknown/legacy tool id even if it is not in the current DB.
-	if sel_idx == 0 and not cur_tool.is_empty():
-		var extra_idx: int = tool_opt.item_count
-		tool_opt.add_item("%s  [missing]" % cur_tool)
-		tool_opt.set_item_metadata(extra_idx, cur_tool)
-		sel_idx = extra_idx
-	tool_opt.select(sel_idx)
-	tool_row.add_child(tool_opt)
+		known_tool_ids.append(tid)
+		var tool_chk := CheckBox.new()
+		tool_chk.text = str(it.get("name", tid))
+		tool_chk.tooltip_text = tid
+		tool_chk.button_pressed = tid in cur_tools
+		tool_chk.add_theme_font_size_override("font_size", 12)
+		tool_row.add_child(tool_chk)
+		tool_checks[tid] = tool_chk
+	# Preserve unknown/legacy tool ids even if they are not in the current DB.
+	for legacy_tid_var: Variant in cur_tools:
+		var legacy_tid: String = str(legacy_tid_var).strip_edges()
+		if legacy_tid.is_empty() or legacy_tid in known_tool_ids:
+			continue
+		known_tool_ids.append(legacy_tid)
+		var legacy_chk := CheckBox.new()
+		legacy_chk.text = "%s (missing)" % legacy_tid
+		legacy_chk.tooltip_text = legacy_tid
+		legacy_chk.button_pressed = true
+		legacy_chk.add_theme_font_size_override("font_size", 12)
+		tool_row.add_child(legacy_chk)
+		tool_checks[legacy_tid] = legacy_chk
 	var radius_lbl := Label.new()
 	radius_lbl.text = "Reveal r"
 	radius_lbl.add_theme_font_size_override("font_size", 12)
@@ -2214,7 +2220,7 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	radius_spin.tooltip_text = "Proximity reveal radius in px (0 = default)"
 	tool_row.add_child(radius_spin)
 	vb.add_child(tool_row)
-	frame.set_meta("requires_tool_opt", tool_opt)
+	frame.set_meta("requires_tool_checks", tool_checks)
 	frame.set_meta("reveal_radius_spin", radius_spin)
 
 	# Spot temperature + translator mumbling (meta-collected; after tool row).
@@ -2243,6 +2249,19 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	temp_enable.toggled.connect(func(on: bool) -> void: temp_spot_spin.editable = on)
 	tool_fx_row.add_child(temp_enable)
 	tool_fx_row.add_child(temp_spot_spin)
+	var emf_lbl := Label.new()
+	emf_lbl.text = "EMF"
+	emf_lbl.tooltip_text = "EMF Meter peak reading at this spot (0–20). Leave blank for default (20)."
+	emf_lbl.add_theme_font_size_override("font_size", 12)
+	tool_fx_row.add_child(emf_lbl)
+	var emf_edit := LineEdit.new()
+	emf_edit.placeholder_text = "blank = default"
+	emf_edit.custom_minimum_size = Vector2(72, 0)
+	emf_edit.add_theme_font_size_override("font_size", 12)
+	emf_edit.tooltip_text = "Custom EMF value (number). Empty = default proximity peak of 20."
+	if spot_data.has("emf"):
+		emf_edit.text = str(spot_data.get("emf"))
+	tool_fx_row.add_child(emf_edit)
 	vb.add_child(tool_fx_row)
 	var mumble_edit := _add_file_field(vb, "Mumbling SFX (Translator close)",
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio"]), "res://assets/audio/sfx/mumbling")
@@ -2309,6 +2328,7 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 
 	frame.set_meta("temp_enable_chk", temp_enable)
 	frame.set_meta("temp_spot_spin", temp_spot_spin)
+	frame.set_meta("emf_edit", emf_edit)
 	frame.set_meta("mumbling_edit", mumble_edit)
 	frame.set_meta("smoke_edit", smoke_edit)
 	frame.set_meta("camera_hide_chk", camera_hide_cb)
@@ -2553,12 +2573,21 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 		if hitbox_h > 0.0:
 			entry["hitbox_h"] = hitbox_h
 		# Detective-tool gating (collected via meta so row order does not matter).
-		if frame.has_meta("requires_tool_opt"):
-			var tool_opt := frame.get_meta("requires_tool_opt") as OptionButton
-			if tool_opt != null and tool_opt.selected >= 0:
-				var tool_id: String = str(tool_opt.get_item_metadata(tool_opt.selected))
-				if not tool_id.is_empty():
-					entry["requires_tool"] = tool_id
+		if frame.has_meta("requires_tool_checks"):
+			var tool_checks := frame.get_meta("requires_tool_checks") as Dictionary
+			if tool_checks != null:
+				var selected: Array[String] = []
+				for tid_var: Variant in tool_checks.keys():
+					var tid: String = str(tid_var).strip_edges()
+					if tid.is_empty():
+						continue
+					var tool_chk := tool_checks[tid] as CheckBox
+					if tool_chk != null and tool_chk.button_pressed:
+						selected.append(tid)
+				if selected.size() == 1:
+					entry["requires_tool"] = selected[0]
+				elif selected.size() > 1:
+					entry["requires_tool"] = selected
 		if frame.has_meta("reveal_radius_spin"):
 			var radius_spin := frame.get_meta("reveal_radius_spin") as SpinBox
 			if radius_spin != null and radius_spin.value > 0.0:
@@ -2568,6 +2597,12 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 			var temp_spin := frame.get_meta("temp_spot_spin") as SpinBox
 			if temp_chk != null and temp_spin != null and temp_chk.button_pressed:
 				entry["temperature"] = float(temp_spin.value)
+		if frame.has_meta("emf_edit"):
+			var emf_le := frame.get_meta("emf_edit") as LineEdit
+			if emf_le != null:
+				var emf_txt: String = emf_le.text.strip_edges()
+				if not emf_txt.is_empty() and emf_txt.is_valid_float():
+					entry["emf"] = float(emf_txt)
 		if frame.has_meta("mumbling_edit"):
 			var mumble_edit := frame.get_meta("mumbling_edit") as LineEdit
 			if mumble_edit != null:

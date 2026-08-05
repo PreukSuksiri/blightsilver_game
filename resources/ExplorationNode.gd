@@ -202,8 +202,10 @@ enum NodeType {
 ##   { "x_norm": float, "y_norm": float   — centre position (0.0–1.0)
 ##     "icon": String                      — res:// image path; empty = 24×24 invisible hitbox
 ##     "icon_scale": float                 — display size as % of natural image size (default 100)
-##     "hitbox_w": float                    — click area width in px (0 = auto from icon or 24)
-##     "hitbox_h": float                    — click area height in px (0 = auto from icon or 24)
+##     "hitbox_w": float                    — click area width in px (0 = auto from icon or 24);
+##                                           does not resize the icon (icon uses icon_scale only)
+##     "hitbox_h": float                    — click area height in px (0 = auto from icon or 24);
+##                                           does not resize the icon (icon uses icon_scale only)
 ##     "tooltip": String                   — text shown on hover
 ##     "hide_after_interact": bool         — remove spot entirely after a successful click
 ##     "disabled_after_interact": bool     — keep spot after click but make it non-interactable;
@@ -215,13 +217,16 @@ enum NodeType {
 ##                                           play_puzzle: value = puzzle id, key = optional params (JSON or text)
 ##                                           actions run in list order; puzzle failure aborts remaining actions
 ##     "conditions": Array                 — condition dicts (same format as connection conditions)
-##     "requires_tool": String             — detective-tool item id; when set, the spot only exists
-##                                           while that tool is active and is revealed by sweeping the
-##                                           cursor near it. While any tool is active, normal spots
-##                                           (no requires_tool) are temporarily hidden.
+##     "requires_tool": String | Array      — one or more detective-tool item ids; when set, the spot
+##                                           only exists while any listed tool is active and is revealed
+##                                           by sweeping the cursor near it. While any tool is active,
+##                                           normal spots (no requires_tool) are temporarily hidden.
 ##     "reveal_radius": float               — proximity reveal radius in px for tool-gated spots
 ##                                           (0 = default TOOL_REVEAL_RADIUS in ExplorationPlayer)
 ##     "temperature": float                 — optional °C target for thermometer blend (omit = room temp)
+##     "emf": float                         — optional EMF Meter reading peak at this spot (0–20;
+##                                           omit = default proximity peak of 20). Cleared from
+##                                           sensing after hide_after_interact, same as temperature.
 ##     "mumbling_sound": String             — optional Translator close-band mumbling SFX path
 ##                                           (empty = random from assets/audio/sfx/mumbling/)
 ##     "smoke_image": String                — optional Polaroid Mode 2 smoke texture for this spot
@@ -387,6 +392,32 @@ func to_dict() -> Dictionary:
 		"characters":      characters.duplicate(true),
 		"editor_position": {"x": editor_position.x, "y": editor_position.y},
 	}
+
+## Normalize requires_tool (String or Array) to a deduped tool-id list.
+static func required_tools_from_spot(spot: Dictionary) -> Array:
+	var raw: Variant = spot.get("requires_tool", "")
+	var out: Array[String] = []
+	if raw is Array:
+		for v: Variant in raw:
+			var sid: String = str(v).strip_edges()
+			if not sid.is_empty() and sid not in out:
+				out.append(sid)
+	else:
+		var single: String = str(raw).strip_edges()
+		if not single.is_empty():
+			out.append(single)
+	return out
+
+
+## True when the spot should be visible for the current active-tool state.
+static func spot_matches_active_tool(spot: Dictionary, active_tool_id: String) -> bool:
+	var required: Array = required_tools_from_spot(spot)
+	if active_tool_id.is_empty():
+		return required.is_empty()
+	if required.is_empty():
+		return false
+	return active_tool_id in required
+
 
 ## Create an ExplorationNode from a Dictionary (as parsed from JSON).
 static func from_dict(d: Dictionary) -> ExplorationNode:

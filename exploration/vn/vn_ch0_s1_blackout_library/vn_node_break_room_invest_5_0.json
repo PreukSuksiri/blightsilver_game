@@ -1,0 +1,30 @@
+[
+	{
+		"linger_characters": true,
+		"text": "(Someone must have forgotten something on the break room's table...)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"text": "(What is this...? A camera...?)"
+	},
+	{
+		"exploration_actions": [
+			{
+				"action": "give_item",
+				"key": "tool_polaroid_camera",
+				"value": ""
+			}
+		],
+		"hide_dialog": true,
+		"linger_characters": true,
+		"suppress_dialog_ui": true
+	},
+	{
+		"linger_characters": true,
+		"text": "(Please check your inventory and try to use the camera on various places to discover hidden objects)"
+	}
+]

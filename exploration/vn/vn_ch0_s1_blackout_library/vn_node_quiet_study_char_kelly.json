@@ -661,6 +661,7 @@
 		"player2_name": "Mayu Kokawa",
 		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_possessed_mayu.png",
+		"battle_use_exploration_bg": true,
 		"start_battle": true,
 		"starting_crystals_p1": 5000.0,
 		"starting_crystals_p2": 5000.0

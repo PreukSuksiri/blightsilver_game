@@ -1,0 +1,63 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_university_break_room_ghost_behind_nex.png",
+		"bg_ken_burns": {
+			"duration": 1.0,
+			"pan_x": -800.0,
+			"pan_y": 600.0,
+			"start_pan_x": 500.0,
+			"start_pan_y": 800.0,
+			"start_velocity": 0.5,
+			"start_zoom": 3.0,
+			"zoom": 3.0
+		},
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/mystery_1.mp3",
+		"sfx_volume": 120.0
+	},
+	{
+		"background": null,
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"shake_screen": 10.0,
+		"speaker": "Nex",
+		"text": "......!?!"
+	},
+	{
+		"background": null,
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "I thought there was someone behind me."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": null,
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Must be my imagination."
+	}
+]
