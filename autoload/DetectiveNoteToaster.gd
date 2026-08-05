@@ -50,8 +50,21 @@ func _ready() -> void:
 func _sync_host_size() -> void:
 	if _toast_host == null:
 		return
-	_toast_host.set_size(get_viewport().get_visible_rect().size)
+	var vp_size: Vector2 = _safe_viewport_size()
+	if vp_size.x <= 0.0 or vp_size.y <= 0.0:
+		return
+	_toast_host.set_size(vp_size)
 	_toast_host.position = Vector2.ZERO
+
+
+func _safe_viewport_size() -> Vector2:
+	var vp: Viewport = get_viewport()
+	if vp != null:
+		var sz: Vector2 = vp.get_visible_rect().size
+		if is_finite(sz.x) and is_finite(sz.y) and sz.x > 0.0 and sz.y > 0.0:
+			return sz
+	var win: Vector2i = DisplayServer.window_get_size()
+	return Vector2(float(win.x), float(win.y))
 
 
 func _on_note_notification(kind: String, _chapter_id: String, _ref_id: String) -> void:

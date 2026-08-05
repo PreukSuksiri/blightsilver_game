@@ -232,6 +232,8 @@ var _union_summoned_this_duel: Array[int] = [0, 0]
 var _setup_p1_resolved: bool = false
 var _setup_p2_resolved: bool = false
 var _battle_begun: bool = false
+## False during setup / first-player coin toss; true once the duel UI should show.
+var _battle_grids_shown: bool = false
 var _was_tutorial_battle: bool = false
 var _handoff_resolving: bool = false
 # Tech card fan (bottom of screen, active player only)
@@ -333,6 +335,12 @@ var _fog_container: Control = null
 var _fog_rect: TextureRect = null
 var _fog_material: ShaderMaterial = null
 var _fog_material_diag: ShaderMaterial = null
+var _expl_top_fog_band: ColorRect = null
+var _expl_top_fog_material: ShaderMaterial = null
+var _expl_top_fog_scroll: Vector2 = Vector2.ZERO
+var _expl_bottom_fog_band: ColorRect = null
+var _expl_bottom_fog_material: ShaderMaterial = null
+var _expl_bottom_fog_scroll: Vector2 = Vector2.ZERO
 var _fog_scroll: Vector2 = Vector2.ZERO
 var _fog_scroll_diag: Vector2 = Vector2(0.37, 0.61)
 var _fog_scroll_x: float = 14.0
@@ -343,7 +351,16 @@ var _fog_dir_timer: float = 0.0
 const _FOG_TILE_REPEAT: float = 8.0       # straight layer
 const _FOG_TILE_REPEAT_DIAG: float = 3.0  # diagonal layer
 const _FOG_IMAGE_SCALE: float = 3.0  # 300% — each noise tile drawn 3× larger
-const _FOG_ALPHA: float = 0.2
+const _FOG_ALPHA: float = 0.3
+const _PORTRAIT_FOG_ALPHA: float = 0.15
+const _FOG_PATH: String = "res://assets/textures/effect/fog/Noise 3.png"
+const _CAPSULE_FOG_EDGE_SHADER: Shader = preload("res://assets/shaders/capsule_fog_edge.gdshader")
+const _PORTRAIT_FOG_SHADER: Shader = preload("res://assets/shaders/portrait_fog.gdshader")
+var _smoke_fog_shader: Shader = null
+var _fog_tex: Texture2D = null
+## Extra smoke layers clipped to player illustrations (setup / coin / battle).
+var _portrait_fog_mats: Array[ShaderMaterial] = []
+var _portrait_fog_mats_diag: Array[ShaderMaterial] = []
 
 # Observer peek (AI vs AI / E2E only) — purely cosmetic, no game-state change
 # 0 = off, 1 = peek P0 only, 2 = peek active player, 3 = peek both
@@ -620,6 +637,8 @@ func _ready() -> void:
 	_setup_ai()
 	_connect_signals()
 	_build_grids()
+	_build_battle_grid_backdrops()
+	_set_battle_grids_visible(false)
 	call_deferred("_ensure_battle_layout")
 	get_node("MainLayout").resized.connect(_ensure_battle_layout)
 	_setup_buttons()
@@ -634,7 +653,6 @@ func _ready() -> void:
 	_build_reveal_buttons()
 	_build_end_turn_button()
 	_build_dungeon_modifier_panel()
-	_build_omen_hud_panel()
 	_build_attack_confirm_panel()
 
 	_build_card_name_lookup()
@@ -654,6 +672,8 @@ func _ready() -> void:
 	HudSkin.skin_changed.connect(_reload_hud_skin)
 	_reload_hud_skin()
 	_apply_exploration_battle_backdrop()
+	# Fog defaults visible on create — lock strip/fog visibility to current phase now.
+	_update_crystal_visibility()
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
@@ -956,8 +976,12 @@ const GRID_LINE_COLOR: Color = Color(0.65, 0.88, 0.95, 0.9)  # silver-cyan
 const _SHADER_GRID_LINE: Shader = preload("res://assets/shaders/magitech_grid_line.gdshader")
 const _SHADER_VFX_BOLT: Shader = preload("res://assets/shaders/magitech_vfx_bolt.gdshader")
 const _SHADER_VFX_RING: Shader = preload("res://assets/shaders/magitech_vfx_ring.gdshader")
+const _SHADER_GRID_BACKDROP: Shader = preload("res://assets/shaders/battle_grid_backdrop.gdshader")
 ## 2×2 white tex so grid-line ShaderMaterial gets real 0–1 UVs (ColorRect UVs are flat).
 var _grid_line_white_tex: ImageTexture = null
+## Continuous vertical plates behind each active-battle grid (above fog, under cards).
+var _p1_grid_backdrop: TextureRect = null
+var _p2_grid_backdrop: TextureRect = null
 
 
 func _grid_line_white_texture() -> Texture2D:
@@ -1153,15 +1177,82 @@ func _clear_grid_borders() -> void:
 		if node.is_in_group("battle_grid_border"):
 			node.queue_free()
 
+## Show/hide duel grids + cyan borders. Uses modulate so MainLayout sizing stays stable.
+func _set_battle_grids_visible(show: bool) -> void:
+	_battle_grids_shown = show
+	var mod: Color = Color.WHITE if show else Color(1.0, 1.0, 1.0, 0.0)
+	if is_instance_valid(p1_grid):
+		p1_grid.modulate = mod
+	if is_instance_valid(p2_grid):
+		p2_grid.modulate = mod
+	if show:
+		refresh_grid_borders()
+	else:
+		_clear_grid_borders()
+	_sync_exploration_top_fog_visibility(show)
+	_sync_battle_grid_backdrops()
+
+
+func _build_battle_grid_backdrops() -> void:
+	_p1_grid_backdrop = _make_battle_grid_backdrop("P1GridBackdrop")
+	_p2_grid_backdrop = _make_battle_grid_backdrop("P2GridBackdrop")
+	_sync_battle_grid_backdrops()
+
+
+func _make_battle_grid_backdrop(node_name: String) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = node_name
+	tr.texture = _grid_line_white_texture()
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_SCALE
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.visible = false
+	var mat := ShaderMaterial.new()
+	mat.shader = _SHADER_GRID_BACKDROP
+	# Vertical black → dark grey, shared across the whole plate (continuous UVs).
+	mat.set_shader_parameter("color_top", Color(0.0, 0.0, 0.0, 1.0))
+	mat.set_shader_parameter("color_bottom", Color(0.18, 0.18, 0.18, 1.0))
+	tr.material = mat
+	add_child(tr)
+	# Sit above Background/fog, under MainLayout cards.
+	var ml: Node = get_node_or_null("MainLayout")
+	if ml != null:
+		move_child(tr, ml.get_index())
+	return tr
+
+
+func _sync_battle_grid_backdrops() -> void:
+	_place_battle_grid_backdrop(_p1_grid_backdrop, p1_grid)
+	_place_battle_grid_backdrop(_p2_grid_backdrop, p2_grid)
+
+
+func _place_battle_grid_backdrop(backdrop: TextureRect, grid: GridContainer) -> void:
+	if backdrop == null or not is_instance_valid(backdrop):
+		return
+	if grid == null or not is_instance_valid(grid) or not _battle_grids_shown:
+		backdrop.visible = false
+		return
+	var gr: Rect2 = grid.get_global_rect()
+	if gr.size.x < 1.0 or gr.size.y < 1.0:
+		backdrop.visible = false
+		return
+	backdrop.visible = true
+	backdrop.global_position = gr.position
+	backdrop.size = gr.size
+
 ## Reposition cyan grid borders after layout changes (e.g. battle hide_ui toggle).
 func refresh_grid_borders() -> void:
 	_clear_grid_borders()
+	if not _battle_grids_shown:
+		return
 	call_deferred("_add_grid_line_panels")
 
 func _add_grid_line_panels() -> void:
 	# Wait one extra frame so the GridContainer layout is fully computed
 	await get_tree().process_frame
 	_clear_grid_borders()
+	if not _battle_grids_shown:
+		return
 	if grid_nodes.is_empty() or grid_nodes[0].is_empty():
 		return
 	var ml: Node = get_node("MainLayout")
@@ -1239,6 +1330,7 @@ func _add_grid_line_panels() -> void:
 				move_child(cr, ml_idx)
 				cr.position = local_pos
 				cr.size = sz
+	_sync_battle_grid_backdrops()
 
 func _setup_buttons() -> void:
 	attack_btn.pressed.connect(_on_attack_btn)
@@ -1711,6 +1803,7 @@ func _start_game() -> void:
 	_setup_p1_resolved = false
 	_setup_p2_resolved = false
 	_battle_begun = false
+	_set_battle_grids_visible(false)
 	_handoff_resolving = false
 	_union_summoned_this_duel = [0, 0]
 	_void_piles = [[], []]
@@ -1824,6 +1917,7 @@ func _begin_setup_phase() -> void:
 	setup_phase.visible = true
 	setup_phase.start_setup(0)
 	setup_phase.setup_complete.connect(_on_setup_complete_p1, CONNECT_ONE_SHOT)
+	_sync_playmat_fog_visibility()
 	_start_setup_music()
 
 func _show_name_entry(ask_p1: bool = true, ask_p2: bool = true, heading_text: String = "") -> void:
@@ -2119,10 +2213,7 @@ func _begin_game() -> void:
 		GameState.post_message(str(intel_line))
 	_refresh_all_bluff_labels()
 	_refresh_all_rune_labels()
-	if _p1_portrait:
-		_p1_portrait.visible = true
-	if _p2_portrait:
-		_p2_portrait.visible = true
+	# Battle portraits stay hidden through coin toss — overlay owns that beat.
 	_start_battle_music()
 	_deal_tech_cards(0, GameState.STARTING_TECH_HAND)
 	_deal_tech_cards(1, GameState.STARTING_TECH_HAND)
@@ -2141,6 +2232,7 @@ func _begin_game() -> void:
 		first_player = tut_forced if tut_forced >= 0 else DiceRoller.flip_coin_first_player()
 	var coin_result: String = "Heads" if first_player == 0 else "Tails"
 	GameState.post_message("Coin flip — %s! Player %d goes first!" % [coin_result, first_player + 1])
+	_sync_playmat_fog_visibility()
 	_show_coin_flip_and_start(first_player)
 
 # ─────────────────────────────────────────────────────────────
@@ -3333,7 +3425,7 @@ func _build_omen_hud_panel() -> void:
 	_omen_hud_panel.offset_right  =  PANEL_HALF_W
 	_omen_hud_panel.offset_bottom = 194.0
 	_omen_hud_panel.z_index = 4
-	_omen_hud_panel.visible = true
+	_omen_hud_panel.visible = false
 	_omen_hud_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var sb := StyleBoxFlat.new()
@@ -5760,6 +5852,23 @@ func _battle_strip_hud_active() -> bool:
 			return true
 
 
+## Playmat smoke fog: setup + coin toss + active battle; hide on final endgame screen.
+func _should_show_playmat_fog() -> bool:
+	if _endgame_screen_active:
+		return false
+	match GameState.current_phase:
+		GameState.Phase.NONE:
+			return false
+		_:
+			return true
+
+
+func _sync_playmat_fog_visibility() -> void:
+	if _fog_container == null or not is_instance_valid(_fog_container):
+		return
+	_fog_container.visible = _should_show_playmat_fog()
+
+
 func _begin_pre_endgame_strip_hud() -> void:
 	_endgame_screen_active = false
 	_set_strip_hud_input_enabled(false)
@@ -5844,8 +5953,9 @@ func _update_crystal_visibility() -> void:
 		_turn_number_hit.visible = show
 	if _options_btn_root:
 		_options_btn_root.visible = show and not TutorialBattleManager.should_hide_options_btn()
-	if _fog_container:
-		_fog_container.visible = show
+	_sync_playmat_fog_visibility()
+	# Top black exploration banner tracks battle grids (active battle only).
+	_sync_exploration_top_fog_visibility(show and _battle_grids_shown)
 	# Keep top dashboard / bottom vault through GAME_OVER card-reveal (almost win/loss).
 	# Endgame screen hides them explicitly in `_show_endgame_screen`.
 	if GameState.current_phase == GameState.Phase.GAME_OVER and not _endgame_screen_active:
@@ -6531,14 +6641,10 @@ func _apply_v3_grid_lift_and_borders() -> void:
 const PLAYMAT_V2_EXTRA_WIDTH: float = 0.0
 
 func _build_fog() -> void:
-	const FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
-	var fog_tex := load(FOG_PATH) as Texture2D
+	var fog_tex := load(_FOG_PATH) as Texture2D
 	if fog_tex == null:
 		return
-
-	var playmat_bg: Control = get_node_or_null("Background") as Control
-	if playmat_bg == null:
-		return
+	_fog_tex = fog_tex
 
 	var smoke_shader := Shader.new()
 	smoke_shader.code = """
@@ -6546,7 +6652,7 @@ shader_type canvas_item;
 uniform vec2 scroll = vec2(0.0, 0.0);
 uniform float tile_repeat = 1.0;
 uniform float image_scale = 3.0;
-uniform float fog_alpha = 0.2;
+uniform float fog_alpha = 0.3;
 void fragment() {
 	vec2 uv = fract(UV * tile_repeat / image_scale + scroll);
 	vec4 tex = texture(TEXTURE, uv);
@@ -6554,39 +6660,346 @@ void fragment() {
 	COLOR = vec4(vec3(smoke), smoke * fog_alpha);
 }
 """
+	_smoke_fog_shader = smoke_shader
 
-	# Clip fog to the playmat only — never overlay HUD / cards / chrome.
-	playmat_bg.clip_contents = true
+	var playmat_bg: Control = get_node_or_null("Background") as Control
+	if playmat_bg != null:
+		# Clip fog to the playmat only — never overlay HUD / cards / chrome.
+		playmat_bg.clip_contents = true
 
-	var fog_clip := Control.new()
-	fog_clip.name = "PlaymatFog"
-	fog_clip.clip_contents = true
-	fog_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	fog_clip.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-	playmat_bg.add_child(fog_clip)
-	_fog_container = fog_clip
+		var fog_clip := Control.new()
+		fog_clip.name = "PlaymatFog"
+		fog_clip.clip_contents = true
+		fog_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fog_clip.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+		playmat_bg.add_child(fog_clip)
+		_fog_container = fog_clip
 
-	_fog_material = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT)
-	_fog_material_diag = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT_DIAG)
+		_fog_material = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT)
+		_fog_material_diag = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT_DIAG)
 
-	var tr := _make_fog_layer(fog_tex, _fog_material)
-	fog_clip.add_child(tr)
-	_fog_rect = tr
+		var tr := _make_fog_layer(fog_tex, _fog_material)
+		fog_clip.add_child(tr)
+		_fog_rect = tr
 
-	var tr_diag := _make_fog_layer(fog_tex, _fog_material_diag)
-	fog_clip.add_child(tr_diag)
+		var tr_diag := _make_fog_layer(fog_tex, _fog_material_diag)
+		fog_clip.add_child(tr_diag)
+
+		# Exploration backdrop only: black top/bottom banners above playmat fog,
+		# foggy on the inward edge only (same treatment as coin-toss bands).
+		if GameState.has_exploration_battle_backdrop():
+			const EXPL_FOG_BAND_H: float = 90.0
+			var make_expl_band := func(is_top: bool, band_name: String) -> ColorRect:
+				var band := ColorRect.new()
+				band.name = band_name
+				band.anchor_left = 0.0
+				band.anchor_right = 1.0
+				band.offset_left = 0.0
+				band.offset_right = 0.0
+				if is_top:
+					band.anchor_top = 0.0
+					band.anchor_bottom = 0.0
+					band.offset_top = 0.0
+					band.offset_bottom = EXPL_FOG_BAND_H
+				else:
+					band.anchor_top = 1.0
+					band.anchor_bottom = 1.0
+					band.offset_top = -EXPL_FOG_BAND_H
+					band.offset_bottom = 0.0
+				band.color = Color(0.0, 0.0, 0.0, 0.96)
+				band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				# After PlaymatFog so the banner is visible (not buried under smoke).
+				playmat_bg.add_child(band)
+				return band
+
+			var top_band: ColorRect = make_expl_band.call(true, "ExplorationTopFog")
+			var bottom_band: ColorRect = make_expl_band.call(false, "ExplorationBottomFog")
+			_expl_top_fog_band = top_band
+			_expl_bottom_fog_band = bottom_band
+
+			var bands: Array[ColorRect] = [top_band, bottom_band]
+			for i: int in range(bands.size()):
+				var band: ColorRect = bands[i]
+				var is_top_band: bool = (i == 0)
+				var mat := ShaderMaterial.new()
+				mat.shader = _CAPSULE_FOG_EDGE_SHADER
+				mat.set_shader_parameter("rect_size", Vector2(1920.0, EXPL_FOG_BAND_H))
+				mat.set_shader_parameter("corner_radius", 0.0)
+				mat.set_shader_parameter("fog_width", 48.0)
+				mat.set_shader_parameter("fog_strength", 1.4)
+				mat.set_shader_parameter("scroll", Vector2.ZERO)
+				mat.set_shader_parameter("relief", 0.0)
+				mat.set_shader_parameter("use_vertex_color", 1.0)
+				mat.set_shader_parameter("progress", 2.0)  # keep sheen disabled
+				mat.set_shader_parameter("intensity", 0.0)
+				mat.set_shader_parameter("band_width", 0.20)
+				mat.set_shader_parameter("fog_noise", fog_tex)
+				# Top: fog bottom edge. Bottom: fog top edge (inward toward board).
+				mat.set_shader_parameter(
+					"fog_edges",
+					Color(0.0, 0.0, 0.0, 1.0) if is_top_band else Color(0.0, 0.0, 1.0, 0.0))
+				band.material = mat
+				if is_top_band:
+					_expl_top_fog_material = mat
+				else:
+					_expl_bottom_fog_material = mat
+				band.resized.connect(func() -> void:
+					var m: ShaderMaterial = band.material as ShaderMaterial
+					if m != null and band.size.x > 1.0 and band.size.y > 1.0:
+						m.set_shader_parameter("rect_size", band.size))
+
+	# Same smoke over player illustrations at lower alpha (setup / coin / battle).
+	_attach_portrait_fog(_p1_portrait)
+	_attach_portrait_fog(_p2_portrait)
+	call_deferred("_attach_setup_portrait_fogs")
 
 	_fog_dir_timer = randf_range(3.0, 6.0)
 	_pick_new_fog_vertical_dir()
+	_sync_playmat_fog_visibility()
+	_sync_exploration_top_fog_visibility(_battle_grids_shown)
 
 
-func _make_fog_material(smoke_shader: Shader, tile_repeat: float) -> ShaderMaterial:
+func _attach_setup_portrait_fogs() -> void:
+	if setup_phase == null:
+		return
+	_attach_portrait_fog(setup_phase.get("_sp_p1_portrait") as Control)
+	_attach_portrait_fog(setup_phase.get("_sp_p2_portrait") as Control)
+
+
+func _make_fog_material(smoke_shader: Shader, tile_repeat: float, fog_alpha: float = -1.0) -> ShaderMaterial:
 	var mat := ShaderMaterial.new()
 	mat.shader = smoke_shader
 	mat.set_shader_parameter("tile_repeat", tile_repeat)
 	mat.set_shader_parameter("image_scale", _FOG_IMAGE_SCALE)
-	mat.set_shader_parameter("fog_alpha", _FOG_ALPHA)
+	mat.set_shader_parameter("fog_alpha", _FOG_ALPHA if fog_alpha < 0.0 else fog_alpha)
 	return mat
+
+
+## Wrap portrait art + fog sibling so smoke draws on top of the illustration.
+func _wrap_portrait_for_fog(art: TextureRect) -> Control:
+	var parent: Node = art.get_parent()
+	if parent != null and parent.name == "PortraitFogHost":
+		return parent as Control
+	if parent == null:
+		return art
+	var idx: int = art.get_index()
+	var wrap := Control.new()
+	wrap.name = "PortraitFogHost"
+	wrap.clip_contents = true
+	wrap.mouse_filter = art.mouse_filter
+	wrap.z_index = art.z_index
+	wrap.visible = art.visible
+	wrap.anchor_left = art.anchor_left
+	wrap.anchor_top = art.anchor_top
+	wrap.anchor_right = art.anchor_right
+	wrap.anchor_bottom = art.anchor_bottom
+	wrap.offset_left = art.offset_left
+	wrap.offset_top = art.offset_top
+	wrap.offset_right = art.offset_right
+	wrap.offset_bottom = art.offset_bottom
+	wrap.grow_horizontal = art.grow_horizontal
+	wrap.grow_vertical = art.grow_vertical
+	parent.add_child(wrap)
+	parent.move_child(wrap, idx)
+	art.reparent(wrap)
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	art.offset_left = 0.0
+	art.offset_top = 0.0
+	art.offset_right = 0.0
+	art.offset_bottom = 0.0
+	art.z_index = 0
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.visibility_changed.connect(func() -> void:
+		if is_instance_valid(wrap):
+			wrap.visible = art.visible)
+	return wrap
+
+
+func _portrait_host_art(host: Control) -> TextureRect:
+	for child in host.get_children():
+		if child is TextureRect and child.name != "PortraitFog":
+			return child as TextureRect
+	return null
+
+
+## Match Godot TextureRect KEEP_ASPECT / KEEP_ASPECT_CENTERED draw rect (see texture_rect.cpp).
+func _godot_keep_aspect_draw_rect(ctrl_sz: Vector2, tex_sz: Vector2, centered: bool) -> Rect2:
+	var drawn_w: float = tex_sz.x * ctrl_sz.y / tex_sz.y
+	var drawn_h: float = ctrl_sz.y
+	if drawn_w > ctrl_sz.x:
+		drawn_w = ctrl_sz.x
+		drawn_h = tex_sz.y * drawn_w / tex_sz.x
+	var origin := Vector2.ZERO
+	if centered:
+		origin.x = (ctrl_sz.x - drawn_w) * 0.5
+		origin.y = (ctrl_sz.y - drawn_h) * 0.5
+	return Rect2(origin, Vector2(drawn_w, drawn_h))
+
+
+## Where a TextureRect actually draws its texture (aspect-fit region inside the control).
+func _portrait_art_inscribed_rect(art: TextureRect) -> Rect2:
+	var ctrl_sz: Vector2 = art.size
+	if not is_finite(ctrl_sz.x) or not is_finite(ctrl_sz.y) \
+			or ctrl_sz.x < 1.0 or ctrl_sz.y < 1.0:
+		return Rect2(Vector2.ZERO, Vector2.ZERO)
+	var tex: Texture2D = art.texture
+	if tex == null:
+		return Rect2(Vector2.ZERO, ctrl_sz)
+	var tex_sz: Vector2 = tex.get_size()
+	if not is_finite(tex_sz.x) or not is_finite(tex_sz.y) \
+			or tex_sz.x < 1.0 or tex_sz.y < 1.0:
+		return Rect2(Vector2.ZERO, ctrl_sz)
+	match art.stretch_mode:
+		TextureRect.STRETCH_SCALE:
+			return Rect2(Vector2.ZERO, ctrl_sz)
+		TextureRect.STRETCH_KEEP_ASPECT_COVERED:
+			var scale: float = maxf(ctrl_sz.x / tex_sz.x, ctrl_sz.y / tex_sz.y)
+			var drawn_sz: Vector2 = tex_sz * scale
+			var origin: Vector2 = (ctrl_sz - drawn_sz) * 0.5
+			return Rect2(origin, drawn_sz)
+		TextureRect.STRETCH_KEEP_ASPECT_CENTERED:
+			return _godot_keep_aspect_draw_rect(ctrl_sz, tex_sz, true)
+		TextureRect.STRETCH_KEEP_ASPECT:
+			return _godot_keep_aspect_draw_rect(ctrl_sz, tex_sz, false)
+		_:
+			var scale: float = minf(ctrl_sz.x / tex_sz.x, ctrl_sz.y / tex_sz.y)
+			var drawn_sz: Vector2 = tex_sz * scale
+			var origin: Vector2 = (ctrl_sz - drawn_sz) * 0.5
+			return Rect2(origin, drawn_sz)
+
+
+func _portrait_fog_rect_is_valid(rect: Rect2) -> bool:
+	return is_finite(rect.position.x) and is_finite(rect.position.y) \
+		and is_finite(rect.size.x) and is_finite(rect.size.y) \
+		and rect.size.x >= 1.0 and rect.size.y >= 1.0
+
+
+func _sync_portrait_fog_layout(host: Control) -> void:
+	if host == null or not is_instance_valid(host):
+		return
+	var fog: Control = host.get_node_or_null("PortraitFog") as Control
+	var art: TextureRect = _portrait_host_art(host)
+	if fog == null or art == null:
+		return
+	if art.texture == null:
+		fog.visible = false
+		return
+	var host_sz: Vector2 = host.size
+	if host_sz.x < 1.0 or host_sz.y < 1.0:
+		fog.visible = false
+		return
+	var art_rect: Rect2 = _portrait_art_inscribed_rect(art)
+	if not _portrait_fog_rect_is_valid(art_rect):
+		fog.visible = false
+		return
+	fog.visible = true
+	fog.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var art_uv: Vector4 = Vector4(
+		art_rect.position.x / host_sz.x,
+		art_rect.position.y / host_sz.y,
+		art_rect.size.x / host_sz.x,
+		art_rect.size.y / host_sz.y)
+	var flip: float = 1.0 if art.flip_h else 0.0
+	for child: Node in fog.get_children():
+		if child is TextureRect:
+			var mat: ShaderMaterial = (child as TextureRect).material as ShaderMaterial
+			if mat == null:
+				continue
+			mat.set_shader_parameter("art_uv_rect", art_uv)
+			mat.set_shader_parameter("portrait_tex", art.texture)
+			mat.set_shader_parameter("flip_h", flip)
+
+
+func _bind_portrait_fog_layout(host: Control, art: TextureRect) -> void:
+	if art.has_meta("portrait_fog_layout_bound"):
+		return
+	art.set_meta("portrait_fog_layout_bound", true)
+	art.resized.connect(func() -> void: _sync_portrait_fog_layout(host))
+	host.resized.connect(func() -> void: _sync_portrait_fog_layout(host))
+
+
+func _make_portrait_fog_material(art: TextureRect, tile_repeat: float) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = _PORTRAIT_FOG_SHADER
+	mat.set_shader_parameter("tile_repeat", tile_repeat)
+	mat.set_shader_parameter("image_scale", _FOG_IMAGE_SCALE)
+	mat.set_shader_parameter("fog_alpha", _PORTRAIT_FOG_ALPHA)
+	mat.set_shader_parameter("portrait_tex", art.texture)
+	mat.set_shader_parameter("flip_h", 1.0 if art.flip_h else 0.0)
+	return mat
+
+
+func _portrait_fog_uses_alpha_mask(fog: Control) -> bool:
+	if fog == null or fog.get_child_count() == 0:
+		return false
+	var layer: TextureRect = fog.get_child(0) as TextureRect
+	if layer == null or layer.material == null:
+		return false
+	return (layer.material as ShaderMaterial).shader == _PORTRAIT_FOG_SHADER
+
+
+func _add_smoke_layers_to_host(host: Control) -> void:
+	var existing: Node = host.get_node_or_null("PortraitFog")
+	if existing != null:
+		if _portrait_fog_uses_alpha_mask(existing as Control):
+			var art_existing: TextureRect = _portrait_host_art(host)
+			if art_existing != null:
+				_bind_portrait_fog_layout(host, art_existing)
+				call_deferred("_sync_portrait_fog_layout", host)
+			return
+		for child: Node in existing.get_children():
+			if child is TextureRect:
+				var old_mat: ShaderMaterial = (child as TextureRect).material as ShaderMaterial
+				if old_mat != null:
+					_portrait_fog_mats.erase(old_mat)
+					_portrait_fog_mats_diag.erase(old_mat)
+		host.remove_child(existing)
+		existing.free()
+	var art: TextureRect = _portrait_host_art(host)
+	if art == null or art.texture == null:
+		return
+	host.clip_contents = true
+	var fog_clip := Control.new()
+	fog_clip.name = "PortraitFog"
+	fog_clip.clip_contents = false
+	fog_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fog_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fog_clip.z_index = 1
+	host.add_child(fog_clip)
+	var mat := _make_portrait_fog_material(art, _FOG_TILE_REPEAT)
+	var mat_diag := _make_portrait_fog_material(art, _FOG_TILE_REPEAT_DIAG)
+	var layer := _make_fog_layer(_fog_tex, mat)
+	layer.z_index = 0
+	fog_clip.add_child(layer)
+	var layer_diag := _make_fog_layer(_fog_tex, mat_diag)
+	layer_diag.z_index = 1
+	fog_clip.add_child(layer_diag)
+	_portrait_fog_mats.append(mat)
+	_portrait_fog_mats_diag.append(mat_diag)
+	if _fog_material != null:
+		mat.set_shader_parameter("scroll", _fog_scroll)
+	if _fog_material_diag != null:
+		mat_diag.set_shader_parameter("scroll", _fog_scroll_diag)
+	_bind_portrait_fog_layout(host, art)
+	call_deferred("_sync_portrait_fog_layout", host)
+
+
+## Clip the same playmat smoke onto a portrait control at portrait alpha.
+func _attach_portrait_fog(art: Control) -> void:
+	if art == null or not is_instance_valid(art):
+		return
+	if _smoke_fog_shader == null or _fog_tex == null:
+		return
+	var host: Control = art
+	if art is TextureRect:
+		host = _wrap_portrait_for_fog(art as TextureRect)
+	elif art.get_parent() != null and art.get_parent().name == "PortraitFogHost":
+		host = art.get_parent() as Control
+		art = _portrait_host_art(host)
+	_add_smoke_layers_to_host(host)
+	if art != null and is_instance_valid(art):
+		call_deferred("_sync_portrait_fog_layout", host)
 
 
 func _make_fog_layer(fog_tex: Texture2D, mat: ShaderMaterial) -> TextureRect:
@@ -6607,23 +7020,50 @@ func _pick_new_fog_vertical_dir() -> void:
 
 
 func _update_fog(delta: float) -> void:
-	if _fog_material == null:
-		return
-
-	_fog_dir_timer -= delta
-	if _fog_dir_timer <= 0.0:
-		_fog_dir_timer = randf_range(3.0, 7.0)
-		_pick_new_fog_vertical_dir()
-
 	var step := delta * 0.002
-	_fog_scroll.x += _fog_scroll_x * step
-	_fog_scroll.y += _fog_scroll_y * step
-	_fog_material.set_shader_parameter("scroll", _fog_scroll)
+	if _fog_material != null:
+		_fog_dir_timer -= delta
+		if _fog_dir_timer <= 0.0:
+			_fog_dir_timer = randf_range(3.0, 7.0)
+			_pick_new_fog_vertical_dir()
+		_fog_scroll.x += _fog_scroll_x * step
+		_fog_scroll.y += _fog_scroll_y * step
+		_fog_material.set_shader_parameter("scroll", _fog_scroll)
+	elif not _portrait_fog_mats.is_empty():
+		_fog_dir_timer -= delta
+		if _fog_dir_timer <= 0.0:
+			_fog_dir_timer = randf_range(3.0, 7.0)
+			_pick_new_fog_vertical_dir()
+		_fog_scroll.x += _fog_scroll_x * step
+		_fog_scroll.y += _fog_scroll_y * step
 
 	if _fog_material_diag:
 		_fog_scroll_diag.x += _fog_diag_scroll_x * step
 		_fog_scroll_diag.y += _fog_diag_scroll_y * step
 		_fog_material_diag.set_shader_parameter("scroll", _fog_scroll_diag)
+	elif not _portrait_fog_mats_diag.is_empty():
+		_fog_scroll_diag.x += _fog_diag_scroll_x * step
+		_fog_scroll_diag.y += _fog_diag_scroll_y * step
+	# Keep portrait overlays locked to the same scroll as playmat smoke.
+	for mat: ShaderMaterial in _portrait_fog_mats:
+		if mat != null:
+			mat.set_shader_parameter("scroll", _fog_scroll)
+	for mat: ShaderMaterial in _portrait_fog_mats_diag:
+		if mat != null:
+			mat.set_shader_parameter("scroll", _fog_scroll_diag)
+	if _expl_top_fog_material != null:
+		_expl_top_fog_scroll += Vector2(0.075, 0.038) * delta
+		_expl_top_fog_material.set_shader_parameter("scroll", _expl_top_fog_scroll)
+	if _expl_bottom_fog_material != null:
+		_expl_bottom_fog_scroll += Vector2(-0.068, 0.041) * delta
+		_expl_bottom_fog_material.set_shader_parameter("scroll", _expl_bottom_fog_scroll)
+
+func _sync_exploration_top_fog_visibility(show: bool) -> void:
+	var vis: bool = show and GameState.has_exploration_battle_backdrop()
+	if _expl_top_fog_band != null and is_instance_valid(_expl_top_fog_band):
+		_expl_top_fog_band.visible = vis
+	if _expl_bottom_fog_band != null and is_instance_valid(_expl_bottom_fog_band):
+		_expl_bottom_fog_band.visible = vis
 
 # ─────────────────────────────────────────────────────────────
 # Union Suggestion Button
@@ -6696,6 +7136,9 @@ func _collect_all_available_unions(player: int) -> Array:
 	return results
 
 func _apply_playmat_skin_layout(playmat_rect: TextureRect) -> void:
+	if GameState.quick_duel_active:
+		_apply_quick_duel_playmat_layout(playmat_rect)
+		return
 	# v3 playmat is full-bleed; v1/v2 keep the small left inset.
 	playmat_rect.offset_left  = 0.0 if HudSkin.version == "v3" else 8.0
 	playmat_rect.offset_right = 0.0
@@ -6710,6 +7153,18 @@ func _apply_playmat_skin_layout(playmat_rect: TextureRect) -> void:
 	else:
 		playmat_rect.scale        = Vector2.ONE
 		playmat_rect.pivot_offset = Vector2.ZERO
+
+
+## Quick Duel: full-viewport steampunk playmat — no v3 top gap; aspect-covered, centered.
+func _apply_quick_duel_playmat_layout(playmat_rect: TextureRect) -> void:
+	playmat_rect.offset_left = 0.0
+	playmat_rect.offset_right = 0.0
+	playmat_rect.offset_top = 0.0
+	playmat_rect.offset_bottom = 0.0
+	playmat_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	playmat_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	playmat_rect.scale = Vector2.ONE
+	playmat_rect.pivot_offset = Vector2.ZERO
 
 func _apply_playmat_v2_scale(playmat_rect: TextureRect) -> void:
 	if not is_instance_valid(playmat_rect):
@@ -6789,11 +7244,13 @@ func _apply_exploration_battle_backdrop() -> void:
 	if not GameState.has_exploration_battle_backdrop():
 		if playmat_bg != null:
 			playmat_bg.visible = true
+		_sync_exploration_top_fog_visibility(false)
 		return
 	var tex: Texture2D = load(GameState.battle_exploration_bg_path) as Texture2D
 	if tex == null:
 		if playmat_bg != null:
 			playmat_bg.visible = true
+		_sync_exploration_top_fog_visibility(false)
 		return
 	if playmat_bg != null:
 		playmat_bg.visible = false
@@ -6802,8 +7259,14 @@ func _apply_exploration_battle_backdrop() -> void:
 		playmat_rect.texture = tex
 		playmat_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		playmat_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		# Full-bleed — do not keep v3 playmat board-down offsets on room photos.
+		playmat_rect.offset_left = 0.0
+		playmat_rect.offset_right = 0.0
+		playmat_rect.offset_top = 0.0
+		playmat_rect.offset_bottom = 0.0
 		playmat_rect.scale = Vector2.ONE
 		playmat_rect.pivot_offset = Vector2.ZERO
+	_sync_exploration_top_fog_visibility(_battle_grids_shown)
 
 
 ## Skin-dependent HUD geometry / chrome (v3 layouts + hover wiring targets).
@@ -8173,6 +8636,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	var _COIN_BACK:  Texture2D = HudSkin.hud_tex("ui_coin_back.png")
 	const COIN_SIZE    : float = 420.0
 	const NUM_FLIPS    : int   = 10   # even → lands on same side it started
+	const COIN_FOG_NOISE_PATH: String = "res://assets/textures/effect/fog/Noise 3.png"
 	const PORTRAIT_W   : float = 260.0
 	const GREY_MODULATE: Color = Color(0.3, 0.3, 0.35, 1.0)
 	## Nudge portraits / coin / labels down so they sit clearer in the frame.
@@ -8188,13 +8652,15 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
 	var bg: Control
 	var use_expl_bg: bool = GameState.has_exploration_battle_backdrop()
-	# Transparent catcher when using exploration backdrop; else black + setup plate.
+	# Quick Duel: leave GameBoard playmat + smoke fog visible (no opaque plate).
+	var reveal_playmat: bool = use_expl_bg or GameState.quick_duel_active
+	# Transparent catcher when revealing playmat/exploration; else black + setup plate.
 	var underlay := ColorRect.new()
 	underlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	underlay.color = Color(0.0, 0.0, 0.0, 0.0) if use_expl_bg else Color(0.0, 0.0, 0.0, 1.0)
+	underlay.color = Color(0.0, 0.0, 0.0, 0.0) if reveal_playmat else Color(0.0, 0.0, 0.0, 1.0)
 	underlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(underlay)
-	if use_expl_bg:
+	if reveal_playmat:
 		underlay.mouse_filter = Control.MOUSE_FILTER_STOP
 		bg = underlay
 	elif setup_bg_tex != null:
@@ -8236,9 +8702,10 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p1_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p1_port.flip_h        = true
 		coin_p1_port.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-		coin_p1_port.modulate      = GREY_MODULATE
+		coin_p1_port.self_modulate = GREY_MODULATE
 		coin_p1_port.z_index       = 1
 		overlay.add_child(coin_p1_port)
+		call_deferred("_attach_portrait_fog", coin_p1_port)
 
 	var _p2_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[1])
 	if _p2_tex:
@@ -8259,9 +8726,10 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p2_port.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		coin_p2_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p2_port.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-		coin_p2_port.modulate      = GREY_MODULATE
+		coin_p2_port.self_modulate = GREY_MODULATE
 		coin_p2_port.z_index       = 1
 		overlay.add_child(coin_p2_port)
+		call_deferred("_attach_portrait_fog", coin_p2_port)
 
 	# ── CenterContainer: coin + satellite labels at true screen center ──
 	var center := CenterContainer.new()
@@ -8270,17 +8738,79 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(center)
 
-	# Front frame: same placement/stretch as backdrop, above portraits + coin.
-	var front_frame_tex: Texture2D = HudSkin.setup_phase_front_frame_tex()
-	if front_frame_tex != null:
-		var front_frame := TextureRect.new()
-		front_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		front_frame.texture = front_frame_tex
-		front_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		front_frame.stretch_mode = TextureRect.STRETCH_SCALE
-		front_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		front_frame.z_index = 20
-		overlay.add_child(front_frame)
+	# Foreground layer:
+	# - regular battles: steampunk setup frame
+	# - exploration-bg battles: top+bottom black fog fringes (animated)
+	# - Quick Duel: neither — playmat smoke fog shows through
+	if use_expl_bg:
+		var fog_noise: Texture2D = load(COIN_FOG_NOISE_PATH) as Texture2D
+		const COIN_FOG_BAND_H: float = 160.0
+		var make_fog_band := func(is_top: bool) -> ColorRect:
+			var band := ColorRect.new()
+			band.anchor_left = 0.0
+			band.anchor_right = 1.0
+			band.offset_left = 0.0
+			band.offset_right = 0.0
+			if is_top:
+				band.anchor_top = 0.0
+				band.anchor_bottom = 0.0
+				band.offset_top = 0.0
+				band.offset_bottom = COIN_FOG_BAND_H
+			else:
+				band.anchor_top = 1.0
+				band.anchor_bottom = 1.0
+				band.offset_top = -COIN_FOG_BAND_H
+				band.offset_bottom = 0.0
+			band.color = Color(0.0, 0.0, 0.0, 0.96)
+			band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			band.z_index = 20
+			overlay.add_child(band)
+			return band
+
+		var top_fog_band: ColorRect = make_fog_band.call(true)
+		var bottom_fog_band: ColorRect = make_fog_band.call(false)
+		var fog_bands: Array[ColorRect] = [top_fog_band, bottom_fog_band]
+		for i: int in range(fog_bands.size()):
+			var fog_band: ColorRect = fog_bands[i]
+			if fog_noise == null:
+				continue
+			var is_top_band: bool = (i == 0)
+			var fog_mat := ShaderMaterial.new()
+			fog_mat.shader = preload("res://assets/shaders/capsule_fog_edge.gdshader")
+			fog_mat.set_shader_parameter("rect_size", Vector2(1920.0, COIN_FOG_BAND_H))
+			fog_mat.set_shader_parameter("corner_radius", 0.0)
+			fog_mat.set_shader_parameter("fog_width", 72.0)
+			fog_mat.set_shader_parameter("fog_strength", 1.4)
+			fog_mat.set_shader_parameter("scroll", Vector2(0.42 * float(i), 0.19 * float(i)))
+			fog_mat.set_shader_parameter("relief", 0.0)
+			fog_mat.set_shader_parameter("use_vertex_color", 1.0)
+			fog_mat.set_shader_parameter("progress", 2.0)  # disable metal sheen band
+			fog_mat.set_shader_parameter("intensity", 0.0)
+			fog_mat.set_shader_parameter("band_width", 0.20)
+			fog_mat.set_shader_parameter("fog_noise", fog_noise)
+			# Top band: fog only its bottom edge. Bottom band: fog only its top edge.
+			fog_mat.set_shader_parameter(
+				"fog_edges",
+				Color(0.0, 0.0, 0.0, 1.0) if is_top_band else Color(0.0, 0.0, 1.0, 0.0))
+			fog_band.material = fog_mat
+			fog_band.resized.connect(func() -> void:
+				if fog_mat != null and fog_band.size.x > 1.0 and fog_band.size.y > 1.0:
+					fog_mat.set_shader_parameter("rect_size", fog_band.size))
+			var fog_tw := overlay.create_tween().set_loops()
+			fog_tw.tween_property(
+				fog_mat, "shader_parameter/scroll", Vector2(1.35, 0.62), 10.0
+			).as_relative().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	elif not reveal_playmat:
+		var front_frame_tex: Texture2D = HudSkin.setup_phase_front_frame_tex()
+		if front_frame_tex != null:
+			var front_frame := TextureRect.new()
+			front_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			front_frame.texture = front_frame_tex
+			front_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			front_frame.stretch_mode = TextureRect.STRETCH_SCALE
+			front_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			front_frame.z_index = 20
+			overlay.add_child(front_frame)
 
 	var vbox := VBoxContainer.new()
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -8348,7 +8878,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	var winner_port: TextureRect = coin_p1_port if first_player == 0 else coin_p2_port
 	if winner_port:
 		var reveal_tw := create_tween()
-		reveal_tw.tween_property(winner_port, "modulate",
+		reveal_tw.tween_property(winner_port, "self_modulate",
 			Color(1.0, 1.0, 1.0, 1.0), 0.45).set_trans(Tween.TRANS_SINE)
 
 	# Fade in hint and allow tap-to-dismiss
@@ -8358,18 +8888,25 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	hint_tw.tween_property(hint_lbl, "theme_override_colors/font_color",
 		Color(0.5, 0.5, 0.6, 0.65), 0.4)
 
+	var finish_coin := func() -> void:
+		if done[0]:
+			return
+		done[0] = true
+		overlay.queue_free()
+		if _p1_portrait:
+			_p1_portrait.visible = true
+		if _p2_portrait:
+			_p2_portrait.visible = true
+		_set_battle_grids_visible(true)
+		turn_manager.start_turn(first_player)
+
 	bg.gui_input.connect(func(e: InputEvent) -> void:
-		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed and not done[0]:
-			done[0] = true
-			overlay.queue_free()
-			turn_manager.start_turn(first_player))
+		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+			finish_coin.call())
 
 	# Auto-dismiss after 2.2 s
 	await get_tree().create_timer(2.2).timeout
-	if not done[0]:
-		done[0] = true
-		overlay.queue_free()
-		turn_manager.start_turn(first_player)
+	finish_coin.call()
 
 func _deal_tech_cards(player: int, count: int) -> void:
 	# SetupPhase already populates tech_hands from the player's deck — skip if done
@@ -8618,9 +9155,10 @@ func _update_portrait_dims() -> void:
 	if _p1_portrait == null or _p2_portrait == null:
 		return
 	var active := GameState.current_player
-	_p1_portrait.modulate = Color(1.0, 1.0, 1.0, 1.0) if active == 0 \
+	# self_modulate greys art only — portrait fog children keep full 0.15 alpha.
+	_p1_portrait.self_modulate = Color(1.0, 1.0, 1.0, 1.0) if active == 0 \
 		else Color(0.3, 0.3, 0.35, 1.0)
-	_p2_portrait.modulate = Color(1.0, 1.0, 1.0, 1.0) if active == 1 \
+	_p2_portrait.self_modulate = Color(1.0, 1.0, 1.0, 1.0) if active == 1 \
 		else Color(0.3, 0.3, 0.35, 1.0)
 
 func _update_turn_info() -> void:

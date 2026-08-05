@@ -178,13 +178,6 @@ texture = ExtResource("playmat")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TopAccentLine" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 9
-anchor_right = 1.0
-offset_bottom = 2.0
-color = Color(0.18, 0.549, 1.0, 0.18)
-
 [node name="HUD" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 9

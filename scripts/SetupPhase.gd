@@ -17,9 +17,6 @@ const GAL_W   : float = 88.0
 const GAL_H   : float = 121.0
 const GAL_GAP : int   = 6
 const TUTORIAL_FORMATION_MSG := "Formation Change is unavailable in tutorial"
-const SP_PORTRAIT_REF_H: float = 720.0
-## Nudge setup portraits toward the right (into the open left lane after panel shift).
-const SP_PORTRAIT_NUDGE_X: float = 56.0
 # Park setup chrome on the far right (same total width as the old 172/172 insets at 1600px).
 const SETUP_PANEL_LEFT_INSET: float = 320.0
 const SETUP_PANEL_RIGHT_INSET: float = 24.0
@@ -33,6 +30,9 @@ const ACTION_BTN_H: float = 34.0
 const FORMATION_BTN_H: float = ACTION_BTN_H
 const CONFIRM_BTN_H: float = 44.0
 const CONFIRM_BTN_W: float = 260.0
+const SP_PORTRAIT_REF_H: float = 720.0
+## Nudge setup portraits toward the right (into the open left lane after panel shift).
+const SP_PORTRAIT_NUDGE_X: float = 56.0
 # Setup UI text — labels stay B&W; buttons use yellow tone.
 const TXT_PRIMARY := Color(0.96, 0.96, 0.96, 1.0)
 const TXT_BODY := Color(0.82, 0.82, 0.82, 1.0)
@@ -118,6 +118,7 @@ class GridCell extends Panel:
 	var _rune_lbl:      Label       = null
 	var _flash_overlay: ColorRect   = null
 	var _drag_started:  bool        = false
+	var _omen_badge:    OmenBadge   = null
 
 	func set_emoticon(emoji: String) -> void:
 		if _emoticon_lbl == null:
@@ -163,12 +164,27 @@ class GridCell extends Panel:
 			_card_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			add_child(_card_tex)
 		_card_tex.texture = tex
+		_refresh_omen_badge()
 
 	func vacate() -> void:
 		occupied_name = ""
 		occupied_type = ""
 		if _card_tex != null:
 			_card_tex.texture = null
+		_clear_omen_badge()
+
+	func _refresh_omen_badge() -> void:
+		_clear_omen_badge()
+		if occupied_name.is_empty():
+			return
+		_omen_badge = OmenBadge.attach_to_tile(self, occupied_name, 20.0)
+		if _omen_badge != null:
+			_omen_badge.z_index = 7
+
+	func _clear_omen_badge() -> void:
+		if _omen_badge != null and is_instance_valid(_omen_badge):
+			_omen_badge.queue_free()
+		_omen_badge = null
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		if occupied_name.is_empty() or locked:
@@ -261,6 +277,8 @@ var _formation_bar: HBoxContainer = null  # pre-defined formation buttons
 var _bottom_panel: Panel = null           # formation + random + confirm chrome
 var _bottom_vbox: VBoxContainer = null
 var _body_hbox:     Control       = null  # body (grid + right panel)
+var _sp_p1_portrait: TextureRect    = null
+var _sp_p2_portrait: TextureRect    = null
 
 var _player_lbl   : Label           = null
 var _instr_lbl    : Label           = null
@@ -273,8 +291,6 @@ var _confirm_sheen_mat: ShaderMaterial = null
 const _CONFIRM_BTN_BRIGHT_REST := 1.0
 const _CONFIRM_BTN_BRIGHT_PULSE := 1.28
 const _BTN_FX_META := &"magitech_btn_fx_mat"
-var _sp_p1_portrait: TextureRect    = null
-var _sp_p2_portrait: TextureRect    = null
 
 # Card info strip
 var _info_img       : TextureRect = null
@@ -424,7 +440,9 @@ func _build_ui() -> void:
 	# ── Background (v3: setup-phase art; else solid + side margins) ──
 	# Exploration-backdrop battles keep this layer transparent so GameBoard's
 	# memorized room image shows through (no setup plate / black underlay).
-	if not GameState.has_exploration_battle_backdrop():
+	# Quick Duel: same — leave GameBoard playmat + smoke fog visible.
+	if not GameState.has_exploration_battle_backdrop() \
+			and not GameState.quick_duel_active:
 		var setup_bg_tex: Texture2D = HudSkin.setup_phase_bg_tex()
 		if setup_bg_tex != null:
 			# Black underlay so letterbox/gap never shows through.
@@ -517,17 +535,20 @@ func _build_ui() -> void:
 	_build_bottom_panel()
 
 	# ── Player portrait illustrations (on top of all content) ─
+	# Bottom-anchored + 40/60 crop split — same layout as last good setup commit.
 	var _sp_p1_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
 	if _sp_p1_tex:
 		var _sz := _sp_p1_tex.get_size()
 		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
 		var _p1p := TextureRect.new()
 		_p1p.texture       = _sp_p1_tex
-		_p1p.anchor_left   = 0.0;  _p1p.anchor_top    = 1.0
-		_p1p.anchor_right  = 0.0;  _p1p.anchor_bottom = 1.0
+		_p1p.anchor_left   = 0.0
+		_p1p.anchor_top    = 1.0
+		_p1p.anchor_right  = 0.0
+		_p1p.anchor_bottom = 1.0
 		_p1p.offset_left   = -_pw * 0.4 + SP_PORTRAIT_NUDGE_X
 		_p1p.offset_top    = -SP_PORTRAIT_REF_H
-		_p1p.offset_right  =  _pw * 0.6 + SP_PORTRAIT_NUDGE_X
+		_p1p.offset_right  = _pw * 0.6 + SP_PORTRAIT_NUDGE_X
 		_p1p.offset_bottom = 0.0
 		_p1p.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p1p.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
@@ -543,11 +564,13 @@ func _build_ui() -> void:
 		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
 		var _p2p := TextureRect.new()
 		_p2p.texture       = _sp_p2_tex
-		_p2p.anchor_left   = 1.0;  _p2p.anchor_top    = 1.0
-		_p2p.anchor_right  = 1.0;  _p2p.anchor_bottom = 1.0
+		_p2p.anchor_left   = 1.0
+		_p2p.anchor_top    = 1.0
+		_p2p.anchor_right  = 1.0
+		_p2p.anchor_bottom = 1.0
 		_p2p.offset_left   = -_pw * 0.6 + SP_PORTRAIT_NUDGE_X
 		_p2p.offset_top    = -SP_PORTRAIT_REF_H
-		_p2p.offset_right  =  _pw * 0.4 + SP_PORTRAIT_NUDGE_X
+		_p2p.offset_right  = _pw * 0.4 + SP_PORTRAIT_NUDGE_X
 		_p2p.offset_bottom = 0.0
 		_p2p.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p2p.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
@@ -555,6 +578,10 @@ func _build_ui() -> void:
 		_p2p.z_index       = 3
 		add_child(_p2p)
 		_sp_p2_portrait = _p2p
+
+	var board := get_parent()
+	if board != null and board.has_method("_attach_setup_portrait_fogs"):
+		board.call_deferred("_attach_setup_portrait_fogs")
 
 	_hover_hold_hint = CardHoverHoldHint.new()
 	add_child(_hover_hold_hint)
@@ -1215,6 +1242,9 @@ func _add_gallery_card(card_name: String, card_type: String) -> void:
 		dc.modulate = Color(0.35, 0.55, 1.0) if card_type == "character" \
 			else Color(1.0, 0.38, 0.38)
 	wrap.add_child(dc)
+	var omen_badge: OmenBadge = OmenBadge.attach_to_tile(dc, card_name, 18.0)
+	if omen_badge != null:
+		omen_badge.z_index = 2
 
 	var lbl := Label.new()
 	lbl.text                 = card_name

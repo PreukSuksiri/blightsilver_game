@@ -14,6 +14,8 @@ uniform float fog_strength : hint_range(0.0, 2.0) = 1.35;
 uniform vec2 scroll = vec2(0.0, 0.0);
 uniform float relief : hint_range(0.0, 1.0) = 0.0;
 uniform float use_vertex_color : hint_range(0.0, 1.0) = 0.0;
+// Per-edge fog mask: (left, right, top, bottom). Default = all sides.
+uniform vec4 fog_edges = vec4(1.0, 1.0, 1.0, 1.0);
 uniform sampler2D fog_noise : hint_default_white, filter_linear, repeat_enable;
 
 // Metal sheen (idle progress ≈ 2.0 = off)
@@ -42,10 +44,12 @@ void fragment() {
 	float aa = max(fwidth(sdf), 0.75);
 	float inside = 1.0 - smoothstep(-aa, aa, sdf);
 
-	float dist_edge = min(
-		min(local_pos.x, rs.x - local_pos.x),
-		min(local_pos.y, rs.y - local_pos.y)
-	);
+	// Optional per-edge mask (L,R,T,B). 0 = hard edge, 1 = fog that side.
+	float d_l = mix(1.0e6, local_pos.x, clamp(fog_edges.x, 0.0, 1.0));
+	float d_r = mix(1.0e6, rs.x - local_pos.x, clamp(fog_edges.y, 0.0, 1.0));
+	float d_t = mix(1.0e6, local_pos.y, clamp(fog_edges.z, 0.0, 1.0));
+	float d_b = mix(1.0e6, rs.y - local_pos.y, clamp(fog_edges.w, 0.0, 1.0));
+	float dist_edge = min(min(d_l, d_r), min(d_t, d_b));
 
 	float clear = smoothstep(0.0, 1.0, clamp(relief, 0.0, 1.0));
 	float width = max(fog_width * (1.0 - clear * clear), 0.001);
