@@ -1,0 +1,15 @@
+=== Battle of WiFi Router Funeral ===
+Battle started: 2026-07-23 21:08:44.195
+Game Session of Ginger Ale (started 2026-07-23 21:07:13.455)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[03:05.179] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 5000  P1: 3000  |  Turns: 1

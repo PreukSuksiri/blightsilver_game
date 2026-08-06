@@ -1,0 +1,37 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-07-21 11:14:04.130
+Game Session of Horchata (started 2026-07-21 11:13:57.508)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.431] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.832] Mode selected P1: TECH
+[00:09.132] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.958] Tech played  P1: "Radar"
+[00:14.548] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.241] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.782] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:17.784] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.217] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:18.628] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:19.002] Tech resolved  P1
+[00:19.222] Dead-end placed  P0 (1,2)
+[00:19.897] Mode selected P1: ATTACK
+[00:19.901] MSG: Player 2: tap a unit to attack.
+[00:20.216] Revealed: P1 (4,3) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:22.134] Dice rolled: 3
+[00:22.158] MSG: Lab Zombie wins!
+[00:26.615] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:31.820] Attack P1(4,3)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=3  ATK=55 vs DEF=25  → WIN
+[00:31.820] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[00:31.820] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:31.820] Anim: 3A  △ P0(1,1)
+[00:31.820] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:34.336] Turn ended  P1  |  Crystals P0=4700 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=2400 ---

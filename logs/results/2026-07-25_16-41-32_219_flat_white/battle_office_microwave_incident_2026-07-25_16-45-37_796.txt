@@ -1,0 +1,85 @@
+=== Battle of Office Microwave Incident ===
+Battle started: 2026-07-25 16:45:37.796
+Game Session of Flat White (started 2026-07-25 16:41:32.219)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:08.489] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:31.127] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:31.128] Revealed: P1 (2,1) "Brainwash" {cost 800}
+[00:32.353] Dice rolled: 4
+[00:32.364] MSG: Trap triggered: Brainwash!
+[00:34.907] Crystals: P1 3000 → 2200 (-800)  [trap cost]
+[00:37.736] MSG: Ability triggered: "Brainwash"
+[00:37.768] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[00:41.910] Revealed: P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:41.910] MSG: Brainwash: Raijin attacks Spear Shark!
+[00:41.929] MSG: Raijin wins!
+[00:46.377] Crystals: P0 5000 → 4520 (-480)  [battle]
+[00:49.238] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(2,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=4  ATK=60 vs DEF=20  → WIN
+[00:49.238] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=60 ATK pill=60 DEF pill=0 mod=+ATK 0 (60+0=60)
+[00:49.238] Reckoning overlay: P1 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:49.238] Anim: 3A  △ P1(2,1)
+[00:49.238] Card destroyed  P1 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:50.594] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(2,1)"Brainwash" {cost 800}  Dice=4  → Unit vs Trap
+[00:50.594] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=60 ATK pill=60 DEF pill=0 mod=+ATK 0 (60+0=60)
+[00:50.594] Anim: 3D  (attacker survives)
+[02:09.869] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:09.869] Revealed: P1 (1,1) "Foul Gas" {cost 0}
+[02:11.107] Dice rolled: 2
+[02:11.125] MSG: Trap triggered: Foul Gas!
+[02:14.929] MSG: Foul Gas: All of Player 1's units -5 ATK this turn!
+[02:16.285] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,1)"Foul Gas" {cost 0}  Dice=2  → Unit vs Trap
+[02:16.285] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[02:16.285] Anim: 3D  (attacker survives)
+[02:16.285] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[02:16.306] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:22.155] Revealed: P1 (0,1) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[02:22.157] MSG: Scout Probe: adjacent cell revealed.
+[02:25.444] Turn ended  P0  |  Crystals P0=4520 P1=2200
+
+--- Turn 2  |  Player 1  |  Crystals P0=4520 P1=2200 ---
+[02:25.445] MSG: Ability triggered: "Plant-29" (turn start coin flip flag)
+[02:27.033] Coin flip: Heads
+[02:29.762] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[02:30.161] MSG: Plant-29: Venom on Scout Probe.
+[02:30.849] Mode selected P1: TECH
+[02:31.149] Crystals: P1 2200 → 1600 (-600)  [tech cost]
+[02:33.978] Tech played  P1: "Radar"
+[02:35.520] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[02:35.948] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[02:36.348] Revealed: P0 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[02:36.724] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[02:36.753] Tech resolved  P1
+[02:37.633] Mode selected P1: ATTACK
+[02:37.639] MSG: Player 2: tap a unit to attack.
+[02:38.863] Dice rolled: 5
+[02:38.875] MSG: Plant-29 wins!
+[02:42.258] Crystals: P0 4520 → 3820 (-700)  [battle]
+[02:46.474] Attack P1(0,1)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=5  ATK=45 vs DEF=20  → WIN
+[02:46.474] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[02:46.474] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:46.474] Anim: 3A  △ P0(4,0)
+[02:46.474] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[02:46.971] Mode selected P1: ATTACK
+[02:46.978] MSG: Player 2: tap a unit to attack.
+[02:47.317] Revealed: P1 (0,0) "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[02:49.199] Dice rolled: 3
+[02:49.208] MSG: Slug-11 wins!
+[02:52.110] Crystals: P0 3820 → 3270 (-550)  [battle]
+[02:56.324] Attack P1(0,0)"Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=3  ATK=45 vs DEF=0  → WIN
+[02:56.324] Reckoning overlay: P1 "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[02:56.324] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:56.324] Anim: 3A  △ P0(2,0)
+[02:56.324] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[02:56.843] Turn ended  P1  |  Crystals P0=3270 P1=1600
+
+--- Turn 3  |  Player 0  |  Crystals P0=3270 P1=1600 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 3270  P1: 1600  |  Turns: 3

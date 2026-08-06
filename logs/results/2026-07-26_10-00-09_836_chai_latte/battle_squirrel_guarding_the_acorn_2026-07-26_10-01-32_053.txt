@@ -1,0 +1,62 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-07-26 10:01:32.053
+Game Session of Chai Latte (started 2026-07-26 10:00:09.836)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.681] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.083] Mode selected P1: TECH
+[00:10.383] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:13.201] Tech played  P1: "Radar"
+[00:14.748] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:15.232] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:15.796] Dead-end placed  P0 (2,4)
+[00:15.959] Tech resolved  P1
+[00:16.199] Dead-end placed  P0 (1,0)
+[00:16.855] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:16.861] Mode selected P1: ATTACK
+[00:16.865] MSG: Player 2: tap a unit to attack.
+[00:17.195] Revealed: P1 (0,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:19.093] Dice rolled: 5
+[00:19.157] Coin flip: Heads
+[00:21.899] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:21.905] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:21.905] MSG: Joseph the Battle Priest wins!
+[00:24.892] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:29.238] Attack P1(0,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=5  ATK=70 vs DEF=50  → WIN
+[00:29.238] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=70 ATK pill=60 DEF pill=25 mod=+ATK 10 (60+10=70)
+[00:29.238] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:29.238] Anim: 3A  △ P0(1,3)
+[00:29.238] Card destroyed  P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:29.738] Mode selected P1: ATTACK
+[00:29.743] MSG: Player 2: tap a unit to attack.
+[00:30.072] Revealed: P1 (1,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:32.209] Dice rolled: 1
+[00:32.236] MSG: Nothing happens — Dead End.
+[00:35.425] Attack P1(1,0)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(0,1)(empty)  Dice=1  → DEAD_END
+[00:35.425] Anim: 3F  (blank slot)
+[00:35.938] Turn ended  P1  |  Crystals P0=4300 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=2400 ---
+[00:43.280] MSG: Tap 2 material card(s) on the field.
+[00:44.052] MSG: 1 more material(s) needed.
+[00:44.696] Crystals: P0 4300 → 3300 (-1000)  [union]
+[00:47.521] Revealed: P0 (3,2) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:47.588] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[00:47.603] MSG: Player 1 summoned [Sand Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[00:54.731] Dice rolled: 3
+[00:54.804] MSG: Sand Elemental wins!
+[00:57.900] Crystals: P1 2400 → 2100 (-300)  [battle]
+[01:02.096] Attack P0(3,2)"Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,0)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=90 vs DEF=20  → WIN
+[01:02.096] Reckoning overlay: P0 "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=90 ATK pill=40 DEF pill=40 mod=+ATK 50 (40+50=90)
+[01:02.096] Reckoning overlay: P1 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:02.099] Anim: 3A  △ P1(1,0)
+[01:02.099] Card destroyed  P1 (1,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 3300  P1: 2100  |  Turns: 2

@@ -1,0 +1,58 @@
+=== Battle of Pickle Jar Incident ===
+Battle started: 2026-08-05 14:13:13.772
+Game Session of Shirley Temple (started 2026-08-05 14:12:47.049)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.664] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:15.508] Mode selected P1: TECH
+[00:15.810] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:18.632] Tech played  P1: "Radar"
+[00:20.180] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:20.574] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:22.438] Dead-end placed  P0 (3,4)
+[00:22.837] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:24.091] Tech resolved  P1
+[00:24.983] Mode selected P1: ATTACK
+[00:25.313] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:27.240] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:28.436] Dice rolled: 4
+[00:28.455] MSG: Gamma Emitter wins!
+[00:32.938] Crystals: P0 5000 → 4520 (-480)  [battle]
+[00:37.143] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=4  ATK=30 vs DEF=20  → WIN
+[00:37.143] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=30 ATK pill=20 DEF pill=15 mod=+ATK 10 (20+10=30)
+[00:37.143] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:37.143] Anim: 3A  △ P0(0,2)
+[00:37.143] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:39.649] Turn ended  P1  |  Crystals P0=4520 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4520 P1=2400 ---
+[00:47.376] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:48.614] Dice rolled: 2
+[00:48.626] MSG: Sonic Seraph wins!
+[00:52.399] Crystals: P1 2400 → 2180 (-220)  [battle]
+[00:56.614] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=2  ATK=45 vs DEF=15  → WIN
+[00:56.614] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[00:56.614] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:56.614] Anim: 3A  △ P1(1,1)
+[00:56.614] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[03:30.073] MSG: Tap 2 material card(s) on the field.
+[03:31.253] MSG: 1 more material(s) needed.
+[03:31.816] Crystals: P0 4520 → 3520 (-1000)  [union]
+[03:34.639] Revealed: P0 (2,2) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[03:34.677] Union summoned P0: "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[03:44.360] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[03:45.563] Dice rolled: 3
+[03:45.603] MSG: Ice Elemental wins!
+[03:50.073] Crystals: P1 2180 → 1760 (-420)  [battle]
+[03:54.271] Attack P0(2,2)"Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=3  ATK=80 vs DEF=50  → WIN
+[03:54.271] Reckoning overlay: P0 "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=80 ATK pill=80 DEF pill=50 mod=+ATK 0 (80+0=80)
+[03:54.271] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:54.271] Anim: 3A  △ P1(2,1)
+[03:54.271] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[03:56.57

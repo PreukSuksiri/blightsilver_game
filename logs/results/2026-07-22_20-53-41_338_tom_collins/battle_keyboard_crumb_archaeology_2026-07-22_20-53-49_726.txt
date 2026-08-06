@@ -1,0 +1,78 @@
+=== Battle of Keyboard Crumb Archaeology ===
+Battle started: 2026-07-22 20:53:49.726
+Game Session of Tom Collins (started 2026-07-22 20:53:41.338)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.998] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:24.272] MSG: Tap 2 material card(s) on the field.
+[00:24.736] MSG: 1 more material(s) needed.
+[00:25.254] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:29.089] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:29.137] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[00:29.137] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[00:29.146] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[00:39.068] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:40.288] Dice rolled: 2
+[00:40.311] MSG: Nothing happens — Dead End.
+[00:43.679] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[00:43.679] Anim: 3F  (blank slot)
+[00:50.943] Revealed: P1 (0,0) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:52.121] Dice rolled: 1
+[00:55.033] Attack P0(0,2)"Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} → P1(0,0)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=1  ATK=45 vs DEF=55  → LOSE
+[00:55.033] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} badge=45 ATK pill=45 DEF pill=35 mod=+ATK 0 (45+0=45)
+[00:55.033] Reckoning overlay: P1 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[00:55.033] Anim: 3B  △ P0(0,2)
+[00:55.033] Card destroyed  P0 (0,2) "Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15}
+[00:59.566] Turn ended  P0  |  Crystals P0=4500 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=3000 ---
+[01:00.159] Mode selected P1: TECH
+[01:00.466] Tech played  P1: "Spy"
+[01:02.058] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[01:03.750] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[01:05.283] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:05.286] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:05.692] Tech resolved  P1
+[01:05.928] Dead-end placed  P0 (1,2)
+[01:06.591] Mode selected P1: ATTACK
+[01:06.595] MSG: Player 2: tap a unit to attack.
+[01:07.793] Dice rolled: 2
+[01:07.799] MSG: Nanomites Beast wins!
+[01:10.402] Crystals: P0 4500 → 4250 (-250)  [battle]
+[01:15.604] Attack P1(0,0)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=50 vs DEF=20  → WIN
+[01:15.604] Reckoning overlay: P1 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[01:15.604] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:15.604] Anim: 3A  △ P0(1,3)
+[01:15.604] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:16.122] Mode selected P1: ATTACK
+[01:16.131] MSG: Player 2: tap a unit to attack.
+[01:16.462] Revealed: P1 (2,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:18.347] Dice rolled: 1
+[01:18.360] MSG: Dystopian Cultist wins!
+[01:22.805] Crystals: P0 4250 → 4070 (-180)  [battle]
+[01:28.009] Attack P1(2,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=1  ATK=65 vs DEF=25  → WIN
+[01:28.010] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[01:28.010] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:28.010] Anim: 3A  △ P0(3,2)
+[01:28.010] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[01:28.505] Turn ended  P1  |  Crystals P0=4070 P1=3000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4070 P1=3000 ---
+[02:28.606] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:28.607] Revealed: P1 (0,2) "Snare Trap" {cost 500}
+[02:29.834] Dice rolled: 5
+[02:29.858] MSG: Trap triggered: Snare Trap!
+[02:31.964] Crystals: P1 3000 → 2500 (-500)  [trap cost]
+[02:35.783] MSG: Snare Trap: Grand Fort Footsoldier's effect nullified until end of next turn!
+[02:37.161] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,2)"Snare Trap" {cost 500}  Dice=5  → Unit vs Trap
+[02:37.161] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[02:37.161] Anim: 3D  (attacker survives)
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4070  P1: 2500  |  Turns: 3

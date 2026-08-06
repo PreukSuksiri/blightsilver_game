@@ -1,0 +1,87 @@
+=== Battle of Gary's Fish Stick Legacy ===
+Battle started: 2026-07-29 09:05:20.126
+Game Session of Kombucha (started 2026-07-29 08:52:36.699)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.582] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:11.009] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:11.009] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:13.438] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+[00:19.325] MSG: Tap 2 material card(s) on the field.
+[00:22.428] MSG: 1 more material(s) needed.
+[00:22.876] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:25.703] Revealed: P0 (1,2) "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:25.750] Union summoned P0: "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[00:33.339] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:34.519] Dice rolled: 5
+[00:34.600] MSG: Cloud Elemental wins!
+[00:34.601] MSG: Ability triggered: "Vampire Servant" (sacrifice for card type)
+[00:37.161] Ability choice: 0 (Yes)
+[00:38.602] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:38.603] Crystals: P1 4950 → 4150 (-800)  [card lost]
+[00:41.377] MSG: Vampire Servant sacrificed itself to save Vampire Duchess!
+[00:42.795] Attack P0(1,2)"Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=5  ATK=65 vs DEF=50  → TIE
+[00:42.796] Reckoning overlay: P0 "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[00:42.796] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:42.796] Anim: exchange  (no destruction)
+[00:53.639] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:53.639] Revealed: P1 (1,0) "Decoy Puppet" {cost 100}
+[00:54.865] Dice rolled: 3
+[00:54.874] MSG: Trap triggered: Decoy Puppet!
+[00:57.058] Crystals: P1 4150 → 4050 (-100)  [trap cost]
+[00:59.881] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:01.276] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,0)"Decoy Puppet" {cost 100}  Dice=3  → Unit vs Trap
+[01:01.276] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[01:01.276] Anim: 3D  (attacker survives)
+[01:02.445] Turn ended  P0  |  Crystals P0=4000 P1=4050
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=4050 ---
+[01:03.056] Mode selected P1: TECH
+[01:03.358] Crystals: P1 4050 → 3050 (-1000)  [tech cost]
+[01:06.185] Tech played  P1: "Accident"
+[01:07.720] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:08.121] MSG: Cloud Elemental survives destruction!
+[01:08.128] Tech resolved  P1
+[01:09.020] Mode selected P1: ATTACK
+[01:10.223] Dice rolled: 5
+[01:10.236] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Grand Fort Footsoldier!
+[01:10.236] MSG: Vampire Duchess wins!
+[01:14.078] Crystals: P0 4000 → 3700 (-300)  [battle]
+[01:18.285] Attack P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK20 DEF20 | cost 300 | affinity Anima | base 20/20}  Dice=5  ATK=55 vs DEF=20  → WIN
+[01:18.285] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[01:18.285] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK20 DEF20 | cost 300 | affinity Anima | base 20/20} badge=20 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=20) MISMATCH
+[01:18.285] Anim: 3A  △ P0(1,1)
+[01:18.285] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK20 DEF20 | cost 300 | affinity Anima | base 20/20}
+[01:20.798] Turn ended  P1  |  Crystals P0=3700 P1=3050
+
+--- Turn 4  |  Player 0  |  Crystals P0=3700 P1=3050 ---
+[01:25.910] Dice rolled: 1
+[01:26.001] MSG: Cloud Elemental wins!
+[01:28.692] Crystals: P1 3050 → 2250 (-800)  [battle]
+[01:32.892] Attack P0(1,2)"Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | flags:indestructible_used} → P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}  Dice=1  ATK=65 vs DEF=55  → WIN
+[01:32.892] Reckoning overlay: P0 "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | flags:indestructible_used} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[01:32.892] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=55 DEF pill=55 mod=+DEF 0 (55+0=55)
+[01:32.892] Anim: 3A  △ P1(1,2)
+[01:32.892] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}
+[01:35.904] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:35.949] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:37.126] Dice rolled: 1
+[01:37.134] MSG: Ability triggered: "Grand Fort Archer" — +10 ATK in Reckoning
+[01:41.749] Crystals: P0 3700 → 3420 (-280)  [battle]
+[01:44.582] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=1  ATK=30 vs DEF=60  → LOSE
+[01:44.582] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:44.582] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=60 ATK pill=95 DEF pill=60 mod=+DEF 0 (60+0=60)
+[01:44.582] Anim: 3B  △ P0(2,1)
+[01:44.582] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:48.837] Crystals: P1 2250 → 0 (-2250)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3420  P1: 0  |  Turns: 4

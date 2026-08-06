@@ -1,0 +1,64 @@
+=== Battle of Cat Hair Tornado ===
+Battle started: 2026-07-02 08:53:52.409
+Game Session of Daiquiri (started 2026-07-02 08:53:00.661)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.947] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.311] Mode selected P1: ATTACK
+[00:09.314] MSG: Player 2: tap a unit to attack.
+[00:09.683] Revealed: P1 (0,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:11.534] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[00:12.759] Dice rolled: 4
+[00:12.788] MSG: Trap triggered: Hard Scale!
+[00:15.460] Crystals: P0 5000 → 4300 (-700)  [trap cost]
+[00:18.293] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:19.672] Attack P1(0,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P0(0,4)"Hard Scale" {cost 700}  Dice=4  → Unit vs Trap
+[00:19.672] Reckoning overlay: P1 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+ATK 0 (10+0=10)
+[00:19.672] Anim: 3D  (attacker survives)
+[00:22.182] Turn ended  P1  |  Crystals P0=4300 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=3000 ---
+[00:26.292] Tech played  P0: "Spy"
+[00:27.822] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:29.866] Revealed: P1 (2,1) "Hard Scale" {cost 700}
+[00:30.101] Tech resolved  P0
+[00:36.650] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima}
+[00:37.862] Dice rolled: 4
+[00:37.888] MSG: Silver Spearman wins!
+[00:41.650] Crystals: P1 3000 → 2800 (-200)  [battle]
+[00:45.884] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima} → P1(0,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=4  ATK=25 vs DEF=10  → WIN
+[00:45.884] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:45.884] Reckoning overlay: P1 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:45.884] Anim: 3A  △ P1(0,0)
+[00:45.884] Card destroyed  P1 (0,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:53.095] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF25 | cost 250 | affinity Anima}
+[00:53.135] Revealed: P1 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:54.321] Dice rolled: 2
+[00:54.335] MSG: Witchhunter wins!
+[00:56.918] Crystals: P1 2800 → 2520 (-280)  [battle]
+[01:01.107] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF25 | cost 250 | affinity Anima} → P1(2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=2  ATK=20 vs DEF=10  → WIN
+[01:01.107] Reckoning overlay: P0 "Witchhunter" {Unit ATK20 DEF25 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=25 mod=+ATK 0 (20+0=20)
+[01:01.107] Reckoning overlay: P1 "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} badge=10 ATK pill=25 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:01.107] Anim: 3A  △ P1(2,0)
+[01:01.107] Card destroyed  P1 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[01:04.724] Turn ended  P0  |  Crystals P0=4300 P1=2520
+
+--- Turn 3  |  Player 1  |  Crystals P0=4300 P1=2520 ---
+[01:05.302] Mode selected P1: ATTACK
+[01:05.309] MSG: Player 2: tap a unit to attack.
+[01:05.643] Revealed: P1 (1,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:07.517] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[01:08.742] Dice rolled: 4
+[01:08.766] MSG: Trap triggered: Trap Hole!
+[01:12.902] Coin flip: Tails, Heads, Tails
+[01:15.639] MSG: Trap Hole: Tails, Heads, Tails.
+[01:15.639] Crystals: P1 2520 → 2500 (-20)  [trap]
+[01:17.404] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[01:18.823] Attack P1(1,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[01:18.823] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affin

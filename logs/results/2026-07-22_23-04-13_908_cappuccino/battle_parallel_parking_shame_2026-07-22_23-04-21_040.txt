@@ -1,0 +1,75 @@
+=== Battle of Parallel Parking Shame ===
+Battle started: 2026-07-22 23:04:21.040
+Game Session of Cappuccino (started 2026-07-22 23:04:13.908)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.097] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.495] Mode selected P1: TECH
+[00:08.795] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.628] Tech played  P1: "Radar"
+[00:14.279] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:15.911] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.448] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:17.452] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.095] Dead-end placed  P0 (3,1)
+[00:18.494] Dead-end placed  P0 (1,2)
+[00:18.656] Tech resolved  P1
+[00:18.893] Dead-end placed  P0 (3,0)
+[00:21.032] Crystals: P1 2400 → 1600 (-800)  [union]
+[00:24.874] Revealed: P1 (2,3) "Moon Lady Ninja" {Union ATK65 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[00:24.923] Union summoned P1: "Moon Lady Ninja" {Union ATK65 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} from "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[00:24.924] MSG: Player 2 summoned [Moon Lady Ninja] using: "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[00:28.286] Mode selected P1: ATTACK
+[00:28.290] MSG: Player 2: tap a unit to attack.
+[00:29.488] Dice rolled: 2
+[00:29.563] MSG: Moon Lady Ninja wins!
+[00:33.970] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:39.198] Attack P1(2,3)"Moon Lady Ninja" {Union ATK65 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=2  ATK=65 vs DEF=25  → WIN
+[00:39.199] Reckoning overlay: P1 "Moon Lady Ninja" {Union ATK65 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} badge=65 ATK pill=65 DEF pill=50 mod=+ATK 0 (65+0=65)
+[00:39.199] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:39.199] Anim: 3A  △ P0(3,2)
+[00:39.199] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:41.689] Turn ended  P1  |  Crystals P0=4820 P1=1600
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=1600 ---
+[00:50.885] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:52.102] Dice rolled: 3
+[00:52.128] MSG: Nothing happens — Dead End.
+[00:55.404] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,1)(empty)  Dice=3  → DEAD_END
+[00:55.404] Anim: 3F  (blank slot)
+[00:58.726] MSG: Cannot target an empty cell.
+[01:00.584] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:01.798] Dice rolled: 4
+[01:01.826] MSG: Nothing happens — Dead End.
+[01:05.266] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(0,2)(empty)  Dice=4  → DEAD_END
+[01:05.266] Anim: 3F  (blank slot)
+[02:48.885] Turn ended  P0  |  Crystals P0=4820 P1=1600
+
+--- Turn 3  |  Player 1  |  Crystals P0=4820 P1=1600 ---
+[02:49.474] Mode selected P1: TECH
+[02:49.782] Tech played  P1: "Spy"
+[02:51.320] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:51.718] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[02:51.749] Tech resolved  P1
+[02:52.621] Mode selected P1: ATTACK
+[02:52.627] MSG: Player 2: tap a unit to attack.
+[02:53.822] Dice rolled: 4
+[02:53.899] MSG: Moon Lady Ninja wins!
+[02:58.144] Crystals: P0 4820 → 4520 (-300)  [battle]
+[03:03.365] Attack P1(2,3)"Moon Lady Ninja" {Union ATK65 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=4  ATK=65 vs DEF=25  → WIN
+[03:03.365] Reckoning overlay: P1 "Moon Lady Ninja" {Union ATK65 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} badge=65 ATK pill=65 DEF pill=50 mod=+ATK 0 (65+0=65)
+[03:03.365] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:03.365] Anim: 3A  △ P0(1,1)
+[03:03.365] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[03:05.879] Turn ended  P1  |  Crystals P0=4520 P1=1600
+
+--- Turn 4  |  Player 0  |  Crystals P0=4520 P1=1600 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4520  P1: 1600  |  Turns: 4

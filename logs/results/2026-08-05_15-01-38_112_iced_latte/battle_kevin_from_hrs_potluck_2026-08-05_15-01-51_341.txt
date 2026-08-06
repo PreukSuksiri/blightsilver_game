@@ -1,0 +1,12 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-08-05 15:01:51.341
+Game Session of Iced Latte (started 2026-08-05 15:01:38.112)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:36.867] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---

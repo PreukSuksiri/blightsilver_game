@@ -1,0 +1,45 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-07-25 18:26:56.987
+Game Session of Apple Cider (started 2026-07-25 18:26:09.878)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.482] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:07.714] Mode selected P1: TECH
+[00:08.016] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:10.833] Tech played  P1: "Radar"
+[00:12.388] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:12.784] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:13.437] Dead-end placed  P0 (0,1)
+[00:13.635] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:13.639] Tech resolved  P1
+[00:14.502] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:14.505] Mode selected P1: ATTACK
+[00:14.509] MSG: Player 2: tap a unit to attack.
+[00:14.835] Revealed: P1 (0,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:16.732] Dice rolled: 5
+[00:16.744] MSG: Archbishop wins!
+[00:19.225] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:23.404] Attack P1(0,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=5  ATK=70 vs DEF=30  → WIN
+[00:23.404] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=70 ATK pill=70 DEF pill=90 mod=+ATK 0 (70+0=70)
+[00:23.404] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:23.404] Anim: 3A  △ P0(1,2)
+[00:23.404] Card destroyed  P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:23.911] Mode selected P1: ATTACK
+[00:23.915] MSG: Player 2: tap a unit to attack.
+[00:24.255] Revealed: P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:26.388] Dice rolled: 3
+[00:26.413] MSG: Nothing happens — Dead End.
+[00:29.633] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(4,3)(empty)  Dice=3  → DEAD_END
+[00:29.633] Anim: 3F  (blank slot)
+[00:30.133] Turn ended  P1  |  Crystals P0=4620 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=2400 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4620  P1: 2400  |  Turns: 2

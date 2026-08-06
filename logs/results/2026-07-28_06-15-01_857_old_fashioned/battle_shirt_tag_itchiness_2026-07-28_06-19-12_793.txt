@@ -1,0 +1,130 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-07-28 06:19:12.793
+Game Session of Old Fashioned (started 2026-07-28 06:15:01.857)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:28.241] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:49.987] Mode selected P1: TECH
+[00:51.235] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:02.347] Tech played  P1: "Radar"
+[01:08.481] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:11.096] Dead-end placed  P0 (1,0)
+[01:12.732] Dead-end placed  P0 (1,3)
+[01:13.429] Revealed: P0 (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:13.433] Tech resolved  P1
+[01:17.102] Mode selected P1: ATTACK
+[01:18.375] Revealed: P1 (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:26.156] Dice rolled: 4
+[01:26.165] MSG: Mine Guard wins!
+[01:38.136] Crystals: P0 5000 → 4800 (-200)  [battle]
+[01:55.062] Attack P1(3,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(0,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=4  ATK=20 vs DEF=15  → WIN
+[01:55.062] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[01:55.062] Reckoning overlay: P0 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:55.062] Anim: 3A  △ P0(0,4)
+[01:55.062] Card destroyed  P0 (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:57.196] Mode selected P1: ATTACK
+[01:58.534] Revealed: P1 (0,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:06.691] Revealed: P0 (4,1) "Dark Tengu" {Unit ATK30 DEF30 | cost 250 | affinity Chaos}
+[02:11.861] Dice rolled: 3
+[02:11.867] MSG: Huntress of Green Glade wins!
+[02:24.543] Crystals: P0 4800 → 4550 (-250)  [battle]
+[02:42.463] Attack P1(0,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(4,1)"Dark Tengu" {Unit ATK30 DEF30 | cost 250 | affinity Chaos}  Dice=3  ATK=50 vs DEF=30  → WIN
+[02:42.463] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:42.463] Reckoning overlay: P0 "Dark Tengu" {Unit ATK30 DEF30 | cost 250 | affinity Chaos} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:42.463] Anim: 3A  △ P0(4,1)
+[02:42.463] Card destroyed  P0 (4,1) "Dark Tengu" {Unit ATK30 DEF30 | cost 250 | affinity Chaos}
+[02:44.688] Turn ended  P1  |  Crystals P0=4550 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4550 P1=2400 ---
+[03:03.972] MSG: Tap 2 material card(s) on the field.
+[03:05.378] MSG: 1 more material(s) needed.
+[03:08.184] Crystals: P0 4550 → 4250 (-300)  [union]
+[03:19.388] Revealed: P0 (3,2) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[03:19.400] Union summoned P0: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[04:01.460] Dice rolled: 5
+[04:01.474] MSG: Kitsune wins!
+[04:13.610] Crystals: P1 2400 → 2100 (-300)  [battle]
+[04:30.777] Attack P0(3,2)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P1(3,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=5  ATK=35 vs DEF=15  → WIN
+[04:30.777] Reckoning overlay: P0 "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[04:30.777] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:30.777] Anim: 3A  △ P1(3,3)
+[04:30.777] Card destroyed  P1 (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[04:51.985] Revealed: P0 (0,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[04:57.736] Dice rolled: 2
+[04:57.742] MSG: Poltergeist wins!
+[05:10.639] Crystals: P1 2100 → 1300 (-800)  [battle]
+[05:28.948] Attack P0(0,0)"Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0} → P1(0,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=2  ATK=70 vs DEF=50  → WIN
+[05:28.948] Reckoning overlay: P0 "Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0} badge=70 ATK pill=70 DEF pill=0 mod=+ATK 0 (70+0=70)
+[05:28.948] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[05:28.948] Anim: 3A  △ P1(0,0)
+[05:28.948] Card destroyed  P1 (0,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[05:59.212] Turn ended  P0  |  Crystals P0=4250 P1=1300
+
+--- Turn 3  |  Player 1  |  Crystals P0=4250 P1=1300 ---
+[05:59.222] MSG: Kelly Lastochkina is Curious about 🧨
+[06:01.726] Mode selected P1: TECH
+[06:03.040] Tech played  P1: "Spy"
+[06:09.091] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[06:10.755] Revealed: P0 (4,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[06:10.757] Tech resolved  P1
+[06:14.425] Mode selected P1: ATTACK
+[06:15.691] Revealed: P1 (0,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[06:23.440] Dice rolled: 3
+[06:23.444] MSG: Tomb Bandit wins!
+[06:35.451] Crystals: P0 4250 → 3850 (-400)  [battle]
+[06:52.545] Attack P1(0,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,3)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=3  ATK=75 vs DEF=25  → WIN
+[06:52.545] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[06:52.545] Reckoning overlay: P0 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[06:52.545] Anim: 3A  △ P0(4,3)
+[06:52.545] Card destroyed  P0 (4,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[07:03.332] Turn ended  P1  |  Crystals P0=3850 P1=1300
+
+--- Turn 4  |  Player 0  |  Crystals P0=3850 P1=1300 ---
+[08:06.350] Dice rolled: 1
+[08:18.985] Crystals: P0 3850 → 3150 (-700)  [battle]
+[08:30.373] Attack P0(0,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(0,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=1  ATK=0 vs DEF=60  → LOSE
+[08:30.373] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} badge=0 ATK pill=0 DEF pill=70 mod=+ATK 0 (0+0=0)
+[08:30.373] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[08:30.373] Anim: 3B  △ P0(0,0)
+[08:30.373] Card destroyed  P0 (0,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[09:10.311] Revealed: P1 (2,3) "Snare Trap" {cost 500}
+[09:15.244] Dice rolled: 5
+[09:15.252] MSG: Trap triggered: Snare Trap!
+[09:25.756] Crystals: P1 1300 → 800 (-500)  [trap cost]
+[09:37.081] MSG: Snare Trap: Kitsune's effect nullified until end of next turn!
+[09:43.016] Attack P0(3,2)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P1(2,3)"Snare Trap" {cost 500}  Dice=5  → Unit vs Trap
+[09:43.016] Reckoning overlay: P0 "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[09:43.016] Anim: 3D  (attacker survives)
+[09:52.339] Turn ended  P0  |  Crystals P0=3150 P1=800
+
+--- Turn 5  |  Player 1  |  Crystals P0=3150 P1=800 ---
+[09:52.348] MSG: Kelly Lastochkina is Curious about ☠️
+[09:55.192] Mode selected P1: TECH
+[09:56.513] Tech played  P1: "Bribe"
+[10:02.568] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[10:05.755] MSG: Bribe: Opponent passed.
+[10:05.761] Tech resolved  P1
+[10:09.461] Mode selected P1: ATTACK
+[10:14.355] Dice rolled: 3
+[10:14.362] MSG: Tomb Bandit wins!
+[10:32.224] Attack P1(0,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(3,2)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos | nullified≤T6}  Dice=3  ATK=75 vs DEF=35  → WIN
+[10:32.224] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[10:32.224] Reckoning overlay: P0 "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos | nullified≤T6} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[10:32.224] Anim: 3A  △ P0(3,2)
+[10:32.224] Card destroyed  P0 (3,2) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos | nullified≤T6}
+[10:42.961] Turn ended  P1  |  Crystals P0=3150 P1=800
+
+--- Turn 6  |  Player 0  |  Crystals P0=3150 P1=800 ---
+[11:02.933] Revealed: P0 (4,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[11:07.820] Dice rolled: 4
+[11:07.824] MSG: Void Stalker wins!
+[11:20.082] Crystals: P1 800 → 0 (-800)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3150  P1: 0  |  Turns: 6

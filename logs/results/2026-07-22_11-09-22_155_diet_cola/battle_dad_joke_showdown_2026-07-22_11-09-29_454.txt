@@ -1,0 +1,185 @@
+=== Battle of Dad Joke Showdown ===
+Battle started: 2026-07-22 11:09:29.454
+Game Session of Diet Cola (started 2026-07-22 11:09:22.155)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.433] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.823] Mode selected P1: TECH
+[00:09.118] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.952] Tech played  P1: "Radar"
+[00:14.585] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.235] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.784] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:17.786] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.435] Dead-end placed  P0 (4,3)
+[00:18.627] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:19.031] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:19.036] Tech resolved  P1
+[00:19.912] Mode selected P1: ATTACK
+[00:19.916] MSG: Player 2: tap a unit to attack.
+[00:20.242] Revealed: P1 (1,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:22.133] Dice rolled: 1
+[00:22.188] MSG: Lab Zombie wins!
+[00:26.609] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:31.830] Attack P1(1,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=1  ATK=55 vs DEF=25  → WIN
+[00:31.831] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[00:31.831] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=25 ATK pill=20 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:31.831] Anim: 3A  △ P0(2,0)
+[00:31.831] Card destroyed  P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:32.312] Mode selected P1: ATTACK
+[00:32.318] MSG: Player 2: tap a unit to attack.
+[00:32.668] Revealed: P1 (0,4) "Radiaghoul" {Unit ATK20 DEF5 | cost 160 | affinity Bio}
+[00:34.597] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:35.768] Dice rolled: 5
+[00:35.835] MSG: Both cards are destroyed!
+[00:40.163] Crystals: P1 2400 → 2240 (-160)  [battle]
+[00:44.001] Crystals: P0 4750 → 4450 (-300)  [battle]
+[00:47.854] Attack P1(0,4)"Radiaghoul" {Unit ATK20 DEF5 | cost 160 | affinity Bio} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=20 vs DEF=20  → TIE
+[00:47.855] Reckoning overlay: P1 "Radiaghoul" {Unit ATK20 DEF5 | cost 160 | affinity Bio} badge=20 ATK pill=20 DEF pill=5 mod=+ATK 0 (20+0=20)
+[00:47.855] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:47.855] Anim: 3C  △ P1(0,4) + △ P0(0,2)
+[00:47.855] Card destroyed  P1 (0,4) "Radiaghoul" {Unit ATK20 DEF5 | cost 160 | affinity Bio}
+[00:47.855] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:48.341] Turn ended  P1  |  Crystals P0=4450 P1=2240
+
+--- Turn 2  |  Player 0  |  Crystals P0=4450 P1=2240 ---
+[01:06.463] Dice rolled: 5
+[01:06.538] MSG: Grand Fort Footsoldier wins!
+[01:10.960] Crystals: P1 2240 → 1540 (-700)  [battle]
+[01:16.184] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=5  ATK=25 vs DEF=20  → WIN
+[01:16.184] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[01:16.184] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:16.184] Anim: 3A  △ P1(1,4)
+[01:16.184] Card destroyed  P1 (1,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:22.707] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:22.707] Revealed: P1 (2,2) "Decoy Puppet" {cost 100}
+[01:23.930] Dice rolled: 5
+[01:23.992] MSG: Trap triggered: Decoy Puppet!
+[01:28.030] Crystals: P1 1540 → 1440 (-100)  [trap cost]
+[01:31.869] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:33.311] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(2,2)"Decoy Puppet" {cost 100}  Dice=5  → Unit vs Trap
+[01:33.311] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:33.311] Anim: 3D  (attacker survives)
+[02:32.998] Turn ended  P0  |  Crystals P0=4450 P1=1440
+
+--- Turn 3  |  Player 1  |  Crystals P0=4450 P1=1440 ---
+[02:33.601] Mode selected P1: TECH
+[02:33.909] Tech played  P1: "Bribe"
+[02:35.951] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[02:37.507] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[02:37.508] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:49.090] MSG: Bribe: Opponent passed.
+[02:49.102] Tech resolved  P1
+[02:51.495] Crystals: P1 1440 → 940 (-500)  [union]
+[02:55.327] Revealed: P1 (1,1) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[02:55.384] Union summoned P1: "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} from "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio | face-down}
+[02:55.384] MSG: Player 2 summoned [Gamma Mermaid] using: "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio | face-down}
+[02:58.727] Mode selected P1: ATTACK
+[02:58.730] MSG: Player 2: tap a unit to attack.
+[02:59.932] Dice rolled: 2
+[03:00.018] MSG: Gamma Mermaid: -20 DEF vs non-BIO defender!
+[03:00.018] MSG: Gamma Mermaid wins!
+[03:04.418] Crystals: P0 4450 → 4170 (-280)  [battle]
+[03:09.619] Attack P1(1,1)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=30 vs DEF=0  → WIN
+[03:09.619] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[03:09.619] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=0 ATK pill=20 DEF pill=20 mod=-DEF 20 (20-20=0)
+[03:09.619] Anim: 3A  △ P0(2,1)
+[03:09.619] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[03:10.109] Mode selected P1: ATTACK
+[03:10.115] MSG: Player 2: tap a unit to attack.
+[03:10.464] Revealed: P1 (0,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[03:12.578] Dice rolled: 5
+[03:12.650] MSG: Nothing happens — Dead End.
+[03:16.491] Attack P1(0,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(1,2)(empty)  Dice=5  → DEAD_END
+[03:16.491] Anim: 3F  (blank slot)
+[03:16.981] Turn ended  P1  |  Crystals P0=4170 P1=940
+
+--- Turn 4  |  Player 0  |  Crystals P0=4170 P1=940 ---
+[03:29.174] Dice rolled: 3
+[03:32.059] Crystals: P0 4170 → 3870 (-300)  [battle]
+[03:35.908] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=3  ATK=25 vs DEF=30  → LOSE
+[03:35.908] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[03:35.908] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:35.908] Anim: 3B  △ P0(1,1)
+[03:35.909] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[04:14.055] Turn ended  P0  |  Crystals P0=3870 P1=940
+
+--- Turn 5  |  Player 1  |  Crystals P0=3870 P1=940 ---
+[04:14.056] MSG: Ability triggered: "Vile Creeper" (swap atk def per opp turn)
+[04:16.083] MSG: Vile Creeper: ATK & DEF swapped (30 / 10).
+[04:16.683] Mode selected P1: TECH
+[04:16.992] Tech played  P1: "Tease"
+[04:19.042] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[04:20.584] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[04:20.584] MSG: Opponent must choose and reveal 1 of their squares.
+[04:20.698] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:22.244] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[04:22.244] MSG: Tease: Opponent revealed Golden Senju.
+[04:22.249] Tech resolved  P1
+[04:23.136] Mode selected P1: ATTACK
+[04:23.140] MSG: Player 2: tap a unit to attack.
+[04:24.337] Dice rolled: 2
+[04:24.445] MSG: Gamma Mermaid: -20 DEF vs non-BIO defender!
+[04:24.445] MSG: Gamma Mermaid wins!
+[04:27.268] Crystals: P0 3870 → 3690 (-180)  [battle]
+[04:32.491] Attack P1(1,1)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} → P0(3,2)"Magical Butterfly" {Unit ATK45 DEF45 | cost 180 | affinity Nature | base 15/15 | buff +permATK30, +permDEF30}  Dice=2  ATK=30 vs DEF=25  → WIN
+[04:32.492] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[04:32.492] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK45 DEF45 | cost 180 | affinity Nature | base 15/15 | buff +permATK30, +permDEF30} badge=25 ATK pill=45 DEF pill=45 mod=-DEF 20 (45-20=25)
+[04:32.492] Anim: 3A  △ P0(3,2)
+[04:32.492] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK45 DEF45 | cost 180 | affinity Nature | base 15/15 | buff +permATK30, +permDEF30}
+[04:32.992] Mode selected P1: ATTACK
+[04:32.998] MSG: Player 2: tap a unit to attack.
+[04:34.196] Dice rolled: 4
+[04:34.253] MSG: Vile Creeper wins!
+[04:38.018] Crystals: P0 3690 → 3490 (-200)  [battle]
+[04:43.236] Attack P1(0,2)"Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10} → P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}  Dice=4  ATK=30 vs DEF=0  → WIN
+[04:43.236] Reckoning overlay: P1 "Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[04:43.236] Reckoning overlay: P0 "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} badge=0 ATK pill=15 DEF pill=0 mod=+DEF 0 (0+0=0)
+[04:43.236] Anim: 3A  △ P0(3,3)
+[04:43.236] Card destroyed  P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[04:43.727] Turn ended  P1  |  Crystals P0=3490 P1=940
+
+--- Turn 6  |  Player 0  |  Crystals P0=3490 P1=940 ---
+[04:56.366] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[04:57.588] Dice rolled: 1
+[04:57.698] MSG: Silver Spearman wins!
+[05:03.448] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}  Dice=1  ATK=25 vs DEF=20  → WIN
+[05:03.448] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[05:03.448] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:03.448] Anim: 3A  △ P1(1,1)
+[05:03.448] Card destroyed  P1 (1,1) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[05:32.668] Turn ended  P0  |  Crystals P0=3490 P1=940
+
+--- Turn 7  |  Player 1  |  Crystals P0=3490 P1=940 ---
+[05:32.671] MSG: Ability triggered: "Vile Creeper" (swap atk def per opp turn)
+[05:34.708] MSG: Vile Creeper: ATK & DEF swapped (10 / 30).
+[05:35.302] Mode selected P1: ATTACK
+[05:35.305] MSG: Player 2: tap a unit to attack.
+[05:36.742] Dice rolled: 4
+[05:36.801] MSG: Nothing happens — Dead End.
+[05:41.551] Attack P1(0,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(2,3)(empty)  Dice=4  → DEAD_END
+[05:41.551] Anim: 3F  (blank slot)
+[05:42.037] Mode selected P1: ATTACK
+[05:42.041] MSG: Player 2: tap a unit to attack.
+[05:42.380] Revealed: P1 (2,4) "Nanomites Walker" {Unit ATK15 DEF15 | cost 170 | affinity Bio}
+[05:44.516] Dice rolled: 2
+[05:44.551] MSG: Nothing happens — Dead End.
+[05:48.093] Attack P1(2,4)"Nanomites Walker" {Unit ATK15 DEF15 | cost 170 | affinity Bio} → P0(4,2)(empty)  Dice=2  → DEAD_END
+[05:48.093] Anim: 3F  (blank slot)
+[05:48.610] Turn ended  P1  |  Crystals P0=3490 P1=940
+
+--- Turn 8  |  Player 0  |  Crystals P0=3490 P1=940 ---
+[06:00.352] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[06:01.570] Dice rolled: 4
+[06:01.622] MSG: Nothing happens — Dead End.
+[06:04.382] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(1,0)(empty)  Dice=4  → DEAD_END
+[06:04.382] Anim: 3F  (blank slot)
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 3490  P1: 940  |  Turns: 8

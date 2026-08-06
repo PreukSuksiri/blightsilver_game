@@ -1,0 +1,21 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-07-24 06:09:45.617
+Game Session of Cappuccino (started 2026-07-24 06:09:14.924)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.175] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:27.349] MSG: Tap 2 material card(s) on the field.
+[00:27.964] MSG: 1 more material(s) needed.
+[00:28.581] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:31.407] Revealed: P0 (3,2) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:31.458] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[00:31.463] MSG: Player 1 summoned [Sand Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4000  P1: 3000  |  Turns: 1

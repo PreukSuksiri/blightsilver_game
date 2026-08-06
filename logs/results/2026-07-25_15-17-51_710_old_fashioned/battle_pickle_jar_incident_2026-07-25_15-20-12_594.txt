@@ -1,0 +1,90 @@
+=== Battle of Pickle Jar Incident ===
+Battle started: 2026-07-25 15:20:12.594
+Game Session of Old Fashioned (started 2026-07-25 15:17:51.710)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.588] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:16.389] Revealed: P0 (1,1) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:17.610] Dice rolled: 1
+[00:17.625] MSG: Nothing happens — Dead End.
+[00:20.860] Attack P0(1,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[00:20.860] Anim: 3F  (blank slot)
+[00:25.328] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:25.920] Mode selected P1: TECH
+[00:26.223] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:29.045] Tech played  P1: "Radar"
+[00:30.588] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:31.228] Dead-end placed  P0 (4,1)
+[00:31.387] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:31.834] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:31.837] Tech resolved  P1
+[00:32.708] Mode selected P1: ATTACK
+[00:32.711] MSG: Player 2: tap a unit to attack.
+[00:33.039] Revealed: P1 (0,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:34.927] Dice rolled: 3
+[00:34.936] MSG: Book with Fangs wins!
+[00:39.416] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:43.628] Attack P1(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=75 vs DEF=30  → WIN
+[00:43.628] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=75 ATK pill=45 DEF pill=55 mod=+ATK 30 (45+30=75)
+[00:43.628] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:43.628] Anim: 3A  △ P0(1,2)
+[00:43.628] Card destroyed  P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:44.127] Mode selected P1: ATTACK
+[00:44.130] MSG: Player 2: tap a unit to attack.
+[00:44.464] Revealed: P1 (0,1) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:46.359] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:47.586] Dice rolled: 2
+[00:47.590] MSG: Trap triggered: Hard Scale!
+[00:51.687] Crystals: P0 4620 → 4320 (-300)  [trap cost]
+[00:54.520] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:55.892] Attack P1(0,1)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(0,4)"Hard Scale" {cost 300}  Dice=2  → Unit vs Trap
+[00:55.892] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[00:55.892] Anim: 3D  (attacker survives)
+[00:56.392] Turn ended  P1  |  Crystals P0=4320 P1=2400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4320 P1=2400 ---
+[01:01.905] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF55 | cost 700 | affinity Cosmic}
+[01:03.127] Dice rolled: 1
+[01:06.836] Crystals: P0 4320 → 3620 (-700)  [battle]
+[01:09.668] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF55 | cost 700 | affinity Cosmic} → P1(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=1  ATK=40 vs DEF=55  → LOSE
+[01:09.668] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF55 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=55 mod=+ATK 0 (40+0=40)
+[01:09.668] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=55 ATK pill=45 DEF pill=55 mod=+DEF 0 (55+0=55)
+[01:09.668] Anim: 3B  △ P0(1,3)
+[01:09.668] Card destroyed  P0 (1,3) "Scout Probe" {Unit ATK40 DEF55 | cost 700 | affinity Cosmic}
+[01:09.668] MSG: Ability triggered: "Scout Probe"
+[01:09.685] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:13.304] MSG: Scout Probe: adjacent cell revealed (empty).
+[01:13.618] Dead-end placed  P1 (1,2)
+[01:18.787] Turn ended  P0  |  Crystals P0=3620 P1=2400
+
+--- Turn 4  |  Player 1  |  Crystals P0=3620 P1=2400 ---
+[01:19.382] Mode selected P1: TECH
+[01:19.694] Tech played  P1: "Spy"
+[01:21.243] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:21.676] Revealed: P0 (3,2) "Earth Elemental" {Unit ATK20 DEF45 | cost 380 | affinity Arcane}
+[01:21.680] Tech resolved  P1
+[01:22.544] Mode selected P1: ATTACK
+[01:22.549] MSG: Player 2: tap a unit to attack.
+[01:23.742] Dice rolled: 1
+[01:23.748] MSG: Book with Fangs wins!
+[01:26.791] Crystals: P0 3620 → 3240 (-380)  [battle]
+[01:31.011] Attack P1(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(3,2)"Earth Elemental" {Unit ATK20 DEF45 | cost 380 | affinity Arcane}  Dice=1  ATK=75 vs DEF=45  → WIN
+[01:31.012] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=75 ATK pill=45 DEF pill=55 mod=+ATK 30 (45+30=75)
+[01:31.012] Reckoning overlay: P0 "Earth Elemental" {Unit ATK20 DEF45 | cost 380 | affinity Arcane} badge=45 ATK pill=20 DEF pill=45 mod=+DEF 0 (45+0=45)
+[01:31.012] Anim: 3A  △ P0(3,2)
+[01:31.012] Card destroyed  P0 (3,2) "Earth Elemental" {Unit ATK20 DEF45 | cost 380 | affinity Arcane}
+[01:31.514] Mode selected P1: ATTACK
+[01:31.518] MSG: Player 2: tap a unit to attack.
+[01:32.953] Dice rolled: 1
+[01:32.968] MSG: Nothing happens — Dead End.
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3240  P1: 2400  |  Turns: 4

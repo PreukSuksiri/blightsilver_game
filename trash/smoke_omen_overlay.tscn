@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://smoke_omen_overlay"]
+
+[ext_resource type="Script" path="res://tests/smoke_omen_overlay.gd" id="1"]
+
+[node name="SmokeOmenOverlay" type="Node"]
+script = ExtResource("1")

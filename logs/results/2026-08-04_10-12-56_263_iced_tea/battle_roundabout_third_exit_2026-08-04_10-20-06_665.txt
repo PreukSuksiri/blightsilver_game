@@ -1,0 +1,233 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-08-04 10:20:06.665
+Game Session of Iced Tea (started 2026-08-04 10:12:56.263)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:19.068] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:26.433] Mode selected P1: ATTACK
+[00:26.780] Revealed: P1 (1,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:28.659] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:29.888] Dice rolled: 3
+[00:29.900] MSG: Trap triggered: Hard Scale!
+[00:33.896] Crystals: P0 5000 → 4700 (-300)  [trap cost]
+[00:36.719] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:38.100] Attack P1(1,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,4)"Hard Scale" {cost 300}  Dice=3  → Unit vs Trap
+[00:38.100] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:38.100] Anim: 3D  (attacker survives)
+[00:38.101] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[00:38.127] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:40.291] MSG: Revealed: (empty)
+[00:40.786] Mode selected P1: ATTACK
+[00:41.108] Revealed: P1 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:43.012] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:44.242] Dice rolled: 5
+[00:44.249] MSG: Trap triggered: Decoy Puppet!
+[00:48.361] Crystals: P0 4700 → 4600 (-100)  [trap cost]
+[00:51.184] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:52.567] Attack P1(2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=5  → Unit vs Trap
+[00:52.567] Reckoning overlay: P1 "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} badge=25 ATK pill=25 DEF pill=10 mod=+ATK 0 (25+0=25)
+[00:52.567] Anim: 3D  (attacker survives)
+[00:53.065] Turn ended  P1  |  Crystals P0=4600 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4600 P1=3000 ---
+[01:17.190] MSG: Tutorial step skipped — took too long.
+[01:37.153] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima}
+[01:38.385] Dice rolled: 2
+[01:38.398] MSG: Silver Spearman wins!
+[01:42.883] Crystals: P1 3000 → 2720 (-280)  [battle]
+[01:47.081] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima} → P1(2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=2  ATK=25 vs DEF=10  → WIN
+[01:47.081] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[01:47.081] Reckoning overlay: P1 "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} badge=10 ATK pill=25 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:47.081] Anim: 3A  △ P1(2,0)
+[01:47.081] Card destroyed  P1 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:10.775] MSG: Tutorial step skipped — took too long.
+[02:15.223] Turn ended  P0  |  Crystals P0=4600 P1=2720
+
+--- Turn 3  |  Player 1  |  Crystals P0=4600 P1=2720 ---
+[02:17.718] Mode selected P1: ATTACK
+[02:18.918] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[02:20.146] Dice rolled: 1
+[02:20.154] MSG: Trap triggered: Pepper Spray!
+[02:22.849] Coin flip: Heads, Tails
+[02:25.588] MSG: Pepper Spray: Heads, Tails.
+[02:25.588] MSG: Pepper Spray: 1 head(s) — Shepherd Detective -5 ATK until next turn ends!
+[02:26.966] Attack P1(1,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(2,2)"Pepper Spray" {cost 0}  Dice=1  → Unit vs Trap
+[02:26.966] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:26.966] Anim: 3D  (attacker survives)
+[02:26.967] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[02:26.999] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:29.153] MSG: Revealed: (empty)
+[02:29.647] Mode selected P1: ATTACK
+[02:29.972] Revealed: P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:31.868] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:33.107] Dice rolled: 3
+[02:33.113] MSG: Trap triggered: Trap Hole!
+[02:35.605] Coin flip: Heads, Heads, Heads
+[02:38.354] MSG: Trap Hole: Heads, Heads, Heads.
+[02:38.354] Crystals: P1 2720 → 2660 (-60)  [trap]
+[02:41.005] MSG: Trap Hole: 3 head(s) — Player 2 loses 60 Crystals!
+[02:42.369] Attack P1(1,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(0,0)"Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[02:42.369] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[02:42.369] Anim: 3D  (attacker survives)
+[02:42.882] Turn ended  P1  |  Crystals P0=4600 P1=2660
+
+--- Turn 4  |  Player 0  |  Crystals P0=4600 P1=2660 ---
+[02:49.268] MSG: Tap 2 material card(s) on the field.
+[02:49.475] MSG: 1 more material(s) needed.
+[02:50.101] Crystals: P0 4600 → 4100 (-500)  [union]
+[02:52.925] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[02:52.976] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[02:52.977] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[03:00.486] Dice rolled: 1
+[03:00.569] MSG: Diamond Unicorn wins!
+[03:03.210] Crystals: P1 2660 → 2260 (-400)  [battle]
+[03:07.408] Attack P0(0,2)"Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} → P1(1,0)"Shepherd Detective" {Unit ATK35 DEF25 | cost 400 | affinity Anima | base 40/25}  Dice=1  ATK=45 vs DEF=25  → WIN
+[03:07.408] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} badge=45 ATK pill=45 DEF pill=35 mod=+ATK 0 (45+0=45)
+[03:07.408] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK35 DEF25 | cost 400 | affinity Anima | base 40/25} badge=25 ATK pill=35 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:07.408] Anim: 3A  △ P1(1,0)
+[03:07.408] Card destroyed  P1 (1,0) "Shepherd Detective" {Unit ATK35 DEF25 | cost 400 | affinity Anima | base 40/25}
+[03:30.880] Dice rolled: 3
+[03:30.891] MSG: Silver Spearman wins!
+[03:33.848] Crystals: P1 2260 → 2010 (-250)  [battle]
+[03:38.043] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=3  ATK=25 vs DEF=10  → WIN
+[03:38.044] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[03:38.044] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[03:38.044] Anim: 3A  △ P1(1,1)
+[03:38.044] Card destroyed  P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[03:39.161] Turn ended  P0  |  Crystals P0=4100 P1=2010
+
+--- Turn 5  |  Player 1  |  Crystals P0=4100 P1=2010 ---
+[03:41.661] Mode selected P1: TECH
+[03:41.969] Tech played  P1: "Spy"
+[03:43.563] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[03:45.255] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[03:46.807] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[03:46.810] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:47.260] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[03:48.460] Tech resolved  P1
+[03:50.830] Crystals: P1 2010 → 1510 (-500)  [union]
+[03:53.660] Revealed: P1 (1,3) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[03:53.713] Union summoned P1: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}, "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down}
+[03:57.110] Mode selected P1: ATTACK
+[03:58.313] Dice rolled: 5
+[03:58.389] MSG: Berserk Hyena wins!
+[04:01.214] Crystals: P0 4100 → 3850 (-250)  [battle]
+[04:05.413] Attack P1(1,3)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=5  ATK=40 vs DEF=20  → WIN
+[04:05.413] Reckoning overlay: P1 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=40 ATK pill=40 DEF pill=0 mod=+ATK 0 (40+0=40)
+[04:05.413] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:05.413] Anim: 3A  △ P0(1,3)
+[04:05.413] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[04:05.913] Mode selected P1: ATTACK
+[04:06.244] Revealed: P1 (0,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[04:08.148] Dice rolled: 4
+[04:08.742] Ability choice: 1 (No)
+[04:08.743] MSG: Hairpin Assassin wins!
+[04:11.185] Crystals: P0 3850 → 3570 (-280)  [battle]
+[04:15.384] Attack P1(0,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=4  ATK=25 vs DEF=20  → WIN
+[04:15.384] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[04:15.384] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:15.384] Anim: 3A  △ P0(2,1)
+[04:15.384] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[04:15.898] Turn ended  P1  |  Crystals P0=3570 P1=1510
+
+--- Turn 6  |  Player 0  |  Crystals P0=3570 P1=1510 ---
+[04:24.119] Dice rolled: 1
+[04:24.198] MSG: Diamond Unicorn wins!
+[04:26.651] Crystals: P1 1510 → 1210 (-300)  [battle]
+[04:30.873] Attack P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(0,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=1  ATK=30 vs DEF=15  → WIN
+[04:30.873] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} badge=30 ATK pill=30 DEF pill=35 mod=+ATK 0 (30+0=30)
+[04:30.873] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:30.873] Anim: 3A  △ P1(0,3)
+[04:30.873] Card destroyed  P1 (0,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[04:36.308] Tech played  P0: "Spy"
+[04:37.841] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[04:37.854] Revealed: P1 (2,2) "Acid Trap Hole" {cost 0}
+[04:39.247] Tech resolved  P0
+[04:42.056] Dice rolled: 3
+[04:42.147] MSG: Magical Butterfly wins!
+[04:46.349] Attack P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} → P1(1,3)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=3  ATK=25 vs DEF=0  → WIN
+[04:46.349] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[04:46.349] Reckoning overlay: P1 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=0 ATK pill=40 DEF pill=0 mod=+DEF 0 (0+0=0)
+[04:46.349] Anim: 3A  △ P1(1,3)
+[04:46.349] Card destroyed  P1 (1,3) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[04:47.904] Turn ended  P0  |  Crystals P0=3570 P1=1210
+
+--- Turn 7  |  Player 1  |  Crystals P0=3570 P1=1210 ---
+[04:50.403] Mode selected P1: TECH
+[04:50.704] Crystals: P1 1210 → 610 (-600)  [tech cost]
+[04:53.553] Tech played  P1: "Radar"
+[04:55.555] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[04:57.092] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[04:57.096] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[04:57.549] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[04:59.167] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[05:00.794] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[05:01.982] Tech resolved  P1
+[05:02.868] Mode selected P1: ATTACK
+[05:03.225] Revealed: P1 (3,4) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[05:05.118] Dice rolled: 4
+[05:05.127] MSG: Mad Raccoon wins!
+[05:08.209] Crystals: P0 3570 → 3270 (-300)  [battle]
+[05:12.416] Attack P1(3,4)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=4  ATK=30 vs DEF=25  → WIN
+[05:12.416] Reckoning overlay: P1 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[05:12.416] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:12.416] Anim: 3A  △ P0(1,1)
+[05:12.416] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[05:14.921] Turn ended  P1  |  Crystals P0=3270 P1=610
+
+--- Turn 8  |  Player 0  |  Crystals P0=3270 P1=610 ---
+[05:20.190] Dice rolled: 5
+[05:20.279] MSG: Diamond Unicorn wins!
+[05:23.234] Crystals: P1 610 → 350 (-260)  [battle]
+[05:27.438] Attack P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(3,4)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=5  ATK=30 vs DEF=15  → WIN
+[05:27.438] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} badge=30 ATK pill=30 DEF pill=35 mod=+ATK 0 (30+0=30)
+[05:27.438] Reckoning overlay: P1 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[05:27.438] Anim: 3A  △ P1(3,4)
+[05:27.438] Card destroyed  P1 (3,4) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[05:30.143] Dice rolled: 4
+[05:30.191] MSG: Magical Butterfly hits Dead End — nothing happens.
+[05:33.095] Attack P0(3,2)"Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20} → P1(4,1)(empty)  Dice=4  → DEAD_END
+[05:33.095] Anim: 3F  (blank slot)
+[05:34.379] Turn ended  P0  |  Crystals P0=3270 P1=350
+
+--- Turn 9  |  Player 1  |  Crystals P0=3270 P1=350 ---
+[05:36.874] Mode selected P1: ATTACK
+[05:37.210] Revealed: P1 (3,0) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[05:39.342] Dice rolled: 3
+[05:39.355] MSG: Neptune Diver hits Dead End — nothing happens.
+[05:43.755] Attack P1(3,0)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(1,4)(empty)  Dice=3  → DEAD_END
+[05:43.755] Anim: 3F  (blank slot)
+[05:44.252] Mode selected P1: ATTACK
+[05:44.601] Revealed: P1 (3,3) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[05:46.508] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[05:47.715] Dice rolled: 1
+[05:47.721] MSG: Laser Walker wins!
+[05:52.042] Crystals: P0 3270 → 3020 (-250)  [battle]
+[05:56.257] Attack P1(3,3)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=1  ATK=20 vs DEF=15  → WIN
+[05:56.257] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[05:56.258] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[05:56.258] Anim: 3A  △ P0(2,4)
+[05:56.258] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[05:56.755] Turn ended  P1  |  Crystals P0=3020 P1=350
+
+--- Turn 10  |  Player 0  |  Crystals P0=3020 P1=350 ---
+[06:04.917] Dice rolled: 5
+[06:04.926] MSG: Choir Lady Alice wins!
+[06:07.718] Crystals: P1 350 → 150 (-200)  [battle]
+[06:11.937] Attack P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(3,0)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=5  ATK=20 vs DEF=10  → WIN
+[06:11.937] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=25 mod=+ATK 0 (20+0=20)
+[06:11.937] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[06:11.937] Anim: 3A  △ P1(3,0)
+[06:11.937] Card destroyed  P1 (3,0) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[06:15.167] Dice rolled: 3
+[06:15.270] MSG: Diamond Unicorn wins!
+[06:18.062] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3020  P1: 0  |  Turns: 10

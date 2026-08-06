@@ -432,7 +432,8 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_car_drive_university.png",
 		"fade_color": "#000000",
-		"text": "The black sedan glide swiftly on an empty university road, toward the hospital."
+		"show_polaroid": "<null>",
+		"text": "The black sedan glided swiftly along an empty university road toward the hospital, \nwhile the street lamps flickered slightly, as if giving an intimidating warning... \nthat those things would come back for them."
 	},
 	{
 		"fade_color": "#000000",

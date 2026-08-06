@@ -1,0 +1,50 @@
+=== Battle of Spilled Iced Coffee ===
+Battle started: 2026-07-25 18:27:56.619
+Game Session of Apple Cider (started 2026-07-25 18:26:09.878)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.260] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.660] Mode selected P1: TECH
+[00:09.966] Tech played  P1: "Spy"
+[00:11.507] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.944] Revealed: P0 (3,1) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[00:11.948] Tech resolved  P1
+[00:14.293] Crystals: P1 3000 → 1000 (-2000)  [union]
+[00:17.136] Revealed: P1 (2,1) "Gaia Turtle" {Union ATK0 DEF210 | destroy-cost 0 | summon-cost 2000 | affinity Nature}
+[00:17.178] Union summoned P1: "Gaia Turtle" {Union ATK0 DEF210 | destroy-cost 0 | summon-cost 2000 | affinity Nature} from "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}, "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down}
+[00:17.178] MSG: Player 2 summoned [Gaia Turtle] using: "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}, "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down}
+[00:20.557] Mode selected P1: ATTACK
+[00:20.559] MSG: Player 2: tap a unit to attack.
+[00:20.882] Revealed: P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:22.791] Dice rolled: 2
+[00:22.807] MSG: Goblin Poacher wins!
+[00:25.746] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:29.944] Attack P1(1,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(3,1)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=2  ATK=30 vs DEF=20  → WIN
+[00:29.944] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[00:29.944] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:29.944] Anim: 3A  △ P0(3,1)
+[00:29.944] Card destroyed  P0 (3,1) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[00:30.444] Mode selected P1: ATTACK
+[00:30.446] MSG: Player 2: tap a unit to attack.
+[00:31.646] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:32.893] Dice rolled: 5
+[00:32.971] MSG: Trap triggered: Trap Hole!
+[00:36.779] Coin flip: Tails, Heads, Heads
+[00:39.536] MSG: Trap Hole: Tails, Heads, Heads.
+[00:39.537] Crystals: P1 1000 → 960 (-40)  [trap]
+[00:41.735] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[00:43.132] Attack P1(2,1)"Gaia Turtle" {Union ATK0 DEF210 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:43.132] Reckoning overlay: P1 "Gaia Turtle" {Union ATK0 DEF210 | destroy-cost 0 | summon-cost 2000 | affinity Nature} badge=0 ATK pill=0 DEF pill=210 mod=+ATK 0 (0+0=0)
+[00:43.132] Anim: 3D  (attacker survives)
+[00:43.619] Turn ended  P1  |  Crystals P0=4620 P1=960
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=960 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4620  P1: 960  |  Turns: 2

@@ -1,0 +1,58 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-07-22 10:04:37.923
+Game Session of Iced Tea (started 2026-07-22 10:04:05.506)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.109] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.552] Mode selected P1: TECH
+[00:10.853] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:14.690] Tech played  P1: "Radar"
+[00:16.301] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:17.973] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:19.523] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:19.527] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:20.170] Dead-end placed  P0 (1,4)
+[00:20.324] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:20.723] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:20.756] Tech resolved  P1
+[00:21.630] Mode selected P1: ATTACK
+[00:21.634] MSG: Player 2: tap a unit to attack.
+[00:21.956] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:23.851] Dice rolled: 2
+[00:23.876] MSG: Gamma Emitter wins!
+[00:28.374] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:33.628] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=2  ATK=30 vs DEF=25  → WIN
+[00:33.628] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=30 ATK pill=20 DEF pill=15 mod=+ATK 10 (20+10=30)
+[00:33.628] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:33.628] Anim: 3A  △ P0(3,2)
+[00:33.628] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:36.140] Turn ended  P1  |  Crystals P0=4820 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=2400 ---
+[01:54.396] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:55.615] Dice rolled: 1
+[01:55.651] MSG: Ponycorn wins!
+[02:00.108] Crystals: P1 2400 → 2180 (-220)  [battle]
+[02:05.279] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=1  ATK=25 vs DEF=15  → WIN
+[02:05.279] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[02:05.279] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[02:05.279] Anim: 3A  △ P1(1,1)
+[02:05.279] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[02:17.648] MSG: Tap 2 material card(s) on the field.
+[02:17.826] MSG: 1 more material(s) needed.
+[02:19.061] Crystals: P0 4820 → 4320 (-500)  [union]
+[02:22.894] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[02:22.931] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | attacked}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[02:22.931] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[02:22.936] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | attacked}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[02:32.923] Revealed: P1 (2,1) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:34.119] Dice rolled: 1
+[02:34.216] MSG: Diamond Unicorn wins!
+[02:36.894] Crystals: P1 2180 → 1860 (-320)  [battle]
+[02:42.091] Attack P0(0,2)"Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | 

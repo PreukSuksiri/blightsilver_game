@@ -1,0 +1,59 @@
+=== Battle of Silent Elevator Incident ===
+Battle started: 2026-07-02 20:47:23.740
+Game Session of Strawberry Smoothie (started 2026-07-02 20:42:59.302)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.008] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:18.008] Revealed: P0 (2,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:18.008] Revealed: P1 (0,1) "Red Card" {cost 0}
+[00:19.234] Dice rolled: 2
+[00:19.255] MSG: Trap triggered: Red Card!
+[00:22.358] Coin flip: Heads, Heads
+[00:25.136] MSG: Red Card: Heads, Heads.
+[00:25.136] MSG: Both heads! Silver Spearman cannot attack next turn!
+[00:26.518] Attack P0(2,1)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(0,1)"Red Card" {cost 0}  Dice=2  → Unit vs Trap
+[00:26.518] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:26.518] Anim: 3D  (attacker survives)
+[00:30.804] Revealed: P0 (2,4) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[00:30.834] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:32.043] Dice rolled: 5
+[00:35.192] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:39.035] Attack P0(2,4)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=5  ATK=35 vs DEF=60  → LOSE
+[00:39.035] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[00:39.035] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=60 ATK pill=95 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:39.035] Anim: 3B  △ P0(2,4)
+[00:39.035] Card destroyed  P0 (2,4) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[00:39.955] Turn ended  P0  |  Crystals P0=4620 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4620 P1=3000 ---
+[00:40.558] Mode selected P1: TECH
+[00:40.857] Crystals: P1 3000 → 2000 (-1000)  [tech cost]
+[00:44.694] Tech played  P1: "Accident"
+[00:46.230] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:46.628] Card destroyed  P0 (2,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | cannot-atk≤T3}
+[00:46.634] Tech resolved  P1
+[00:49.533] Crystals: P1 2000 → 1950 (-50)  [skip tax]
+[00:49.533] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:52.976] Turn ended  P1  |  Crystals P0=4620 P1=1950
+
+--- Turn 3  |  Player 0  |  Crystals P0=4620 P1=1950 ---
+[01:00.761] Revealed: P0 (1,4) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:00.788] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[01:01.994] Dice rolled: 2
+[01:02.017] MSG: Ability triggered: "Grand Fort Archer" — +10 ATK in Reckoning
+[01:04.732] Crystals: P0 4620 → 4340 (-280)  [battle]
+[01:08.597] Attack P0(1,4)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=2  ATK=30 vs DEF=40  → LOSE
+[01:08.597] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:08.597] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=40 ATK pill=60 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:08.597] Anim: 3B  △ P0(1,4)
+[01:08.597] Card destroyed  P0 (1,4) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:27.589] Crystals: P1 1950 → 0 (-1950)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4340  P1: 0  |  Turns: 3

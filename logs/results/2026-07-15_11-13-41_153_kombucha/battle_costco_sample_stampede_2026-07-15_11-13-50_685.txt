@@ -1,0 +1,213 @@
+=== Battle of Costco Sample Stampede ===
+Battle started: 2026-07-15 11:13:50.685
+Game Session of Kombucha (started 2026-07-15 11:13:41.153)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.021] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.404] Mode selected P1: TECH
+[00:11.714] Tech played  P1: "Spy"
+[00:13.261] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:13.729] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:13.733] Tech resolved  P1
+[00:14.565] Mode selected P1: ATTACK
+[00:14.568] MSG: Player 2: tap a unit to attack.
+[00:14.900] Revealed: P1 (1,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:16.789] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[00:18.014] Dice rolled: 3
+[00:18.041] MSG: Trap triggered: Hard Scale!
+[00:22.120] Crystals: P0 5000 → 4300 (-700)  [trap cost]
+[00:25.961] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:27.328] Attack P1(1,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P0(0,4)"Hard Scale" {cost 700}  Dice=3  → Unit vs Trap
+[00:27.328] Reckoning overlay: P1 "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} badge=0 ATK pill=0 DEF pill=25 mod=+ATK 0 (0+0=0)
+[00:27.328] Anim: 3D  (attacker survives)
+[00:27.835] Mode selected P1: ATTACK
+[00:27.837] MSG: Player 2: tap a unit to attack.
+[00:28.155] Revealed: P1 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:30.067] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:31.292] Dice rolled: 5
+[00:31.306] MSG: Trap triggered: Trap Hole!
+[00:35.427] Coin flip: Tails, Tails, Heads
+[00:38.190] MSG: Trap Hole: Tails, Tails, Heads.
+[00:38.190] Crystals: P1 3000 → 2980 (-20)  [trap]
+[00:40.965] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[00:42.332] Attack P1(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:42.332] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[00:42.332] Anim: 3D  (attacker survives)
+[00:42.834] MSG: Ability triggered: "Sniping Fairy" (atk penalty when exposed)
+[00:44.380] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[00:44.382] Turn ended  P1  |  Crystals P0=4300 P1=2980
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=2980 ---
+[00:51.286] Dice rolled: 2
+[00:51.306] MSG: Scout Probe wins!
+[00:55.335] Crystals: P1 2980 → 2630 (-350)  [battle]
+[01:00.547] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF55 | cost 700 | affinity Cosmic} → P1(1,1)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}  Dice=2  ATK=40 vs DEF=20  → WIN
+[01:00.547] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF55 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=55 mod=+ATK 0 (40+0=40)
+[01:00.547] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:00.547] Anim: 3A  △ P1(1,1)
+[01:00.547] Card destroyed  P1 (1,1) "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}
+[01:00.548] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[01:00.571] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:02.604] Revealed: P1 (0,1) "Trap Hole" {cost 0}
+[01:02.605] MSG: Scout Probe: adjacent cell revealed.
+[01:15.916] MSG: Tap 2 material card(s) on the field.
+[01:16.578] MSG: 1 more material(s) needed.
+[01:17.822] Crystals: P0 4300 → 3300 (-1000)  [union]
+[01:21.650] Revealed: P0 (3,2) "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:21.712] Union summoned P0: "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF45 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF35 | cost 380 | affinity Arcane | face-down}
+[01:21.731] MSG: Player 1 summoned [Sand Elemental] using: "Earth Elemental" {Unit ATK20 DEF45 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF35 | cost 380 | affinity Arcane | face-down}
+[01:29.385] Dice rolled: 2
+[01:29.473] MSG: Sand Elemental wins!
+[01:32.709] Crystals: P1 2630 → 1930 (-700)  [battle]
+[01:32.729] Crystals: P1 1930 → 2230 (+300)  [recovery]
+[01:32.729] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:40.751] Attack P0(3,2)"Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=2  ATK=105 vs DEF=25  → WIN
+[01:40.751] Reckoning overlay: P0 "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=105 ATK pill=55 DEF pill=55 mod=+ATK 50 (55+50=105)
+[01:40.751] Reckoning overlay: P1 "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} badge=25 ATK pill=0 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:40.751] Anim: 3A  △ P1(1,2)
+[01:40.751] Card destroyed  P1 (1,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[01:41.768] Turn ended  P0  |  Crystals P0=3300 P1=2230
+
+--- Turn 3  |  Player 1  |  Crystals P0=3300 P1=2230 ---
+[01:42.377] Mode selected P1: TECH
+[01:42.676] Crystals: P1 2230 → 1630 (-600)  [tech cost]
+[01:46.512] Tech played  P1: "Radar"
+[01:48.048] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:48.490] Revealed: P0 (4,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF25 | cost 300 | affinity Cosmic}
+[01:48.898] Revealed: P0 (1,4) "Armored Bee" {Unit ATK30 DEF5 | cost 480 | affinity Nature}
+[01:49.256] Tech resolved  P1
+[01:49.493] Dead-end placed  P0 (4,1)
+[01:50.155] Mode selected P1: ATTACK
+[01:50.160] MSG: Player 2: tap a unit to attack.
+[01:50.486] Revealed: P1 (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:52.384] Dice rolled: 5
+[01:52.409] MSG: Bomber Fairy wins!
+[01:55.209] Crystals: P0 3300 → 3000 (-300)  [battle]
+[01:59.056] MSG: Bomber Fairy: Kill bonus — extra attack!
+[01:59.059] Attack P1(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P0(4,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF25 | cost 300 | affinity Cosmic}  Dice=5  ATK=30 vs DEF=25  → WIN
+[01:59.059] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[01:59.059] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF25 | cost 300 | affinity Cosmic} badge=25 ATK pill=30 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:59.059] Anim: 3A  △ P0(4,2)
+[01:59.059] Card destroyed  P0 (4,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF25 | cost 300 | affinity Cosmic}
+[01:59.543] Mode selected P1: ATTACK
+[01:59.547] MSG: Player 2: tap a unit to attack.
+[02:00.984] Dice rolled: 3
+[02:01.020] MSG: Nothing happens — Dead End.
+[02:05.773] Attack P1(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used} → P0(0,1)(empty)  Dice=3  → DEAD_END
+[02:05.773] Anim: 3F  (blank slot)
+[02:06.272] Mode selected P1: ATTACK
+[02:06.275] MSG: Player 2: tap a unit to attack.
+[02:06.593] Revealed: P1 (2,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:08.507] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio}
+[02:09.721] Dice rolled: 2
+[02:13.214] Crystals: P1 1630 → 1330 (-300)  [battle]
+[02:17.061] Attack P1(2,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio}  Dice=2  ATK=25 vs DEF=45  → LOSE
+[02:17.061] Reckoning overlay: P1 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[02:17.061] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio} badge=45 ATK pill=65 DEF pill=45 mod=+DEF 0 (45+0=45)
+[02:17.061] Anim: 3B  △ P1(2,1)
+[02:17.061] Card destroyed  P1 (2,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:17.606] Turn ended  P1  |  Crystals P0=3000 P1=1330
+
+--- Turn 4  |  Player 0  |  Crystals P0=3000 P1=1330 ---
+[03:46.838] Revealed: P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[03:48.055] Dice rolled: 1
+[03:48.090] MSG: Water Elemental wins!
+[03:50.763] Crystals: P1 1330 → 830 (-500)  [battle]
+[03:55.967] Attack P0(2,3)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P1(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}  Dice=1  ATK=25 vs DEF=15  → WIN
+[03:55.967] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[03:55.967] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:55.967] Anim: 3A  △ P1(2,2)
+[03:55.967] Card destroyed  P1 (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[03:59.362] Revealed: P1 (1,0) "Alarm" {cost 0}
+[04:00.588] Dice rolled: 3
+[04:00.686] MSG: Trap triggered: Alarm!
+[04:03.889] MSG: Alarm: +10 ATK & +10 DEF to all ANIMA units this turn!
+[04:05.271] Attack P0(3,2)"Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,0)"Alarm" {cost 0}  Dice=3  → Unit vs Trap
+[04:05.271] Reckoning overlay: P0 "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=55 ATK pill=55 DEF pill=55 mod=+ATK 0 (55+0=55)
+[04:05.271] Anim: 3D  (attacker survives)
+[04:06.005] Turn ended  P0  |  Crystals P0=3000 P1=830
+
+--- Turn 5  |  Player 1  |  Crystals P0=3000 P1=830 ---
+[04:06.610] Mode selected P1: TECH
+[04:06.919] Tech played  P1: "Tease"
+[04:08.455] MSG: Opponent must choose and reveal 1 of their squares.
+[04:08.586] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:12.082] Revealed: P0 (3,1) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[04:12.082] MSG: Tease: Opponent revealed Fire Elemental.
+[04:12.089] Tech resolved  P1
+[04:12.986] Mode selected P1: ATTACK
+[04:12.993] MSG: Player 2: tap a unit to attack.
+[04:13.321] Revealed: P1 (2,3) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[04:15.209] Dice rolled: 1
+[04:15.230] MSG: Joan the Faithful Warrior wins!
+[04:18.201] Crystals: P0 3000 → 2620 (-380)  [battle]
+[04:23.410] Attack P1(2,3)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P0(3,1)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=1  ATK=25 vs DEF=20  → WIN
+[04:23.410] Reckoning overlay: P1 "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} badge=25 ATK pill=25 DEF pill=5 mod=+ATK 0 (25+0=25)
+[04:23.410] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:23.410] Anim: 3A  △ P0(3,1)
+[04:23.410] Card destroyed  P0 (3,1) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[04:23.909] Mode selected P1: ATTACK
+[04:23.912] MSG: Player 2: tap a unit to attack.
+[04:24.230] Revealed: P1 (3,3) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[04:26.135] Dice rolled: 4
+[04:26.148] MSG: Moonrise Gentleman wins!
+[04:30.618] Crystals: P0 2620 → 2240 (-380)  [battle]
+[04:35.832] Attack P1(3,3)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P0(2,3)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}  Dice=4  ATK=40 vs DEF=35  → WIN
+[04:35.832] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[04:35.832] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=35 ATK pill=25 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:35.832] Anim: 3A  △ P0(2,3)
+[04:35.832] Card destroyed  P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[04:36.339] Turn ended  P1  |  Crystals P0=2240 P1=830
+
+--- Turn 6  |  Player 0  |  Crystals P0=2240 P1=830 ---
+[04:41.263] Dice rolled: 2
+[04:41.354] MSG: Sand Elemental wins!
+[04:43.967] Crystals: P1 830 → 430 (-400)  [battle]
+[04:47.817] MSG: Moonrise Gentleman: +10 DEF, -10 ATK permanently (if possible).
+[04:49.177] Attack P0(3,2)"Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(3,3)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=2  ATK=105 vs DEF=40  → WIN
+[04:49.177] Reckoning overlay: P0 "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=105 ATK pill=55 DEF pill=55 mod=+ATK 50 (55+50=105)
+[04:49.177] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[04:49.177] Anim: 3A  △ P1(3,3)
+[04:49.177] Card destroyed  P1 (3,3) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[04:52.195] Dice rolled: 2
+[04:52.220] MSG: Scout Probe wins!
+[04:55.551] Crystals: P1 430 → 150 (-280)  [battle]
+[05:00.773] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,3)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=2  ATK=40 vs DEF=5  → WIN
+[05:00.773] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[05:00.773] Reckoning overlay: P1 "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} badge=5 ATK pill=25 DEF pill=5 mod=+DEF 0 (5+0=5)
+[05:00.773] Anim: 3A  △ P1(2,3)
+[05:00.773] Card destroyed  P1 (2,3) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[05:00.773] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[05:00.808] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[05:02.689] Revealed: P1 (1,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[05:02.689] MSG: Scout Probe: adjacent cell revealed.
+[05:05.321] Turn ended  P0  |  Crystals P0=2240 P1=150
+
+--- Turn 7  |  Player 1  |  Crystals P0=2240 P1=150 ---
+[05:05.931] Mode selected P1: ATTACK
+[05:05.937] MSG: Player 2: tap a unit to attack.
+[05:07.367] Dice rolled: 5
+[05:07.405] MSG: Nothing happens — Dead End.
+[05:10.607] Attack P1(1,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P0(0,3)(empty)  Dice=5  → DEAD_END
+[05:10.607] Anim: 3F  (blank slot)
+[05:13.107] Turn ended  P1  |  Crystals P0=2240 P1=150
+
+--- Turn 8  |  Player 0  |  Crystals P0=2240 P1=150 ---
+[05:16.232] Tech played  P0: "Tease"
+[05:17.775] MSG: Opponent must choose and reveal 1 of their squares.
+[05:17.777] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:18.218] Revealed: P1 (3,2) "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}
+[05:18.218] MSG: Tease: Opponent revealed Sunrise Lady.
+[05:18.315] Tech resolved  P0
+[05:22.722] Dice rolled: 1
+[05:22.749] MSG: Scout Probe wins!
+[05:25.447] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2240  P1: 0  |  Turns: 8

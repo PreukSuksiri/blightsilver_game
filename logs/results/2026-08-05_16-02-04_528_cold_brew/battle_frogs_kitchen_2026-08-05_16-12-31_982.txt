@@ -1,0 +1,121 @@
+=== Battle of Frog's Kitchen ===
+Battle started: 2026-08-05 16:12:31.982
+Game Session of Cold Brew (started 2026-08-05 16:02:04.528)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:08.620] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:25.183] MSG: Tap 2 material card(s) on the field.
+[00:36.905] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:38.364] Dice rolled: 5
+[00:38.386] MSG: Sonic Seraph hits Dead End — nothing happens.
+[00:41.782] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[00:41.795] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,1)(empty)  Dice=5  → DEAD_END
+[00:41.795] Anim: 3F  (blank slot)
+[00:50.127] Revealed: P1 (0,2) "Blackmail" {cost 0}
+[00:51.365] Dice rolled: 4
+[00:51.372] MSG: Trap triggered: Blackmail!
+[00:56.497] MSG: Blackmail: Discarded Resurrection.
+[00:57.876] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} → P1(0,2)"Blackmail" {cost 0}  Dice=4  → Unit vs Trap
+[00:57.876] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[00:57.876] Anim: 3D  (attacker survives)
+[01:09.925] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:11.380] Dice rolled: 3
+[01:11.399] MSG: Pit Lord hits Dead End — nothing happens.
+[01:15.083] Attack P0(4,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(3,2)(empty)  Dice=3  → DEAD_END
+[01:15.084] Anim: 3F  (blank slot)
+[01:18.071] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[01:20.573] Mode selected P1: TECH
+[01:20.873] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:23.702] Tech played  P1: "Radar"
+[01:25.247] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:25.894] Dead-end placed  P0 (3,0)
+[01:26.336] Revealed: P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:28.181] Dead-end placed  P0 (2,3)
+[01:28.196] Tech resolved  P1
+[01:29.087] Mode selected P1: ATTACK
+[01:29.427] Revealed: P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:31.318] Dice rolled: 5
+[01:31.326] MSG: Pyromancer wins!
+[01:34.699] Crystals: P0 5000 → 4450 (-550)  [battle]
+[01:38.897] Attack P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn}  Dice=5  ATK=80 vs DEF=50  → WIN
+[01:38.897] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=80 ATK pill=80 DEF pill=0 mod=+ATK 0 (80+0=80)
+[01:38.897] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:38.897] Anim: 3A  △ P0(1,1)
+[01:38.897] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn}
+[01:41.403] MSG: Ability triggered: "Sniping Fairy" (atk penalty when exposed)
+[01:42.957] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[01:42.965] Turn ended  P1  |  Crystals P0=4450 P1=2400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=2400 ---
+[02:10.587] Dice rolled: 1
+[02:10.591] MSG: Sniping Fairy wins!
+[02:13.307] Crystals: P1 2400 → 1500 (-900)  [battle]
+[02:17.529] Attack P0(4,3)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} → P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=1  ATK=20 vs DEF=0  → WIN
+[02:17.529] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[02:17.529] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:17.529] Anim: 3A  △ P1(2,4)
+[02:17.530] Card destroyed  P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[02:20.315] MSG: Tap 2 material card(s) on the field.
+[02:20.322] MSG: 1 more material(s) needed.
+[02:20.806] Crystals: P0 4450 → 3450 (-1000)  [union]
+[02:23.632] Revealed: P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[02:23.688] MSG: Union material bonus: +50 ATK&DEF!
+[02:23.689] Union summoned P0: "Ice Elemental" {Union ATK130 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 130/100} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[02:31.022] Revealed: P1 (1,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[02:32.201] Dice rolled: 5
+[02:32.229] MSG: Ice Elemental wins!
+[02:32.229] MSG: Green Mage: Ice Elemental permanently loses 10 ATK and DEF!
+[02:37.693] Crystals: P1 1500 → 1100 (-400)  [battle]
+[02:40.533] MSG: Green Mage locked — cannot attack until end of next turn.
+[02:41.900] Attack P0(1,3)"Ice Elemental" {Union ATK120 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 120/90} → P1(1,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=5  ATK=130 vs DEF=15  → WIN
+[02:41.900] Reckoning overlay: P0 "Ice Elemental" {Union ATK120 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 120/90} badge=130 ATK pill=130 DEF pill=100 mod=+ATK 0 (130+0=130)
+[02:41.900] Reckoning overlay: P1 "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[02:41.900] Anim: 3A  △ P1(1,3)
+[02:41.900] Card destroyed  P1 (1,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[03:22.780] Turn ended  P0  |  Crystals P0=3450 P1=1100
+
+--- Turn 4  |  Player 1  |  Crystals P0=3450 P1=1100 ---
+[03:25.281] Mode selected P1: TECH
+[03:25.589] Tech played  P1: "Tease"
+[03:27.342] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:33.929] Revealed: P0 (2,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[03:35.155] MSG: Tease: Opponent revealed Dark Blob.
+[03:35.164] Tech resolved  P1
+[03:36.053] Mode selected P1: ATTACK
+[03:36.389] Revealed: P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[03:38.281] Dice rolled: 5
+[03:38.290] MSG: Mind Flayer wins!
+[03:41.023] Crystals: P0 3450 → 2950 (-500)  [battle]
+[03:45.244] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(2,4)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=5  ATK=100 vs DEF=50  → WIN
+[03:45.244] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=100 ATK pill=100 DEF pill=70 mod=+ATK 0 (100+0=100)
+[03:45.244] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:45.244] Anim: 3A  △ P0(2,4)
+[03:45.244] Card destroyed  P0 (2,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[03:45.742] Mode selected P1: ATTACK
+[03:46.089] Revealed: P1 (4,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[03:47.978] Dice rolled: 4
+[03:47.986] MSG: Book with Fangs wins!
+[03:52.465] Crystals: P0 2950 → 2600 (-350)  [battle]
+[03:56.683] Attack P1(4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,3)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}  Dice=4  ATK=45 vs DEF=20  → WIN
+[03:56.683] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[03:56.683] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:56.683] Anim: 3A  △ P0(4,3)
+[03:56.683] Card destroyed  P0 (4,3) "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}
+[03:57.186] Turn ended  P1  |  Crystals P0=2600 P1=1100
+
+--- Turn 5  |  Player 0  |  Crystals P0=2600 P1=1100 ---
+[04:02.504] Dice rolled: 3
+[04:02.540] MSG: Ice Elemental wins!
+[04:06.099] Crystals: P1 1100 → 0 (-1100)  [battle]
+[04:09.094] MSG: Mind Flayer locked — cannot attack until end of next turn.
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2600  P1: 0  |  Turns: 5

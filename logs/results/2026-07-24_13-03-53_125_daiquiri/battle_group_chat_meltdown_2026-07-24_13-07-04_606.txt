@@ -1,0 +1,197 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-07-24 13:07:04.606
+Game Session of Daiquiri (started 2026-07-24 13:03:53.125)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.146] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.484] Mode selected P1: TECH
+[00:11.799] Tech played  P1: "Spy"
+[00:13.359] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:13.769] Tech resolved  P1
+[00:14.005] Dead-end placed  P0 (2,1)
+[00:14.685] Mode selected P1: ATTACK
+[00:14.687] MSG: Player 2: tap a unit to attack.
+[00:15.058] Revealed: P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:16.939] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:18.167] Dice rolled: 1
+[00:18.178] MSG: Trap triggered: Trap Hole!
+[00:18.178] MSG: Mars Drill is immune to 0-cost Traps!
+[00:22.216] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap (nullified)
+[00:22.216] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:22.216] Anim: 3D  (attacker survives)
+[00:22.725] Mode selected P1: ATTACK
+[00:22.728] MSG: Player 2: tap a unit to attack.
+[00:23.071] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[00:24.264] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[00:25.034] Revealed: P0 (4,0) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[00:26.198] Dice rolled: 5
+[00:30.517] Crystals: P1 3000 → 2800 (-200)  [battle]
+[00:33.362] Attack P1(1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P0(4,0)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=5  ATK=25 vs DEF=35  → LOSE
+[00:33.362] Reckoning overlay: P1 "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:33.362] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:33.362] Anim: 3B  △ P1(1,1)
+[00:33.362] Card destroyed  P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[00:33.864] Turn ended  P1  |  Crystals P0=5000 P1=2800
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=2800 ---
+[00:40.804] MSG: Tap 2 material card(s) on the field.
+[00:41.328] MSG: 1 more material(s) needed.
+[00:41.780] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:44.605] Revealed: P0 (3,3) "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:44.675] Union summoned P0: "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[00:44.693] MSG: Player 1 summoned [Wood Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[00:53.415] Dice rolled: 1
+[00:53.517] MSG: Wood Elemental wins!
+[00:56.922] Crystals: P1 2800 → 2400 (-400)  [battle]
+[01:01.141] Attack P0(3,3)"Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=1  ATK=65 vs DEF=30  → WIN
+[01:01.141] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=85 mod=+ATK 0 (65+0=65)
+[01:01.141] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:01.141] Anim: 3A  △ P1(0,0)
+[01:01.141] Card destroyed  P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:04.295] Revealed: P0 (1,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[01:04.295] Revealed: P1 (0,2) "Foul Gas" {cost 0}
+[01:05.512] Dice rolled: 2
+[01:05.518] MSG: Trap triggered: Foul Gas!
+[01:09.486] MSG: Foul Gas: All of Player 1's units -5 ATK this turn!
+[01:10.874] Attack P0(1,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P1(0,2)"Foul Gas" {cost 0}  Dice=2  → Unit vs Trap
+[01:10.874] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[01:10.874] Anim: 3D  (attacker survives)
+[01:22.605] Turn ended  P0  |  Crystals P0=4000 P1=2400
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=2400 ---
+[01:23.203] Mode selected P1: TECH
+[01:23.497] Crystals: P1 2400 → 1800 (-600)  [tech cost]
+[01:26.327] Tech played  P1: "Radar"
+[01:27.881] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:28.521] Dead-end placed  P0 (1,4)
+[01:28.921] Dead-end placed  P0 (4,3)
+[01:29.122] Revealed: P0 (1,2) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[01:29.126] Tech resolved  P1
+[01:31.467] Crystals: P1 1800 → 1300 (-500)  [union]
+[01:34.301] Revealed: P1 (1,3) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[01:34.346] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10 | face-down}, "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}
+[01:34.346] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[01:34.346] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10 | face-down}, "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}
+[01:37.733] Mode selected P1: ATTACK
+[01:37.739] MSG: Player 2: tap a unit to attack.
+[01:38.937] Dice rolled: 2
+[01:39.017] MSG: Moon Tribe Shaman wins!
+[01:43.421] Crystals: P0 4000 → 3620 (-380)  [battle]
+[01:47.636] Attack P1(1,3)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(1,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=2  ATK=25 vs DEF=20  → WIN
+[01:47.636] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[01:47.636] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:47.636] Anim: 3A  △ P0(1,3)
+[01:47.637] Card destroyed  P0 (1,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[01:48.137] Mode selected P1: ATTACK
+[01:48.143] MSG: Player 2: tap a unit to attack.
+[01:48.474] Revealed: P1 (4,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:50.397] Dice rolled: 3
+[01:50.414] MSG: Scout Probe wins!
+[01:53.855] Crystals: P0 3620 → 3220 (-400)  [battle]
+[01:58.034] Attack P1(4,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(4,0)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=3  ATK=40 vs DEF=35  → WIN
+[01:58.034] Reckoning overlay: P1 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:58.034] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:58.034] Anim: 3A  △ P0(4,0)
+[01:58.034] Card destroyed  P0 (4,0) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:58.034] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[01:58.067] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:00.013] Revealed: P0 (3,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:00.013] MSG: Scout Probe: adjacent cell revealed.
+[02:00.479] MSG: Ability triggered: "Wood Elemental" (perm def on foe turn end)
+[02:02.024] MSG: Wood Elemental: +5 DEF permanently at foe's turn end.
+[02:02.028] Turn ended  P1  |  Crystals P0=3220 P1=1300
+
+--- Turn 4  |  Player 0  |  Crystals P0=3220 P1=1300 ---
+[02:09.809] Dice rolled: 2
+[02:09.935] MSG: Wood Elemental wins!
+[02:15.689] Attack P0(3,3)"Wood Elemental" {Union ATK65 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/90} → P1(1,3)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}  Dice=2  ATK=65 vs DEF=55  → WIN
+[02:15.689] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/90} badge=65 ATK pill=65 DEF pill=90 mod=+ATK 0 (65+0=65)
+[02:15.689] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=55 ATK pill=25 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:15.689] Anim: 3A  △ P1(1,3)
+[02:15.689] Card destroyed  P1 (1,3) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[02:20.562] Dice rolled: 1
+[02:24.154] Crystals: P0 3220 → 2870 (-350)  [battle]
+[02:26.997] Attack P0(3,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(4,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=1  ATK=40 vs DEF=50  → LOSE
+[02:26.997] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[02:26.997] Reckoning overlay: P1 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:26.997] Anim: 3B  △ P0(3,0)
+[02:26.997] Card destroyed  P0 (3,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:29.638] Turn ended  P0  |  Crystals P0=2870 P1=1300
+
+--- Turn 5  |  Player 1  |  Crystals P0=2870 P1=1300 ---
+[02:30.230] Mode selected P1: TECH
+[02:30.538] Tech played  P1: "Tease"
+[02:32.083] MSG: Opponent must choose and reveal 1 of their squares.
+[02:32.230] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:34.900] Revealed: P0 (0,1) "Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane}
+[02:34.901] MSG: Tease: Opponent revealed Gem Turtle.
+[02:34.907] Tech resolved  P1
+[02:35.789] Mode selected P1: ATTACK
+[02:35.794] MSG: Player 2: tap a unit to attack.
+[02:36.994] Dice rolled: 3
+[02:37.007] MSG: Scout Probe wins!
+[02:37.007] MSG: Gem Turtle: Scout Probe permanently loses 5 ATK!
+[02:40.886] Crystals: P0 2870 → 2670 (-200)  [battle]
+[02:45.085] Attack P1(4,4)"Scout Probe" {Unit ATK35 DEF50 | cost 700 | affinity Cosmic | base 35/50} → P0(0,1)"Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane | 1xDEF-used}  Dice=3  ATK=40 vs DEF=30  → WIN
+[02:45.085] Reckoning overlay: P1 "Scout Probe" {Unit ATK35 DEF50 | cost 700 | affinity Cosmic | base 35/50} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[02:45.085] Reckoning overlay: P0 "Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane | 1xDEF-used} badge=30 ATK pill=0 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:45.085] Anim: 3A  △ P0(0,1)
+[02:45.085] Card destroyed  P0 (0,1) "Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane | 1xDEF-used}
+[02:45.086] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[02:45.108] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:47.033] MSG: Scout Probe: adjacent cell revealed (empty).
+[02:47.274] Dead-end placed  P0 (0,2)
+[02:47.534] Mode selected P1: ATTACK
+[02:47.537] MSG: Player 2: tap a unit to attack.
+[02:47.862] Revealed: P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:49.767] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[02:50.987] Dice rolled: 4
+[02:50.998] MSG: Trap triggered: Decoy Puppet!
+[02:53.196] Crystals: P0 2670 → 2570 (-100)  [trap cost]
+[02:56.022] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[02:57.348] Attack P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=4  → Unit vs Trap
+[02:57.348] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[02:57.348] Anim: 3D  (attacker survives)
+[02:57.864] MSG: Ability triggered: "Wood Elemental" (perm def on foe turn end)
+[02:59.387] MSG: Wood Elemental: +5 DEF permanently at foe's turn end.
+[02:59.393] Turn ended  P1  |  Crystals P0=2570 P1=1300
+
+--- Turn 6  |  Player 0  |  Crystals P0=2570 P1=1300 ---
+[03:08.539] Dice rolled: 3
+[03:08.621] MSG: Wood Elemental wins!
+[03:11.388] Crystals: P1 1300 → 600 (-700)  [battle]
+[03:15.603] Attack P0(3,3)"Wood Elemental" {Union ATK65 DEF95 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/95} → P1(4,4)"Scout Probe" {Unit ATK35 DEF50 | cost 700 | affinity Cosmic | base 35/50}  Dice=3  ATK=65 vs DEF=50  → WIN
+[03:15.603] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF95 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/95} badge=65 ATK pill=65 DEF pill=95 mod=+ATK 0 (65+0=65)
+[03:15.603] Reckoning overlay: P1 "Scout Probe" {Unit ATK35 DEF50 | cost 700 | affinity Cosmic | base 35/50} badge=50 ATK pill=35 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:15.603] Anim: 3A  △ P1(4,4)
+[03:15.603] Card destroyed  P1 (4,4) "Scout Probe" {Unit ATK35 DEF50 | cost 700 | affinity Cosmic | base 35/50}
+[03:18.619] Dice rolled: 4
+[03:18.624] MSG: Mad Wyvern wins!
+[03:21.134] Crystals: P1 600 → 300 (-300)  [battle]
+[03:25.345] Attack P0(1,2)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=65 vs DEF=20  → WIN
+[03:25.345] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[03:25.345] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:25.345] Anim: 3A  △ P1(3,4)
+[03:25.345] Card destroyed  P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[03:26.631] Turn ended  P0  |  Crystals P0=2570 P1=300
+
+--- Turn 7  |  Player 1  |  Crystals P0=2570 P1=300 ---
+[03:27.234] Mode selected P1: ATTACK
+[03:27.237] MSG: Player 2: tap a unit to attack.
+[03:27.577] Revealed: P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[03:29.519] Revealed: P0 (1,1) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[03:30.716] Dice rolled: 1
+[03:30.724] MSG: Ability triggered: "Mine Guard" (sacrifice for card type)
+[03:32.887] Ability choice: 0 (Yes)
+[03:32.927] Revealed: P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[03:32.928] Crystals: P1 300 → 0 (-300)  [card lost]
+[03:35.879] MSG: Mine Guard sacrificed itself to save Miner Probe!
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2570  P1: 0  |  Turns: 7

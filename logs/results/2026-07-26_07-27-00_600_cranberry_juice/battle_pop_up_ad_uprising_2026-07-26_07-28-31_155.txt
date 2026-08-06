@@ -1,0 +1,124 @@
+=== Battle of Pop-Up Ad Uprising ===
+Battle started: 2026-07-26 07:28:31.155
+Game Session of Cranberry Juice (started 2026-07-26 07:27:00.600)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:12.217] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:24.202] Revealed: P0 (1,1) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:24.202] Revealed: P1 (1,3) "Pepper Spray" {cost 0}
+[00:25.430] Dice rolled: 4
+[00:25.436] MSG: Trap triggered: Pepper Spray!
+[00:28.019] Coin flip: Heads, Heads
+[00:30.759] MSG: Pepper Spray: Heads, Heads.
+[00:30.759] MSG: Pepper Spray: 2 head(s) — War Genie -10 ATK until next turn ends!
+[00:32.152] Attack P0(1,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,3)"Pepper Spray" {cost 0}  Dice=4  → Unit vs Trap
+[00:32.152] Reckoning overlay: P0 "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} badge=100 ATK pill=100 DEF pill=80 mod=+ATK 0 (100+0=100)
+[00:32.152] Anim: 3D  (attacker survives)
+[00:35.870] Revealed: P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:35.870] Revealed: P1 (2,2) "Flame Trap" {cost 200}
+[00:37.101] Dice rolled: 2
+[00:37.122] MSG: Trap triggered: Flame Trap!
+[00:39.982] Crystals: P1 3000 → 2800 (-200)  [trap cost]
+[00:42.797] MSG: Flame Trap: Spear Shark debuffed!
+[00:44.169] Attack P0(2,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(2,2)"Flame Trap" {cost 200}  Dice=2  → Unit vs Trap
+[00:44.169] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[00:44.170] Anim: 3D  (attacker survives)
+[00:47.329] Turn ended  P0  |  Crystals P0=5000 P1=2800
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2800 ---
+[00:47.935] Mode selected P1: TECH
+[00:48.243] Tech played  P1: "Spy"
+[00:49.786] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:50.185] Revealed: P0 (3,3) "Spike Trap" {cost 800}
+[00:50.216] Tech resolved  P1
+[00:51.112] Mode selected P1: ATTACK
+[00:51.119] MSG: Player 2: tap a unit to attack.
+[00:51.434] Revealed: P1 (2,0) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:53.335] Dice rolled: 4
+[00:53.344] MSG: Water Elemental wins!
+[00:57.826] Crystals: P0 5000 → 4520 (-480)  [battle]
+[01:02.023] Attack P1(2,0)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(2,1)"Spear Shark" {Unit ATK40 DEF20 | cost 480 | affinity Nature | base 40/20}  Dice=4  ATK=25 vs DEF=20  → WIN
+[01:02.023] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[01:02.023] Reckoning overlay: P0 "Spear Shark" {Unit ATK40 DEF20 | cost 480 | affinity Nature | base 40/20} badge=20 ATK pill=40 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:02.023] Anim: 3A  △ P0(2,1)
+[01:02.023] Card destroyed  P0 (2,1) "Spear Shark" {Unit ATK40 DEF20 | cost 480 | affinity Nature | base 40/20}
+[01:02.524] Mode selected P1: ATTACK
+[01:02.528] MSG: Player 2: tap a unit to attack.
+[01:02.863] Revealed: P1 (0,1) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[01:04.747] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[01:05.980] Dice rolled: 4
+[01:05.988] MSG: Trap triggered: Trap Hole!
+[01:10.142] Coin flip: Heads, Heads, Heads
+[01:12.893] MSG: Trap Hole: Heads, Heads, Heads.
+[01:12.894] Crystals: P1 2800 → 2740 (-60)  [trap]
+[01:15.543] MSG: Trap Hole: 3 head(s) — Player 2 loses 60 Crystals!
+[01:16.923] Attack P1(0,1)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} → P0(0,0)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[01:16.923] Reckoning overlay: P1 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=20 ATK pill=20 DEF pill=40 mod=+ATK 0 (20+0=20)
+[01:16.923] Anim: 3D  (attacker survives)
+[01:17.422] Turn ended  P1  |  Crystals P0=4520 P1=2740
+
+--- Turn 3  |  Player 0  |  Crystals P0=4520 P1=2740 ---
+[01:24.993] Crystals: P0 4520 → 4470 (-50)  [skip tax]
+[01:24.994] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[01:27.443] Turn ended  P0  |  Crystals P0=4470 P1=2740
+
+--- Turn 4  |  Player 1  |  Crystals P0=4470 P1=2740 ---
+[01:28.009] Mode selected P1: TECH
+[01:28.308] Crystals: P1 2740 → 2140 (-600)  [tech cost]
+[01:31.139] Tech played  P1: "Radar"
+[01:32.691] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:33.133] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:33.500] Revealed: P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[01:33.934] Revealed: P0 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:33.939] Tech resolved  P1
+[01:34.808] Mode selected P1: ATTACK
+[01:34.813] MSG: Player 2: tap a unit to attack.
+[01:36.007] Dice rolled: 5
+[01:36.023] MSG: Water Elemental wins!
+[01:40.485] Crystals: P0 4470 → 3770 (-700)  [battle]
+[01:44.691] Attack P1(2,0)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=5  ATK=25 vs DEF=20  → WIN
+[01:44.691] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[01:44.691] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:44.691] Anim: 3A  △ P0(4,0)
+[01:44.691] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:45.185] Mode selected P1: ATTACK
+[01:45.188] MSG: Player 2: tap a unit to attack.
+[01:45.550] Revealed: P1 (1,1) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:47.418] Dice rolled: 5
+[01:47.427] MSG: Book with Fangs wins!
+[01:51.905] Crystals: P0 3770 → 3370 (-400)  [battle]
+[01:56.100] Attack P1(1,1)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(0,3)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=5  ATK=45 vs DEF=35  → WIN
+[01:56.100] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[01:56.100] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:56.100] Anim: 3A  △ P0(0,3)
+[01:56.100] Card destroyed  P0 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:56.602] Turn ended  P1  |  Crystals P0=3370 P1=2140
+
+--- Turn 5  |  Player 0  |  Crystals P0=3370 P1=2140 ---
+[02:03.185] Dice rolled: 1
+[02:03.191] MSG: War Genie wins!
+[02:06.068] Crystals: P1 2140 → 1760 (-380)  [battle]
+[02:10.274] Attack P0(1,1)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P1(0,1)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}  Dice=1  ATK=90 vs DEF=40  → WIN
+[02:10.274] Reckoning overlay: P0 "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} badge=90 ATK pill=90 DEF pill=80 mod=+ATK 0 (90+0=90)
+[02:10.274] Reckoning overlay: P1 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=40 ATK pill=20 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:10.274] Anim: 3A  △ P1(0,1)
+[02:10.274] Card destroyed  P1 (0,1) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[02:15.333] Turn ended  P0  |  Crystals P0=3370 P1=1760
+
+--- Turn 6  |  Player 1  |  Crystals P0=3370 P1=1760 ---
+[02:15.934] Mode selected P1: TECH
+[02:16.243] Tech played  P1: "Tease"
+[02:17.784] MSG: Opponent must choose and reveal 1 of their squares.
+[02:17.935] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:21.229] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:21.229] MSG: Tease: Opponent revealed Scout Probe.
+[02:21.244] Tech resolved  P1
+[02:22.139] Mode selected P1: ATTACK
+[02:22.146] MSG: Player 2: tap a unit to attack.
+[02:22.469] Revealed: P1 (3,3) "Pyromancer" {U

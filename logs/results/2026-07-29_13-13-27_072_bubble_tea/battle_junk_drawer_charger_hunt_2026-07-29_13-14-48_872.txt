@@ -1,0 +1,119 @@
+=== Battle of Junk Drawer Charger Hunt ===
+Battle started: 2026-07-29 13:14:48.872
+Game Session of Bubble Tea (started 2026-07-29 13:13:27.072)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:23.770] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:44.883] Mode selected P1: TECH
+[00:46.162] Tech played  P1: "Spy"
+[00:52.334] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:53.969] Tech resolved  P1
+[00:54.993] Dead-end placed  P0 (1,4)
+[00:57.658] Mode selected P1: ATTACK
+[00:58.923] Revealed: P1 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:07.639] Dice rolled: 4
+[01:07.657] MSG: Demon Spawn hits Dead End — nothing happens.
+[01:21.150] Attack P1(0,3)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P0(2,1)(empty)  Dice=4  → DEAD_END
+[01:21.150] Anim: 3F  (blank slot)
+[01:23.340] Mode selected P1: ATTACK
+[01:24.696] Revealed: P1 (0,2) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[01:33.082] Revealed: P0 (0,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:38.482] Dice rolled: 3
+[01:52.022] Crystals: P1 3000 → 2400 (-600)  [battle]
+[02:03.928] Attack P1(0,2)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → P0(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=3  ATK=10 vs DEF=60  → LOSE
+[02:03.928] Reckoning overlay: P1 "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} badge=10 ATK pill=10 DEF pill=30 mod=+ATK 0 (10+0=10)
+[02:03.928] Reckoning overlay: P0 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[02:03.928] Anim: 3B  △ P1(0,2)
+[02:03.928] Card destroyed  P1 (0,2) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[02:06.156] Turn ended  P1  |  Crystals P0=5000 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=2400 ---
+[02:26.010] MSG: Tap 2 material card(s) on the field.
+[02:29.127] MSG: 1 more material(s) needed.
+[02:30.565] Crystals: P0 5000 → 4500 (-500)  [union]
+[02:41.568] Revealed: P0 (1,1) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[02:41.604] Union summoned P0: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | face-down}
+[02:41.605] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[03:25.213] Revealed: P0 (3,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:30.052] Dice rolled: 1
+[03:30.056] MSG: Scout Probe wins!
+[03:42.097] Crystals: P1 2400 → 2000 (-400)  [battle]
+[03:59.171] Attack P0(3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(0,3)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=1  ATK=40 vs DEF=35  → WIN
+[03:59.171] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[03:59.171] Reckoning overlay: P1 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:59.171] Anim: 3A  △ P1(0,3)
+[03:59.171] Card destroyed  P1 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[03:59.172] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[03:59.204] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[04:07.448] MSG: Scout Probe: adjacent cell revealed (empty).
+[04:08.648] Dead-end placed  P1 (1,3)
+[04:23.176] Revealed: P0 (3,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[04:23.176] Revealed: P1 (2,1) "Street Joke" {cost 0}
+[04:28.573] Dice rolled: 1
+[04:28.581] MSG: Trap triggered: Street Joke!
+[04:28.581] MSG: Huntress of Green Glade is immune to 0-cost Traps!
+[04:45.624] Attack P0(3,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(2,1)"Street Joke" {cost 0}  Dice=1  → Unit vs Trap (nullified)
+[04:45.625] Reckoning overlay: P0 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[04:45.625] Anim: 3D  (attacker survives)
+[04:50.993] Turn ended  P0  |  Crystals P0=4500 P1=2000
+
+--- Turn 3  |  Player 1  |  Crystals P0=4500 P1=2000 ---
+[04:53.419] Mode selected P1: TECH
+[04:54.652] Crystals: P1 2000 → 1400 (-600)  [tech cost]
+[05:05.594] Tech played  P1: "Radar"
+[05:11.655] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[05:14.248] Dead-end placed  P0 (4,3)
+[05:14.885] Revealed: P0 (0,4) "Snare Trap" {cost 500}
+[05:16.586] Revealed: P0 (1,2) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[05:16.590] Tech resolved  P1
+[05:20.239] Mode selected P1: ATTACK
+[05:21.487] Revealed: P1 (2,4) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[05:29.201] Dice rolled: 1
+[05:29.205] MSG: Shredder Doll wins!
+[05:29.205] MSG: Ability triggered: "Mine Guard" (sacrifice for card type)
+[05:44.914] Ability choice: 0 (Yes)
+[05:51.593] Revealed: P0 (4,4) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[05:51.593] Crystals: P0 4500 → 4200 (-300)  [card lost]
+[06:02.642] MSG: Mine Guard sacrificed itself to save Miner Probe!
+[06:08.425] Attack P1(2,4)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P0(1,2)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=1  ATK=25 vs DEF=10  → TIE
+[06:08.425] Reckoning overlay: P1 "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} badge=25 ATK pill=25 DEF pill=5 mod=+ATK 0 (25+0=25)
+[06:08.425] Reckoning overlay: P0 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[06:08.425] Anim: exchange  (no destruction)
+[06:19.041] Turn ended  P1  |  Crystals P0=4200 P1=1400
+
+--- Turn 4  |  Player 0  |  Crystals P0=4200 P1=1400 ---
+[06:42.946] Dice rolled: 4
+[06:42.964] MSG: Miner Probe wins!
+[06:55.254] Crystals: P1 1400 → 1150 (-250)  [battle]
+[07:12.247] Attack P0(1,2)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P1(2,4)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=4  ATK=10 vs DEF=5  → WIN
+[07:12.247] Reckoning overlay: P0 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+ATK 0 (10+0=10)
+[07:12.247] Reckoning overlay: P1 "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} badge=5 ATK pill=25 DEF pill=5 mod=+DEF 0 (5+0=5)
+[07:12.247] Anim: 3A  △ P1(2,4)
+[07:12.247] Card destroyed  P1 (2,4) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[07:25.196] Revealed: P0 (0,2) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[07:25.196] Revealed: P1 (3,3) "Hypnosis" {cost 500}
+[07:30.370] Dice rolled: 5
+[07:30.373] MSG: Trap triggered: Hypnosis!
+[07:41.301] Crystals: P1 1150 → 650 (-500)  [trap cost]
+[07:53.327] MSG: Hypnosis: Mysterious Miner cannot attack until end of next turn.
+[07:59.273] Attack P0(0,2)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P1(3,3)"Hypnosis" {cost 500}  Dice=5  → Unit vs Trap
+[07:59.273] Reckoning overlay: P0 "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[07:59.273] Anim: 3D  (attacker survives)
+[08:05.490] Turn ended  P0  |  Crystals P0=4200 P1=650
+
+--- Turn 5  |  Player 1  |  Crystals P0=4200 P1=650 ---
+[08:08.177] Mode selected P1: TECH
+[08:09.659] Tech played  P1: "Tease"
+[08:16.271] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[08:22.106] Revealed: P0 (2,2) "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima}
+[08:22.106] MSG: Tease: Opponent revealed Lockpicker.
+[08:22.111] Tech resolved  P1
+[08:26.010] Mode selected P1: ATTACK
+[08:27.401] Revealed: P1 (4,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[08:27.475] 

@@ -1,0 +1,48 @@
+=== Battle of Discount Lasagna ===
+Battle started: 2026-07-25 18:04:07.704
+Game Session of Tequila Sunset (started 2026-07-25 18:03:34.957)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.672] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.049] Mode selected P1: TECH
+[00:10.348] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:13.174] Tech played  P1: "Radar"
+[00:14.729] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:15.175] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:15.524] Revealed: P0 (4,2) "Decoy Puppet" {cost 100}
+[00:15.932] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:15.978] Tech resolved  P1
+[00:16.838] Mode selected P1: ATTACK
+[00:16.841] MSG: Player 2: tap a unit to attack.
+[00:17.175] Revealed: P1 (0,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:19.063] Dice rolled: 4
+[00:19.073] MSG: Street Rogue wins!
+[00:22.940] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:27.139] Attack P1(0,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=4  ATK=25 vs DEF=20  → WIN
+[00:27.139] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:27.139] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:27.139] Anim: 3A  △ P0(4,0)
+[00:27.139] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:27.640] Mode selected P1: ATTACK
+[00:27.642] MSG: Player 2: tap a unit to attack.
+[00:27.984] Revealed: P1 (0,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:29.908] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:31.091] Dice rolled: 3
+[00:34.905] Crystals: P1 2400 → 2150 (-250)  [battle]
+[00:37.742] Attack P1(0,4)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=30 vs DEF=40  → LOSE
+[00:37.742] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[00:37.742] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:37.742] Anim: 3B  △ P1(0,4)
+[00:37.742] Card destroyed  P1 (0,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:38.249] Turn ended  P1  |  Crystals P0=4300 P1=2150
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=2150 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4300  P1: 2150  |  Turns: 2

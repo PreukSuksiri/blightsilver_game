@@ -1,0 +1,16 @@
+=== Battle of Sneezing Panda ===
+Battle started: 2026-08-04 16:43:28.373
+Game Session of Horchata (started 2026-08-04 16:40:26.750)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:15.649] MSG: Open Book: foe Offensive — Sleeping Dragon
+[00:15.665] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 5000  P1: 3000  |  Turns: 1

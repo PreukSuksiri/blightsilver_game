@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://tmp_tc_check"]
+[ext_resource type="Script" path="res://trash/_tc.gd" id="1"]
+[node name="TC" type="Node"]
+script = ExtResource("1")

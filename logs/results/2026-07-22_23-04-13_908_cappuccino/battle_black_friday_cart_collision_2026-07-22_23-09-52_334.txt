@@ -1,0 +1,15 @@
+=== Battle of Black Friday Cart Collision ===
+Battle started: 2026-07-22 23:09:52.334
+Game Session of Cappuccino (started 2026-07-22 23:04:13.908)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.288] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 5000  P1: 3000  |  Turns: 1

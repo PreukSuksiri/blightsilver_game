@@ -1,0 +1,62 @@
+=== Battle of Wet Jeans Commute ===
+Battle started: 2026-07-27 18:16:59.930
+Game Session of Raspberry Iced Tea (started 2026-07-27 18:05:53.452)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:12.475] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:17.842] Mode selected P1: TECH
+[00:18.149] Tech played  P1: "Spy"
+[00:19.697] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:20.141] Revealed: P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:20.144] Tech resolved  P1
+[00:21.006] Mode selected P1: ATTACK
+[00:21.010] MSG: Player 2: tap a unit to attack.
+[00:21.328] Revealed: P1 (3,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:23.219] Dice rolled: 1
+[00:23.229] MSG: Tomb Bandit wins!
+[00:27.725] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:31.924] Attack P1(3,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=1  ATK=75 vs DEF=55  → WIN
+[00:31.924] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[00:31.924] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[00:31.925] Anim: 3A  △ P0(0,2)
+[00:31.925] Card destroyed  P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:32.430] Mode selected P1: ATTACK
+[00:32.434] MSG: Player 2: tap a unit to attack.
+[00:32.767] Revealed: P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:34.645] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:35.871] Dice rolled: 2
+[00:35.875] MSG: Trap triggered: Trap Hole!
+[00:40.030] Coin flip: Tails, Heads, Tails
+[00:42.783] MSG: Trap Hole: Tails, Heads, Tails.
+[00:42.784] Crystals: P1 3000 → 2980 (-20)  [trap]
+[00:44.550] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[00:45.926] Attack P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[00:45.926] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:45.926] Anim: 3D  (attacker survives)
+[00:46.405] Turn ended  P1  |  Crystals P0=4200 P1=2980
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=2980 ---
+[00:54.397] Revealed: P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:55.615] Dice rolled: 5
+[00:55.629] MSG: Scout Probe wins!
+[00:58.192] Crystals: P1 2980 → 2180 (-800)  [battle]
+[01:02.368] Attack P0(1,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=5  ATK=40 vs DEF=35  → WIN
+[01:02.368] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:02.368] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:02.368] Anim: 3A  △ P1(0,1)
+[01:02.368] Card destroyed  P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:02.369] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[01:02.405] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:05.234] Revealed: P1 (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[01:05.235] MSG: Scout Probe: adjacent cell revealed.
+[01:11.217] MSG: Tap 2 material card(s) on the field.
+[01:12.070] MSG: 1 more material(s) needed.
+[01:13.136] Crystals: P0 4200 → 3700 (-500)  [union]
+[01:15.964] Revealed: P0 (1,3) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:16.020] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 

@@ -1,0 +1,47 @@
+=== Battle of Autocorrect Apology Tour ===
+Battle started: 2026-07-03 06:22:26.395
+Game Session of Chocolate Shake (started 2026-07-03 06:22:08.437)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.692] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.091] Mode selected P1: TECH
+[00:10.389] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:14.213] Tech played  P1: "Radar"
+[00:15.769] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.388] Dead-end placed  P0 (4,1)
+[00:16.604] Revealed: P0 (2,2) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:17.003] Revealed: P0 (3,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:17.007] Tech resolved  P1
+[00:17.871] Mode selected P1: ATTACK
+[00:17.878] MSG: Player 2: tap a unit to attack.
+[00:18.243] Revealed: P1 (1,4) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[00:20.096] Dice rolled: 4
+[00:20.130] MSG: Rotten Shrieker wins!
+[00:24.565] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:29.798] Attack P1(1,4)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P0(3,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=4  ATK=40 vs DEF=30  → WIN
+[00:29.798] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:29.798] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:29.798] Anim: 3A  △ P0(3,2)
+[00:29.798] Card destroyed  P0 (3,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:30.289] Mode selected P1: ATTACK
+[00:30.293] MSG: Player 2: tap a unit to attack.
+[00:30.642] Revealed: P1 (0,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:32.522] Revealed: P0 (1,2) "Spike Trap" {cost 1500}
+[00:33.734] Dice rolled: 1
+[00:33.750] MSG: Trap triggered: Spike Trap!
+[00:38.754] Crystals: P0 4620 → 3120 (-1500)  [trap cost]
+[00:42.606] Crystals: P1 2400 → 2200 (-200)  [card lost]
+[00:47.084] MSG: Spike Trap: Vile Creeper destroyed!
+[00:47.093] Attack P1(0,4)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(1,2)"Spike Trap" {cost 1500}  Dice=1  → Unit vs Trap
+[00:47.093] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=10 ATK pill=10 DEF pill=30 mod=+ATK 0 (10+0=10)
+[00:47.093] Anim: 3E  △ P1(0,4)
+[00:47.580] MSG: Ability triggered: "Rotten Shrieker" (perm atk loss per own turn)
+[00:49.125] Turn ended  P1  |  Crystals P0=3120 P1=2200
+
+--- Turn 2  |  Player 0  |  Crystals P0=3120 P1=2200 ---

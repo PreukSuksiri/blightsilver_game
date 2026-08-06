@@ -1,0 +1,38 @@
+=== Battle of Windshield Bug Stare-Down ===
+Battle started: 2026-07-26 17:22:29.149
+Game Session of Mocha (started 2026-07-26 17:09:11.635)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.613] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.014] Mode selected P1: TECH
+[00:11.311] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:14.137] Tech played  P1: "Radar"
+[00:15.684] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.323] Dead-end placed  P0 (1,4)
+[00:16.723] Dead-end placed  P0 (0,1)
+[00:16.918] Revealed: P0 (3,3) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:16.921] Tech resolved  P1
+[00:17.795] Mode selected P1: ATTACK
+[00:17.799] MSG: Player 2: tap a unit to attack.
+[00:18.126] Revealed: P1 (1,1) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:20.030] Dice rolled: 3
+[00:20.039] MSG: War Genie wins!
+[00:24.528] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:28.749] Attack P1(1,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(3,3)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}  Dice=3  ATK=100 vs DEF=40  → WIN
+[00:28.749] Reckoning overlay: P1 "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} badge=100 ATK pill=100 DEF pill=80 mod=+ATK 0 (100+0=100)
+[00:28.749] Reckoning overlay: P0 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=40 ATK pill=20 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:28.749] Anim: 3A  △ P0(3,3)
+[00:28.749] Card destroyed  P0 (3,3) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:29.234] Mode selected P1: ATTACK
+[00:29.237] MSG: Player 2: tap a unit to attack.
+[00:29.597] Revealed: P1 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[00:31.510] Revealed: P0 (3,1) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:32.698] Dice rolled: 2
+[00:32.708] MSG: Spell Sniper wins!
+[00:36.065] Crystals: P0 4620 → 4240 (-380)  [battle]

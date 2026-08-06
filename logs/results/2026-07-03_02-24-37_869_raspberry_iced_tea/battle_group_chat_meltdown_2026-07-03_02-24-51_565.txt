@@ -1,0 +1,215 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-07-03 02:24:51.565
+Game Session of Raspberry Iced Tea (started 2026-07-03 02:24:37.869)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:11.838] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:29.052] Revealed: P0 (4,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:29.081] Revealed: P1 (4,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:30.262] Dice rolled: 5
+[00:30.278] MSG: Flame Seraph wins!
+[00:34.514] Crystals: P1 3000 → 2700 (-300)  [battle]
+[00:39.726] Attack P0(4,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P1(4,2)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=5  ATK=50 vs DEF=15  → WIN
+[00:39.726] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[00:39.726] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:39.726] Anim: 3A  △ P1(4,2)
+[00:39.726] Card destroyed  P1 (4,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:42.923] Revealed: P0 (2,0) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:44.147] Dice rolled: 2
+[00:44.173] MSG: Nothing happens — Dead End.
+[00:47.149] Attack P0(2,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[00:47.149] Anim: 3F  (blank slot)
+[00:47.149] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[00:47.169] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:49.156] MSG: Scout Probe: adjacent cell revealed (empty).
+[00:49.496] Dead-end placed  P1 (2,1)
+[00:51.343] Turn ended  P0  |  Crystals P0=5000 P1=2700
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2700 ---
+[00:51.951] Mode selected P1: TECH
+[00:52.258] Tech played  P1: "Spy"
+[00:53.801] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:54.200] Revealed: P0 (1,2) "Spike Trap" {cost 1500}
+[00:54.228] Tech resolved  P1
+[00:55.106] Mode selected P1: ATTACK
+[00:55.109] MSG: Player 2: tap a unit to attack.
+[00:55.433] Revealed: P1 (4,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:57.344] Dice rolled: 3
+[00:57.359] MSG: Mafia Associates wins!
+[01:00.814] Crystals: P0 5000 → 4500 (-500)  [battle]
+[01:06.032] Attack P1(4,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(4,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=3  ATK=45 vs DEF=10  → WIN
+[01:06.032] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[01:06.032] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=10 ATK pill=50 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:06.032] Anim: 3A  △ P0(4,0)
+[01:06.032] Card destroyed  P0 (4,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:06.529] Mode selected P1: ATTACK
+[01:06.534] MSG: Player 2: tap a unit to attack.
+[01:06.863] Revealed: P1 (4,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:08.764] Revealed: P0 (2,3) "Decoy Puppet" {cost 100}
+[01:09.985] Dice rolled: 1
+[01:10.000] MSG: Trap triggered: Decoy Puppet!
+[01:14.074] Crystals: P0 4500 → 4400 (-100)  [trap cost]
+[01:17.915] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:19.292] Attack P1(4,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(2,3)"Decoy Puppet" {cost 100}  Dice=1  → Unit vs Trap
+[01:19.292] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[01:19.292] Anim: 3D  (attacker survives)
+[01:19.791] MSG: Ability triggered: "Mafia Associates" (def zero when exposed)
+[01:21.341] MSG: Mafia Associates: DEF becomes 0 at end of expose turn.
+[01:21.344] Turn ended  P1  |  Crystals P0=4400 P1=2700
+
+--- Turn 3  |  Player 0  |  Crystals P0=4400 P1=2700 ---
+[01:47.219] Dice rolled: 4
+[01:47.236] MSG: Scout Probe wins!
+[01:49.850] Crystals: P1 2700 → 2200 (-500)  [battle]
+[01:55.063] Attack P0(2,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,1)"Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}  Dice=4  ATK=40 vs DEF=0  → WIN
+[01:55.063] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:55.063] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0} badge=0 ATK pill=45 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:55.063] Anim: 3A  △ P1(4,1)
+[01:55.063] Card destroyed  P1 (4,1) "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}
+[01:55.064] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[01:55.082] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:56.959] MSG: Scout Probe: adjacent cell revealed (empty).
+[01:57.298] Dead-end placed  P1 (3,1)
+[02:01.588] Revealed: P0 (1,1) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[02:02.812] Dice rolled: 4
+[02:02.829] MSG: Mad Wyvern wins!
+[02:05.485] Crystals: P1 2200 → 1850 (-350)  [battle]
+[02:10.709] Attack P0(1,1)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(4,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=4  ATK=65 vs DEF=20  → WIN
+[02:10.709] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[02:10.709] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:10.709] Anim: 3A  △ P1(4,0)
+[02:10.709] Card destroyed  P1 (4,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:12.005] Turn ended  P0  |  Crystals P0=4400 P1=1850
+
+--- Turn 4  |  Player 1  |  Crystals P0=4400 P1=1850 ---
+[02:12.601] Mode selected P1: TECH
+[02:12.910] Tech played  P1: "Bribe"
+[02:14.462] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:16.227] MSG: Bribe: Opponent passed.
+[02:16.231] Tech resolved  P1
+[02:17.127] Mode selected P1: ATTACK
+[02:17.129] MSG: Player 2: tap a unit to attack.
+[02:17.450] Revealed: P1 (0,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:19.367] Revealed: P0 (3,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[02:20.576] Dice rolled: 3
+[02:20.590] MSG: Shepherd Detective wins!
+[02:24.960] Crystals: P0 4400 → 4020 (-380)  [battle]
+[02:30.175] Attack P1(0,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(3,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=40 vs DEF=30  → WIN
+[02:30.175] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:30.175] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:30.175] Anim: 3A  △ P0(3,2)
+[02:30.175] Card destroyed  P0 (3,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[02:30.176] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[02:30.194] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:32.144] Revealed: P0 (3,0) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[02:32.144] MSG: Revealed: Black Worms
+[02:32.627] Mode selected P1: ATTACK
+[02:32.630] MSG: Player 2: tap a unit to attack.
+[02:32.953] Revealed: P1 (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:34.872] Revealed: P0 (2,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:36.078] Dice rolled: 4
+[02:38.901] Crystals: P1 1850 → 1700 (-150)  [battle]
+[02:42.754] Attack P1(0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(2,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=0 vs DEF=45  → LOSE
+[02:42.754] Reckoning overlay: P1 "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} badge=0 ATK pill=0 DEF pill=35 mod=+ATK 0 (0+0=0)
+[02:42.754] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[02:42.754] Anim: 3B  △ P1(0,2)
+[02:42.754] Card destroyed  P1 (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:43.242] Turn ended  P1  |  Crystals P0=4020 P1=1700
+
+--- Turn 5  |  Player 0  |  Crystals P0=4020 P1=1700 ---
+[02:48.624] MSG: Tap 3 material card(s) on the field.
+[02:48.921] MSG: 2 more material(s) needed.
+[02:54.414] MSG: Tap 3 material card(s) on the field.
+[02:54.647] MSG: 2 more material(s) needed.
+[02:55.580] MSG: 1 more material(s) needed.
+[02:56.381] Crystals: P0 4020 → 3220 (-800)  [union]
+[03:00.210] Revealed: P0 (0,0) "Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[03:00.244] Union summoned P0: "Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}, "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down}
+[03:00.247] MSG: Player 1 summoned [Katana Shark] using: "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}, "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down}
+[03:09.954] Dice rolled: 3
+[03:10.016] MSG: Katana Shark wins!
+[03:13.113] Crystals: P1 1700 → 1300 (-400)  [battle]
+[03:18.329] Attack P0(0,0)"Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(0,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=3  ATK=105 vs DEF=25  → WIN
+[03:18.329] Reckoning overlay: P0 "Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=105 ATK pill=105 DEF pill=50 mod=+ATK 0 (105+0=105)
+[03:18.329] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:18.329] Anim: 3A  △ P1(0,0)
+[03:18.329] Card destroyed  P1 (0,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:26.380] Dice rolled: 5
+[03:26.404] MSG: Nothing happens — Dead End.
+[03:29.591] Attack P0(2,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,3)(empty)  Dice=5  → DEAD_END
+[03:29.591] Anim: 3F  (blank slot)
+[03:29.591] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[03:29.610] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[03:31.451] MSG: Scout Probe: adjacent cell revealed (empty).
+[03:31.692] Dead-end placed  P1 (1,3)
+[03:35.416] Turn ended  P0  |  Crystals P0=3220 P1=1300
+
+--- Turn 6  |  Player 1  |  Crystals P0=3220 P1=1300 ---
+[03:36.027] Mode selected P1: ATTACK
+[03:36.030] MSG: Player 2: tap a unit to attack.
+[03:36.346] Revealed: P1 (3,4) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[03:38.250] Dice rolled: 3
+[03:38.308] MSG: Kiyoko the Death Whisper wins!
+[03:44.119] Attack P1(3,4)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(0,0)"Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature}  Dice=3  ATK=90 vs DEF=50  → WIN
+[03:44.119] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=90 ATK pill=40 DEF pill=35 mod=+ATK 50 (40+50=90)
+[03:44.119] Reckoning overlay: P0 "Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=50 ATK pill=105 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:44.119] Anim: 3A  △ P0(0,0)
+[03:44.119] Card destroyed  P0 (0,0) "Katana Shark" {Union ATK105 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[03:44.614] Mode selected P1: ATTACK
+[03:44.621] MSG: Player 2: tap a unit to attack.
+[03:44.957] Revealed: P1 (4,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:46.842] Revealed: P0 (2,4) "Pepper Spray" {cost 0}
+[03:48.063] Dice rolled: 3
+[03:48.077] MSG: Trap triggered: Pepper Spray!
+[03:50.790] Coin flip: Heads, Tails
+[03:53.555] MSG: Pepper Spray: Heads, Tails.
+[03:53.555] MSG: Pepper Spray: 1 head(s) — Big Thug -5 ATK until next turn ends!
+[03:54.937] Attack P1(4,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(2,4)"Pepper Spray" {cost 0}  Dice=3  → Unit vs Trap
+[03:54.937] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[03:54.937] Anim: 3D  (attacker survives)
+[03:55.424] Turn ended  P1  |  Crystals P0=3220 P1=1300
+
+--- Turn 7  |  Player 0  |  Crystals P0=3220 P1=1300 ---
+[04:04.918] Dice rolled: 5
+[04:04.932] MSG: Mad Wyvern wins!
+[04:07.495] Crystals: P1 1300 → 500 (-800)  [battle]
+[04:12.709] Attack P0(1,1)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(3,4)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=5  ATK=65 vs DEF=35  → WIN
+[04:12.709] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[04:12.709] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:12.709] Anim: 3A  △ P1(3,4)
+[04:12.709] Card destroyed  P1 (3,4) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[04:18.480] Dice rolled: 3
+[04:18.496] MSG: Aerial the Battlemage wins!
+[04:21.854] Crystals: P1 500 → 100 (-400)  [battle]
+[04:27.078] Attack P0(2,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(4,3)"Big Thug" {Unit ATK35 DEF35 | cost 400 | affinity Anima | base 40/35}  Dice=3  ATK=50 vs DEF=35  → WIN
+[04:27.078] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[04:27.078] Reckoning overlay: P1 "Big Thug" {Unit ATK35 DEF35 | cost 400 | affinity Anima | base 40/35} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:27.078] Anim: 3A  △ P1(4,3)
+[04:27.078] Card destroyed  P1 (4,3) "Big Thug" {Unit ATK35 DEF35 | cost 400 | affinity Anima | base 40/35}
+[04:28.095] Turn ended  P0  |  Crystals P0=3220 P1=100
+
+--- Turn 8  |  Player 1  |  Crystals P0=3220 P1=100 ---
+[04:28.697] Mode selected P1: ATTACK
+[04:28.699] MSG: Player 2: tap a unit to attack.
+[04:29.039] Revealed: P1 (0,3) "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima}
+[04:30.221] MSG: Ability triggered: "Lockpicker" (on expose reveal foe once)
+[04:30.242] Target prompt: "Lockpicker: Choose 1 foe cell to reveal."  filter=ability_lockpicker_reveal
+[04:30.954] Revealed: P0 (2,2) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[04:32.155] Dice rolled: 1
+[04:32.195] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[04:32.195] MSG: Lockpicker: Revealed Hard Scale!
+[04:36.755] Crystals: P1 100 → 0 (-100)  [battle]
+[04:40.604] Attack P1(0,3)"Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used} → P0(2,2)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}  Dice=1  ATK=30 vs DEF=40  → LOSE
+[04:40.604] Reckoning overlay: P1 "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used} badge=30 ATK pill=30 DEF pill=35 mod=+ATK 0 (30+0=30)
+[04:40.604] Reckoning overlay: P0 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=40 ATK pill=20 DEF pill=40 mod=+DEF 0 (40+0=40)
+[04:40.604] Anim: 3B  △ P1(0,3)
+[04:40.604] Card destroyed  P1 (0,3) "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3220  P1: 0  |  Turns: 8

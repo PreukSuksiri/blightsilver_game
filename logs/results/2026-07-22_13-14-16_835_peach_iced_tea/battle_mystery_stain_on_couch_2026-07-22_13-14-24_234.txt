@@ -1,0 +1,34 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-07-22 13:14:24.233
+Game Session of Peach Iced Tea (started 2026-07-22 13:14:16.835)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.145] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.539] Mode selected P1: TECH
+[00:08.847] Tech played  P1: "Spy"
+[00:10.458] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.138] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:13.674] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:13.677] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.078] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:14.113] Tech resolved  P1
+[00:14.998] Mode selected P1: ATTACK
+[00:15.003] MSG: Player 2: tap a unit to attack.
+[00:15.303] Revealed: P1 (0,4) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:17.204] Dice rolled: 1
+[00:17.235] MSG: Wandering Swordsman wins!
+[00:21.694] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:26.910] Attack P1(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=1  ATK=60 vs DEF=25  → WIN
+[00:26.910] Reckoning overlay: P1 "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[00:26.910] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:26.910] Anim: 3A  △ P0(3,2)
+[00:26.910] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:29.412] Turn ended  P1  |  Crystals P0=4820 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=3000 ---

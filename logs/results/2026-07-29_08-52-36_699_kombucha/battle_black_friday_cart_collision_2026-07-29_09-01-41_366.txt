@@ -1,0 +1,16 @@
+=== Battle of Black Friday Cart Collision ===
+Battle started: 2026-07-29 09:01:41.366
+Game Session of Kombucha (started 2026-07-29 08:52:36.699)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.134] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:17.376] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 5000  P1: 0  |  Turns: 1

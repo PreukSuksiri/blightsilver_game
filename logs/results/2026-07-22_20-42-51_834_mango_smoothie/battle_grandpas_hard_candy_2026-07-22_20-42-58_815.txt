@@ -1,0 +1,48 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-07-22 20:42:58.815
+Game Session of Mango Smoothie (started 2026-07-22 20:42:51.834)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.273] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.670] Mode selected P1: TECH
+[00:08.953] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.780] Tech played  P1: "Radar"
+[00:14.414] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.070] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.611] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:17.615] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.255] Dead-end placed  P0 (3,0)
+[00:18.453] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:18.862] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:18.866] Tech resolved  P1
+[00:19.726] Mode selected P1: ATTACK
+[00:19.730] MSG: Player 2: tap a unit to attack.
+[00:20.061] Revealed: P1 (0,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:21.952] Dice rolled: 4
+[00:21.962] MSG: Spear Shark wins!
+[00:25.579] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:30.798] Attack P1(0,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=4  ATK=50 vs DEF=15  → WIN
+[00:30.798] Reckoning overlay: P1 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[00:30.798] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:30.798] Anim: 3A  △ P0(2,4)
+[00:30.798] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:33.302] Turn ended  P1  |  Crystals P0=4750 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=2400 ---
+[00:40.129] Dice rolled: 2
+[00:40.137] MSG: Grand Fort Footsoldier wins!
+[00:42.749] Crystals: P1 2400 → 1920 (-480)  [battle]
+[00:47.985] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=2  ATK=25 vs DEF=20  → WIN
+[00:47.985] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:47.985] Reckoning overlay: P1 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:47.985] Anim: 3A  △ P1(0,1)
+[00:47.985] Card destroyed  P1 (0,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4750  P1: 1920  |  Turns: 2

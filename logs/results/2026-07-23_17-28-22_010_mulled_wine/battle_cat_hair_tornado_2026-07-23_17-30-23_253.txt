@@ -1,0 +1,49 @@
+=== Battle of Cat Hair Tornado ===
+Battle started: 2026-07-23 17:30:23.253
+Game Session of Mulled Wine (started 2026-07-23 17:28:22.010)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:39.426] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:44.777] Mode selected P1: TECH
+[00:45.078] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:47.904] Tech played  P1: "Radar"
+[00:49.466] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:50.099] Dead-end placed  P0 (3,0)
+[00:50.258] Revealed: P0 (4,2) "Decoy Puppet" {cost 100}
+[00:50.660] Tech resolved  P1
+[00:50.899] Dead-end placed  P0 (4,3)
+[00:51.567] Mode selected P1: ATTACK
+[00:51.570] MSG: Player 2: tap a unit to attack.
+[00:51.904] Revealed: P1 (0,0) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[00:53.810] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:55.011] Dice rolled: 3
+[00:55.019] MSG: Zealot wins!
+[00:58.388] Crystals: P0 5000 → 4620 (-380)  [battle]
+[01:02.654] Attack P1(0,0)"Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima} → P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=75 vs DEF=30  → WIN
+[01:02.654] Reckoning overlay: P1 "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima} badge=75 ATK pill=75 DEF pill=50 mod=+ATK 0 (75+0=75)
+[01:02.654] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:02.654] Anim: 3A  △ P0(1,2)
+[01:02.654] Card destroyed  P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[01:03.151] Mode selected P1: ATTACK
+[01:03.156] MSG: Player 2: tap a unit to attack.
+[01:03.500] Revealed: P1 (0,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:05.417] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:06.601] Dice rolled: 2
+[01:11.207] Crystals: P1 2400 → 2250 (-150)  [battle]
+[01:14.100] Attack P1(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=2  ATK=0 vs DEF=40  → LOSE
+[01:14.101] Reckoning overlay: P1 "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} badge=0 ATK pill=0 DEF pill=35 mod=+ATK 0 (0+0=0)
+[01:14.101] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:14.101] Anim: 3B  △ P1(0,1)
+[01:14.101] Card destroyed  P1 (0,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:14.549] Turn ended  P1  |  Crystals P0=4620 P1=2250
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=2250 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4620  P1: 2250  |  Turns: 2

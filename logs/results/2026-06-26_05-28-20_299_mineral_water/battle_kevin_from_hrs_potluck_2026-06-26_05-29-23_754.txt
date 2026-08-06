@@ -1,0 +1,106 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-06-26 05:29:23.754
+Game Session of Mineral Water (started 2026-06-26 05:28:20.299)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:27.371] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:47.701] Mode selected P1: TECH
+[00:48.897] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:59.864] Tech played  P1: "Radar"
+[01:05.758] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:07.401] Revealed: P0 (3,3) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[01:09.921] Dead-end placed  P0 (3,0)
+[01:10.564] Revealed: P0 (0,2) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:10.566] Tech resolved  P1
+[01:14.168] Mode selected P1: ATTACK
+[01:14.170] MSG: Player 2: tap a unit to attack.
+[01:15.459] Revealed: P1 (3,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:23.513] Dice rolled: 5
+[01:23.531] MSG: Scarlet Mutant wins!
+[01:35.155] Crystals: P0 5000 → 4900 (-100)  [battle]
+[01:51.701] Attack P1(3,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(0,2)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}  Dice=5  ATK=35 vs DEF=10  → WIN
+[01:51.702] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=35 ATK pill=35 DEF pill=30 mod=+ATK 0 (35+0=35)
+[01:51.702] Reckoning overlay: P0 "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:51.702] Anim: 3A  △ P0(0,2)
+[01:51.702] Card destroyed  P0 (0,2) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:53.801] Mode selected P1: ATTACK
+[01:53.803] MSG: Player 2: tap a unit to attack.
+[01:55.118] Revealed: P1 (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[02:03.168] Revealed: P0 (4,0) "Decoy Puppet" {cost 100}
+[02:08.274] Dice rolled: 2
+[02:08.287] MSG: Trap triggered: Decoy Puppet!
+[02:18.918] Crystals: P0 4900 → 4800 (-100)  [trap cost]
+[02:30.580] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[02:36.402] Attack P1(2,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(4,0)"Decoy Puppet" {cost 100}  Dice=2  → Unit vs Trap
+[02:36.402] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[02:36.402] Anim: 3D  (attacker survives)
+[02:38.560] Turn ended  P1  |  Crystals P0=4800 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4800 P1=4400 ---
+[03:10.300] Revealed: P0 (4,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[03:15.097] Dice rolled: 4
+[03:15.109] MSG: White Tiger wins!
+[03:26.790] Crystals: P1 4400 → 4050 (-350)  [battle]
+[03:43.539] Attack P0(4,2)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → P1(3,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=4  ATK=40 vs DEF=30  → WIN
+[03:43.539] Reckoning overlay: P0 "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:43.539] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=30 ATK pill=35 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:43.539] Anim: 3A  △ P1(3,1)
+[03:43.539] Card destroyed  P1 (3,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[04:02.725] MSG: Tap 2 material card(s) on the field.
+[04:07.725] MSG: 1 more material(s) needed.
+[04:09.101] Crystals: P0 4800 → 3300 (-1500)  [union]
+[04:20.766] Revealed: P0 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[04:20.796] Union summoned P0: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[04:20.796] MSG: Player 1 summoned [Barros the Colossal] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[04:48.751] Dice rolled: 1
+[04:48.806] MSG: Barros the Colossal wins!
+[05:01.118] Crystals: P1 4050 → 3250 (-800)  [battle]
+[05:18.822] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(2,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}  Dice=1  ATK=150 vs DEF=85  → WIN
+[05:18.822] Reckoning overlay: P0 "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=130 mod=+ATK 0 (150+0=150)
+[05:18.822] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=85 ATK pill=20 DEF pill=85 mod=+DEF 0 (85+0=85)
+[05:18.822] Anim: 3A  △ P1(2,1)
+[05:18.822] Card destroyed  P1 (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[05:25.295] Turn ended  P0  |  Crystals P0=3300 P1=3250
+
+--- Turn 3  |  Player 1  |  Crystals P0=3300 P1=3250 ---
+[05:33.492] Crystals: P1 3250 → 2750 (-500)  [union]
+[05:44.452] Revealed: P1 (1,1) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[05:44.476] Union summoned P1: "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} from "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[05:44.476] MSG: Player 2 summoned [Gamma Mermaid] using: "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[05:46.959] MSG: [DEBUG] Bot Player timed out — ending turn.
+[05:46.960] Turn ended  P1  |  Crystals P0=3300 P1=2750
+
+--- Turn 4  |  Player 0  |  Crystals P0=3300 P1=2750 ---
+[05:58.022] Mode selected P0: ATTACK
+[05:58.027] MSG: Player 1: tap a unit to attack.
+[06:35.733] Revealed: P0 (3,2) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[06:46.322] Coin flip: Heads
+[06:57.100] Revealed: P1 (2,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[07:01.914] Dice rolled: 4
+[07:01.927] MSG: Lazy Troll wins!
+[07:13.498] Crystals: P1 2750 → 2430 (-320)  [battle]
+[07:30.068] Attack P0(3,2)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P1(2,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=4  ATK=120 vs DEF=20  → WIN
+[07:30.068] Reckoning overlay: P0 "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} badge=120 ATK pill=120 DEF pill=60 mod=+ATK 0 (120+0=120)
+[07:30.068] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:30.068] Anim: 3A  △ P1(2,2)
+[07:30.068] Card destroyed  P1 (2,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[07:57.794] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[08:02.835] Dice rolled: 1
+[08:02.890] MSG: Armored Bee wins!
+[08:20.981] Attack P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(1,1)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}  Dice=1  ATK=30 vs DEF=20  → WIN
+[08:20.981] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} badge=30 ATK pill=30 DEF pill=0 mod=+ATK 0 (30+0=30)
+[08:20.981] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:20.981] Anim: 3A  △ P1(1,1)
+[08:20.981] Card destroyed  P1 (1,1) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[08:27.350] Turn ended  P0  |  Crystals P0=3300 P1=2430
+
+--- Turn 5  |  Player 1  |  Crystals P0=3300 P1=2430 ---
+[08:29.643] Mode selected P1: ATTACK
+[08:29.645] MSG: Player 2: tap a unit to attack.
+[08:30.869] Revealed: P1 (2,3) "Bladeshifter" {Unit 

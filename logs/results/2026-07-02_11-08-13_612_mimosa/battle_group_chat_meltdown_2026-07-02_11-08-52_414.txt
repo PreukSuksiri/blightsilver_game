@@ -1,0 +1,126 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-07-02 11:08:52.414
+Game Session of Mimosa (started 2026-07-02 11:08:13.612)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:09.525] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:14.867] Mode selected P1: TECH
+[00:15.178] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:18.002] Tech played  P1: "Radar"
+[00:19.558] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:19.955] Revealed: P0 (4,2) "Acid Trap Hole" {cost 0}
+[00:20.387] Revealed: P0 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:20.761] Revealed: P0 (1,4) "Spike Trap" {cost 1500}
+[00:20.785] Tech resolved  P1
+[00:21.664] Mode selected P1: ATTACK
+[00:21.667] MSG: Player 2: tap a unit to attack.
+[00:21.984] Revealed: P1 (4,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:23.893] Dice rolled: 2
+[00:23.928] MSG: Pyromancer wins!
+[00:28.447] Crystals: P0 5000 → 4400 (-600)  [battle]
+[00:32.655] Attack P1(4,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=2  ATK=80 vs DEF=60  → WIN
+[00:32.655] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=80 ATK pill=80 DEF pill=0 mod=+ATK 0 (80+0=80)
+[00:32.655] Reckoning overlay: P0 "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} badge=60 ATK pill=60 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:32.655] Anim: 3A  △ P0(3,2)
+[00:32.655] Card destroyed  P0 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:35.163] Turn ended  P1  |  Crystals P0=4400 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4400 P1=4400 ---
+[02:14.118] Revealed: P0 (1,3) "WK-17 the Siren" {Unit ATK10 DEF25 | cost 200 | affinity Bio}
+[02:15.702] Coin flip: Heads, Tails
+[02:18.710] Dice rolled: 4
+[02:18.732] MSG: Nothing happens — Dead End.
+[02:22.385] Attack P0(1,3)"WK-17 the Siren" {Unit ATK10 DEF25 | cost 200 | affinity Bio} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[02:22.386] Anim: 3F  (blank slot)
+[02:37.118] Revealed: P0 (2,3) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[02:37.146] Revealed: P1 (2,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[02:38.339] Dice rolled: 1
+[02:38.393] MSG: Laughing Granny wins!
+[02:41.064] Crystals: P1 4400 → 4000 (-400)  [battle]
+[02:45.276] Attack P0(2,3)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P1(2,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=1  ATK=25 vs DEF=20  → WIN
+[02:45.276] Reckoning overlay: P0 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} badge=25 ATK pill=15 DEF pill=20 mod=+ATK 10 (15+10=25)
+[02:45.276] Reckoning overlay: P1 "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:45.276] Anim: 3A  △ P1(2,1)
+[02:45.276] Card destroyed  P1 (2,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[02:47.719] Turn ended  P0  |  Crystals P0=4400 P1=4000
+
+--- Turn 3  |  Player 1  |  Crystals P0=4400 P1=4000 ---
+[02:48.311] Mode selected P1: TECH
+[02:48.624] Tech played  P1: "Tease"
+[02:50.175] MSG: Opponent must choose and reveal 1 of their squares.
+[02:50.414] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:54.915] Revealed: P0 (1,2) "Venom Toad" {Unit ATK15 DEF20 | cost 400 | affinity Nature}
+[02:54.916] MSG: Tease: Opponent revealed Venom Toad.
+[02:54.923] Tech resolved  P1
+[02:55.798] Mode selected P1: ATTACK
+[02:55.800] MSG: Player 2: tap a unit to attack.
+[02:56.999] Dice rolled: 3
+[02:57.015] MSG: Pyromancer wins!
+[03:00.239] Crystals: P0 4400 → 4000 (-400)  [battle]
+[03:03.086] MSG: Venom Toad: Venom on Pyromancer.
+[03:04.483] Attack P1(4,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(1,2)"Venom Toad" {Unit ATK15 DEF20 | cost 400 | affinity Nature}  Dice=3  ATK=110 vs DEF=20  → WIN
+[03:04.483] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=110 ATK pill=80 DEF pill=0 mod=+ATK 30 (80+30=110)
+[03:04.483] Reckoning overlay: P0 "Venom Toad" {Unit ATK15 DEF20 | cost 400 | affinity Nature} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:04.483] Anim: 3A  △ P0(1,2)
+[03:04.483] Card destroyed  P0 (1,2) "Venom Toad" {Unit ATK15 DEF20 | cost 400 | affinity Nature}
+[03:06.997] Turn ended  P1  |  Crystals P0=4000 P1=4000
+
+--- Turn 4  |  Player 0  |  Crystals P0=4000 P1=4000 ---
+[03:18.392] Coin flip: Tails, Tails
+[03:21.145] MSG: WK-17 the Siren: Both tails — destroyed!
+[03:21.148] Card destroyed  P0 (1,3) "WK-17 the Siren" {Unit ATK10 DEF25 | cost 200 | affinity Bio}
+[03:21.156] Attack aborted
+[03:43.854] Revealed: P0 (0,2) "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}
+[03:45.077] Dice rolled: 5
+[03:45.099] MSG: Vicious Lizard wins!
+[03:48.388] Crystals: P1 4000 → 3100 (-900)  [battle]
+[03:52.584] Attack P0(0,2)"Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} → P1(4,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | flags:venom}  Dice=5  ATK=100 vs DEF=0  → WIN
+[03:52.584] Reckoning overlay: P0 "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} badge=100 ATK pill=40 DEF pill=25 mod=+ATK 60 (40+60=100)
+[03:52.584] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | flags:venom} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:52.584] Anim: 3A  △ P1(4,0)
+[03:52.584] Card destroyed  P1 (4,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | flags:venom}
+[03:54.009] Turn ended  P0  |  Crystals P0=4000 P1=3100
+
+--- Turn 5  |  Player 1  |  Crystals P0=4000 P1=3100 ---
+[03:54.603] Mode selected P1: TECH
+[03:54.910] Tech played  P1: "Bribe"
+[03:56.463] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[04:05.012] MSG: Bribe: Opponent passed.
+[04:05.019] Tech resolved  P1
+[04:05.918] Mode selected P1: ATTACK
+[04:05.920] MSG: Player 2: tap a unit to attack.
+[04:06.250] Revealed: P1 (0,4) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[04:08.141] Dice rolled: 2
+[04:08.160] MSG: Blue Mage: Two heads — Vicious Lizard is destroyed!
+[04:08.202] Coin flip: Heads, Heads
+[04:11.989] Crystals: P0 4000 → 2900 (-1100)  [battle]
+[04:16.205] Attack P1(0,4)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} → P0(0,2)"Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}  Dice=2  ATK=35 vs DEF=25  → WIN
+[04:16.205] Reckoning overlay: P1 "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[04:16.205] Reckoning overlay: P0 "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:16.205] Anim: 3A  △ P0(0,2)
+[04:16.205] Card destroyed  P0 (0,2) "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}
+[04:18.711] Turn ended  P1  |  Crystals P0=2900 P1=3100
+
+--- Turn 6  |  Player 0  |  Crystals P0=2900 P1=3100 ---
+[04:33.988] Revealed: P0 (2,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[04:35.209] Dice rolled: 4
+[04:35.240] MSG: Nothing happens — Dead End.
+[04:38.150] Attack P0(2,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[04:38.150] Anim: 3F  (blank slot)
+[04:43.965] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[04:45.184] Dice rolled: 3
+[04:45.207] MSG: Nothing happens — Dead End.
+[04:46.775] Attack P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P1(3,0)(empty)  Dice=3  → DEAD_END
+[04:46.776] Anim: 3F  (blank slot)
+[04:52.977] Turn ended  P0  |  Crystals P0=2900 P1=3100
+
+--- Turn 7  |  Player 1  |  Crystals P0=2900 P1=3100 ---
+[04:53.566] Mode selected P1: ATTACK
+[04:53.569] MSG: Player 2: tap a unit to attack.
+[04:53.895] Revealed: P1 (3,1) "Book with

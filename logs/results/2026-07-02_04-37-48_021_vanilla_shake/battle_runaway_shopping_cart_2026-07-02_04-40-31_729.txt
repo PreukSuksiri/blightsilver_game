@@ -1,0 +1,61 @@
+=== Battle of Runaway Shopping Cart ===
+Battle started: 2026-07-02 04:40:31.729
+Game Session of Vanilla Shake (started 2026-07-02 04:37:48.021)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:13.501] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:29.721] MSG: Tap 3 material card(s) on the field.
+[00:36.770] MSG: Tap 3 material card(s) on the field.
+[00:37.460] MSG: 2 more material(s) needed.
+[00:37.943] MSG: 1 more material(s) needed.
+[00:38.643] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:41.470] Revealed: P0 (4,0) "Choir Lead Amber" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:41.519] Union summoned P0: "Choir Lead Amber" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[00:41.523] MSG: Player 1 summoned [Choir Lead Amber] using: "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[00:54.565] Revealed: P0 (3,3) "Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20}
+[00:55.790] Dice rolled: 4
+[00:55.836] MSG: Nothing happens — Dead End.
+[00:58.245] Attack P0(3,3)"Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20} → P1(3,2)(empty)  Dice=4  → DEAD_END
+[00:58.245] Anim: 3F  (blank slot)
+[01:04.927] Revealed: P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[01:06.115] Dice rolled: 4
+[01:06.141] MSG: Golden Senju wins!
+[01:10.611] Crystals: P1 5000 → 4800 (-200)  [battle]
+[01:14.840] Attack P0(3,3)"Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20 | multi-atk:1} → P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=4  ATK=35 vs DEF=30  → WIN
+[01:14.840] Reckoning overlay: P0 "Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20 | multi-atk:1} badge=35 ATK pill=35 DEF pill=0 mod=+ATK 0 (35+0=35)
+[01:14.840] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:14.840] Anim: 3A  △ P1(2,2)
+[01:14.840] Card destroyed  P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[01:25.200] Turn ended  P0  |  Crystals P0=4500 P1=4800
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=4800 ---
+[01:25.802] Mode selected P1: TECH
+[01:26.116] Crystals: P1 4800 → 4200 (-600)  [tech cost]
+[01:28.949] Tech played  P1: "Radar"
+[01:30.541] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[01:33.807] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:33.811] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:34.457] Dead-end placed  P0 (1,0)
+[01:34.865] Dead-end placed  P0 (3,0)
+[01:35.036] Tech resolved  P1
+[01:35.273] Dead-end placed  P0 (2,3)
+[01:35.949] Mode selected P1: ATTACK
+[01:35.953] MSG: Player 2: tap a unit to attack.
+[01:36.295] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:38.210] Dice rolled: 5
+[01:38.239] MSG: Gamma Emitter wins!
+[01:41.270] Crystals: P0 4500 → 4300 (-200)  [battle]
+[01:45.486] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(3,3)"Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20 | multi-atk:1}  Dice=5  ATK=20 vs DEF=0  → WIN
+[01:45.486] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[01:45.486] Reckoning overlay: P0 "Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20 | multi-atk:1} badge=0 ATK pill=35 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:45.486] Anim: 3A  △ P0(3,3)
+[01:45.486] Card destroyed  P0 (3,3) "Golden Senju" {Unit ATK35 DEF0 | cost 200 | affinity Divine | base 15/0 | buff +auraATK20 | multi-atk:1}
+[01:47.999] Turn ended  P1  |  Crystals P0=4300 P1=4200
+
+--- Turn 3  |  Player 0  |  Crystals P0=4300 P1=4200 ---

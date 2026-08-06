@@ -1,0 +1,185 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-07-01 13:27:28.335
+Game Session of Peppermint Tea (started 2026-07-01 13:19:23.351)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:23.090] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:37.445] Revealed: P0 (2,1) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:38.665] Dice rolled: 1
+[00:38.696] MSG: Nothing happens — Dead End.
+[00:43.425] Attack P0(2,1)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[00:43.425] Anim: 3F  (blank slot)
+[00:48.065] Revealed: P0 (0,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:49.281] Dice rolled: 1
+[00:49.313] MSG: Nothing happens — Dead End.
+[00:52.700] Attack P0(0,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(0,2)(empty)  Dice=1  → DEAD_END
+[00:52.700] Anim: 3F  (blank slot)
+[00:57.234] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[00:57.260] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:57.908] Mode selected P1: TECH
+[00:58.208] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:01.040] Tech played  P1: "Radar"
+[01:02.599] Revealed: P0 (3,0) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[01:05.849] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:05.855] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:06.290] Revealed: P0 (0,3) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:06.681] Revealed: P0 (2,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:07.049] Revealed: P0 (3,3) "Pepper Spray" {cost 0}
+[01:07.089] Tech resolved  P1
+[01:07.957] Mode selected P1: ATTACK
+[01:07.966] MSG: Player 2: tap a unit to attack.
+[01:08.291] Revealed: P1 (0,1) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:10.182] Dice rolled: 4
+[01:10.208] MSG: Mine Guard wins!
+[01:14.661] Crystals: P0 5000 → 4450 (-550)  [battle]
+[01:18.872] Attack P1(0,1)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(2,1)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=4  ATK=20 vs DEF=0  → WIN
+[01:18.872] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[01:18.872] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:18.872] Anim: 3A  △ P0(2,1)
+[01:18.872] Card destroyed  P0 (2,1) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:19.369] Mode selected P1: ATTACK
+[01:19.372] MSG: Player 2: tap a unit to attack.
+[01:19.692] Revealed: P1 (0,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:21.835] Dice rolled: 3
+[01:21.859] MSG: Nothing happens — Dead End.
+[01:26.657] Attack P1(0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[01:26.658] Anim: 3F  (blank slot)
+[01:26.687] Target prompt: "Moon Rover: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:28.592] Revealed: P0 (4,2) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[01:28.592] MSG: Revealed: Fire Elemental
+[01:29.065] Turn ended  P1  |  Crystals P0=4450 P1=2400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=2400 ---
+[02:09.253] Dice rolled: 4
+[02:09.269] MSG: Magical Butterfly wins!
+[02:11.927] Crystals: P1 2400 → 2200 (-200)  [battle]
+[02:16.137] Attack P0(3,0)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} → P1(0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=4  ATK=25 vs DEF=20  → WIN
+[02:16.137] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[02:16.137] Reckoning overlay: P1 "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:16.137] Anim: 3A  △ P1(0,0)
+[02:16.137] Card destroyed  P1 (0,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[02:18.907] Dice rolled: 2
+[02:18.922] MSG: Ponycorn wins!
+[02:21.593] Crystals: P1 2200 → 1900 (-300)  [battle]
+[02:25.803] Attack P0(2,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(0,1)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=2  ATK=25 vs DEF=15  → WIN
+[02:25.803] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[02:25.803] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[02:25.803] Anim: 3A  △ P1(0,1)
+[02:25.803] Card destroyed  P1 (0,1) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[02:27.265] Turn ended  P0  |  Crystals P0=4450 P1=1900
+
+--- Turn 4  |  Player 1  |  Crystals P0=4450 P1=1900 ---
+[02:27.918] Mode selected P1: TECH
+[02:28.225] Tech played  P1: "Bribe"
+[02:31.826] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[02:31.827] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:33.557] MSG: Bribe: Opponent passed.
+[02:33.563] Tech resolved  P1
+[02:35.943] Crystals: P1 1900 → 1400 (-500)  [union]
+[02:38.777] Revealed: P1 (1,3) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[02:38.803] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}, "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}
+[02:39.181] Revealed: P1 (0,0) "Moon Rover" {Unit ATK15 DEF20 | cost 400 (base 200) | affinity Cosmic}
+[02:39.187] MSG: Moon Tribe Shaman revived Moon Rover (cost doubled to 400)!
+[02:39.187] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}, "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}
+[02:42.601] Mode selected P1: ATTACK
+[02:42.606] MSG: Player 2: tap a unit to attack.
+[02:43.801] Dice rolled: 4
+[02:43.865] MSG: Moon Tribe Shaman wins!
+[02:47.785] Crystals: P0 4450 → 4070 (-380)  [battle]
+[02:51.994] Attack P1(1,3)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(4,2)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=4  ATK=25 vs DEF=20  → WIN
+[02:51.995] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[02:51.995] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:51.995] Anim: 3A  △ P0(4,2)
+[02:51.998] Card destroyed  P0 (4,2) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[02:52.480] Mode selected P1: ATTACK
+[02:52.484] MSG: Player 2: tap a unit to attack.
+[02:52.816] Revealed: P1 (2,1) "Lunar Wraith" {Unit ATK60 DEF20 | cost 500 | affinity Cosmic | base 30/20 | buff +auraATK30}
+[02:54.709] Dice rolled: 5
+[02:54.732] MSG: Lunar Wraith wins!
+[02:59.191] Crystals: P0 4070 → 3720 (-350)  [battle]
+[03:03.396] Attack P1(2,1)"Lunar Wraith" {Unit ATK60 DEF20 | cost 500 | affinity Cosmic | base 30/20 | buff +auraATK30} → P0(0,1)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}  Dice=5  ATK=60 vs DEF=20  → WIN
+[03:03.396] Reckoning overlay: P1 "Lunar Wraith" {Unit ATK60 DEF20 | cost 500 | affinity Cosmic | base 30/20 | buff +auraATK30} badge=60 ATK pill=60 DEF pill=20 mod=+ATK 0 (60+0=60)
+[03:03.396] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:03.396] Anim: 3A  △ P0(0,1)
+[03:03.397] Card destroyed  P0 (0,1) "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}
+[03:03.897] Turn ended  P1  |  Crystals P0=3720 P1=1400
+
+--- Turn 5  |  Player 0  |  Crystals P0=3720 P1=1400 ---
+[03:19.862] MSG: Tap 2 material card(s) on the field.
+[03:20.195] MSG: 1 more material(s) needed.
+[03:21.369] Crystals: P0 3720 → 3220 (-500)  [union]
+[03:24.197] Revealed: P0 (3,0) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[03:24.238] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20}, "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down}
+[03:24.241] MSG: Player 1 summoned [Berserk Hyena] using: "Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20}, "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down}
+[03:33.868] Dice rolled: 5
+[03:34.035] MSG: Berserk Hyena wins!
+[03:36.711] Crystals: P1 1400 → 1000 (-400)  [battle]
+[03:40.899] Attack P0(3,0)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(0,0)"Moon Rover" {Unit ATK30 DEF35 | cost 400 (base 200) | affinity Cosmic | base 15/20 | buff +auraATK15, +auraDEF15}  Dice=5  ATK=40 vs DEF=35  → WIN
+[03:40.899] Reckoning overlay: P0 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=40 ATK pill=40 DEF pill=0 mod=+ATK 0 (40+0=40)
+[03:40.899] Reckoning overlay: P1 "Moon Rover" {Unit ATK30 DEF35 | cost 400 (base 200) | affinity Cosmic | base 15/20 | buff +auraATK15, +auraDEF15} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:40.899] Anim: 3A  △ P1(0,0)
+[03:49.024] Dice rolled: 4
+[03:49.038] MSG: Grand Fort Footsoldier wins!
+[03:53.498] Crystals: P1 1000 → 500 (-500)  [battle]
+[03:57.717] Attack P0(0,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(2,1)"Lunar Wraith" {Unit ATK60 DEF20 | cost 500 | affinity Cosmic | base 30/20 | buff +auraATK30}  Dice=4  ATK=25 vs DEF=20  → WIN
+[03:57.717] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[03:57.717] Reckoning overlay: P1 "Lunar Wraith" {Unit ATK60 DEF20 | cost 500 | affinity Cosmic | base 30/20 | buff +auraATK30} badge=20 ATK pill=60 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:57.717] Anim: 3A  △ P1(2,1)
+[03:57.717] Card destroyed  P1 (2,1) "Lunar Wraith" {Unit ATK60 DEF20 | cost 500 | affinity Cosmic | base 30/20 | buff +auraATK30}
+[04:04.430] Turn ended  P0  |  Crystals P0=3220 P1=500
+
+--- Turn 6  |  Player 1  |  Crystals P0=3220 P1=500 ---
+[04:05.028] Mode selected P1: ATTACK
+[04:05.032] MSG: Player 2: tap a unit to attack.
+[04:06.225] Dice rolled: 5
+[04:06.282] MSG: Moon Tribe Shaman wins!
+[04:10.712] Crystals: P0 3220 → 2920 (-300)  [battle]
+[04:14.906] Attack P1(1,3)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(2,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=25 vs DEF=20  → WIN
+[04:14.906] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[04:14.906] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:14.906] Anim: 3A  △ P0(2,3)
+[04:14.907] Card destroyed  P0 (2,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[04:15.400] Mode selected P1: ATTACK
+[04:15.402] MSG: Player 2: tap a unit to attack.
+[04:15.723] Revealed: P1 (2,4) "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}
+[04:17.625] Dice rolled: 5
+[04:17.639] MSG: Sunrise Lady wins!
+[04:22.118] Crystals: P0 2920 → 2620 (-300)  [battle]
+[04:24.957] MSG: Sunrise Lady: +10 ATK, -10 DEF permanently (if possible).
+[04:26.319] Attack P1(2,4)"Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine} → P0(0,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=5  ATK=30 vs DEF=25  → WIN
+[04:26.319] Reckoning overlay: P1 "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine} badge=30 ATK pill=20 DEF pill=30 mod=+ATK 10 (20+10=30)
+[04:26.319] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:26.319] Anim: 3A  △ P0(0,3)
+[04:26.320] Card destroyed  P0 (0,3) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[04:26.820] Turn ended  P1  |  Crystals P0=2620 P1=500
+
+--- Turn 7  |  Player 0  |  Crystals P0=2620 P1=500 ---
+[04:30.202] Dice rolled: 1
+[04:30.251] MSG: Berserk Hyena wins!
+[04:33.184] Crystals: P1 500 → 200 (-300)  [battle]
+[04:37.403] Attack P0(3,0)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(2,4)"Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20}  Dice=1  ATK=40 vs DEF=20  → WIN
+[04:37.404] Reckoning overlay: P0 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=40 ATK pill=40 DEF pill=0 mod=+ATK 0 (40+0=40)
+[04:37.404] Reckoning overlay: P1 "Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:37.404] Anim: 3A  △ P1(2,4)
+[04:37.404] Card destroyed  P1 (2,4) "Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20}
+[04:40.701] Tech played  P0: "Tease"
+[04:42.259] MSG: Opponent must choose and reveal 1 of their squares.
+[04:42.262] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:42.698] Revealed: P1 (4,4) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[04:42.698] MSG: Tease: Opponent revealed Laser Walker.
+[04:42.811] Tech resolved  P0
+[05:00.762] Revealed: P0 (0,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[05:01.981] Dice rolled: 5
+[05:02.008] MSG: Elemental Master wins!
+[05:04.961] Crystals: P1 200 → 0 (-200)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2620  P1: 0  |  Turns: 7

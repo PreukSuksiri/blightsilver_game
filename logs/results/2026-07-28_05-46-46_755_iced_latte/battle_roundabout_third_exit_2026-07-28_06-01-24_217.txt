@@ -1,0 +1,80 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-07-28 06:01:24.217
+Game Session of Iced Latte (started 2026-07-28 05:46:46.755)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:19.108] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:41.947] Mode selected P1: TECH
+[00:43.768] Tech played  P1: "Spy"
+[00:50.126] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:51.766] Revealed: P0 (3,1) "Decoy Puppet" {cost 100}
+[00:51.797] Tech resolved  P1
+[01:03.955] Crystals: P1 3000 → 2950 (-50)  [skip tax]
+[01:03.959] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[01:13.969] Turn ended  P1  |  Crystals P0=5000 P1=2950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=2950 ---
+[01:31.408] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[01:42.636] Tech played  P0: "Radar"
+[01:48.770] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:49.481] Revealed: P1 (1,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:52.995] Revealed: P1 (0,1) "Bait" {cost 0}
+[02:01.876] Revealed: P1 (2,1) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[02:02.108] Tech resolved  P0
+[02:25.134] Revealed: P0 (4,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:30.160] Revealed: P1 (3,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:37.277] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[02:45.849] Ability choice: 0 (Yes)
+[02:45.858] Dice rolled: 3
+[02:45.867] MSG: Mephisto the Fallen wins!
+[02:58.003] Crystals: P1 2950 → 2750 (-200)  [battle]
+[03:15.419] Attack P0(4,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(3,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=75 vs DEF=15  → WIN
+[03:15.419] Reckoning overlay: P0 "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} badge=75 ATK pill=75 DEF pill=0 mod=+ATK 0 (75+0=75)
+[03:15.419] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:15.419] Anim: 3A  △ P1(3,2)
+[03:15.419] Card destroyed  P1 (3,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[03:36.394] Revealed: P0 (2,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:41.645] Dice rolled: 3
+[03:41.652] MSG: Sniping Fairy wins!
+[03:54.498] Crystals: P1 2750 → 1850 (-900)  [battle]
+[04:12.444] Attack P0(2,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(1,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=3  ATK=40 vs DEF=30  → WIN
+[04:12.444] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[04:12.444] Reckoning overlay: P1 "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:12.444] Anim: 3A  △ P1(1,2)
+[04:12.444] Card destroyed  P1 (1,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[04:25.404] MSG: Ability triggered: "Sniping Fairy" (atk penalty when exposed)
+[04:32.065] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[04:32.073] Turn ended  P0  |  Crystals P0=4400 P1=1850
+
+--- Turn 3  |  Player 1  |  Crystals P0=4400 P1=1850 ---
+[04:34.589] Mode selected P1: TECH
+[04:35.987] Tech played  P1: "Bribe"
+[04:42.056] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[04:46.695] MSG: Bribe: Opponent passed.
+[04:46.703] Tech resolved  P1
+[04:50.384] Mode selected P1: ATTACK
+[04:55.242] Dice rolled: 1
+[04:55.255] MSG: Hands in the Attic wins!
+[05:07.391] Crystals: P0 4400 → 3540 (-860)  [battle]
+[05:24.295] Attack P1(2,1)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} → P0(4,1)"Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}  Dice=1  ATK=30 vs DEF=0  → WIN
+[05:24.295] Reckoning overlay: P1 "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[05:24.296] Reckoning overlay: P0 "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[05:24.296] Anim: 3A  △ P0(4,1)
+[05:24.296] Card destroyed  P0 (4,1) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[05:35.230] Turn ended  P1  |  Crystals P0=3540 P1=1850
+
+--- Turn 4  |  Player 0  |  Crystals P0=3540 P1=1850 ---
+[05:51.796] MSG: Tap 2 material card(s) on the field.
+[05:57.242] MSG: 1 more material(s) needed.
+[05:59.669] Crystals: P0 3540 → 3240 (-300)  [union]
+[06:11.173] Revealed: P0 (3,0) "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[06:11.214] Union summoned P0: "Pixie Queen" {Union ATK35 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 30/30 | buff +permATK5} from "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}, "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 3240  P1: 1850  |  Turns: 4

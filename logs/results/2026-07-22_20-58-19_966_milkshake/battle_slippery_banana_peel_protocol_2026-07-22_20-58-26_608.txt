@@ -1,0 +1,60 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-07-22 20:58:26.608
+Game Session of Milkshake (started 2026-07-22 20:58:19.966)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.251] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.641] Mode selected P1: TECH
+[00:08.946] Tech played  P1: "Spy"
+[00:10.552] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.224] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:13.756] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:13.758] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.192] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:14.196] Tech resolved  P1
+[00:15.082] Mode selected P1: ATTACK
+[00:15.085] MSG: Player 2: tap a unit to attack.
+[00:15.389] Revealed: P1 (4,0) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[00:17.290] Dice rolled: 1
+[00:17.302] MSG: Black Worms wins!
+[00:20.950] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:26.165] Attack P1(4,0)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=1  ATK=45 vs DEF=20  → WIN
+[00:26.165] Reckoning overlay: P1 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[00:26.165] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:26.166] Anim: 3A  △ P0(0,2)
+[00:26.166] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:26.667] Mode selected P1: ATTACK
+[00:26.670] MSG: Player 2: tap a unit to attack.
+[00:27.000] Revealed: P1 (0,0) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:28.906] Dice rolled: 1
+[00:28.914] MSG: Nanomites Beast wins!
+[00:32.042] Crystals: P0 4700 → 4520 (-180)  [battle]
+[00:37.225] Attack P1(0,0)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=1  ATK=50 vs DEF=25  → WIN
+[00:37.225] Reckoning overlay: P1 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[00:37.225] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:37.225] Anim: 3A  △ P0(3,2)
+[00:37.225] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:37.750] Turn ended  P1  |  Crystals P0=4520 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4520 P1=3000 ---
+[00:46.791] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:46.791] Revealed: P1 (0,1) "Trap Hole" {cost 0}
+[00:48.010] Dice rolled: 5
+[00:48.019] MSG: Trap triggered: Trap Hole!
+[00:50.902] Coin flip: Tails, Tails, Tails
+[00:53.642] MSG: Trap Hole: Tails, Tails, Tails.
+[00:53.642] MSG: Trap Hole: No heads — no crystal loss.
+[00:55.026] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(0,1)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:55.026] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:55.026] Anim: 3D  (attacker survives)
+[00:59.520] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:59.563] Revealed: P1 (1,1) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:00.737] Dice rolled: 5
+[01:03.413] Crystals: P0 4520 → 4220 (-300)  [battle]
+[01:07.285] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,1)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinit

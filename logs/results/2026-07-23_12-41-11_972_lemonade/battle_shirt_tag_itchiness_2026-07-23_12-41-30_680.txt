@@ -1,0 +1,268 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-07-23 12:41:30.680
+Game Session of Lemonade (started 2026-07-23 12:41:11.972)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:14.352] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[01:01.498] Revealed: P0 (1,1) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[01:01.521] Revealed: P1 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[01:06.432] Dice rolled: 4
+[01:06.439] MSG: War Genie wins!
+[01:18.408] Crystals: P1 3000 → 2300 (-700)  [battle]
+[01:18.428] Crystals: P1 2300 → 2600 (+300)  [recovery]
+[01:18.428] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:48.212] Attack P0(1,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=4  ATK=100 vs DEF=25  → WIN
+[01:48.212] Reckoning overlay: P0 "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} badge=100 ATK pill=100 DEF pill=80 mod=+ATK 0 (100+0=100)
+[01:48.212] Reckoning overlay: P1 "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} badge=25 ATK pill=0 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:48.212] Anim: 3A  △ P1(1,1)
+[01:48.213] Card destroyed  P1 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[02:26.049] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:26.049] Revealed: P1 (3,1) "Street Joke" {cost 0}
+[02:31.321] Dice rolled: 1
+[02:31.327] MSG: Trap triggered: Street Joke!
+[02:42.534] MSG: Ability triggered: "Street Joke"
+[02:42.553] Target prompt: "Street Joke: Choose 1 of your cells to reveal."  filter=trap_street_joke_reveal
+[02:51.085] Revealed: P1 (4,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:51.086] Crystals: P1 2600 → 2700 (+100)  [trap]
+[02:51.086] MSG: Street Joke: Revealed Joseph the Battle Priest — you gain 100 Crystals!
+[03:09.522] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(3,1)"Street Joke" {cost 0}  Dice=1  → Unit vs Trap
+[03:09.522] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[03:09.522] Anim: 3D  (attacker survives)
+[03:09.523] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[03:09.542] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[03:18.592] MSG: Scout Probe: adjacent cell revealed (empty).
+[03:20.007] Dead-end placed  P1 (3,2)
+[03:29.323] Turn ended  P0  |  Crystals P0=5000 P1=2700
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2700 ---
+[03:32.074] Mode selected P1: TECH
+[03:33.388] Tech played  P1: "Spy"
+[03:39.454] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:41.178] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[03:41.180] Tech resolved  P1
+[03:44.857] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:44.857] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:44.857] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:44.857] Mode selected P1: ATTACK
+[03:44.859] MSG: Player 2: tap a unit to attack.
+[03:49.895] Dice rolled: 5
+[03:49.934] Coin flip: Tails
+[04:01.171] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[04:01.176] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[04:01.177] MSG: Joseph the Battle Priest wins!
+[04:13.312] Crystals: P0 5000 → 4450 (-550)  [battle]
+[04:30.833] Attack P1(4,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=5  ATK=60 vs DEF=0  → WIN
+[04:30.833] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=60 ATK pill=60 DEF pill=25 mod=+ATK 0 (60+0=60)
+[04:30.833] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[04:30.833] Anim: 3A  △ P0(2,0)
+[04:30.833] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[04:32.987] Mode selected P1: ATTACK
+[04:32.989] MSG: Player 2: tap a unit to attack.
+[04:34.331] Revealed: P1 (3,4) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[04:43.439] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[04:48.727] Dice rolled: 4
+[04:48.735] MSG: Trap triggered: Trap Hole!
+[04:59.773] Coin flip: Tails, Heads, Tails
+[05:11.361] MSG: Trap Hole: Tails, Heads, Tails.
+[05:11.361] Crystals: P1 2700 → 2680 (-20)  [trap]
+[05:18.610] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[05:24.746] Attack P1(3,4)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P0(0,0)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[05:24.746] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[05:24.746] Anim: 3D  (attacker survives)
+[05:27.023] MSG: Ability triggered: "Sniping Fairy" (atk penalty when exposed)
+[05:33.729] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[05:33.731] Turn ended  P1  |  Crystals P0=4450 P1=2680
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=2680 ---
+[05:57.663] Crystals: P0 4450 → 3850 (-600)  [tech cost]
+[06:08.867] Tech played  P0: "Radar"
+[06:15.022] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[06:16.798] Revealed: P1 (0,1) "Bait" {cost 0}
+[06:27.304] Dead-end placed  P1 (1,0)
+[06:33.116] Tech resolved  P0
+[06:34.106] Dead-end placed  P1 (0,4)
+[06:51.589] MSG: Tap 2 material card(s) on the field.
+[06:53.702] MSG: 1 more material(s) needed.
+[06:56.463] Crystals: P0 3850 → 2850 (-1000)  [union]
+[07:07.693] Revealed: P0 (1,2) "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[07:07.730] Union summoned P0: "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[07:07.734] MSG: Player 1 summoned [Thunder Elemental] using: "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[07:36.071] Dice rolled: 2
+[07:36.139] MSG: Nothing happens — Dead End.
+[07:49.642] Attack P0(1,2)"Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[07:49.642] Anim: 3F  (blank slot)
+[08:03.041] Revealed: P0 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[08:08.362] Dice rolled: 2
+[08:08.377] MSG: Nothing happens — Dead End.
+[08:22.403] Attack P0(0,3)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(0,0)(empty)  Dice=2  → DEAD_END
+[08:22.403] Anim: 3F  (blank slot)
+[08:32.956] Turn ended  P0  |  Crystals P0=2850 P1=2680
+
+--- Turn 4  |  Player 1  |  Crystals P0=2850 P1=2680 ---
+[08:35.392] Mode selected P1: TECH
+[08:36.633] Crystals: P1 2680 → 2080 (-600)  [tech cost]
+[08:47.967] Tech played  P1: "Radar"
+[08:54.207] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[08:55.864] Revealed: P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[08:57.514] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[08:59.165] Revealed: P0 (3,2) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[08:59.169] Tech resolved  P1
+[09:08.846] Crystals: P1 2080 → 1780 (-300)  [union]
+[09:20.057] Revealed: P1 (0,2) "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[09:20.083] Union summoned P1: "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[09:20.083] MSG: Player 2 summoned [False Prophet] using: "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[09:33.804] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.804] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.805] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.805] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.805] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.805] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.805] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[09:33.805] Mode selected P1: ATTACK
+[09:33.810] MSG: Player 2: tap a unit to attack.
+[09:38.892] Dice rolled: 5
+[09:38.925] Coin flip: Heads
+[09:50.112] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[09:50.124] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[09:50.124] MSG: Joseph the Battle Priest wins!
+[10:02.145] Crystals: P0 2850 → 2150 (-700)  [battle]
+[10:19.241] Attack P1(4,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=5  ATK=70 vs DEF=20  → WIN
+[10:19.241] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=70 ATK pill=60 DEF pill=25 mod=+ATK 10 (60+10=70)
+[10:19.241] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[10:19.241] Anim: 3A  △ P0(4,0)
+[10:19.241] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[10:21.365] Mode selected P1: ATTACK
+[10:21.370] MSG: Player 2: tap a unit to attack.
+[10:26.617] Dice rolled: 5
+[10:26.679] MSG: False Prophet wins!
+[10:39.314] Crystals: P0 2150 → 1670 (-480)  [battle]
+[10:57.092] Attack P1(0,2)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P0(2,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=5  ATK=30 vs DEF=20  → WIN
+[10:57.092] Reckoning overlay: P1 "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} badge=30 ATK pill=30 DEF pill=40 mod=+ATK 0 (30+0=30)
+[10:57.092] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[10:57.092] Anim: 3A  △ P0(2,1)
+[10:57.092] Card destroyed  P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[10:59.277] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[11:01.039] Turn ended  P1  |  Crystals P0=1670 P1=1780
+
+--- Turn 5  |  Player 0  |  Crystals P0=1670 P1=1780 ---
+[11:20.780] Dice rolled: 1
+[11:20.839] MSG: Thunder Elemental wins!
+[11:32.915] Crystals: P1 1780 → 1180 (-600)  [battle]
+[11:50.331] Attack P0(1,2)"Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(4,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=1  ATK=90 vs DEF=25  → WIN
+[11:50.331] Reckoning overlay: P0 "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=90 ATK pill=90 DEF pill=55 mod=+ATK 0 (90+0=90)
+[11:50.331] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=25 ATK pill=60 DEF pill=25 mod=+DEF 0 (25+0=25)
+[11:50.331] Anim: 3A  △ P1(4,4)
+[11:50.331] Card destroyed  P1 (4,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[11:50.332] Target prompt: "Thunder Elemental: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[11:53.991] Revealed: P1 (2,2) "Snare Trap" {cost 500}
+[11:53.997] MSG: Revealed: Snare Trap
+[12:25.259] Dice rolled: 4
+[12:25.266] MSG: War Genie wins!
+[12:37.817] Crystals: P1 1180 → 830 (-350)  [battle]
+[12:56.087] Attack P0(1,1)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P1(3,4)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}  Dice=4  ATK=90 vs DEF=20  → WIN
+[12:56.088] Reckoning overlay: P0 "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} badge=90 ATK pill=90 DEF pill=80 mod=+ATK 0 (90+0=90)
+[12:56.088] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[12:56.088] Anim: 3A  △ P1(3,4)
+[12:56.088] Card destroyed  P1 (3,4) "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}
+[12:59.749] Turn ended  P0  |  Crystals P0=1670 P1=830
+
+--- Turn 6  |  Player 1  |  Crystals P0=1670 P1=830 ---
+[13:02.149] Mode selected P1: TECH
+[13:03.446] Tech played  P1: "Prayer"
+[13:09.540] MSG: Prayer: Divine Units protected until opponent's turn ends.
+[13:09.552] Tech resolved  P1
+[13:13.280] Mode selected P1: ATTACK
+[13:13.283] MSG: Player 2: tap a unit to attack.
+[13:19.126] Dice rolled: 5
+[13:19.197] MSG: Nothing happens — Dead End.
+[13:32.727] Attack P1(0,2)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P0(1,0)(empty)  Dice=5  → DEAD_END
+[13:32.727] Anim: 3F  (blank slot)
+[13:43.461] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[13:45.209] Turn ended  P1  |  Crystals P0=1670 P1=830
+
+--- Turn 7  |  Player 0  |  Crystals P0=1670 P1=830 ---
+[14:00.194] Tech played  P0: "Tease"
+[14:06.216] MSG: Opponent must choose and reveal 1 of their squares.
+[14:06.218] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[14:07.910] Revealed: P1 (4,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[14:07.910] MSG: Tease: Opponent revealed Bomber Fairy.
+[14:07.976] Tech resolved  P0
+[14:18.351] Dice rolled: 2
+[14:18.411] MSG: Thunder Elemental wins!
+[14:18.411] MSG: Prayer protected Bomber Fairy!
+[14:33.988] Attack P0(1,2)"Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(4,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=2  ATK=90 vs DEF=15  → TIE
+[14:33.989] Reckoning overlay: P0 "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=90 ATK pill=90 DEF pill=55 mod=+ATK 0 (90+0=90)
+[14:33.989] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[14:33.989] Anim: exchange  (no destruction)
+[14:48.882] Dice rolled: 5
+[14:48.885] MSG: Demon Spawn is destroyed battling Divine!
+[15:06.170] Crystals: P0 1670 → 1270 (-400)  [battle]
+[15:18.156] Attack P0(0,3)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(4,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=5  ATK=0 vs DEF=0  → LOSE
+[15:18.156] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[15:18.156] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[15:18.156] Anim: 3B  △ P0(0,3)
+[15:18.156] Card destroyed  P0 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[15:24.852] Turn ended  P0  |  Crystals P0=1270 P1=830
+
+--- Turn 8  |  Player 1  |  Crystals P0=1270 P1=830 ---
+[15:27.239] Mode selected P1: ATTACK
+[15:27.241] MSG: Player 2: tap a unit to attack.
+[15:33.085] Dice rolled: 5
+[15:33.098] MSG: Nothing happens — Dead End.
+[15:46.513] Attack P1(4,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P0(3,0)(empty)  Dice=5  → DEAD_END
+[15:46.514] Anim: 3F  (blank slot)
+[15:48.655] Mode selected P1: ATTACK
+[15:48.658] MSG: Player 2: tap a unit to attack.
+[15:53.945] Revealed: P0 (3,3) "Spike Trap" {cost 800}
+[15:59.213] Dice rolled: 3
+[15:59.274] MSG: Trap triggered: Spike Trap!
+[16:14.213] Crystals: P0 1270 → 470 (-800)  [trap cost]
+[16:28.960] MSG: Spike Trap: False Prophet destroyed!
+[16:28.964] Attack P1(0,2)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P0(3,3)"Spike Trap" {cost 800}  Dice=3  → Unit vs Trap
+[16:28.964] Reckoning overlay: P1 "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} badge=30 ATK pill=30 DEF pill=40 mod=+ATK 0 (30+0=30)
+[16:28.964] Anim: 3E  △ P1(0,2)
+[16:31.191] Turn ended  P1  |  Crystals P0=470 P1=830
+
+--- Turn 9  |  Player 0  |  Crystals P0=470 P1=830 ---
+[16:50.619] Dice rolled: 1
+[16:50.680] MSG: Thunder Elemental wins!
+[17:02.597] Crystals: P1 830 → 330 (-500)  [battle]
+[17:19.616] Attack P0(1,2)"Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(4,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=1  ATK=90 vs DEF=15  → WIN
+[17:19.616] Reckoning overlay: P0 "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=90 ATK pill=90 DEF pill=55 mod=+ATK 0 (90+0=90)
+[17:19.616] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[17:19.616] Anim: 3A  △ P1(4,2)
+[17:19.616] Card destroyed  P1 (4,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[17:19.617] Target prompt: "Thunder Elemental: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[17:22.769] MSG: Revealed: (empty)
+[17:24.012] Dead-end placed  P1 (2,1)
+[17:41.546] Revealed: P1 (2,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[17:46.781] Dice rolled: 3
+[17:46.786] MSG: Scout Probe wins!
+[17:57.405] MSG: Tiny Pixie survives destruction!
+[18:03.385] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=3  ATK=40 vs DEF=0  → WIN
+[18:03.385] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[18:03.385] Reckoning overlay: P1 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[18:03.385] Anim: 3A  △ P1(2,3)
+[18:03.385] Card destroyed  P1 (2,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[18:03.385] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[18:03.404] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[18:11.477] MSG: Scout Probe: adjacent cell revealed (empty).
+[18:12.685] Dead-end placed  P1 (2,4)
+[18:27.263] Turn ended  P0  |  Crystals P0=470 P1=330
+
+--- Turn 10  |  Player 1  |  Crystals P0=470 P1=330 ---
+[18:29.668] Mode selected P1: ATTACK
+[18:29.671] MSG: Player 2: tap a unit to attack.
+[18:30.984] Revealed: P1 (4,1) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}
+[18:38.768] Dice rolled: 4
+[18:38.772] MSG: Padmapani wins!
+[18:50.644] Crystals: P0 470 → 0 (-470)  [battle]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 330  |  Turns: 10

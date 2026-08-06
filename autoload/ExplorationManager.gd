@@ -885,11 +885,71 @@ func restore_saved_session() -> bool:
 	_source_vn_scene  = str(sd.get("source_vn_scene", ""))
 	_current_node_id  = str(sd.get("current_node_id", graph.start_node_id))
 	_queue_restored_bgm_from_save(sd)
+	# Heal clues wiped by a past load-order save race while interacted spots survived.
+	_reconcile_detective_notes_from_interacted_spots()
 	emit_signal("session_started", graph)
 	var node: ExplorationNode = graph.get_node_by_id(_current_node_id)
 	if node != null:
 		emit_signal("node_entered", node)
 	return true
+
+
+## Re-grant note_add_clue / note_unlock_topic from spots already marked interacted.
+## Spot interaction lives in exploration_session; clues live in detective_notes —
+## a boot-time early save used to wipe notes while keeping interacted_spots.
+func _reconcile_detective_notes_from_interacted_spots() -> void:
+	if _current_graph == null or _interacted_spots.is_empty():
+		return
+	var restored: int = 0
+	for key_var: Variant in _interacted_spots.keys():
+		var key: String = str(key_var)
+		var sep: int = key.rfind(":")
+		if sep <= 0:
+			continue
+		var node_id: String = key.substr(0, sep)
+		var spot_index: int = int(key.substr(sep + 1))
+		var n: ExplorationNode = _current_graph.get_node_by_id(node_id)
+		if n == null or spot_index < 0 or spot_index >= n.clickable_spots.size():
+			continue
+		var spot_var: Variant = n.clickable_spots[spot_index]
+		if not spot_var is Dictionary:
+			continue
+		var spot: Dictionary = spot_var as Dictionary
+		var acts: Variant = spot.get("actions", [])
+		if not acts is Array:
+			continue
+		for act_var: Variant in (acts as Array):
+			if not act_var is Dictionary:
+				continue
+			var act: Dictionary = act_var as Dictionary
+			var action: String = str(act.get("action", "")).strip_edges()
+			var clue_or_topic: String = str(act.get("key", "")).strip_edges()
+			if clue_or_topic.is_empty():
+				continue
+			var chapter: String = _note_chapter(str(act.get("value", "")))
+			if chapter.is_empty():
+				continue
+			match action:
+				"note_add_clue":
+					if not DetectiveNoteManager.has_clue(chapter, clue_or_topic):
+						if DetectiveNoteManager.add_clue(chapter, clue_or_topic, true):
+							restored += 1
+				"note_unlock_topic":
+					if not DetectiveNoteManager.is_topic_unlocked(chapter, clue_or_topic):
+						if DetectiveNoteManager.unlock_topic(chapter, clue_or_topic):
+							restored += 1
+	# Quiet Study enter VN grants (topic + anomaly clues) — not spot actions.
+	var quiet_main: String = "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_quiet_study_main.json"
+	if _played_vn_scenes.has(quiet_main):
+		if not DetectiveNoteManager.is_topic_unlocked("ch1_s1", "library_quiet_study_ghost_or_demon"):
+			if DetectiveNoteManager.unlock_topic("ch1_s1", "library_quiet_study_ghost_or_demon"):
+				restored += 1
+		for cid: String in ["anomaly_quiet_study_ghost", "anomaly_quiet_study_demon"]:
+			if not DetectiveNoteManager.has_clue("ch1_s1", cid):
+				if DetectiveNoteManager.add_clue("ch1_s1", cid, true):
+					restored += 1
+	if restored > 0:
+		push_warning("ExplorationManager: restored %d detective-note grant(s) from interacted spots / played VN." % restored)
 
 
 ## Pop the BGM snapshot queued by restore_saved_session (single use).

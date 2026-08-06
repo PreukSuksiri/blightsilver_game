@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://tmp_compile_check"]
+
+[ext_resource type="Script" path="res://trash/_tmp_compile_check.gd" id="1"]
+
+[node name="TmpCompileCheck" type="Node"]
+script = ExtResource("1")

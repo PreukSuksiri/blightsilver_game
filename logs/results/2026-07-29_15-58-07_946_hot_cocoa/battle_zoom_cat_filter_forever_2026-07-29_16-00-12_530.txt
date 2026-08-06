@@ -1,0 +1,50 @@
+=== Battle of Zoom Cat Filter Forever ===
+Battle started: 2026-07-29 16:00:12.530
+Game Session of Hot Cocoa (started 2026-07-29 15:58:07.946)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:25.108] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:46.588] Mode selected P1: TECH
+[00:47.868] Tech played  P1: "Spy"
+[00:53.921] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:55.573] Revealed: P0 (1,0) "Alarm" {cost 0}
+[01:00.632] Tech resolved  P1
+[01:04.244] Mode selected P1: ATTACK
+[01:05.494] Revealed: P1 (2,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:14.427] Dice rolled: 4
+[01:14.444] MSG: Shredder Doll hits Dead End — nothing happens.
+[01:27.947] Attack P1(2,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P0(1,4)(empty)  Dice=4  → DEAD_END
+[01:27.947] Anim: 3F  (blank slot)
+[01:38.908] Turn ended  P1  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[01:57.744] Revealed: P0 (2,0) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[02:02.664] Revealed: P1 (4,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:09.540] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[02:17.809] Ability choice: 1 (No)
+[02:17.813] Dice rolled: 2
+[02:17.821] MSG: Bomber Fairy wins!
+[02:29.715] Crystals: P1 3000 → 2750 (-250)  [battle]
+[02:40.717] MSG: Bomber Fairy: Kill bonus — extra attack!
+[02:40.720] Attack P0(2,0)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P1(2,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=2  ATK=30 vs DEF=5  → WIN
+[02:40.720] Reckoning overlay: P0 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[02:40.720] Reckoning overlay: P1 "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} badge=5 ATK pill=25 DEF pill=5 mod=+DEF 0 (5+0=5)
+[02:40.720] Anim: 3A  △ P1(2,2)
+[02:40.720] Card destroyed  P1 (2,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[02:51.821] Dice rolled: 5
+[02:51.830] MSG: Bomber Fairy wins!
+[03:03.688] Crystals: P1 2750 → 2550 (-200)  [battle]
+[03:20.431] Attack P0(2,0)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used} → P1(4,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=5  ATK=30 vs DEF=15  → WIN
+[03:20.431] Reckoning overlay: P0 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[03:20.431] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:20.431] Anim: 3A  △ P1(4,0)
+[03:20.431] Card destroyed  P1 (4,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 5000  P1: 2550  |  Turns: 2

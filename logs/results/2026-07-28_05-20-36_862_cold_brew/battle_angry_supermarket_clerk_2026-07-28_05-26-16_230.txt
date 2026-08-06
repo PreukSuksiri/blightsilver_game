@@ -1,0 +1,198 @@
+=== Battle of Angry Supermarket Clerk ===
+Battle started: 2026-07-28 05:26:16.230
+Game Session of Cold Brew (started 2026-07-28 05:20:36.862)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:49.491] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[01:11.022] Mode selected P1: TECH
+[01:12.374] Tech played  P1: "Spy"
+[01:18.421] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:20.100] Revealed: P0 (2,1) "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}
+[01:20.102] Tech resolved  P1
+[01:23.766] Mode selected P1: ATTACK
+[01:25.027] Revealed: P1 (3,0) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:32.778] Dice rolled: 4
+[01:32.784] MSG: Ox Patrol wins!
+[01:45.139] Crystals: P0 5000 → 4700 (-300)  [battle]
+[02:02.347] Attack P1(3,0)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P0(2,1)"Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}  Dice=4  ATK=40 vs DEF=30  → WIN
+[02:02.347] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=40 ATK pill=30 DEF pill=35 mod=+ATK 10 (30+10=40)
+[02:02.347] Reckoning overlay: P0 "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine} badge=30 ATK pill=20 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:02.347] Anim: 3A  △ P0(2,1)
+[02:02.347] Card destroyed  P0 (2,1) "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}
+[02:04.503] Mode selected P1: ATTACK
+[02:05.835] Revealed: P1 (4,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[02:15.086] Dice rolled: 3
+[02:15.100] MSG: Witchhunter hits Dead End — nothing happens.
+[02:29.095] Attack P1(4,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P0(0,1)(empty)  Dice=3  → DEAD_END
+[02:29.095] Anim: 3F  (blank slot)
+[02:31.308] Turn ended  P1  |  Crystals P0=4700 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=3000 ---
+[02:48.409] MSG: Tap 2 material card(s) on the field.
+[02:50.552] MSG: 1 more material(s) needed.
+[02:51.833] Crystals: P0 4700 → 3900 (-800)  [union]
+[03:02.952] Revealed: P0 (0,2) "Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[03:02.960] Union summoned P0: "Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima} from "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down}, "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down}
+[03:42.132] Dice rolled: 2
+[03:42.194] MSG: Rebel King wins!
+[03:54.301] Crystals: P1 3000 → 2750 (-250)  [battle]
+[04:11.400] Attack P0(0,2)"Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima} → P1(4,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=60 vs DEF=20  → WIN
+[04:11.400] Reckoning overlay: P0 "Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima} badge=60 ATK pill=60 DEF pill=40 mod=+ATK 0 (60+0=60)
+[04:11.400] Reckoning overlay: P1 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:11.400] Anim: 3A  △ P1(4,0)
+[04:11.400] Card destroyed  P1 (4,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[04:29.038] Revealed: P0 (4,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[04:34.411] Dice rolled: 1
+[04:34.416] MSG: Flame Seraph wins!
+[04:47.457] Crystals: P1 2750 → 2330 (-420)  [battle]
+[05:05.934] Attack P0(4,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P1(3,0)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=1  ATK=50 vs DEF=45  → WIN
+[05:05.934] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[05:05.934] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=45 ATK pill=30 DEF pill=35 mod=+DEF 10 (35+10=45)
+[05:05.934] Anim: 3A  △ P1(3,0)
+[05:05.935] Card destroyed  P1 (3,0) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[05:21.743] Turn ended  P0  |  Crystals P0=3900 P1=2330
+
+--- Turn 3  |  Player 1  |  Crystals P0=3900 P1=2330 ---
+[05:24.203] Mode selected P1: TECH
+[05:25.440] Crystals: P1 2330 → 1730 (-600)  [tech cost]
+[05:36.485] Tech played  P1: "Radar"
+[05:42.591] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[05:45.260] Dead-end placed  P0 (3,4)
+[05:46.894] Dead-end placed  P0 (0,3)
+[05:47.566] Revealed: P0 (0,0) "Street Joke" {cost 0}
+[05:47.599] Tech resolved  P1
+[05:57.223] Crystals: P1 1730 → 1230 (-500)  [union]
+[06:08.349] Revealed: P1 (1,2) "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}
+[06:08.383] Union summoned P1: "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} from "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down}, "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down}
+[06:22.220] Mode selected P1: ATTACK
+[06:27.140] Dice rolled: 4
+[06:27.198] MSG: Grand Fort Captain wins!
+[06:39.230] Crystals: P0 3900 → 3400 (-500)  [battle]
+[06:56.373] Attack P1(1,2)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} → P0(4,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=4  ATK=45 vs DEF=10  → WIN
+[06:56.373] Reckoning overlay: P1 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[06:56.373] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=10 ATK pill=50 DEF pill=10 mod=+DEF 0 (10+0=10)
+[06:56.373] Anim: 3A  △ P0(4,3)
+[06:56.373] Card destroyed  P0 (4,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[06:58.578] Mode selected P1: ATTACK
+[06:59.951] Revealed: P1 (1,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[07:08.395] Dice rolled: 2
+[07:08.459] MSG: Mafia Associates wins!
+[07:27.336] Attack P1(1,3)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(0,2)"Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima}  Dice=2  ATK=45 vs DEF=40  → WIN
+[07:27.336] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[07:27.336] Reckoning overlay: P0 "Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima} badge=40 ATK pill=60 DEF pill=40 mod=+DEF 0 (40+0=40)
+[07:27.336] Anim: 3A  △ P0(0,2)
+[07:27.336] Card destroyed  P0 (0,2) "Rebel King" {Union ATK60 DEF40 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[07:29.551] MSG: Ability triggered: "Mafia Associates" (def zero when exposed)
+[07:36.093] MSG: Mafia Associates: DEF becomes 0 at end of expose turn.
+[07:36.096] Turn ended  P1  |  Crystals P0=3400 P1=1230
+
+--- Turn 4  |  Player 0  |  Crystals P0=3400 P1=1230 ---
+[08:42.512] Revealed: P0 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[08:47.631] Dice rolled: 4
+[08:47.694] MSG: Street Rogue wins!
+[09:05.655] Attack P0(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(1,2)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}  Dice=4  ATK=45 vs DEF=40  → WIN
+[09:05.655] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=45 ATK pill=25 DEF pill=20 mod=+ATK 20 (25+20=45)
+[09:05.655] Reckoning overlay: P1 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=40 ATK pill=45 DEF pill=40 mod=+DEF 0 (40+0=40)
+[09:05.655] Anim: 3A  △ P1(1,2)
+[09:05.655] Card destroyed  P1 (1,2) "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}
+[09:15.584] Revealed: P0 (0,4) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[09:20.904] Dice rolled: 3
+[09:20.910] MSG: Silver Spearman wins!
+[09:33.753] Crystals: P1 1230 → 730 (-500)  [battle]
+[09:52.307] Attack P0(0,4)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,3)"Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}  Dice=3  ATK=25 vs DEF=0  → WIN
+[09:52.307] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[09:52.307] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0} badge=0 ATK pill=45 DEF pill=0 mod=+DEF 0 (0+0=0)
+[09:52.307] Anim: 3A  △ P1(1,3)
+[09:52.307] Card destroyed  P1 (1,3) "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}
+[10:08.100] Turn ended  P0  |  Crystals P0=3400 P1=730
+
+--- Turn 5  |  Player 1  |  Crystals P0=3400 P1=730 ---
+[10:10.541] Mode selected P1: TECH
+[10:11.853] Tech played  P1: "Bribe"
+[10:17.871] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[10:27.586] MSG: Bribe: Opponent passed.
+[10:27.590] Tech resolved  P1
+[10:31.250] Mode selected P1: ATTACK
+[10:32.519] Revealed: P1 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[10:40.298] Dice rolled: 1
+[10:40.311] MSG: Goblin Poacher wins!
+[10:52.434] Crystals: P0 3400 → 3050 (-350)  [battle]
+[11:09.425] Attack P1(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=30 vs DEF=20  → WIN
+[11:09.425] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[11:09.425] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[11:09.425] Anim: 3A  △ P0(1,3)
+[11:09.425] Card destroyed  P0 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[11:11.645] Mode selected P1: ATTACK
+[11:13.022] Revealed: P1 (0,4) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[11:21.582] Dice rolled: 3
+[11:21.589] MSG: Hairpin Assassin wins!
+[11:36.205] Crystals: P0 3050 → 2800 (-250)  [battle]
+[11:54.720] Attack P1(0,4)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P0(0,4)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=3  ATK=25 vs DEF=20  → WIN
+[11:54.720] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[11:54.720] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[11:54.720] Anim: 3A  △ P0(0,4)
+[11:54.720] Card destroyed  P0 (0,4) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[11:56.948] Turn ended  P1  |  Crystals P0=2800 P1=730
+
+--- Turn 6  |  Player 0  |  Crystals P0=2800 P1=730 ---
+[12:30.117] Revealed: P0 (3,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[12:35.106] Dice rolled: 3
+[12:35.116] MSG: Red Mage wins!
+[12:47.381] Crystals: P1 730 → 480 (-250)  [battle]
+[13:04.272] Attack P0(3,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P1(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=3  ATK=30 vs DEF=10  → WIN
+[13:04.272] Reckoning overlay: P0 "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[13:04.272] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[13:04.272] Anim: 3A  △ P1(0,0)
+[13:04.272] Card destroyed  P1 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[13:21.596] Revealed: P0 (3,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[13:26.713] Dice rolled: 5
+[13:26.718] MSG: Mad Raccoon wins!
+[13:39.323] Crystals: P1 480 → 180 (-300)  [battle]
+[13:57.691] Attack P0(3,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(0,4)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=5  ATK=30 vs DEF=15  → WIN
+[13:57.691] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[13:57.691] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[13:57.691] Anim: 3A  △ P1(0,4)
+[13:57.691] Card destroyed  P1 (0,4) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[14:02.550] Turn ended  P0  |  Crystals P0=2800 P1=180
+
+--- Turn 7  |  Player 1  |  Crystals P0=2800 P1=180 ---
+[14:04.989] Mode selected P1: ATTACK
+[14:06.256] Revealed: P1 (1,4) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[14:13.959] Dice rolled: 2
+[14:13.964] MSG: Shepherd Detective wins!
+[14:26.033] Crystals: P0 2800 → 2400 (-400)  [battle]
+[14:42.928] Attack P1(1,4)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(3,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=2  ATK=40 vs DEF=20  → WIN
+[14:42.928] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[14:42.928] Reckoning overlay: P0 "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[14:42.928] Anim: 3A  △ P0(3,1)
+[14:42.928] Card destroyed  P0 (3,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[14:42.931] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[14:42.956] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[14:51.027] Revealed: P0 (1,1) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[14:51.028] MSG: Revealed: Spell Sniper
+[14:53.195] Mode selected P1: ATTACK
+[14:54.508] Revealed: P1 (1,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[15:02.614] Dice rolled: 4
+[15:02.619] MSG: Mad Raccoon wins!
+[15:15.237] Crystals: P0 2400 → 2140 (-260)  [battle]
+[15:32.885] Attack P1(1,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(3,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=4  ATK=30 vs DEF=15  → WIN
+[15:32.885] Reckoning overlay: P1 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[15:32.885] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[15:32.885] Anim: 3A  △ P0(3,0)
+[15:32.885] Card destroyed  P0 (3,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[15:35.082] Turn ended  P1  |  Crystals P0=2140 P1=180
+
+--- Turn 8  |  Player 0  |  Crystals P0=2140 P1=180 ---
+[15:52.001] Revealed: P0 (1,4) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[15:56.830] Dice rolled: 4
+[15:56.836] MSG: Ox Patrol wins!
+[16:08.911] Crystals: P1 180 → 0 (-180)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2140  P1: 0  |  Turns: 8

@@ -1,0 +1,170 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-07-22 21:02:09.141
+Game Session of Affogato (started 2026-07-22 21:02:02.210)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.011] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.403] Mode selected P1: TECH
+[00:09.706] Tech played  P1: "Spy"
+[00:11.333] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.974] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:14.523] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:14.532] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.932] Tech resolved  P1
+[00:15.169] Dead-end placed  P0 (3,0)
+[00:15.829] Mode selected P1: ATTACK
+[00:15.832] MSG: Player 2: tap a unit to attack.
+[00:16.152] Revealed: P1 (3,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:18.051] Dice rolled: 1
+[00:18.060] MSG: Dystopian Cultist wins!
+[00:21.074] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:26.292] Attack P1(3,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=1  ATK=65 vs DEF=25  → WIN
+[00:26.292] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[00:26.292] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:26.292] Anim: 3A  △ P0(3,2)
+[00:26.292] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:26.786] Mode selected P1: ATTACK
+[00:26.788] MSG: Player 2: tap a unit to attack.
+[00:27.115] Revealed: P1 (3,2) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:29.016] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:30.249] Dice rolled: 3
+[00:30.260] MSG: Trap triggered: Trap Hole!
+[00:32.897] Coin flip: Heads, Tails, Heads
+[00:35.632] MSG: Trap Hole: Heads, Tails, Heads.
+[00:35.632] Crystals: P1 3000 → 2960 (-40)  [trap]
+[00:38.849] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[00:40.224] Attack P1(3,2)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(0,0)"Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[00:40.224] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[00:40.224] Anim: 3D  (attacker survives)
+[00:40.729] Turn ended  P1  |  Crystals P0=4820 P1=2960
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=2960 ---
+[00:51.466] MSG: Tap 2 material card(s) on the field.
+[00:51.572] MSG: 1 more material(s) needed.
+[00:52.198] Crystals: P0 4820 → 4320 (-500)  [union]
+[00:56.031] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:56.075] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[00:56.075] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[00:56.086] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[01:04.113] Dice rolled: 3
+[01:04.217] MSG: Diamond Unicorn wins!
+[01:07.090] Crystals: P1 2960 → 2410 (-550)  [battle]
+[01:12.300] Attack P0(0,2)"Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} → P1(3,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=45 vs DEF=40  → WIN
+[01:12.300] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} badge=45 ATK pill=45 DEF pill=35 mod=+ATK 0 (45+0=45)
+[01:12.300] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:12.300] Anim: 3A  △ P1(3,1)
+[01:12.300] Card destroyed  P1 (3,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:16.498] Turn ended  P0  |  Crystals P0=4320 P1=2410
+
+--- Turn 3  |  Player 1  |  Crystals P0=4320 P1=2410 ---
+[01:17.090] Mode selected P1: TECH
+[01:17.390] Crystals: P1 2410 → 1810 (-600)  [tech cost]
+[01:21.225] Tech played  P1: "Radar"
+[01:22.769] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:23.410] Dead-end placed  P0 (0,3)
+[01:23.568] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[01:24.039] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:24.044] Tech resolved  P1
+[01:26.357] Crystals: P1 1810 → 810 (-1000)  [union]
+[01:30.209] Revealed: P1 (0,4) "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[01:30.251] Union summoned P1: "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[01:30.251] MSG: Player 2 summoned [Bioterrorist] using: "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[01:33.612] Mode selected P1: ATTACK
+[01:33.617] MSG: Player 2: tap a unit to attack.
+[01:34.828] Dice rolled: 2
+[01:34.954] MSG: Bioterrorist wins!
+[01:39.334] MSG: Bioterrorist: self-destroyed after battle (no crystal loss)!
+[01:39.337] Attack P1(0,4)"Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}  Dice=2  ATK=150 vs DEF=35  → WIN
+[01:39.337] Reckoning overlay: P1 "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=150 ATK pill=150 DEF pill=0 mod=+ATK 0 (150+0=150)
+[01:39.337] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:39.337] Anim: 3A  △ P0(0,2)
+[01:39.337] Card destroyed  P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[01:39.832] Mode selected P1: ATTACK
+[01:39.835] MSG: Player 2: tap a unit to attack.
+[01:41.273] Dice rolled: 2
+[01:41.296] MSG: Nothing happens — Dead End.
+[01:44.532] Attack P1(3,2)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[01:44.532] Anim: 3F  (blank slot)
+[01:45.031] Turn ended  P1  |  Crystals P0=4320 P1=810
+
+--- Turn 4  |  Player 0  |  Crystals P0=4320 P1=810 ---
+[01:50.003] Revealed: P1 (0,2) "Snare Trap" {cost 500}
+[01:51.222] Dice rolled: 3
+[01:51.234] MSG: Trap triggered: Snare Trap!
+[01:53.973] Crystals: P1 810 → 310 (-500)  [trap cost]
+[01:57.810] MSG: Snare Trap: Choir Lady Alice's effect nullified until end of next turn!
+[01:59.181] Attack P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(0,2)"Snare Trap" {cost 500}  Dice=3  → Unit vs Trap
+[01:59.181] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=25 mod=+ATK 0 (20+0=20)
+[01:59.181] Anim: 3D  (attacker survives)
+[02:02.638] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[02:02.638] Revealed: P1 (1,0) "Trap Hole" {cost 0}
+[02:03.869] Dice rolled: 5
+[02:03.875] MSG: Trap triggered: Trap Hole!
+[02:06.416] Coin flip: Tails, Heads, Tails
+[02:09.170] MSG: Trap Hole: Tails, Heads, Tails.
+[02:09.170] Crystals: P0 4320 → 4300 (-20)  [trap]
+[02:11.936] MSG: Trap Hole: 1 head(s) — Player 1 loses 20 Crystals!
+[02:13.326] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(1,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[02:13.326] Reckoning overlay: P0 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[02:13.326] Anim: 3D  (attacker survives)
+[02:15.553] Turn ended  P0  |  Crystals P0=4300 P1=310
+
+--- Turn 5  |  Player 1  |  Crystals P0=4300 P1=310 ---
+[02:16.161] Mode selected P1: TECH
+[02:16.470] Tech played  P1: "Tease"
+[02:18.010] MSG: Opponent must choose and reveal 1 of their squares.
+[02:18.143] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:19.205] Revealed: P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[02:19.206] MSG: Tease: Opponent revealed Choir Lady Anna.
+[02:19.210] Tech resolved  P1
+[02:20.087] Mode selected P1: ATTACK
+[02:20.093] MSG: Player 2: tap a unit to attack.
+[02:21.286] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[02:22.519] Dice rolled: 2
+[02:22.527] MSG: Trap triggered: Hard Scale!
+[02:26.616] Crystals: P0 4300 → 4000 (-300)  [trap cost]
+[02:30.445] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[02:31.823] Attack P1(3,2)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(0,4)"Hard Scale" {cost 300}  Dice=2  → Unit vs Trap
+[02:31.823] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[02:31.824] Anim: 3D  (attacker survives)
+[02:34.333] Turn ended  P1  |  Crystals P0=4000 P1=310
+
+--- Turn 6  |  Player 0  |  Crystals P0=4000 P1=310 ---
+[02:38.874] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima}
+[02:40.094] Dice rolled: 4
+[02:40.125] MSG: Nothing happens — Dead End.
+[02:43.661] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF25 | cost 250 | affinity Anima} → P1(4,2)(empty)  Dice=4  → DEAD_END
+[02:43.662] Anim: 3F  (blank slot)
+[02:46.815] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF25 | cost 280 | affinity Anima}
+[02:46.815] Revealed: P1 (1,3) "Acid Trap Hole" {cost 0}
+[02:48.035] Dice rolled: 3
+[02:48.040] MSG: Trap triggered: Acid Trap Hole!
+[02:50.197] Coin flip: Heads, Tails
+[02:52.939] MSG: Acid Trap Hole: Heads, Tails.
+[02:52.940] Crystals: P0 4000 → 3950 (-50)  [trap]
+[02:56.381] MSG: Acid Trap Hole: 1 head(s) — Player 1 loses 50 Crystals!
+[02:57.765] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF25 | cost 280 | affinity Anima} → P1(1,3)"Acid Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[02:57.765] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF25 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=25 mod=+ATK 10 (20+10=30)
+[02:57.765] Anim: 3D  (attacker survives)
+[03:00.842] Turn ended  P0  |  Crystals P0=3950 P1=310
+
+--- Turn 7  |  Player 1  |  Crystals P0=3950 P1=310 ---
+[03:01.437] Mode selected P1: ATTACK
+[03:01.444] MSG: Player 2: tap a unit to attack.
+[03:02.681] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF30 | cost 300 | affinity Anima}
+[03:03.877] Dice rolled: 3
+[03:07.995] Crystals: P1 310 → 0 (-310)  [battle]
+[03:12.176] Attack P1(3,2)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF30 | cost 300 | affinity Anima}  Dice=3  ATK=20 vs DEF=30  → LOSE
+[03:12.176] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[03:12.176] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF30 | cost 300 | affinity Anima} badge=30 ATK pill=25 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:12.176] Anim: 3B  △ P1(3,2)
+[03:12.176] Card destroyed  P1 (3,2) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3950  P1: 0  |  Turns: 7

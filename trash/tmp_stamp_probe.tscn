@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://tmp_stamp_probe"]
+
+[ext_resource type="Script" path="res://trash/tmp_stamp_probe.gd" id="1"]
+
+[node name="StampProbe" type="Node"]
+script = ExtResource("1")

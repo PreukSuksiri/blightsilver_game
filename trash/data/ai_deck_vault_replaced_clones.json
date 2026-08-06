@@ -1,0 +1,795 @@
+{
+	"replaced_entries": [
+		{
+			"deck": {
+				"characters": [
+					"Ox Patrol",
+					"Mafia Associates",
+					"Big Thug",
+					"Huntress of Green Glade",
+					"Hairpin Assassin",
+					"Lockpicker",
+					"Street Rogue",
+					"Church Guard",
+					"Tomb Bandit",
+					"Silver Spearman"
+				],
+				"deck_name": "Easy / Ani - Street Patrol",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Ox Patrol",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Mafia Associates",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Big Thug",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Huntress of Green Glade",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Hairpin Assassin",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Lockpicker",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Street Rogue",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Church Guard",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Tomb Bandit",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Silver Spearman",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Brainwash",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Bunker",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Red Card",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Street Joke",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Alarm",
+								"r": 1.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Tease",
+					"War Supply",
+					"Bribe"
+				],
+				"traps": [
+					"Brainwash",
+					"Bunker",
+					"Red Card",
+					"Street Joke",
+					"Alarm"
+				]
+			},
+			"featured_union": "",
+			"featured_unit": "Street Rogue",
+			"id": "easy_ani_patrol",
+			"label": "Easy / Ani - Street Patrol",
+			"tags": [
+				"easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Chaotic Wisp",
+					"Foul Wisp",
+					"Vampire Duchess",
+					"Doom Wisp",
+					"Bat Swarm",
+					"Night Whisperer",
+					"Poltergeist",
+					"Dark Monk",
+					"Shredder Doll",
+					"Jacob the Ski Mask",
+					"Cursed Well"
+				],
+				"deck_name": "Easy / Cha - Wisp Pack",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Chaotic Wisp",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Doom Wisp",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Night Whisperer",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Bat Swarm",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Shredder Doll",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Foul Wisp",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Bait",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Cursed Well",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Acid Trap Hole",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Explosive Barrels",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Red Card",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Jacob the Ski Mask",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Poltergeist",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Vampire Duchess",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Dark Monk",
+								"r": 0.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Siege Cannon",
+					"Radar",
+					"War Supply"
+				],
+				"traps": [
+					"Bait",
+					"Acid Trap Hole",
+					"Explosive Barrels",
+					"Red Card"
+				]
+			},
+			"featured_union": "",
+			"featured_unit": "Chaotic Wisp",
+			"id": "easy_cha_wisps",
+			"label": "Easy / Cha - Wisp Pack",
+			"tags": [
+				"easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Striker Comet",
+					"Scout Probe",
+					"Moon Rover",
+					"Mars Drill",
+					"Mine Guard",
+					"Neptune Diver",
+					"Parom the Smuggler",
+					"Miner Probe"
+				],
+				"deck_name": "Easy / Cos - Scout Patrol",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 4.0,
+								"name": "Striker Comet",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Scout Probe",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Moon Rover",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Mars Drill",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Mine Guard",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Neptune Diver",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Parom the Smuggler",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Miner Probe",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Flame Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Explosive Barrels",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Self-destruct",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Spike Trap",
+								"r": 1.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Accident",
+					"Tease",
+					"War Supply"
+				],
+				"traps": [
+					"Explosive Barrels",
+					"Flame Trap",
+					"Self-destruct",
+					"Spike Trap"
+				]
+			},
+			"featured_union": "Imperial Frame",
+			"featured_unit": "",
+			"id": "easy_cos_probe",
+			"label": "Easy / Cos - Scout Patrol",
+			"tags": [
+				"easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Aerial the Battlemage",
+					"Book with Fangs",
+					"Green Mage",
+					"Mind Flayer",
+					"Pyromancer",
+					"Red Mage",
+					"War Genie",
+					"Angel Gatekeeper",
+					"Ice Mage",
+					"Pit Lord",
+					"Archbishop"
+				],
+				"deck_name": "Hard / Arc - Arcane Legion",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Angel Gatekeeper",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Ice Mage",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Pit Lord",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Archbishop",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Aerial the Battlemage",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Book with Fangs",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Green Mage",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Mind Flayer",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Pyromancer",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Red Mage",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "War Genie",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Hypnosis",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Snare Trap",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Spike Trap",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Decoy Puppet",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Acid Trap Hole",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Pepper Spray",
+								"r": 2.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Accident",
+					"Radar",
+					"War Supply"
+				],
+				"traps": [
+					"Hypnosis",
+					"Snare Trap",
+					"Spike Trap",
+					"Decoy Puppet",
+					"Acid Trap Hole",
+					"Pepper Spray"
+				]
+			},
+			"featured_union": "Gaia Turtle",
+			"featured_unit": "",
+			"id": "hard_arc_legion",
+			"label": "Hard / Arc - Arcane Legion",
+			"tags": [
+				"hard"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Pit Lord",
+					"Void Stalker",
+					"Bladeshifter",
+					"Scarlet Mutant",
+					"Lab Zombie",
+					"Lab Bloater",
+					"Gamma Emitter",
+					"Claw Mutant",
+					"Leech Man"
+				],
+				"deck_name": "Hard / Bio - Abomination",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Pit Lord",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Void Stalker",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Bladeshifter",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Scarlet Mutant",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Lab Zombie",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Lab Bloater",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Gamma Emitter",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Claw Mutant",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Leech Man",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Brainwash",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Foul Gas",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Trap Hole",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Snare Trap",
+								"r": 4.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Release Mutagen",
+					"Spy",
+					"Tease"
+				],
+				"traps": [
+					"Brainwash",
+					"Foul Gas",
+					"Trap Hole",
+					"Snare Trap"
+				]
+			},
+			"featured_union": "Dimensional Virus",
+			"featured_unit": "",
+			"id": "hard_bio_abomination",
+			"label": "Hard / Bio - Abomination",
+			"tags": [
+				"hard"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Canyon Warg",
+					"Flame Lizard",
+					"Armored Bee",
+					"Armored Monkey",
+					"Armored Rhino",
+					"Lazy Troll",
+					"Nuki the Tanuki",
+					"White Tiger",
+					"Needle Porcupine",
+					"Mad Raccoon",
+					"Death Cobra"
+				],
+				"deck_name": "Hard / Nat - Canyon Behemoth",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 1.0,
+								"name": "Canyon Warg",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Flame Lizard",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Armored Rhino",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Armored Bee",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Armored Monkey",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Nuki the Tanuki",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "White Tiger",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Mad Raccoon",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Defensive Pheromone",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Decoy Puppet",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Explosive Barrels",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Red Card",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Street Joke",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Cursed Reflection",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Lazy Troll",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Death Cobra",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Needle Porcupine",
+								"r": 1.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Tease",
+					"Spy",
+					"Accident"
+				],
+				"traps": [
+					"Defensive Pheromone",
+					"Decoy Puppet",
+					"Red Card",
+					"Explosive Barrels",
+					"Street Joke",
+					"Cursed Reflection"
+				]
+			},
+			"featured_union": "Barros the Colossal",
+			"featured_unit": "",
+			"id": "hard_nat_behemoth",
+			"label": "Hard / Nat - Canyon Behemoth",
+			"tags": [
+				"hard"
+			]
+		}
+	]
+}

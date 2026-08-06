@@ -1,0 +1,135 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-07-27 19:20:59.561
+Game Session of Coconut Water (started 2026-07-27 19:20:40.518)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:34.190] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:38.679] Mode selected P1: TECH
+[00:38.985] Tech played  P1: "Spy"
+[00:40.530] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:40.938] Tech resolved  P1
+[00:41.171] Dead-end placed  P0 (1,0)
+[00:41.844] Mode selected P1: ATTACK
+[00:41.847] MSG: Player 2: tap a unit to attack.
+[00:42.206] Revealed: P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:44.110] Revealed: P0 (0,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:45.297] Dice rolled: 2
+[00:49.591] Crystals: P1 3000 → 2200 (-800)  [battle]
+[00:52.431] Attack P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(0,0)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}  Dice=2  ATK=40 vs DEF=60  → LOSE
+[00:52.431] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:52.431] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=60 ATK pill=20 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:52.431] Anim: 3B  △ P1(0,1)
+[00:52.431] Card destroyed  P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:52.929] Mode selected P1: ATTACK
+[00:52.931] MSG: Player 2: tap a unit to attack.
+[00:53.269] Revealed: P1 (4,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:55.168] Dice rolled: 3
+[00:55.173] MSG: Tomb Bandit wins!
+[00:58.059] Crystals: P0 5000 → 4200 (-800)  [battle]
+[01:02.266] Attack P1(4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(0,0)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}  Dice=3  ATK=75 vs DEF=60  → WIN
+[01:02.266] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[01:02.266] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=60 ATK pill=20 DEF pill=60 mod=+DEF 0 (60+0=60)
+[01:02.266] Anim: 3A  △ P0(0,0)
+[01:02.266] Card destroyed  P0 (0,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[01:02.763] Turn ended  P1  |  Crystals P0=4200 P1=2200
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=2200 ---
+[01:11.179] MSG: Tap 2 material card(s) on the field.
+[01:12.835] MSG: 1 more material(s) needed.
+[01:13.451] Crystals: P0 4200 → 3200 (-1000)  [union]
+[01:16.282] Revealed: P0 (3,1) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:16.363] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[01:16.377] MSG: Player 1 summoned [Sand Elemental] using: "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[01:29.510] Dice rolled: 1
+[01:29.603] MSG: Nothing happens — Dead End.
+[01:32.466] Attack P0(3,1)"Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[01:32.466] Anim: 3F  (blank slot)
+[01:42.053] Revealed: P0 (4,4) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:43.277] Dice rolled: 2
+[01:43.286] MSG: Dystopian Cultist wins!
+[01:47.178] Crystals: P1 2200 → 1200 (-1000)  [battle]
+[01:51.385] Attack P0(4,4)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=2  ATK=65 vs DEF=60  → WIN
+[01:51.385] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[01:51.385] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[01:51.385] Anim: 3A  △ P1(4,0)
+[01:51.385] Card destroyed  P1 (4,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:53.161] Turn ended  P0  |  Crystals P0=3200 P1=1200
+
+--- Turn 3  |  Player 1  |  Crystals P0=3200 P1=1200 ---
+[01:53.744] Mode selected P1: TECH
+[01:54.045] Crystals: P1 1200 → 600 (-600)  [tech cost]
+[01:56.872] Tech played  P1: "Radar"
+[01:58.427] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:58.872] Revealed: P0 (3,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:59.232] Revealed: P0 (2,0) "Red Card" {cost 0}
+[01:59.638] Revealed: P0 (2,4) "Hostage" {cost 100}
+[01:59.663] Tech resolved  P1
+[02:00.542] Mode selected P1: ATTACK
+[02:00.550] MSG: Player 2: tap a unit to attack.
+[02:00.904] Revealed: P1 (4,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:02.770] Dice rolled: 3
+[02:02.781] MSG: Huntress of Green Glade wins!
+[02:05.850] Crystals: P0 3200 → 2650 (-550)  [battle]
+[02:10.047] Attack P1(4,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(4,4)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=50 vs DEF=40  → WIN
+[02:10.047] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:10.047] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:10.047] Anim: 3A  △ P0(4,4)
+[02:10.047] Card destroyed  P0 (4,4) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[02:12.570] Turn ended  P1  |  Crystals P0=2650 P1=600
+
+--- Turn 4  |  Player 0  |  Crystals P0=2650 P1=600 ---
+[02:28.620] Revealed: P1 (1,0) "Pepper Spray" {cost 0}
+[02:29.845] Dice rolled: 4
+[02:29.940] MSG: Trap triggered: Pepper Spray!
+[02:32.216] Coin flip: Tails, Tails
+[02:34.973] MSG: Pepper Spray: Tails, Tails.
+[02:34.973] MSG: No heads — no effect.
+[02:36.357] Attack P0(3,1)"Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,0)"Pepper Spray" {cost 0}  Dice=4  → Unit vs Trap
+[02:36.357] Reckoning overlay: P0 "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=40 ATK pill=40 DEF pill=40 mod=+ATK 0 (40+0=40)
+[02:36.357] Anim: 3D  (attacker survives)
+[02:37.852] Turn ended  P0  |  Crystals P0=2650 P1=600
+
+--- Turn 5  |  Player 1  |  Crystals P0=2650 P1=600 ---
+[02:38.437] Mode selected P1: TECH
+[02:38.744] Tech played  P1: "Tease"
+[02:40.281] MSG: Opponent must choose and reveal 1 of their squares.
+[02:40.439] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:42.591] Revealed: P0 (3,2) "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:42.591] MSG: Tease: Opponent revealed Armored Cat.
+[02:42.597] Tech resolved  P1
+[02:43.482] Mode selected P1: ATTACK
+[02:43.488] MSG: Player 2: tap a unit to attack.
+[02:44.674] Dice rolled: 1
+[02:44.687] MSG: Huntress of Green Glade wins!
+[02:47.420] Crystals: P0 2650 → 2170 (-480)  [battle]
+[02:51.608] Attack P1(4,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(3,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=1  ATK=50 vs DEF=20  → WIN
+[02:51.608] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:51.608] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:51.608] Anim: 3A  △ P0(3,0)
+[02:51.608] Card destroyed  P0 (3,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:52.105] Mode selected P1: ATTACK
+[02:52.110] MSG: Player 2: tap a unit to attack.
+[02:52.448] Revealed: P1 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:54.337] Dice rolled: 2
+[02:54.346] MSG: Silver Spearman wins!
+[02:57.118] Crystals: P0 2170 → 2000 (-170)  [battle]
+[03:01.334] Attack P1(0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P0(3,2)"Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=2  ATK=25 vs DEF=20  → WIN
+[03:01.334] Reckoning overlay: P1 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[03:01.334] Reckoning overlay: P0 "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature} badge=20 ATK pill=10 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:01.334] Anim: 3A  △ P0(3,2)
+[03:01.334] Card destroyed  P0 (3,2) "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[03:01.832] Turn ended  P1  |  Crystals P0=2000 P1=600
+
+--- Turn 6  |  Player 0  |  Crystals P0=2000 P1=600 ---
+[03:12.034] Dice rolled: 3
+[03:12.118] MSG: Sand Elemental wins!
+[03:15.819] Crystals: P1 600 → 0 (-600)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2000  P1: 0  |  Turns: 6

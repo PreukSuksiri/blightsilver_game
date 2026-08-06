@@ -1,0 +1,197 @@
+=== Battle of Angry Supermarket Clerk ===
+Battle started: 2026-07-01 13:55:59.898
+Game Session of Virgin Margarita (started 2026-07-01 13:50:41.284)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.235] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:32.615] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:32.653] Revealed: P1 (1,1) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:33.832] Dice rolled: 5
+[00:33.851] MSG: Lab Zombie wins!
+[00:38.295] Crystals: P1 3000 → 2750 (-250)  [battle]
+[00:42.518] Attack P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P1(1,1)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=5  ATK=55 vs DEF=15  → WIN
+[00:42.518] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[00:42.518] Reckoning overlay: P1 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:42.518] Anim: 3A  △ P1(1,1)
+[00:42.518] Card destroyed  P1 (1,1) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:48.022] MSG: Tap 2 material card(s) on the field.
+[00:48.411] MSG: 1 more material(s) needed.
+[00:48.887] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:51.713] Revealed: P0 (3,2) "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:51.764] Union summoned P0: "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[00:51.786] MSG: Player 1 summoned [Cloud Elemental] using: "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[01:01.436] Dice rolled: 3
+[01:01.495] MSG: Nothing happens — Dead End.
+[01:04.515] Attack P0(3,2)"Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[01:04.515] Anim: 3F  (blank slot)
+[01:07.145] Turn ended  P0  |  Crystals P0=4000 P1=2750
+
+--- Turn 2  |  Player 1  |  Crystals P0=4000 P1=2750 ---
+[01:07.754] Mode selected P1: TECH
+[01:08.067] Tech played  P1: "Spy"
+[01:09.611] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:10.037] Revealed: P0 (3,1) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[01:10.039] Tech resolved  P1
+[01:10.916] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:10.916] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:10.916] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:10.917] Mode selected P1: ATTACK
+[01:10.920] MSG: Player 2: tap a unit to attack.
+[01:11.229] Revealed: P1 (2,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:12.764] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[01:13.146] Dice rolled: 2
+[01:13.185] Coin flip: Tails
+[01:15.920] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:15.957] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:15.957] MSG: Joseph the Battle Priest wins!
+[01:20.425] Crystals: P0 4000 → 3300 (-700)  [battle]
+[01:24.642] Attack P1(2,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=2  ATK=60 vs DEF=20  → WIN
+[01:24.642] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=60 ATK pill=60 DEF pill=25 mod=+ATK 0 (60+0=60)
+[01:24.642] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:24.642] Anim: 3A  △ P0(4,0)
+[01:24.642] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:25.142] Mode selected P1: ATTACK
+[01:25.145] MSG: Player 2: tap a unit to attack.
+[01:25.472] Revealed: P1 (1,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:27.363] Dice rolled: 5
+[01:27.389] MSG: Sniping Fairy wins!
+[01:31.853] Crystals: P0 3300 → 3000 (-300)  [battle]
+[01:36.063] Attack P1(1,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P0(3,1)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied}  Dice=5  ATK=40 vs DEF=20  → WIN
+[01:36.063] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[01:36.063] Reckoning overlay: P0 "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:36.063] Anim: 3A  △ P0(3,1)
+[01:36.063] Card destroyed  P0 (3,1) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied}
+[01:38.101] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[01:38.106] Turn ended  P1  |  Crystals P0=3000 P1=2750
+
+--- Turn 3  |  Player 0  |  Crystals P0=3000 P1=2750 ---
+[01:47.735] Revealed: P0 (2,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:48.949] Dice rolled: 1
+[01:48.967] MSG: Spear Shark wins!
+[01:53.440] Crystals: P1 2750 → 2150 (-600)  [battle]
+[01:57.668] Attack P0(2,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(2,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=1  ATK=50 vs DEF=25  → WIN
+[01:57.668] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[01:57.668] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=25 ATK pill=60 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:57.668] Anim: 3A  △ P1(2,1)
+[01:57.668] Card destroyed  P1 (2,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:14.002] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:15.223] Dice rolled: 4
+[02:15.244] MSG: Ponycorn wins!
+[02:17.731] Crystals: P1 2150 → 1800 (-350)  [battle]
+[02:21.941] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,3)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}  Dice=4  ATK=25 vs DEF=20  → WIN
+[02:21.941] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[02:21.941] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:21.941] Anim: 3A  △ P1(1,3)
+[02:21.941] Card destroyed  P1 (1,3) "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}
+[02:24.410] Turn ended  P0  |  Crystals P0=3000 P1=1800
+
+--- Turn 4  |  Player 1  |  Crystals P0=3000 P1=1800 ---
+[02:25.014] Mode selected P1: TECH
+[02:25.322] Tech played  P1: "Tease"
+[02:26.853] MSG: Opponent must choose and reveal 1 of their squares.
+[02:26.986] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:30.691] Revealed: P0 (0,4) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[02:30.692] MSG: Tease: Opponent revealed Black Worms.
+[02:30.702] Tech resolved  P1
+[02:31.587] Mode selected P1: ATTACK
+[02:31.597] MSG: Player 2: tap a unit to attack.
+[02:31.910] Revealed: P1 (3,2) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[02:33.814] Dice rolled: 2
+[02:33.857] MSG: Archbishop wins!
+[02:38.302] Crystals: P0 3000 → 2200 (-800)  [battle]
+[02:42.513] Attack P1(3,2)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(0,4)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}  Dice=2  ATK=70 vs DEF=65  → WIN
+[02:42.514] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=70 ATK pill=70 DEF pill=90 mod=+ATK 0 (70+0=70)
+[02:42.514] Reckoning overlay: P0 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=65 ATK pill=45 DEF pill=65 mod=+DEF 0 (65+0=65)
+[02:42.514] Anim: 3A  △ P0(0,4)
+[02:42.514] Card destroyed  P0 (0,4) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[02:43.020] Mode selected P1: ATTACK
+[02:43.023] MSG: Player 2: tap a unit to attack.
+[02:43.365] Revealed: P1 (3,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[02:45.499] Dice rolled: 2
+[02:45.549] MSG: Nothing happens — Dead End.
+[02:50.291] Attack P1(3,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[02:50.291] Anim: 3F  (blank slot)
+[02:50.789] Turn ended  P1  |  Crystals P0=2200 P1=1800
+
+--- Turn 5  |  Player 0  |  Crystals P0=2200 P1=1800 ---
+[03:15.897] Crystals: P0 2200 → 1200 (-1000)  [tech cost]
+[03:18.715] Tech played  P0: "War Supply"
+[03:20.265] MSG: War Supply: All face-up units gain +10 ATK & DEF until end of turn.
+[03:20.276] Tech resolved  P0
+[03:24.308] Revealed: P0 (4,2) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[03:25.531] Dice rolled: 2
+[03:25.553] MSG: Elemental Master wins!
+[03:28.006] MSG: Tiny Pixie survives destruction!
+[03:29.374] Attack P0(4,2)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} → P1(3,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=2  ATK=20 vs DEF=0  → WIN
+[03:29.374] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=20 ATK pill=20 DEF pill=60 mod=+ATK 0 (20+0=20)
+[03:29.374] Reckoning overlay: P1 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:29.374] Anim: 3A  △ P1(3,3)
+[03:29.374] Card destroyed  P1 (3,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[03:35.477] Dice rolled: 2
+[03:35.588] MSG: Cloud Elemental wins!
+[03:39.959] Target prompt: "Archbishop: Destroy 1 other Divine Unit instead?"  filter=own_divine_character_redirect
+[03:40.357] Crystals: P1 1800 → 1700 (-100)  [card lost]
+[03:40.364] MSG: Archbishop redirected destruction to Tiny Pixie.
+[03:41.726] Attack P0(3,2)"Cloud Elemental" {Union ATK135 DEF75 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60, +tempATK10, +tempDEF10} → P1(3,2)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=2  ATK=135 vs DEF=90  → TIE
+[03:41.726] Reckoning overlay: P0 "Cloud Elemental" {Union ATK135 DEF75 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60, +tempATK10, +tempDEF10} badge=135 ATK pill=135 DEF pill=75 mod=+ATK 0 (135+0=135)
+[03:41.726] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=90 ATK pill=70 DEF pill=90 mod=+DEF 0 (90+0=90)
+[03:41.726] Anim: exchange  (no destruction)
+[03:56.508] Turn ended  P0  |  Crystals P0=1200 P1=1700
+
+--- Turn 6  |  Player 1  |  Crystals P0=1200 P1=1700 ---
+[03:57.119] Mode selected P1: TECH
+[03:57.425] Tech played  P1: "Prayer"
+[03:58.965] MSG: Prayer: Divine Units protected until opponent's turn ends.
+[03:58.967] Tech resolved  P1
+[03:59.878] Mode selected P1: ATTACK
+[03:59.884] MSG: Player 2: tap a unit to attack.
+[04:01.068] Dice rolled: 1
+[04:01.093] MSG: Archbishop wins!
+[04:03.915] Crystals: P0 1200 → 400 (-800)  [battle]
+[04:08.129] Attack P1(3,2)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(4,2)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}  Dice=1  ATK=70 vs DEF=60  → WIN
+[04:08.129] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=70 ATK pill=70 DEF pill=90 mod=+ATK 0 (70+0=70)
+[04:08.129] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=60 ATK pill=20 DEF pill=60 mod=+DEF 0 (60+0=60)
+[04:08.129] Anim: 3A  △ P0(4,2)
+[04:08.129] Card destroyed  P0 (4,2) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[04:08.635] Mode selected P1: ATTACK
+[04:08.642] MSG: Player 2: tap a unit to attack.
+[04:08.971] Revealed: P1 (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[04:10.869] Revealed: P0 (1,1) "Flame Trap" {cost 250}
+[04:12.089] Dice rolled: 5
+[04:12.119] MSG: Trap triggered: Flame Trap!
+[04:14.345] Crystals: P0 400 → 150 (-250)  [trap cost]
+[04:17.172] MSG: Flame Trap: Choir Lady Alice permanently loses 10 ATK!
+[04:18.557] Attack P1(0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P0(1,1)"Flame Trap" {cost 250}  Dice=5  → Unit vs Trap
+[04:18.557] Reckoning overlay: P1 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=25 mod=+ATK 0 (20+0=20)
+[04:18.557] Anim: 3D  (attacker survives)
+[04:19.055] Turn ended  P1  |  Crystals P0=150 P1=1700
+
+--- Turn 7  |  Player 0  |  Crystals P0=150 P1=1700 ---
+[04:23.890] Dice rolled: 4
+[04:23.912] MSG: Spear Shark wins!
+[04:23.912] MSG: Prayer protected Choir Lady Alice!
+[04:29.202] Attack P0(2,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(0,1)"Choir Lady Alice" {Unit ATK10 DEF25 | cost 250 | affinity Divine | base 10/25}  Dice=4  ATK=50 vs DEF=25  → TIE
+[04:29.202] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[04:29.202] Reckoning overlay: P1 "Choir Lady Alice" {Unit ATK10 DEF25 | cost 250 | affinity Divine | base 10/25} badge=25 ATK pill=10 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:29.202] Anim: exchange  (no destruction)
+[04:36.412] Dice rolled: 2
+[04:36.442] MSG: Nothing happens — Dead End.
+[04:39.613] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(2,0)(empty)  Dice=2  → DEAD_END
+[04:39.613] Anim: 3F  (blank slot)
+[04:40.797] Turn ended  P0  |  Crystals P0=150 P1=1700
+
+--- Turn 8  |  Player 1  |  Crystals P0=150 P1=1700 ---
+[04:41.401] Mode selected P1: ATTACK
+[04:41.408] MSG: Player 2: tap a unit to attack.
+[04:42.599] Dice rolled: 5
+[04:42.622] MSG: Archbishop wins!
+[04:47.089] Crystals: P0 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 1700  |  Turns: 8

@@ -1,0 +1,172 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-07-29 16:11:48.041
+Game Session of Cola (started 2026-07-29 16:10:49.612)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:21.071] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[01:01.243] Tech played  P0: "Spy"
+[01:07.324] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:08.127] Revealed: P1 (2,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[01:13.291] Tech resolved  P0
+[01:23.011] MSG: Tap 2 material card(s) on the field.
+[01:25.063] MSG: 1 more material(s) needed.
+[01:27.973] Crystals: P0 5000 → 4700 (-300)  [union]
+[01:39.089] Revealed: P0 (3,0) "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:39.129] Union summoned P0: "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down}, "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}
+[02:14.078] Revealed: P0 (3,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:18.957] Dice rolled: 1
+[02:18.993] Coin flip: Heads
+[02:29.985] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[02:29.992] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[02:29.992] MSG: Joseph the Battle Priest wins!
+[02:41.857] Crystals: P1 3000 → 2200 (-800)  [battle]
+[02:58.681] Attack P0(3,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(2,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=1  ATK=70 vs DEF=55  → WIN
+[02:58.681] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=70 ATK pill=60 DEF pill=25 mod=+ATK 10 (60+10=70)
+[02:58.681] Reckoning overlay: P1 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:58.681] Anim: 3A  △ P1(2,2)
+[02:58.681] Card destroyed  P1 (2,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[03:05.493] Revealed: P0 (3,2) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:05.493] Revealed: P1 (1,2) "Trap Hole" {cost 0}
+[03:10.919] Dice rolled: 3
+[03:10.924] MSG: Trap triggered: Trap Hole!
+[03:21.957] Coin flip: Tails, Tails, Heads
+[03:33.721] MSG: Trap Hole: Tails, Tails, Heads.
+[03:33.721] Crystals: P0 4700 → 4680 (-20)  [trap]
+[03:41.166] MSG: Trap Hole: 1 head(s) — Player 1 loses 20 Crystals!
+[03:47.167] Attack P0(3,2)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(1,2)"Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[03:47.167] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[03:47.167] Anim: 3D  (attacker survives)
+[04:08.870] MSG: Ability triggered: "Sniping Fairy" (atk penalty when exposed)
+[04:15.342] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[04:15.351] Turn ended  P0  |  Crystals P0=4680 P1=2200
+
+--- Turn 2  |  Player 1  |  Crystals P0=4680 P1=2200 ---
+[04:15.360] MSG: Shady Woman Avoids 🥺
+[04:17.784] Mode selected P1: TECH
+[04:19.101] Tech played  P1: "Spy"
+[04:25.021] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[04:27.621] Dead-end placed  P0 (3,1)
+[04:27.688] Tech resolved  P1
+[04:31.216] Mode selected P1: ATTACK
+[04:32.495] Revealed: P1 (0,4) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[04:40.163] Dice rolled: 1
+[04:40.169] MSG: Plant-29 wins!
+[04:52.039] Crystals: P0 4680 → 4330 (-350)  [battle]
+[05:08.850] Attack P1(0,4)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(3,2)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}  Dice=1  ATK=45 vs DEF=20  → WIN
+[05:08.850] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[05:08.850] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:08.851] Anim: 3A  △ P0(3,2)
+[05:08.851] Card destroyed  P0 (3,2) "Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20}
+[05:10.973] Mode selected P1: ATTACK
+[05:12.276] Revealed: P1 (2,0) "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[05:20.589] Dice rolled: 3
+[05:20.595] MSG: Slug-11 wins!
+[05:33.179] Crystals: P0 4330 → 3730 (-600)  [battle]
+[05:50.919] Attack P1(2,0)"Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P0(3,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=3  ATK=45 vs DEF=25  → WIN
+[05:50.919] Reckoning overlay: P1 "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[05:50.919] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=25 ATK pill=60 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:50.919] Anim: 3A  △ P0(3,4)
+[05:50.919] Card destroyed  P0 (3,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[05:53.126] Turn ended  P1  |  Crystals P0=3730 P1=2200
+
+--- Turn 3  |  Player 0  |  Crystals P0=3730 P1=2200 ---
+[06:20.579] Tech played  P0: "Prayer"
+[06:26.473] MSG: Prayer: Divine Units protected until opponent's turn ends.
+[06:26.476] Tech resolved  P0
+[06:42.362] Revealed: P0 (2,0) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[06:48.157] Dice rolled: 2
+[06:48.175] MSG: Bomber Fairy hits Dead End — nothing happens.
+[07:01.654] Attack P0(2,0)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P1(1,0)(empty)  Dice=2  → DEAD_END
+[07:01.655] Anim: 3F  (blank slot)
+[07:17.089] Revealed: P0 (2,4) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[07:23.324] Dice rolled: 4
+[07:23.337] MSG: Ponycorn hits Dead End — nothing happens.
+[07:37.229] Attack P0(2,4)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(3,0)(empty)  Dice=4  → DEAD_END
+[07:37.229] Anim: 3F  (blank slot)
+[07:40.900] Turn ended  P0  |  Crystals P0=3730 P1=2200
+
+--- Turn 4  |  Player 1  |  Crystals P0=3730 P1=2200 ---
+[07:40.901] MSG: Ability triggered: "Plant-29" (turn start coin flip flag)
+[07:46.815] Coin flip: Tails
+[07:57.830] Target prompt: "Plant-29: Tails! Choose 1 of your units for Mutagen."  filter=ability_plant29_mutagen
+[07:59.500] Revealed: P1 (0,0) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[07:59.502] MSG: Plant-29: Mutagen on Lab Bloater.
+[08:02.101] Mode selected P1: TECH
+[08:03.319] Crystals: P1 2200 → 1600 (-600)  [tech cost]
+[08:14.251] Tech played  P1: "Radar"
+[08:20.513] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[08:23.093] Dead-end placed  P0 (0,3)
+[08:24.701] Revealed: P0 (4,4) "Street Joke" {cost 0}
+[08:32.255] Dead-end placed  P0 (1,4)
+[08:32.329] Tech resolved  P1
+[08:35.898] Mode selected P1: ATTACK
+[08:40.638] Dice rolled: 3
+[08:40.644] MSG: Lab Bloater wins!
+[08:40.644] MSG: Prayer protected Bomber Fairy!
+[08:55.950] Attack P1(0,0)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | flags:mutagen} → P0(2,0)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=3  ATK=20 vs DEF=15  → TIE
+[08:55.951] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | flags:mutagen} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[08:55.951] Reckoning overlay: P0 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[08:55.951] Anim: exchange  (no destruction)
+[08:58.214] Mode selected P1: ATTACK
+[09:03.481] Dice rolled: 4
+[09:03.498] MSG: Plant-29 wins!
+[09:16.111] Crystals: P0 3730 → 3230 (-500)  [battle]
+[09:33.986] Attack P1(0,4)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(2,0)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=4  ATK=45 vs DEF=15  → WIN
+[09:33.986] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[09:33.987] Reckoning overlay: P0 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[09:33.987] Anim: 3A  △ P0(2,0)
+[09:33.987] Card destroyed  P0 (2,0) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[09:36.156] MSG: Ability triggered: "Slug-11" (turn end foe crystal per mutagen)
+[09:42.489] Crystals: P0 3230 → 2930 (-300)  [ability]
+[09:42.490] MSG: Slug-11: Foe loses 300 Crystals (1 Mutagen on field)!
+[09:54.506] Turn ended  P1  |  Crystals P0=2930 P1=1600
+
+--- Turn 5  |  Player 0  |  Crystals P0=2930 P1=1600 ---
+[10:25.842] Revealed: P0 (4,0) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}
+[10:30.636] Dice rolled: 1
+[10:30.641] MSG: Padmapani wins!
+[10:42.581] Crystals: P1 1600 → 700 (-900)  [battle]
+[10:59.291] Attack P0(4,0)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} → P1(0,4)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}  Dice=1  ATK=125 vs DEF=85  → WIN
+[10:59.291] Reckoning overlay: P0 "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} badge=125 ATK pill=50 DEF pill=25 mod=+ATK 75 (50+75=125)
+[10:59.291] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=85 ATK pill=45 DEF pill=85 mod=+DEF 0 (85+0=85)
+[10:59.291] Anim: 3A  △ P1(0,4)
+[10:59.291] Card destroyed  P1 (0,4) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[11:18.715] Revealed: P1 (1,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[11:23.814] Dice rolled: 2
+[11:36.947] Crystals: P0 2930 → 2630 (-300)  [battle]
+[11:48.831] Attack P0(2,4)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=2  ATK=25 vs DEF=40  → LOSE
+[11:48.831] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[11:48.831] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[11:48.831] Anim: 3B  △ P0(2,4)
+[11:48.831] Card destroyed  P0 (2,4) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[12:12.117] Turn ended  P0  |  Crystals P0=2630 P1=700
+
+--- Turn 6  |  Player 1  |  Crystals P0=2630 P1=700 ---
+[12:14.546] Mode selected P1: TECH
+[12:15.833] Tech played  P1: "Tease"
+[12:21.811] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[12:23.361] Revealed: P0 (2,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[12:28.248] MSG: Tease: Opponent revealed Church Guard.
+[12:28.252] Tech resolved  P1
+[12:31.792] Mode selected P1: ATTACK
+[12:36.559] Dice rolled: 5
+[12:36.563] MSG: Slug-11 wins!
+[12:48.495] Crystals: P0 2630 → 1630 (-1000)  [battle]
+[13:05.242] Attack P1(2,0)"Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P0(4,0)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}  Dice=5  ATK=45 vs DEF=25  → WIN
+[13:05.242] Reckoning overlay: P1 "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[13:05.242] Reckoning overlay: P0 "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[13:05.242] Anim: 3A  △ P0(4,0)
+[13:05.242] Card destroyed  P0 (4,0) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}
+[13:07.346] Mode selected P1: ATTACK
+[13:12.499] Dice rolled: 4
+[13:12.502] MSG: Dystopian Cultist wins!
+[13:25.234] Crystals: P0 1630 → 1480 (-150)  [battle]
+[13:43.076] Attack P1(1,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P0(2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=4  ATK=65 vs DEF=35  → WIN
+[13:43.076] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[13:4

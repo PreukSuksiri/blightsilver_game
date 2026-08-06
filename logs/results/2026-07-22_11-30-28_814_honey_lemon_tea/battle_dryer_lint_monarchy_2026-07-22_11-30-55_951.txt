@@ -1,0 +1,97 @@
+=== Battle of Dryer Lint Monarchy ===
+Battle started: 2026-07-22 11:30:55.951
+Game Session of Honey Lemon Tea (started 2026-07-22 11:30:28.814)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.113] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.503] Mode selected P1: TECH
+[00:08.813] Tech played  P1: "Spy"
+[00:10.443] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.077] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:13.618] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:13.621] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.021] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:14.073] Tech resolved  P1
+[00:14.932] Mode selected P1: ATTACK
+[00:14.940] MSG: Player 2: tap a unit to attack.
+[00:15.276] Revealed: P1 (0,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:17.166] Dice rolled: 4
+[00:17.213] MSG: Pyromancer wins!
+[00:21.653] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:26.889] Attack P1(0,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=4  ATK=110 vs DEF=25  → WIN
+[00:26.889] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=110 ATK pill=80 DEF pill=0 mod=+ATK 30 (80+30=110)
+[00:26.889] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:26.889] Anim: 3A  △ P0(3,2)
+[00:26.889] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:29.386] Turn ended  P1  |  Crystals P0=4820 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=3000 ---
+[00:43.781] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:44.994] Dice rolled: 4
+[00:45.035] MSG: Witchhunter wins!
+[00:49.478] Crystals: P1 3000 → 2100 (-900)  [battle]
+[00:54.715] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(0,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=4  ATK=25 vs DEF=0  → WIN
+[00:54.715] Reckoning overlay: P0 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=20 DEF pill=20 mod=+ATK 5 (20+5=25)
+[00:54.715] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[00:54.715] Anim: 3A  △ P1(0,4)
+[00:54.715] Card destroyed  P1 (0,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:03.178] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:03.212] Revealed: P1 (1,2) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[01:04.411] Dice rolled: 1
+[01:04.442] MSG: Grand Fort Archer wins!
+[01:04.442] MSG: Green Mage: Grand Fort Archer permanently loses 10 ATK and DEF!
+[01:09.882] Crystals: P1 2100 → 1700 (-400)  [battle]
+[01:15.086] Attack P0(2,1)"Grand Fort Archer" {Unit ATK10 DEF10 | cost 280 | affinity Anima | base 10/10} → P1(1,2)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=1  ATK=30 vs DEF=15  → WIN
+[01:15.086] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK10 DEF10 | cost 280 | affinity Anima | base 10/10} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:15.086] Reckoning overlay: P1 "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:15.086] Anim: 3A  △ P1(1,2)
+[01:15.086] Card destroyed  P1 (1,2) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[01:18.966] Turn ended  P0  |  Crystals P0=4820 P1=1700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4820 P1=1700 ---
+[01:19.551] Mode selected P1: TECH
+[01:19.852] Crystals: P1 1700 → 1100 (-600)  [tech cost]
+[01:23.681] Tech played  P1: "Radar"
+[01:25.203] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:25.652] Revealed: P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:26.254] Dead-end placed  P0 (2,3)
+[01:26.438] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:26.444] Tech resolved  P1
+[01:28.804] Crystals: P1 1100 → 100 (-1000)  [union]
+[01:32.644] Revealed: P1 (0,1) "Diamond Elemental" {Union ATK60 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:32.699] Union summoned P1: "Diamond Elemental" {Union ATK60 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[01:32.701] MSG: Player 2 summoned [Diamond Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[01:36.066] Mode selected P1: ATTACK
+[01:36.073] MSG: Player 2: tap a unit to attack.
+[01:37.271] Dice rolled: 3
+[01:37.359] MSG: Diamond Elemental wins!
+[01:41.760] Crystals: P0 4820 → 4570 (-250)  [battle]
+[01:46.943] Attack P1(0,1)"Diamond Elemental" {Union ATK60 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=3  ATK=60 vs DEF=25  → WIN
+[01:46.943] Reckoning overlay: P1 "Diamond Elemental" {Union ATK60 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=60 ATK pill=60 DEF pill=100 mod=+ATK 0 (60+0=60)
+[01:46.943] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=25 ATK pill=20 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:46.943] Anim: 3A  △ P0(2,0)
+[01:46.943] Card destroyed  P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:49.457] Turn ended  P1  |  Crystals P0=4570 P1=100
+
+--- Turn 4  |  Player 0  |  Crystals P0=4570 P1=100 ---
+[01:56.035] MSG: Tap 2 material card(s) on the field.
+[01:56.776] MSG: 1 more material(s) needed.
+[01:57.468] Crystals: P0 4570 → 4070 (-500)  [union]
+[02:01.302] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[02:01.348] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[02:01.349] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[02:01.355] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[02:11.460] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:11.506] Revealed: P1 (1,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[02:12.683] Dice rolled: 1
+[02:12.748] MSG: Grand Fort Footsoldier wins!
+[02:17.178] Crystals: P1 100 → 0 (-100)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4070  P1: 0  |  Turns: 4

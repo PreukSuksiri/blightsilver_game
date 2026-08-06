@@ -1,0 +1,45 @@
+=== Battle of Garage Sale Treasure Hunt ===
+Battle started: 2026-07-03 06:37:24.243
+Game Session of Arnold Palmer (started 2026-07-03 06:36:49.773)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.295] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.680] Mode selected P1: TECH
+[00:09.989] Tech played  P1: "Spy"
+[00:11.527] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.926] Revealed: P0 (2,4) "Pepper Spray" {cost 0}
+[00:11.978] Tech resolved  P1
+[00:12.835] Mode selected P1: ATTACK
+[00:12.838] MSG: Player 2: tap a unit to attack.
+[00:13.186] Revealed: P1 (1,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:15.300] Dice rolled: 2
+[00:15.341] MSG: Nothing happens — Dead End.
+[00:20.073] Attack P1(1,1)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(1,0)(empty)  Dice=2  → DEAD_END
+[00:20.073] Anim: 3F  (blank slot)
+[00:22.583] Turn ended  P1  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:37.602] MSG: Tap 3 material card(s) on the field.
+[00:43.145] MSG: Tap 2 material card(s) on the field.
+[00:43.458] MSG: 1 more material(s) needed.
+[00:44.051] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:47.888] Revealed: P0 (2,2) "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:47.946] Union summoned P0: "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[00:47.951] MSG: Player 1 summoned [Sand Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[00:56.547] Revealed: P1 (2,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:58.233] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[01:00.371] Ability choice: 1 (No)
+[01:00.377] Dice rolled: 2
+[01:00.459] MSG: Sand Elemental wins!
+[01:04.854] Crystals: P1 3000 → 2650 (-350)  [battle]
+[01:10.071] Attack P0(2,2)"Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,1)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=2  ATK=105 vs DEF=20  → WIN
+[01:10.071] Reckoning overlay: P0 "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=105 ATK pill=55 DEF pill=55 mod=+ATK 50 (55+50=105)
+[01:10.071] Reckoning overlay: P1 "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:10.071] Anim: 3A  △ P1(1,1)
+[01:10.071] Card destroyed  P1 (1,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}

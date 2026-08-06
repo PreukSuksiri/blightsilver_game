@@ -1,0 +1,39 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-07-02 17:09:12.537
+Game Session of Ginger Beer (started 2026-07-02 17:08:19.076)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.500] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.879] Mode selected P1: TECH
+[00:10.188] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:13.012] Tech played  P1: "Radar"
+[00:14.588] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:15.040] Revealed: P0 (4,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:15.400] Revealed: P0 (0,2) "Decoy Puppet" {cost 100}
+[00:15.836] Revealed: P0 (2,1) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[00:15.838] Tech resolved  P1
+[00:16.725] Mode selected P1: ATTACK
+[00:16.727] MSG: Player 2: tap a unit to attack.
+[00:17.059] Revealed: P1 (2,0) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[00:18.998] Dice rolled: 1
+[00:19.018] MSG: Rotten Shrieker wins!
+[00:22.000] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:26.193] Attack P1(2,0)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P0(4,2)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=1  ATK=40 vs DEF=5  → WIN
+[00:26.193] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:26.193] Reckoning overlay: P0 "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} badge=5 ATK pill=35 DEF pill=5 mod=+DEF 0 (5+0=5)
+[00:26.193] Anim: 3A  △ P0(4,2)
+[00:26.193] Card destroyed  P0 (4,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:28.711] MSG: Ability triggered: "Rotten Shrieker" (perm atk loss per own turn)
+[00:30.281] Turn ended  P1  |  Crystals P0=4700 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=2400 ---
+[00:37.861] Crystals: P1 2400 → 0 (-2400)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4700  P1: 0  |  Turns: 2

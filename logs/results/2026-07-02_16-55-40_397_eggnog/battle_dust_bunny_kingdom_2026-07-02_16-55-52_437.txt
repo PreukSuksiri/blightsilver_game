@@ -1,0 +1,51 @@
+=== Battle of Dust Bunny Kingdom ===
+Battle started: 2026-07-02 16:55:52.437
+Game Session of Eggnog (started 2026-07-02 16:55:40.397)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.716] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.104] Mode selected P1: TECH
+[00:10.410] Tech played  P1: "Spy"
+[00:11.943] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:12.349] Tech resolved  P1
+[00:12.585] Dead-end placed  P0 (2,0)
+[00:13.247] Mode selected P1: ATTACK
+[00:13.249] MSG: Player 2: tap a unit to attack.
+[00:13.587] Revealed: P1 (0,0) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:15.506] Revealed: P0 (0,0) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:16.701] Dice rolled: 3
+[00:17.312] Ability choice: 0 (Yes)
+[00:17.313] Crystals: P1 3000 → 2200 (-800)  [ability]
+[00:20.118] MSG: Hairpin Assassin: Paid 800 Crystals for +10 ATK!
+[00:20.118] MSG: Hairpin Assassin wins!
+[00:24.361] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:28.575] Attack P1(0,0)"Hairpin Assassin" {Unit ATK35 DEF15 | cost 300 | affinity Anima | base 25/15 | buff +tempATK10} → P0(0,0)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=35 vs DEF=30  → WIN
+[00:28.575] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK35 DEF15 | cost 300 | affinity Anima | base 25/15 | buff +tempATK10} badge=35 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=35) MISMATCH
+[00:28.575] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:28.575] Anim: 3A  △ P0(0,0)
+[00:28.575] Card destroyed  P0 (0,0) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:29.080] Mode selected P1: ATTACK
+[00:29.083] MSG: Player 2: tap a unit to attack.
+[00:29.416] Revealed: P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:31.301] Revealed: P0 (1,0) "Pepper Spray" {cost 0}
+[00:32.526] Dice rolled: 2
+[00:32.544] MSG: Trap triggered: Pepper Spray!
+[00:35.736] Coin flip: Heads, Heads
+[00:38.484] MSG: Pepper Spray: Heads, Heads.
+[00:38.484] MSG: Pepper Spray: 2 head(s) — Kiyoko the Death Whisper -10 ATK until next turn ends!
+[00:39.866] Attack P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(1,0)"Pepper Spray" {cost 0}  Dice=2  → Unit vs Trap
+[00:39.866] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:39.866] Anim: 3D  (attacker survives)
+[00:40.373] Turn ended  P1  |  Crystals P0=4620 P1=2200
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=2200 ---
+[01:02.426] Crystals: P1 2200 → 0 (-2200)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4620  P1: 0  |  Turns: 2

@@ -1,0 +1,133 @@
+=== Battle of Todd's Standing Desk ===
+Battle started: 2026-08-06 07:08:26.475
+Game Session of Lemonade (started 2026-08-06 07:06:35.751)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:19.798] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:27.126] Mode selected P1: ATTACK
+[00:27.450] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:29.341] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:30.573] Dice rolled: 5
+[00:30.580] MSG: Trap triggered: Trap Hole!
+[00:32.852] MSG: Omen: Vampire Servant cannot attack during their next turn.
+[00:32.895] Coin flip: Heads, Tails, Heads
+[00:35.657] MSG: Trap Hole: Heads, Tails, Heads.
+[00:35.658] Crystals: P1 5000 → 4960 (-40)  [trap]
+[00:37.865] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[00:39.247] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:39.247] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[00:39.247] Anim: 3D  (attacker survives)
+[00:39.735] Mode selected P1: ATTACK
+[00:40.077] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:42.193] Dice rolled: 4
+[00:42.209] MSG: Vampire Duchess hits Dead End — nothing happens.
+[00:46.974] Attack P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} → P0(1,0)(empty)  Dice=4  → DEAD_END
+[00:46.974] Anim: 3F  (blank slot)
+[00:47.476] Turn ended  P1  |  Crystals P0=5000 P1=4960
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4960 ---
+[01:19.867] Revealed: P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:21.091] Dice rolled: 3
+[01:21.105] MSG: Moon Tribe Twin Blader wins!
+[01:23.863] Crystals: P1 4960 → 4160 (-800)  [battle]
+[01:26.744] Coin flip: Tails
+[01:29.483] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:30.864] Attack P0(1,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | cannot-atk≤T3}  Dice=3  ATK=30 vs DEF=20  → WIN
+[01:30.864] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[01:30.864] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | cannot-atk≤T3} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:30.864] Anim: 3A  △ P1(0,2)
+[01:30.864] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | cannot-atk≤T3}
+[01:44.394] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:45.630] Dice rolled: 2
+[01:45.639] MSG: Pit Lord wins!
+[01:48.116] Crystals: P1 4160 → 3360 (-800)  [battle]
+[01:50.955] MSG: Pit Lord: ATK & DEF halved after attack!
+[01:52.316] Attack P0(4,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=2  ATK=120 vs DEF=50  → WIN
+[01:52.316] Reckoning overlay: P0 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[01:52.316] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:52.316] Anim: 3A  △ P1(1,2)
+[01:52.316] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:53.682] Turn ended  P0  |  Crystals P0=5000 P1=3360
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=3360 ---
+[01:56.186] Mode selected P1: TECH
+[01:56.487] Crystals: P1 3360 → 2360 (-1000)  [tech cost]
+[01:59.305] Tech played  P1: "Accident"
+[02:00.867] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[02:01.268] Card destroyed  P0 (4,0) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[02:01.275] Tech resolved  P1
+[02:02.179] Mode selected P1: ATTACK
+[02:02.496] Revealed: P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[02:04.397] Dice rolled: 3
+[02:04.402] MSG: Ancient Lich wins!
+[02:07.028] Crystals: P0 5000 → 4700 (-300)  [battle]
+[02:11.236] Attack P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} → P0(1,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=60 vs DEF=20  → WIN
+[02:11.236] Reckoning overlay: P1 "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[02:11.236] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:11.236] Anim: 3A  △ P0(1,4)
+[02:11.236] Card destroyed  P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:11.744] Mode selected P1: ATTACK
+[02:12.086] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[02:14.034] Revealed: P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:15.208] Dice rolled: 4
+[02:15.217] MSG: Lab Crawler wins!
+[02:19.511] Crystals: P0 4700 → 4350 (-350)  [battle]
+[02:23.717] Attack P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=4  ATK=95 vs DEF=20  → WIN
+[02:23.717] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[02:23.717] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:23.717] Anim: 3A  △ P0(2,0)
+[02:23.717] Card destroyed  P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:24.219] Turn ended  P1  |  Crystals P0=4350 P1=2360
+
+--- Turn 4  |  Player 0  |  Crystals P0=4350 P1=2360 ---
+[02:30.591] MSG: Tap 2 material card(s) on the field.
+[02:30.707] MSG: 1 more material(s) needed.
+[02:31.357] Crystals: P0 4350 → 2850 (-1500)  [union]
+[02:34.186] Revealed: P0 (0,1) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[02:34.233] Union summoned P0: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}, "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[02:51.166] Dice rolled: 2
+[02:51.194] MSG: Seraphim Fistmaster wins!
+[02:54.015] Crystals: P1 2360 → 1610 (-750)  [battle]
+[02:58.241] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}  Dice=2  ATK=240 vs DEF=60  → WIN
+[02:58.241] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=240 ATK pill=120 DEF pill=120 mod=+ATK 120 (120+120=240)
+[02:58.241] Reckoning overlay: P1 "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} badge=60 ATK pill=60 DEF pill=60 mod=+DEF 0 (60+0=60)
+[02:58.241] Anim: 3A  △ P1(3,1)
+[02:58.241] Card destroyed  P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[03:02.155] Revealed: P0 (1,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:03.382] Dice rolled: 2
+[03:03.388] MSG: Pyromancer wins!
+[03:06.166] Crystals: P1 1610 → 410 (-1200)  [battle]
+[03:10.388] Attack P0(1,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=2  ATK=80 vs DEF=60  → WIN
+[03:10.388] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=80 ATK pill=80 DEF pill=0 mod=+ATK 0 (80+0=80)
+[03:10.388] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=60 ATK pill=95 DEF pill=60 mod=+DEF 0 (60+0=60)
+[03:10.389] Anim: 3A  △ P1(2,1)
+[03:10.389] Card destroyed  P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[03:11.524] Turn ended  P0  |  Crystals P0=2850 P1=410
+
+--- Turn 5  |  Player 1  |  Crystals P0=2850 P1=410 ---
+[03:14.035] Mode selected P1: ATTACK
+[03:14.353] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[03:16.250] Dice rolled: 5
+[03:16.257] MSG: Leech Man wins!
+[03:20.736] Crystals: P0 2850 → 1950 (-900)  [battle]
+[03:24.934] Attack P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(1,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=5  ATK=60 vs DEF=0  → WIN
+[03:24.934] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=60 ATK pill=60 DEF pill=40 mod=+ATK 0 (60+0=60)
+[03:24.934] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:24.934] Anim: 3A  △ P0(1,2)
+[03:24.934] Card destroyed  P0 (1,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:27.430] Turn ended  P1  |  Crystals P0=1950 P1=410
+
+--- Turn 6  |  Player 0  |  Crystals P0=1950 P1=410 ---
+[03:33.295] Revealed: P0 (1,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[03:34.521] Dice rolled: 1
+[03:34.527] MSG: Dystopian Cultist wins!
+[03:38.173] Crystals: P1 410 → 0 (-410)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1950  P1: 0  |  Turns: 6

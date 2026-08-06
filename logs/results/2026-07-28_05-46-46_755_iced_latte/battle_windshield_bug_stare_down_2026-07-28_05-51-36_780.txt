@@ -1,0 +1,100 @@
+=== Battle of Windshield Bug Stare-Down ===
+Battle started: 2026-07-28 05:51:36.780
+Game Session of Iced Latte (started 2026-07-28 05:46:46.755)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:20.727] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:42.140] Mode selected P1: TECH
+[00:43.418] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:54.417] Tech played  P1: "Radar"
+[01:00.503] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:03.091] Dead-end placed  P0 (0,1)
+[01:04.717] Dead-end placed  P0 (1,4)
+[01:05.409] Revealed: P0 (3,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:05.412] Tech resolved  P1
+[01:09.054] Mode selected P1: ATTACK
+[01:10.322] Revealed: P1 (1,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:18.223] Dice rolled: 5
+[01:18.233] MSG: Flame Lizard wins!
+[01:28.542] MSG: Tiny Pixie survives destruction!
+[01:34.389] Attack P1(1,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P0(3,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=5  ATK=25 vs DEF=0  → WIN
+[01:34.389] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[01:34.389] Reckoning overlay: P0 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:34.389] Anim: 3A  △ P0(3,4)
+[01:34.389] Card destroyed  P0 (3,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:36.565] Mode selected P1: ATTACK
+[01:37.944] Revealed: P1 (2,2) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[01:46.380] Dice rolled: 4
+[01:46.384] MSG: Goblin Poacher wins!
+[01:59.223] Crystals: P0 5000 → 4900 (-100)  [battle]
+[02:17.492] Attack P1(2,2)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(3,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}  Dice=4  ATK=30 vs DEF=0  → WIN
+[02:17.492] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[02:17.492] Reckoning overlay: P0 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:17.492] Anim: 3A  △ P0(3,4)
+[02:19.699] Turn ended  P1  |  Crystals P0=4900 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4900 P1=2400 ---
+[02:52.753] MSG: Tap 2 material card(s) on the field.
+[02:53.918] MSG: 1 more material(s) needed.
+[02:54.837] Crystals: P0 4900 → 4600 (-300)  [union]
+[03:06.037] Revealed: P0 (2,2) "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[03:06.068] Union summoned P0: "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[03:49.803] Dice rolled: 5
+[03:49.875] MSG: False Prophet wins!
+[04:02.000] Crystals: P1 2400 → 2150 (-250)  [battle]
+[04:19.335] Attack P0(2,2)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(2,2)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=5  ATK=30 vs DEF=10  → WIN
+[04:19.335] Reckoning overlay: P0 "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} badge=30 ATK pill=30 DEF pill=40 mod=+ATK 0 (30+0=30)
+[04:19.335] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[04:19.335] Anim: 3A  △ P1(2,2)
+[04:19.335] Card destroyed  P1 (2,2) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[04:38.943] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[04:44.735] MSG: False Prophet: Dead End revealed — self-destructs!
+[04:44.742] Card destroyed  P0 (2,2) "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine | attacked}
+[04:44.938] Turn ended  P0  |  Crystals P0=4600 P1=2150
+
+--- Turn 3  |  Player 1  |  Crystals P0=4600 P1=2150 ---
+[04:45.991] Dead-end placed  P1 (1,1)
+[04:47.315] Mode selected P1: TECH
+[04:48.664] Tech played  P1: "Tease"
+[04:54.856] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:18.804] Revealed: P0 (3,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[05:18.804] MSG: Tease: Opponent revealed Joan the Faithful Warrior.
+[05:18.808] Tech resolved  P1
+[05:28.578] Crystals: P1 2150 → 1350 (-800)  [union]
+[05:39.720] Revealed: P1 (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[05:39.748] Union summoned P1: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[05:53.580] Mode selected P1: ATTACK
+[05:58.552] Dice rolled: 1
+[05:58.613] MSG: Ancient Lizard wins!
+[06:10.668] Crystals: P0 4600 → 4320 (-280)  [battle]
+[06:27.904] Attack P1(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(3,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=1  ATK=75 vs DEF=5  → WIN
+[06:27.904] Reckoning overlay: P1 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+ATK 0 (75+0=75)
+[06:27.904] Reckoning overlay: P0 "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} badge=5 ATK pill=25 DEF pill=5 mod=+DEF 0 (5+0=5)
+[06:27.904] Anim: 3A  △ P0(3,0)
+[06:27.904] Card destroyed  P0 (3,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[06:38.765] Turn ended  P1  |  Crystals P0=4320 P1=1350
+
+--- Turn 4  |  Player 0  |  Crystals P0=4320 P1=1350 ---
+[07:02.568] Crystals: P0 4320 → 3320 (-1000)  [tech cost]
+[07:13.655] Tech played  P0: "War Supply"
+[07:19.830] MSG: War Supply: All face-up units gain +10 ATK & DEF until end of turn.
+[07:19.834] Tech resolved  P0
+[07:36.958] Revealed: P0 (4,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[07:41.825] Dice rolled: 5
+[07:41.885] MSG: Both cards are destroyed!
+[07:53.629] Crystals: P0 3320 → 2460 (-860)  [battle]
+[08:09.326] Attack P0(4,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}  Dice=5  ATK=75 vs DEF=75  → TIE
+[08:09.326] Reckoning overlay: P0 "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} badge=75 ATK pill=75 DEF pill=0 mod=+ATK 0 (75+0=75)
+[08:09.326] Reckoning overlay: P1 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+DEF 0 (75+0=75)
+[08:09.326] Anim: 3C  △ P0(4,1) + △ P1(1,2)
+[08:09.326] Card destroyed  P0 (4,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[08:09.326] Card destroyed  P1 (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 2460  P1: 1350  |  Turns: 4

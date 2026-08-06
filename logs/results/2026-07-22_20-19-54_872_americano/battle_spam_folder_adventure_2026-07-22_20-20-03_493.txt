@@ -1,0 +1,40 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-07-22 20:20:03.493
+Game Session of Americano (started 2026-07-22 20:19:54.872)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.265] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[01:00.543] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:01.753] Dice rolled: 3
+[01:01.796] MSG: Nothing happens — Dead End.
+[01:05.575] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(0,1)(empty)  Dice=3  → DEAD_END
+[01:05.576] Anim: 3F  (blank slot)
+[01:33.620] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:33.651] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:34.853] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[01:36.391] Dice rolled: 5
+[01:36.398] MSG: Both cards are destroyed!
+[01:39.553] Crystals: P0 5000 → 4750 (-250)  [battle]
+[01:43.397] Crystals: P1 3000 → 2800 (-200)  [battle]
+[01:47.252] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}  Dice=5  ATK=25 vs DEF=25  → TIE
+[01:47.252] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[01:47.252] Reckoning overlay: P1 "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:47.252] Anim: 3C  △ P0(2,4) + △ P1(1,1)
+[01:47.252] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:47.252] Card destroyed  P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[01:56.464] MSG: Tap 2 material card(s) on the field.
+[01:56.593] MSG: 1 more material(s) needed.
+[01:57.218] Crystals: P0 4750 → 4250 (-500)  [union]
+[02:01.057] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[02:01.094] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | attacked}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[02:01.094] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[02:01.117] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | attacked}, "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4250  P1: 2800  |  Turns: 1

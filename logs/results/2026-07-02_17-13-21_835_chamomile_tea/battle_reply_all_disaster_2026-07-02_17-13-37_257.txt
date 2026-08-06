@@ -1,0 +1,38 @@
+=== Battle of Reply All Disaster ===
+Battle started: 2026-07-02 17:13:37.257
+Game Session of Chamomile Tea (started 2026-07-02 17:13:21.835)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.700] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.071] Mode selected P1: TECH
+[00:10.369] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:14.198] Tech played  P1: "Radar"
+[00:15.744] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.141] Revealed: P0 (4,1) "Trap Hole" {cost 0}
+[00:16.784] Dead-end placed  P0 (2,2)
+[00:16.971] Revealed: P0 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:16.973] Tech resolved  P1
+[00:17.850] Mode selected P1: ATTACK
+[00:17.853] MSG: Player 2: tap a unit to attack.
+[00:18.180] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:20.078] Dice rolled: 1
+[00:20.099] MSG: Lab Zombie wins!
+[00:24.566] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:29.777] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(2,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=1  ATK=55 vs DEF=20  → WIN
+[00:29.777] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[00:29.777] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:29.777] Anim: 3A  △ P0(2,3)
+[00:29.777] Card destroyed  P0 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:32.284] Turn ended  P1  |  Crystals P0=4750 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=2400 ---
+[00:51.718] Crystals: P1 2400 → 0 (-2400)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4750  P1: 0  |  Turns: 2

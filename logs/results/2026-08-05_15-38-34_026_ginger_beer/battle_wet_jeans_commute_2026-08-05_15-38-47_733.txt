@@ -1,0 +1,113 @@
+=== Battle of Wet Jeans Commute ===
+Battle started: 2026-08-05 15:38:47.732
+Game Session of Ginger Beer (started 2026-08-05 15:38:34.026)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:14.686] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:22.031] Mode selected P1: TECH
+[00:22.350] Tech played  P1: "Spy"
+[00:23.906] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:24.335] Revealed: P0 (2,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:25.548] Tech resolved  P1
+[00:26.438] Mode selected P1: ATTACK
+[00:26.773] Revealed: P1 (0,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:28.673] Dice rolled: 3
+[00:28.684] MSG: Tomb Bandit wins!
+[00:32.862] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:37.074] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(2,4)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=3  ATK=75 vs DEF=50  → WIN
+[00:37.074] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[00:37.074] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:37.074] Anim: 3A  △ P0(2,4)
+[00:37.074] Card destroyed  P0 (2,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:39.569] Turn ended  P1  |  Crystals P0=4500 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4500 P1=3000 ---
+[00:45.658] Revealed: P0 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[00:46.874] Dice rolled: 2
+[00:51.505] Crystals: P0 4500 → 3800 (-700)  [battle]
+[00:54.344] Attack P0(1,2)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=2  ATK=20 vs DEF=60  → LOSE
+[00:54.345] Reckoning overlay: P0 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=20 ATK pill=20 DEF pill=50 mod=+ATK 0 (20+0=20)
+[00:54.345] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:54.345] Anim: 3B  △ P0(1,2)
+[00:54.345] Card destroyed  P0 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[00:58.557] MSG: Tap 2 material card(s) on the field.
+[00:59.767] MSG: 1 more material(s) needed.
+[01:00.219] Crystals: P0 3800 → 2800 (-1000)  [union]
+[01:03.044] Revealed: P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:03.100] Union summoned P0: "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[01:24.771] Dice rolled: 5
+[01:24.822] MSG: Ice Elemental hits Dead End — nothing happens.
+[01:27.970] Attack P0(1,3)"Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[01:27.970] Anim: 3F  (blank slot)
+[01:30.458] Turn ended  P0  |  Crystals P0=2800 P1=3000
+
+--- Turn 3  |  Player 1  |  Crystals P0=2800 P1=3000 ---
+[01:32.951] Mode selected P1: TECH
+[01:33.252] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:36.079] Tech played  P1: "Radar"
+[01:37.616] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:38.048] Revealed: P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:39.643] Revealed: P0 (1,4) "Spike Trap" {cost 800}
+[01:41.272] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[01:42.516] Tech resolved  P1
+[01:44.891] Crystals: P1 2400 → 1400 (-1000)  [union]
+[01:47.720] Revealed: P1 (0,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[01:47.752] Union summoned P1: "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} from "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[01:51.154] Mode selected P1: ATTACK
+[01:52.364] Dice rolled: 3
+[01:52.368] MSG: Tomb Bandit wins!
+[01:56.868] Crystals: P0 2800 → 2450 (-350)  [battle]
+[02:01.070] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=3  ATK=75 vs DEF=20  → WIN
+[02:01.070] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[02:01.070] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=20 ATK pill=40 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:01.070] Anim: 3A  △ P0(4,3)
+[02:01.070] Card destroyed  P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[02:01.580] Mode selected P1: ATTACK
+[02:02.785] Dice rolled: 2
+[02:02.849] MSG: Kiba the Giant Slayer wins!
+[02:08.629] Attack P1(0,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} → P0(1,3)"Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}  Dice=2  ATK=150 vs DEF=50  → WIN
+[02:08.630] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=150 ATK pill=80 DEF pill=55 mod=+ATK 70 (80+70=150)
+[02:08.630] Reckoning overlay: P0 "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=50 ATK pill=80 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:08.630] Anim: 3A  △ P0(1,3)
+[02:08.630] Card destroyed  P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[02:09.146] Turn ended  P1  |  Crystals P0=2450 P1=1400
+
+--- Turn 4  |  Player 0  |  Crystals P0=2450 P1=1400 ---
+[05:08.813] Crystals: P0 2450 → 2400 (-50)  [skip tax]
+[05:08.815] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[05:11.264] Turn ended  P0  |  Crystals P0=2400 P1=1400
+
+--- Turn 5  |  Player 1  |  Crystals P0=2400 P1=1400 ---
+[05:13.742] Mode selected P1: TECH
+[05:14.051] Tech played  P1: "Tease"
+[05:15.828] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:21.024] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[05:22.254] MSG: Tease: Opponent revealed Pit Lord.
+[05:22.262] Tech resolved  P1
+[05:23.154] Mode selected P1: ATTACK
+[05:24.398] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:25.591] Dice rolled: 3
+[05:25.597] MSG: Tomb Bandit wins!
+[05:30.093] Crystals: P0 2400 → 2100 (-300)  [battle]
+[05:34.301] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=75 vs DEF=20  → WIN
+[05:34.301] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[05:34.301] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:34.301] Anim: 3A  △ P0(4,2)
+[05:34.301] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:34.786] Mode selected P1: ATTACK
+[05:36.248] Dice rolled: 2
+[05:36.287] MSG: Kiba the Giant Slayer hits Dead End — nothing happens.
+[05:41.019] Attack P1(0,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} → P0(4,1)(empty)  Dice=2  → DEAD_END
+[05:41.019] Anim: 3F  (blank slot)
+[05:41.527] Turn ended  P1  |  Crystals P0=2100 P1=1400
+
+--- Turn 6  |  Player 0  |  Crystals P0=2100 P1=1400 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 2100  P1: 1400  |  Turns: 6

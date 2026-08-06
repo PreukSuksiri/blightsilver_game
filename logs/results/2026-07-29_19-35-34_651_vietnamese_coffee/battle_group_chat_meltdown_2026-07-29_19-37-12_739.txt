@@ -1,0 +1,140 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-07-29 19:37:12.739
+Game Session of Vietnamese Coffee (started 2026-07-29 19:35:34.651)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:13.235] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:58.278] Tech played  P0: "Spy"
+[01:04.464] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:06.322] Revealed: P1 (2,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:11.703] Tech resolved  P0
+[01:31.029] Revealed: P0 (4,3) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[01:36.153] MSG: Ability triggered: "Magenta the Nightbloom" (halve def on first expose)
+[01:42.381] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[01:42.387] Dice rolled: 4
+[01:42.392] MSG: Magenta the Nightbloom wins!
+[01:54.693] Crystals: P1 3000 → 2820 (-180)  [battle]
+[02:12.326] Attack P0(4,3)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied} → P1(2,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=4  ATK=25 vs DEF=10  → WIN
+[02:12.326] Reckoning overlay: P0 "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[02:12.326] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=10 ATK pill=15 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:12.326] Anim: 3A  △ P1(2,1)
+[02:12.326] Card destroyed  P1 (2,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:22.872] MSG: Tap 2 material card(s) on the field.
+[02:24.945] MSG: 1 more material(s) needed.
+[02:26.777] Crystals: P0 5000 → 4200 (-800)  [union]
+[02:39.209] Revealed: P0 (3,2) "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[02:39.249] Union summoned P0: "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}, "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}
+[03:13.843] Revealed: P1 (1,2) "Trap Hole" {cost 0}
+[03:19.145] Dice rolled: 5
+[03:19.205] MSG: Trap triggered: Trap Hole!
+[03:30.312] Coin flip: Heads, Tails, Tails
+[03:42.514] MSG: Trap Hole: Heads, Tails, Tails.
+[03:42.516] Crystals: P0 4200 → 4180 (-20)  [trap]
+[03:50.335] MSG: Trap Hole: 1 head(s) — Player 1 loses 20 Crystals!
+[03:50.342] Attack P0(3,2)"Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos} → P1(1,2)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[03:50.342] Reckoning overlay: P0 "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[03:50.342] Anim: 3D  (attacker survives)
+[03:56.962] Revealed: P1 (3,3) "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio}
+[04:02.382] Dice rolled: 2
+[04:02.442] MSG: Ten Arms Yaksa wins!
+[04:15.636] Crystals: P1 2820 → 2670 (-150)  [battle]
+[04:28.146] Attack P0(3,2)"Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:1} → P1(3,3)"Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio}  Dice=2  ATK=50 vs DEF=15  → WIN
+[04:28.146] Reckoning overlay: P0 "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:1} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[04:28.146] Reckoning overlay: P1 "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio} badge=15 ATK pill=10 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:28.147] Anim: 3A  △ P1(3,3)
+[04:28.147] Card destroyed  P1 (3,3) "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio}
+[04:40.010] Revealed: P1 (2,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[04:45.538] Dice rolled: 4
+[04:45.597] MSG: Ten Arms Yaksa wins!
+[04:58.560] Crystals: P1 2670 → 2120 (-550)  [battle]
+[05:11.184] MSG: Ten Arms Yaksa: -5 ATK after attack.
+[05:17.516] Attack P0(3,2)"Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:2} → P1(2,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=4  ATK=50 vs DEF=40  → WIN
+[05:17.516] Reckoning overlay: P0 "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:2} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[05:17.516] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[05:17.516] Anim: 3A  △ P1(2,2)
+[05:17.516] Card destroyed  P1 (2,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[05:23.325] Turn ended  P0  |  Crystals P0=4180 P1=2120
+
+--- Turn 2  |  Player 1  |  Crystals P0=4180 P1=2120 ---
+[05:39.928] Crystals: P1 2120 → 1120 (-1000)  [union]
+[05:51.430] Revealed: P1 (0,0) "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[05:51.457] Union summoned P1: "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[06:05.313] Mode selected P1: ATTACK
+[06:10.432] Revealed: P0 (4,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[06:17.490] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[06:35.879] Ability choice: 0 (Yes)
+[06:35.909] MSG: Bat Swarm swapped positions with Magenta the Nightbloom!
+[06:35.917] Dice rolled: 3
+[06:35.998] MSG: Bioterrorist wins!
+[06:48.571] Crystals: P0 4180 → 3980 (-200)  [battle]
+[07:00.389] MSG: Bioterrorist: self-destroyed after battle (no crystal loss)!
+[07:00.391] Attack P1(0,0)"Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(4,3)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=150 vs DEF=15  → WIN
+[07:00.391] Reckoning overlay: P1 "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=150 ATK pill=150 DEF pill=0 mod=+ATK 0 (150+0=150)
+[07:00.391] Reckoning overlay: P0 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[07:00.391] Anim: 3A  △ P0(4,3)
+[07:00.391] Card destroyed  P0 (4,3) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[07:02.638] Mode selected P1: ATTACK
+[07:03.984] Revealed: P1 (1,3) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[07:12.189] Dice rolled: 2
+[07:12.196] MSG: Nanomites Beast wins!
+[07:24.538] Crystals: P0 3980 → 3680 (-300)  [battle]
+[07:42.614] Attack P1(1,3)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P0(4,2)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied}  Dice=2  ATK=50 vs DEF=20  → WIN
+[07:42.614] Reckoning overlay: P1 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[07:42.614] Reckoning overlay: P0 "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:42.614] Anim: 3A  △ P0(4,2)
+[07:42.614] Card destroyed  P0 (4,2) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20 | flags:halve_def_applied}
+[07:44.899] Turn ended  P1  |  Crystals P0=3680 P1=1120
+
+--- Turn 3  |  Player 0  |  Crystals P0=3680 P1=1120 ---
+[07:58.002] Tech played  P0: "Tease"
+[08:04.153] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[08:05.846] Revealed: P1 (3,2) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[08:10.933] MSG: Tease: Opponent revealed Bladeshifter.
+[08:11.103] Tech resolved  P0
+[08:34.450] Revealed: P0 (3,3) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[08:39.437] Dice rolled: 3
+[08:39.444] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Bladeshifter!
+[08:39.444] MSG: Vampire Duchess wins!
+[08:55.535] Crystals: P1 1120 → 700 (-420)  [battle]
+[09:12.684] Attack P0(3,3)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P1(3,2)"Bladeshifter" {Unit ATK0 DEF45 | cost 420 | affinity Bio | base 0/45}  Dice=3  ATK=55 vs DEF=45  → WIN
+[09:12.684] Reckoning overlay: P0 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[09:12.684] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF45 | cost 420 | affinity Bio | base 0/45} badge=45 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=45) MISMATCH
+[09:12.685] Anim: 3A  △ P1(3,2)
+[09:12.685] Card destroyed  P1 (3,2) "Bladeshifter" {Unit ATK0 DEF45 | cost 420 | affinity Bio | base 0/45}
+[09:21.064] Turn ended  P0  |  Crystals P0=3680 P1=700
+
+--- Turn 4  |  Player 1  |  Crystals P0=3680 P1=700 ---
+[09:30.958] Mode selected P1: ATTACK
+[09:35.899] Dice rolled: 2
+[09:35.965] MSG: Nanomites Beast wins!
+[09:53.874] Attack P1(1,3)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P0(3,2)"Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 45/30}  Dice=2  ATK=50 vs DEF=30  → WIN
+[09:53.874] Reckoning overlay: P1 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[09:53.874] Reckoning overlay: P0 "Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 45/30} badge=30 ATK pill=45 DEF pill=30 mod=+DEF 0 (30+0=30)
+[09:53.874] Anim: 3A  △ P0(3,2)
+[09:53.874] Card destroyed  P0 (3,2) "Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 45/30}
+[09:56.014] Mode selected P1: ATTACK
+[09:57.346] Revealed: P1 (2,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[10:05.620] Revealed: P0 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[10:10.892] Dice rolled: 2
+[10:24.217] Crystals: P1 700 → 380 (-320)  [battle]
+[10:36.064] Attack P1(2,3)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P0(0,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=2  ATK=20 vs DEF=25  → LOSE
+[10:36.064] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[10:36.064] Reckoning overlay: P0 "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} badge=25 ATK pill=15 DEF pill=25 mod=+DEF 0 (25+0=25)
+[10:36.064] Anim: 3B  △ P1(2,3)
+[10:36.064] Card destroyed  P1 (2,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[10:38.277] Turn ended  P1  |  Crystals P0=3680 P1=380
+
+--- Turn 5  |  Player 0  |  Crystals P0=3680 P1=380 ---
+[11:01.312] Dice rolled: 3
+[11:01.315] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Nanomites Beast!
+[11:01.315] MSG: Vampire Duchess wins!
+[11:17.236] Crystals: P1 380 → 0 (-380)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3680  P1: 0  |  Turns: 5

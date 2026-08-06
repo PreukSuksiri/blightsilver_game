@@ -1,0 +1,29 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-07-02 18:09:26.822
+Game Session of Banana Smoothie (started 2026-07-02 18:07:41.598)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.245] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.649] Mode selected P1: TECH
+[00:10.952] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:14.785] Tech played  P1: "Radar"
+[00:16.320] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.956] Dead-end placed  P0 (1,3)
+[00:17.116] Revealed: P0 (1,2) "Trap Hole" {cost 0}
+[00:17.523] Tech resolved  P1
+[00:17.764] Dead-end placed  P0 (4,3)
+[00:20.447] Crystals: P1 2400 → 2350 (-50)  [skip tax]
+[00:20.448] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:23.887] Turn ended  P1  |  Crystals P0=5000 P1=2350
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=2350 ---
+[00:39.682] Crystals: P1 2350 → 0 (-2350)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 5000  P1: 0  |  Turns: 2

@@ -1,0 +1,41 @@
+=== Battle of Silent Elevator Incident ===
+Battle started: 2026-07-25 18:05:40.705
+Game Session of Tequila Sunset (started 2026-07-25 18:03:34.957)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.251] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.662] Mode selected P1: TECH
+[00:09.972] Tech played  P1: "Spy"
+[00:11.511] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.957] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:11.960] Tech resolved  P1
+[00:12.832] Mode selected P1: ATTACK
+[00:12.836] MSG: Player 2: tap a unit to attack.
+[00:13.163] Revealed: P1 (0,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:15.049] Dice rolled: 1
+[00:15.058] MSG: Canyon Warg wins!
+[00:18.259] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:22.450] Attack P1(0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=1  ATK=70 vs DEF=0  → WIN
+[00:22.450] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[00:22.450] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[00:22.450] Anim: 3A  △ P0(2,0)
+[00:22.450] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:22.951] Mode selected P1: ATTACK
+[00:22.956] MSG: Player 2: tap a unit to attack.
+[00:23.290] Revealed: P1 (0,2) "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:25.420] Dice rolled: 2
+[00:25.432] MSG: Nothing happens — Dead End.
+[00:30.187] Attack P1(0,2)"Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[00:30.187] Anim: 3F  (blank slot)
+[00:30.690] Turn ended  P1  |  Crystals P0=4450 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4450 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4450  P1: 3000  |  Turns: 2

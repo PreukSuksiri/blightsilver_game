@@ -1,0 +1,50 @@
+=== Battle of Break Room Passive Aggression ===
+Battle started: 2026-07-22 17:52:47.511
+Game Session of Ginger Beer (started 2026-07-22 17:52:39.919)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.660] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.032] Mode selected P1: TECH
+[00:09.331] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:13.166] Tech played  P1: "Radar"
+[00:14.819] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.457] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.995] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:18.007] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.464] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:19.054] Dead-end placed  P0 (4,3)
+[00:19.248] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:19.253] Tech resolved  P1
+[00:20.128] Mode selected P1: ATTACK
+[00:20.131] MSG: Player 2: tap a unit to attack.
+[00:20.451] Revealed: P1 (3,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:22.360] Dice rolled: 1
+[00:22.370] MSG: Scout Probe wins!
+[00:26.832] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:32.054] Attack P1(3,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=1  ATK=40 vs DEF=25  → WIN
+[00:32.054] Reckoning overlay: P1 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[00:32.054] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:32.054] Anim: 3A  △ P0(3,2)
+[00:32.054] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:32.055] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[00:32.091] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:33.997] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:33.998] MSG: Scout Probe: adjacent cell revealed.
+[00:36.497] Turn ended  P1  |  Crystals P0=4820 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=2400 ---
+[02:22.182] Revealed: P1 (2,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:23.364] Dice rolled: 5
+[02:23.375] MSG: Choir Lady Abigail wins!
+[02:26.283] Crystals: P1 2400 → 2100 (-300)  [battle]
+[02:31.514] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(2,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=25 vs DEF=20  → WIN
+[02:31.514] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[02:31.514] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:31.514] Anim: 3A  △ P1(2,1)
+[02:31.514] Card destroyed  P1 (2,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}

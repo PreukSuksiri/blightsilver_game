@@ -1,0 +1,14 @@
+=== Battle of Neighbor's Leaf Blower ===
+Battle started: 2026-07-29 21:46:00.114
+Game Session of Mint Julep (started 2026-07-29 21:45:14.275)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.870] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:39.462] Mode selected P1: TECH
+[00:40.761] Tech played  P1: "Spy"

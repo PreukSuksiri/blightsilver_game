@@ -1,0 +1,69 @@
+=== Battle of Suburban Sprinkler War ===
+Battle started: 2026-07-27 06:40:42.676
+Game Session of Apple Cider (started 2026-07-27 06:39:28.736)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.455] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:27.709] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[00:27.709] Revealed: P1 (1,1) "Bait" {cost 0}
+[00:28.927] Dice rolled: 3
+[00:28.935] MSG: Trap triggered: Bait!
+[00:31.476] MSG: Ability triggered: "Bait"
+[00:31.508] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[00:33.465] Revealed: P1 (4,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:33.465] MSG: Bait: Defender revealed Tiny Pixie.
+[00:34.993] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(1,1)"Bait" {cost 0}  Dice=3  → Unit vs Trap
+[00:34.994] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:34.994] Anim: 3D  (attacker survives)
+[01:04.000] Revealed: P0 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:05.460] Dice rolled: 5
+[01:05.490] MSG: Nothing happens — Dead End.
+[01:10.251] Attack P0(4,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(2,2)(empty)  Dice=5  → DEAD_END
+[01:10.251] Anim: 3F  (blank slot)
+[01:16.134] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[01:16.753] Mode selected P1: TECH
+[01:17.058] Tech played  P1: "Spy"
+[01:18.597] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:19.022] Revealed: P0 (3,1) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[01:19.026] Tech resolved  P1
+[01:19.905] Mode selected P1: ATTACK
+[01:19.907] MSG: Player 2: tap a unit to attack.
+[01:21.105] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[01:22.346] Dice rolled: 5
+[01:22.351] MSG: Trap triggered: Decoy Puppet!
+[01:26.450] Crystals: P0 5000 → 4900 (-100)  [trap cost]
+[01:29.274] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:30.649] Attack P1(4,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=5  → Unit vs Trap
+[01:30.649] Reckoning overlay: P1 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[01:30.649] Anim: 3D  (attacker survives)
+[01:31.147] Mode selected P1: ATTACK
+[01:31.151] MSG: Player 2: tap a unit to attack.
+[01:31.479] Revealed: P1 (3,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:33.377] Dice rolled: 5
+[01:33.382] MSG: Canyon Warg wins!
+[01:37.875] Crystals: P0 4900 → 4500 (-400)  [battle]
+[01:42.077] Attack P1(3,4)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=5  ATK=70 vs DEF=35  → WIN
+[01:42.077] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[01:42.077] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:42.077] Anim: 3A  △ P0(1,2)
+[01:42.077] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:42.577] Turn ended  P1  |  Crystals P0=4500 P1=3000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4500 P1=3000 ---
+[08:29.331] Crystals: P0 4500 → 4450 (-50)  [skip tax]
+[08:29.332] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[08:31.782] Turn ended  P0  |  Crystals P0=4450 P1=3000
+
+--- Turn 4  |  Player 1  |  Crystals P0=4450 P1=3000 ---
+[08:32.369] Mode selected P1: TECH
+[08:32.667] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[08:35.508] Tech played  P1: "Radar"
+[08:37.044] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponen

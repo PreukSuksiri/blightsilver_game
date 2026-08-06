@@ -1,0 +1,9 @@
+extends SceneTree
+func _init() -> void:
+	call_deferred("_run")
+func _run() -> void:
+	var a: bool = GameDialog.try_press(&"unit_test_token")
+	var b: bool = GameDialog.try_press(&"unit_test_token")
+	var cooling: bool = GameDialog.is_press_cooling(&"unit_test_token")
+	print("first=", a, " second=", b, " cooling=", cooling)
+	quit(0 if (a and not b and cooling) else 1)

@@ -1,0 +1,110 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-07-24 13:21:13.469
+Game Session of Daiquiri (started 2026-07-24 13:03:53.125)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.960] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.366] Mode selected P1: ATTACK
+[00:11.371] MSG: Player 2: tap a unit to attack.
+[00:11.698] Revealed: P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:13.617] Revealed: P0 (1,0) "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[00:14.803] Dice rolled: 5
+[00:19.412] Crystals: P1 3000 → 2820 (-180)  [battle]
+[00:22.253] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(1,0)"Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}  Dice=5  ATK=15 vs DEF=30  → LOSE
+[00:22.253] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[00:22.253] Reckoning overlay: P0 "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:22.253] Anim: 3B  △ P1(0,0)
+[00:22.253] Card destroyed  P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:22.752] Mode selected P1: ATTACK
+[00:22.755] MSG: Player 2: tap a unit to attack.
+[00:23.089] Revealed: P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[00:24.958] Dice rolled: 1
+[00:24.962] MSG: Ancient Lich wins!
+[00:29.444] Crystals: P0 5000 → 4550 (-450)  [battle]
+[00:33.635] Attack P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} → P0(1,0)"Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}  Dice=1  ATK=60 vs DEF=30  → WIN
+[00:33.635] Reckoning overlay: P1 "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[00:33.635] Reckoning overlay: P0 "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:33.635] Anim: 3A  △ P0(1,0)
+[00:33.635] Card destroyed  P0 (1,0) "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[00:34.137] Turn ended  P1  |  Crystals P0=4550 P1=2820
+
+--- Turn 2  |  Player 0  |  Crystals P0=4550 P1=2820 ---
+[00:39.902] MSG: Tap 2 material card(s) on the field.
+[00:40.342] MSG: 1 more material(s) needed.
+[00:40.788] Crystals: P0 4550 → 3550 (-1000)  [union]
+[00:43.610] Revealed: P0 (2,3) "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:43.653] Union summoned P0: "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[00:43.658] MSG: Player 1 summoned [Wood Elemental] using: "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[00:54.270] Dice rolled: 4
+[00:54.345] MSG: Wood Elemental wins!
+[00:57.106] Crystals: P1 2820 → 2070 (-750)  [battle]
+[01:01.324] Attack P0(2,3)"Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}  Dice=4  ATK=65 vs DEF=60  → WIN
+[01:01.325] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=85 mod=+ATK 0 (65+0=65)
+[01:01.325] Reckoning overlay: P1 "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} badge=60 ATK pill=60 DEF pill=60 mod=+DEF 0 (60+0=60)
+[01:01.325] Anim: 3A  △ P1(3,1)
+[01:01.325] Card destroyed  P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[01:06.091] Revealed: P0 (1,1) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[01:06.136] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:07.348] Dice rolled: 5
+[01:07.361] MSG: Both cards are destroyed!
+[01:07.361] MSG: Ability triggered: "Vampire Servant" (sacrifice for card type)
+[01:09.497] Ability choice: 0 (Yes)
+[01:09.542] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:09.542] Crystals: P1 2070 → 1270 (-800)  [card lost]
+[01:12.323] MSG: Vampire Servant sacrificed itself to save Vampire Duchess!
+[01:16.251] Crystals: P0 3550 → 2750 (-800)  [battle]
+[01:19.100] Attack P0(1,1)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=5  ATK=50 vs DEF=50  → LOSE
+[01:19.100] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[01:19.100] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:19.100] Anim: 3B  △ P0(1,1)
+[01:19.100] Card destroyed  P0 (1,1) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[01:50.245] Turn ended  P0  |  Crystals P0=2750 P1=1270
+
+--- Turn 3  |  Player 1  |  Crystals P0=2750 P1=1270 ---
+[01:50.804] Mode selected P1: TECH
+[01:51.111] Crystals: P1 1270 → 270 (-1000)  [tech cost]
+[01:53.934] Tech played  P1: "Accident"
+[01:55.489] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:55.895] Card destroyed  P0 (2,3) "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:55.908] Tech resolved  P1
+[01:56.790] Mode selected P1: ATTACK
+[01:56.793] MSG: Player 2: tap a unit to attack.
+[01:58.009] Revealed: P0 (0,3) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:59.210] Dice rolled: 4
+[01:59.220] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Skeleton Archer!
+[01:59.220] MSG: Vampire Duchess wins!
+[02:04.702] Crystals: P0 2750 → 2450 (-300)  [battle]
+[02:08.901] Attack P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(0,3)"Skeleton Archer" {Unit ATK30 DEF0 | cost 300 | affinity Chaos | base 30/0}  Dice=4  ATK=55 vs DEF=0  → WIN
+[02:08.902] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[02:08.902] Reckoning overlay: P0 "Skeleton Archer" {Unit ATK30 DEF0 | cost 300 | affinity Chaos | base 30/0} badge=0 ATK pill=35 DEF pill=5 mod=+DEF 0 (5+0=0) MISMATCH
+[02:08.902] Anim: 3A  △ P0(0,3)
+[02:08.902] Card destroyed  P0 (0,3) "Skeleton Archer" {Unit ATK30 DEF0 | cost 300 | affinity Chaos | base 30/0}
+[02:09.400] Mode selected P1: ATTACK
+[02:09.403] MSG: Player 2: tap a unit to attack.
+[02:09.728] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[02:11.617] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:12.842] Dice rolled: 2
+[02:12.853] MSG: Trap triggered: Trap Hole!
+[02:15.832] Coin flip: Tails, Heads, Heads
+[02:18.573] MSG: Trap Hole: Tails, Heads, Heads.
+[02:18.573] Crystals: P1 270 → 230 (-40)  [trap]
+[02:20.780] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[02:22.277] Attack P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(0,0)"Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[02:22.277] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=60 ATK pill=60 DEF pill=40 mod=+ATK 0 (60+0=60)
+[02:22.277] Anim: 3D  (attacker survives)
+[02:22.788] Turn ended  P1  |  Crystals P0=2450 P1=230
+
+--- Turn 4  |  Player 0  |  Crystals P0=2450 P1=230 ---
+[02:29.959] Revealed: P0 (1,2) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[02:31.177] Dice rolled: 3
+[02:31.188] MSG: Mad Wyvern wins!
+[02:33.727] Crystals: P1 230 → 0 (-230)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2450  P1: 0  |  Turns: 4

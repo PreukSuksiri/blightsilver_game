@@ -1,0 +1,154 @@
+=== Battle of Dryer Lint Monarchy ===
+Battle started: 2026-07-01 14:53:53.463
+Game Session of Vietnamese Coffee (started 2026-07-01 14:52:28.925)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.580] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:12.952] Mode selected P1: TECH
+[00:13.260] Tech played  P1: "Spy"
+[00:14.813] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:15.214] Tech resolved  P1
+[00:15.449] Dead-end placed  P0 (0,3)
+[00:16.111] Mode selected P1: ATTACK
+[00:16.112] MSG: Player 2: tap a unit to attack.
+[00:16.459] Revealed: P1 (0,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:18.364] Revealed: P0 (0,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:19.560] Dice rolled: 3
+[00:24.167] Crystals: P1 3000 → 2720 (-280)  [battle]
+[00:27.009] Attack P1(0,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=30 vs DEF=40  → LOSE
+[00:27.009] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[00:27.009] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:27.009] Anim: 3B  △ P1(0,0)
+[00:27.009] Card destroyed  P1 (0,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:27.505] Mode selected P1: ATTACK
+[00:27.512] MSG: Player 2: tap a unit to attack.
+[00:27.838] Revealed: P1 (2,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:29.731] Dice rolled: 4
+[00:29.746] MSG: Huntress of Green Glade wins!
+[00:34.217] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:38.430] Attack P1(2,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(0,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=4  ATK=50 vs DEF=40  → WIN
+[00:38.430] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[00:38.430] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:38.430] Anim: 3A  △ P0(0,0)
+[00:38.431] Card destroyed  P0 (0,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:38.926] Turn ended  P1  |  Crystals P0=4450 P1=2720
+
+--- Turn 2  |  Player 0  |  Crystals P0=4450 P1=2720 ---
+[00:46.185] MSG: Tap 2 material card(s) on the field.
+[00:47.232] MSG: 1 more material(s) needed.
+[00:47.750] Crystals: P0 4450 → 3450 (-1000)  [union]
+[00:50.575] Revealed: P0 (2,2) "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:50.604] Union summoned P0: "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[00:50.610] MSG: Player 1 summoned [Cloud Elemental] using: "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[00:57.148] Dice rolled: 1
+[00:57.211] MSG: Cloud Elemental wins!
+[01:00.171] Crystals: P1 2720 → 1920 (-800)  [battle]
+[01:04.365] Attack P0(2,2)"Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(2,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=1  ATK=65 vs DEF=50  → WIN
+[01:04.365] Reckoning overlay: P0 "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[01:04.365] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:04.365] Anim: 3A  △ P1(2,2)
+[01:04.365] Card destroyed  P1 (2,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:08.176] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:08.206] Revealed: P1 (1,1) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:09.393] Dice rolled: 5
+[01:09.411] MSG: Ponycorn wins!
+[01:13.882] Crystals: P1 1920 → 1570 (-350)  [battle]
+[01:18.054] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,1)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=5  ATK=25 vs DEF=20  → WIN
+[01:18.054] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[01:18.054] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:18.054] Anim: 3A  △ P1(1,1)
+[01:18.054] Card destroyed  P1 (1,1) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:22.896] Turn ended  P0  |  Crystals P0=3450 P1=1570
+
+--- Turn 3  |  Player 1  |  Crystals P0=3450 P1=1570 ---
+[01:23.558] Mode selected P1: TECH
+[01:23.868] Tech played  P1: "Bribe"
+[01:25.429] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:28.150] MSG: Bribe: Opponent passed.
+[01:28.162] Tech resolved  P1
+[01:29.054] Mode selected P1: ATTACK
+[01:29.060] MSG: Player 2: tap a unit to attack.
+[01:29.383] Revealed: P1 (1,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[01:31.277] Dice rolled: 3
+[01:31.300] MSG: Mafia Associates wins!
+[01:35.766] Crystals: P0 3450 → 3150 (-300)  [battle]
+[01:39.976] Attack P1(1,3)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=45 vs DEF=20  → WIN
+[01:39.976] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[01:39.976] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:39.976] Anim: 3A  △ P0(0,2)
+[01:39.976] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:40.473] Mode selected P1: ATTACK
+[01:40.476] MSG: Player 2: tap a unit to attack.
+[01:40.808] Revealed: P1 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:42.692] Revealed: P0 (1,2) "Pepper Spray" {cost 0}
+[01:43.917] Dice rolled: 4
+[01:43.938] MSG: Trap triggered: Pepper Spray!
+[01:48.063] Coin flip: Heads, Heads
+[01:50.809] MSG: Pepper Spray: Heads, Heads.
+[01:50.810] MSG: Pepper Spray: 2 head(s) — Silver Spearman -10 ATK until next turn ends!
+[01:52.187] Attack P1(0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P0(1,2)"Pepper Spray" {cost 0}  Dice=4  → Unit vs Trap
+[01:52.187] Reckoning overlay: P1 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[01:52.187] Anim: 3D  (attacker survives)
+[01:54.224] MSG: Mafia Associates: DEF becomes 0 at end of expose turn.
+[01:54.237] Turn ended  P1  |  Crystals P0=3150 P1=1570
+
+--- Turn 4  |  Player 0  |  Crystals P0=3150 P1=1570 ---
+[02:02.904] Revealed: P0 (4,2) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[02:04.124] Dice rolled: 4
+[02:04.153] MSG: Elemental Master wins!
+[02:06.808] Crystals: P1 1570 → 1070 (-500)  [battle]
+[02:11.057] Attack P0(4,2)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} → P1(1,3)"Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}  Dice=4  ATK=20 vs DEF=0  → WIN
+[02:11.057] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=20 ATK pill=20 DEF pill=60 mod=+ATK 0 (20+0=20)
+[02:11.057] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0} badge=0 ATK pill=45 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:11.057] Anim: 3A  △ P1(1,3)
+[02:11.057] Card destroyed  P1 (1,3) "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}
+[02:15.014] Dice rolled: 5
+[02:15.098] MSG: Cloud Elemental wins!
+[02:17.670] Crystals: P1 1070 → 820 (-250)  [battle]
+[02:21.855] Attack P0(2,2)"Cloud Elemental" {Union ATK125 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60} → P1(0,3)"Silver Spearman" {Unit ATK15 DEF20 | cost 250 | affinity Anima | base 25/20}  Dice=5  ATK=125 vs DEF=20  → WIN
+[02:21.856] Reckoning overlay: P0 "Cloud Elemental" {Union ATK125 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60} badge=125 ATK pill=125 DEF pill=65 mod=+ATK 0 (125+0=125)
+[02:21.856] Reckoning overlay: P1 "Silver Spearman" {Unit ATK15 DEF20 | cost 250 | affinity Anima | base 25/20} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:21.856] Anim: 3A  △ P1(0,3)
+[02:21.856] Card destroyed  P1 (0,3) "Silver Spearman" {Unit ATK15 DEF20 | cost 250 | affinity Anima | base 25/20}
+[02:23.090] Turn ended  P0  |  Crystals P0=3150 P1=820
+
+--- Turn 5  |  Player 1  |  Crystals P0=3150 P1=820 ---
+[02:25.166] Crystals: P1 820 → 20 (-800)  [union]
+[02:28.003] Revealed: P1 (4,4) "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[02:28.048] Union summoned P1: "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} from "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}, "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down}, "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima | face-down}
+[02:28.048] MSG: Player 2 summoned [X-Death Squad] using: "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}, "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down}, "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima | face-down}
+[02:31.416] Mode selected P1: ATTACK
+[02:31.420] MSG: Player 2: tap a unit to attack.
+[02:31.760] Revealed: P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[02:33.641] Dice rolled: 3
+[02:33.695] MSG: Kiyoko the Death Whisper wins!
+[02:37.664] MSG: Cloud Elemental survives destruction!
+[02:39.049] Attack P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(2,2)"Cloud Elemental" {Union ATK125 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60}  Dice=3  ATK=90 vs DEF=65  → WIN
+[02:39.049] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=90 ATK pill=40 DEF pill=35 mod=+ATK 50 (40+50=90)
+[02:39.049] Reckoning overlay: P0 "Cloud Elemental" {Union ATK125 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60} badge=65 ATK pill=125 DEF pill=65 mod=+DEF 0 (65+0=65)
+[02:39.049] Anim: 3A  △ P0(2,2)
+[02:39.050] Card destroyed  P0 (2,2) "Cloud Elemental" {Union ATK125 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/65 | buff +auraATK60}
+[02:39.532] Mode selected P1: ATTACK
+[02:39.536] MSG: Player 2: tap a unit to attack.
+[02:40.761] Revealed: P0 (0,4) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[02:41.961] Dice rolled: 5
+[02:46.586] Attack P1(4,4)"X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} → P0(0,4)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}  Dice=5  ATK=50 vs DEF=65  → LOSE
+[02:46.586] Reckoning overlay: P1 "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:46.586] Reckoning overlay: P0 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=65 ATK pill=45 DEF pill=65 mod=+DEF 0 (65+0=65)
+[02:46.586] Anim: 3B  △ P1(4,4)
+[02:46.586] Card destroyed  P1 (4,4) "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[02:47.081] Turn ended  P1  |  Crystals P0=3150 P1=20
+
+--- Turn 6  |  Player 0  |  Crystals P0=3150 P1=20 ---
+[02:54.913] Dice rolled: 1
+[02:54.975] MSG: Cloud Elemental wins!
+[02:59.341] Crystals: P1 20 → 0 (-20)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3150  P1: 0  |  Turns: 6

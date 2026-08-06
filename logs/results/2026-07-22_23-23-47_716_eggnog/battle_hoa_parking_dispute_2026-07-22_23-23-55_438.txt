@@ -1,0 +1,38 @@
+=== Battle of HOA Parking Dispute ===
+Battle started: 2026-07-22 23:23:55.438
+Game Session of Eggnog (started 2026-07-22 23:23:47.716)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.229] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.619] Mode selected P1: TECH
+[00:08.924] Tech played  P1: "Spy"
+[00:10.521] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.178] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:13.724] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:13.727] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.166] Revealed: P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:14.169] Tech resolved  P1
+[00:15.039] Mode selected P1: ATTACK
+[00:15.043] MSG: Player 2: tap a unit to attack.
+[00:15.371] Revealed: P1 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:17.260] Dice rolled: 1
+[00:17.270] MSG: Goblin Poacher wins!
+[00:21.733] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:26.950] Attack P1(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(4,0)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=1  ATK=30 vs DEF=20  → WIN
+[00:26.950] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[00:26.950] Reckoning overlay: P0 "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:26.950] Anim: 3A  △ P0(4,0)
+[00:26.950] Card destroyed  P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:29.438] Turn ended  P1  |  Crystals P0=4750 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=3000 ---
+[00:39.942] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4750  P1: 0  |  Turns: 2

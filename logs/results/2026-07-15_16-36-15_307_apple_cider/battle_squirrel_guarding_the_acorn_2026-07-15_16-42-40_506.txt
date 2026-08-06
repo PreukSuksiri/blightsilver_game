@@ -1,0 +1,166 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-07-15 16:42:40.506
+Game Session of Apple Cider (started 2026-07-15 16:36:15.307)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.887] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.290] Mode selected P1: TECH
+[00:09.597] Tech played  P1: "Spy"
+[00:11.138] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.536] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:11.585] Tech resolved  P1
+[00:12.449] Mode selected P1: ATTACK
+[00:12.452] MSG: Player 2: tap a unit to attack.
+[00:12.766] Revealed: P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:14.665] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:15.885] Dice rolled: 1
+[00:15.906] MSG: Trap triggered: Trap Hole!
+[00:18.545] Coin flip: Tails, Heads, Tails
+[00:21.290] MSG: Trap Hole: Tails, Heads, Tails.
+[00:21.290] Crystals: P1 3000 → 2980 (-20)  [trap]
+[00:24.057] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[00:25.445] Attack P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[00:25.445] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:25.445] Anim: 3D  (attacker survives)
+[00:25.445] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[00:25.478] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:27.418] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:27.418] MSG: Revealed: Dystopian Cultist
+[00:27.890] Mode selected P1: ATTACK
+[00:27.892] MSG: Player 2: tap a unit to attack.
+[00:28.259] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:30.351] Dice rolled: 4
+[00:30.381] MSG: Nothing happens — Dead End.
+[00:34.585] Attack P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,1)(empty)  Dice=4  → DEAD_END
+[00:34.585] Anim: 3F  (blank slot)
+[00:35.077] Turn ended  P1  |  Crystals P0=5000 P1=2980
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=2980 ---
+[01:09.897] MSG: Tap 2 material card(s) on the field.
+[01:10.390] MSG: 1 more material(s) needed.
+[01:11.127] Crystals: P0 5000 → 4000 (-1000)  [union]
+[01:14.961] Revealed: P0 (2,3) "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:15.005] Union summoned P0: "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[01:15.009] MSG: Player 1 summoned [Wood Elemental] using: "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[01:22.612] Dice rolled: 2
+[01:22.698] MSG: Wood Elemental wins!
+[01:25.523] Crystals: P1 2980 → 2700 (-280)  [battle]
+[01:30.726] Attack P0(2,3)"Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=65 vs DEF=20  → WIN
+[01:30.726] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=85 mod=+ATK 0 (65+0=65)
+[01:30.726] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:30.726] Anim: 3A  △ P1(1,1)
+[01:30.726] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[01:33.620] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:34.836] Dice rolled: 1
+[01:34.863] MSG: Scout Probe wins!
+[01:39.316] Crystals: P1 2700 → 2300 (-400)  [battle]
+[01:44.526] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=40 vs DEF=25  → WIN
+[01:44.526] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:44.526] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:44.527] Anim: 3A  △ P1(0,1)
+[01:44.527] Card destroyed  P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:44.528] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[01:44.563] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:46.450] Revealed: P1 (0,0) "Bait" {cost 0}
+[01:46.450] MSG: Scout Probe: adjacent cell revealed.
+[01:50.034] Turn ended  P0  |  Crystals P0=4000 P1=2300
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=2300 ---
+[01:50.628] Mode selected P1: TECH
+[01:50.936] Tech played  P1: "Bribe"
+[01:52.479] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:54.314] MSG: Bribe: Opponent passed.
+[01:54.320] Tech resolved  P1
+[01:56.698] Crystals: P1 2300 → 1300 (-1000)  [union]
+[02:00.540] Revealed: P1 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[02:00.578] Union summoned P1: "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} from "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[02:00.579] MSG: Player 2 summoned [Kiba the Giant Slayer] using: "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[02:03.955] Mode selected P1: ATTACK
+[02:03.961] MSG: Player 2: tap a unit to attack.
+[02:05.153] Dice rolled: 1
+[02:05.261] MSG: Kiba the Giant Slayer wins!
+[02:09.636] Crystals: P0 4000 → 3300 (-700)  [battle]
+[02:14.862] Attack P1(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} → P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=1  ATK=80 vs DEF=50  → WIN
+[02:14.862] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=80 ATK pill=80 DEF pill=55 mod=+ATK 0 (80+0=80)
+[02:14.862] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:14.862] Anim: 3A  △ P0(1,3)
+[02:14.862] Card destroyed  P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:15.353] Mode selected P1: ATTACK
+[02:15.359] MSG: Player 2: tap a unit to attack.
+[02:15.699] Revealed: P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:17.587] Dice rolled: 5
+[02:17.611] MSG: Huntress of Green Glade wins!
+[02:22.056] Crystals: P0 3300 → 2750 (-550)  [battle]
+[02:27.268] Attack P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=5  ATK=50 vs DEF=40  → WIN
+[02:27.268] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:27.268] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:27.268] Anim: 3A  △ P0(0,2)
+[02:27.268] Card destroyed  P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[02:27.768] MSG: Ability triggered: "Wood Elemental" (perm def on foe turn end)
+[02:29.315] MSG: Wood Elemental: +5 DEF permanently at foe's turn end.
+[02:29.324] Turn ended  P1  |  Crystals P0=2750 P1=1300
+
+--- Turn 4  |  Player 0  |  Crystals P0=2750 P1=1300 ---
+[02:34.819] Dice rolled: 3
+[02:34.949] MSG: Wood Elemental wins!
+[02:38.812] Attack P0(2,3)"Wood Elemental" {Union ATK65 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/90} → P1(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}  Dice=3  ATK=65 vs DEF=55  → WIN
+[02:38.812] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/90} badge=65 ATK pill=65 DEF pill=90 mod=+ATK 0 (65+0=65)
+[02:38.812] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=55 ATK pill=80 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:38.812] Anim: 3A  △ P1(2,1)
+[02:38.812] Card destroyed  P1 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[02:46.905] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[02:48.123] Dice rolled: 2
+[02:48.160] MSG: Raijin wins!
+[02:52.445] Crystals: P1 1300 → 500 (-800)  [battle]
+[02:57.663] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=2  ATK=60 vs DEF=50  → WIN
+[02:57.663] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=60 ATK pill=60 DEF pill=0 mod=+ATK 0 (60+0=60)
+[02:57.663] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:57.663] Anim: 3A  △ P1(3,2)
+[02:57.663] Card destroyed  P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:59.076] Turn ended  P0  |  Crystals P0=2750 P1=500
+
+--- Turn 5  |  Player 1  |  Crystals P0=2750 P1=500 ---
+[02:59.681] Mode selected P1: ATTACK
+[02:59.687] MSG: Player 2: tap a unit to attack.
+[02:59.997] Revealed: P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:01.905] Dice rolled: 4
+[03:01.938] MSG: Big Thug wins!
+[03:06.385] Crystals: P0 2750 → 2200 (-550)  [battle]
+[03:11.594] Attack P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=4  ATK=40 vs DEF=0  → WIN
+[03:11.594] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[03:11.594] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:11.594] Anim: 3A  △ P0(2,0)
+[03:11.595] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[03:12.093] Mode selected P1: ATTACK
+[03:12.095] MSG: Player 2: tap a unit to attack.
+[03:12.423] Revealed: P1 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[03:14.564] Dice rolled: 3
+[03:14.605] MSG: Nothing happens — Dead End.
+[03:19.353] Attack P1(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(2,4)(empty)  Dice=3  → DEAD_END
+[03:19.353] Anim: 3F  (blank slot)
+[03:19.848] MSG: Ability triggered: "Wood Elemental" (perm def on foe turn end)
+[03:21.396] MSG: Wood Elemental: +5 DEF permanently at foe's turn end.
+[03:21.399] Turn ended  P1  |  Crystals P0=2200 P1=500
+
+--- Turn 6  |  Player 0  |  Crystals P0=2200 P1=500 ---
+[03:25.054] Dice rolled: 3
+[03:25.143] MSG: Wood Elemental wins!
+[03:29.540] Crystals: P1 500 → 100 (-400)  [battle]
+[03:34.737] Attack P0(2,3)"Wood Elemental" {Union ATK65 DEF95 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/95} → P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=65 vs DEF=35  → WIN
+[03:34.737] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF95 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 65/95} badge=65 ATK pill=65 DEF pill=95 mod=+ATK 0 (65+0=65)
+[03:34.737] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:34.737] Anim: 3A  △ P1(0,3)
+[03:34.737] Card destroyed  P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:39.702] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[03:40.923] Dice rolled: 5
+[03:40.946] MSG: Wind Elemental wins!
+[03:45.427] Crystals: P1 100 → 0 (-100)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2200  P1: 0  |  Turns: 6

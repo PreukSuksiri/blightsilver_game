@@ -1,0 +1,69 @@
+=== Battle of Blue Screen of Serenity ===
+Battle started: 2026-07-22 23:35:09.330
+Game Session of Bubble Tea (started 2026-07-22 23:30:25.600)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.284] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:13.964] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:13.964] Revealed: P1 (0,0) "Pepper Spray" {cost 0}
+[00:15.190] Dice rolled: 2
+[00:15.199] MSG: Trap triggered: Pepper Spray!
+[00:17.660] Coin flip: Heads, Tails
+[00:20.398] MSG: Pepper Spray: Heads, Tails.
+[00:20.398] MSG: Pepper Spray: 1 head(s) — Silver Spearman -5 ATK until next turn ends!
+[00:21.776] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(0,0)"Pepper Spray" {cost 0}  Dice=2  → Unit vs Trap
+[00:21.777] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:21.777] Anim: 3D  (attacker survives)
+[00:25.400] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:26.622] Dice rolled: 4
+[00:26.639] MSG: Nothing happens — Dead End.
+[00:29.447] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[00:29.447] Anim: 3F  (blank slot)
+[00:30.791] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:31.390] Mode selected P1: TECH
+[00:31.697] Tech played  P1: "Spy"
+[00:33.267] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:34.978] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:36.518] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:36.526] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:36.931] Tech resolved  P1
+[00:37.163] Dead-end placed  P0 (1,0)
+[00:37.828] Mode selected P1: ATTACK
+[00:37.832] MSG: Player 2: tap a unit to attack.
+[00:38.164] Revealed: P1 (4,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:40.063] Dice rolled: 2
+[00:40.661] Ability choice: 1 (No)
+[00:40.661] MSG: Hairpin Assassin wins!
+[00:44.202] Crystals: P0 5000 → 4720 (-280)  [battle]
+[00:48.415] Attack P1(4,2)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=25 vs DEF=20  → WIN
+[00:48.415] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[00:48.415] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:48.415] Anim: 3A  △ P0(2,1)
+[00:48.415] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[00:48.914] Mode selected P1: ATTACK
+[00:48.919] MSG: Player 2: tap a unit to attack.
+[00:49.267] Revealed: P1 (4,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:51.241] Dice rolled: 1
+[00:51.252] MSG: Mafia Associates wins!
+[00:55.711] Crystals: P0 4720 → 4470 (-250)  [battle]
+[00:59.919] Attack P1(4,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(1,3)"Silver Spearman" {Unit ATK20 DEF20 | cost 250 | affinity Anima | base 25/20}  Dice=1  ATK=45 vs DEF=20  → WIN
+[00:59.919] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[00:59.919] Reckoning overlay: P0 "Silver Spearman" {Unit ATK20 DEF20 | cost 250 | affinity Anima | base 25/20} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:59.919] Anim: 3A  △ P0(1,3)
+[00:59.919] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK20 DEF20 | cost 250 | affinity Anima | base 25/20}
+[01:00.416] MSG: Ability triggered: "Mafia Associates" (def zero when exposed)
+[01:01.962] MSG: Mafia Associates: DEF becomes 0 at end of expose turn.
+[01:01.976] Turn ended  P1  |  Crystals P0=4470 P1=3000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4470 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4470  P1: 3000  |  Turns: 3

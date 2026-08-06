@@ -1,0 +1,85 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-07-29 21:52:00.094
+Game Session of Margarita (started 2026-07-29 21:51:19.092)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.822] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:48.207] Revealed: P0 (3,1) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[00:54.037] Dice rolled: 4
+[00:54.056] MSG: Zealot hits Dead End — nothing happens.
+[01:07.272] Attack P0(3,1)"Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[01:07.272] Anim: 3F  (blank slot)
+[01:17.978] Revealed: P0 (1,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:18.000] Revealed: P1 (1,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:23.187] Dice rolled: 5
+[01:23.192] MSG: Kiyoko the Death Whisper wins!
+[01:35.565] Crystals: P1 3000 → 2600 (-400)  [battle]
+[01:53.219] Attack P0(1,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P1(1,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=5  ATK=40 vs DEF=30  → WIN
+[01:53.219] Reckoning overlay: P0 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[01:53.219] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:53.219] Anim: 3A  △ P1(1,0)
+[01:53.219] Card destroyed  P1 (1,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:58.297] Turn ended  P0  |  Crystals P0=5000 P1=2600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2600 ---
+[02:08.085] Mode selected P1: TECH
+[02:09.354] Tech played  P1: "Spy"
+[02:15.305] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:16.914] Revealed: P0 (3,2) "Bunker" {cost 400}
+[02:21.800] Tech resolved  P1
+[02:25.329] Mode selected P1: ATTACK
+[02:26.574] Revealed: P1 (2,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:34.192] Dice rolled: 2
+[02:34.197] MSG: Scout Probe wins!
+[02:46.000] Crystals: P0 5000 → 4200 (-800)  [battle]
+[03:02.954] Attack P1(2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(1,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=2  ATK=40 vs DEF=35  → WIN
+[03:02.954] Reckoning overlay: P1 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[03:02.954] Reckoning overlay: P0 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:02.954] Anim: 3A  △ P0(1,1)
+[03:02.954] Card destroyed  P0 (1,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[03:02.955] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[03:02.975] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[03:11.982] MSG: Scout Probe: adjacent cell revealed (empty).
+[03:14.066] Mode selected P1: ATTACK
+[03:15.403] Revealed: P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[03:24.612] Dice rolled: 5
+[03:24.624] MSG: Moon Tribe Twin Blader hits Dead End — nothing happens.
+[03:32.512] Coin flip: Heads
+[03:44.344] MSG: Moon Tribe Twin Blader: Coin flip heads — extra attack!
+[03:44.354] Attack P1(0,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(0,1)(empty)  Dice=5  → DEAD_END
+[03:44.354] Anim: 3F  (blank slot)
+[03:46.521] Mode selected P1: ATTACK
+[03:52.716] Dice rolled: 3
+[03:52.728] MSG: Moon Tribe Twin Blader hits Dead End — nothing happens.
+[04:00.653] Coin flip: Tails
+[04:12.398] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[04:18.349] Attack P1(0,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[04:18.349] Anim: 3F  (blank slot)
+[04:20.530] Turn ended  P1  |  Crystals P0=4200 P1=2600
+
+--- Turn 3  |  Player 0  |  Crystals P0=4200 P1=2600 ---
+[04:40.615] Revealed: P0 (1,3) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[04:45.429] Dice rolled: 4
+[04:45.434] MSG: Grand Fort Archer wins!
+[04:57.428] Crystals: P1 2600 → 2300 (-300)  [battle]
+[05:14.178] Attack P0(1,3)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(0,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=30 vs DEF=20  → WIN
+[05:14.178] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[05:14.178] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:14.178] Anim: 3A  △ P1(0,0)
+[05:14.178] Card destroyed  P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:24.566] MSG: Tap 3 material card(s) on the field.
+[05:24.998] MSG: 2 more material(s) needed.
+[05:26.248] MSG: 1 more material(s) needed.
+[05:31.645] Crystals: P0 4200 → 3400 (-800)  [union]
+[05:43.383] Revealed: P0 (2,0) "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[05:43.423] Union summoned P0: "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima} from "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down}, "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down}, "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}
+[06:15.891] Ability choice: 0 (Yes)
+[06:15.891] Crystals: P0 3400 → 2400 (-1000)  [ability]
+[06:27.571] MSG: X-Death Squad: Scout Probe is destroyed!
+[06:27.575] Attack aborted

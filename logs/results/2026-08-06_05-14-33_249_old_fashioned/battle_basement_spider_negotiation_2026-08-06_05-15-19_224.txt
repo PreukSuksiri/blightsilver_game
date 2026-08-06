@@ -1,0 +1,144 @@
+=== Battle of Basement Spider Negotiation ===
+Battle started: 2026-08-06 05:15:19.224
+Game Session of Old Fashioned (started 2026-08-06 05:14:33.249)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.670] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:14.985] Mode selected P1: TECH
+[00:15.285] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:18.111] Tech played  P1: "Radar"
+[00:19.674] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:20.072] Revealed: P0 (2,1) "Pepper Spray" {cost 0}
+[00:21.701] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:23.358] Revealed: P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:24.544] Tech resolved  P1
+[00:25.452] Mode selected P1: ATTACK
+[00:25.763] Revealed: P1 (0,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:27.671] Dice rolled: 1
+[00:27.682] MSG: Space Boy wins!
+[00:32.180] Crystals: P0 5000 → 4650 (-350)  [battle]
+[00:36.398] Attack P1(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=75 vs DEF=20  → WIN
+[00:36.398] Reckoning overlay: P1 "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} badge=75 ATK pill=75 DEF pill=65 mod=+ATK 0 (75+0=75)
+[00:36.398] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:36.399] Anim: 3A  △ P0(2,0)
+[00:36.399] Card destroyed  P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:38.899] Turn ended  P1  |  Crystals P0=4650 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4650 P1=2400 ---
+[00:46.168] MSG: Tap 2 material card(s) on the field.
+[00:49.473] MSG: Tap 2 material card(s) on the field.
+[00:49.701] MSG: 1 more material(s) needed.
+[00:50.580] Crystals: P0 4650 → 3150 (-1500)  [union]
+[00:53.408] Revealed: P0 (0,1) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[00:53.447] Union summoned P0: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}, "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[01:01.054] Dice rolled: 2
+[01:01.090] MSG: Seraphim Fistmaster wins!
+[01:05.538] Crystals: P1 2400 → 1600 (-800)  [battle]
+[01:09.752] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=2  ATK=120 vs DEF=65  → WIN
+[01:09.752] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=120 ATK pill=120 DEF pill=120 mod=+ATK 0 (120+0=120)
+[01:09.752] Reckoning overlay: P1 "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} badge=65 ATK pill=75 DEF pill=65 mod=+DEF 0 (65+0=65)
+[01:09.752] Anim: 3A  △ P1(0,2)
+[01:09.752] Card destroyed  P1 (0,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:17.825] Revealed: P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:17.864] Revealed: P1 (1,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:19.062] Dice rolled: 2
+[01:23.647] Crystals: P0 3150 → 2850 (-300)  [battle]
+[01:26.511] Coin flip: Tails
+[01:29.255] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:29.263] Attack P0(1,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(1,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=2  ATK=30 vs DEF=80  → LOSE
+[01:29.263] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[01:29.263] Reckoning overlay: P1 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} badge=80 ATK pill=100 DEF pill=80 mod=+DEF 0 (80+0=80)
+[01:29.263] Anim: 3B  △ P0(1,4)
+[01:29.263] Card destroyed  P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:31.727] Turn ended  P0  |  Crystals P0=2850 P1=1600
+
+--- Turn 3  |  Player 1  |  Crystals P0=2850 P1=1600 ---
+[01:34.228] Mode selected P1: ATTACK
+[01:35.667] Dice rolled: 2
+[01:35.685] MSG: Satellite Cannon hits Dead End — nothing happens.
+[01:40.440] Attack P1(1,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P0(1,1)(empty)  Dice=2  → DEAD_END
+[01:40.440] Anim: 3F  (blank slot)
+[01:40.930] Mode selected P1: ATTACK
+[01:41.265] Revealed: P1 (1,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:42.461] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[01:44.702] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[01:45.922] Dice rolled: 1
+[01:45.930] MSG: Trap triggered: Trap Hole!
+[01:50.051] MSG: Omen: Striker Comet cannot attack during their next turn.
+[01:50.105] Coin flip: Tails, Tails, Tails
+[01:52.844] MSG: Trap Hole: Tails, Tails, Tails.
+[01:52.844] MSG: Trap Hole: No heads — no crystal loss.
+[01:54.213] Attack P1(1,2)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[01:54.213] Reckoning overlay: P1 "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[01:54.213] Anim: 3D  (attacker survives)
+[01:54.714] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[01:56.258] MSG: Striker Comet self-destructs at end of turn!
+[01:56.261] Crystals: P1 1600 → 1400 (-200)  [card lost]
+[01:56.268] Card destroyed  P1 (1,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending | attacked,cannot-atk≤T5}
+[01:56.280] Turn ended  P1  |  Crystals P0=2850 P1=1400
+
+--- Turn 4  |  Player 0  |  Crystals P0=2850 P1=1400 ---
+[02:04.605] Dice rolled: 4
+[02:04.638] MSG: Seraphim Fistmaster wins!
+[02:07.395] Crystals: P1 1400 → 300 (-1100)  [battle]
+[02:11.584] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(1,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=4  ATK=120 vs DEF=80  → WIN
+[02:11.584] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=120 ATK pill=120 DEF pill=120 mod=+ATK 0 (120+0=120)
+[02:11.584] Reckoning overlay: P1 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} badge=80 ATK pill=100 DEF pill=80 mod=+DEF 0 (80+0=80)
+[02:11.584] Anim: 3A  △ P1(1,1)
+[02:11.584] Card destroyed  P1 (1,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[02:15.019] Revealed: P0 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[02:15.019] Revealed: P1 (0,0) "Trap Hole" {cost 0}
+[02:16.244] Dice rolled: 2
+[02:16.248] MSG: Trap triggered: Trap Hole!
+[02:20.312] Coin flip: Tails, Heads, Tails
+[02:23.067] MSG: Trap Hole: Tails, Heads, Tails.
+[02:23.068] Crystals: P0 2850 → 2830 (-20)  [trap]
+[02:24.831] MSG: Trap Hole: 1 head(s) — Player 1 loses 20 Crystals!
+[02:26.220] Attack P0(1,2)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P1(0,0)"Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[02:26.220] Reckoning overlay: P0 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=20 ATK pill=20 DEF pill=50 mod=+ATK 0 (20+0=20)
+[02:26.220] Anim: 3D  (attacker survives)
+[02:28.723] Turn ended  P0  |  Crystals P0=2830 P1=300
+
+--- Turn 5  |  Player 1  |  Crystals P0=2830 P1=300 ---
+[02:31.230] Mode selected P1: ATTACK
+[02:31.554] Revealed: P1 (1,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[02:33.442] Dice rolled: 2
+[02:33.448] MSG: Echo Bringer wins!
+[02:37.947] Crystals: P0 2830 → 2130 (-700)  [battle]
+[02:40.789] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[02:40.795] Attack P1(1,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P0(1,2)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}  Dice=2  ATK=70 vs DEF=50  → WIN
+[02:40.795] Reckoning overlay: P1 "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} badge=70 ATK pill=70 DEF pill=40 mod=+ATK 0 (70+0=70)
+[02:40.795] Reckoning overlay: P0 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:40.795] Anim: 3A  △ P0(1,2)
+[02:40.795] Card destroyed  P0 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[02:41.285] Mode selected P1: ATTACK
+[02:42.526] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:43.723] Dice rolled: 2
+[02:43.729] MSG: Echo Bringer wins!
+[02:48.214] Crystals: P0 2130 → 1650 (-480)  [battle]
+[02:52.430] Attack P1(1,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=2  ATK=70 vs DEF=20  → WIN
+[02:52.430] Reckoning overlay: P1 "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used} badge=70 ATK pill=70 DEF pill=40 mod=+ATK 0 (70+0=70)
+[02:52.430] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:52.430] Anim: 3A  △ P0(0,2)
+[02:52.430] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:52.923] Mode selected P1: ATTACK
+[02:53.251] Revealed: P1 (2,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[02:55.412] Dice rolled: 1
+[02:55.434] MSG: Mars Drill hits Dead End — nothing happens.
+[03:00.100] Attack P1(2,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(0,3)(empty)  Dice=1  → DEAD_END
+[03:00.100] Anim: 3F  (blank slot)
+[03:00.609] Turn ended  P1  |  Crystals P0=1650 P1=300
+
+--- Turn 6  |  Player 0  |  Crystals P0=1650 P1=300 ---
+[03:05.724] Dice rolled: 1
+[03:05.759] MSG: Seraphim Fistmaster wins!
+[03:10.232] Crystals: P1 300 → 0 (-300)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1650  P1: 0  |  Turns: 6

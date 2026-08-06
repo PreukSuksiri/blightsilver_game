@@ -1,0 +1,226 @@
+=== Battle of Wet Jeans Commute ===
+Battle started: 2026-07-02 15:43:42.692
+Game Session of Tom Collins (started 2026-07-02 15:36:41.947)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.536] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:09.000] Mode selected P1: TECH
+[00:09.308] Tech played  P1: "Spy"
+[00:10.863] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.309] Revealed: P0 (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:11.311] Tech resolved  P1
+[00:12.164] Mode selected P1: ATTACK
+[00:12.169] MSG: Player 2: tap a unit to attack.
+[00:12.487] Revealed: P1 (0,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:14.419] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:15.611] Dice rolled: 2
+[00:15.637] MSG: Feral Vampire wins!
+[00:19.496] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:23.705] Attack P1(0,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=40 vs DEF=20  → WIN
+[00:23.705] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:23.705] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:23.705] Anim: 3A  △ P0(1,3)
+[00:23.705] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:24.204] Mode selected P1: ATTACK
+[00:24.207] MSG: Player 2: tap a unit to attack.
+[00:24.530] Revealed: P1 (1,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:26.458] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:27.652] Dice rolled: 2
+[00:32.261] Crystals: P1 5000 → 4800 (-200)  [battle]
+[00:35.101] Attack P1(1,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=15 vs DEF=25  → LOSE
+[00:35.101] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+ATK 0 (15+0=15)
+[00:35.101] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:35.101] Anim: 3B  △ P1(1,0)
+[00:35.101] Card destroyed  P1 (1,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:35.591] Turn ended  P1  |  Crystals P0=4750 P1=4800
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=4800 ---
+[01:00.487] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:01.704] Dice rolled: 3
+[01:01.723] MSG: Grand Fort Archer wins!
+[01:04.639] Crystals: P1 4800 → 4400 (-400)  [battle]
+[01:07.503] Revealed: P1 (3,4) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:11.361] Ability choice: 1 (No)
+[01:12.721] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(0,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=3  ATK=30 vs DEF=25  → WIN
+[01:12.721] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:12.721] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:12.721] Anim: 3A  △ P1(0,0)
+[01:12.722] Card destroyed  P1 (0,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[03:54.037] Revealed: P0 (1,0) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[03:54.065] Revealed: P1 (2,0) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[03:55.267] Dice rolled: 2
+[03:59.889] Crystals: P0 4750 → 4250 (-500)  [battle]
+[04:02.758] Coin flip: Heads, Tails
+[04:05.550] MSG: Lightning Hawk: Coin flip failed — no extra attack.
+[04:05.554] Attack P0(1,0)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} → P1(2,0)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=2  ATK=20 vs DEF=25  → LOSE
+[04:05.554] Reckoning overlay: P0 "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[04:05.554] Reckoning overlay: P1 "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} badge=25 ATK pill=0 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:05.554] Anim: 3B  △ P0(1,0)
+[04:05.555] Card destroyed  P0 (1,0) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[04:17.919] MSG: Cursed Well: +15 ATK permanently at end of expose turn.
+[04:17.936] Turn ended  P0  |  Crystals P0=4250 P1=4400
+
+--- Turn 3  |  Player 1  |  Crystals P0=4250 P1=4400 ---
+[04:18.516] Mode selected P1: TECH
+[04:18.821] Crystals: P1 4400 → 3400 (-1000)  [tech cost]
+[04:21.646] Tech played  P1: "Great Diplomacy"
+[04:23.201] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[04:23.628] Revealed: P1 (3,0) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[04:24.026] Revealed: P1 (0,4) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[04:24.420] Revealed: P1 (1,4) "Immortal Vampire" {Unit ATK230 DEF80 | cost 1200 | affinity Chaos | base 30/80 | buff +permATK200}
+[04:24.828] Revealed: P1 (4,4) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[04:25.229] Revealed: P1 (0,2) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[04:25.229] MSG: Great Diplomacy: revealed 5 unit(s).
+[04:25.235] Tech resolved  P1
+[04:26.105] Mode selected P1: ATTACK
+[04:26.110] MSG: Player 2: tap a unit to attack.
+[04:27.305] Dice rolled: 4
+[04:27.324] MSG: Immortal Vampire wins!
+[04:31.791] Crystals: P0 4250 → 3950 (-300)  [battle]
+[04:35.990] Attack P1(1,4)"Immortal Vampire" {Unit ATK330 DEF80 | cost 1200 | affinity Chaos | base 30/80 | buff +permATK300} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=4  ATK=330 vs DEF=25  → WIN
+[04:35.990] Reckoning overlay: P1 "Immortal Vampire" {Unit ATK330 DEF80 | cost 1200 | affinity Chaos | base 30/80 | buff +permATK300} badge=330 ATK pill=330 DEF pill=80 mod=+ATK 0 (330+0=330)
+[04:35.990] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:35.990] Anim: 3A  △ P0(1,1)
+[04:35.990] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[04:36.491] Mode selected P1: ATTACK
+[04:36.498] MSG: Player 2: tap a unit to attack.
+[04:37.691] Dice rolled: 1
+[04:37.715] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Grand Fort Archer!
+[04:37.715] MSG: Vampire Duchess wins!
+[04:43.182] Crystals: P0 3950 → 3670 (-280)  [battle]
+[04:47.455] Attack P1(3,0)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(2,1)"Grand Fort Archer" {Unit ATK15 DEF15 | cost 280 | affinity Anima | base 15/15 | 1xATK-used}  Dice=1  ATK=55 vs DEF=15  → WIN
+[04:47.455] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[04:47.455] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK15 DEF15 | cost 280 | affinity Anima | base 15/15 | 1xATK-used} badge=15 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=15) MISMATCH
+[04:47.455] Anim: 3A  △ P0(2,1)
+[04:47.455] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK15 DEF15 | cost 280 | affinity Anima | base 15/15 | 1xATK-used}
+[04:47.957] Turn ended  P1  |  Crystals P0=3670 P1=3400
+
+--- Turn 4  |  Player 0  |  Crystals P0=3670 P1=3400 ---
+[05:01.033] Tech played  P0: "Spy"
+[05:02.580] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[05:03.235] Tech resolved  P0
+[05:03.333] Dead-end placed  P1 (1,2)
+[06:15.809] Dice rolled: 4
+[06:15.836] MSG: Poltergeist wins!
+[06:18.752] Crystals: P1 3400 → 2600 (-800)  [battle]
+[06:24.232] Ability choice: 0 (Yes)
+[06:24.232] Crystals: P1 2600 → 1800 (-800)  [card lost]
+[06:27.061] MSG: Vampire Servant sacrificed itself to save Vampire Duchess!
+[06:28.430] Attack P0(3,0)"Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0} → P1(3,0)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}  Dice=4  ATK=70 vs DEF=55  → TIE
+[06:28.430] Reckoning overlay: P0 "Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0} badge=70 ATK pill=70 DEF pill=0 mod=+ATK 0 (70+0=70)
+[06:28.430] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=55 DEF pill=55 mod=+DEF 0 (55+0=55)
+[06:28.430] Anim: exchange  (no destruction)
+[07:19.489] Revealed: P0 (0,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[07:20.709] Dice rolled: 2
+[07:20.734] MSG: Skeleton Archer wins!
+[07:23.637] Crystals: P1 1800 → 1500 (-300)  [battle]
+[07:27.853] Attack P0(0,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P1(2,0)"Cursed Well" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | base 0/25 | buff +permATK15}  Dice=2  ATK=35 vs DEF=25  → WIN
+[07:27.853] Reckoning overlay: P0 "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} badge=35 ATK pill=35 DEF pill=5 mod=+ATK 0 (35+0=35)
+[07:27.853] Reckoning overlay: P1 "Cursed Well" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | base 0/25 | buff +permATK15} badge=25 ATK pill=15 DEF pill=25 mod=+DEF 0 (25+0=25)
+[07:27.853] Anim: 3A  △ P1(2,0)
+[07:27.853] Card destroyed  P1 (2,0) "Cursed Well" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | base 0/25 | buff +permATK15}
+[07:30.798] Turn ended  P0  |  Crystals P0=3670 P1=1500
+
+--- Turn 5  |  Player 1  |  Crystals P0=3670 P1=1500 ---
+[07:31.389] Mode selected P1: TECH
+[07:31.696] Tech played  P1: "Bribe"
+[07:33.246] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[07:42.261] Revealed: P0 (2,4) "Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane}
+[07:42.261] Crystals: P0 3670 → 4370 (+700)  [ability]
+[07:42.262] MSG: Bribe: Player 1 revealed Gem Turtle and received 700 Crystals.
+[07:45.086] Tech resolved  P1
+[07:45.985] Mode selected P1: ATTACK
+[07:45.989] MSG: Player 2: tap a unit to attack.
+[07:47.184] Dice rolled: 4
+[07:47.210] MSG: Araya the Eerie Dancer wins!
+[07:50.069] Crystals: P0 4370 → 3670 (-700)  [battle]
+[07:54.280] Attack P1(0,2)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → P0(3,0)"Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0}  Dice=4  ATK=15 vs DEF=0  → WIN
+[07:54.280] Reckoning overlay: P1 "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} badge=15 ATK pill=15 DEF pill=20 mod=+ATK 0 (15+0=15)
+[07:54.280] Reckoning overlay: P0 "Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0} badge=0 ATK pill=70 DEF pill=0 mod=+DEF 0 (0+0=0)
+[07:54.280] Anim: 3A  △ P0(3,0)
+[07:54.280] Card destroyed  P0 (3,0) "Poltergeist" {Unit ATK70 DEF0 | cost 700 | affinity Chaos | base 70/0}
+[07:54.779] Mode selected P1: ATTACK
+[07:54.783] MSG: Player 2: tap a unit to attack.
+[07:55.991] Dice rolled: 3
+[07:56.022] MSG: Night Whisperer wins!
+[07:59.024] Crystals: P0 3670 → 3370 (-300)  [battle]
+[08:03.210] Attack P1(0,4)"Night Whisperer" {Unit ATK60 DEF60 | cost 900 | affinity Chaos | base 30/30 | buff +permATK30, +permDEF30} → P0(0,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=3  ATK=60 vs DEF=5  → WIN
+[08:03.210] Reckoning overlay: P1 "Night Whisperer" {Unit ATK60 DEF60 | cost 900 | affinity Chaos | base 30/30 | buff +permATK30, +permDEF30} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[08:03.210] Reckoning overlay: P0 "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} badge=5 ATK pill=35 DEF pill=5 mod=+DEF 0 (5+0=5)
+[08:03.210] Anim: 3A  △ P0(0,1)
+[08:03.210] Card destroyed  P0 (0,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[08:03.708] Turn ended  P1  |  Crystals P0=3370 P1=1500
+
+--- Turn 6  |  Player 0  |  Crystals P0=3370 P1=1500 ---
+[08:20.603] Tech played  P0: "Tease"
+[08:22.144] MSG: Opponent must choose and reveal 1 of their squares.
+[08:22.146] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[08:22.574] Revealed: P1 (0,3) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[08:22.574] MSG: Tease: Opponent revealed Foul Wisp.
+[08:22.739] Tech resolved  P0
+[08:43.715] Revealed: P0 (4,4) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[08:44.929] Dice rolled: 4
+[08:44.948] MSG: Black Worms wins!
+[08:48.278] Crystals: P1 1500 → 1100 (-400)  [battle]
+[08:52.486] Attack P0(4,4)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P1(0,2)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}  Dice=4  ATK=45 vs DEF=20  → WIN
+[08:52.486] Reckoning overlay: P0 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[08:52.486] Reckoning overlay: P1 "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:52.486] Anim: 3A  △ P1(0,2)
+[08:52.486] Card destroyed  P1 (0,2) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[09:03.996] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[09:05.215] Dice rolled: 4
+[09:05.264] MSG: Wind Elemental wins!
+[09:09.710] Crystals: P1 1100 → 1000 (-100)  [battle]
+[09:13.880] Attack P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} → P1(0,3)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=4  ATK=30 vs DEF=25  → WIN
+[09:13.881] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[09:13.881] Reckoning overlay: P1 "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} badge=25 ATK pill=0 DEF pill=25 mod=+DEF 0 (25+0=25)
+[09:13.881] Anim: 3A  △ P1(0,3)
+[09:13.881] Card destroyed  P1 (0,3) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[09:15.834] Turn ended  P0  |  Crystals P0=3370 P1=1000
+
+--- Turn 7  |  Player 1  |  Crystals P0=3370 P1=1000 ---
+[09:16.430] Mode selected P1: ATTACK
+[09:16.434] MSG: Player 2: tap a unit to attack.
+[09:17.630] Dice rolled: 4
+[09:17.651] MSG: Immortal Vampire wins!
+[09:20.669] Crystals: P0 3370 → 2990 (-380)  [battle]
+[09:24.843] Attack P1(1,4)"Immortal Vampire" {Unit ATK180 DEF80 | cost 1200 | affinity Chaos | base 30/80 | buff +permATK150} → P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=4  ATK=180 vs DEF=30  → WIN
+[09:24.843] Reckoning overlay: P1 "Immortal Vampire" {Unit ATK180 DEF80 | cost 1200 | affinity Chaos | base 30/80 | buff +permATK150} badge=180 ATK pill=180 DEF pill=80 mod=+ATK 0 (180+0=180)
+[09:24.843] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[09:24.843] Anim: 3A  △ P0(1,2)
+[09:24.843] Card destroyed  P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[09:25.340] Mode selected P1: ATTACK
+[09:25.345] MSG: Player 2: tap a unit to attack.
+[09:26.547] Dice rolled: 1
+[09:26.564] MSG: Night Whisperer wins!
+[09:26.564] MSG: Gem Turtle: Night Whisperer permanently loses 5 ATK!
+[09:30.673] Crystals: P0 2990 → 2790 (-200)  [battle]
+[09:34.868] Attack P1(0,4)"Night Whisperer" {Unit ATK55 DEF60 | cost 900 | affinity Chaos | base 25/30 | buff +permATK30, +permDEF30} → P0(2,4)"Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane | 1xDEF-used}  Dice=1  ATK=60 vs DEF=30  → WIN
+[09:34.869] Reckoning overlay: P1 "Night Whisperer" {Unit ATK55 DEF60 | cost 900 | affinity Chaos | base 25/30 | buff +permATK30, +permDEF30} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[09:34.869] Reckoning overlay: P0 "Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane | 1xDEF-used} badge=30 ATK pill=0 DEF pill=30 mod=+DEF 0 (30+0=30)
+[09:34.869] Anim: 3A  △ P0(2,4)
+[09:34.869] Card destroyed  P0 (2,4) "Gem Turtle" {Unit ATK0 DEF30 | cost 200 | affinity Arcane | 1xDEF-used}
+[09:35.373] Turn ended  P1  |  Crystals P0=2790 P1=1000
+
+--- Turn 8  |  Player 0  |  Crystals P0=2790 P1=1000 ---
+[10:15.904] Revealed: P0 (2,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[10:17.127] Dice rolled: 2
+[10:17.146] MSG: Fire Elemental wins!
+[10:19.744] Crystals: P1 1000 → 900 (-100)  [battle]
+[10:23.952] Attack P0(2,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P1(4,4)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=35 vs DEF=0  → WIN
+[10:23.952] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[10:23.952] Reckoning overlay: P1 "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} badge=0 ATK pill=20 DEF pill=0 mod=+DEF 0 (0+0=0)
+[10:23.952] Anim: 3A  △ P1(4,4)
+[10:23.952] Card destroyed  P1 (4,4) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[10:27.165] Dice rolled: 1
+[10:27.184] MSG: Black Worms wins!
+[10:29.861] Crystals: P1 900 → 0 (-900)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2790  P1: 0  |  Turns: 8

@@ -1,0 +1,16 @@
+=== Battle of Greasy Keyboard ===
+Battle started: 2026-07-02 17:10:41.653
+Game Session of Milkshake (started 2026-07-02 17:10:25.484)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.573] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:20.331] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 5000  P1: 0  |  Turns: 1

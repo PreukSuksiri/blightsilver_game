@@ -1,0 +1,57 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-07-25 16:27:52.822
+Game Session of Chamomile Tea (started 2026-07-25 16:27:12.085)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.381] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:17.805] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:17.840] Revealed: P1 (2,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:19.039] Dice rolled: 2
+[00:19.051] MSG: Lab Zombie wins!
+[00:22.376] Crystals: P1 3000 → 2650 (-350)  [battle]
+[00:26.595] Attack P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P1(2,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=2  ATK=55 vs DEF=30  → WIN
+[00:26.595] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[00:26.595] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=30 ATK pill=35 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:26.595] Anim: 3A  △ P1(2,1)
+[00:26.595] Card destroyed  P1 (2,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:32.379] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:32.405] Revealed: P1 (1,1) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:33.608] Dice rolled: 4
+[00:33.615] MSG: Dystopian Cultist wins!
+[00:36.496] Crystals: P1 2650 → 2450 (-200)  [battle]
+[00:40.715] Attack P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(1,1)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=4  ATK=65 vs DEF=30  → WIN
+[00:40.715] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[00:40.715] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:40.715] Anim: 3A  △ P1(1,1)
+[00:40.715] Card destroyed  P1 (1,1) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:55.202] Turn ended  P0  |  Crystals P0=5000 P1=2450
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2450 ---
+[00:55.797] Mode selected P1: TECH
+[00:56.105] Tech played  P1: "Spy"
+[00:57.645] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:58.053] Tech resolved  P1
+[00:58.287] Dead-end placed  P0 (2,4)
+[00:58.951] Mode selected P1: ATTACK
+[00:58.955] MSG: Player 2: tap a unit to attack.
+[00:59.294] Revealed: P1 (4,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[01:01.186] Dice rolled: 1
+[01:01.197] MSG: Bleacher Squad wins!
+[01:03.909] Crystals: P0 5000 → 4300 (-700)  [battle]
+[01:08.111] Attack P1(4,0)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=1  ATK=40 vs DEF=20  → WIN
+[01:08.111] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=40 ATK pill=20 DEF pill=20 mod=+ATK 20 (20+20=40)
+[01:08.112] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:08.112] Anim: 3A  △ P0(4,0)
+[01:08.112] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:10.622] Turn ended  P1  |  Crystals P0=4300 P1=2450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4300 P1=2450 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4300  P1: 2450  |  Turns: 3

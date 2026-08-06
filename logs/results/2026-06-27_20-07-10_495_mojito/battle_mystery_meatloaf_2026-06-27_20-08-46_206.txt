@@ -1,0 +1,59 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-06-27 20:08:46.206
+Game Session of Mojito (started 2026-06-27 20:07:10.495)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:32.737] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:21.251] Revealed: P0 (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:21.278] Revealed: P1 (2,2) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:26.549] Dice rolled: 3
+[01:26.564] MSG: Canyon Warg wins!
+[01:39.344] Crystals: P1 5000 → 4600 (-400)  [battle]
+[01:57.939] Attack P0(3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(2,2)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=3  ATK=70 vs DEF=30  → WIN
+[01:57.939] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[01:57.939] Reckoning overlay: P1 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:57.939] Anim: 3A  △ P1(2,2)
+[01:57.939] Card destroyed  P1 (2,2) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[02:06.170] Revealed: P0 (0,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[02:06.192] Revealed: P1 (0,2) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[02:11.799] Dice rolled: 1
+[02:11.813] MSG: War Genie wins!
+[02:25.275] Crystals: P1 4600 → 4000 (-600)  [battle]
+[02:44.932] Attack P0(0,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(0,2)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}  Dice=1  ATK=100 vs DEF=30  → WIN
+[02:44.932] Reckoning overlay: P0 "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} badge=100 ATK pill=100 DEF pill=80 mod=+ATK 0 (100+0=100)
+[02:44.932] Reckoning overlay: P1 "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:44.932] Anim: 3A  △ P1(0,2)
+[02:44.932] Card destroyed  P1 (0,2) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[02:52.466] Turn ended  P0  |  Crystals P0=5000 P1=4000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4000 ---
+[02:55.082] Mode selected P1: TECH
+[02:56.385] Tech played  P1: "Spy"
+[03:02.933] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:04.577] Revealed: P0 (4,4) "Pepper Spray" {cost 0}
+[03:04.600] Tech resolved  P1
+[03:08.444] Mode selected P1: ATTACK
+[03:08.447] MSG: Player 2: tap a unit to attack.
+[03:09.732] Revealed: P1 (0,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[03:17.956] Dice rolled: 5
+[03:17.969] MSG: Poltergeist wins!
+[03:30.493] Crystals: P0 5000 → 4250 (-750)  [battle]
+[03:48.820] Attack P1(0,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=5  ATK=70 vs DEF=30  → WIN
+[03:48.820] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} badge=70 ATK pill=0 DEF pill=70 mod=+ATK 70 (0+70=70)
+[03:48.820] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=30 ATK pill=70 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:48.820] Anim: 3A  △ P0(3,2)
+[03:48.820] Card destroyed  P0 (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[03:51.298] Mode selected P1: ATTACK
+[03:51.301] MSG: Player 2: tap a unit to attack.
+[03:52.664] Revealed: P1 (1,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[04:02.062] Revealed: P0 (2,0) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[04:07.751] Dice rolled: 5
+[04:21.440] Crystals: P1 4000 → 3650 (-350)  [battle]
+[04:34.038] Attack P1(1,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(2,0)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}  Dice=5  ATK=25 vs DEF=85  → LOSE
+[04:34.038] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} 

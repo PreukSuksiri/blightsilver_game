@@ -1,0 +1,158 @@
+=== Battle of Discount Lasagna ===
+Battle started: 2026-06-26 05:57:02.796
+Game Session of Arnold Palmer (started 2026-06-26 05:55:39.268)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:10.353] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:47.587] Revealed: P0 (0,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[01:52.346] Dice rolled: 2
+[01:52.369] MSG: Nothing happens — Dead End.
+[02:05.447] Attack P0(0,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[02:05.447] Anim: 3F  (blank slot)
+[02:14.264] Revealed: P0 (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[02:14.291] Revealed: P1 (2,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[02:19.375] Dice rolled: 3
+[02:19.388] MSG: Canyon Warg wins!
+[02:31.567] Crystals: P1 5000 → 4650 (-350)  [battle]
+[02:49.073] Attack P0(3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(2,1)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=3  ATK=70 vs DEF=20  → WIN
+[02:49.073] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[02:49.073] Reckoning overlay: P1 "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:49.073] Anim: 3A  △ P1(2,1)
+[02:49.073] Card destroyed  P1 (2,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[02:54.391] Turn ended  P0  |  Crystals P0=5000 P1=4650
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4650 ---
+[02:56.719] Mode selected P1: TECH
+[02:57.992] Tech played  P1: "Spy"
+[03:03.860] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:05.470] Revealed: P0 (1,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[03:05.472] Tech resolved  P1
+[03:14.805] Crystals: P1 4650 → 3850 (-800)  [union]
+[03:25.689] Revealed: P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[03:25.716] Union summoned P1: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down}
+[03:25.716] MSG: Player 2 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down}
+[03:38.896] Mode selected P1: ATTACK
+[03:38.899] MSG: Player 2: tap a unit to attack.
+[03:43.672] Dice rolled: 5
+[03:43.725] MSG: Both cards are destroyed!
+[03:54.984] Crystals: P0 5000 → 4250 (-750)  [battle]
+[04:05.881] Attack P1(0,2)"Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} → P0(3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=5  ATK=30 vs DEF=30  → TIE
+[04:05.881] Reckoning overlay: P1 "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} badge=30 ATK pill=30 DEF pill=50 mod=+ATK 0 (30+0=30)
+[04:05.881] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=30 ATK pill=70 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:05.881] Anim: 3C  △ P1(0,2) + △ P0(3,2)
+[04:05.881] Card destroyed  P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[04:05.881] Card destroyed  P0 (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[04:07.877] Mode selected P1: ATTACK
+[04:07.879] MSG: Player 2: tap a unit to attack.
+[04:09.117] Revealed: P1 (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[04:16.665] Dice rolled: 5
+[04:16.677] MSG: Both cards are destroyed!
+[04:27.941] Crystals: P1 3850 → 3450 (-400)  [battle]
+[04:38.844] Crystals: P0 4250 → 3800 (-450)  [battle]
+[04:53.488] Attack P1(4,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P0(1,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=5  ATK=40 vs DEF=40  → TIE
+[04:53.489] Reckoning overlay: P1 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[04:53.489] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[04:53.489] Anim: 3C  △ P1(4,4) + △ P0(1,2)
+[04:53.489] Card destroyed  P1 (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[04:53.489] Card destroyed  P0 (1,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[04:55.469] Turn ended  P1  |  Crystals P0=3800 P1=3450
+
+--- Turn 3  |  Player 0  |  Crystals P0=3800 P1=3450 ---
+[05:13.439] MSG: Tap 3 material card(s) on the field.
+[05:19.508] MSG: 2 more material(s) needed.
+[05:22.719] MSG: 1 more material(s) needed.
+[05:24.952] Crystals: P0 3800 → 3000 (-800)  [union]
+[05:35.810] Revealed: P0 (1,3) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[05:35.837] Union summoned P0: "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} from "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}, "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down}, "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down}
+[05:35.837] MSG: Player 1 summoned [Burning Phoenix] using: "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}, "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down}, "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down}
+[05:58.819] Revealed: P1 (2,0) "Hypnosis" {cost 800}
+[06:03.656] Dice rolled: 4
+[06:03.708] MSG: Trap triggered: Hypnosis!
+[06:13.865] Crystals: P1 3450 → 2650 (-800)  [trap cost]
+[06:24.815] MSG: Hypnosis: Burning Phoenix cannot attack until end of next turn.
+[06:30.516] Attack P0(1,3)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P1(2,0)"Hypnosis" {cost 800}  Dice=4  → Unit vs Trap
+[06:30.516] Reckoning overlay: P0 "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} badge=125 ATK pill=125 DEF pill=50 mod=+ATK 0 (125+0=125)
+[06:30.516] Anim: 3D  (attacker survives)
+[06:44.907] Revealed: P0 (2,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[06:50.039] Dice rolled: 1
+[06:50.060] MSG: Nothing happens — Dead End.
+[06:57.816] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[06:57.820] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(3,2)(empty)  Dice=1  → DEAD_END
+[06:57.820] Anim: 3F  (blank slot)
+[07:09.219] Revealed: P1 (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[07:14.322] Dice rolled: 5
+[07:27.158] Crystals: P0 3000 → 2450 (-550)  [battle]
+[07:38.854] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} → P1(3,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}  Dice=5  ATK=45 vs DEF=70  → LOSE
+[07:38.854] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[07:38.854] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} badge=70 ATK pill=0 DEF pill=70 mod=+DEF 0 (70+0=70)
+[07:38.854] Anim: 3B  △ P0(2,1)
+[07:38.854] Card destroyed  P0 (2,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn}
+[08:35.069] Turn ended  P0  |  Crystals P0=2450 P1=2650
+
+--- Turn 4  |  Player 1  |  Crystals P0=2450 P1=2650 ---
+[08:37.683] Mode selected P1: TECH
+[08:39.073] Tech played  P1: "Bribe"
+[08:45.454] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[09:11.464] MSG: Bribe: Opponent passed.
+[09:11.466] Tech resolved  P1
+[09:15.487] Mode selected P1: ATTACK
+[09:15.490] MSG: Player 2: tap a unit to attack.
+[09:22.054] Dice rolled: 2
+[09:22.078] MSG: Nothing happens — Dead End.
+[09:36.271] Attack P1(3,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(1,0)(empty)  Dice=2  → DEAD_END
+[09:36.271] Anim: 3F  (blank slot)
+[09:38.548] Mode selected P1: ATTACK
+[09:38.551] MSG: Player 2: tap a unit to attack.
+[09:40.019] Revealed: P1 (4,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[09:49.798] Dice rolled: 2
+[09:49.818] MSG: Nothing happens — Dead End.
+[10:04.400] Attack P1(4,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(3,0)(empty)  Dice=2  → DEAD_END
+[10:04.400] Anim: 3F  (blank slot)
+[10:06.813] Turn ended  P1  |  Crystals P0=2450 P1=2650
+
+--- Turn 5  |  Player 0  |  Crystals P0=2450 P1=2650 ---
+[10:23.497] Revealed: P0 (2,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[10:28.688] Dice rolled: 1
+[10:28.701] MSG: Book with Fangs wins!
+[10:41.188] Crystals: P1 2650 → 2300 (-350)  [battle]
+[10:58.999] Attack P0(2,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(4,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}  Dice=1  ATK=45 vs DEF=30  → WIN
+[10:58.999] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[10:58.999] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used} badge=30 ATK pill=15 DEF pill=20 mod=+DEF 10 (20+10=30)
+[10:58.999] Anim: 3A  △ P1(4,0)
+[10:58.999] Card destroyed  P1 (4,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}
+[11:09.978] Dice rolled: 5
+[11:09.990] MSG: War Genie wins!
+[11:22.545] Crystals: P1 2300 → 1600 (-700)  [battle]
+[11:40.603] Attack P0(0,4)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P1(3,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}  Dice=5  ATK=90 vs DEF=70  → WIN
+[11:40.603] Reckoning overlay: P0 "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} badge=90 ATK pill=90 DEF pill=80 mod=+ATK 0 (90+0=90)
+[11:40.603] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} badge=70 ATK pill=0 DEF pill=70 mod=+DEF 0 (70+0=70)
+[11:40.603] Anim: 3A  △ P1(3,0)
+[11:40.603] Card destroyed  P1 (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[12:00.020] Turn ended  P0  |  Crystals P0=2450 P1=1600
+
+--- Turn 6  |  Player 1  |  Crystals P0=2450 P1=1600 ---
+[12:02.355] Mode selected P1: TECH
+[12:03.660] Tech played  P1: "Tease"
+[12:09.616] MSG: Opponent must choose and reveal 1 of their squares.
+[12:09.701] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[12:12.203] Revealed: P0 (4,2) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[12:12.203] MSG: Tease: Opponent revealed Needle Porcupine.
+[12:12.205] Tech resolved  P1
+[12:15.739] Mode selected P1: ATTACK
+[12:15.742] MSG: Player 2: tap a unit to attack.
+[12:16.983] Revealed: P1 (2,3) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[12:24.670] Dice rolled: 2
+[12:24.683] MSG: Araya the Eerie Dancer wins!
+[12:36.446] Crystals: P0 2450 → 2250 (-200)  [battle]
+[12:53.235] Attack P1(2,3)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → P0(4,2)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}  Dice=2  ATK=15 vs DEF=10  → WIN
+[12:53.235] Reckoning overlay: P1 "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} badge=15 ATK pill=15 DEF pill=20 mod=+ATK 0 (15+0=15)
+[12:53.235] Reckoning overlay: P0 "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[12:53.235] Anim: 3A  △ P0(4,2)
+[12:53.235] Card destroyed  P0 (4,2) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[13:03.811] Turn ended  P1  |

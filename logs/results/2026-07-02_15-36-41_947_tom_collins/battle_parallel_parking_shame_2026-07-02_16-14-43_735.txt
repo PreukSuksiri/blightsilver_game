@@ -1,0 +1,133 @@
+=== Battle of Parallel Parking Shame ===
+Battle started: 2026-07-02 16:14:43.735
+Game Session of Tom Collins (started 2026-07-02 15:36:41.947)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:29.376] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[02:40.701] Revealed: P0 (1,4) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[02:40.702] Revealed: P1 (1,1) "Bunker" {cost 600}
+[02:42.107] Dice rolled: 1
+[02:42.339] MSG: Trap triggered: Bunker!
+[02:44.532] Crystals: P1 3000 → 2400 (-600)  [trap cost]
+[02:47.383] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[02:48.879] Attack P0(1,4)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P1(1,1)"Bunker" {cost 600}  Dice=1  → Unit vs Trap
+[02:48.879] Reckoning overlay: P0 "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[02:48.879] Anim: 3D  (attacker survives)
+[02:52.318] MSG: That square is locked by a trap.
+[02:52.981] MSG: That square is locked by a trap.
+[02:54.148] MSG: That square is locked by a trap.
+[02:57.346] Revealed: P0 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:57.347] Revealed: P1 (0,2) "Blackmail" {cost 0}
+[02:58.588] Dice rolled: 4
+[02:58.643] MSG: Trap triggered: Blackmail!
+[03:07.932] MSG: Blackmail: Discarded Bribe.
+[03:09.341] Attack P0(2,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(0,2)"Blackmail" {cost 0}  Dice=4  → Unit vs Trap
+[03:09.342] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[03:09.342] Anim: 3D  (attacker survives)
+[06:23.981] Turn ended  P0  |  Crystals P0=5000 P1=2400
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2400 ---
+[06:24.565] Mode selected P1: TECH
+[06:24.865] Crystals: P1 2400 → 1800 (-600)  [tech cost]
+[06:27.685] Tech played  P1: "Radar"
+[06:29.243] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[06:29.880] Dead-end placed  P0 (4,1)
+[06:30.048] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[06:30.482] Revealed: P0 (2,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[06:30.489] Tech resolved  P1
+[06:31.340] Mode selected P1: ATTACK
+[06:31.344] MSG: Player 2: tap a unit to attack.
+[06:31.684] Revealed: P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[06:33.598] Dice rolled: 1
+[06:33.653] MSG: Mind Flayer wins!
+[06:36.405] Crystals: P0 5000 → 4600 (-400)  [battle]
+[06:40.587] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(2,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=1  ATK=100 vs DEF=25  → WIN
+[06:40.587] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=100 ATK pill=100 DEF pill=70 mod=+ATK 0 (100+0=100)
+[06:40.587] Reckoning overlay: P0 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[06:40.587] Anim: 3A  △ P0(2,4)
+[06:40.587] Card destroyed  P0 (2,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[06:41.024] Mode selected P1: ATTACK
+[06:41.028] MSG: Player 2: tap a unit to attack.
+[06:41.352] Revealed: P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[06:43.270] Dice rolled: 2
+[06:43.298] MSG: Pyromancer wins!
+[06:46.160] Crystals: P0 4600 → 4350 (-250)  [battle]
+[06:50.358] Attack P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(2,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=80 vs DEF=20  → WIN
+[06:50.358] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=80 ATK pill=80 DEF pill=0 mod=+ATK 0 (80+0=80)
+[06:50.358] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[06:50.358] Anim: 3A  △ P0(2,3)
+[06:50.358] Card destroyed  P0 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[06:50.854] Turn ended  P1  |  Crystals P0=4350 P1=1800
+
+--- Turn 3  |  Player 0  |  Crystals P0=4350 P1=1800 ---
+[06:56.427] Dice rolled: 1
+[06:56.449] MSG: Rotten Shrieker wins!
+[06:58.869] Crystals: P1 1800 → 900 (-900)  [battle]
+[07:03.073] Attack P0(1,4)"Rotten Shrieker" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} → P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=1  ATK=30 vs DEF=0  → WIN
+[07:03.073] Reckoning overlay: P0 "Rotten Shrieker" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[07:03.073] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[07:03.073] Anim: 3A  △ P1(2,4)
+[07:03.073] Card destroyed  P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[07:06.103] Tech played  P0: "Tease"
+[07:07.638] MSG: Opponent must choose and reveal 1 of their squares.
+[07:07.643] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[07:08.087] Revealed: P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[07:08.087] MSG: Tease: Opponent revealed Ice Mage.
+[07:08.283] Tech resolved  P0
+[07:16.058] Revealed: P0 (1,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[07:17.280] Dice rolled: 4
+[07:17.308] MSG: Flame Lizard wins!
+[07:21.743] Crystals: P1 900 → 500 (-400)  [battle]
+[07:25.944] Attack P0(1,1)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=4  ATK=25 vs DEF=0  → WIN
+[07:25.944] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[07:25.944] Reckoning overlay: P1 "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} badge=0 ATK pill=50 DEF pill=0 mod=+DEF 0 (0+0=0)
+[07:25.944] Anim: 3A  △ P1(2,0)
+[07:25.944] Card destroyed  P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[07:28.748] Turn ended  P0  |  Crystals P0=4350 P1=500
+
+--- Turn 4  |  Player 1  |  Crystals P0=4350 P1=500 ---
+[07:29.323] Mode selected P1: TECH
+[07:29.632] Tech played  P1: "Tease"
+[07:31.174] MSG: Opponent must choose and reveal 1 of their squares.
+[07:31.379] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[07:36.964] Revealed: P0 (0,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[07:36.964] MSG: Tease: Opponent revealed Skeleton Archer.
+[07:36.969] Tech resolved  P1
+[07:37.866] Mode selected P1: ATTACK
+[07:37.870] MSG: Player 2: tap a unit to attack.
+[07:39.072] Dice rolled: 1
+[07:39.098] MSG: Mind Flayer wins!
+[07:42.905] Crystals: P0 4350 → 3900 (-450)  [battle]
+[07:47.043] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(1,4)"Rotten Shrieker" {Unit ATK20 DEF30 | cost 450 | affinity Bio | base 20/30}  Dice=1  ATK=100 vs DEF=30  → WIN
+[07:47.043] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=100 ATK pill=100 DEF pill=70 mod=+ATK 0 (100+0=100)
+[07:47.043] Reckoning overlay: P0 "Rotten Shrieker" {Unit ATK20 DEF30 | cost 450 | affinity Bio | base 20/30} badge=30 ATK pill=20 DEF pill=30 mod=+DEF 0 (30+0=30)
+[07:47.043] Anim: 3A  △ P0(1,4)
+[07:47.043] Card destroyed  P0 (1,4) "Rotten Shrieker" {Unit ATK20 DEF30 | cost 450 | affinity Bio | base 20/30}
+[07:47.514] Mode selected P1: ATTACK
+[07:47.518] MSG: Player 2: tap a unit to attack.
+[07:47.858] Revealed: P1 (4,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[07:49.748] Dice rolled: 1
+[07:49.765] MSG: Aerial the Battlemage wins!
+[07:52.904] Crystals: P0 3900 → 3500 (-400)  [battle]
+[07:57.048] Attack P1(4,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(1,1)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=1  ATK=50 vs DEF=40  → WIN
+[07:57.049] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[07:57.049] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=40 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=40)
+[07:57.049] Anim: 3A  △ P0(1,1)
+[07:57.049] Card destroyed  P0 (1,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[07:57.526] Turn ended  P1  |  Crystals P0=3500 P1=500
+
+--- Turn 5  |  Player 0  |  Crystals P0=3500 P1=500 ---
+[08:03.994] Revealed: P0 (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[08:05.203] Dice rolled: 1
+[08:05.224] MSG: Both cards are destroyed!
+[08:09.583] Crystals: P0 3500 → 2800 (-700)  [battle]
+[08:12.397] Crystals: P1 500 → 0 (-500)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2800  P1: 0  |  Turns: 5

@@ -1,0 +1,15 @@
+=== Battle of Suburban Sprinkler War ===
+Battle started: 2026-07-25 15:18:24.354
+Game Session of Old Fashioned (started 2026-07-25 15:17:51.710)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.486] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 5000  P1: 3000  |  Turns: 1

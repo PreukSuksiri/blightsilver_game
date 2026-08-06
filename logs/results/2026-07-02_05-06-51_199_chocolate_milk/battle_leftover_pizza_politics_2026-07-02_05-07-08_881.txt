@@ -1,0 +1,50 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-07-02 05:07:08.881
+Game Session of Chocolate Milk (started 2026-07-02 05:06:51.199)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:33.192] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[01:38.565] Mode selected P1: TECH
+[01:38.865] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[01:41.692] Tech played  P1: "Radar"
+[01:43.310] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[01:46.538] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:46.546] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:47.178] Dead-end placed  P0 (0,1)
+[01:47.367] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:47.747] Tech resolved  P1
+[01:47.983] Dead-end placed  P0 (2,0)
+[01:48.644] Mode selected P1: ATTACK
+[01:48.647] MSG: Player 2: tap a unit to attack.
+[01:48.979] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:50.872] Dice rolled: 2
+[01:50.893] MSG: Gamma Emitter wins!
+[01:54.654] Crystals: P0 5000 → 4750 (-250)  [battle]
+[01:58.862] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=2  ATK=20 vs DEF=15  → WIN
+[01:58.863] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[01:58.863] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:58.863] Anim: 3A  △ P0(2,4)
+[01:58.863] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:59.361] Mode selected P1: ATTACK
+[01:59.363] MSG: Player 2: tap a unit to attack.
+[01:59.683] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[02:01.612] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:02.818] Dice rolled: 4
+[02:06.025] Crystals: P1 4400 → 3980 (-420)  [battle]
+[02:08.873] Attack P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=0 vs DEF=20  → LOSE
+[02:08.873] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} badge=0 ATK pill=0 DEF pill=50 mod=+ATK 0 (0+0=0)
+[02:08.873] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:08.873] Anim: 3B  △ P1(2,1)
+[02:08.874] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[02:09.360] Turn ended  P1  |  Crystals P0=4750 P1=3980
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=3980 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4750  P1: 3980  |  Turns: 2

@@ -1,0 +1,140 @@
+=== Battle of Break Room Passive Aggression ===
+Battle started: 2026-07-29 06:55:48.246
+Game Session of Bubble Tea (started 2026-07-29 06:53:49.433)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.770] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.207] Mode selected P1: TECH
+[00:10.513] Tech played  P1: "Spy"
+[00:12.055] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:12.520] Revealed: P0 (4,2) "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[00:12.523] Tech resolved  P1
+[00:13.372] Mode selected P1: ATTACK
+[00:13.685] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:15.590] Dice rolled: 4
+[00:15.596] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Rotten Spider!
+[00:15.597] MSG: Vampire Duchess wins!
+[00:21.090] Crystals: P0 5000 → 4550 (-450)  [battle]
+[00:25.298] Attack P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(4,2)"Rotten Spider" {Unit ATK35 DEF25 | cost 450 | affinity Bio | base 35/25}  Dice=4  ATK=55 vs DEF=25  → WIN
+[00:25.298] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[00:25.298] Reckoning overlay: P0 "Rotten Spider" {Unit ATK35 DEF25 | cost 450 | affinity Bio | base 35/25} badge=25 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=25) MISMATCH
+[00:25.298] Anim: 3A  △ P0(4,2)
+[00:25.298] Card destroyed  P0 (4,2) "Rotten Spider" {Unit ATK35 DEF25 | cost 450 | affinity Bio | base 35/25}
+[00:25.793] Mode selected P1: ATTACK
+[00:26.125] Revealed: P1 (0,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:28.276] Dice rolled: 1
+[00:28.300] MSG: Night Whisperer hits Dead End — nothing happens.
+[00:31.995] Attack P1(0,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P0(1,0)(empty)  Dice=1  → DEAD_END
+[00:31.995] Anim: 3F  (blank slot)
+[00:32.503] Turn ended  P1  |  Crystals P0=4550 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4550 P1=3000 ---
+[00:54.075] Revealed: P0 (1,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:55.357] Revealed: P1 (4,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:57.034] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[00:59.171] Ability choice: 0 (Yes)
+[00:59.182] Dice rolled: 3
+[00:59.195] MSG: Dystopian Cultist wins!
+[01:02.771] Crystals: P1 3000 → 2800 (-200)  [battle]
+[01:06.974] Attack P0(1,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(4,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=65 vs DEF=15  → WIN
+[01:06.974] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[01:06.974] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:06.974] Anim: 3A  △ P1(4,4)
+[01:06.974] Card destroyed  P1 (4,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:14.153] Revealed: P0 (4,0) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:15.383] Dice rolled: 5
+[01:15.393] MSG: Lab Crawler wins!
+[01:19.750] Crystals: P1 2800 → 1900 (-900)  [battle]
+[01:23.952] Attack P0(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(0,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=5  ATK=95 vs DEF=30  → WIN
+[01:23.952] Reckoning overlay: P0 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[01:23.952] Reckoning overlay: P1 "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:23.952] Anim: 3A  △ P1(0,2)
+[01:23.952] Card destroyed  P1 (0,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:29.229] Turn ended  P0  |  Crystals P0=4550 P1=1900
+
+--- Turn 3  |  Player 1  |  Crystals P0=4550 P1=1900 ---
+[01:29.836] Mode selected P1: TECH
+[01:30.142] Tech played  P1: "Tease"
+[01:31.851] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[01:36.246] Revealed: P0 (0,0) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:36.248] MSG: Tease: Opponent revealed Plant-29.
+[01:36.254] Tech resolved  P1
+[01:37.136] Mode selected P1: ATTACK
+[01:38.338] Dice rolled: 4
+[01:38.346] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Dystopian Cultist!
+[01:38.346] MSG: Vampire Duchess wins!
+[01:42.367] Crystals: P0 4550 → 4000 (-550)  [battle]
+[01:46.561] Attack P1(1,2)"Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60} → P0(1,1)"Dystopian Cultist" {Unit ATK60 DEF35 | cost 550 | affinity Bio | base 60/35}  Dice=4  ATK=60 vs DEF=35  → WIN
+[01:46.561] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60} badge=60 ATK pill=55 DEF pill=55 mod=+ATK 0 (55+0=60) MISMATCH
+[01:46.561] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK60 DEF35 | cost 550 | affinity Bio | base 60/35} badge=35 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=35) MISMATCH
+[01:46.561] Anim: 3A  △ P0(1,1)
+[01:46.561] Card destroyed  P0 (1,1) "Dystopian Cultist" {Unit ATK60 DEF35 | cost 550 | affinity Bio | base 60/35}
+[01:47.056] Mode selected P1: ATTACK
+[01:47.398] Revealed: P1 (2,2) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[01:49.334] Revealed: P0 (1,3) "Nanomites Walker" {Unit ATK15 DEF15 | cost 170 | affinity Bio}
+[01:50.529] Dice rolled: 2
+[01:50.538] MSG: Hands in the Attic wins!
+[01:55.031] Crystals: P0 4000 → 3830 (-170)  [battle]
+[01:59.225] Attack P1(2,2)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} → P0(1,3)"Nanomites Walker" {Unit ATK15 DEF15 | cost 170 | affinity Bio}  Dice=2  ATK=30 vs DEF=15  → WIN
+[01:59.225] Reckoning overlay: P1 "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:59.225] Reckoning overlay: P0 "Nanomites Walker" {Unit ATK15 DEF15 | cost 170 | affinity Bio} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:59.225] Anim: 3A  △ P0(1,3)
+[01:59.225] Card destroyed  P0 (1,3) "Nanomites Walker" {Unit ATK15 DEF15 | cost 170 | affinity Bio}
+[01:59.739] Turn ended  P1  |  Crystals P0=3830 P1=1900
+
+--- Turn 4  |  Player 0  |  Crystals P0=3830 P1=1900 ---
+[01:59.740] MSG: Ability triggered: "Plant-29" (turn start coin flip flag)
+[02:01.343] Coin flip: Heads
+[02:04.090] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[02:16.422] MSG: Plant-29: Venom on Vampire Duchess.
+[02:25.782] Tech played  P0: "Release Mutagen"
+[02:27.448] Target prompt: "Release Mutagen: Choose 1 of your units to flag."  filter=own_faceup_character
+[02:27.716] MSG: Release Mutagen: Mutagen on Lab Crawler.
+[02:27.843] Tech resolved  P0
+[02:31.593] Dice rolled: 4
+[02:31.616] MSG: Lab Crawler wins!
+[02:34.435] Crystals: P1 1900 → 1100 (-800)  [battle]
+[02:37.284] MSG: Lab Crawler: Mutagen chain — choose target 2/3.
+[02:37.289] Attack P0(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | flags:mutagen} → P1(1,2)"Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60 | flags:venom}  Dice=4  ATK=95 vs DEF=60  → WIN
+[02:37.289] Reckoning overlay: P0 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | flags:mutagen} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[02:37.289] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60 | flags:venom} badge=60 ATK pill=60 DEF pill=60 mod=+DEF 0 (60+0=60)
+[02:37.289] Anim: 3A  △ P1(1,2)
+[02:37.289] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60 | flags:venom}
+[02:40.211] Dice rolled: 5
+[02:40.220] MSG: Lab Crawler wins!
+[02:44.692] Crystals: P1 1100 → 800 (-300)  [battle]
+[02:47.518] MSG: Lab Crawler: Mutagen chain — choose target 3/3.
+[02:47.524] Attack P0(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | flags:mutagen | multi-atk:1} → P1(2,2)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | 1xATK-used}  Dice=5  ATK=95 vs DEF=20  → WIN
+[02:47.524] Reckoning overlay: P0 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | flags:mutagen | multi-atk:1} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[02:47.524] Reckoning overlay: P1 "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:47.524] Anim: 3A  △ P1(2,2)
+[02:47.524] Card destroyed  P1 (2,2) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | 1xATK-used}
+[02:52.521] Revealed: P1 (2,4) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[02:53.723] Dice rolled: 4
+[02:53.729] MSG: Lab Crawler wins!
+[02:56.447] Crystals: P1 800 → 300 (-500)  [battle]
+[03:00.663] Attack P0(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | flags:mutagen | multi-atk:2} → P1(2,4)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}  Dice=4  ATK=95 vs DEF=30  → WIN
+[03:00.663] Reckoning overlay: P0 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | flags:mutagen | multi-atk:2} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[03:00.663] Reckoning overlay: P1 "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:00.663] Anim: 3A  △ P1(2,4)
+[03:00.663] Card destroyed  P1 (2,4) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[03:02.286] Turn ended  P0  |  Crystals P0=3830 P1=300
+
+--- Turn 5  |  Player 1  |  Crystals P0=3830 P1=300 ---
+[03:02.892] Mode selected P1: TECH
+[03:03.203] Tech played  P1: "Bribe"
+[03:04.743] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[03:06.666] MSG: Bribe: Opponent passed.
+[03:06.677] Tech resolved  P1
+[03:09.080] Crystals: P1 300 → 0 (-300)  [union]
+[03:12.081] Revealed: P1 (2,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[03:12.132] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3830  P1: 0  |  Turns: 5

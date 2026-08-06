@@ -1,0 +1,159 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-08-04 16:12:46.561
+Game Session of Shirley Temple (started 2026-08-04 16:04:48.283)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:16.130] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:23.561] Mode selected P1: TECH
+[00:23.865] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:26.700] Tech played  P1: "Radar"
+[00:28.247] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:28.715] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:30.261] Revealed: P0 (2,1) "Pepper Spray" {cost 0}
+[00:32.131] Dead-end placed  P0 (4,1)
+[00:32.146] Tech resolved  P1
+[00:33.039] Mode selected P1: ATTACK
+[00:33.374] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:35.273] Dice rolled: 1
+[00:35.285] MSG: Gamma Emitter wins!
+[00:39.774] Crystals: P0 5000 → 4520 (-480)  [battle]
+[00:43.988] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=1  ATK=30 vs DEF=20  → WIN
+[00:43.989] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=30 ATK pill=20 DEF pill=15 mod=+ATK 10 (20+10=30)
+[00:43.989] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:43.989] Anim: 3A  △ P0(0,2)
+[00:43.989] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:46.488] Turn ended  P1  |  Crystals P0=4520 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4520 P1=2400 ---
+[01:06.729] MSG: Tap 2 material card(s) on the field.
+[01:06.734] MSG: 1 more material(s) needed.
+[01:07.160] Crystals: P0 4520 → 3520 (-1000)  [union]
+[01:09.979] Revealed: P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:10.036] Union summoned P0: "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[01:16.985] Dice rolled: 2
+[01:17.090] MSG: Ice Elemental wins!
+[01:19.494] Crystals: P1 2400 → 2180 (-220)  [battle]
+[01:23.701] Attack P0(1,3)"Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=2  ATK=80 vs DEF=15  → WIN
+[01:23.701] Reckoning overlay: P0 "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=80 ATK pill=80 DEF pill=50 mod=+ATK 0 (80+0=80)
+[01:23.701] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:23.701] Anim: 3A  △ P1(1,1)
+[01:23.701] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:29.425] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:30.886] Dice rolled: 5
+[01:30.928] MSG: Sonic Seraph hits Dead End — nothing happens.
+[01:33.762] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[01:33.773] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[01:33.773] Anim: 3F  (blank slot)
+[01:37.335] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:38.533] Dice rolled: 1
+[01:38.542] MSG: Bladeshifter morphs: -40 DEF, +40 ATK permanently!
+[01:44.114] Crystals: P0 3520 → 2970 (-550)  [battle]
+[01:46.967] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} → P1(2,1)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used}  Dice=1  ATK=45 vs DEF=50  → LOSE
+[01:46.967] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[01:46.968] Reckoning overlay: P1 "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:46.968] Anim: 3B  △ P0(1,1)
+[01:46.968] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn}
+[01:48.567] Turn ended  P0  |  Crystals P0=2970 P1=2180
+
+--- Turn 3  |  Player 1  |  Crystals P0=2970 P1=2180 ---
+[01:51.057] Mode selected P1: TECH
+[01:51.366] Tech played  P1: "Release Mutagen"
+[01:52.913] Target prompt: "Release Mutagen: Choose 1 of your units to flag."  filter=own_faceup_character
+[01:53.355] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:54.546] MSG: Release Mutagen: Mutagen on Lab Zombie.
+[01:54.557] Tech resolved  P1
+[01:55.443] Mode selected P1: ATTACK
+[01:56.644] Dice rolled: 5
+[01:56.743] MSG: Lab Zombie wins!
+[02:02.530] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio | flags:mutagen} → P0(1,3)"Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}  Dice=5  ATK=55 vs DEF=50  → WIN
+[02:02.530] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio | flags:mutagen} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[02:02.530] Reckoning overlay: P0 "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=50 ATK pill=80 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:02.530] Anim: 3A  △ P0(1,3)
+[02:02.530] Card destroyed  P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[02:03.010] Mode selected P1: ATTACK
+[02:04.267] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[02:05.460] Dice rolled: 2
+[02:10.078] Crystals: P1 2180 → 1760 (-420)  [battle]
+[02:12.930] Attack P1(2,1)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} → P0(4,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}  Dice=2  ATK=40 vs DEF=100  → LOSE
+[02:12.930] Reckoning overlay: P1 "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[02:12.930] Reckoning overlay: P0 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=100 ATK pill=120 DEF pill=100 mod=+DEF 0 (100+0=100)
+[02:12.930] Anim: 3B  △ P1(2,1)
+[02:12.930] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used}
+[02:13.409] Turn ended  P1  |  Crystals P0=2970 P1=1760
+
+--- Turn 4  |  Player 0  |  Crystals P0=2970 P1=1760 ---
+[03:11.179] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[03:12.411] Dice rolled: 4
+[03:12.425] MSG: Parom the Smuggler wins!
+[03:15.614] Crystals: P1 1760 → 1060 (-700)  [battle]
+[03:19.827] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio | flags:mutagen}  Dice=4  ATK=30 vs DEF=20  → WIN
+[03:19.827] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[03:19.827] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio | flags:mutagen} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:19.827] Anim: 3A  △ P1(2,4)
+[03:19.827] Card destroyed  P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio | flags:mutagen}
+[03:21.008] Turn ended  P0  |  Crystals P0=2970 P1=1060
+
+--- Turn 5  |  Player 1  |  Crystals P0=2970 P1=1060 ---
+[03:23.511] Mode selected P1: ATTACK
+[03:23.824] Revealed: P1 (2,0) "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[03:25.738] Dice rolled: 1
+[03:25.757] MSG: Rotten Spider wins!
+[03:28.843] Crystals: P0 2970 → 2670 (-300)  [battle]
+[03:33.041] Attack P1(2,0)"Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=40 vs DEF=20  → WIN
+[03:33.041] Reckoning overlay: P1 "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[03:33.041] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:33.041] Anim: 3A  △ P0(4,2)
+[03:33.041] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[03:33.537] Mode selected P1: ATTACK
+[03:33.878] Revealed: P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[03:35.790] Revealed: P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:36.991] Dice rolled: 2
+[03:37.000] MSG: Both cards are destroyed!
+[03:39.726] Crystals: P1 1060 → 740 (-320)  [battle]
+[03:42.551] Crystals: P0 2670 → 2320 (-350)  [battle]
+[03:45.400] Attack P1(4,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P0(4,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=2  ATK=20 vs DEF=20  → TIE
+[03:45.400] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[03:45.400] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=20 ATK pill=40 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:45.400] Anim: 3C  △ P1(4,2) + △ P0(4,3)
+[03:45.400] Card destroyed  P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[03:45.400] Card destroyed  P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:45.897] MSG: Ability triggered: "Rotten Spider" (perm atk loss per own turn)
+[03:47.445] Turn ended  P1  |  Crystals P0=2320 P1=740
+
+--- Turn 6  |  Player 0  |  Crystals P0=2320 P1=740 ---
+[03:58.745] Dice rolled: 3
+[03:58.751] MSG: Pit Lord wins!
+[04:03.231] Crystals: P1 740 → 290 (-450)  [battle]
+[04:07.453] Attack P0(4,0)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(2,0)"Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30}  Dice=3  ATK=120 vs DEF=30  → WIN
+[04:07.453] Reckoning overlay: P0 "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[04:07.453] Reckoning overlay: P1 "Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:07.453] Anim: 3A  △ P1(2,0)
+[04:07.453] Card destroyed  P1 (2,0) "Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30}
+[04:12.355] Turn ended  P0  |  Crystals P0=2320 P1=290
+
+--- Turn 7  |  Player 1  |  Crystals P0=2320 P1=290 ---
+[04:14.851] Mode selected P1: ATTACK
+[04:15.188] Revealed: P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[04:17.073] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[04:18.311] Dice rolled: 4
+[04:18.317] MSG: Trap triggered: Decoy Puppet!
+[04:20.658] Crystals: P0 2320 → 2220 (-100)  [trap cost]
+[04:23.470] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[04:24.851] Attack P1(4,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=4  → Unit vs Trap
+[04:24.851] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=35 ATK pill=35 DEF pill=30 mod=+ATK 0 (35+0=35)
+[04:24.851] Anim: 3D  (attacker survives)
+[04:27.359] Turn ended  P1  |  Crystals P0=2220 P1=290
+
+--- Turn 8  |  Player 0  |  Crystals P0=2220 P1=290 ---
+[04:34.157] Dice rolled: 2
+[04:34.162] MSG: Pit Lord wins!
+[04:38.093] Crystals: P1 290 → 0 (-290)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2220  P1: 0  |  Turns: 8

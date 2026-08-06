@@ -1,0 +1,119 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-07-21 11:59:22.064
+Game Session of Earl Grey Tea (started 2026-07-21 11:59:14.588)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.446] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.851] Mode selected P1: TECH
+[00:09.155] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.975] Tech played  P1: "Radar"
+[00:14.590] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.250] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.799] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:17.801] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.235] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:18.851] Dead-end placed  P0 (1,2)
+[00:19.011] Tech resolved  P1
+[00:19.250] Dead-end placed  P0 (4,2)
+[00:19.908] Mode selected P1: ATTACK
+[00:19.910] MSG: Player 2: tap a unit to attack.
+[00:20.233] Revealed: P1 (3,0) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[00:22.135] Dice rolled: 2
+[00:22.164] MSG: Fire Elemental wins!
+[00:26.617] Crystals: P0 5000 → 4800 (-200)  [battle]
+[00:31.825] Attack P1(3,0)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}  Dice=2  ATK=35 vs DEF=0  → WIN
+[00:31.825] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[00:31.825] Reckoning overlay: P0 "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} badge=0 ATK pill=15 DEF pill=0 mod=+DEF 0 (0+0=0)
+[00:31.825] Anim: 3A  △ P0(3,3)
+[00:31.825] Card destroyed  P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:34.334] Turn ended  P1  |  Crystals P0=4800 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4800 P1=2400 ---
+[00:45.984] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:47.203] Dice rolled: 4
+[00:47.234] MSG: Grand Fort Footsoldier wins!
+[00:50.194] Crystals: P1 2400 → 2020 (-380)  [battle]
+[00:55.419] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(3,0)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=4  ATK=25 vs DEF=20  → WIN
+[00:55.419] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:55.419] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:55.419] Anim: 3A  △ P1(3,0)
+[00:55.419] Card destroyed  P1 (3,0) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[02:08.368] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:09.575] Dice rolled: 3
+[02:09.630] MSG: Nothing happens — Dead End.
+[02:12.952] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(2,2)(empty)  Dice=3  → DEAD_END
+[02:12.952] Anim: 3F  (blank slot)
+[02:24.038] Turn ended  P0  |  Crystals P0=4800 P1=2020
+
+--- Turn 3  |  Player 1  |  Crystals P0=4800 P1=2020 ---
+[02:24.629] Mode selected P1: TECH
+[02:24.937] Tech played  P1: "Spy"
+[02:26.987] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[02:28.520] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[02:28.522] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:28.926] Tech resolved  P1
+[02:29.163] Dead-end placed  P0 (2,3)
+[02:29.820] Mode selected P1: ATTACK
+[02:29.823] MSG: Player 2: tap a unit to attack.
+[02:30.149] Revealed: P1 (0,3) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[02:32.048] Dice rolled: 2
+[02:32.071] MSG: Wind Elemental wins!
+[02:36.503] Crystals: P0 4800 → 4500 (-300)  [battle]
+[02:41.720] Attack P1(0,3)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=30 vs DEF=25  → WIN
+[02:41.722] Reckoning overlay: P1 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[02:41.722] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:41.722] Anim: 3A  △ P0(1,1)
+[02:41.722] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:42.219] Mode selected P1: ATTACK
+[02:42.225] MSG: Player 2: tap a unit to attack.
+[02:42.557] Revealed: P1 (0,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[02:44.440] Dice rolled: 1
+[02:44.465] MSG: Water Elemental wins!
+[02:47.542] Crystals: P0 4500 → 4250 (-250)  [battle]
+[02:52.753] Attack P1(0,2)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=1  ATK=25 vs DEF=20  → WIN
+[02:52.753] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[02:52.753] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:52.753] Anim: 3A  △ P0(1,3)
+[02:52.753] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:53.252] Turn ended  P1  |  Crystals P0=4250 P1=2020
+
+--- Turn 4  |  Player 0  |  Crystals P0=4250 P1=2020 ---
+[03:00.869] Crystals: P0 4250 → 4200 (-50)  [skip tax]
+[03:00.870] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[03:04.312] Turn ended  P0  |  Crystals P0=4200 P1=2020
+
+--- Turn 5  |  Player 1  |  Crystals P0=4200 P1=2020 ---
+[03:04.903] Mode selected P1: TECH
+[03:05.212] Tech played  P1: "Tease"
+[03:07.261] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[03:08.786] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[03:08.786] MSG: Opponent must choose and reveal 1 of their squares.
+[03:08.932] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:11.723] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[03:11.723] MSG: Tease: Opponent revealed Choir Lady Abigail.
+[03:11.728] Tech resolved  P1
+[03:12.620] Mode selected P1: ATTACK
+[03:12.625] MSG: Player 2: tap a unit to attack.
+[03:13.831] Dice rolled: 2
+[03:13.855] MSG: Water Elemental wins!
+[03:18.314] Crystals: P0 4200 → 3950 (-250)  [battle]
+[03:23.514] Attack P1(0,2)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=2  ATK=25 vs DEF=15  → WIN
+[03:23.514] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[03:23.514] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:23.514] Anim: 3A  △ P0(2,4)
+[03:23.514] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[03:24.007] Mode selected P1: ATTACK
+[03:24.014] MSG: Player 2: tap a unit to attack.
+[03:25.255] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[03:26.444] Dice rolled: 1
+[03:26.463] MSG: Wind Elemental wins!
+[03:30.910] Crystals: P0 3950 → 3650 (-300)  [battle]
+[03:36.135] Attack P1(0,3)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=1  ATK=30 vs DEF=20  → WIN
+[03:36.135] Reckoning overlay: P1 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[03:36.135] Reckoning over

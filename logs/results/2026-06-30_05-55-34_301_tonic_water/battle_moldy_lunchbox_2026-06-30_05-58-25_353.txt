@@ -1,0 +1,66 @@
+=== Battle of Moldy Lunchbox ===
+Battle started: 2026-06-30 05:58:25.353
+Game Session of Tonic Water (started 2026-06-30 05:55:34.301)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:28.672] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:34.030] Mode selected P1: ATTACK
+[00:34.032] MSG: Player 2: tap a unit to attack.
+[00:34.395] Revealed: P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:36.253] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:37.472] Dice rolled: 1
+[00:37.505] MSG: Trap triggered: Pepper Spray!
+[00:41.627] Coin flip: Heads, Heads
+[00:44.367] MSG: Pepper Spray: Heads, Heads.
+[00:44.367] MSG: Pepper Spray: 2 head(s) — Goblin Poacher -10 ATK until next turn ends!
+[00:45.743] Attack P1(1,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(2,2)"Pepper Spray" {cost 0}  Dice=1  → Unit vs Trap
+[00:45.743] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[00:45.743] Anim: 3D  (attacker survives)
+[00:46.241] Mode selected P1: ATTACK
+[00:46.242] MSG: Player 2: tap a unit to attack.
+[00:46.561] Revealed: P1 (1,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:48.466] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:49.691] Dice rolled: 5
+[00:49.705] MSG: Trap triggered: Trap Hole!
+[00:53.830] Coin flip: Tails, Tails, Heads
+[00:56.597] MSG: Trap Hole: Tails, Tails, Heads.
+[00:56.597] Crystals: P1 3000 → 2980 (-20)  [trap]
+[00:58.365] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[00:59.776] Attack P1(1,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:59.776] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:59.776] Anim: 3D  (attacker survives)
+[00:59.797] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:01.729] MSG: Revealed: (empty)
+[01:01.973] Dead-end placed  P0 (3,1)
+[01:02.237] Turn ended  P1  |  Crystals P0=5000 P1=2980
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=2980 ---
+[01:22.695] MSG: Tutorial step skipped — took too long.
+[01:43.054] MSG: Tutorial step skipped — took too long.
+[02:04.261] MSG: Tutorial step skipped — took too long.
+[02:24.619] MSG: Tutorial step skipped — took too long.
+[02:45.829] MSG: Tutorial step skipped — took too long.
+[03:06.186] MSG: Tutorial step skipped — took too long.
+[03:27.394] MSG: Tutorial step skipped — took too long.
+[03:47.753] MSG: Tutorial step skipped — took too long.
+[25:01.679] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[25:02.906] Dice rolled: 2
+[25:02.934] MSG: Silver Spearman wins!
+[25:05.752] Crystals: P1 2980 → 2730 (-250)  [battle]
+[25:09.966] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)"Goblin Poacher" {Unit ATK20 DEF10 | cost 250 | affinity Nature | base 30/10}  Dice=2  ATK=25 vs DEF=10  → WIN
+[25:09.967] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[25:09.967] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK20 DEF10 | cost 250 | affinity Nature | base 30/10} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[25:09.967] Anim: 3A  △ P1(1,1)
+[25:09.967] Card destroyed  P1 (1,1) "Goblin Poacher" {Unit ATK20 DEF10 | cost 250 | affinity Nature | base 30/10}
+[25:34.392] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[25:34.425] Revealed: P1 (3,0) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[25:35.627] Dice rolled: 3
+[25:35.662] MSG: Witchhunter wins!
+[25:39.003] Crystals: P1 2730 → 2530 (-200)  [battle]
+[25:43.209] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(3,0)"Neptune Diver" {Unit ATK20 DEF10 

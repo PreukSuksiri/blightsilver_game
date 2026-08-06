@@ -1,0 +1,12 @@
+=== Battle of Basement Spider Negotiation ===
+Battle started: 2026-07-21 15:18:39.561
+Game Session of Old Fashioned (started 2026-07-21 15:18:32.441)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.409] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---

@@ -1,0 +1,171 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-08-05 14:30:25.522
+Game Session of Thai Iced Tea (started 2026-08-05 14:30:12.985)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.297] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:36.405] Revealed: P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:36.458] Revealed: P1 (2,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:37.610] Dice rolled: 2
+[00:37.620] MSG: Street Rogue wins!
+[00:40.458] Crystals: P1 3000 → 2700 (-300)  [battle]
+[00:44.670] Attack P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(2,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=45 vs DEF=25  → WIN
+[00:44.671] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=45 ATK pill=25 DEF pill=20 mod=+ATK 20 (25+20=45)
+[00:44.671] Reckoning overlay: P1 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:44.671] Anim: 3A  △ P1(2,1)
+[00:44.671] Card destroyed  P1 (2,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:01.225] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:01.263] Revealed: P1 (1,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:02.449] Dice rolled: 1
+[01:02.457] MSG: Sonic Seraph wins!
+[01:05.492] Crystals: P1 2700 → 2440 (-260)  [battle]
+[01:09.716] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=1  ATK=45 vs DEF=15  → WIN
+[01:09.716] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[01:09.716] Reckoning overlay: P1 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:09.716] Anim: 3A  △ P1(1,1)
+[01:09.716] Card destroyed  P1 (1,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:12.885] Turn ended  P0  |  Crystals P0=5000 P1=2440
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2440 ---
+[01:15.378] Mode selected P1: TECH
+[01:15.687] Tech played  P1: "Spy"
+[01:17.241] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:17.655] Revealed: P0 (1,4) "Alarm" {cost 0}
+[01:18.881] Tech resolved  P1
+[01:19.774] Mode selected P1: ATTACK
+[01:20.087] Revealed: P1 (1,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:21.991] Dice rolled: 1
+[01:22.000] MSG: Grand Fort Archer wins!
+[01:26.488] Crystals: P0 5000 → 4650 (-350)  [battle]
+[01:30.701] Attack P1(1,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=30 vs DEF=20  → WIN
+[01:30.701] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[01:30.701] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:30.701] Anim: 3A  △ P0(2,0)
+[01:30.701] Card destroyed  P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:31.200] Mode selected P1: ATTACK
+[01:31.535] Revealed: P1 (2,2) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:33.472] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:34.656] Dice rolled: 2
+[01:34.664] MSG: Both cards are destroyed!
+[01:39.055] Crystals: P1 2440 → 2190 (-250)  [battle]
+[01:41.875] Crystals: P0 4650 → 4170 (-480)  [battle]
+[01:44.745] Attack P1(2,2)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=2  ATK=20 vs DEF=20  → TIE
+[01:44.745] Reckoning overlay: P1 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[01:44.745] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:44.745] Anim: 3C  △ P1(2,2) + △ P0(0,2)
+[01:44.746] Card destroyed  P1 (2,2) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:44.746] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:45.201] Turn ended  P1  |  Crystals P0=4170 P1=2190
+
+--- Turn 3  |  Player 0  |  Crystals P0=4170 P1=2190 ---
+[02:48.956] Revealed: P1 (3,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[02:50.166] Dice rolled: 3
+[02:50.178] MSG: Sonic Seraph wins!
+[02:53.112] Crystals: P1 2190 → 1690 (-500)  [battle]
+[02:57.329] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(3,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=3  ATK=45 vs DEF=40  → WIN
+[02:57.329] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[02:57.329] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} badge=40 ATK pill=45 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:57.329] Anim: 3A  △ P1(3,1)
+[02:57.329] Card destroyed  P1 (3,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[03:01.523] Revealed: P0 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[03:02.991] Dice rolled: 5
+[03:03.020] MSG: Spell Sniper hits Dead End — nothing happens.
+[03:06.538] Attack P0(1,2)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P1(4,1)(empty)  Dice=5  → DEAD_END
+[03:06.538] Anim: 3F  (blank slot)
+[03:30.784] Turn ended  P0  |  Crystals P0=4170 P1=1690
+
+--- Turn 4  |  Player 1  |  Crystals P0=4170 P1=1690 ---
+[03:33.271] Mode selected P1: TECH
+[03:33.571] Crystals: P1 1690 → 1090 (-600)  [tech cost]
+[03:36.409] Tech played  P1: "Radar"
+[03:37.946] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:38.579] Dead-end placed  P0 (3,2)
+[03:39.034] Revealed: P0 (1,3) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[03:40.603] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[03:41.879] Tech resolved  P1
+[03:42.751] Mode selected P1: ATTACK
+[03:43.066] Revealed: P1 (3,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:44.982] Dice rolled: 3
+[03:44.991] MSG: Shepherd Detective wins!
+[03:47.964] Crystals: P0 4170 → 3790 (-380)  [battle]
+[03:52.180] Attack P1(3,2)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(1,3)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=40 vs DEF=30  → WIN
+[03:52.180] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:52.180] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:52.180] Anim: 3A  △ P0(1,3)
+[03:52.180] Card destroyed  P0 (1,3) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[03:52.184] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[03:52.213] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:54.355] MSG: Revealed: (empty)
+[03:54.866] Mode selected P1: ATTACK
+[03:56.092] Revealed: P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[03:57.295] Dice rolled: 5
+[04:01.895] Crystals: P1 1090 → 810 (-280)  [battle]
+[04:04.746] Attack P1(1,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} → P0(2,2)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}  Dice=5  ATK=20 vs DEF=35  → LOSE
+[04:04.746] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[04:04.748] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=35 ATK pill=25 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:04.748] Anim: 3B  △ P1(1,2)
+[04:04.748] Card destroyed  P1 (1,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[04:05.242] Turn ended  P1  |  Crystals P0=3790 P1=810
+
+--- Turn 5  |  Player 0  |  Crystals P0=3790 P1=810 ---
+[09:46.075] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[09:47.296] Dice rolled: 2
+[09:47.308] MSG: Parom the Smuggler wins!
+[09:51.792] Crystals: P1 810 → 410 (-400)  [battle]
+[09:55.989] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(3,2)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=30 vs DEF=25  → WIN
+[09:55.989] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[09:55.989] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[09:55.989] Anim: 3A  △ P1(3,2)
+[09:55.989] Card destroyed  P1 (3,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[10:03.962] Dice rolled: 4
+[10:03.985] MSG: Spell Sniper hits Dead End — nothing happens.
+[10:06.975] Attack P0(1,2)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P1(0,2)(empty)  Dice=4  → DEAD_END
+[10:06.975] Anim: 3F  (blank slot)
+[10:08.876] Turn ended  P0  |  Crystals P0=3790 P1=410
+
+--- Turn 6  |  Player 1  |  Crystals P0=3790 P1=410 ---
+[10:11.361] Mode selected P1: TECH
+[10:11.664] Tech played  P1: "Bribe"
+[10:13.219] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[10:16.111] MSG: Bribe: Opponent passed.
+[10:16.132] Tech resolved  P1
+[10:17.039] Mode selected P1: ATTACK
+[10:17.362] Revealed: P1 (3,4) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[10:19.263] Dice rolled: 5
+[10:19.272] MSG: Ox Patrol wins!
+[10:23.762] Crystals: P0 3790 → 3410 (-380)  [battle]
+[10:27.962] Attack P1(3,4)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P0(2,2)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}  Dice=5  ATK=40 vs DEF=35  → WIN
+[10:27.962] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=40 ATK pill=30 DEF pill=35 mod=+ATK 10 (30+10=40)
+[10:27.962] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=35 ATK pill=25 DEF pill=35 mod=+DEF 0 (35+0=35)
+[10:27.962] Anim: 3A  △ P0(2,2)
+[10:27.962] Card destroyed  P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[10:28.480] Mode selected P1: ATTACK
+[10:28.784] Revealed: P1 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[10:30.701] Dice rolled: 2
+[10:30.712] MSG: Street Rogue wins!
+[10:35.200] Crystals: P0 3410 → 3110 (-300)  [battle]
+[10:39.412] Attack P1(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=25 vs DEF=20  → WIN
+[10:39.412] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[10:39.412] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[10:39.412] Anim: 3A  △ P0(4,2)
+[10:39.412] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[10:39.905] Turn ended  P1  |  Crystals P0=3110 P1=410
+
+--- Turn 7  |  Player 0  |  Crystals P0=3110 P1=410 ---
+[11:04.376] Crystals: P0 3110 → 2110 (-1000)  [tech cost]
+[11:07.214] Tech played  P0: "War Supply"
+[11:08.755] MSG: War Supply: All your units gain +10 ATK & DEF until end of turn.
+[11:08.773] Tech resolved  P0
+[11:12.170] Revealed: P0 (4,3) "Sniping Fairy" {Unit ATK50 DEF30 | cost 350 | affinity Divine | base 40/20 | buff +tempATK10, +tempDEF10}
+[11:13.399] Dice rolled: 1
+[11:13.408] MSG: Sniping Fairy wins!
+[11:17.891] Crystals: P1 410 → 0 (-410)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2110  P1: 0  |  Turns: 7

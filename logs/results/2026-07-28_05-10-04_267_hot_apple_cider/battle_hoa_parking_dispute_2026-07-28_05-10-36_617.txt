@@ -1,0 +1,72 @@
+=== Battle of HOA Parking Dispute ===
+Battle started: 2026-07-28 05:10:36.617
+Game Session of Hot Apple Cider (started 2026-07-28 05:10:04.267)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:06.218] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[01:25.961] Mode selected P1: TECH
+[01:27.198] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:38.227] Tech played  P1: "Radar"
+[01:44.339] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:45.968] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[01:47.659] Revealed: P0 (2,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:49.340] Revealed: P0 (3,2) "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:49.343] Tech resolved  P1
+[01:59.112] Crystals: P1 2400 → 900 (-1500)  [union]
+[02:10.290] Revealed: P1 (1,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[02:10.330] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}, "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down}
+[02:24.569] Mode selected P1: ATTACK
+[02:29.630] Dice rolled: 2
+[02:29.704] MSG: Lord of Terror wins!
+[02:41.686] Crystals: P0 5000 → 4600 (-400)  [battle]
+[02:58.748] Attack P1(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(2,1)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=2  ATK=150 vs DEF=40  → WIN
+[02:58.748] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[02:58.748] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=40 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:58.748] Anim: 3A  △ P0(2,1)
+[02:58.748] Card destroyed  P0 (2,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[03:00.951] Mode selected P1: ATTACK
+[03:02.314] Revealed: P1 (1,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[03:10.749] Dice rolled: 2
+[03:10.755] MSG: Lab Crawler wins!
+[03:23.931] Crystals: P0 4600 → 4430 (-170)  [battle]
+[03:42.480] Attack P1(1,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(3,2)"Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=2  ATK=95 vs DEF=20  → WIN
+[03:42.480] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[03:42.480] Reckoning overlay: P0 "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature} badge=20 ATK pill=10 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:42.480] Anim: 3A  △ P0(3,2)
+[03:42.480] Card destroyed  P0 (3,2) "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[03:44.747] Turn ended  P1  |  Crystals P0=4430 P1=900
+
+--- Turn 2  |  Player 0  |  Crystals P0=4430 P1=900 ---
+[04:18.695] Crystals: P0 4430 → 3430 (-1000)  [tech cost]
+[04:30.014] Tech played  P0: "War Supply"
+[04:36.287] MSG: War Supply: All face-up units gain +10 ATK & DEF until end of turn.
+[04:36.297] Tech resolved  P0
+[04:57.955] MSG: Tap 2 material card(s) on the field.
+[04:58.939] MSG: 1 more material(s) needed.
+[05:00.148] Crystals: P0 3430 → 2430 (-1000)  [union]
+[05:11.370] Revealed: P0 (3,3) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[05:11.405] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[05:36.908] Revealed: P1 (0,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[05:44.075] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[05:52.781] Ability choice: 0 (Yes)
+[05:52.792] Dice rolled: 5
+[05:52.873] MSG: Sand Elemental wins!
+[06:05.138] Crystals: P1 900 → 700 (-200)  [battle]
+[06:22.383] Attack P0(3,3)"Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(0,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=5  ATK=100 vs DEF=15  → WIN
+[06:22.383] Reckoning overlay: P0 "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=100 ATK pill=40 DEF pill=40 mod=+ATK 60 (40+60=100)
+[06:22.383] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[06:22.383] Anim: 3A  △ P1(0,2)
+[06:22.383] Card destroyed  P1 (0,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[06:33.050] Revealed: P0 (0,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[06:38.288] Dice rolled: 4
+[06:38.296] MSG: Dystopian Cultist wins!
+[06:51.220] Crystals: P1 700 → 0 (-700)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2430  P1: 0  |  Turns: 2

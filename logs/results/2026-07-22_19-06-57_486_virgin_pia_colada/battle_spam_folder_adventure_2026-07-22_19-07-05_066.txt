@@ -1,0 +1,198 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-07-22 19:07:05.066
+Game Session of Virgin Piña Colada (started 2026-07-22 19:06:57.486)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.434] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.837] Mode selected P1: TECH
+[00:09.138] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.956] Tech played  P1: "Radar"
+[00:14.587] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.237] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:17.778] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:17.782] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:18.422] Dead-end placed  P0 (4,2)
+[00:18.612] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:19.013] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:19.016] Tech resolved  P1
+[00:19.894] Mode selected P1: ATTACK
+[00:19.899] MSG: Player 2: tap a unit to attack.
+[00:20.216] Revealed: P1 (1,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[00:21.412] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[00:22.123] Dice rolled: 3
+[00:22.132] MSG: Striker Comet wins!
+[00:26.607] Crystals: P0 5000 → 4720 (-280)  [battle]
+[00:31.822] Attack P1(1,2)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=3  ATK=25 vs DEF=20  → WIN
+[00:31.823] Reckoning overlay: P1 "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:31.823] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:31.823] Anim: 3A  △ P0(2,1)
+[00:31.823] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:32.319] Mode selected P1: ATTACK
+[00:32.324] MSG: Player 2: tap a unit to attack.
+[00:32.657] Revealed: P1 (2,2) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:34.783] Dice rolled: 5
+[00:34.812] MSG: Nothing happens — Dead End.
+[00:39.574] Attack P1(2,2)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(1,0)(empty)  Dice=5  → DEAD_END
+[00:39.574] Anim: 3F  (blank slot)
+[00:40.058] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[00:41.608] MSG: Striker Comet self-destructs at end of turn!
+[00:41.609] Crystals: P1 2400 → 2200 (-200)  [card lost]
+[00:41.613] Card destroyed  P1 (1,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending | attacked}
+[00:41.619] Turn ended  P1  |  Crystals P0=4720 P1=2200
+
+--- Turn 2  |  Player 0  |  Crystals P0=4720 P1=2200 ---
+[01:05.122] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:06.341] Dice rolled: 4
+[01:06.356] MSG: Silver Spearman wins!
+[01:10.834] Crystals: P1 2200 → 2000 (-200)  [battle]
+[01:16.049] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(2,2)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=4  ATK=25 vs DEF=10  → WIN
+[01:16.049] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[01:16.049] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:16.049] Anim: 3A  △ P1(2,2)
+[01:16.049] Card destroyed  P1 (2,2) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[01:24.683] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:24.683] Revealed: P1 (1,1) "Spike Trap" {cost 800}
+[01:25.916] Dice rolled: 2
+[01:25.923] MSG: Trap triggered: Spike Trap!
+[01:30.941] Crystals: P1 2000 → 1200 (-800)  [trap cost]
+[01:34.791] Crystals: P0 4720 → 4420 (-300)  [card lost]
+[01:39.268] MSG: Spike Trap: Ponycorn destroyed!
+[01:39.273] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,1)"Spike Trap" {cost 800}  Dice=2  → Unit vs Trap
+[01:39.273] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[01:39.273] Anim: 3E  △ P0(0,2)
+[01:41.785] Turn ended  P0  |  Crystals P0=4420 P1=1200
+
+--- Turn 3  |  Player 1  |  Crystals P0=4420 P1=1200 ---
+[01:42.383] Mode selected P1: TECH
+[01:42.695] Tech played  P1: "Spy"
+[01:44.743] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[01:46.274] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:46.278] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:46.721] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[01:46.725] Tech resolved  P1
+[01:49.077] Crystals: P1 1200 → 700 (-500)  [union]
+[01:52.917] Revealed: P1 (0,0) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[01:52.980] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic | face-down}
+[01:52.980] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[01:52.981] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic | face-down}
+[01:56.325] Mode selected P1: ATTACK
+[01:56.331] MSG: Player 2: tap a unit to attack.
+[01:57.527] Dice rolled: 1
+[01:57.605] MSG: Moon Tribe Shaman wins!
+[02:02.017] Crystals: P0 4420 → 4170 (-250)  [battle]
+[02:07.227] Attack P1(0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=1  ATK=25 vs DEF=20  → WIN
+[02:07.227] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[02:07.227] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:07.227] Anim: 3A  △ P0(1,3)
+[02:07.227] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:09.747] Turn ended  P1  |  Crystals P0=4170 P1=700
+
+--- Turn 4  |  Player 0  |  Crystals P0=4170 P1=700 ---
+[06:36.644] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[06:36.646] Revealed: P1 (2,1) "Flame Trap" {cost 200}
+[06:37.857] Dice rolled: 2
+[06:37.867] MSG: Trap triggered: Flame Trap!
+[06:41.969] Crystals: P1 700 → 500 (-200)  [trap cost]
+[06:45.792] MSG: Flame Trap: Choir Lady Abigail debuffed!
+[06:47.161] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(2,1)"Flame Trap" {cost 200}  Dice=2  → Unit vs Trap
+[06:47.161] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[06:47.161] Anim: 3D  (attacker survives)
+[06:55.486] Revealed: P1 (1,3) "Explosive Barrels" {cost 0}
+[06:56.718] Dice rolled: 3
+[06:56.729] MSG: Trap triggered: Explosive Barrels!
+[07:01.743] Crystals: P0 4170 → 3990 (-180)  [card lost]
+[07:06.233] Crystals: P1 500 → 320 (-180)  [trap]
+[07:10.066] MSG: Explosive Barrels: Magical Butterfly destroyed! Defender loses 180 Crystals.
+[07:10.074] Attack P0(3,2)"Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20} → P1(1,3)"Explosive Barrels" {cost 0}  Dice=3  → Unit vs Trap
+[07:10.074] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[07:10.074] Anim: 3E  △ P0(3,2)
+[07:34.419] Turn ended  P0  |  Crystals P0=3990 P1=320
+
+--- Turn 5  |  Player 1  |  Crystals P0=3990 P1=320 ---
+[07:35.050] Mode selected P1: TECH
+[07:35.357] Tech played  P1: "Tease"
+[07:36.898] MSG: Opponent must choose and reveal 1 of their squares.
+[07:37.004] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[07:39.060] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[07:39.060] MSG: Tease: Opponent revealed Witchhunter.
+[07:39.066] Tech resolved  P1
+[07:39.940] Mode selected P1: ATTACK
+[07:39.944] MSG: Player 2: tap a unit to attack.
+[07:41.145] Dice rolled: 3
+[07:41.226] MSG: Moon Tribe Shaman wins!
+[07:45.616] Crystals: P0 3990 → 3740 (-250)  [battle]
+[07:50.828] Attack P1(0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(2,4)"Choir Lady Abigail" {Unit ATK15 DEF15 | cost 250 | affinity Divine | base 15/15}  Dice=3  ATK=25 vs DEF=15  → WIN
+[07:50.828] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[07:50.828] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK15 DEF15 | cost 250 | affinity Divine | base 15/15} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[07:50.828] Anim: 3A  △ P0(2,4)
+[07:50.828] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK15 DEF15 | cost 250 | affinity Divine | base 15/15}
+[07:51.326] Mode selected P1: ATTACK
+[07:51.331] MSG: Player 2: tap a unit to attack.
+[07:51.671] Revealed: P1 (2,3) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[07:53.553] Dice rolled: 4
+[07:53.561] MSG: Mars Drill wins!
+[07:58.035] Crystals: P0 3740 → 3490 (-250)  [battle]
+[08:03.242] Attack P1(2,3)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=4  ATK=40 vs DEF=20  → WIN
+[08:03.242] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[08:03.242] Reckoning overlay: P0 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:03.242] Anim: 3A  △ P0(4,1)
+[08:03.242] Card destroyed  P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[08:03.755] Turn ended  P1  |  Crystals P0=3490 P1=320
+
+--- Turn 6  |  Player 0  |  Crystals P0=3490 P1=320 ---
+[08:18.630] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[08:18.630] Revealed: P1 (4,4) "Self-destruct" {cost 0}
+[08:19.858] Dice rolled: 1
+[08:19.866] MSG: Trap triggered: Self-destruct!
+[08:23.972] MSG: Ability triggered: "Self-destruct"
+[08:24.005] Target prompt: "Self-destruct: Choose 1 of your units for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[08:25.899] MSG: Mars Drill: +10 ATK until end of next turn, then destroyed.
+[08:27.284] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(4,4)"Self-destruct" {cost 0}  Dice=1  → Unit vs Trap
+[08:27.284] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[08:27.284] Anim: 3D  (attacker survives)
+[08:36.283] Dice rolled: 5
+[08:36.321] MSG: Nothing happens — Dead End.
+[08:39.714] Attack P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P1(3,0)(empty)  Dice=5  → DEAD_END
+[08:39.714] Anim: 3F  (blank slot)
+[08:43.050] Dice rolled: 3
+[08:43.086] MSG: Nothing happens — Dead End.
+[08:47.849] Attack P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:1} → P1(2,0)(empty)  Dice=3  → DEAD_END
+[08:47.849] Anim: 3F  (blank slot)
+[08:50.037] Turn ended  P0  |  Crystals P0=3490 P1=320
+
+--- Turn 7  |  Player 1  |  Crystals P0=3490 P1=320 ---
+[08:50.642] Mode selected P1: ATTACK
+[08:50.647] MSG: Player 2: tap a unit to attack.
+[08:51.854] Dice rolled: 5
+[08:51.866] MSG: Mars Drill wins!
+[08:56.341] Crystals: P0 3490 → 3190 (-300)  [battle]
+[09:01.559] Attack P1(2,3)"Mars Drill" {Unit ATK50 DEF30 | cost 400 | affinity Cosmic | base 40/30 | buff +tempATK10 | flags:self_destruct_next_turn} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=5  ATK=50 vs DEF=25  → WIN
+[09:01.559] Reckoning overlay: P1 "Mars Drill" {Unit ATK50 DEF30 | cost 400 | affinity Cosmic | base 40/30 | buff +tempATK10 | flags:self_destruct_next_turn} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[09:01.559] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[09:01.559] Anim: 3A  △ P0(1,1)
+[09:01.559] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[09:02.044] Mode selected P1: ATTACK
+[09:02.049] MSG: Player 2: tap a unit to attack.
+[09:03.254] Dice rolled: 1
+[09:03.341] MSG: Moon Tribe Shaman wins!
+[09:07.728] Crystals: P0 3190 → 2990 (-200)  [battle]
+[09:12.927] Attack P1(0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:2}  Dice=1  ATK=25 vs DEF=0  → WIN
+[09:12.927] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[09:12.928] Reckoning overlay: P0 "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:2} badge=0 ATK pill=15 DEF pill=0 mod=+DEF 0 (0+0=0)
+[09:12.928] Anim: 3A  △ P0(3,3)
+[09:12.928] Card destroyed  P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:2}
+[09:13.422] MSG: Mars Drill is destroyed by self-destruct trap!
+[09:13.422] Crystals: P1 320 → 0 (-320)  [card lost]
+[09:13.424] Card destroyed  P1 (2,3) "Mars Drill" {Unit ATK50 DEF30 | cost 400 | affinity Cosmic | base 40/30 | buff +tempATK10 | attacked}
+[09:13.428] Turn ended  P1  |  Crystals P0=2990 P1=0
+
+--- Turn 8  |  Player 0  |  Crystals P0=2990 P1=0 ---
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2990  P1: 0  |  Turns: 8

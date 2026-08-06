@@ -1,0 +1,204 @@
+=== Battle of Autocorrect Apology Tour ===
+Battle started: 2026-07-27 13:44:19.371
+Game Session of Yerba Mate (started 2026-07-27 13:38:47.886)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.183] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:21.771] MSG: Tap 2 material card(s) on the field.
+[00:22.411] MSG: 1 more material(s) needed.
+[00:22.778] Crystals: P0 5000 → 4200 (-800)  [union]
+[00:25.587] Revealed: P0 (2,1) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:25.644] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}
+[00:25.658] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}
+[00:33.217] Revealed: P1 (1,1) "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}
+[00:34.400] Dice rolled: 4
+[00:34.483] MSG: Both cards are destroyed!
+[00:38.367] Crystals: P1 3000 → 2450 (-550)  [battle]
+[00:41.231] Attack P0(2,1)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(1,1)"Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}  Dice=4  ATK=75 vs DEF=75  → TIE
+[00:41.231] Reckoning overlay: P0 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+ATK 0 (75+0=75)
+[00:41.231] Reckoning overlay: P1 "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature} badge=75 ATK pill=45 DEF pill=75 mod=+DEF 0 (75+0=75)
+[00:41.231] Anim: 3C  △ P0(2,1) + △ P1(1,1)
+[00:41.231] Card destroyed  P0 (2,1) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:41.231] Card destroyed  P1 (1,1) "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}
+[00:46.617] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[00:46.617] Revealed: P1 (2,4) "Flame Trap" {cost 200}
+[00:47.845] Dice rolled: 2
+[00:47.865] MSG: Trap triggered: Flame Trap!
+[00:50.056] Crystals: P1 2450 → 2250 (-200)  [trap cost]
+[00:52.862] MSG: Flame Trap: Demon Spawn debuffed!
+[00:54.275] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(2,4)"Flame Trap" {cost 200}  Dice=2  → Unit vs Trap
+[00:54.276] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:54.276] Anim: 3D  (attacker survives)
+[01:04.564] Turn ended  P0  |  Crystals P0=4200 P1=2250
+
+--- Turn 2  |  Player 1  |  Crystals P0=4200 P1=2250 ---
+[01:05.229] Mode selected P1: TECH
+[01:05.538] Tech played  P1: "Spy"
+[01:07.088] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:07.535] Revealed: P0 (3,1) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[01:07.542] Tech resolved  P1
+[01:09.870] Crystals: P1 2250 → 1750 (-500)  [union]
+[01:12.704] Revealed: P1 (2,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:12.751] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[01:12.756] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:12.756] MSG: Player 2 summoned [Scarlet Shroom] using: "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[01:16.139] Mode selected P1: ATTACK
+[01:16.151] MSG: Player 2: tap a unit to attack.
+[01:16.482] Revealed: P1 (2,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[01:18.390] Dice rolled: 2
+[01:18.406] MSG: Scythe Shark wins!
+[01:22.871] Crystals: P0 4200 → 3820 (-380)  [battle]
+[01:27.072] Attack P1(2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(3,1)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | flags:venom}  Dice=2  ATK=35 vs DEF=30  → WIN
+[01:27.072] Reckoning overlay: P1 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[01:27.072] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | flags:venom} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:27.072] Anim: 3A  △ P0(3,1)
+[01:27.072] Card destroyed  P0 (3,1) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | flags:venom}
+[01:27.568] Mode selected P1: ATTACK
+[01:27.576] MSG: Player 2: tap a unit to attack.
+[01:27.888] Revealed: P1 (3,1) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[01:29.782] Dice rolled: 3
+[01:29.787] MSG: War Genie wins!
+[01:32.744] Crystals: P0 3820 → 3420 (-400)  [battle]
+[01:36.945] Attack P1(3,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(1,2)"Demon Spawn" {Unit ATK30 DEF35 | cost 400 | affinity Chaos | base 30/35 | flags:venom}  Dice=3  ATK=100 vs DEF=35  → WIN
+[01:36.945] Reckoning overlay: P1 "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} badge=100 ATK pill=100 DEF pill=80 mod=+ATK 0 (100+0=100)
+[01:36.945] Reckoning overlay: P0 "Demon Spawn" {Unit ATK30 DEF35 | cost 400 | affinity Chaos | base 30/35 | flags:venom} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:36.945] Anim: 3A  △ P0(1,2)
+[01:36.945] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK30 DEF35 | cost 400 | affinity Chaos | base 30/35 | flags:venom}
+[01:37.445] Turn ended  P1  |  Crystals P0=3420 P1=1750
+
+--- Turn 3  |  Player 0  |  Crystals P0=3420 P1=1750 ---
+[01:50.939] Crystals: P0 3420 → 3370 (-50)  [skip tax]
+[01:50.939] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[01:53.399] Turn ended  P0  |  Crystals P0=3370 P1=1750
+
+--- Turn 4  |  Player 1  |  Crystals P0=3370 P1=1750 ---
+[01:53.962] Mode selected P1: TECH
+[01:54.262] Crystals: P1 1750 → 1150 (-600)  [tech cost]
+[01:57.103] Tech played  P1: "Radar"
+[01:58.646] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:59.093] Revealed: P0 (3,0) "Spear Shark" {Unit ATK60 DEF20 | cost 480 | affinity Nature | base 50/20 | buff +permATK10}
+[01:59.453] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[01:59.876] Revealed: P0 (4,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:59.885] Tech resolved  P1
+[02:00.765] Mode selected P1: ATTACK
+[02:00.781] MSG: Player 2: tap a unit to attack.
+[02:01.991] Dice rolled: 2
+[02:02.000] MSG: War Genie wins!
+[02:06.469] Crystals: P0 3370 → 2890 (-480)  [battle]
+[02:10.676] Attack P1(3,1)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P0(3,0)"Spear Shark" {Unit ATK60 DEF20 | cost 480 | affinity Nature | base 50/20 | buff +permATK10}  Dice=2  ATK=90 vs DEF=20  → WIN
+[02:10.676] Reckoning overlay: P1 "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} badge=90 ATK pill=90 DEF pill=80 mod=+ATK 0 (90+0=90)
+[02:10.676] Reckoning overlay: P0 "Spear Shark" {Unit ATK60 DEF20 | cost 480 | affinity Nature | base 50/20 | buff +permATK10} badge=20 ATK pill=60 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:10.676] Anim: 3A  △ P0(3,0)
+[02:10.677] Card destroyed  P0 (3,0) "Spear Shark" {Unit ATK60 DEF20 | cost 480 | affinity Nature | base 50/20 | buff +permATK10}
+[02:11.176] Mode selected P1: ATTACK
+[02:11.189] MSG: Player 2: tap a unit to attack.
+[02:12.373] Dice rolled: 5
+[02:12.379] MSG: Scythe Shark wins!
+[02:15.369] Crystals: P0 2890 → 2590 (-300)  [battle]
+[02:19.588] Attack P1(2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(4,0)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=5  ATK=35 vs DEF=15  → WIN
+[02:19.588] Reckoning overlay: P1 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[02:19.588] Reckoning overlay: P0 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[02:19.588] Anim: 3A  △ P0(4,0)
+[02:19.588] Card destroyed  P0 (4,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[02:20.087] Turn ended  P1  |  Crystals P0=2590 P1=1150
+
+--- Turn 5  |  Player 0  |  Crystals P0=2590 P1=1150 ---
+[02:39.097] Revealed: P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[02:40.315] Dice rolled: 3
+[02:40.328] MSG: Nanomites Beast wins!
+[02:43.084] Crystals: P1 1150 → 600 (-550)  [battle]
+[02:47.288] Attack P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}  Dice=3  ATK=50 vs DEF=35  → WIN
+[02:47.288] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[02:47.288] Reckoning overlay: P1 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[02:47.288] Anim: 3A  △ P1(2,1)
+[02:47.288] Card destroyed  P1 (2,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[02:53.969] Turn ended  P0  |  Crystals P0=2590 P1=600
+
+--- Turn 6  |  Player 1  |  Crystals P0=2590 P1=600 ---
+[02:54.572] Mode selected P1: TECH
+[02:54.883] Tech played  P1: "Tease"
+[02:56.420] MSG: Opponent must choose and reveal 1 of their squares.
+[02:56.556] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:58.371] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[02:58.371] MSG: Tease: Opponent revealed Armored Bee.
+[02:58.381] Tech resolved  P1
+[02:59.256] Mode selected P1: ATTACK
+[02:59.268] MSG: Player 2: tap a unit to attack.
+[03:00.460] Dice rolled: 5
+[03:00.469] MSG: War Genie wins!
+[03:03.991] Crystals: P0 2590 → 1790 (-800)  [battle]
+[03:08.194] Attack P1(3,1)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80} → P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=5  ATK=80 vs DEF=55  → WIN
+[03:08.194] Reckoning overlay: P1 "War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80} badge=80 ATK pill=80 DEF pill=80 mod=+ATK 0 (80+0=80)
+[03:08.194] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[03:08.194] Anim: 3A  △ P0(0,2)
+[03:08.194] Card destroyed  P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[03:08.700] Mode selected P1: ATTACK
+[03:08.706] MSG: Player 2: tap a unit to attack.
+[03:09.932] Revealed: P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:11.131] Dice rolled: 1
+[03:15.515] Attack P1(2,2)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(1,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=1  ATK=0 vs DEF=50  → LOSE
+[03:15.515] Reckoning overlay: P1 "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=0 ATK pill=0 DEF pill=80 mod=+ATK 0 (0+0=0)
+[03:15.515] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:15.515] Anim: 3B  △ P1(2,2)
+[03:15.515] Card destroyed  P1 (2,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[03:16.003] Turn ended  P1  |  Crystals P0=1790 P1=600
+
+--- Turn 7  |  Player 0  |  Crystals P0=1790 P1=600 ---
+[03:25.853] Crystals: P0 1790 → 1690 (-100)  [skip tax]
+[03:25.855] MSG: Player 1 skips without attacking — 100◆ tax (skip #2 this duel)
+[03:28.686] Turn ended  P0  |  Crystals P0=1690 P1=600
+
+--- Turn 8  |  Player 1  |  Crystals P0=1690 P1=600 ---
+[03:29.288] Mode selected P1: ATTACK
+[03:29.294] MSG: Player 2: tap a unit to attack.
+[03:30.491] Dice rolled: 2
+[03:30.500] MSG: War Genie wins!
+[03:33.749] Crystals: P0 1690 → 990 (-700)  [battle]
+[03:37.970] Attack P1(3,1)"War Genie" {Unit ATK70 DEF80 | cost 1150 | affinity Arcane | base 70/80} → P0(1,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=2  ATK=70 vs DEF=50  → WIN
+[03:37.970] Reckoning overlay: P1 "War Genie" {Unit ATK70 DEF80 | cost 1150 | affinity Arcane | base 70/80} badge=70 ATK pill=70 DEF pill=80 mod=+ATK 0 (70+0=70)
+[03:37.970] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:37.970] Anim: 3A  △ P0(1,1)
+[03:37.970] Card destroyed  P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:38.456] Mode selected P1: ATTACK
+[03:38.462] MSG: Player 2: tap a unit to attack.
+[03:38.792] Revealed: P1 (0,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[03:40.690] Revealed: P0 (2,0) "Red Card" {cost 0}
+[03:41.936] Dice rolled: 3
+[03:41.942] MSG: Trap triggered: Red Card!
+[03:46.085] Coin flip: Tails, Heads
+[03:48.850] MSG: Red Card: Tails, Heads.
+[03:48.851] MSG: Not both heads — no effect.
+[03:50.232] Attack P1(0,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P0(2,0)"Red Card" {cost 0}  Dice=3  → Unit vs Trap
+[03:50.232] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[03:50.232] Anim: 3D  (attacker survives)
+[03:50.742] Turn ended  P1  |  Crystals P0=990 P1=600
+
+--- Turn 9  |  Player 0  |  Crystals P0=990 P1=600 ---
+[04:12.508] Revealed: P0 (1,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[04:13.723] Dice rolled: 5
+[04:13.737] MSG: Elemental Master wins!
+[04:16.666] Crystals: P1 600 → 100 (-500)  [battle]
+[04:20.880] Attack P0(1,0)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} → P1(0,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=5  ATK=20 vs DEF=15  → WIN
+[04:20.880] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=20 ATK pill=20 DEF pill=60 mod=+ATK 0 (20+0=20)
+[04:20.880] Reckoning overlay: P1 "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:20.880] Anim: 3A  △ P1(0,2)
+[04:20.880] Card destroyed  P1 (0,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[04:22.669] Tech played  P0: "Tease"
+[04:24.198] MSG: Opponent must choose and reveal 1 of their squares.
+[04:24.200] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:24.630] Revealed: P1 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[04:24.630] MSG: Tease: Opponent revealed Spell Sniper.
+[04:24.694] Tech resolved  P0
+[04:28.763] Revealed: P0 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[04:29.999] Dice rolled: 4
+[04:30.008] MSG: Dystopian Cultist wins!
+[04:33.745] Crystals: P1 100 → 0 (-100)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 990  P1: 0  |  Turns: 9

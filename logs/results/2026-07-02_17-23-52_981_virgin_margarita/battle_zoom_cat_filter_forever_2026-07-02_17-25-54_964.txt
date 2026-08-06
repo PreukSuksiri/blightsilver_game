@@ -1,0 +1,16 @@
+=== Battle of Zoom Cat Filter Forever ===
+Battle started: 2026-07-02 17:25:54.964
+Game Session of Virgin Margarita (started 2026-07-02 17:23:52.981)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.491] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:23.913] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 5000  P1: 0  |  Turns: 1

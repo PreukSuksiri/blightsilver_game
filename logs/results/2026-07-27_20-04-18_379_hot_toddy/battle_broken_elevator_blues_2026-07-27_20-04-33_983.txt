@@ -1,0 +1,66 @@
+=== Battle of Broken Elevator Blues ===
+Battle started: 2026-07-27 20:04:33.983
+Game Session of Hot Toddy (started 2026-07-27 20:04:18.379)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.967] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:26.714] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[00:28.174] Dice rolled: 4
+[00:28.195] MSG: Nothing happens — Dead End.
+[00:32.912] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(3,2)(empty)  Dice=4  → DEAD_END
+[00:32.912] Anim: 3F  (blank slot)
+[00:37.447] Revealed: P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:38.903] Dice rolled: 4
+[00:38.921] MSG: Nothing happens — Dead End.
+[00:42.302] Attack P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[00:42.302] Anim: 3F  (blank slot)
+[03:40.216] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[03:40.239] MSG: Fruit Granny is Curious about 🧨
+[03:40.781] Mode selected P1: TECH
+[03:41.087] Tech played  P1: "Spy"
+[03:42.628] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:43.075] Revealed: P0 (2,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[03:43.079] Tech resolved  P1
+[03:43.939] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:43.939] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:43.939] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:43.943] Mode selected P1: ATTACK
+[03:43.949] MSG: Player 2: tap a unit to attack.
+[03:44.289] Revealed: P1 (2,0) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[03:46.165] Dice rolled: 2
+[03:46.174] MSG: Gryphon wins!
+[03:49.275] Crystals: P0 5000 → 4200 (-800)  [battle]
+[03:53.482] Attack P1(2,0)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=2  ATK=100 vs DEF=55  → WIN
+[03:53.482] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=100 ATK pill=100 DEF pill=85 mod=+ATK 0 (100+0=100)
+[03:53.482] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[03:53.482] Anim: 3A  △ P0(0,2)
+[03:53.482] Card destroyed  P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[03:53.976] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:53.976] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[03:53.977] Mode selected P1: ATTACK
+[03:53.981] MSG: Player 2: tap a unit to attack.
+[03:54.301] Revealed: P1 (2,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[03:56.219] Dice rolled: 5
+[03:56.277] Coin flip: Tails
+[03:59.024] MSG: Demon Spawn is destroyed battling Divine!
+[04:04.520] Crystals: P0 4200 → 3800 (-400)  [battle]
+[04:08.710] Attack P1(2,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=5  ATK=0 vs DEF=0  → WIN
+[04:08.710] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[04:08.710] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[04:08.710] Anim: 3A  △ P0(1,2)
+[04:08.710] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[04:09.202] Turn ended  P1  |  Crystals P0=3800 P1=3000
+
+--- Turn 3  |  Player 0  |  Crystals P0=3800 P1=3000 ---
+[04:19.638] MSG: Tap 2 material card(s) on the field.
+[04:20.227] MSG: 1 more material(s) needed.
+[04:20.678] Crystals: P0 3800 → 2800 (-1000)  [union]
+[04:23.502] Revealed: P0 (3,3) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affi

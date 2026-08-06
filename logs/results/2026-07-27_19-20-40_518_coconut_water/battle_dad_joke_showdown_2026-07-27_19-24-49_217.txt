@@ -1,0 +1,193 @@
+=== Battle of Dad Joke Showdown ===
+Battle started: 2026-07-27 19:24:49.217
+Game Session of Coconut Water (started 2026-07-27 19:20:40.518)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.709] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.638] Mode selected P1: TECH
+[00:08.938] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:11.757] Tech played  P1: "Radar"
+[00:13.308] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:13.945] Dead-end placed  P0 (4,3)
+[00:14.129] Revealed: P0 (1,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:14.512] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:14.540] Tech resolved  P1
+[00:15.419] Mode selected P1: ATTACK
+[00:15.421] MSG: Player 2: tap a unit to attack.
+[00:15.756] Revealed: P1 (2,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:17.637] Dice rolled: 5
+[00:17.645] MSG: Canyon Warg wins!
+[00:20.675] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:24.899] Attack P1(2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(1,0)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}  Dice=5  ATK=70 vs DEF=60  → WIN
+[00:24.899] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[00:24.899] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=60 ATK pill=20 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:24.899] Anim: 3A  △ P0(1,0)
+[00:24.899] Card destroyed  P0 (1,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:25.397] Mode selected P1: ATTACK
+[00:25.410] MSG: Player 2: tap a unit to attack.
+[00:25.745] Revealed: P1 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:27.613] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:28.840] Dice rolled: 5
+[00:28.852] MSG: Trap triggered: Hard Scale!
+[00:32.482] Crystals: P0 4200 → 3900 (-300)  [trap cost]
+[00:35.299] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:36.685] Attack P1(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(0,4)"Hard Scale" {cost 300}  Dice=5  → Unit vs Trap
+[00:36.685] Reckoning overlay: P1 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[00:36.685] Anim: 3D  (attacker survives)
+[00:37.186] Turn ended  P1  |  Crystals P0=3900 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=3900 P1=2400 ---
+[00:46.345] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF40 | cost 400 | affinity Chaos}
+[00:47.572] Dice rolled: 2
+[00:47.579] MSG: Demon Spawn wins!
+[00:50.380] Crystals: P1 2400 → 1650 (-750)  [battle]
+[00:54.581] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF40 | cost 400 | affinity Chaos} → P1(2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=2  ATK=40 vs DEF=30  → WIN
+[00:54.581] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF40 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=40 mod=+ATK 0 (40+0=40)
+[00:54.581] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=30 ATK pill=70 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:54.581] Anim: 3A  △ P1(2,2)
+[00:54.581] Card destroyed  P1 (2,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:57.579] Revealed: P0 (3,0) "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}
+[00:58.802] Dice rolled: 4
+[00:58.811] MSG: Spear Shark wins!
+[01:01.471] Crystals: P1 1650 → 1390 (-260)  [battle]
+[01:05.686] Attack P0(3,0)"Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} → P1(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=4  ATK=50 vs DEF=15  → WIN
+[01:05.686] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=25 mod=+ATK 0 (50+0=50)
+[01:05.686] Reckoning overlay: P1 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:05.686] Anim: 3A  △ P1(0,0)
+[01:05.686] Card destroyed  P1 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:06.970] Turn ended  P0  |  Crystals P0=3900 P1=1390
+
+--- Turn 3  |  Player 1  |  Crystals P0=3900 P1=1390 ---
+[01:07.558] Mode selected P1: TECH
+[01:07.868] Tech played  P1: "Spy"
+[01:09.415] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:09.812] Revealed: P0 (2,4) "Hostage" {cost 100}
+[01:09.851] Tech resolved  P1
+[01:10.727] Mode selected P1: ATTACK
+[01:10.734] MSG: Player 2: tap a unit to attack.
+[01:11.054] Revealed: P1 (0,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:12.952] Dice rolled: 2
+[01:12.964] MSG: Flame Lizard wins!
+[01:15.779] Crystals: P0 3900 → 3420 (-480)  [battle]
+[01:19.986] Attack P1(0,1)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P0(3,0)"Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}  Dice=2  ATK=45 vs DEF=25  → WIN
+[01:19.986] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=45 ATK pill=25 DEF pill=40 mod=+ATK 20 (25+20=45)
+[01:19.986] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:19.986] Anim: 3A  △ P0(3,0)
+[01:19.986] Card destroyed  P0 (3,0) "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}
+[01:20.481] Mode selected P1: ATTACK
+[01:20.487] MSG: Player 2: tap a unit to attack.
+[01:20.820] Revealed: P1 (1,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[01:22.705] Dice rolled: 3
+[01:22.717] MSG: Ostrich Cannon wins!
+[01:25.927] Crystals: P0 3420 → 3020 (-400)  [battle]
+[01:28.750] MSG: Ostrich Cannon locks itself until next turn.
+[01:30.122] Attack P1(1,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P0(1,2)"Demon Spawn" {Unit ATK40 DEF40 | cost 400 | affinity Chaos}  Dice=3  ATK=60 vs DEF=40  → WIN
+[01:30.122] Reckoning overlay: P1 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[01:30.122] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF40 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:30.122] Anim: 3A  △ P0(1,2)
+[01:30.122] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK40 DEF40 | cost 400 | affinity Chaos}
+[01:30.621] Turn ended  P1  |  Crystals P0=3020 P1=1390
+
+--- Turn 4  |  Player 0  |  Crystals P0=3020 P1=1390 ---
+[01:39.909] Revealed: P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[01:41.127] Dice rolled: 4
+[01:41.131] MSG: Nanomites Beast wins!
+[01:43.711] Crystals: P1 1390 → 990 (-400)  [battle]
+[01:47.923] Attack P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(0,1)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=4  ATK=50 vs DEF=40  → WIN
+[01:47.923] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[01:47.923] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=40 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:47.923] Anim: 3A  △ P1(0,1)
+[01:47.923] Card destroyed  P1 (0,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:53.574] Revealed: P0 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:54.806] Dice rolled: 2
+[01:54.813] MSG: Dystopian Cultist wins!
+[01:57.910] Crystals: P1 990 → 190 (-800)  [battle]
+[02:02.124] Attack P0(4,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(1,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T5}  Dice=2  ATK=65 vs DEF=30  → WIN
+[02:02.124] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[02:02.124] Reckoning overlay: P1 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T5} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:02.124] Anim: 3A  △ P1(1,1)
+[02:02.124] Card destroyed  P1 (1,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T5}
+[02:03.342] Turn ended  P0  |  Crystals P0=3020 P1=190
+
+--- Turn 5  |  Player 1  |  Crystals P0=3020 P1=190 ---
+[02:03.942] Mode selected P1: TECH
+[02:04.260] Tech played  P1: "Tease"
+[02:05.792] MSG: Opponent must choose and reveal 1 of their squares.
+[02:05.974] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:11.833] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[02:11.834] MSG: Tease: Opponent revealed Armored Bee.
+[02:11.838] Tech resolved  P1
+[02:12.726] Mode selected P1: ATTACK
+[02:12.729] MSG: Player 2: tap a unit to attack.
+[02:13.081] Revealed: P1 (1,3) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[02:14.945] Dice rolled: 4
+[02:14.958] MSG: Death Cobra wins!
+[02:19.459] Crystals: P0 3020 → 2220 (-800)  [battle]
+[02:23.678] Attack P1(1,3)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=4  ATK=85 vs DEF=55  → WIN
+[02:23.679] Reckoning overlay: P1 "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} badge=85 ATK pill=85 DEF pill=50 mod=+ATK 0 (85+0=85)
+[02:23.679] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:23.679] Anim: 3A  △ P0(0,2)
+[02:23.679] Card destroyed  P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[02:24.169] Mode selected P1: ATTACK
+[02:24.174] MSG: Player 2: tap a unit to attack.
+[02:24.498] Revealed: P1 (4,3) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[02:26.404] MSG: Ability triggered: "Lazy Troll" (coin flip cancel attack)
+[02:27.988] Coin flip: Heads
+[02:29.486] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:29.486] MSG: Ability triggered: "Death Cobra" (venom flag end of turn)
+[02:29.506] Target prompt: "Death Cobra: Choose 1 exposed card (either side) for Venom."  filter=ability_death_cobra_venom
+[02:30.722] Dice rolled: 2
+[02:30.728] MSG: Lazy Troll wins!
+[02:31.424] MSG: Death Cobra: Venom on Dystopian Cultist.
+[02:31.429] Turn ended  P1  |  Crystals P0=2220 P1=190
+
+--- Turn 6  |  Player 0  |  Crystals P0=2220 P1=190 ---
+[02:35.216] Crystals: P0 2220 → 1670 (-550)  [battle]
+[02:38.046] Card destroyed  P0 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio | flags:venom}
+[02:38.078] Attack P0(4,3)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P1(4,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=2  ATK=120 vs DEF=40  → WIN
+[02:38.078] Reckoning overlay: P0 "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} badge=120 ATK pill=120 DEF pill=60 mod=+ATK 0 (120+0=120)
+[02:38.078] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:38.078] Anim: 3A  △ P1(4,2)
+[02:38.078] Card destroyed  P1 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[02:43.839] Revealed: P0 (3,3) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[02:45.085] Dice rolled: 5
+[02:47.743] Crystals: P0 1670 → 1290 (-380)  [battle]
+[02:50.594] Attack P0(3,3)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} → P1(1,3)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=5  ATK=20 vs DEF=50  → LOSE
+[02:50.594] Reckoning overlay: P0 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=20 ATK pill=20 DEF pill=40 mod=+ATK 0 (20+0=20)
+[02:50.594] Reckoning overlay: P1 "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} badge=50 ATK pill=85 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:50.594] Anim: 3B  △ P0(3,3)
+[02:50.594] Card destroyed  P0 (3,3) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[02:55.295] MSG: Tap 2 material card(s) on the field.
+[02:55.667] MSG: 1 more material(s) needed.
+[02:56.051] Crystals: P0 1290 → 490 (-800)  [union]
+[02:58.867] Revealed: P0 (2,1) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[02:58.922] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}
+[02:58.928] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Armored Cat" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}
+[03:08.409] Turn ended  P0  |  Crystals P0=490 P1=190
+
+--- Turn 7  |  Player 1  |  Crystals P0=490 P1=190 ---
+[03:09.024] Mode selected P1: ATTACK
+[03:09.029] MSG: Player 2: tap a unit to attack.
+[03:10.208] MSG: Ability triggered: "Lazy Troll" (coin flip cancel attack)
+[03:11.818] Coin flip: Tails
+[03:14.321] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:14.322] MSG: Ability triggered: "Death Cobra" (venom flag end of turn)
+[03:14.360] Target prompt: "Death Cobra: Choose 1 exposed card (either side) for Venom."  filter=ability_death_cobra_venom
+[03:14.580] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[03:15.961] Attack aborted
+[03:16.268] MSG: Death Cobra: Venom on Ancient Lizard.
+[03:16.278] Turn ended  P1  |  Crystals P0=490 P1=190
+
+--- Turn 8  |  Player 0  |  Crystals P0=490 P1=190 ---
+[03:21.274] Dice rolled: 1
+[03:21.341] MSG: Ancient Lizard wins!
+[03:25.776] Crystals: P1 190 → 0 (-190)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 490  P1: 0  |  Turns: 8

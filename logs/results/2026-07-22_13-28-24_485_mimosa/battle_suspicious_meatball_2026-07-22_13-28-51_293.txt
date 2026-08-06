@@ -1,0 +1,61 @@
+=== Battle of Suspicious Meatball ===
+Battle started: 2026-07-22 13:28:51.293
+Game Session of Mimosa (started 2026-07-22 13:28:24.485)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.265] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.905] Mode selected P1: TECH
+[00:12.202] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:16.035] Tech played  P1: "Radar"
+[00:17.580] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:19.300] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:20.834] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:20.837] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:21.477] Dead-end placed  P0 (1,2)
+[00:21.876] Dead-end placed  P0 (3,1)
+[00:22.056] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:22.059] Tech resolved  P1
+[00:22.940] Mode selected P1: ATTACK
+[00:22.943] MSG: Player 2: tap a unit to attack.
+[00:23.274] Revealed: P1 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:25.170] Dice rolled: 1
+[00:25.219] MSG: Wandering Swordsman wins!
+[00:29.642] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:34.855] Attack P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=1  ATK=60 vs DEF=25  → WIN
+[00:34.855] Reckoning overlay: P1 "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[00:34.855] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:34.855] Anim: 3A  △ P0(3,2)
+[00:34.855] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:37.357] Turn ended  P1  |  Crystals P0=4820 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=2400 ---
+[02:11.651] MSG: Tap 2 material card(s) on the field.
+[02:11.874] MSG: 1 more material(s) needed.
+[02:12.792] Crystals: P0 4820 → 4320 (-500)  [union]
+[02:16.627] Revealed: P0 (2,4) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[02:16.674] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}, "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[02:16.674] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[02:16.680] MSG: Player 1 summoned [Diamond Unicorn] using: "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}, "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[02:58.209] Crystals: P0 4320 → 4270 (-50)  [skip tax]
+[02:58.209] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[03:01.652] Turn ended  P0  |  Crystals P0=4270 P1=2400
+
+--- Turn 3  |  Player 1  |  Crystals P0=4270 P1=2400 ---
+[03:02.251] Mode selected P1: TECH
+[03:02.558] Tech played  P1: "Spy"
+[03:04.110] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:04.508] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[03:04.551] Tech resolved  P1
+[03:05.418] Mode selected P1: ATTACK
+[03:05.423] MSG: Player 2: tap a unit to attack.
+[03:06.619] Dice rolled: 3
+[03:06.714] MSG: Wandering Swordsman wins!
+[03:12.495] Attack P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(2,4)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}  Dice=3  ATK=60 vs DEF=35  → WIN
+[03:12.495] Reckoning overlay: P1 "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[03:12.

@@ -1,0 +1,52 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-07-22 18:04:16.060
+Game Session of Margarita (started 2026-07-22 18:02:52.756)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:02.985] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.444] Mode selected P1: TECH
+[00:08.752] Tech played  P1: "Spy"
+[00:10.331] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.023] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:13.574] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:13.579] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.010] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:14.014] Tech resolved  P1
+[00:14.888] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:14.888] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:14.891] Mode selected P1: ATTACK
+[00:14.895] MSG: Player 2: tap a unit to attack.
+[00:15.184] Revealed: P1 (1,1) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:17.109] Dice rolled: 3
+[00:17.118] MSG: Choir Lady Abigail wins!
+[00:21.074] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:26.306] Attack P1(1,1)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=3  ATK=25 vs DEF=15  → WIN
+[00:26.306] Reckoning overlay: P1 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[00:26.306] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:26.306] Anim: 3A  △ P0(2,4)
+[00:26.306] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:26.809] Mode selected P1: ATTACK
+[00:26.815] MSG: Player 2: tap a unit to attack.
+[00:27.149] Revealed: P1 (0,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:29.029] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:30.252] Dice rolled: 1
+[00:30.262] MSG: Trap triggered: Trap Hole!
+[00:34.398] Coin flip: Heads, Heads, Heads
+[00:37.131] MSG: Trap Hole: Heads, Heads, Heads.
+[00:37.132] Crystals: P1 3000 → 2940 (-60)  [trap]
+[00:40.791] MSG: Trap Hole: 3 head(s) — Player 2 loses 60 Crystals!
+[00:42.151] Attack P1(0,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[00:42.151] Reckoning overlay: P1 "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[00:42.151] Anim: 3D  (attacker survives)
+[00:42.659] Turn ended  P1  |  Crystals P0=4750 P1=2940
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=2940 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4750  P1: 2940  |  Turns: 2

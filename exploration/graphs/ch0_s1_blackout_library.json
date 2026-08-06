@@ -1547,7 +1547,7 @@
 					"mumbling_sound": "res://assets/audio/sfx/mumbling/sfx_radio_mumbling_3.mp3",
 					"requires_tool": "tool_translator",
 					"temperature": 12.0,
-					"tooltip": "???",
+					"tooltip": "Should I use the translator here?",
 					"x_norm": 0.282,
 					"y_norm": 0.737
 				},

@@ -1,0 +1,157 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-07-27 20:41:23.836
+Game Session of Ginger Beer (started 2026-07-27 20:40:59.660)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:16.798] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:28.649] Revealed: P0 (0,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:28.689] Revealed: P1 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:29.870] Dice rolled: 4
+[00:29.879] MSG: Both cards are destroyed!
+[00:32.410] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:35.234] Crystals: P1 3000 → 2650 (-350)  [battle]
+[00:38.091] Attack P0(0,4)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} → P1(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=4  ATK=20 vs DEF=20  → TIE
+[00:38.091] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=20 ATK pill=20 DEF pill=60 mod=+ATK 0 (20+0=20)
+[00:38.091] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=20 ATK pill=40 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:38.091] Anim: 3C  △ P0(0,4) + △ P1(1,1)
+[00:38.091] Card destroyed  P0 (0,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:38.091] Card destroyed  P1 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:41.536] Revealed: P0 (4,4) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:41.580] Revealed: P1 (2,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:42.761] Dice rolled: 5
+[00:42.768] MSG: Dystopian Cultist wins!
+[00:45.454] Crystals: P1 2650 → 2350 (-300)  [battle]
+[00:49.664] Attack P0(4,4)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(2,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=65 vs DEF=20  → WIN
+[00:49.664] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[00:49.664] Reckoning overlay: P1 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:49.664] Anim: 3A  △ P1(2,1)
+[00:49.664] Card destroyed  P1 (2,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:50.964] Turn ended  P0  |  Crystals P0=4200 P1=2350
+
+--- Turn 2  |  Player 1  |  Crystals P0=4200 P1=2350 ---
+[00:51.547] Mode selected P1: TECH
+[00:51.855] Tech played  P1: "Spy"
+[00:53.412] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:53.810] Revealed: P0 (2,0) "Red Card" {cost 0}
+[00:53.864] Tech resolved  P1
+[00:56.189] Crystals: P1 2350 → 2050 (-300)  [union]
+[00:59.022] Revealed: P1 (1,3) "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:59.069] Union summoned P1: "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine | face-down}
+[01:02.452] Mode selected P1: ATTACK
+[01:03.654] Revealed: P0 (0,0) "Hard Scale" {cost 300}
+[01:04.880] Dice rolled: 4
+[01:04.978] MSG: Trap triggered: Hard Scale!
+[01:07.365] Crystals: P0 4200 → 3900 (-300)  [trap cost]
+[01:10.188] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[01:11.570] Attack P1(1,3)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P0(0,0)"Hard Scale" {cost 300}  Dice=4  → Unit vs Trap
+[01:11.570] Reckoning overlay: P1 "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} badge=30 ATK pill=30 DEF pill=40 mod=+ATK 0 (30+0=30)
+[01:11.570] Anim: 3D  (attacker survives)
+[01:14.072] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[01:14.480] Turn ended  P1  |  Crystals P0=3900 P1=2050
+
+--- Turn 3  |  Player 0  |  Crystals P0=3900 P1=2050 ---
+[02:30.651] MSG: Tap 2 material card(s) on the field.
+[02:34.068] MSG: Tap 2 material card(s) on the field.
+[02:34.634] MSG: 1 more material(s) needed.
+[02:35.066] Crystals: P0 3900 → 3100 (-800)  [union]
+[02:37.889] Revealed: P0 (2,1) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[02:37.949] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF45 | cost 400 | affinity Nature | face-down}, "Armored Cat" {Unit ATK10 DEF25 | cost 170 | affinity Nature | face-down}
+[02:44.954] Revealed: P1 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[02:46.155] Dice rolled: 1
+[02:46.291] MSG: Ancient Lizard wins!
+[02:49.598] Crystals: P1 2050 → 1650 (-400)  [battle]
+[02:52.438] MSG: Moonrise Gentleman: +10 DEF, -10 ATK permanently (if possible).
+[02:53.762] Attack P0(2,1)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=1  ATK=75 vs DEF=40  → WIN
+[02:53.762] Reckoning overlay: P0 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+ATK 0 (75+0=75)
+[02:53.762] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[02:53.762] Anim: 3A  △ P1(1,2)
+[02:53.762] Card destroyed  P1 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[03:00.259] Revealed: P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio}
+[03:01.480] Dice rolled: 1
+[03:01.563] MSG: Nanomites Beast wins!
+[03:06.880] Attack P0(0,2)"Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} → P1(1,3)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}  Dice=1  ATK=50 vs DEF=40  → WIN
+[03:06.881] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=60 mod=+ATK 0 (50+0=50)
+[03:06.881] Reckoning overlay: P1 "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} badge=40 ATK pill=30 DEF pill=40 mod=+DEF 0 (40+0=40)
+[03:06.881] Anim: 3A  △ P1(1,3)
+[03:06.881] Card destroyed  P1 (1,3) "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[03:08.129] Turn ended  P0  |  Crystals P0=3100 P1=1650
+
+--- Turn 4  |  Player 1  |  Crystals P0=3100 P1=1650 ---
+[03:08.705] Mode selected P1: TECH
+[03:09.006] Crystals: P1 1650 → 1050 (-600)  [tech cost]
+[03:11.849] Tech played  P1: "Radar"
+[03:13.386] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:14.026] Dead-end placed  P0 (0,1)
+[03:14.426] Dead-end placed  P0 (3,4)
+[03:14.584] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[03:14.613] Tech resolved  P1
+[03:15.483] Mode selected P1: ATTACK
+[03:15.823] Revealed: P1 (2,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[03:17.740] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF5 | cost 480 | affinity Nature}
+[03:18.930] Dice rolled: 4
+[03:21.155] MSG: Tiny Pixie survives destruction!
+[03:22.532] Attack P1(2,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P0(1,3)"Armored Bee" {Unit ATK30 DEF5 | cost 480 | affinity Nature | 1xDEF-used}  Dice=4  ATK=0 vs DEF=65  → LOSE
+[03:22.533] Reckoning overlay: P1 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[03:22.533] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF5 | cost 480 | affinity Nature | 1xDEF-used} badge=65 ATK pill=30 DEF pill=5 mod=+DEF 60 (5+60=65)
+[03:22.533] Anim: 3B  △ P1(2,3)
+[03:22.533] Card destroyed  P1 (2,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[03:25.035] Turn ended  P1  |  Crystals P0=3100 P1=1050
+
+--- Turn 5  |  Player 0  |  Crystals P0=3100 P1=1050 ---
+[03:33.232] Revealed: P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:34.457] Dice rolled: 3
+[03:34.464] MSG: Scout Probe wins!
+[03:38.775] Crystals: P1 1050 → 950 (-100)  [battle]
+[03:43.026] Attack P0(1,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}  Dice=3  ATK=40 vs DEF=0  → WIN
+[03:43.026] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[03:43.026] Reckoning overlay: P1 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:43.026] Anim: 3A  △ P1(2,3)
+[03:43.029] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[03:43.066] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[03:44.927] Revealed: P1 (3,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[03:44.927] MSG: Scout Probe: adjacent cell revealed.
+[04:47.656] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[04:48.878] Dice rolled: 1
+[04:48.884] MSG: Demon Spawn is destroyed battling Divine!
+[04:52.715] Crystals: P0 3100 → 2700 (-400)  [battle]
+[04:55.551] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(3,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=1  ATK=0 vs DEF=0  → LOSE
+[04:55.551] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[04:55.551] Reckoning overlay: P1 "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[04:55.551] Anim: 3B  △ P0(1,2)
+[04:55.551] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[05:09.802] Turn ended  P0  |  Crystals P0=2700 P1=950
+
+--- Turn 6  |  Player 1  |  Crystals P0=2700 P1=950 ---
+[05:09.846] MSG: Rich Guy 1 is Curious about 🖕
+[05:10.389] Mode selected P1: TECH
+[05:10.697] Tech played  P1: "Tease"
+[05:12.354] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:16.898] Revealed: P0 (4,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[05:16.898] MSG: Tease: Opponent revealed Mine Guard.
+[05:16.905] Tech resolved  P1
+[05:17.784] Mode selected P1: ATTACK
+[05:18.122] Revealed: P1 (3,2) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[05:20.018] Dice rolled: 3
+[05:20.024] MSG: Joan the Faithful Warrior wins!
+[05:22.721] Crystals: P0 2700 → 2220 (-480)  [battle]
+[05:26.931] Attack P1(3,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=3  ATK=25 vs DEF=0  → WIN
+[05:26.931] Reckoning overlay: P1 "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} badge=25 ATK pill=25 DEF pill=5 mod=+ATK 0 (25+0=25)
+[05:26.931] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=0 ATK pill=30 DEF pill=0 mod=+DEF 0 (0+0=0)
+[05:26.931] Anim: 3A  △ P0(1,3)
+[05:26.931] Card destroyed  P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[05:27.423] Mode selected P1: ATTACK
+[05:28.719] Revealed: P0 (1,0) "Trap Hole" {cost 0}
+[05:29.958] Dice rolled: 2
+[05:29.963] MSG: Trap triggered: Trap Hole!
+[05:34.122] Coin flip: Heads, Tails, Heads
+[05:36.889] MSG: Trap Hole: Heads, Tails, Heads.
+[05:36.889] Crystals: P1 950 → 910 (-40)  [trap]
+[05:39.097] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[05:40.483] Attack P1(3,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(1,0)"Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[05:40.483] Reckoning overlay: P1 "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} badge=0 ATK pill=0 DEF pill=35 

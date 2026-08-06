@@ -1,0 +1,173 @@
+=== Battle of Windshield Bug Stare-Down ===
+Battle started: 2026-07-03 01:47:03.809
+Game Session of Kombucha (started 2026-07-03 01:42:53.007)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.727] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.096] Mode selected P1: TECH
+[00:10.396] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:14.230] Tech played  P1: "Radar"
+[00:15.780] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.179] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:16.826] Dead-end placed  P0 (3,4)
+[00:16.984] Revealed: P0 (2,2) "Alarm" {cost 0}
+[00:17.005] Tech resolved  P1
+[00:17.884] Mode selected P1: ATTACK
+[00:17.886] MSG: Player 2: tap a unit to attack.
+[00:18.209] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:20.111] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[00:21.340] Dice rolled: 3
+[00:21.355] MSG: Trap triggered: Hard Scale!
+[00:25.208] Crystals: P0 5000 → 4300 (-700)  [trap cost]
+[00:29.048] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:30.418] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(0,4)"Hard Scale" {cost 700}  Dice=3  → Unit vs Trap
+[00:30.418] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[00:30.418] Anim: 3D  (attacker survives)
+[00:30.914] Mode selected P1: ATTACK
+[00:30.917] MSG: Player 2: tap a unit to attack.
+[00:31.235] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:33.139] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:34.364] Dice rolled: 1
+[00:34.384] MSG: Trap triggered: Decoy Puppet!
+[00:38.466] Crystals: P0 4300 → 4200 (-100)  [trap cost]
+[00:42.305] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:43.680] Attack P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=1  → Unit vs Trap
+[00:43.680] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} badge=0 ATK pill=0 DEF pill=50 mod=+ATK 0 (0+0=0)
+[00:43.680] Anim: 3D  (attacker survives)
+[00:44.173] Turn ended  P1  |  Crystals P0=4200 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=2400 ---
+[00:56.060] MSG: Tap 2 material card(s) on the field.
+[00:56.392] MSG: 1 more material(s) needed.
+[00:57.025] Crystals: P0 4200 → 3700 (-500)  [union]
+[01:00.858] Revealed: P0 (1,2) "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}
+[01:00.886] Union summoned P0: "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} from "Grand Fort Archer" {Unit ATK20 DEF25 | cost 280 | affinity Anima | face-down}, "Grand Fort Footsoldier" {Unit ATK25 DEF30 | cost 300 | affinity Anima | face-down}
+[01:00.892] MSG: Player 1 summoned [Grand Fort Captain] using: "Grand Fort Archer" {Unit ATK20 DEF25 | cost 280 | affinity Anima | face-down}, "Grand Fort Footsoldier" {Unit ATK25 DEF30 | cost 300 | affinity Anima | face-down}
+[01:09.900] Dice rolled: 4
+[01:09.962] MSG: Grand Fort Captain wins!
+[01:12.567] Crystals: P1 2400 → 2180 (-220)  [battle]
+[01:17.759] Attack P0(1,2)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} → P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=4  ATK=45 vs DEF=15  → WIN
+[01:17.759] Reckoning overlay: P0 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[01:17.759] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:17.759] Anim: 3A  △ P1(1,1)
+[01:17.759] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:41.138] Revealed: P0 (2,1) "Aerial the Battlemage" {Unit ATK50 DEF50 | cost 750 | affinity Arcane}
+[01:42.355] Dice rolled: 4
+[01:42.373] MSG: Aerial the Battlemage wins!
+[01:46.614] Crystals: P1 2180 → 1760 (-420)  [battle]
+[01:51.811] Attack P0(2,1)"Aerial the Battlemage" {Unit ATK50 DEF50 | cost 750 | affinity Arcane} → P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=4  ATK=70 vs DEF=50  → WIN
+[01:51.811] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF50 | cost 750 | affinity Arcane} badge=70 ATK pill=50 DEF pill=50 mod=+ATK 20 (50+20=70)
+[01:51.811] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:51.811] Anim: 3A  △ P1(2,1)
+[01:51.811] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:52.805] Turn ended  P0  |  Crystals P0=3700 P1=1760
+
+--- Turn 3  |  Player 1  |  Crystals P0=3700 P1=1760 ---
+[01:53.398] Mode selected P1: ATTACK
+[01:53.400] MSG: Player 2: tap a unit to attack.
+[01:53.721] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:55.625] Dice rolled: 1
+[01:55.652] MSG: Lab Zombie wins!
+[01:59.318] Crystals: P0 3700 → 2950 (-750)  [battle]
+[02:04.530] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(2,1)"Aerial the Battlemage" {Unit ATK50 DEF50 | cost 750 | affinity Arcane}  Dice=1  ATK=55 vs DEF=50  → WIN
+[02:04.530] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[02:04.530] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF50 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:04.530] Anim: 3A  △ P0(2,1)
+[02:04.530] Card destroyed  P0 (2,1) "Aerial the Battlemage" {Unit ATK50 DEF50 | cost 750 | affinity Arcane}
+[02:05.027] Mode selected P1: ATTACK
+[02:05.032] MSG: Player 2: tap a unit to attack.
+[02:05.351] Revealed: P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:07.283] Revealed: P0 (1,1) "Mad Wyvern" {Unit ATK65 DEF45 | cost 550 | affinity Arcane}
+[02:08.484] Dice rolled: 1
+[02:13.098] Crystals: P1 1760 → 1580 (-180)  [battle]
+[02:16.945] Attack P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(1,1)"Mad Wyvern" {Unit ATK65 DEF45 | cost 550 | affinity Arcane}  Dice=1  ATK=15 vs DEF=45  → LOSE
+[02:16.945] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[02:16.945] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF45 | cost 550 | affinity Arcane} badge=45 ATK pill=65 DEF pill=45 mod=+DEF 0 (45+0=45)
+[02:16.945] Anim: 3B  △ P1(1,3)
+[02:16.945] Card destroyed  P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:17.445] Turn ended  P1  |  Crystals P0=2950 P1=1580
+
+--- Turn 4  |  Player 0  |  Crystals P0=2950 P1=1580 ---
+[02:23.382] Crystals: P0 2950 → 2350 (-600)  [tech cost]
+[02:27.215] Tech played  P0: "Radar"
+[02:28.766] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[02:29.186] Revealed: P1 (0,0) "Hypnosis" {cost 800}
+[02:30.429] Revealed: P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[02:31.892] Revealed: P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:32.055] Tech resolved  P0
+[03:38.125] Dice rolled: 5
+[03:38.194] MSG: Grand Fort Captain wins!
+[03:40.832] Crystals: P1 1580 → 1380 (-200)  [battle]
+[03:46.050] Attack P0(1,2)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} → P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=5  ATK=45 vs DEF=30  → WIN
+[03:46.050] Reckoning overlay: P0 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[03:46.050] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:46.050] Anim: 3A  △ P1(2,2)
+[03:46.050] Card destroyed  P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[03:57.762] Dice rolled: 2
+[03:57.779] MSG: Mad Wyvern wins!
+[04:00.452] Crystals: P1 1380 → 680 (-700)  [battle]
+[04:05.670] Attack P0(1,1)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=2  ATK=65 vs DEF=20  → WIN
+[04:05.670] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[04:05.670] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:05.670] Anim: 3A  △ P1(2,4)
+[04:05.670] Card destroyed  P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[04:08.647] Turn ended  P0  |  Crystals P0=2350 P1=680
+
+--- Turn 5  |  Player 1  |  Crystals P0=2350 P1=680 ---
+[04:09.246] Mode selected P1: TECH
+[04:09.565] Tech played  P1: "Release Mutagen"
+[04:11.125] Target prompt: "Release Mutagen: Choose 1 of your units to flag."  filter=own_faceup_character
+[04:11.558] Revealed: P1 (2,0) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[04:11.558] MSG: Release Mutagen: Mutagen on Rotten Shrieker.
+[04:11.561] Tech resolved  P1
+[04:12.447] Mode selected P1: ATTACK
+[04:12.450] MSG: Player 2: tap a unit to attack.
+[04:13.698] Revealed: P0 (3,3) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[04:14.900] Dice rolled: 2
+[04:19.127] Crystals: P1 680 → 230 (-450)  [battle]
+[04:22.974] Attack P1(2,0)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | flags:mutagen} → P0(3,3)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}  Dice=2  ATK=40 vs DEF=50  → LOSE
+[04:22.974] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | flags:mutagen} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[04:22.974] Reckoning overlay: P0 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[04:22.974] Anim: 3B  △ P1(2,0)
+[04:22.974] Card destroyed  P1 (2,0) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | flags:mutagen}
+[04:23.478] Mode selected P1: ATTACK
+[04:23.482] MSG: Player 2: tap a unit to attack.
+[04:24.719] Revealed: P0 (1,3) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[04:25.934] Dice rolled: 2
+[04:25.959] MSG: Lab Bloater wins!
+[04:29.395] Crystals: P0 2350 → 2050 (-300)  [battle]
+[04:34.635] Attack P1(3,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(1,3)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=2  ATK=20 vs DEF=5  → WIN
+[04:34.635] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[04:34.635] Reckoning overlay: P0 "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} badge=5 ATK pill=35 DEF pill=5 mod=+DEF 0 (5+0=5)
+[04:34.635] Anim: 3A  △ P0(1,3)
+[04:34.635] Card destroyed  P0 (1,3) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[04:35.143] Turn ended  P1  |  Crystals P0=2050 P1=230
+
+--- Turn 6  |  Player 0  |  Crystals P0=2050 P1=230 ---
+[04:42.561] Revealed: P1 (0,1) "Red Card" {cost 0}
+[04:43.780] Dice rolled: 5
+[04:43.841] MSG: Trap triggered: Red Card!
+[04:46.166] Coin flip: Tails, Tails
+[04:48.924] MSG: Red Card: Tails, Tails.
+[04:48.924] MSG: Not both heads — no effect.
+[04:50.367] Attack P0(1,2)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} → P1(0,1)"Red Card" {cost 0}  Dice=5  → Unit vs Trap
+[04:50.367] Reckoning overlay: P0 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[04:50.367] Anim: 3D  (attacker survives)
+[04:59.810] Tech played  P0: "Tease"
+[05:01.362] MSG: Opponent must choose and reveal 1 of their squares.
+[05:01.363] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:01.786] Revealed: P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[05:01.786] MSG: Tease: Opponent revealed Scarlet Mutant.
+[05:01.913] Tech resolved  P0
+[05:08.475] Dice rolled: 5
+[05:08.490] MSG: Mad Wyvern wins!
+[05:12.962] Crystals: P1 230 → 0 (-230)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2050  P1: 0  |  Turns: 6

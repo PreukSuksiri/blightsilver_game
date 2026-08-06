@@ -1,0 +1,182 @@
+=== Battle of Pop-Up Ad Uprising ===
+Battle started: 2026-08-05 16:04:27.175
+Game Session of Cold Brew (started 2026-08-05 16:02:04.528)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:08.890] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:16.223] Mode selected P1: TECH
+[00:16.532] Tech played  P1: "Spy"
+[00:18.063] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:18.461] Revealed: P0 (2,1) "Pepper Spray" {cost 0}
+[00:19.718] Tech resolved  P1
+[00:20.599] Mode selected P1: ATTACK
+[00:20.913] Revealed: P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:22.819] Revealed: P0 (1,4) "Alarm" {cost 0}
+[00:24.047] Dice rolled: 3
+[00:24.055] MSG: Trap triggered: Alarm!
+[00:28.182] MSG: Alarm: +10 ATK & +10 DEF to all ANIMA units this turn!
+[00:29.535] Attack P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(1,4)"Alarm" {cost 0}  Dice=3  → Unit vs Trap
+[00:29.535] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:29.535] Anim: 3D  (attacker survives)
+[00:29.538] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[00:29.605] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:31.712] MSG: Revealed: (empty)
+[00:32.211] Mode selected P1: ATTACK
+[00:32.552] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:34.448] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:35.674] Dice rolled: 1
+[00:35.687] MSG: Trap triggered: Decoy Puppet!
+[00:39.791] Crystals: P0 5000 → 4900 (-100)  [trap cost]
+[00:42.615] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:44.001] Attack P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=1  → Unit vs Trap
+[00:44.001] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[00:44.002] Anim: 3D  (attacker survives)
+[00:44.498] Turn ended  P1  |  Crystals P0=4900 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4900 P1=3000 ---
+[01:52.078] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:53.298] Dice rolled: 1
+[01:53.314] MSG: Sonic Seraph wins!
+[01:56.061] Crystals: P1 3000 → 2600 (-400)  [battle]
+[02:00.290] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=45 vs DEF=25  → WIN
+[02:00.290] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[02:00.290] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:00.290] Anim: 3A  △ P1(0,1)
+[02:00.290] Card destroyed  P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:08.962] Revealed: P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:10.185] Dice rolled: 3
+[02:10.202] MSG: Street Rogue wins!
+[02:13.423] Crystals: P1 2600 → 2320 (-280)  [battle]
+[02:17.629] Attack P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=3  ATK=45 vs DEF=20  → WIN
+[02:17.629] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=45 ATK pill=25 DEF pill=20 mod=+ATK 20 (25+20=45)
+[02:17.629] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:17.629] Anim: 3A  △ P1(1,1)
+[02:17.629] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[02:20.952] Turn ended  P0  |  Crystals P0=4900 P1=2320
+
+--- Turn 3  |  Player 1  |  Crystals P0=4900 P1=2320 ---
+[02:23.448] Mode selected P1: TECH
+[02:23.755] Tech played  P1: "Bribe"
+[02:25.311] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:30.998] MSG: Bribe: Opponent passed.
+[02:31.008] Tech resolved  P1
+[02:33.378] Crystals: P1 2320 → 1320 (-1000)  [union]
+[02:36.211] Revealed: P1 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[02:36.253] Union summoned P1: "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} from "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[02:39.649] Mode selected P1: ATTACK
+[02:40.860] Dice rolled: 2
+[02:40.899] MSG: Kiba the Giant Slayer wins!
+[02:43.383] Crystals: P0 4900 → 4350 (-550)  [battle]
+[02:47.578] Attack P1(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} → P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=2  ATK=80 vs DEF=50  → WIN
+[02:47.578] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=80 ATK pill=80 DEF pill=55 mod=+ATK 0 (80+0=80)
+[02:47.578] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:47.578] Anim: 3A  △ P0(1,1)
+[02:47.578] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[02:50.092] Turn ended  P1  |  Crystals P0=4350 P1=1320
+
+--- Turn 4  |  Player 0  |  Crystals P0=4350 P1=1320 ---
+[03:05.732] Crystals: P0 4350 → 3350 (-1000)  [tech cost]
+[03:08.556] Tech played  P0: "War Supply"
+[03:10.098] MSG: War Supply: All your units gain +10 ATK & DEF until end of turn.
+[03:10.118] Tech resolved  P0
+[03:16.850] Dice rolled: 2
+[03:16.883] MSG: Both cards are destroyed!
+[03:16.883] MSG: Ability triggered: "Street Rogue" — +20 ATK in Reckoning
+[03:19.869] Crystals: P0 3350 → 3000 (-350)  [battle]
+[03:22.711] Attack P0(2,0)"Street Rogue" {Unit ATK35 DEF30 | cost 350 | affinity Anima | base 25/20 | buff +tempATK10, +tempDEF10} → P1(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}  Dice=2  ATK=55 vs DEF=55  → TIE
+[03:22.711] Reckoning overlay: P0 "Street Rogue" {Unit ATK35 DEF30 | cost 350 | affinity Anima | base 25/20 | buff +tempATK10, +tempDEF10} badge=55 ATK pill=35 DEF pill=30 mod=+ATK 20 (35+20=55)
+[03:22.711] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=55 ATK pill=80 DEF pill=55 mod=+DEF 0 (55+0=55)
+[03:22.711] Anim: 3C  △ P0(2,0) + △ P1(2,1)
+[03:22.711] Card destroyed  P0 (2,0) "Street Rogue" {Unit ATK35 DEF30 | cost 350 | affinity Anima | base 25/20 | buff +tempATK10, +tempDEF10}
+[03:22.711] Card destroyed  P1 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[03:26.288] MSG: Tap 2 material card(s) on the field.
+[03:26.444] MSG: 1 more material(s) needed.
+[03:27.001] Crystals: P0 3000 → 2000 (-1000)  [union]
+[03:29.826] Revealed: P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[03:29.866] MSG: Union material bonus: +50 ATK&DEF!
+[03:29.866] Union summoned P0: "Ice Elemental" {Union ATK130 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 130/100} from "Wind Elemental" {Unit ATK40 DEF40 | cost 380 | affinity Arcane | base 30/30 | buff +tempATK10, +tempDEF10 | face-down}, "Water Elemental" {Unit ATK35 DEF45 | cost 380 | affinity Arcane | base 25/35 | buff +tempATK10, +tempDEF10 | face-down}
+[03:42.502] Revealed: P1 (0,0) "Bait" {cost 0}
+[03:43.747] Dice rolled: 4
+[03:43.779] MSG: Trap triggered: Bait!
+[03:46.645] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[03:47.035] Revealed: P1 (2,0) "Pepper Spray" {cost 0}
+[03:48.267] MSG: Bait: Defender revealed Pepper Spray.
+[03:49.737] Attack P0(1,3)"Ice Elemental" {Union ATK130 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 130/100} → P1(0,0)"Bait" {cost 0}  Dice=4  → Unit vs Trap
+[03:49.738] Reckoning overlay: P0 "Ice Elemental" {Union ATK130 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 130/100} badge=130 ATK pill=130 DEF pill=100 mod=+ATK 0 (130+0=130)
+[03:49.738] Anim: 3D  (attacker survives)
+[03:56.449] Turn ended  P0  |  Crystals P0=2000 P1=1320
+
+--- Turn 5  |  Player 1  |  Crystals P0=2000 P1=1320 ---
+[03:58.950] Mode selected P1: ATTACK
+[03:59.283] Revealed: P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[04:01.176] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[04:02.411] Dice rolled: 3
+[04:02.419] MSG: Trap triggered: Hard Scale!
+[04:06.513] Crystals: P0 2000 → 1700 (-300)  [trap cost]
+[04:09.328] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[04:10.717] Attack P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(0,4)"Hard Scale" {cost 300}  Dice=3  → Unit vs Trap
+[04:10.717] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[04:10.717] Anim: 3D  (attacker survives)
+[04:13.215] Turn ended  P1  |  Crystals P0=1700 P1=1320
+
+--- Turn 6  |  Player 0  |  Crystals P0=1700 P1=1320 ---
+[04:34.307] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}
+[04:35.532] Dice rolled: 5
+[04:35.543] MSG: Spear Shark wins!
+[04:40.018] Crystals: P1 1320 → 920 (-400)  [battle]
+[04:44.226] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} → P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=5  ATK=50 vs DEF=35  → WIN
+[04:44.226] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=25 mod=+ATK 0 (50+0=50)
+[04:44.226] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:44.226] Anim: 3A  △ P1(0,3)
+[04:44.226] Card destroyed  P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[04:55.697] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF105 | cost 1250 | affinity Chaos}
+[04:55.697] Revealed: P1 (1,4) "Decoy Puppet" {cost 100}
+[04:56.922] Dice rolled: 2
+[04:56.931] MSG: Trap triggered: Decoy Puppet!
+[05:01.034] Crystals: P1 920 → 820 (-100)  [trap cost]
+[05:03.857] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[05:05.238] Attack P0(4,0)"Pit Lord" {Unit ATK120 DEF105 | cost 1250 | affinity Chaos} → P1(1,4)"Decoy Puppet" {cost 100}  Dice=2  → Unit vs Trap
+[05:05.238] Reckoning overlay: P0 "Pit Lord" {Unit ATK120 DEF105 | cost 1250 | affinity Chaos} badge=120 ATK pill=120 DEF pill=105 mod=+ATK 0 (120+0=120)
+[05:05.238] Anim: 3D  (attacker survives)
+[05:27.919] Turn ended  P0  |  Crystals P0=1700 P1=820
+
+--- Turn 7  |  Player 1  |  Crystals P0=1700 P1=820 ---
+[05:30.399] Mode selected P1: ATTACK
+[05:30.727] Revealed: P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[05:32.630] Dice rolled: 1
+[05:32.645] MSG: Huntress of Green Glade wins!
+[05:37.108] Crystals: P0 1700 → 1220 (-480)  [battle]
+[05:41.317] Attack P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(0,2)"Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}  Dice=1  ATK=50 vs DEF=25  → WIN
+[05:41.317] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[05:41.317] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:41.317] Anim: 3A  △ P0(0,2)
+[05:41.317] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}
+[05:43.821] Turn ended  P1  |  Crystals P0=1220 P1=820
+
+--- Turn 8  |  Player 0  |  Crystals P0=1220 P1=820 ---
+[05:50.867] Dice rolled: 3
+[05:50.906] MSG: Ice Elemental wins!
+[05:53.523] Crystals: P1 820 → 20 (-800)  [battle]
+[05:56.356] MSG: Huntress of Green Glade locked — cannot attack until end of next turn.
+[05:57.733] Attack P0(1,3)"Ice Elemental" {Union ATK130 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 130/100} → P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=3  ATK=130 vs DEF=50  → WIN
+[05:57.733] Reckoning overlay: P0 "Ice Elemental" {Union ATK130 DEF100 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 130/100} badge=130 ATK pill=130 DEF pill=100 mod=+ATK 0 (130+0=130)
+[05:57.733] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[05:57.733] Anim: 3A  △ P1(3,2)
+[05:57.733] Card destroyed  P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[06:03.435] Tech played  P0: "Tease"
+[06:04.989] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[06:05.444] Revealed: P1 (4,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[06:06.616] MSG: Tease: Opponent revealed Mafia Associates.
+[06:06.812] Tech resolved  P0
+[06:35.855] Dice rolled: 5
+[06:35.878] MSG: Pit Lord wins!
+[06:40.330] Crystals: P1 20 → 0 (-20)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1220  P1: 0  |  Turns: 8

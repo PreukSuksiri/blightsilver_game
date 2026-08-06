@@ -1,0 +1,110 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-07-27 21:01:29.387
+Game Session of Ginger Ale (started 2026-07-27 21:01:17.817)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.010] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:18.010] Revealed: P0 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:18.048] Revealed: P1 (3,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:19.248] Dice rolled: 3
+[00:19.256] MSG: Dystopian Cultist wins!
+[00:21.930] Crystals: P1 3000 → 2400 (-600)  [battle]
+[00:26.146] Attack P0(4,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(3,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=3  ATK=65 vs DEF=25  → WIN
+[00:26.146] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[00:26.146] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=25 ATK pill=60 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:26.146] Anim: 3A  △ P1(3,1)
+[00:26.146] Card destroyed  P1 (3,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:27.660] Turn ended  P0  |  Crystals P0=5000 P1=2400
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2400 ---
+[00:28.260] Mode selected P1: TECH
+[00:28.558] Crystals: P1 2400 → 1800 (-600)  [tech cost]
+[00:31.371] Tech played  P1: "Radar"
+[00:32.924] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:33.361] Revealed: P0 (3,3) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:33.777] Revealed: P0 (1,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:34.142] Tech resolved  P1
+[00:34.386] Dead-end placed  P0 (4,1)
+[00:35.045] Mode selected P1: ATTACK
+[00:35.367] Revealed: P1 (2,2) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:37.278] Dice rolled: 4
+[00:37.287] MSG: Gryphon wins!
+[00:39.976] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:44.193] Attack P1(2,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(1,0)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}  Dice=4  ATK=100 vs DEF=60  → WIN
+[00:44.194] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=100 ATK pill=100 DEF pill=85 mod=+ATK 0 (100+0=100)
+[00:44.194] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=60 ATK pill=20 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:44.194] Anim: 3A  △ P0(1,0)
+[00:44.194] Card destroyed  P0 (1,0) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:44.688] Mode selected P1: ATTACK
+[00:45.030] Revealed: P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:46.912] Dice rolled: 3
+[00:46.921] MSG: Flame Seraph wins!
+[00:51.422] Crystals: P0 4200 → 3650 (-550)  [battle]
+[00:55.643] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(4,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=50 vs DEF=40  → WIN
+[00:55.643] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[00:55.643] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:55.643] Anim: 3A  △ P0(4,2)
+[00:55.643] Card destroyed  P0 (4,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:56.135] Turn ended  P1  |  Crystals P0=3650 P1=1800
+
+--- Turn 3  |  Player 0  |  Crystals P0=3650 P1=1800 ---
+[01:48.286] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:49.509] Dice rolled: 3
+[01:49.520] MSG: Demon Spawn is destroyed battling Divine!
+[01:53.667] Crystals: P0 3650 → 3250 (-400)  [battle]
+[01:56.511] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=3  ATK=0 vs DEF=0  → LOSE
+[01:56.511] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[01:56.511] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:56.511] Anim: 3B  △ P0(1,2)
+[01:56.511] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[02:00.290] Revealed: P0 (3,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:01.514] Dice rolled: 3
+[02:01.523] MSG: Spear Shark wins!
+[02:04.208] Crystals: P1 1800 → 1300 (-500)  [battle]
+[02:08.408] Attack P0(3,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=3  ATK=50 vs DEF=10  → WIN
+[02:08.408] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[02:08.408] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=10 ATK pill=50 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:08.408] Anim: 3A  △ P1(0,0)
+[02:08.408] Card destroyed  P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:10.109] Turn ended  P0  |  Crystals P0=3250 P1=1300
+
+--- Turn 4  |  Player 1  |  Crystals P0=3250 P1=1300 ---
+[02:10.136] MSG: Vezgarez is Curious about 🖕
+[02:10.704] Mode selected P1: TECH
+[02:11.013] Tech played  P1: "Spy"
+[02:12.559] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:13.000] Revealed: P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:13.004] Tech resolved  P1
+[02:13.876] Mode selected P1: ATTACK
+[02:15.065] Dice rolled: 2
+[02:15.072] MSG: Gryphon wins!
+[02:18.621] Crystals: P0 3250 → 2550 (-700)  [battle]
+[02:22.825] Attack P1(2,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(1,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=2  ATK=100 vs DEF=50  → WIN
+[02:22.825] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=100 ATK pill=100 DEF pill=85 mod=+ATK 0 (100+0=100)
+[02:22.825] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:22.825] Anim: 3A  △ P0(1,1)
+[02:22.825] Card destroyed  P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:23.330] Mode selected P1: ATTACK
+[02:23.671] Revealed: P1 (0,1) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[02:25.540] Dice rolled: 2
+[02:25.546] MSG: Angel Gatekeeper wins!
+[02:30.038] Crystals: P0 2550 → 2070 (-480)  [battle]
+[02:34.245] Attack P1(0,1)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P0(3,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=2  ATK=40 vs DEF=20  → WIN
+[02:34.245] Reckoning overlay: P1 "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} badge=40 ATK pill=40 DEF pill=90 mod=+ATK 0 (40+0=40)
+[02:34.245] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:34.245] Anim: 3A  △ P0(3,0)
+[02:34.245] Card destroyed  P0 (3,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:34.747] Turn ended  P1  |  Crystals P0=2070 P1=1300
+
+--- Turn 5  |  Player 0  |  Crystals P0=2070 P1=1300 ---
+[03:04.582] MSG: Tap 2 material card(s) on the field.
+[03:05.832] MSG: 1 more material(s) needed.
+[03:06.916] Crystals: P0 2070 → 1070 (-1000)  [union]
+[03:09.742] Revealed: P0 (3,3) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[03:09.792] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 

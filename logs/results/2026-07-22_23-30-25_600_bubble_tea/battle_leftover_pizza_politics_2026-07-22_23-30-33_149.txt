@@ -1,0 +1,64 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-07-22 23:30:33.149
+Game Session of Bubble Tea (started 2026-07-22 23:30:25.600)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.905] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:21.220] MSG: Tap 2 material card(s) on the field.
+[00:21.358] MSG: 1 more material(s) needed.
+[00:22.226] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:25.052] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:25.094] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[00:25.094] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[00:25.098] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[00:39.036] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:39.072] Revealed: P1 (1,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:40.264] Dice rolled: 4
+[00:40.274] MSG: Ability triggered: "Grand Fort Archer" — +10 ATK in Reckoning
+[00:43.989] Crystals: P0 4500 → 4220 (-280)  [battle]
+[00:46.837] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(1,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=4  ATK=30 vs DEF=55  → LOSE
+[00:46.837] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[00:46.837] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=55 ATK pill=45 DEF pill=55 mod=+DEF 0 (55+0=55)
+[00:46.837] Anim: 3B  △ P0(2,1)
+[00:46.837] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:52.552] Turn ended  P0  |  Crystals P0=4220 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4220 P1=3000 ---
+[00:53.148] Mode selected P1: TECH
+[00:53.455] Tech played  P1: "Spy"
+[00:55.027] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:56.742] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:58.280] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:58.282] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:58.719] Revealed: P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:58.724] Tech resolved  P1
+[00:59.586] Mode selected P1: ATTACK
+[00:59.590] MSG: Player 2: tap a unit to attack.
+[01:00.788] Dice rolled: 2
+[01:00.795] MSG: Book with Fangs wins!
+[01:03.677] Crystals: P0 4220 → 4040 (-180)  [battle]
+[01:07.906] Attack P1(1,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=2  ATK=45 vs DEF=25  → WIN
+[01:07.909] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[01:07.910] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:07.911] Anim: 3A  △ P0(3,2)
+[01:07.911] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[01:08.404] Mode selected P1: ATTACK
+[01:08.409] MSG: Player 2: tap a unit to attack.
+[01:08.745] Revealed: P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:10.867] Dice rolled: 2
+[01:10.897] MSG: Nothing happens — Dead End.
+[01:14.256] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(2,3)(empty)  Dice=2  → DEAD_END
+[01:14.256] Anim: 3F  (blank slot)
+[01:14.751] Turn ended  P1  |  Crystals P0=4040 P1=3000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4040 P1=3000 ---
+[01:28.856] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4040  P1: 0  |  Turns: 3

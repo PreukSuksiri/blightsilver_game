@@ -1,0 +1,193 @@
+=== Battle of Junk Drawer Charger Hunt ===
+Battle started: 2026-07-22 16:37:16.078
+Game Session of Sparkling Water (started 2026-07-22 16:36:22.009)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.795] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.165] Mode selected P1: TECH
+[00:10.472] Tech played  P1: "Spy"
+[00:12.096] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:13.756] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:15.305] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:15.308] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:15.711] Tech resolved  P1
+[00:15.949] Dead-end placed  P0 (4,3)
+[00:16.610] Mode selected P1: ATTACK
+[00:16.612] MSG: Player 2: tap a unit to attack.
+[00:16.938] Revealed: P1 (2,3) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:18.833] Dice rolled: 4
+[00:18.841] MSG: Grand Fort Archer wins!
+[00:23.323] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:28.513] Attack P1(2,3)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=4  ATK=30 vs DEF=25  → WIN
+[00:28.513] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[00:28.513] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:28.513] Anim: 3A  △ P0(3,2)
+[00:28.513] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:31.018] Turn ended  P1  |  Crystals P0=4820 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=3000 ---
+[00:46.327] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:47.530] Dice rolled: 3
+[00:47.537] MSG: Silver Spearman wins!
+[00:51.898] Crystals: P1 3000 → 2720 (-280)  [battle]
+[00:57.108] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(2,3)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=3  ATK=25 vs DEF=20  → WIN
+[00:57.108] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:57.108] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:57.108] Anim: 3A  △ P1(2,3)
+[00:57.108] Card destroyed  P1 (2,3) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[01:30.450] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:31.668] Dice rolled: 1
+[01:31.683] MSG: Nothing happens — Dead End.
+[01:34.982] Attack P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[01:34.982] Anim: 3F  (blank slot)
+[01:39.089] Turn ended  P0  |  Crystals P0=4820 P1=2720
+
+--- Turn 3  |  Player 1  |  Crystals P0=4820 P1=2720 ---
+[01:39.672] Mode selected P1: TECH
+[01:39.972] Crystals: P1 2720 → 2120 (-600)  [tech cost]
+[01:43.813] Tech played  P1: "Radar"
+[01:45.362] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:46.000] Dead-end placed  P0 (2,3)
+[01:46.192] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:46.557] Tech resolved  P1
+[01:46.797] Dead-end placed  P0 (0,3)
+[01:48.940] Crystals: P1 2120 → 1320 (-800)  [union]
+[01:52.781] Revealed: P1 (2,0) "X-Death Squad" {Union ATK50 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Anima}
+[01:52.838] MSG: Union material bonus: +40 ATK&DEF!
+[01:52.838] Union summoned P1: "X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} from "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima | face-down}, "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down}, "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[01:52.839] MSG: Player 2 summoned [X-Death Squad] using: "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima | face-down}, "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down}, "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[01:56.206] Mode selected P1: ATTACK
+[01:56.208] MSG: Player 2: tap a unit to attack.
+[01:58.007] Ability choice: 1 (No)
+[01:58.010] Dice rolled: 3
+[01:58.081] MSG: X-Death Squad wins!
+[02:02.048] Crystals: P0 4820 → 4570 (-250)  [battle]
+[02:07.268] Attack P1(2,0)"X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=3  ATK=90 vs DEF=20  → WIN
+[02:07.268] Reckoning overlay: P1 "X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} badge=90 ATK pill=90 DEF pill=90 mod=+ATK 0 (90+0=90)
+[02:07.268] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:07.268] Anim: 3A  △ P0(1,3)
+[02:07.268] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:09.788] Turn ended  P1  |  Crystals P0=4570 P1=1320
+
+--- Turn 4  |  Player 0  |  Crystals P0=4570 P1=1320 ---
+[02:15.314] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:15.314] Revealed: P1 (0,0) "Brainwash" {cost 800}
+[02:16.527] Dice rolled: 3
+[02:16.534] MSG: Trap triggered: Brainwash!
+[02:20.630] Crystals: P1 1320 → 520 (-800)  [trap cost]
+[02:24.468] MSG: Ability triggered: "Brainwash"
+[02:24.494] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[02:31.716] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[02:31.716] MSG: Brainwash: Grand Fort Footsoldier attacks Golden Senju!
+[02:31.736] MSG: Grand Fort Footsoldier wins!
+[02:36.203] Crystals: P0 4570 → 4370 (-200)  [battle]
+[02:40.067] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}  Dice=3  ATK=25 vs DEF=0  → WIN
+[02:40.067] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[02:40.067] Reckoning overlay: P1 "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} badge=0 ATK pill=15 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:40.067] Anim: 3A  △ P1(3,3)
+[02:40.067] Card destroyed  P1 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[02:41.369] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,0)"Brainwash" {cost 800}  Dice=3  → Unit vs Trap
+[02:41.369] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[02:41.369] Anim: 3D  (attacker survives)
+[02:48.121] MSG: Tap 2 material card(s) on the field.
+[02:48.343] MSG: 1 more material(s) needed.
+[02:50.484] Crystals: P0 4370 → 3870 (-500)  [union]
+[02:54.318] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[02:54.356] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:54.356] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[02:54.360] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[03:02.759] Dice rolled: 5
+[03:02.863] MSG: Nothing happens — Dead End.
+[03:06.090] Attack P0(0,2)"Diamond Unicorn" {Union ATK45 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | base 30/35 | buff +tempATK15} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[03:06.090] Anim: 3F  (blank slot)
+[03:53.782] Turn ended  P0  |  Crystals P0=3870 P1=520
+
+--- Turn 5  |  Player 1  |  Crystals P0=3870 P1=520 ---
+[03:54.326] Mode selected P1: TECH
+[03:54.625] Tech played  P1: "Tease"
+[03:56.183] MSG: Opponent must choose and reveal 1 of their squares.
+[03:56.241] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:57.683] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[03:57.683] MSG: Tease: Opponent revealed Grand Fort Archer.
+[03:57.689] Tech resolved  P1
+[03:58.586] Mode selected P1: ATTACK
+[03:58.591] MSG: Player 2: tap a unit to attack.
+[03:59.811] Dice rolled: 2
+[03:59.881] MSG: X-Death Squad wins!
+[04:03.868] Crystals: P0 3870 → 3570 (-300)  [battle]
+[04:09.079] Attack P1(2,0)"X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=90 vs DEF=25  → WIN
+[04:09.079] Reckoning overlay: P1 "X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} badge=90 ATK pill=90 DEF pill=90 mod=+ATK 0 (90+0=90)
+[04:09.079] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:09.079] Anim: 3A  △ P0(1,1)
+[04:09.079] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[04:09.585] Mode selected P1: ATTACK
+[04:09.593] MSG: Player 2: tap a unit to attack.
+[04:09.895] Revealed: P1 (2,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[04:11.848] Dice rolled: 2
+[04:11.856] MSG: Grand Fort Footsoldier wins!
+[04:16.344] Crystals: P0 3570 → 3290 (-280)  [battle]
+[04:21.570] Attack P1(2,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=2  ATK=25 vs DEF=20  → WIN
+[04:21.570] Reckoning overlay: P1 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[04:21.570] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:21.570] Anim: 3A  △ P0(2,1)
+[04:21.570] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[04:22.080] Turn ended  P1  |  Crystals P0=3290 P1=520
+
+--- Turn 6  |  Player 0  |  Crystals P0=3290 P1=520 ---
+[04:28.214] Dice rolled: 1
+[04:28.421] MSG: Diamond Unicorn wins!
+[04:31.692] Crystals: P1 520 → 220 (-300)  [battle]
+[04:36.882] Attack P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(2,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=1  ATK=30 vs DEF=25  → WIN
+[04:36.882] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} badge=30 ATK pill=30 DEF pill=35 mod=+ATK 0 (30+0=30)
+[04:36.882] Reckoning overlay: P1 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:36.882] Anim: 3A  △ P1(2,1)
+[04:36.882] Card destroyed  P1 (2,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[04:47.955] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[04:48.006] Revealed: P1 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[04:49.164] Dice rolled: 2
+[04:52.390] Crystals: P0 3290 → 3040 (-250)  [battle]
+[04:56.241] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=2  ATK=20 vs DEF=60  → LOSE
+[04:56.241] Reckoning overlay: P0 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[04:56.241] Reckoning overlay: P1 "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} badge=60 ATK pill=60 DEF pill=60 mod=+DEF 0 (60+0=60)
+[04:56.241] Anim: 3B  △ P0(4,1)
+[04:56.241] Card destroyed  P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[04:57.648] Turn ended  P0  |  Crystals P0=3040 P1=220
+
+--- Turn 7  |  Player 1  |  Crystals P0=3040 P1=220 ---
+[04:58.238] Mode selected P1: ATTACK
+[04:58.242] MSG: Player 2: tap a unit to attack.
+[04:59.443] Dice rolled: 4
+[04:59.545] MSG: X-Death Squad wins!
+[05:03.930] Crystals: P0 3040 → 2790 (-250)  [battle]
+[05:09.151] Attack P1(2,0)"X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} → P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=4  ATK=90 vs DEF=25  → WIN
+[05:09.152] Reckoning overlay: P1 "X-Death Squad" {Union ATK90 DEF90 | destroy-cost 0 | summon-cost 800 | affinity Anima | base 90/90} badge=90 ATK pill=90 DEF pill=90 mod=+ATK 0 (90+0=90)
+[05:09.152] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=25 ATK pill=20 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:09.152] Anim: 3A  △ P0(2,0)
+[05:09.152] Card destroyed  P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[05:09.648] Mode selected P1: ATTACK
+[05:09.655] MSG: Player 2: tap a unit to attack.
+[05:10.853] Dice rolled: 4
+[05:10.931] MSG: Wandering Swordsman wins!
+[05:15.390] Attack P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}  Dice=4  ATK=60 vs DEF=35  → WIN
+[05:15.390] Reckoning overlay: P1 "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[05:15.390] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[05:15.390] Anim: 3A  △ P0(0,2)
+[05:15.390] Card destroyed  P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[05:15.855] Turn ended  P1  |  Crystals P0=2790 P1=220
+
+--- Turn 8  |  Player 0  |  Crystals P0=2790 P1=220 ---
+[05:23.204] Revealed: P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[05:23.204] Revealed: P1 (4,1) "Bunker" {cost 400}
+[05:24.426] Dice rolled: 2
+[05:24.435] MSG: Trap triggered: Bunker!
+[05:26.827] Crystals: P1 220 → 0 (-220)  [trap cost]
+[05:30.659] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2790  P1: 0  |  Turns: 8

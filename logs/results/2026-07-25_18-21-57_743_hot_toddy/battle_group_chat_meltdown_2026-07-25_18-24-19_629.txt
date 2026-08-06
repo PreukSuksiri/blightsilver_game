@@ -1,0 +1,45 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-07-25 18:24:19.629
+Game Session of Hot Toddy (started 2026-07-25 18:21:57.743)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.245] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.636] Mode selected P1: TECH
+[00:09.941] Tech played  P1: "Spy"
+[00:11.499] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.902] Tech resolved  P1
+[00:12.139] Dead-end placed  P0 (3,0)
+[00:12.799] Mode selected P1: ATTACK
+[00:12.801] MSG: Player 2: tap a unit to attack.
+[00:13.122] Revealed: P1 (0,1) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:15.060] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:16.262] Dice rolled: 2
+[00:20.601] Crystals: P1 3000 → 2620 (-380)  [battle]
+[00:23.425] Attack P1(0,1)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=2  ATK=20 vs DEF=40  → LOSE
+[00:23.425] Reckoning overlay: P1 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=20 ATK pill=20 DEF pill=40 mod=+ATK 0 (20+0=20)
+[00:23.425] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:23.425] Anim: 3B  △ P1(0,1)
+[00:23.425] Card destroyed  P1 (0,1) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:23.919] Mode selected P1: ATTACK
+[00:23.923] MSG: Player 2: tap a unit to attack.
+[00:24.250] Revealed: P1 (2,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:26.151] Dice rolled: 5
+[00:26.158] MSG: Pyromancer wins!
+[00:29.048] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:33.251] Attack P1(2,3)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=5  ATK=80 vs DEF=40  → WIN
+[00:33.251] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=80 ATK pill=80 DEF pill=0 mod=+ATK 0 (80+0=80)
+[00:33.251] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:33.251] Anim: 3A  △ P0(0,2)
+[00:33.251] Card destroyed  P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:33.752] Turn ended  P1  |  Crystals P0=4450 P1=2620
+
+--- Turn 2  |  Player 0  |  Crystals P0=4450 P1=2620 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4450  P1: 2620  |  Turns: 2

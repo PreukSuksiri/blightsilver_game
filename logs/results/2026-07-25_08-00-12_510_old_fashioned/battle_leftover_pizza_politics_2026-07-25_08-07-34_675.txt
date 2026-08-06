@@ -1,0 +1,55 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-07-25 08:07:34.675
+Game Session of Old Fashioned (started 2026-07-25 08:00:12.510)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:11.227] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:23.955] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:23.981] Revealed: P1 (1,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:25.171] Dice rolled: 4
+[00:25.183] MSG: Scout Probe wins!
+[00:29.659] Crystals: P1 3000 → 2700 (-300)  [battle]
+[00:33.869] Attack P0(1,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=40 vs DEF=20  → WIN
+[00:33.870] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[00:33.870] Reckoning overlay: P1 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:33.870] Anim: 3A  △ P1(1,1)
+[00:33.870] Card destroyed  P1 (1,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:33.871] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[00:33.903] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:38.190] Revealed: P1 (2,1) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:38.190] MSG: Scout Probe: adjacent cell revealed.
+[00:58.782] MSG: Tap 2 material card(s) on the field.
+[00:59.632] MSG: 1 more material(s) needed.
+[01:01.832] Crystals: P0 5000 → 4200 (-800)  [union]
+[01:04.665] Revealed: P0 (1,1) "Dimensional Virus" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 800 | affinity Bio}
+[01:04.721] Union summoned P0: "Dimensional Virus" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 800 | affinity Bio} from "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[01:04.735] MSG: Player 1 summoned [Dimensional Virus] using: "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[01:13.458] Dice rolled: 5
+[01:13.564] MSG: Nothing happens — Dead End.
+[01:17.197] Attack P0(1,1)"Dimensional Virus" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 800 | affinity Bio} → P1(0,2)(empty)  Dice=5  → DEAD_END
+[01:17.197] Anim: 3F  (blank slot)
+[01:18.855] Turn ended  P0  |  Crystals P0=4200 P1=2700
+
+--- Turn 2  |  Player 1  |  Crystals P0=4200 P1=2700 ---
+[01:19.444] Mode selected P1: TECH
+[01:19.754] Tech played  P1: "Spy"
+[01:21.299] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:21.691] Revealed: P0 (3,3) "Spike Trap" {cost 800}
+[01:21.744] Tech resolved  P1
+[01:24.091] Crystals: P1 2700 → 2400 (-300)  [union]
+[01:26.916] Revealed: P1 (1,3) "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:26.958] Union summoned P1: "False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}
+[01:26.959] MSG: Player 2 summoned [False Prophet] using: "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}
+[01:30.342] Mode selected P1: ATTACK
+[01:30.348] MSG: Player 2: tap a unit to attack.
+[01:31.542] Dice rolled: 4
+[01:31.649] MSG: False Prophet wins!
+[01:34.787] MSG: False Prophet: -10 ATK & -10 DEF permanently (non-BIO battle).
+[01:36.166] Attack P1(1,3)"False Prophet" {Union ATK30 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P0(1,1)"Dimensional Virus" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 800 | affinity Bio}  Dice=4  ATK=30 vs DEF=0  → WIN
+[01:36.166] Reckon

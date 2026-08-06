@@ -1,0 +1,12 @@
+=== Battle of WiFi Router Funeral ===
+Battle started: 2026-07-21 12:05:04.087
+Game Session of Orange Juice (started 2026-07-21 12:04:57.234)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.092] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---

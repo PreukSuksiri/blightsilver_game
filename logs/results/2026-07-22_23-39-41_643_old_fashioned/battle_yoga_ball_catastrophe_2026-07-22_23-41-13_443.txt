@@ -1,0 +1,51 @@
+=== Battle of Yoga Ball Catastrophe ===
+Battle started: 2026-07-22 23:41:13.443
+Game Session of Old Fashioned (started 2026-07-22 23:39:41.643)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.133] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:08.536] Mode selected P1: TECH
+[00:08.848] Tech played  P1: "Spy"
+[00:10.428] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:12.123] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:13.660] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:13.665] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:14.066] Tech resolved  P1
+[00:14.302] Dead-end placed  P0 (1,0)
+[00:14.967] Mode selected P1: ATTACK
+[00:14.971] MSG: Player 2: tap a unit to attack.
+[00:15.297] Revealed: P1 (3,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:17.199] Dice rolled: 1
+[00:17.209] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Magical Butterfly!
+[00:17.209] MSG: Vampire Duchess wins!
+[00:21.249] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:25.470] Attack P1(3,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(3,2)"Magical Butterfly" {Unit ATK20 DEF20 | cost 180 | affinity Nature | base 10/10 | buff +permATK10, +permDEF10}  Dice=1  ATK=55 vs DEF=20  → WIN
+[00:25.470] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[00:25.470] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK20 DEF20 | cost 180 | affinity Nature | base 10/10 | buff +permATK10, +permDEF10} badge=20 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=20) MISMATCH
+[00:25.471] Anim: 3A  △ P0(3,2)
+[00:25.471] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK20 DEF20 | cost 180 | affinity Nature | base 10/10 | buff +permATK10, +permDEF10}
+[00:25.967] Mode selected P1: ATTACK
+[00:25.971] MSG: Player 2: tap a unit to attack.
+[00:26.314] Revealed: P1 (3,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:28.190] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:29.421] Dice rolled: 3
+[00:29.430] MSG: Trap triggered: Trap Hole!
+[00:31.819] Coin flip: Tails, Tails, Heads
+[00:34.570] MSG: Trap Hole: Tails, Tails, Heads.
+[00:34.571] Crystals: P1 3000 → 2980 (-20)  [trap]
+[00:36.335] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[00:37.695] Attack P1(3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(0,0)"Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[00:37.695] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+ATK 0 (15+0=15)
+[00:37.695] Anim: 3D  (attacker survives)
+[00:38.193] Turn ended  P1  |  Crystals P0=4820 P1=2980
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=2980 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4820  P1: 2980  |  Turns: 2

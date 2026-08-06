@@ -1,0 +1,67 @@
+=== Battle of Break Room Passive Aggression ===
+Battle started: 2026-07-15 21:46:26.448
+Game Session of Sparkling Water (started 2026-07-15 21:40:50.440)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.655] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:20.974] MSG: Tap 2 material card(s) on the field.
+[00:25.756] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:25.797] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:26.986] Dice rolled: 1
+[00:27.011] MSG: Dystopian Cultist wins!
+[00:30.248] Crystals: P1 3000 → 2200 (-800)  [battle]
+[00:35.462] Attack P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=1  ATK=65 vs DEF=20  → WIN
+[00:35.462] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[00:35.462] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:35.462] Anim: 3A  △ P1(0,2)
+[00:35.462] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:39.631] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:39.631] Revealed: P1 (1,0) "Decoy Puppet" {cost 100}
+[00:40.841] Dice rolled: 4
+[00:40.867] MSG: Trap triggered: Decoy Puppet!
+[00:44.099] Crystals: P1 2200 → 2100 (-100)  [trap cost]
+[00:47.918] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:49.303] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,0)"Decoy Puppet" {cost 100}  Dice=4  → Unit vs Trap
+[00:49.303] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=60 ATK pill=60 DEF pill=0 mod=+ATK 0 (60+0=60)
+[00:49.303] Anim: 3D  (attacker survives)
+[00:50.250] Turn ended  P0  |  Crystals P0=5000 P1=2100
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2100 ---
+[00:50.865] Mode selected P1: TECH
+[00:51.165] Crystals: P1 2100 → 1100 (-1000)  [tech cost]
+[00:54.984] Tech played  P1: "Accident"
+[00:56.524] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:56.921] Card destroyed  P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:56.928] Tech resolved  P1
+[00:57.827] Mode selected P1: ATTACK
+[00:57.830] MSG: Player 2: tap a unit to attack.
+[00:58.162] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:00.051] Dice rolled: 1
+[01:00.075] MSG: Lab Crawler wins!
+[01:04.203] Crystals: P0 5000 → 4450 (-550)  [battle]
+[01:09.415] Attack P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=1  ATK=95 vs DEF=0  → WIN
+[01:09.415] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=95 ATK pill=95 DEF pill=60 mod=+ATK 0 (95+0=95)
+[01:09.415] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:09.415] Anim: 3A  △ P0(2,0)
+[01:09.415] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:11.916] Turn ended  P1  |  Crystals P0=4450 P1=1100
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=1100 ---
+[01:18.970] MSG: Tap 2 material card(s) on the field.
+[01:20.008] MSG: 1 more material(s) needed.
+[01:20.885] Crystals: P0 4450 → 3450 (-1000)  [union]
+[01:24.719] Revealed: P0 (3,2) "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:24.787] Union summoned P0: "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[01:24.794] MSG: Player 1 summoned [Sand Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[01:31.537] Dice rolled: 5
+[01:31.636] MSG: Sand Elemental wins!
+[01:34.152] Crystals: P1 1100 → 0 (-1100)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3450  P1: 0  |  Turns: 3

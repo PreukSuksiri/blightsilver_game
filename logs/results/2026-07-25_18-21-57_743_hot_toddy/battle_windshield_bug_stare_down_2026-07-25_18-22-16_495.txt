@@ -1,0 +1,71 @@
+=== Battle of Windshield Bug Stare-Down ===
+Battle started: 2026-07-25 18:22:16.495
+Game Session of Hot Toddy (started 2026-07-25 18:21:57.743)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.054] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:17.483] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:17.483] Revealed: P1 (1,2) "Foul Gas" {cost 0}
+[00:18.712] Dice rolled: 3
+[00:18.720] MSG: Trap triggered: Foul Gas!
+[00:21.032] MSG: Foul Gas: All of Player 1's units -5 ATK this turn!
+[00:22.411] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,2)"Foul Gas" {cost 0}  Dice=3  → Unit vs Trap
+[00:22.411] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=60 ATK pill=60 DEF pill=0 mod=+ATK 0 (60+0=60)
+[00:22.411] Anim: 3D  (attacker survives)
+[00:28.172] MSG: Tap 2 material card(s) on the field.
+[00:29.205] MSG: 1 more material(s) needed.
+[00:31.849] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:34.665] Revealed: P0 (2,3) "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:34.720] Union summoned P0: "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[00:34.726] MSG: Player 1 summoned [Wood Elemental] using: "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[00:46.548] Revealed: P1 (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:47.728] Dice rolled: 3
+[00:50.533] Attack P0(2,3)"Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=3  ATK=65 vs DEF=85  → LOSE
+[00:50.533] Reckoning overlay: P0 "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=85 mod=+ATK 0 (65+0=65)
+[00:50.533] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=85 ATK pill=45 DEF pill=55 mod=+DEF 30 (55+30=85)
+[00:50.533] Anim: 3B  △ P0(2,3)
+[00:50.533] Card destroyed  P0 (2,3) "Wood Elemental" {Union ATK65 DEF85 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:10.397] Turn ended  P0  |  Crystals P0=4000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4000 P1=3000 ---
+[01:10.980] Mode selected P1: TECH
+[01:11.282] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:14.111] Tech played  P1: "Radar"
+[01:15.662] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:16.060] Revealed: P0 (3,4) "Red Card" {cost 0}
+[01:16.516] Revealed: P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:16.873] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[01:16.923] Tech resolved  P1
+[01:17.776] Mode selected P1: ATTACK
+[01:17.789] MSG: Player 2: tap a unit to attack.
+[01:18.984] Dice rolled: 1
+[01:18.997] MSG: Book with Fangs wins!
+[01:22.130] Crystals: P0 4000 → 3520 (-480)  [battle]
+[01:26.337] Attack P1(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(2,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=1  ATK=45 vs DEF=20  → WIN
+[01:26.337] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[01:26.337] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:26.337] Anim: 3A  △ P0(2,1)
+[01:26.337] Card destroyed  P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:26.825] Mode selected P1: ATTACK
+[01:26.829] MSG: Player 2: tap a unit to attack.
+[01:27.167] Revealed: P1 (2,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:29.056] Dice rolled: 4
+[01:29.060] MSG: Claw Mutant wins!
+[01:32.179] Crystals: P0 3520 → 2970 (-550)  [battle]
+[01:36.391] Attack P1(2,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=4  ATK=15 vs DEF=0  → WIN
+[01:36.392] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[01:36.392] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:36.392] Anim: 3A  △ P0(2,0)
+[01:36.392] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:36.883] Turn ended  P1  |  Crystals P0=2970 P1=2400
+
+--- Turn 3  |  Player 0  |  Crystals P0=2970 P1=2400 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 2970  P1: 2400  |  Turns: 3

@@ -1,0 +1,12 @@
+=== Battle of Mystery Remote Batteries ===
+Battle started: 2026-07-29 21:44:46.160
+Game Session of Oolong Tea (started 2026-07-29 21:43:23.566)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.368] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---

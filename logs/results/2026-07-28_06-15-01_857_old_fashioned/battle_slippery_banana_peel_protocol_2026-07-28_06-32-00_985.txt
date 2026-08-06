@@ -1,0 +1,135 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-07-28 06:32:00.985
+Game Session of Old Fashioned (started 2026-07-28 06:15:01.857)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:18.217] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[01:11.609] Revealed: P0 (0,3) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:11.643] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:16.598] Dice rolled: 1
+[01:16.604] MSG: Mysterious Miner wins!
+[01:28.797] Crystals: P1 3000 → 2720 (-280)  [battle]
+[01:46.127] Attack P0(0,3)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=1  ATK=25 vs DEF=20  → WIN
+[01:46.127] Reckoning overlay: P0 "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[01:46.127] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:46.127] Anim: 3A  △ P1(1,1)
+[01:46.127] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:46.128] MSG: Ability triggered: "Mysterious Miner" (reveal on win)
+[01:46.145] Target prompt: "Mysterious Miner: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:54.472] Revealed: P1 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:54.472] MSG: Revealed: Ox Patrol
+[02:10.329] Revealed: P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[02:15.727] Dice rolled: 3
+[02:29.260] Crystals: P0 5000 → 4600 (-400)  [battle]
+[02:41.510] Attack P0(1,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=40 vs DEF=45  → LOSE
+[02:41.510] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[02:41.510] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=45 ATK pill=30 DEF pill=35 mod=+DEF 10 (35+10=45)
+[02:41.510] Anim: 3B  △ P0(1,2)
+[02:41.510] Card destroyed  P0 (1,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[03:10.612] Turn ended  P0  |  Crystals P0=4600 P1=2720
+
+--- Turn 2  |  Player 1  |  Crystals P0=4600 P1=2720 ---
+[03:10.624] MSG: Lucia Gomez is Curious about 🥺
+[03:13.043] Mode selected P1: TECH
+[03:14.372] Tech played  P1: "Spy"
+[03:20.476] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:22.121] Tech resolved  P1
+[03:23.096] Dead-end placed  P0 (1,3)
+[03:25.785] Mode selected P1: ATTACK
+[03:30.751] Revealed: P0 (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[03:37.724] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[03:46.798] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:46.800] Turn ended  P1  |  Crystals P0=4600 P1=2720
+
+--- Turn 3  |  Player 0  |  Crystals P0=4600 P1=2720 ---
+[03:51.826] Ability choice: 1 (No)
+[03:51.830] Dice rolled: 1
+[03:51.832] MSG: Ox Patrol wins!
+[04:03.983] Crystals: P0 4600 → 4350 (-250)  [battle]
+[04:15.482] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(0,3)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=1  ATK=40 vs DEF=15  → WIN
+[04:15.482] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=40 ATK pill=30 DEF pill=35 mod=+ATK 10 (30+10=40)
+[04:15.482] Reckoning overlay: P1 "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:15.482] Anim: 3A  △ P1(0,3)
+[04:15.482] Card destroyed  P1 (0,3) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[05:52.867] Turn ended  P0  |  Crystals P0=4350 P1=2720
+
+--- Turn 4  |  Player 1  |  Crystals P0=4350 P1=2720 ---
+[05:52.876] MSG: Lucia Gomez is Curious about 🥺
+[05:55.280] Mode selected P1: TECH
+[05:56.528] Crystals: P1 2720 → 2120 (-600)  [tech cost]
+[06:07.710] Tech played  P1: "Radar"
+[06:13.824] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[06:15.458] Revealed: P0 (3,0) "Decoy Puppet" {cost 100}
+[06:18.090] Dead-end placed  P0 (2,3)
+[06:18.748] Tech resolved  P1
+[06:19.751] Dead-end placed  P0 (1,0)
+[06:22.447] Mode selected P1: ATTACK
+[06:27.478] Dice rolled: 3
+[06:27.482] MSG: Ox Patrol wins!
+[06:39.461] Crystals: P0 4350 → 4150 (-200)  [battle]
+[06:56.566] Attack P1(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P0(0,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=40 vs DEF=15  → WIN
+[06:56.567] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=40 ATK pill=30 DEF pill=35 mod=+ATK 10 (30+10=40)
+[06:56.567] Reckoning overlay: P0 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[06:56.567] Anim: 3A  △ P0(0,4)
+[06:56.567] Card destroyed  P0 (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[06:58.779] Mode selected P1: ATTACK
+[07:00.217] Revealed: P1 (3,2) "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima}
+[07:05.583] MSG: Ability triggered: "Lockpicker" (on expose reveal foe once)
+[07:05.602] Target prompt: "Lockpicker: Choose 1 foe cell to reveal."  filter=ability_lockpicker_reveal
+[07:08.747] Revealed: P0 (2,2) "Explosive Barrels" {cost 0}
+[07:14.033] Revealed: P0 (4,1) "Dark Tengu" {Unit ATK30 DEF30 | cost 250 | affinity Chaos}
+[07:14.033] MSG: Lockpicker: Revealed Dark Tengu!
+[07:14.191] Dice rolled: 1
+[07:14.194] MSG: Trap triggered: Explosive Barrels!
+[07:29.568] Crystals: P1 2120 → 1670 (-450)  [card lost]
+[07:44.622] Crystals: P0 4150 → 3700 (-450)  [trap]
+[07:57.231] MSG: Explosive Barrels: Lockpicker destroyed! Defender loses 450 Crystals.
+[07:57.238] Attack P1(3,2)"Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used} → P0(2,2)"Explosive Barrels" {cost 0}  Dice=1  → Unit vs Trap
+[07:57.238] Reckoning overlay: P1 "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used} badge=30 ATK pill=30 DEF pill=35 mod=+ATK 0 (30+0=30)
+[07:57.238] Anim: 3E  △ P1(3,2)
+[07:59.543] Turn ended  P1  |  Crystals P0=3700 P1=1670
+
+--- Turn 5  |  Player 0  |  Crystals P0=3700 P1=1670 ---
+[08:43.139] MSG: Tap 2 material card(s) on the field.
+[08:44.274] MSG: 1 more material(s) needed.
+[08:47.242] Crystals: P0 3700 → 2900 (-800)  [union]
+[08:58.504] Revealed: P0 (0,1) "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[08:58.527] Union summoned P0: "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}, "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down}
+[09:33.074] Dice rolled: 1
+[09:33.142] MSG: Ten Arms Yaksa wins!
+[09:45.602] Crystals: P1 1670 → 1250 (-420)  [battle]
+[09:57.247] Attack P0(0,1)"Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos} → P1(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=1  ATK=50 vs DEF=45  → WIN
+[09:57.248] Reckoning overlay: P0 "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[09:57.248] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=45 ATK pill=30 DEF pill=35 mod=+DEF 10 (35+10=45)
+[09:57.248] Anim: 3A  △ P1(2,2)
+[09:57.248] Card destroyed  P1 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[10:05.707] Revealed: P1 (3,1) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[10:10.757] Dice rolled: 5
+[10:10.820] MSG: Both cards are destroyed!
+[10:22.609] Crystals: P1 1250 → 350 (-900)  [battle]
+[10:33.991] Attack P0(0,1)"Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:1} → P1(3,1)"Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}  Dice=5  ATK=50 vs DEF=50  → TIE
+[10:33.991] Reckoning overlay: P0 "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:1} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[10:33.991] Reckoning overlay: P1 "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima} badge=50 ATK pill=75 DEF pill=50 mod=+DEF 0 (50+0=50)
+[10:33.991] Anim: 3C  △ P0(0,1) + △ P1(3,1)
+[10:33.991] Card destroyed  P0 (0,1) "Ten Arms Yaksa" {Union ATK50 DEF30 | destroy-cost 0 | summon-cost 800 | affinity Chaos | multi-atk:1}
+[10:33.991] Card destroyed  P1 (3,1) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[10:45.476] Crystals: P0 2900 → 2300 (-600)  [tech cost]
+[10:56.897] Tech played  P0: "Radar"
+[11:03.189] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[11:04.415] Revealed: P1 (1,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[11:06.978] Dead-end placed  P1 (3,0)
+[11:08.904] Tech resolved  P0
+[11:09.904] Dead-end placed  P1 (0,0)
+[11:22.374] Revealed: P0 (0,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[11:27.325] Dice rolled: 3
+[11:27.328] MSG: Poltergeist wins!
+[11:39.582] Crystals: P1 350 → 0 (-350)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2300  P1: 0  |  Turns: 5

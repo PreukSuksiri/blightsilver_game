@@ -326,10 +326,6 @@
 		"text": "If you're finished, talk to me."
 	},
 	{
-		"linger_characters": true,
-		"text": "(Use different tools in your inventory to gather information. Then talk to Kelly for concluding your verdict)"
-	},
-	{
 		"detective_note": [
 			{
 				"action": "unlock_topic",
@@ -349,6 +345,7 @@
 				"silent": true
 			}
 		],
-		"linger_characters": true
+		"linger_characters": true,
+		"text": "(Use different tools in your inventory to gather information. Then talk to Kelly for concluding your verdict)"
 	}
 ]

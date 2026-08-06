@@ -1,0 +1,16 @@
+=== Battle of Yoga Ball Catastrophe ===
+Battle started: 2026-07-02 18:00:29.164
+Game Session of Peppermint Tea (started 2026-07-02 18:00:20.517)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.986] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:24.140] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 5000  P1: 0  |  Turns: 1

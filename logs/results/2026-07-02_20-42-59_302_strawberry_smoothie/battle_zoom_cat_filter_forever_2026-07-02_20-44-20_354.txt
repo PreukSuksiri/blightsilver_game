@@ -1,0 +1,49 @@
+=== Battle of Zoom Cat Filter Forever ===
+Battle started: 2026-07-02 20:44:20.354
+Game Session of Strawberry Smoothie (started 2026-07-02 20:42:59.302)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.775] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:10.146] Mode selected P1: TECH
+[00:10.455] Tech played  P1: "Spy"
+[00:12.001] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:12.479] Revealed: P0 (3,2) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:12.482] Tech resolved  P1
+[00:13.323] Mode selected P1: ATTACK
+[00:13.325] MSG: Player 2: tap a unit to attack.
+[00:13.644] Revealed: P1 (0,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:15.543] Dice rolled: 4
+[00:15.566] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Demon Spawn!
+[00:15.566] MSG: Vampire Duchess wins!
+[00:20.110] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:25.311] Attack P1(0,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(3,2)"Demon Spawn" {Unit ATK35 DEF25 | cost 400 | affinity Chaos | base 35/25}  Dice=4  ATK=55 vs DEF=25  → WIN
+[00:25.311] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[00:25.311] Reckoning overlay: P0 "Demon Spawn" {Unit ATK35 DEF25 | cost 400 | affinity Chaos | base 35/25} badge=25 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=25) MISMATCH
+[00:25.311] Anim: 3A  △ P0(3,2)
+[00:25.311] Card destroyed  P0 (3,2) "Demon Spawn" {Unit ATK35 DEF25 | cost 400 | affinity Chaos | base 35/25}
+[00:25.808] Mode selected P1: ATTACK
+[00:25.810] MSG: Player 2: tap a unit to attack.
+[00:26.134] Revealed: P1 (0,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:28.045] Revealed: P0 (0,1) "Acid Trap Hole" {cost 0}
+[00:29.273] Dice rolled: 3
+[00:29.289] MSG: Trap triggered: Acid Trap Hole!
+[00:31.621] Coin flip: Tails, Heads
+[00:34.372] MSG: Acid Trap Hole: Tails, Heads.
+[00:34.373] Crystals: P1 3000 → 2950 (-50)  [trap]
+[00:37.807] MSG: Acid Trap Hole: 1 head(s) — Player 2 loses 50 Crystals!
+[00:39.171] Attack P1(0,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P0(0,1)"Acid Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[00:39.171] Reckoning overlay: P1 "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} badge=0 ATK pill=0 DEF pill=25 mod=+ATK 0 (0+0=0)
+[00:39.171] Anim: 3D  (attacker survives)
+[00:39.683] Turn ended  P1  |  Crystals P0=4600 P1=2950
+
+--- Turn 2  |  Player 0  |  Crystals P0=4600 P1=2950 ---
+[00:50.108] Crystals: P1 2950 → 0 (-2950)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4600  P1: 0  |  Turns: 2

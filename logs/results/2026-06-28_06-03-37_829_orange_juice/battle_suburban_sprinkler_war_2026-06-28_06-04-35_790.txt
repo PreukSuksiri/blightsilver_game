@@ -1,0 +1,57 @@
+=== Battle of Suburban Sprinkler War ===
+Battle started: 2026-06-28 06:04:35.790
+Game Session of Orange Juice (started 2026-06-28 06:03:37.829)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:16.739] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:38.812] Mode selected P1: TECH
+[00:40.098] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:52.068] Tech played  P1: "Radar"
+[00:58.727] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:00.634] Revealed: P0 (4,2) "Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima}
+[01:03.425] Dead-end placed  P0 (0,3)
+[01:04.110] Tech resolved  P1
+[01:05.070] Dead-end placed  P0 (4,1)
+[01:07.919] Mode selected P1: ATTACK
+[01:07.921] MSG: Player 2: tap a unit to attack.
+[01:09.239] Revealed: P1 (2,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:17.967] Dice rolled: 1
+[01:17.985] MSG: Book with Fangs wins!
+[01:30.435] Crystals: P0 5000 → 4720 (-280)  [battle]
+[01:48.542] Attack P1(2,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,2)"Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima}  Dice=1  ATK=45 vs DEF=15  → WIN
+[01:48.543] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[01:48.543] Reckoning overlay: P0 "Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:48.543] Anim: 3A  △ P0(4,2)
+[01:48.543] Card destroyed  P0 (4,2) "Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima}
+[01:59.884] Turn ended  P1  |  Crystals P0=4720 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4720 P1=4400 ---
+[02:17.287] MSG: Tap 2 material card(s) on the field.
+[02:19.841] MSG: 1 more material(s) needed.
+[02:21.294] Crystals: P0 4720 → 3720 (-1000)  [union]
+[02:33.085] Revealed: P0 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[02:33.115] Union summoned P0: "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} from "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}, "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}
+[02:33.120] MSG: Player 1 summoned [Kiba the Giant Slayer] using: "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}, "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}
+[02:57.279] Dice rolled: 3
+[02:57.519] MSG: Kiba the Giant Slayer wins!
+[03:10.723] Crystals: P1 4400 → 3600 (-800)  [battle]
+[03:28.853] Attack P0(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} → P1(2,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=3  ATK=80 vs DEF=55  → WIN
+[03:28.853] Reckoning overlay: P0 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=80 ATK pill=80 DEF pill=55 mod=+ATK 0 (80+0=80)
+[03:28.853] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=55 ATK pill=45 DEF pill=55 mod=+DEF 0 (55+0=55)
+[03:28.853] Anim: 3A  △ P1(2,4)
+[03:28.853] Card destroyed  P1 (2,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[03:34.815] Revealed: P0 (3,1) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[03:34.815] Revealed: P1 (1,1) "Street Joke" {cost 0}
+[03:40.456] Dice rolled: 1
+[03:40.469] MSG: Trap triggered: Street Joke!
+[03:52.718] Target prompt: "Street Joke: Choose 1 of your cells to reveal."  filter=trap_street_joke_reveal
+[04:01.264] Revealed: P1 (3,3) "Pepper Spray" {cost 0}
+[04:01.264] Crystals: P0 3720 → 3820 (+100)  [trap]
+[04:01.265] MSG: Street Joke: Revealed Pepper Spray — attacker gains 100 Crystals!
+[04:22.696] Attack P0(3,1)"Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima} → P1(1,1)"Street Joke" {cost 0}  

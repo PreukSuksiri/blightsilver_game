@@ -1,0 +1,34 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-07-25 16:49:40.793
+Game Session of Flat White (started 2026-07-25 16:41:32.219)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.015] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:18.847] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:20.068] Dice rolled: 5
+[00:20.103] MSG: Nothing happens — Dead End.
+[00:24.852] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[00:24.852] Anim: 3F  (blank slot)
+[00:56.782] Revealed: P1 (4,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:58.475] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[01:00.630] Ability choice: 1 (No)
+[01:00.637] Revealed: P0 (0,3) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[01:00.670] Revealed: P1 (1,2) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:01.860] Dice rolled: 3
+[01:01.870] MSG: Demon Spawn wins!
+[01:06.321] Crystals: P1 3000 → 2850 (-150)  [battle]
+[01:10.533] Attack P0(0,3)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(1,2)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=3  ATK=40 vs DEF=5  → WIN
+[01:10.533] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[01:10.533] Reckoning overlay: P1 "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} badge=5 ATK pill=20 DEF pill=5 mod=+DEF 0 (5+0=5)
+[01:10.533] Anim: 3A  △ P1(1,2)
+[01:10.533] Card destroyed  P1 (1,2) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:30.031] Crystals: P1 2850 → 0 (-2850)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 5000  P1: 0  |  Turns: 1

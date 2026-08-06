@@ -8,8 +8,9 @@
 				"sprite": "res://assets/textures/vn/monsters/battler_univ_meeting_room_ghost_2.png"
 			}
 		],
-		"sfx": "res://assets/audio/sfx/laugh_2.mp3",
+		"sfx": "res://assets/audio/sfx/mumbling/sfx_radio_mumbling_6.mp3",
 		"sfx_volume": 120.0,
+		"show_polaroid": "<null>",
 		"speaker": "???",
 		"text": "(**mumbling**)"
 	},
@@ -108,11 +109,12 @@
 			"Radar",
 			"War Supply"
 		],
+		"battle_use_exploration_bg": true,
 		"linger_characters": true,
 		"player1_name": "Nexus Crowmont",
-		"player2_name": "Stained Doll",
-		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png",
-		"battle_use_exploration_bg": true,
+		"player2_name": "Lucid Man",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_meeting_room_ghost.png",
+		"show_polaroid": "<null>",
 		"start_battle": true
 	}
 ]

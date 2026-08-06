@@ -1,0 +1,123 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-07-28 03:49:48.881
+Game Session of Peppermint Tea (started 2026-07-28 03:46:25.755)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:28.539] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:49.788] Mode selected P1: TECH
+[00:51.075] Tech played  P1: "Spy"
+[00:57.040] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:58.683] Revealed: P0 (4,2) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[00:58.685] Tech resolved  P1
+[01:02.328] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:02.328] Mode selected P1: ATTACK
+[01:03.588] Revealed: P1 (0,4) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:11.236] Dice rolled: 4
+[01:11.248] MSG: Gryphon wins!
+[01:23.195] Crystals: P0 5000 → 4200 (-800)  [battle]
+[01:39.973] Attack P1(0,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(4,2)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}  Dice=4  ATK=100 vs DEF=60  → WIN
+[01:39.973] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=100 ATK pill=100 DEF pill=85 mod=+ATK 0 (100+0=100)
+[01:39.973] Reckoning overlay: P0 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=60 ATK pill=20 DEF pill=60 mod=+DEF 0 (60+0=60)
+[01:39.973] Anim: 3A  △ P0(4,2)
+[01:39.973] Card destroyed  P0 (4,2) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[01:42.124] Mode selected P1: ATTACK
+[01:43.486] Revealed: P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:51.685] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[01:56.864] Dice rolled: 4
+[01:56.870] MSG: Trap triggered: Pepper Spray!
+[02:07.927] Coin flip: Tails, Tails
+[02:19.800] MSG: Pepper Spray: Tails, Tails.
+[02:19.800] MSG: No heads — no effect.
+[02:25.859] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(2,2)"Pepper Spray" {cost 0}  Dice=4  → Unit vs Trap
+[02:25.859] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[02:25.859] Anim: 3D  (attacker survives)
+[02:28.083] Turn ended  P1  |  Crystals P0=4200 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=3000 ---
+[02:55.147] MSG: Tap 2 material card(s) on the field.
+[02:56.330] MSG: 1 more material(s) needed.
+[02:57.506] Crystals: P0 4200 → 3200 (-1000)  [union]
+[03:08.669] Revealed: P0 (3,3) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[03:08.702] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[03:51.531] Dice rolled: 3
+[03:51.596] MSG: Sand Elemental wins!
+[04:03.635] Crystals: P1 3000 → 1850 (-1150)  [battle]
+[04:20.700] Attack P0(3,3)"Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(0,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=3  ATK=90 vs DEF=85  → WIN
+[04:20.700] Reckoning overlay: P0 "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=90 ATK pill=40 DEF pill=40 mod=+ATK 50 (40+50=90)
+[04:20.700] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=85 ATK pill=100 DEF pill=85 mod=+DEF 0 (85+0=85)
+[04:20.700] Anim: 3A  △ P1(0,4)
+[04:20.700] Card destroyed  P1 (0,4) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[04:37.945] Revealed: P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[04:43.359] Dice rolled: 1
+[04:43.365] MSG: Nanomites Beast wins!
+[04:56.055] Crystals: P1 1850 → 1350 (-500)  [battle]
+[05:14.879] Attack P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=1  ATK=50 vs DEF=10  → WIN
+[05:14.880] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[05:14.880] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=10 ATK pill=50 DEF pill=10 mod=+DEF 0 (10+0=10)
+[05:14.880] Anim: 3A  △ P1(0,0)
+[05:14.880] Card destroyed  P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[05:25.095] Turn ended  P0  |  Crystals P0=3200 P1=1350
+
+--- Turn 3  |  Player 1  |  Crystals P0=3200 P1=1350 ---
+[05:27.509] Mode selected P1: TECH
+[05:28.741] Crystals: P1 1350 → 750 (-600)  [tech cost]
+[05:40.044] Tech played  P1: "Radar"
+[05:46.170] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[05:48.787] Dead-end placed  P0 (3,4)
+[05:49.483] Revealed: P0 (3,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[05:51.141] Revealed: P0 (4,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[05:51.145] Tech resolved  P1
+[05:54.846] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[05:54.847] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[05:54.847] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[05:54.847] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[05:54.847] Mode selected P1: ATTACK
+[05:56.140] Revealed: P1 (4,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[06:03.981] Dice rolled: 4
+[06:04.015] Coin flip: Heads
+[06:15.340] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[06:15.357] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[06:15.358] MSG: Joseph the Battle Priest wins!
+[06:27.561] Crystals: P0 3200 → 2400 (-800)  [battle]
+[06:44.307] Attack P1(4,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(0,2)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=4  ATK=70 vs DEF=55  → WIN
+[06:44.307] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=70 ATK pill=60 DEF pill=25 mod=+ATK 10 (60+10=70)
+[06:44.307] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[06:44.307] Anim: 3A  △ P0(0,2)
+[06:44.307] Card destroyed  P0 (0,2) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[06:46.416] Mode selected P1: ATTACK
+[06:47.727] Revealed: P1 (1,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[06:55.864] Dice rolled: 3
+[06:55.867] MSG: Sniping Fairy wins!
+[07:08.427] Crystals: P0 2400 → 1920 (-480)  [battle]
+[07:26.149] Attack P1(1,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P0(3,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=3  ATK=40 vs DEF=20  → WIN
+[07:26.149] Reckoning overlay: P1 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[07:26.149] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:26.149] Anim: 3A  △ P0(3,0)
+[07:26.149] Card destroyed  P0 (3,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[07:28.331] MSG: Ability triggered: "Sniping Fairy" (atk penalty when exposed)
+[07:34.907] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[07:34.910] Turn ended  P1  |  Crystals P0=1920 P1=750
+
+--- Turn 4  |  Player 0  |  Crystals P0=1920 P1=750 ---
+[07:57.805] Revealed: P0 (0,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[08:02.739] Dice rolled: 2
+[08:02.745] MSG: Dystopian Cultist wins!
+[08:14.764] Crystals: P1 750 → 150 (-600)  [battle]
+[08:31.836] Attack P0(0,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(4,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=2  ATK=65 vs DEF=25  → WIN
+[08:31.837] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[08:31.837] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=25 ATK pill=60 DEF pill=25 mod=+DEF 0 (25+0=25)
+[08:31.837] Anim: 3A  △ P1(4,4)
+[08:31.837] Card destroyed  P1 (4,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[08:40.578] Revealed: P0 (1,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[08:45.935] Dice rolled: 3
+[08:45.942] MSG: Scout Probe wins!
+[08:58.856] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1920  P1: 0  |  Turns: 4

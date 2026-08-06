@@ -1,0 +1,37 @@
+=== Battle of Windy Day Hair Crisis ===
+Battle started: 2026-07-25 17:35:32.368
+Game Session of Cold Brew (started 2026-07-25 17:33:00.820)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.925] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:09.062] Mode selected P1: TECH
+[00:09.361] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:12.190] Tech played  P1: "Radar"
+[00:13.740] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:14.375] Dead-end placed  P0 (1,4)
+[00:14.562] Revealed: P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:14.922] Tech resolved  P1
+[00:15.165] Dead-end placed  P0 (0,1)
+[00:15.823] Mode selected P1: ATTACK
+[00:15.827] MSG: Player 2: tap a unit to attack.
+[00:16.154] Revealed: P1 (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:18.086] Dice rolled: 5
+[00:18.096] MSG: Aerial the Battlemage wins!
+[00:21.447] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:25.655] Attack P1(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(2,3)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}  Dice=5  ATK=50 vs DEF=35  → WIN
+[00:25.655] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[00:25.655] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=35 ATK pill=25 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:25.655] Anim: 3A  △ P0(2,3)
+[00:25.655] Card destroyed  P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:28.162] Turn ended  P1  |  Crystals P0=4620 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=2400 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4620  P1: 2400  |  Turns: 2

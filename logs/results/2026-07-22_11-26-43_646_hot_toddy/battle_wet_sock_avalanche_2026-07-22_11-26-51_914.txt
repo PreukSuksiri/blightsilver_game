@@ -1,0 +1,12 @@
+=== Battle of Wet Sock Avalanche ===
+Battle started: 2026-07-22 11:26:51.914
+Game Session of Hot Toddy (started 2026-07-22 11:26:43.646)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.506] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---

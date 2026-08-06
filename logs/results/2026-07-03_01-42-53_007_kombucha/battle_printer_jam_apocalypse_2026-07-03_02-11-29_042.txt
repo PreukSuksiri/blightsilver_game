@@ -1,0 +1,111 @@
+=== Battle of Printer Jam Apocalypse ===
+Battle started: 2026-07-03 02:11:29.042
+Game Session of Kombucha (started 2026-07-03 01:42:53.007)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.588] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:18.259] Revealed: P0 (1,1) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[00:18.259] Revealed: P1 (0,1) "Red Card" {cost 0}
+[00:19.487] Dice rolled: 4
+[00:19.506] MSG: Trap triggered: Red Card!
+[00:21.779] Coin flip: Heads, Heads
+[00:24.538] MSG: Red Card: Heads, Heads.
+[00:24.538] MSG: Both heads! Mad Wyvern cannot attack next turn!
+[00:25.901] Attack P0(1,1)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(0,1)"Red Card" {cost 0}  Dice=4  → Unit vs Trap
+[00:25.901] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[00:25.901] Anim: 3D  (attacker survives)
+[00:29.992] Revealed: P0 (4,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:30.016] Revealed: P1 (4,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:31.222] Dice rolled: 3
+[00:31.249] MSG: Bladeshifter morphs: -40 DEF, +40 ATK permanently!
+[00:36.163] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:40.025] Attack P0(4,2)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P1(4,0)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used}  Dice=3  ATK=40 vs DEF=50  → LOSE
+[00:40.025] Reckoning overlay: P0 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:40.025] Reckoning overlay: P1 "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:40.025] Anim: 3B  △ P0(4,2)
+[00:40.025] Card destroyed  P0 (4,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:41.605] Turn ended  P0  |  Crystals P0=4600 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4600 P1=3000 ---
+[00:42.205] Mode selected P1: TECH
+[00:42.505] Crystals: P1 3000 → 2000 (-1000)  [tech cost]
+[00:46.338] Tech played  P1: "Accident"
+[00:47.889] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:48.288] Card destroyed  P0 (1,1) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane | cannot-atk≤T3}
+[00:48.291] Tech resolved  P1
+[00:49.192] Mode selected P1: ATTACK
+[00:49.195] MSG: Player 2: tap a unit to attack.
+[00:50.416] Revealed: P0 (4,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:51.620] Dice rolled: 1
+[00:51.646] MSG: Bladeshifter wins!
+[00:54.834] Crystals: P0 4600 → 4100 (-500)  [battle]
+[01:00.030] Attack P1(4,0)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} → P0(4,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=1  ATK=40 vs DEF=10  → WIN
+[01:00.030] Reckoning overlay: P1 "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[01:00.030] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=10 ATK pill=50 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:00.030] Anim: 3A  △ P0(4,0)
+[01:00.030] Card destroyed  P0 (4,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:00.533] Mode selected P1: ATTACK
+[01:00.538] MSG: Player 2: tap a unit to attack.
+[01:00.856] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:03.002] Dice rolled: 2
+[01:03.040] MSG: Nothing happens — Dead End.
+[01:06.361] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(4,3)(empty)  Dice=2  → DEAD_END
+[01:06.361] Anim: 3F  (blank slot)
+[01:06.868] Turn ended  P1  |  Crystals P0=4100 P1=2000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4100 P1=2000 ---
+[01:12.382] MSG: Tap 2 material card(s) on the field.
+[01:12.862] MSG: 1 more material(s) needed.
+[01:13.354] Crystals: P0 4100 → 3100 (-1000)  [union]
+[01:17.190] Revealed: P0 (3,2) "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:17.226] Union summoned P0: "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[01:17.246] MSG: Player 1 summoned [Sand Elemental] using: "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}
+[01:25.979] Dice rolled: 1
+[01:26.052] MSG: Sand Elemental wins!
+[01:30.121] Crystals: P1 2000 → 1200 (-800)  [battle]
+[01:35.366] Attack P0(3,2)"Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=1  ATK=105 vs DEF=20  → WIN
+[01:35.366] Reckoning overlay: P0 "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=105 ATK pill=55 DEF pill=55 mod=+ATK 50 (55+50=105)
+[01:35.366] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:35.366] Anim: 3A  △ P1(0,2)
+[01:35.366] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:39.370] Turn ended  P0  |  Crystals P0=3100 P1=1200
+
+--- Turn 4  |  Player 1  |  Crystals P0=3100 P1=1200 ---
+[01:39.967] Mode selected P1: TECH
+[01:40.270] Crystals: P1 1200 → 200 (-1000)  [tech cost]
+[01:44.103] Tech played  P1: "Illegal Steroid"
+[01:45.668] Target prompt: "Choose 1 of your units to boost."  filter=own_faceup_character
+[01:46.084] Revealed: P1 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:46.084] MSG: Illegal Steroid: Pit Lord gains +30 ATK this attack.
+[01:46.087] Tech resolved  P1
+[01:46.966] Mode selected P1: ATTACK
+[01:46.969] MSG: Player 2: tap a unit to attack.
+[01:48.168] Dice rolled: 1
+[01:48.224] MSG: Pit Lord wins!
+[01:54.027] Attack P1(4,2)"Pit Lord" {Unit ATK90 DEF50 | cost 1250 | affinity Chaos | base 60/50 | buff +tempATK30 | halved} → P0(3,2)"Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}  Dice=1  ATK=150 vs DEF=105  → WIN
+[01:54.027] Reckoning overlay: P1 "Pit Lord" {Unit ATK90 DEF50 | cost 1250 | affinity Chaos | base 60/50 | buff +tempATK30 | halved} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[01:54.027] Reckoning overlay: P0 "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=105 ATK pill=55 DEF pill=55 mod=+DEF 50 (55+50=105)
+[01:54.027] Anim: 3A  △ P0(3,2)
+[01:54.027] Card destroyed  P0 (3,2) "Sand Elemental" {Union ATK55 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:54.527] Mode selected P1: ATTACK
+[01:54.534] MSG: Player 2: tap a unit to attack.
+[01:55.966] Dice rolled: 4
+[01:55.990] MSG: Nothing happens — Dead End.
+[01:59.760] Attack P1(4,0)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} → P0(4,1)(empty)  Dice=4  → DEAD_END
+[01:59.760] Anim: 3F  (blank slot)
+[02:00.261] Turn ended  P1  |  Crystals P0=3100 P1=200
+
+--- Turn 5  |  Player 0  |  Crystals P0=3100 P1=200 ---
+[02:15.081] Revealed: P0 (2,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:16.298] Dice rolled: 3
+[02:16.315] MSG: Aerial the Battlemage wins!
+[02:18.857] Crystals: P1 200 → 0 (-200)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3100  P1: 0  |  Turns: 5

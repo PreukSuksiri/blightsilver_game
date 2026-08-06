@@ -3,6 +3,8 @@ extends Control
 const MAIN_MENU := "res://scenes/main_menu.tscn"
 const DriftingCardsScript = preload("res://scripts/DriftingCards.gd")
 const FADE_OUT_DUR := 1.0
+## Threaded main-menu load can stall at IN_PROGRESS in the editor; fall back to sync.
+const MENU_LOAD_TIMEOUT_SEC := 8.0
 
 @onready var logo: Control = $LogoRoot
 @onready var overlay: ColorRect = $FadeOverlay
@@ -104,21 +106,44 @@ func _bootstrap_parallel(state: Dictionary) -> void:
 func _load_menu_parallel(state: Dictionary) -> void:
 	StartupLoadDebug.log("SplashScreen.menu_load: polling threaded status…")
 	var polls := 0
+	var t0_ms: int = Time.get_ticks_msec()
 	while _load_errors.is_empty():
-		var status: int = ResourceLoader.load_threaded_get_status(MAIN_MENU)
+		var progress: Array = []
+		var status: int = ResourceLoader.load_threaded_get_status(MAIN_MENU, progress)
 		if status == ResourceLoader.THREAD_LOAD_LOADED:
 			state["packed_menu"] = ResourceLoader.load_threaded_get(MAIN_MENU) as PackedScene
 			state["menu_done"] = true
 			StartupLoadDebug.log("SplashScreen.menu_load: complete (%d polls)" % polls)
 			return
-		if status == ResourceLoader.THREAD_LOAD_FAILED:
+		if status == ResourceLoader.THREAD_LOAD_FAILED \
+				or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			_load_errors.append("Main menu failed to load.")
 			state["menu_done"] = true
-			StartupLoadDebug.log("SplashScreen.menu_load: FAILED")
+			StartupLoadDebug.log("SplashScreen.menu_load: FAILED (status=%d)" % status)
+			return
+		var elapsed_s: float = float(Time.get_ticks_msec() - t0_ms) / 1000.0
+		if elapsed_s >= MENU_LOAD_TIMEOUT_SEC:
+			var pct: float = float(progress[0]) * 100.0 if not progress.is_empty() else -1.0
+			StartupLoadDebug.log(
+				"SplashScreen.menu_load: TIMEOUT after %.1fs (poll %d, status=%d, progress=%.0f%%) — sync fallback"
+				% [elapsed_s, polls, status, pct]
+			)
+			var packed: PackedScene = load(MAIN_MENU) as PackedScene
+			if packed != null:
+				state["packed_menu"] = packed
+				StartupLoadDebug.log("SplashScreen.menu_load: sync fallback OK")
+			else:
+				_load_errors.append("Main menu failed to load (timed out).")
+				StartupLoadDebug.log("SplashScreen.menu_load: sync fallback FAILED")
+			state["menu_done"] = true
 			return
 		polls += 1
 		if polls % 120 == 0:
-			StartupLoadDebug.log("SplashScreen.menu_load: still loading (poll %d, status=%d)" % [polls, status])
+			var pct_log: float = float(progress[0]) * 100.0 if not progress.is_empty() else -1.0
+			StartupLoadDebug.log(
+				"SplashScreen.menu_load: still loading (poll %d, status=%d, progress=%.0f%%, %.1fs)"
+				% [polls, status, pct_log, elapsed_s]
+			)
 		await get_tree().process_frame
 	state["menu_done"] = true
 

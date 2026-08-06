@@ -1,0 +1,79 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-08-06 04:05:54.411
+Game Session of Hot Cocoa (started 2026-08-06 04:05:21.674)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.285] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:24.854] MSG: Tap 2 material card(s) on the field.
+[00:25.297] MSG: 1 more material(s) needed.
+[00:26.119] Crystals: P0 5000 → 3500 (-1500)  [union]
+[00:28.937] Revealed: P0 (0,1) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[00:28.992] Union summoned P0: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}, "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[00:36.369] Revealed: P1 (1,2) "Flame Trap" {cost 200}
+[00:37.620] Dice rolled: 5
+[00:37.648] MSG: Trap triggered: Flame Trap!
+[00:41.726] Crystals: P1 3000 → 2800 (-200)  [trap cost]
+[00:44.549] MSG: Flame Trap: Seraphim Fistmaster debuffed!
+[00:45.954] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(1,2)"Flame Trap" {cost 200}  Dice=5  → Unit vs Trap
+[00:45.954] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=120 ATK pill=120 DEF pill=120 mod=+ATK 0 (120+0=120)
+[00:45.954] Anim: 3D  (attacker survives)
+[00:59.138] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:59.188] Revealed: P1 (3,1) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[01:00.362] Dice rolled: 3
+[01:00.372] MSG: Pit Lord wins!
+[01:04.738] Crystals: P1 2800 → 1900 (-900)  [battle]
+[01:08.954] Attack P0(4,0)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(3,1)"Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}  Dice=3  ATK=120 vs DEF=50  → WIN
+[01:08.954] Reckoning overlay: P0 "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[01:08.954] Reckoning overlay: P1 "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima} badge=50 ATK pill=75 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:08.954] Anim: 3A  △ P1(3,1)
+[01:08.954] Card destroyed  P1 (3,1) "Zealot" {Unit ATK75 DEF50 | cost 900 | affinity Anima}
+[02:18.696] Turn ended  P0  |  Crystals P0=3500 P1=1900
+
+--- Turn 2  |  Player 1  |  Crystals P0=3500 P1=1900 ---
+[02:21.176] Mode selected P1: TECH
+[02:21.473] Crystals: P1 1900 → 1300 (-600)  [tech cost]
+[02:24.304] Tech played  P1: "Radar"
+[02:25.851] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[02:26.488] Dead-end placed  P0 (3,1)
+[02:26.888] Revealed: P0 (4,3) "Alarm" {cost 0}
+[02:28.528] Revealed: P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[02:29.743] Tech resolved  P1
+[02:30.647] Mode selected P1: ATTACK
+[02:30.944] Revealed: P1 (0,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[02:32.898] Dice rolled: 3
+[02:32.910] MSG: Tomb Bandit wins!
+[02:36.903] Crystals: P0 3500 → 2250 (-1250)  [battle]
+[02:41.110] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,0)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=3  ATK=75 vs DEF=50  → WIN
+[02:41.110] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[02:41.110] Reckoning overlay: P0 "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} badge=50 ATK pill=60 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:41.110] Anim: 3A  △ P0(4,0)
+[02:41.110] Card destroyed  P0 (4,0) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[02:43.607] Turn ended  P1  |  Crystals P0=2250 P1=1300
+
+--- Turn 3  |  Player 0  |  Crystals P0=2250 P1=1300 ---
+[02:51.029] Dice rolled: 3
+[02:51.052] MSG: Seraphim Fistmaster wins!
+[02:55.523] Crystals: P1 1300 → 300 (-1000)  [battle]
+[02:59.735] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK110 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 110/120} → P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=3  ATK=110 vs DEF=60  → WIN
+[02:59.735] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK110 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 110/120} badge=110 ATK pill=110 DEF pill=120 mod=+ATK 0 (110+0=110)
+[02:59.735] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[02:59.735] Anim: 3A  △ P1(0,0)
+[02:59.735] Card destroyed  P1 (0,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[03:02.062] Tech played  P0: "Tease"
+[03:03.596] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:04.040] Revealed: P1 (0,4) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[03:05.226] MSG: Tease: Opponent revealed Ox Patrol.
+[03:05.423] Tech resolved  P0
+[03:13.405] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[03:14.632] Dice rolled: 3
+[03:14.640] MSG: Spear Shark wins!
+[03:17.866] Crystals: P1 300 → 0 (-300)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2250  P1: 0  |  Turns: 3

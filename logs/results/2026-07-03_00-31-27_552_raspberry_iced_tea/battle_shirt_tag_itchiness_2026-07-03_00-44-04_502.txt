@@ -1,0 +1,177 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-07-03 00:44:04.502
+Game Session of Raspberry Iced Tea (started 2026-07-03 00:31:27.552)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.884] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:32.465] Revealed: P0 (3,3) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[00:32.500] Revealed: P1 (2,1) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:33.692] Dice rolled: 1
+[00:33.722] MSG: Spell Sniper wins!
+[00:37.990] Crystals: P1 5000 → 4750 (-250)  [battle]
+[00:43.183] Attack P0(3,3)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P1(2,1)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}  Dice=1  ATK=70 vs DEF=10  → WIN
+[00:43.183] Reckoning overlay: P0 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=70 ATK pill=20 DEF pill=50 mod=+ATK 50 (20+50=70)
+[00:43.183] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:43.183] Anim: 3A  △ P1(2,1)
+[00:43.183] Card destroyed  P1 (2,1) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:47.144] Revealed: P0 (2,3) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:48.362] Dice rolled: 5
+[00:48.409] MSG: Nothing happens — Dead End.
+[00:51.448] Attack P0(2,3)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:51.448] Anim: 3F  (blank slot)
+[00:55.170] Turn ended  P0  |  Crystals P0=5000 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4750 ---
+[00:55.771] Mode selected P1: TECH
+[00:56.069] Crystals: P1 4750 → 4150 (-600)  [tech cost]
+[00:59.900] Tech played  P1: "Radar"
+[01:01.440] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:02.078] Dead-end placed  P0 (4,1)
+[01:02.477] Dead-end placed  P0 (0,3)
+[01:02.636] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[01:02.677] Tech resolved  P1
+[01:03.553] Mode selected P1: ATTACK
+[01:03.556] MSG: Player 2: tap a unit to attack.
+[01:03.890] Revealed: P1 (2,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:05.777] Dice rolled: 3
+[01:05.798] MSG: Book with Fangs wins!
+[01:09.261] Crystals: P0 5000 → 4300 (-700)  [battle]
+[01:14.469] Attack P1(2,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(3,3)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}  Dice=3  ATK=75 vs DEF=50  → WIN
+[01:14.469] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=75 ATK pill=45 DEF pill=55 mod=+ATK 30 (45+30=75)
+[01:14.469] Reckoning overlay: P0 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:14.469] Anim: 3A  △ P0(3,3)
+[01:14.469] Card destroyed  P0 (3,3) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[01:14.975] Mode selected P1: ATTACK
+[01:14.979] MSG: Player 2: tap a unit to attack.
+[01:15.320] Revealed: P1 (2,2) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[01:17.248] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:18.428] Dice rolled: 5
+[01:18.455] MSG: Both cards are destroyed!
+[01:22.833] Crystals: P1 4150 → 3650 (-500)  [battle]
+[01:26.674] Crystals: P0 4300 → 4000 (-300)  [battle]
+[01:30.573] Coin flip: Tails, Tails
+[01:33.303] MSG: Lightning Hawk: Coin flip failed — no extra attack.
+[01:33.307] Attack P1(2,2)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=20 vs DEF=20  → TIE
+[01:33.307] Reckoning overlay: P1 "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[01:33.307] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:33.307] Anim: 3C  △ P1(2,2) + △ P0(0,2)
+[01:33.307] Card destroyed  P1 (2,2) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[01:33.307] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:33.808] Turn ended  P1  |  Crystals P0=4000 P1=3650
+
+--- Turn 3  |  Player 0  |  Crystals P0=4000 P1=3650 ---
+[01:38.790] Tech played  P0: "Tease"
+[01:40.328] MSG: Opponent must choose and reveal 1 of their squares.
+[01:40.329] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[01:40.766] Revealed: P1 (4,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[01:40.766] MSG: Tease: Opponent revealed Elemental Master.
+[01:40.963] Tech resolved  P0
+[02:24.051] Revealed: P0 (3,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[02:24.056] Revealed: P1 (1,0) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[02:25.262] Dice rolled: 5
+[02:29.207] Crystals: P0 4000 → 3650 (-350)  [battle]
+[02:33.061] Attack P0(3,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(1,0)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}  Dice=5  ATK=40 vs DEF=50  → LOSE
+[02:33.061] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[02:33.061] Reckoning overlay: P1 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:33.061] Anim: 3B  △ P0(3,1)
+[02:33.061] Card destroyed  P0 (3,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[02:35.038] Turn ended  P0  |  Crystals P0=3650 P1=3650
+
+--- Turn 4  |  Player 1  |  Crystals P0=3650 P1=3650 ---
+[02:35.631] Mode selected P1: TECH
+[02:35.941] Tech played  P1: "Tease"
+[02:37.486] MSG: Opponent must choose and reveal 1 of their squares.
+[02:37.694] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:43.248] Revealed: P0 (2,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:43.248] MSG: Tease: Opponent revealed Silver Spearman.
+[02:43.254] Tech resolved  P1
+[02:44.128] Mode selected P1: ATTACK
+[02:44.134] MSG: Player 2: tap a unit to attack.
+[02:45.331] Dice rolled: 3
+[02:45.353] MSG: Book with Fangs wins!
+[02:49.190] Crystals: P0 3650 → 3400 (-250)  [battle]
+[02:54.399] Attack P1(2,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(2,3)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=3  ATK=45 vs DEF=20  → WIN
+[02:54.399] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[02:54.399] Reckoning overlay: P0 "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:54.399] Anim: 3A  △ P0(2,3)
+[02:54.399] Card destroyed  P0 (2,3) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:54.906] Mode selected P1: ATTACK
+[02:54.913] MSG: Player 2: tap a unit to attack.
+[02:55.243] Revealed: P1 (2,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[02:57.143] Dice rolled: 5
+[02:57.160] MSG: Mars Drill wins!
+[03:01.615] Crystals: P0 3400 → 3150 (-250)  [battle]
+[03:06.846] Attack P1(2,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(2,1)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=5  ATK=40 vs DEF=20  → WIN
+[03:06.846] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[03:06.846] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:06.846] Anim: 3A  △ P0(2,1)
+[03:06.846] Card destroyed  P0 (2,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[03:07.335] Turn ended  P1  |  Crystals P0=3150 P1=3650
+
+--- Turn 5  |  Player 0  |  Crystals P0=3150 P1=3650 ---
+[03:21.545] Revealed: P0 (2,0) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:22.765] Dice rolled: 2
+[03:22.789] MSG: Scout Probe wins!
+[03:26.290] Crystals: P1 3650 → 3250 (-400)  [battle]
+[03:31.490] Attack P0(2,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=2  ATK=40 vs DEF=30  → WIN
+[03:31.490] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[03:31.490] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:31.490] Anim: 3A  △ P1(2,0)
+[03:31.490] Card destroyed  P1 (2,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:31.490] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[03:31.523] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[03:35.353] Revealed: P1 (3,0) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[03:35.353] MSG: Scout Probe: adjacent cell revealed.
+[03:46.763] Revealed: P0 (3,0) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[03:47.962] Dice rolled: 4
+[03:47.989] MSG: Black Worms wins!
+[03:52.008] Crystals: P1 3250 → 2700 (-550)  [battle]
+[03:57.211] Attack P0(3,0)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P1(3,0)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}  Dice=4  ATK=45 vs DEF=40  → WIN
+[03:57.211] Reckoning overlay: P0 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[03:57.211] Reckoning overlay: P1 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[03:57.211] Anim: 3A  △ P1(3,0)
+[03:57.211] Card destroyed  P1 (3,0) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[03:59.160] Turn ended  P0  |  Crystals P0=3150 P1=2700
+
+--- Turn 6  |  Player 1  |  Crystals P0=3150 P1=2700 ---
+[03:59.776] Mode selected P1: TECH
+[04:00.082] Tech played  P1: "Bribe"
+[04:01.616] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[04:04.232] MSG: Bribe: Opponent passed.
+[04:04.239] Tech resolved  P1
+[04:06.616] Crystals: P1 2700 → 1700 (-1000)  [union]
+[04:10.458] Revealed: P1 (0,3) "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[04:10.506] Union summoned P1: "Thunder Elemental" {Union ATK150 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 90/55 | buff +auraATK60} from "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[04:10.506] MSG: Player 2 summoned [Thunder Elemental] using: "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[04:13.892] Mode selected P1: ATTACK
+[04:13.897] MSG: Player 2: tap a unit to attack.
+[04:15.102] Dice rolled: 5
+[04:15.194] MSG: Thunder Elemental wins!
+[04:19.591] Crystals: P0 3150 → 2450 (-700)  [battle]
+[04:24.799] Attack P1(0,3)"Thunder Elemental" {Union ATK150 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 90/55 | buff +auraATK60} → P0(2,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=5  ATK=150 vs DEF=50  → WIN
+[04:24.799] Reckoning overlay: P1 "Thunder Elemental" {Union ATK150 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 90/55 | buff +auraATK60} badge=150 ATK pill=150 DEF pill=55 mod=+ATK 0 (150+0=150)
+[04:24.799] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[04:24.799] Anim: 3A  △ P0(2,0)
+[04:24.799] Card destroyed  P0 (2,0) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[04:24.800] Target prompt: "Thunder Elemental: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[04:25.193] Revealed: P0 (2,4) "Pepper Spray" {cost 0}
+[04:25.194] MSG: Revealed: Pepper Spray
+[04:25.694] Mode selected P1: ATTACK
+[04:25.697] MSG: Player 2: tap a unit to attack.
+[04:27.149] Dice rolled: 5
+[04:27.188] MSG: Nothing happens — Dead End.
+[04:31.943] Attack P1(1,0)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P0(1,2)(empty)  Dice=5  → DEAD_END
+[04:31.943] Anim: 3F  (blank slot)
+[04:32.446] Turn ended  P1  |  Crystals P0=2450 P1=1700
+
+--- Turn 7  |  Player 0  |  Crystals P0=2450 P1=1700 ---
+[05:09.969] Crystals: P1 1700 → 0 (-1700)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2450  P1: 0  |  Turns: 7

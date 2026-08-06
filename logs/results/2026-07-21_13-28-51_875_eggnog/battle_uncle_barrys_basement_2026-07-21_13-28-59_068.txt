@@ -1,0 +1,67 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-07-21 13:28:59.068
+Game Session of Eggnog (started 2026-07-21 13:28:51.875)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.215] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:18.259] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:19.486] Dice rolled: 2
+[00:19.531] MSG: Nothing happens — Dead End.
+[00:22.545] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[00:22.545] Anim: 3F  (blank slot)
+[00:35.200] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:35.230] Revealed: P1 (2,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:36.421] Dice rolled: 1
+[00:39.057] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:42.916] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(2,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=1  ATK=25 vs DEF=40  → LOSE
+[00:42.916] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[00:42.916] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:42.916] Anim: 3B  △ P0(2,4)
+[00:42.916] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:51.233] Turn ended  P0  |  Crystals P0=4750 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4750 P1=3000 ---
+[00:51.816] Mode selected P1: TECH
+[00:52.116] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:55.943] Tech played  P1: "Radar"
+[00:57.525] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:59.235] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[01:00.773] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:00.777] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:01.412] Dead-end placed  P0 (1,0)
+[01:01.601] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:02.010] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:02.017] Tech resolved  P1
+[01:02.898] Mode selected P1: ATTACK
+[01:02.907] MSG: Player 2: tap a unit to attack.
+[01:04.121] Dice rolled: 4
+[01:04.137] MSG: Fujin wins!
+[01:07.460] Crystals: P0 4750 → 4450 (-300)  [battle]
+[01:12.680] Attack P1(2,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=35 vs DEF=20  → WIN
+[01:12.680] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[01:12.680] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:12.680] Anim: 3A  △ P0(0,2)
+[01:12.680] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:13.200] Mode selected P1: ATTACK
+[01:13.218] MSG: Player 2: tap a unit to attack.
+[01:13.522] Revealed: P1 (1,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:15.433] Dice rolled: 2
+[01:15.457] MSG: Sonic Seraph wins!
+[01:19.115] Crystals: P0 4450 → 4150 (-300)  [battle]
+[01:24.337] Attack P1(1,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=45 vs DEF=25  → WIN
+[01:24.337] Reckoning overlay: P1 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[01:24.337] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:24.337] Anim: 3A  △ P0(1,1)
+[01:24.337] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:24.833] Turn ended  P1  |  Crystals P0=4150 P1=2400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4150 P1=2400 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4150  P1: 2400  |  Turns: 3

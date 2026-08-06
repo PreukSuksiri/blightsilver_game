@@ -1,0 +1,46 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-07-25 17:33:14.495
+Game Session of Cold Brew (started 2026-07-25 17:33:00.820)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:06.348] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[01:11.737] Mode selected P1: TECH
+[01:12.045] Tech played  P1: "Spy"
+[01:13.583] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:13.982] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[01:14.051] Tech resolved  P1
+[01:14.894] Mode selected P1: ATTACK
+[01:14.895] MSG: Player 2: tap a unit to attack.
+[01:15.240] Revealed: P1 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:17.146] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[01:18.342] Dice rolled: 3
+[01:21.973] Crystals: P1 3000 → 2700 (-300)  [battle]
+[01:24.826] Attack P1(0,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=15 vs DEF=30  → LOSE
+[01:24.826] Reckoning overlay: P1 "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} badge=15 ATK pill=15 DEF pill=25 mod=+ATK 0 (15+0=15)
+[01:24.826] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:24.826] Anim: 3B  △ P1(0,4)
+[01:24.827] Card destroyed  P1 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:25.327] Mode selected P1: ATTACK
+[01:25.329] MSG: Player 2: tap a unit to attack.
+[01:25.649] Revealed: P1 (3,0) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:27.532] Dice rolled: 5
+[01:27.541] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Wind Elemental!
+[01:27.541] MSG: Vampire Duchess wins!
+[01:31.726] Crystals: P0 5000 → 4620 (-380)  [battle]
+[01:35.946] Attack P1(3,0)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(1,2)"Wind Elemental" {Unit ATK25 DEF25 | cost 380 | affinity Arcane | base 25/25}  Dice=5  ATK=55 vs DEF=25  → WIN
+[01:35.946] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[01:35.946] Reckoning overlay: P0 "Wind Elemental" {Unit ATK25 DEF25 | cost 380 | affinity Arcane | base 25/25} badge=25 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=25) MISMATCH
+[01:35.946] Anim: 3A  △ P0(1,2)
+[01:35.946] Card destroyed  P0 (1,2) "Wind Elemental" {Unit ATK25 DEF25 | cost 380 | affinity Arcane | base 25/25}
+[01:36.438] Turn ended  P1  |  Crystals P0=4620 P1=2700
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=2700 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4620  P1: 2700  |  Turns: 2

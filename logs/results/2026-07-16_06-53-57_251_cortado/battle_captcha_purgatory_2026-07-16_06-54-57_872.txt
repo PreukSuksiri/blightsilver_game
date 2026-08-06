@@ -1,0 +1,72 @@
+=== Battle of Captcha Purgatory ===
+Battle started: 2026-07-16 06:54:57.872
+Game Session of Cortado (started 2026-07-16 06:53:57.251)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.605] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:20.193] Revealed: P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:20.229] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:21.421] Dice rolled: 5
+[00:21.448] MSG: Spear Shark wins!
+[00:25.904] Crystals: P1 3000 → 2120 (-880)  [battle]
+[00:31.120] Attack P0(2,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=5  ATK=50 vs DEF=40  → WIN
+[00:31.121] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[00:31.121] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=40 ATK pill=60 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:31.121] Anim: 3A  △ P1(1,1)
+[00:31.121] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:35.299] Revealed: P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:35.339] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:36.526] Dice rolled: 1
+[00:41.121] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:44.979] Attack P0(4,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=1  ATK=55 vs DEF=60  → LOSE
+[00:44.979] Reckoning overlay: P0 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[00:44.979] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=60 ATK pill=95 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:44.979] Anim: 3B  △ P0(4,0)
+[00:44.979] Card destroyed  P0 (4,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:46.656] Turn ended  P0  |  Crystals P0=4300 P1=2120
+
+--- Turn 2  |  Player 1  |  Crystals P0=4300 P1=2120 ---
+[00:47.251] Mode selected P1: TECH
+[00:47.550] Crystals: P1 2120 → 1120 (-1000)  [tech cost]
+[00:51.385] Tech played  P1: "Accident"
+[00:52.921] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:53.322] Card destroyed  P0 (2,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:53.328] Tech resolved  P1
+[00:54.222] Mode selected P1: ATTACK
+[00:54.226] MSG: Player 2: tap a unit to attack.
+[00:55.662] Dice rolled: 3
+[00:55.698] MSG: Nothing happens — Dead End.
+[00:59.912] Attack P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(2,4)(empty)  Dice=3  → DEAD_END
+[00:59.912] Anim: 3F  (blank slot)
+[01:00.411] Mode selected P1: ATTACK
+[01:00.414] MSG: Player 2: tap a unit to attack.
+[01:00.744] Revealed: P1 (2,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[01:02.674] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:03.863] Dice rolled: 3
+[01:08.110] Crystals: P1 1120 → 520 (-600)  [battle]
+[01:11.962] Attack P1(2,0)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=10 vs DEF=40  → LOSE
+[01:11.962] Reckoning overlay: P1 "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} badge=10 ATK pill=10 DEF pill=30 mod=+ATK 0 (10+0=10)
+[01:11.962] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:11.962] Anim: 3B  △ P1(2,0)
+[01:11.962] Card destroyed  P1 (2,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[01:12.463] Turn ended  P1  |  Crystals P0=4300 P1=520
+
+--- Turn 3  |  Player 0  |  Crystals P0=4300 P1=520 ---
+[01:21.334] MSG: Tap 2 material card(s) on the field.
+[01:22.114] MSG: 1 more material(s) needed.
+[01:22.616] Crystals: P0 4300 → 3300 (-1000)  [union]
+[01:26.450] Revealed: P0 (3,2) "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:26.499] Union summoned P0: "Sand Elemental" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[01:26.506] MSG: Player 1 summoned [Sand Elemental] using: "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane | face-down}, "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}
+[01:34.163] Dice rolled: 1
+[01:34.254] MSG: Sand Elemental wins!
+[01:36.812] Crystals: P1 520 → 0 (-520)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3300  P1: 0  |  Turns: 3

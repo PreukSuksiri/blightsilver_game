@@ -1,0 +1,16 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-07-23 17:28:31.407
+Game Session of Mulled Wine (started 2026-07-23 17:28:22.010)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:18.019] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:47.953] Crystals: P0 5000 → 0 (-5000)  [admin]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 3000  |  Turns: 1

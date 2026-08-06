@@ -1,0 +1,36 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-07-02 18:07:51.351
+Game Session of Banana Smoothie (started 2026-07-02 18:07:41.598)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.675] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.066] Mode selected P1: TECH
+[00:11.372] Tech played  P1: "Spy"
+[00:12.916] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:13.374] Revealed: P0 (3,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:13.376] Tech resolved  P1
+[00:14.233] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:14.233] Mode selected P1: ATTACK
+[00:14.238] MSG: Player 2: tap a unit to attack.
+[00:14.557] Revealed: P1 (1,4) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:16.453] Dice rolled: 1
+[00:16.485] MSG: Joan the Faithful Warrior wins!
+[00:20.941] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:26.159] Attack P1(1,4)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P0(3,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=1  ATK=25 vs DEF=5  → WIN
+[00:26.159] Reckoning overlay: P1 "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} badge=25 ATK pill=25 DEF pill=5 mod=+ATK 0 (25+0=25)
+[00:26.159] Reckoning overlay: P0 "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} badge=5 ATK pill=35 DEF pill=5 mod=+DEF 0 (5+0=5)
+[00:26.159] Anim: 3A  △ P0(3,1)
+[00:26.159] Card destroyed  P0 (3,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:28.670] Turn ended  P1  |  Crystals P0=4700 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=3000 ---
+[00:47.891] Crystals: P1 3000 → 0 (-3000)  [admin]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4700  P1: 0  |  Turns: 2

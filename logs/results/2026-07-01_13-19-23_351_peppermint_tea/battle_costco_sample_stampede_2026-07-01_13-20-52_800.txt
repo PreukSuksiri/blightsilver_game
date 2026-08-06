@@ -1,0 +1,217 @@
+=== Battle of Costco Sample Stampede ===
+Battle started: 2026-07-01 13:20:52.800
+Game Session of Peppermint Tea (started 2026-07-01 13:19:23.351)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:50.456] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[01:04.485] MSG: Tap 2 material card(s) on the field.
+[01:04.901] MSG: 1 more material(s) needed.
+[01:05.586] Crystals: P0 5000 → 4500 (-500)  [union]
+[01:08.413] Revealed: P0 (1,0) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:08.453] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down}, "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}
+[01:08.470] MSG: Player 1 summoned [Berserk Hyena] using: "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down}, "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}
+[01:16.536] Dice rolled: 3
+[01:16.632] MSG: Nothing happens — Dead End.
+[01:21.307] Attack P0(1,0)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[01:21.307] Anim: 3F  (blank slot)
+[01:25.314] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:26.532] Dice rolled: 5
+[01:26.585] MSG: Nothing happens — Dead End.
+[01:29.842] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,1)(empty)  Dice=5  → DEAD_END
+[01:29.842] Anim: 3F  (blank slot)
+[01:30.822] Turn ended  P0  |  Crystals P0=4500 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=3000 ---
+[01:31.421] Mode selected P1: TECH
+[01:31.719] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:34.546] Tech played  P1: "Radar"
+[01:36.113] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:36.504] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[01:36.923] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:37.304] Revealed: P0 (4,4) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:37.307] Tech resolved  P1
+[01:39.688] Crystals: P1 2400 → 1900 (-500)  [union]
+[01:42.521] Revealed: P1 (0,0) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[01:42.547] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}
+[01:42.547] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[01:42.547] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}
+[01:45.948] Mode selected P1: ATTACK
+[01:45.952] MSG: Player 2: tap a unit to attack.
+[01:47.159] Dice rolled: 2
+[01:47.240] MSG: Moon Tribe Shaman wins!
+[01:51.639] Crystals: P0 4500 → 4220 (-280)  [battle]
+[01:55.828] Attack P1(0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=2  ATK=25 vs DEF=20  → WIN
+[01:55.828] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[01:55.828] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:55.828] Anim: 3A  △ P0(2,1)
+[01:55.828] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:56.326] Mode selected P1: ATTACK
+[01:56.332] MSG: Player 2: tap a unit to attack.
+[01:56.683] Revealed: P1 (0,1) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[01:58.552] Dice rolled: 4
+[01:58.641] MSG: Neptune Diver wins!
+[02:04.506] Attack P1(0,1)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(1,0)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=4  ATK=20 vs DEF=0  → WIN
+[02:04.506] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[02:04.506] Reckoning overlay: P0 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=0 ATK pill=40 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:04.506] Anim: 3A  △ P0(1,0)
+[02:04.506] Card destroyed  P0 (1,0) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[02:05.016] Turn ended  P1  |  Crystals P0=4220 P1=1900
+
+--- Turn 3  |  Player 0  |  Crystals P0=4220 P1=1900 ---
+[02:09.687] Dice rolled: 4
+[02:09.702] MSG: Grand Fort Footsoldier wins!
+[02:12.290] Crystals: P1 1900 → 1700 (-200)  [battle]
+[02:16.502] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,1)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=4  ATK=25 vs DEF=10  → WIN
+[02:16.502] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[02:16.502] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:16.502] Anim: 3A  △ P1(0,1)
+[02:16.502] Card destroyed  P1 (0,1) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[02:19.460] Dice rolled: 1
+[02:19.537] MSG: Dystopian Cultist wins!
+[02:24.423] Attack P0(4,4)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}  Dice=1  ATK=65 vs DEF=55  → WIN
+[02:24.423] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[02:24.423] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=55 ATK pill=25 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:24.423] Anim: 3A  △ P1(0,0)
+[02:24.423] Card destroyed  P1 (0,0) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[02:25.345] Turn ended  P0  |  Crystals P0=4220 P1=1700
+
+--- Turn 4  |  Player 1  |  Crystals P0=4220 P1=1700 ---
+[02:25.940] Mode selected P1: TECH
+[02:26.250] Tech played  P1: "Bribe"
+[02:27.804] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:32.472] Revealed: P0 (4,0) "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[02:32.472] Crystals: P0 4220 → 4920 (+700)  [ability]
+[02:32.473] MSG: Bribe: Player 1 revealed Black Worms and received 700 Crystals.
+[02:35.294] Tech resolved  P1
+[02:36.195] Mode selected P1: ATTACK
+[02:36.197] MSG: Player 2: tap a unit to attack.
+[02:36.516] Revealed: P1 (4,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[02:38.419] Dice rolled: 1
+[02:38.434] MSG: Moonrise Gentleman wins!
+[02:42.532] Crystals: P0 4920 → 4620 (-300)  [battle]
+[02:46.742] Attack P1(4,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=1  ATK=40 vs DEF=25  → WIN
+[02:46.742] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[02:46.742] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:46.742] Anim: 3A  △ P0(1,1)
+[02:46.742] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:47.241] Mode selected P1: ATTACK
+[02:47.243] MSG: Player 2: tap a unit to attack.
+[02:47.572] Revealed: P1 (0,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:49.490] Revealed: P0 (2,2) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[02:50.693] Dice rolled: 1
+[02:50.723] MSG: Moon Tribe Marksman wins!
+[02:55.184] Crystals: P0 4620 → 4240 (-380)  [battle]
+[02:59.373] Attack P1(0,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P0(2,2)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=1  ATK=35 vs DEF=20  → WIN
+[02:59.374] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} badge=35 ATK pill=35 DEF pill=25 mod=+ATK 0 (35+0=35)
+[02:59.374] Reckoning overlay: P0 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:59.374] Anim: 3A  △ P0(2,2)
+[02:59.374] Card destroyed  P0 (2,2) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[02:59.871] Turn ended  P1  |  Crystals P0=4240 P1=1700
+
+--- Turn 5  |  Player 0  |  Crystals P0=4240 P1=1700 ---
+[03:05.503] Dice rolled: 2
+[03:05.524] MSG: Dystopian Cultist wins!
+[03:09.994] Crystals: P1 1700 → 1300 (-400)  [battle]
+[03:12.834] MSG: Moonrise Gentleman: +10 DEF, -10 ATK permanently (if possible).
+[03:14.213] Attack P0(4,4)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(4,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=2  ATK=65 vs DEF=40  → WIN
+[03:14.213] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[03:14.213] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[03:14.213] Anim: 3A  △ P1(4,2)
+[03:14.213] Card destroyed  P1 (4,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[03:29.459] Dice rolled: 3
+[03:29.476] MSG: Black Worms wins!
+[03:33.957] Crystals: P1 1300 → 1000 (-300)  [battle]
+[03:38.157] Attack P0(4,0)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P1(0,3)"Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10}  Dice=3  ATK=45 vs DEF=25  → WIN
+[03:38.157] Reckoning overlay: P0 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[03:38.157] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:38.157] Anim: 3A  △ P1(0,3)
+[03:38.157] Card destroyed  P1 (0,3) "Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10}
+[03:39.950] Turn ended  P0  |  Crystals P0=4240 P1=1000
+
+--- Turn 6  |  Player 1  |  Crystals P0=4240 P1=1000 ---
+[03:40.553] Mode selected P1: ATTACK
+[03:40.557] MSG: Player 2: tap a unit to attack.
+[03:40.897] Revealed: P1 (1,3) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[03:42.824] Revealed: P0 (1,3) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[03:44.020] Dice rolled: 5
+[03:44.036] MSG: Laser Walker wins!
+[03:48.513] Crystals: P0 4240 → 3690 (-550)  [battle]
+[03:52.721] Attack P1(1,3)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P0(1,3)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=5  ATK=20 vs DEF=0  → WIN
+[03:52.722] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[03:52.722] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:52.722] Anim: 3A  △ P0(1,3)
+[03:52.722] Card destroyed  P0 (1,3) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[03:53.220] Mode selected P1: ATTACK
+[03:53.222] MSG: Player 2: tap a unit to attack.
+[03:53.572] Revealed: P1 (2,2) "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}
+[03:55.677] Dice rolled: 1
+[03:55.709] MSG: Nothing happens — Dead End.
+[03:59.081] MSG: Sunrise Lady: +10 ATK, -10 DEF permanently (if possible).
+[04:00.499] Attack P1(2,2)"Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine} → P0(0,1)(empty)  Dice=1  → DEAD_END
+[04:00.499] Anim: 3F  (blank slot)
+[04:01.001] Turn ended  P1  |  Crystals P0=3690 P1=1000
+
+--- Turn 7  |  Player 0  |  Crystals P0=3690 P1=1000 ---
+[04:06.434] Dice rolled: 2
+[04:06.453] MSG: Dystopian Cultist wins!
+[04:10.920] Crystals: P1 1000 → 700 (-300)  [battle]
+[04:15.134] Attack P0(4,4)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(2,2)"Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20}  Dice=2  ATK=65 vs DEF=20  → WIN
+[04:15.134] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[04:15.134] Reckoning overlay: P1 "Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:15.134] Anim: 3A  △ P1(2,2)
+[04:15.134] Card destroyed  P1 (2,2) "Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20}
+[04:19.241] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[04:20.462] Dice rolled: 3
+[04:20.482] MSG: Ponycorn wins!
+[04:24.952] Crystals: P1 700 → 450 (-250)  [battle]
+[04:29.167] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,3)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}  Dice=3  ATK=25 vs DEF=10  → WIN
+[04:29.167] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[04:29.167] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[04:29.167] Anim: 3A  △ P1(1,3)
+[04:29.167] Card destroyed  P1 (1,3) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[04:32.599] Turn ended  P0  |  Crystals P0=3690 P1=450
+
+--- Turn 8  |  Player 1  |  Crystals P0=3690 P1=450 ---
+[04:33.199] Mode selected P1: ATTACK
+[04:33.205] MSG: Player 2: tap a unit to attack.
+[04:33.529] Revealed: P1 (4,0) "Lunar Wraith" {Unit ATK30 DEF20 | cost 500 | affinity Cosmic}
+[04:35.424] Dice rolled: 3
+[04:35.441] MSG: Lunar Wraith wins!
+[04:39.912] Crystals: P0 3690 → 3390 (-300)  [battle]
+[04:44.121] Attack P1(4,0)"Lunar Wraith" {Unit ATK30 DEF20 | cost 500 | affinity Cosmic} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=30 vs DEF=20  → WIN
+[04:44.121] Reckoning overlay: P1 "Lunar Wraith" {Unit ATK30 DEF20 | cost 500 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[04:44.121] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:44.121] Anim: 3A  △ P0(0,2)
+[04:44.121] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[04:44.618] Mode selected P1: ATTACK
+[04:44.623] MSG: Player 2: tap a unit to attack.
+[04:44.951] Revealed: P1 (3,1) "Moon Tribe Twin Blader" {Unit ATK45 DEF35 | cost 300 | affinity Cosmic | base 30/20 | buff +auraATK15, +auraDEF15}
+[04:47.082] Dice rolled: 4
+[04:47.116] MSG: Nothing happens — Dead End.
+[04:50.528] Coin flip: Tails
+[04:53.280] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[04:54.656] Attack P1(3,1)"Moon Tribe Twin Blader" {Unit ATK45 DEF35 | cost 300 | affinity Cosmic | base 30/20 | buff +auraATK15, +auraDEF15} → P0(0,3)(empty)  Dice=4  → DEAD_END
+[04:54.656] Anim: 3F  (blank slot)
+[04:55.159] Turn ended  P1  |  Crystals P0=3390 P1=450
+
+--- Turn 9  |  Player 0  |  Crystals P0=3390 P1=450 ---
+[05:16.837] Dice rolled: 1
+[05:16.860] MSG: Black Worms wins!
+[05:19.429] Crystals: P1 450 → 150 (-300)  [battle]
+[05:23.642] Attack P0(4,0)"Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P1(3,1)"Moon Tribe Twin Blader" {Unit ATK45 DEF35 | cost 300 | affinity Cosmic | base 30/20 | buff +auraATK15, +auraDEF15}  Dice=1  ATK=45 vs DEF=35  → WIN
+[05:23.642] Reckoning overlay: P0 "Black Worms" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[05:23.642] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK45 DEF35 | cost 300 | affinity Cosmic | base 30/20 | buff +auraATK15, +auraDEF15} badge=35 ATK pill=45 DEF pill=35 mod=+DEF 0 (35+0=35)
+[05:23.642] Anim: 3A  △ P1(3,1)
+[05:23.642] Card destroyed  P1 (3,1) "Moon Tribe Twin Blader" {Unit ATK45 DEF35 | cost 300 | affinity Cosmic | base 30/20 | buff +auraATK15, +auraDEF15}
+[05:26.975] Dice rolled: 2
+[05:27.003] MSG: Dystopian Cultist wins!
+[05:30.541] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3390  P1: 0  |  Turns: 9

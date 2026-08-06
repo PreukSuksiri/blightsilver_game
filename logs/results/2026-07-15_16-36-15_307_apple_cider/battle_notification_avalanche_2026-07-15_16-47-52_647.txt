@@ -1,0 +1,93 @@
+=== Battle of Notification Avalanche ===
+Battle started: 2026-07-15 16:47:52.647
+Game Session of Apple Cider (started 2026-07-15 16:36:15.307)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.597] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:18.683] MSG: Tap 2 material card(s) on the field.
+[00:19.639] MSG: 1 more material(s) needed.
+[00:20.215] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:24.049] Revealed: P0 (3,1) "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[00:24.097] Union summoned P0: "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[00:24.101] MSG: Player 1 summoned [Cloud Elemental] using: "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[00:32.981] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:34.177] Dice rolled: 2
+[00:34.268] MSG: Cloud Elemental wins!
+[00:37.051] Crystals: P1 3000 → 2780 (-220)  [battle]
+[00:42.269] Attack P0(3,1)"Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=2  ATK=65 vs DEF=15  → WIN
+[00:42.269] Reckoning overlay: P0 "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[00:42.269] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:42.269] Anim: 3A  △ P1(1,1)
+[00:42.269] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:45.150] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[00:45.150] Revealed: P1 (1,0) "Explosive Barrels" {cost 0}
+[00:46.377] Dice rolled: 5
+[00:46.399] MSG: Trap triggered: Explosive Barrels!
+[00:49.501] Crystals: P0 4000 → 3620 (-380)  [card lost]
+[00:53.979] Crystals: P1 2780 → 2400 (-380)  [trap]
+[00:57.812] MSG: Explosive Barrels: Wind Elemental destroyed! Defender loses 380 Crystals.
+[00:57.823] Attack P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} → P1(1,0)"Explosive Barrels" {cost 0}  Dice=5  → Unit vs Trap
+[00:57.823] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[00:57.823] Anim: 3E  △ P0(1,2)
+[00:59.252] Turn ended  P0  |  Crystals P0=3620 P1=2400
+
+--- Turn 2  |  Player 1  |  Crystals P0=3620 P1=2400 ---
+[00:59.862] Mode selected P1: TECH
+[01:00.161] Crystals: P1 2400 → 1800 (-600)  [tech cost]
+[01:03.996] Tech played  P1: "Radar"
+[01:05.541] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:06.181] Dead-end placed  P0 (4,1)
+[01:06.581] Dead-end placed  P0 (0,3)
+[01:06.744] Tech resolved  P1
+[01:06.981] Dead-end placed  P0 (3,4)
+[01:09.132] Crystals: P1 1800 → 800 (-1000)  [union]
+[01:12.984] Revealed: P1 (2,1) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[01:13.028] Union summoned P1: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio | face-down}
+[01:13.028] MSG: Player 2 summoned [Volatile Slasher] using: "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio | face-down}
+[01:16.396] Mode selected P1: ATTACK
+[01:16.405] MSG: Player 2: tap a unit to attack.
+[01:17.634] Revealed: P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:18.831] Dice rolled: 3
+[01:18.925] MSG: Volatile Slasher wins!
+[01:22.932] Crystals: P0 3620 → 3070 (-550)  [battle]
+[01:28.154] Attack P1(2,1)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(0,2)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=50 vs DEF=40  → WIN
+[01:28.154] Reckoning overlay: P1 "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[01:28.154] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:28.154] Anim: 3A  △ P0(0,2)
+[01:28.154] Card destroyed  P0 (0,2) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[01:28.658] Mode selected P1: ATTACK
+[01:28.663] MSG: Player 2: tap a unit to attack.
+[01:29.008] Revealed: P1 (2,0) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[01:30.931] Revealed: P0 (1,4) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[01:32.111] Dice rolled: 4
+[01:36.498] Crystals: P1 800 → 350 (-450)  [battle]
+[01:40.350] Attack P1(2,0)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P0(1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=4  ATK=40 vs DEF=60  → LOSE
+[01:40.350] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:40.350] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=60 ATK pill=30 DEF pill=0 mod=+DEF 60 (0+60=60)
+[01:40.350] Anim: 3B  △ P1(2,0)
+[01:40.350] Card destroyed  P1 (2,0) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[01:40.837] Turn ended  P1  |  Crystals P0=3070 P1=350
+
+--- Turn 3  |  Player 0  |  Crystals P0=3070 P1=350 ---
+[01:49.028] Dice rolled: 3
+[01:49.169] MSG: Cloud Elemental wins!
+[01:53.800] Attack P0(3,1)"Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(2,1)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}  Dice=3  ATK=65 vs DEF=45  → WIN
+[01:53.800] Reckoning overlay: P0 "Cloud Elemental" {Union ATK65 DEF65 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[01:53.800] Reckoning overlay: P1 "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[01:53.800] Anim: 3A  △ P1(2,1)
+[01:53.801] Card destroyed  P1 (2,1) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[01:57.466] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:57.466] Revealed: P1 (0,0) "Hypnosis" {cost 800}
+[01:58.694] Dice rolled: 1
+[01:58.720] MSG: Trap triggered: Hypnosis!
+[02:00.882] Crystals: P1 350 → 0 (-350)  [trap cost]
+[02:04.724] MSG: Hypnosis: Grand Fort Archer cannot attack until end of next turn.
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3070  P1: 0  |  Turns: 3

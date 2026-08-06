@@ -1,0 +1,63 @@
+=== Battle of Block Party Flamingo ===
+Battle started: 2026-06-28 06:17:42.937
+Game Session of Latte (started 2026-06-28 06:16:28.385)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:23.025] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:44.016] Mode selected P1: TECH
+[00:45.248] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:56.291] Tech played  P1: "Radar"
+[01:02.418] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:04.084] Revealed: P0 (3,0) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[01:05.736] Revealed: P0 (0,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:07.360] Tech resolved  P1
+[01:08.330] Dead-end placed  P0 (4,1)
+[01:10.990] Mode selected P1: ATTACK
+[01:10.992] MSG: Player 2: tap a unit to attack.
+[01:12.272] Revealed: P1 (2,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:20.024] Dice rolled: 5
+[01:20.039] MSG: Lab Zombie wins!
+[01:31.869] Crystals: P0 5000 → 4450 (-550)  [battle]
+[01:31.869] Crystals: P0 4450 → 4750 (+300)  [recovery]
+[01:31.870] MSG: Melissa the Healer: Recovered 300 Crystals!
+[02:04.277] Attack P1(2,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(0,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=5  ATK=55 vs DEF=50  → WIN
+[02:04.280] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[02:04.280] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:04.280] Anim: 3A  △ P0(0,0)
+[02:04.280] Card destroyed  P0 (0,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[02:06.600] Mode selected P1: ATTACK
+[02:06.603] MSG: Player 2: tap a unit to attack.
+[02:07.951] Revealed: P1 (1,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:16.297] Revealed: P0 (0,4) "Spike Trap" {cost 1500}
+[02:21.593] Dice rolled: 2
+[02:21.606] MSG: Trap triggered: Spike Trap!
+[02:37.569] Crystals: P0 4750 → 3250 (-1500)  [trap cost]
+[02:37.569] Crystals: P0 3250 → 3550 (+300)  [recovery]
+[02:37.573] MSG: Melissa the Healer: Recovered 300 Crystals!
+[03:07.781] Crystals: P1 4400 → 4220 (-180)  [card lost]
+[03:28.250] MSG: Spike Trap: Claw Mutant destroyed!
+[03:28.252] Attack P1(1,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(0,4)"Spike Trap" {cost 1500}  Dice=2  → Unit vs Trap
+[03:28.252] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[03:28.252] Anim: 3E  △ P1(1,0)
+[03:30.444] Turn ended  P1  |  Crystals P0=3550 P1=4220
+
+--- Turn 2  |  Player 0  |  Crystals P0=3550 P1=4220 ---
+[03:53.507] MSG: Tap 2 material card(s) on the field.
+[04:05.941] MSG: Tap 2 material card(s) on the field.
+[04:07.366] MSG: 1 more material(s) needed.
+[04:09.567] Crystals: P0 3550 → 2550 (-1000)  [union]
+[04:09.567] Crystals: P0 2550 → 2850 (+300)  [recovery]
+[04:09.567] MSG: Melissa the Healer: Recovered 300 Crystals!
+[04:35.631] Revealed: P0 (4,4) "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine}
+[04:35.657] Union summoned P0: "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} from "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}, "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}
+[04:35.661] MSG: Player 1 summoned [Gryphon Rider] using: "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}, "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}
+[04:59.685] Dice rolled: 3
+[04:59.742] MSG: Gryphon Rider wins!
+[05:11.595] Crystals: P1 4220 → 3520 (-700)  [battle]
+[05:28.524] Attack P0(4,4)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(2,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bi

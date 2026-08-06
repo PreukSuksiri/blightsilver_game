@@ -1,0 +1,52 @@
+=== Battle of Autocorrect Apology Tour ===
+Battle started: 2026-07-25 16:29:43.941
+Game Session of Chamomile Tea (started 2026-07-25 16:27:12.085)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.982] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:12.809] Revealed: P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:12.844] Revealed: P1 (1,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:14.029] Dice rolled: 2
+[00:16.657] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:19.486] Attack P0(2,3)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P1(1,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=2  ATK=25 vs DEF=35  → LOSE
+[00:19.486] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[00:19.486] Reckoning overlay: P1 "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} badge=35 ATK pill=0 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:19.486] Anim: 3B  △ P0(2,3)
+[00:19.486] Card destroyed  P0 (2,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:23.964] Turn ended  P0  |  Crystals P0=4620 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4620 P1=3000 ---
+[00:24.566] Mode selected P1: TECH
+[00:24.879] Tech played  P1: "Spy"
+[00:26.420] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:26.818] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:26.863] Tech resolved  P1
+[00:27.726] Mode selected P1: ATTACK
+[00:27.733] MSG: Player 2: tap a unit to attack.
+[00:28.921] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:30.157] Dice rolled: 3
+[00:30.166] MSG: Trap triggered: Hard Scale!
+[00:34.261] Crystals: P0 4620 → 4320 (-300)  [trap cost]
+[00:37.093] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:38.472] Attack P1(1,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(0,4)"Hard Scale" {cost 300}  Dice=3  → Unit vs Trap
+[00:38.472] Reckoning overlay: P1 "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} badge=0 ATK pill=0 DEF pill=35 mod=+ATK 0 (0+0=0)
+[00:38.472] Anim: 3D  (attacker survives)
+[00:38.975] Mode selected P1: ATTACK
+[00:38.977] MSG: Player 2: tap a unit to attack.
+[00:39.300] Revealed: P1 (1,0) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:41.435] Dice rolled: 2
+[00:41.448] MSG: Nothing happens — Dead End.
+[00:44.727] Attack P1(1,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(1,0)(empty)  Dice=2  → DEAD_END
+[00:44.728] Anim: 3F  (blank slot)
+[00:45.246] Turn ended  P1  |  Crystals P0=4320 P1=3000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4320 P1=3000 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4320  P1: 3000  |  Turns: 3

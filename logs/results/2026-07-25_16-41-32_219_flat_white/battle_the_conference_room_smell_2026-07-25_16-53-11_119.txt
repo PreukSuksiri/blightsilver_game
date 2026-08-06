@@ -1,0 +1,53 @@
+=== Battle of The Conference Room Smell ===
+Battle started: 2026-07-25 16:53:11.119
+Game Session of Flat White (started 2026-07-25 16:41:32.219)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.621] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:51.527] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:52.733] Dice rolled: 2
+[00:52.761] MSG: Nothing happens — Dead End.
+[00:56.103] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[00:56.103] Anim: 3F  (blank slot)
+[01:01.331] Revealed: P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[01:01.338] Revealed: P1 (2,1) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[01:02.558] Dice rolled: 4
+[01:07.153] Crystals: P0 5000 → 4620 (-380)  [battle]
+[01:09.992] Attack P0(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} → P1(2,1)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}  Dice=4  ATK=30 vs DEF=35  → LOSE
+[01:09.992] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[01:09.992] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=35 ATK pill=25 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:09.992] Anim: 3B  △ P0(1,2)
+[01:09.992] Card destroyed  P0 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[01:24.597] Turn ended  P0  |  Crystals P0=4620 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4620 P1=3000 ---
+[01:25.199] Mode selected P1: TECH
+[01:25.498] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:28.320] Tech played  P1: "Radar"
+[01:29.870] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:30.262] Revealed: P0 (3,4) "Red Card" {cost 0}
+[01:30.911] Dead-end placed  P0 (2,4)
+[01:31.103] Revealed: P0 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:31.106] Tech resolved  P1
+[01:31.975] Mode selected P1: ATTACK
+[01:31.980] MSG: Player 2: tap a unit to attack.
+[01:33.181] Dice rolled: 1
+[01:33.194] MSG: Water Elemental wins!
+[01:37.678] Crystals: P0 4620 → 4070 (-550)  [battle]
+[01:41.904] Attack P1(2,1)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=1  ATK=25 vs DEF=0  → WIN
+[01:41.904] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[01:41.904] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:41.905] Anim: 3A  △ P0(2,0)
+[01:41.905] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:44.405] Turn ended  P1  |  Crystals P0=4070 P1=2400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4070 P1=2400 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4070  P1: 2400  |  Turns: 3

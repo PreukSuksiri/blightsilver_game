@@ -1,0 +1,105 @@
+=== Battle of Parallel Parking Shame ===
+Battle started: 2026-07-24 05:43:21.693
+Game Session of Iced Tea (started 2026-07-24 05:43:04.480)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:16.476] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:37.629] Mode selected P1: TECH
+[00:38.897] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[00:49.967] Tech played  P1: "Radar"
+[00:56.038] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:57.703] Revealed: P0 (3,2) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[00:59.324] Revealed: P0 (3,4) "Red Card" {cost 0}
+[01:00.971] Tech resolved  P1
+[01:01.936] Dead-end placed  P0 (1,4)
+[01:04.634] Mode selected P1: ATTACK
+[01:04.636] MSG: Player 2: tap a unit to attack.
+[01:05.900] Revealed: P1 (0,4) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:13.709] Dice rolled: 1
+[01:13.715] MSG: Plant-29 wins!
+[01:25.657] Crystals: P0 5000 → 4620 (-380)  [battle]
+[01:42.890] Attack P1(0,4)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(3,2)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}  Dice=1  ATK=45 vs DEF=40  → WIN
+[01:42.890] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[01:42.890] Reckoning overlay: P0 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=40 ATK pill=20 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:42.890] Anim: 3A  △ P0(3,2)
+[01:42.890] Card destroyed  P0 (3,2) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[01:53.739] Turn ended  P1  |  Crystals P0=4620 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=2400 ---
+[02:09.523] Tech played  P0: "Tease"
+[02:15.529] MSG: Opponent must choose and reveal 1 of their squares.
+[02:15.531] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:17.168] Revealed: P1 (3,3) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[02:17.169] MSG: Tease: Opponent revealed Dystopian Cultist.
+[02:17.352] Tech resolved  P0
+[02:32.436] MSG: Tap 2 material card(s) on the field.
+[02:33.549] MSG: 1 more material(s) needed.
+[02:34.864] Crystals: P0 4620 → 3620 (-1000)  [union]
+[02:46.084] Revealed: P0 (1,2) "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[02:46.118] Union summoned P0: "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[02:46.121] MSG: Player 1 summoned [Thunder Elemental] using: "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane | face-down}
+[03:09.928] Dice rolled: 4
+[03:09.986] MSG: Thunder Elemental wins!
+[03:21.945] Crystals: P1 2400 → 1500 (-900)  [battle]
+[03:39.316] Attack P0(1,2)"Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(0,4)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}  Dice=4  ATK=90 vs DEF=85  → WIN
+[03:39.316] Reckoning overlay: P0 "Thunder Elemental" {Union ATK90 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=90 ATK pill=90 DEF pill=55 mod=+ATK 0 (90+0=90)
+[03:39.316] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=85 ATK pill=45 DEF pill=85 mod=+DEF 0 (85+0=85)
+[03:39.316] Anim: 3A  △ P1(0,4)
+[03:39.316] Card destroyed  P1 (0,4) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[03:39.318] Target prompt: "Thunder Elemental: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:40.199] Revealed: P1 (2,2) "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[03:40.200] MSG: Revealed: Slug-11
+[04:11.504] Revealed: P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[04:16.771] Dice rolled: 3
+[04:16.779] MSG: Raijin wins!
+[04:29.390] Crystals: P1 1500 → 950 (-550)  [battle]
+[04:48.144] Attack P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(3,3)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=60 vs DEF=40  → WIN
+[04:48.144] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=60 ATK pill=60 DEF pill=0 mod=+ATK 0 (60+0=60)
+[04:48.144] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[04:48.144] Anim: 3A  △ P1(3,3)
+[04:48.144] Card destroyed  P1 (3,3) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[04:51.934] Turn ended  P0  |  Crystals P0=3620 P1=950
+
+--- Turn 3  |  Player 1  |  Crystals P0=3620 P1=950 ---
+[04:54.395] Mode selected P1: TECH
+[04:55.744] Tech played  P1: "Spy"
+[05:01.813] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[05:03.442] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[05:03.468] Tech resolved  P1
+[05:07.124] Mode selected P1: ATTACK
+[05:07.127] MSG: Player 2: tap a unit to attack.
+[05:12.031] Dice rolled: 4
+[05:12.037] MSG: Slug-11 wins!
+[05:24.091] Crystals: P0 3620 → 3070 (-550)  [battle]
+[05:41.221] Attack P1(2,2)"Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P0(2,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=4  ATK=45 vs DEF=0  → WIN
+[05:41.221] Reckoning overlay: P1 "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[05:41.221] Reckoning overlay: P0 "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} badge=0 ATK pill=60 DEF pill=0 mod=+DEF 0 (0+0=0)
+[05:41.221] Anim: 3A  △ P0(2,0)
+[05:41.221] Card destroyed  P0 (2,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[05:43.375] Mode selected P1: ATTACK
+[05:43.379] MSG: Player 2: tap a unit to attack.
+[05:44.818] Revealed: P1 (0,0) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[05:53.071] Revealed: P0 (3,3) "Spike Trap" {cost 800}
+[05:59.575] Dice rolled: 4
+[05:59.591] MSG: Trap triggered: Spike Trap!
+[06:14.065] Crystals: P0 3070 → 2270 (-800)  [trap cost]
+[06:25.788] Crystals: P1 950 → 150 (-800)  [card lost]
+[06:40.110] MSG: Spike Trap: Lab Bloater destroyed!
+[06:40.112] Attack P1(0,0)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(3,3)"Spike Trap" {cost 800}  Dice=4  → Unit vs Trap
+[06:40.112] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[06:40.112] Anim: 3E  △ P1(0,0)
+[06:42.273] Turn ended  P1  |  Crystals P0=2270 P1=150
+
+--- Turn 4  |  Player 0  |  Crystals P0=2270 P1=150 ---
+[07:25.885] Dice rolled: 1
+[07:25.955] MSG: Thunder Elemental wins!
+[07:37.918] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2270  P1: 0  |  Turns: 4
