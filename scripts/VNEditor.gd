@@ -192,6 +192,8 @@ var _f_nsfw: OptionButton = null
 var _f_animation: OptionButton = null
 var _f_ai_union_enabled: CheckBox = null
 var _f_player_union_enabled: CheckBox = null
+var _f_enemy_omen_count: SpinBox = null
+var _f_enemy_omen_groups: LineEdit = null
 var _f_ai_pers_def: OptionButton = null
 var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
@@ -1199,6 +1201,18 @@ func _build_fields() -> void:
 	_f_ai_vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_ai_vault_selected())
 	form_row.add_child(_f_ai_vault_form_opt)
 
+	# ── Enemy Omens (post-setup roll) ─────────────────────────
+	_section(v, "ENEMY OMENS  (optional — roll after AI setup)")
+	var omen_hint := Label.new()
+	omen_hint.text = "Enemy rolls 1–3 omens from the group pool after Setup, before battle begin. 0 count or empty groups = disabled."
+	omen_hint.add_theme_font_size_override("font_size", 12)
+	omen_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	omen_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(omen_hint)
+	_f_enemy_omen_count = _row_sb(v, "Enemy Omen Count", 0, 3, 1, "0 = off")
+	_f_enemy_omen_count.value = 0
+	_f_enemy_omen_groups = _row_le(v, "Enemy Omen Groups", "CSV groups e.g. anoint,chapter_1")
+
 	# ── Enemy Deck ────────────────────────────────────────────
 	_section(v, "ENEMY DECK  (optional — leave empty to use random pool)")
 	var hint_lbl := Label.new()
@@ -1649,6 +1663,10 @@ func _connect_static_signals() -> void:
 		_f_note_stamp_stamp.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
+	if _f_enemy_omen_count != null:
+		_f_enemy_omen_count.value_changed.connect(func(_v: float) -> void: ch.call())
+	if _f_enemy_omen_groups != null:
+		_f_enemy_omen_groups.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_ai_pers_def.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_pers_off.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_pers_soc.item_selected.connect(func(_i: int) -> void: ch.call())
@@ -4457,6 +4475,12 @@ func _populate_fields() -> void:
 	_f_ai_union_enabled.button_pressed     = bool(b.get("ai_union_enabled",     true))
 	_f_player_union_enabled.button_pressed = bool(b.get("player_union_enabled", true))
 
+	# Enemy omens
+	if _f_enemy_omen_count != null:
+		_f_enemy_omen_count.value = clampi(int(b.get("enemy_omen_count", 0)), 0, 3)
+	if _f_enemy_omen_groups != null:
+		_f_enemy_omen_groups.text = str(b.get("enemy_omen_groups", "")).strip_edges()
+
 	# AI personality (index 0 = Random)
 	_select_opt(_f_ai_pers_def, str(b.get("ai_personality_defensive", "")))
 	_select_opt(_f_ai_pers_off, str(b.get("ai_personality_offensive", "")))
@@ -4941,6 +4965,16 @@ func _collect_beat() -> Dictionary:
 		b["ai_union_enabled"] = false
 	if not _f_player_union_enabled.button_pressed:
 		b["player_union_enabled"] = false
+
+	# Enemy omens (only write when enabled)
+	if _f_enemy_omen_count != null:
+		var eoc: int = clampi(int(_f_enemy_omen_count.value), 0, 3)
+		var eog: String = ""
+		if _f_enemy_omen_groups != null:
+			eog = _f_enemy_omen_groups.text.strip_edges()
+		if eoc > 0 and not eog.is_empty():
+			b["enemy_omen_count"] = eoc
+			b["enemy_omen_groups"] = eog
 
 	# AI personality (only write if not Random / index 0)
 	if _f_ai_pers_def.selected > 0:

@@ -172,8 +172,12 @@ func _summary_text() -> String:
 	var anointed: int = 0
 	for row: Variant in _rows:
 		var entry: Dictionary = (row as Dictionary).get("entry", {}) as Dictionary
-		if not str(entry.get("anointed_card", "")).strip_edges().is_empty():
-			anointed += 1
+		if str(entry.get("anointed_card", "")).strip_edges().is_empty():
+			continue
+		# Enemy binds only count once the target is public knowledge.
+		if not OmenVisuals.anoint_target_is_public(entry):
+			continue
+		anointed += 1
 	if anointed <= 0:
 		return "%d held this chapter." % _rows.size()
 	return "%d held this chapter — %d bound to a card." % [_rows.size(), anointed]
@@ -368,7 +372,8 @@ func _rebuild_detail() -> void:
 	_detail_host.add_child(stars)
 
 	var anointed: String = str(entry.get("anointed_card", "")).strip_edges()
-	if not anointed.is_empty():
+	# Enemy anoint target only once the card is public (face-up / played).
+	if not anointed.is_empty() and OmenVisuals.anoint_target_is_public(entry):
 		_detail_host.add_child(_make_rule())
 		_detail_host.add_child(_build_anointed_block(anointed, ring))
 

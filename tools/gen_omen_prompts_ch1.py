@@ -181,6 +181,32 @@ SUBJECTS: dict[str, str] = {
 	"comet_barrage": "a meteor and comet streaking twice across a lapis night sky",
 	"trap_hole_snare": "a foe tumbling into a trap-hole pit, legs bound so they cannot strike again",
 	"forced_confession": "a bound foe forced to accept a sealed bribe scroll and blackmail letter",
+	# --- added for missing capsule art (chapter_1 / boss_chapter_1) ---
+	"cheap_circuit_lock": "a sacred circuit diagram locked behind iron bars, coins frozen outside the grate",
+	"glass_cannon": "a crystal cannon-saint of thin glass, blazing gold muzzle, cracked fragile armor",
+	"heavy_relic": "a massive gold relic idol too heavy to lift, radiant and crushing",
+	"lightweight": "a feather-light saint dissolving into Union light, almost weightless gold",
+	"battle_drill_totem": "a central totem saint, neighboring warriors gaining thin gold spearpoints",
+	"shield_drill_totem": "a central totem saint, neighboring warriors gaining thickened gold shields",
+	"guardian_ring_totem": "a ring of ally saints around a central guardian, each wrapped in a once-only gold ward",
+	"quartermaster_ring_small": "a quartermaster saint handing small discount coins to surrounding allies",
+	"quartermaster_ring_major": "a quartermaster saint pouring a heavy stream of discount coins to surrounding allies",
+	"colossus_bloom_brand": "a colossal blooming warrior of vine and muscle, petals wilting after the strike",
+	"victor_growth_brand": "a victor raising a blade that grows longer with each successful kill, gold rings on the edge",
+	"guardian_growth_brand": "a guardian whose shield thickens with each successful defense, layered gold plates",
+	"heads_rush_brand": "a warrior mid-second-charge, a gold coin spinning heads-up above the blade",
+	"solar_fervor_brand": "a sun-branded saint flipping three gold coins at dawn, ATK fire rising per heads",
+	"moon_bastion_brand": "a moon-bastion saint flipping three silver coins at dusk, DEF plates rising per heads",
+	"oracle_lane_brand": "an oracle pointing down a lane of cells, some lit open after a coin flip",
+	"hidden_bane_brand": "a hunter's brand glowing as it strikes a face-down veiled card-idol",
+	"shadow_hunter_mark": "a shadow hunter marking a face-down mask with a spear of black-gold",
+	"mirror_duelist_brand": "two mirrored duelists of matching color clashing, shared affinity aura",
+	"intel_strongest_unit_1": "an open eye above a single strongest enemy unit silhouette revealed in gold",
+	"intel_strongest_unit_and_union": "an open eye revealing one strongest unit and one towering Union silhouette",
+	"intel_highest_spell_1": "an open eye above a single highest-cost spell scroll unfurling in indigo gold",
+	"intel_highest_spell_2": "an open eye above two highest-cost spell scrolls unfurling side by side",
+	"intel_highest_trap_1": "an open eye above a single highest-cost trap snare revealed in oxblood gold",
+	"intel_highest_trap_2": "an open eye above two highest-cost trap snares revealed side by side",
 }
 
 
@@ -188,37 +214,46 @@ def build_prompt(subject: str) -> str:
 	return f"{subject}, {COMPOSITION}, {STYLE_SUFFIX}"
 
 
-def main() -> None:
-	data = json.loads(OMENS_PATH.read_text())
-	omens = data["omens"] if isinstance(data, dict) else data
-	ch1 = [e for e in omens if "chapter_1" in (e.get("groups") or [])]
+def _has_illustration(entry: dict) -> bool:
+	ill = (entry.get("illustration") or "").strip().replace("res://", "")
+	return bool(ill) and (ROOT / ill).is_file()
 
-	missing = [e["id"] for e in ch1 if e["id"] not in SUBJECTS]
-	extra = sorted(set(SUBJECTS) - {e["id"] for e in ch1})
-	if missing:
-		raise SystemExit(f"Missing subjects for {len(missing)} omens: {missing[:20]}")
-	if extra:
-		print(f"Note: {len(extra)} subject keys unused: {extra[:10]}")
 
-	prompts = []
-	for e in ch1:
+def _collect_targets(omens: list) -> list:
+	"""chapter_1 and/or boss_chapter_1, stable unique by id."""
+	seen: set[str] = set()
+	out: list = []
+	for e in omens:
+		groups = e.get("groups") or []
+		if "chapter_1" not in groups and "boss_chapter_1" not in groups:
+			continue
 		oid = e["id"]
-		prompt = build_prompt(SUBJECTS[oid])
+		if oid in seen:
+			continue
+		seen.add(oid)
+		out.append(e)
+	return out
+
+
+def _write_prompt_file(path: Path, group_label: str, entries: list) -> None:
+	prompts = []
+	for e in entries:
+		oid = e["id"]
 		prompts.append(
 			{
 				"id": oid,
 				"label": e.get("label", oid),
 				"rarity": e.get("rarity", ""),
 				"positive": e.get("positive", None),
+				"groups": e.get("groups") or [],
 				"description": e.get("description", ""),
 				"subject": SUBJECTS[oid],
-				"prompt": prompt,
+				"prompt": build_prompt(SUBJECTS[oid]),
 			}
 		)
-
 	out = {
 		"_meta": {
-			"group": "chapter_1",
+			"group": group_label,
 			"count": len(prompts),
 			"aspect_ratio": "2:1 landscape (author at 900x450, crop top-weighted)",
 			"style_suffix": STYLE_SUFFIX,
@@ -227,13 +262,35 @@ def main() -> None:
 			"notes": (
 				"Every prompt begins with a subject, then composition glue, then style suffix. "
 				"'2:1 aspect ratio,' is included near the start of the style block. "
-				"Subject sits in upper-middle third. Bottom ~28% dissolves into capsule metal."
+				"Subject sits in upper-middle third. Bottom ~28% dissolves into capsule metal. "
+				"Paste `prompt` into Grok Imagine; use `negative` as negative prompt if supported."
 			),
 		},
 		"prompts": prompts,
 	}
-	OUT_PATH.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
-	print(f"Wrote {len(prompts)} prompts → {OUT_PATH}")
+	path.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
+	print(f"Wrote {len(prompts)} prompts → {path}")
+
+
+def main() -> None:
+	data = json.loads(OMENS_PATH.read_text())
+	omens = data["omens"] if isinstance(data, dict) else data
+	targets = _collect_targets(omens)
+
+	missing_subj = [e["id"] for e in targets if e["id"] not in SUBJECTS]
+	if missing_subj:
+		raise SystemExit(
+			f"Missing subjects for {len(missing_subj)} omens: {missing_subj[:30]}"
+		)
+
+	# Full chapter_1 (+ boss overlap) catalog — historical output path.
+	ch1 = [e for e in targets if "chapter_1" in (e.get("groups") or [])]
+	_write_prompt_file(OUT_PATH, "chapter_1", ch1)
+
+	# Missing art only — generate these next.
+	missing_art = [e for e in targets if not _has_illustration(e)]
+	missing_path = ROOT / "data" / "omen_illustration_prompts_missing_ch1.json"
+	_write_prompt_file(missing_path, "chapter_1+boss_chapter_1 missing art", missing_art)
 
 
 if __name__ == "__main__":

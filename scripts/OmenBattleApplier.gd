@@ -28,11 +28,17 @@ static func rune_glyph(rune_id: String) -> String:
 static func prepare_from_exploration() -> void:
 	reset_runtime_fields()
 	GameState.active_omens = ExplorationManager.get_active_omens()
+	# Ensure player entries carry owner: 0 for ownership-aware matchers.
+	for i: int in range(GameState.active_omens.size()):
+		var held: Variant = GameState.active_omens[i]
+		if held is Dictionary and not (held as Dictionary).has("owner"):
+			(GameState.active_omens[i] as Dictionary)["owner"] = 0
 	_build_anoint_effects_map()
 
 
 static func clear() -> void:
 	GameState.active_omens.clear()
+	GameState.enemy_active_omens.clear()
 	reset_runtime_fields()
 
 
@@ -64,7 +70,239 @@ static func reset_runtime_fields() -> void:
 	GameState.omen_force_heads_flips = 0
 
 
+## Player + enemy held omen entries (each with owner 0|1).
+static func all_held_omens() -> Array:
+	var out: Array = []
+	for held: Variant in GameState.active_omens:
+		if not held is Dictionary:
+			continue
+		var d: Dictionary = (held as Dictionary).duplicate(true)
+		if not d.has("owner"):
+			d["owner"] = 0
+		out.append(d)
+	for held2: Variant in GameState.enemy_active_omens:
+		if not held2 is Dictionary:
+			continue
+		var d2: Dictionary = (held2 as Dictionary).duplicate(true)
+		d2["owner"] = int(d2.get("owner", 1))
+		out.append(d2)
+	return out
+
+
+static func rebuild_anoint_effects_map() -> void:
+	_build_anoint_effects_map()
+
+
+## Append a rolled enemy omen entry and refresh the anoint map.
+static func append_enemy_omen(omen_id: String, anointed_card: String = "") -> void:
+	var entry: Dictionary = {
+		"id": omen_id.strip_edges(),
+		"anointed_card": anointed_card.strip_edges(),
+		"owner": 1,
+	}
+	if entry["id"].is_empty():
+		return
+	GameState.enemy_active_omens.append(entry)
+	_build_anoint_effects_map()
+
+
+## Post-setup board/hand candidates for enemy anoint (P1 grid + tech pool).
+static func build_enemy_anoint_candidates() -> Array:
+	var candidates: Array = []
+	var seen: Dictionary = {}
+	# Board units/traps on the enemy grid.
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(1, r, c)
+			if card.card_type == "dead_end" or card.card_name.is_empty():
+				continue
+			var key: String = card.card_name
+			if seen.has(key):
+				continue
+			seen[key] = true
+			var entry: Dictionary = OmenDatabase.deck_entry_from_name(card.card_name)
+			entry["on_board"] = true
+			entry["face_up"] = card.face_up
+			candidates.append(entry)
+	# Tech: live hand if dealt, otherwise forced / deck pool.
+	var tech_names: Array = []
+	if not GameState.tech_hands[1].is_empty():
+		tech_names = GameState.tech_hands[1].duplicate()
+	elif not GameState.battle_ai_forced_tech.is_empty():
+		for t: Variant in GameState.battle_ai_forced_tech:
+			var ts: String = str(t).strip_edges()
+			if not ts.is_empty():
+				tech_names.append(ts)
+	elif GameState.battle_ai_deck != null:
+		for t2: Variant in (GameState.battle_ai_deck as DeckData).techs:
+			var ts2: String = str(t2).strip_edges()
+			if not ts2.is_empty():
+				tech_names.append(ts2)
+	else:
+		var forced_tech: Variant = GameState.campaign_enemy_config.get("forced_tech", null)
+		if forced_tech is Array:
+			for t3: Variant in forced_tech as Array:
+				var ts3: String = str(t3).strip_edges()
+				if not ts3.is_empty():
+					tech_names.append(ts3)
+	for tn: Variant in tech_names:
+		var tname: String = str(tn).strip_edges()
+		if tname.is_empty() or seen.has(tname):
+			continue
+		seen[tname] = true
+		var tech_entry: Dictionary = OmenDatabase.deck_entry_from_name(tname)
+		tech_entry["on_board"] = false
+		candidates.append(tech_entry)
+	return candidates
+
+
+## Deterministic AI anoint pick from post-setup candidates.
+static func choose_enemy_anoint_card(omen: Dictionary, candidates: Array) -> String:
+	if omen.is_empty() or not OmenDatabase.is_anoint(omen):
+		return ""
+	var eligible: Array = OmenDatabase.get_eligible_deck_cards(omen, candidates)
+	if eligible.is_empty():
+		return ""
+	var already_anointed: Dictionary = {}
+	for held: Variant in all_held_omens():
+		if not held is Dictionary:
+			continue
+		var ac: String = str((held as Dictionary).get("anointed_card", "")).strip_edges()
+		if not ac.is_empty():
+			already_anointed[ac] = true
+	var fresh: Array = []
+	var reused: Array = []
+	for entry: Variant in eligible:
+		if not entry is Dictionary:
+			continue
+		var name: String = str((entry as Dictionary).get("name", "")).strip_edges()
+		if name.is_empty():
+			continue
+		if already_anointed.has(name):
+			reused.append(entry)
+		else:
+			fresh.append(entry)
+	var pool: Array = fresh if not fresh.is_empty() else reused
+	if pool.is_empty():
+		return ""
+	pool.sort_custom(func(a: Variant, b: Variant) -> bool:
+		return _enemy_anoint_score(a as Dictionary) > _enemy_anoint_score(b as Dictionary))
+	return str((pool[0] as Dictionary).get("name", "")).strip_edges()
+
+
+static func _enemy_anoint_score(entry: Dictionary) -> int:
+	var card_type: String = str(entry.get("type", "")).strip_edges().to_lower()
+	var on_board: int = 100000 if bool(entry.get("on_board", false)) else 0
+	var face_up: int = 1000 if bool(entry.get("face_up", false)) else 0
+	if card_type == "unit" or card_type == "character":
+		var atk: int = int(entry.get("atk", 0))
+		var defv: int = int(entry.get("def", 0))
+		var cost: int = int(entry.get("cost", 0))
+		return on_board + face_up + (atk + defv) * 100 + atk * 10 + cost
+	# Traps / tech: maximize crystal cost, prefer board when both exist.
+	return on_board + face_up + int(entry.get("cost", 0)) * 100
+
+
+## True when this player's held omens (or legacy P0 flags) block tech.
+static func cannot_tech_for(player: int) -> bool:
+	if player == 0 and GameState.omen_cannot_tech:
+		return true
+	return _holder_has_effect(player, "cannot_tech")
+
+
+static func cannot_union_for(player: int) -> bool:
+	if player == 0 and GameState.omen_cannot_union:
+		return true
+	return _holder_has_effect(player, "cannot_union")
+
+
+static func attack_crystal_cost_for(player: int) -> int:
+	if player == 0:
+		return GameState.omen_attack_crystal_cost
+	return _sum_holder_effect_int(player, "attack_crystal_cost")
+
+
+static func tech_cost_pct_for(player: int) -> float:
+	if player == 0:
+		return GameState.omen_tech_cost_pct
+	return _sum_holder_effect_float(player, "tech_cost_pct")
+
+
+static func trap_cost_pct_for(player: int) -> float:
+	if player == 0:
+		return GameState.omen_trap_cost_pct
+	return _sum_holder_effect_float(player, "trap_cost_pct")
+
+
+static func _holder_has_effect(player: int, effect_type: String) -> bool:
+	var want: String = effect_type.strip_edges()
+	for held: Variant in all_held_omens():
+		if not held is Dictionary:
+			continue
+		var held_d: Dictionary = held as Dictionary
+		if int(held_d.get("owner", 0)) != player:
+			continue
+		# Skip legacy P0 flags already checked via GameState fields above.
+		if player == 0:
+			continue
+		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
+		if omen.is_empty():
+			continue
+		for effect: Variant in omen.get("effects", []):
+			if not effect is Dictionary:
+				continue
+			var eff: Dictionary = effect as Dictionary
+			if str(eff.get("type", "")) != want:
+				continue
+			if bool(eff.get("value", true)):
+				return true
+	return false
+
+
+static func _sum_holder_effect_int(player: int, effect_type: String) -> int:
+	var total: int = 0
+	var want: String = effect_type.strip_edges()
+	for held: Variant in all_held_omens():
+		if not held is Dictionary:
+			continue
+		var held_d: Dictionary = held as Dictionary
+		if int(held_d.get("owner", 0)) != player:
+			continue
+		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
+		if omen.is_empty():
+			continue
+		for effect: Variant in omen.get("effects", []):
+			if not effect is Dictionary:
+				continue
+			var eff: Dictionary = effect as Dictionary
+			if str(eff.get("type", "")) == want:
+				total += int(eff.get("value", 0))
+	return total
+
+
+static func _sum_holder_effect_float(player: int, effect_type: String) -> float:
+	var total: float = 0.0
+	var want: String = effect_type.strip_edges()
+	for held: Variant in all_held_omens():
+		if not held is Dictionary:
+			continue
+		var held_d: Dictionary = held as Dictionary
+		if int(held_d.get("owner", 0)) != player:
+			continue
+		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
+		if omen.is_empty():
+			continue
+		for effect: Variant in omen.get("effects", []):
+			if not effect is Dictionary:
+				continue
+			var eff: Dictionary = effect as Dictionary
+			if str(eff.get("type", "")) == want:
+				total += float(eff.get("value", 0))
+	return total
+
+
 static func apply_pre_battle_crystal_and_flags() -> void:
+	## Player omens only — enemy omens are rolled after setup; see apply_enemy_crystal_bonuses().
 	if GameState.active_omens.is_empty():
 		return
 	for held: Variant in GameState.active_omens:
@@ -74,9 +312,46 @@ static func apply_pre_battle_crystal_and_flags() -> void:
 		if omen.is_empty():
 			continue
 		var anointed: String = str((held as Dictionary).get("anointed_card", "")).strip_edges()
+		var owner: int = int((held as Dictionary).get("owner", 0))
 		for effect: Variant in omen.get("effects", []):
 			if effect is Dictionary:
-				_apply_pre_battle_effect(effect as Dictionary, anointed)
+				_apply_pre_battle_effect(effect as Dictionary, anointed, owner)
+
+
+## Starting crystal_bonus for enemy-held omens (Heavy Purse, etc.).
+## Safe with force_starting_crystals — bonuses stack on top of the authored base.
+## Idempotent via crystal_bonus_applied on each held entry.
+static func apply_enemy_crystal_bonuses() -> void:
+	for held_v: Variant in GameState.enemy_active_omens:
+		if not held_v is Dictionary:
+			continue
+		var held: Dictionary = held_v as Dictionary
+		if bool(held.get("crystal_bonus_applied", false)):
+			continue
+		var omen: Dictionary = OmenDatabase.get_omen(str(held.get("id", "")))
+		if omen.is_empty():
+			held["crystal_bonus_applied"] = true
+			continue
+		var anointed: String = str(held.get("anointed_card", "")).strip_edges()
+		var owner: int = int(held.get("owner", 1))
+		for effect: Variant in omen.get("effects", []):
+			if not effect is Dictionary:
+				continue
+			var eff: Dictionary = effect as Dictionary
+			if str(eff.get("type", "")) != "crystal_bonus":
+				continue
+			var before: int = 0
+			var target: int = _target_player_index(str(eff.get("target", "player")), owner)
+			if target >= 0 and target < GameState.crystals.size():
+				before = int(GameState.crystals[target])
+			_apply_pre_battle_effect(eff, anointed, owner)
+			if target >= 0 and target < GameState.crystals.size():
+				var delta: int = int(GameState.crystals[target]) - before
+				if delta != 0:
+					var label: String = str(omen.get("label", omen.get("id", "Omen")))
+					GameState.post_message("%s: %+d crystals (Player %d)." % [
+						label, delta, target + 1])
+		held["crystal_bonus_applied"] = true
 
 
 static func apply_setup_runes() -> void:
@@ -89,6 +364,7 @@ static func apply_setup_runes() -> void:
 		var omen: Dictionary = OmenDatabase.get_omen(str((held as Dictionary).get("id", "")))
 		if omen.is_empty():
 			continue
+		var owner: int = int((held as Dictionary).get("owner", 0))
 		for effect: Variant in omen.get("effects", []):
 			if not effect is Dictionary:
 				continue
@@ -98,20 +374,23 @@ static func apply_setup_runes() -> void:
 			var placement: String = str(eff.get("placement", "")).strip_edges()
 			if placement != "setup_visible":
 				continue
-			_place_cell_runes(eff, false)
+			_place_cell_runes(eff, false, owner)
 
 
 static func apply_begin_game(board: Node) -> void:
-	if GameState.active_omens.is_empty():
+	var held_all: Array = all_held_omens()
+	if held_all.is_empty():
 		return
 	_ensure_cell_runes_grid()
-	for held: Variant in GameState.active_omens:
+	for held: Variant in held_all:
 		if not held is Dictionary:
 			continue
-		var omen: Dictionary = OmenDatabase.get_omen(str((held as Dictionary).get("id", "")))
+		var held_d: Dictionary = held as Dictionary
+		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
 		if omen.is_empty():
 			continue
-		var anointed: String = str((held as Dictionary).get("anointed_card", "")).strip_edges()
+		var anointed: String = str(held_d.get("anointed_card", "")).strip_edges()
+		var owner: int = int(held_d.get("owner", 0))
 		for effect: Variant in omen.get("effects", []):
 			if not effect is Dictionary:
 				continue
@@ -119,18 +398,20 @@ static func apply_begin_game(board: Node) -> void:
 			match str(eff.get("type", "")):
 				"reveal_cells":
 					if str(eff.get("timing", "battle_start")).strip_edges() == "battle_start":
-						_apply_reveal_cells(eff)
+						_apply_reveal_cells(eff, owner)
 				"cell_runes":
 					var placement: String = str(eff.get("placement", "")).strip_edges()
 					if placement != "setup_visible":
-						_place_cell_runes(eff, true)
+						_place_cell_runes(eff, true, owner)
 				"unit_stat_flat", "unit_stat_pct":
-					_apply_unit_stat_on_grid(eff)
+					_apply_unit_stat_on_grid(eff, owner)
 				"affinity_override_all":
-					_apply_affinity_override_all(eff)
+					_apply_affinity_override_all(eff, owner)
 	_apply_anoint_effects_on_grid()
 	_apply_rune_card_effects()
 	_apply_anoint_affinity_overrides()
+	# Enemy omens roll post-setup — apply their starting crystal bonuses here if pending.
+	apply_enemy_crystal_bonuses()
 	apply_begin_game_extra(board)
 	if board != null and GameState.omen_intel_lines.is_empty():
 		var ai: Node = board.get("ai_player") if board.get("ai_player") != null else null
@@ -141,6 +422,7 @@ static func apply_begin_game(board: Node) -> void:
 
 static func collect_intel_lines(ai_player: Node) -> Array:
 	var lines: PackedStringArray = PackedStringArray()
+	# Intel omens are player-facing (owner 0 only).
 	if ai_player == null or GameState.active_omens.is_empty():
 		return lines
 	for held: Variant in GameState.active_omens:
@@ -214,10 +496,17 @@ static func get_anoint_lines_for_card(card_name: String) -> PackedStringArray:
 	var effects: Variant = GameState.omen_anoint_effects.get(card_name, [])
 	if effects is Array:
 		for eff: Variant in effects as Array:
-			if eff is Dictionary:
-				var line: String = _format_anoint_effect_line(eff as Dictionary)
-				if not line.is_empty():
-					lines.append(line)
+			if not eff is Dictionary:
+				continue
+			var eff_d: Dictionary = eff as Dictionary
+			# Enemy anoint details only when the target is already public knowledge.
+			if int(eff_d.get("omen_owner", 0)) == 1:
+				var probe: Dictionary = {"owner": 1, "anointed_card": card_name}
+				if not OmenVisuals.anoint_target_is_public(probe):
+					continue
+			var line: String = _format_anoint_effect_line(eff_d)
+			if not line.is_empty():
+				lines.append(line)
 	if lines.is_empty() and ExplorationManager.is_session_active:
 		for held: Variant in ExplorationManager.get_active_omens():
 			if not held is Dictionary:
@@ -243,7 +532,7 @@ static func rune_biases_bluff_reaction(player: int, row: int, col: int) -> int:
 
 static func _build_anoint_effects_map() -> void:
 	GameState.omen_anoint_effects.clear()
-	for held: Variant in GameState.active_omens:
+	for held: Variant in all_held_omens():
 		if not held is Dictionary:
 			continue
 		var held_d: Dictionary = held as Dictionary
@@ -261,15 +550,20 @@ static func _build_anoint_effects_map() -> void:
 				var eff: Dictionary = (effect as Dictionary).duplicate(true)
 				var etype: String = str(eff.get("type", ""))
 				if etype.begins_with("anoint_") or etype in _ANPOINT_RUNTIME_TYPES:
+					eff["omen_owner"] = int(held_d.get("owner", 0))
 					bucket.append(eff)
 		if not bucket.is_empty():
 			GameState.omen_anoint_effects[anointed] = bucket
 
 
-static func _apply_pre_battle_effect(effect: Dictionary, _anointed: String) -> void:
+static func _apply_pre_battle_effect(effect: Dictionary, _anointed: String, omen_owner: int = 0) -> void:
+	# Pre-battle global flags accumulate on GameState for the omen holder (P0 path today).
+	# Enemy omens roll after setup and use owner-aware helpers at gate points instead.
+	if omen_owner != 0 and str(effect.get("type", "")) != "crystal_bonus":
+		return
 	match str(effect.get("type", "")):
 		"crystal_bonus":
-			var target: int = _target_player_index(str(effect.get("target", "player")))
+			var target: int = _target_player_index(str(effect.get("target", "player")), omen_owner)
 			if target >= 0:
 				GameState.crystals[target] = maxi(0, GameState.crystals[target] + int(effect.get("value", 0)))
 		"cannot_attack_first_turn":
@@ -331,8 +625,8 @@ static func _accumulate_crystal_loss_pct(effect: Dictionary) -> void:
 			GameState.omen_crystal_loss_pct += pct
 
 
-static func _apply_reveal_cells(effect: Dictionary) -> void:
-	var target: int = _target_player_index(str(effect.get("target", "enemy")))
+static func _apply_reveal_cells(effect: Dictionary, omen_owner: int = 0) -> void:
+	var target: int = _target_player_index(str(effect.get("target", "enemy")), omen_owner)
 	if target < 0:
 		return
 	var count: int = maxi(0, int(effect.get("value", 0)))
@@ -350,8 +644,8 @@ static func _apply_reveal_cells(effect: Dictionary) -> void:
 		GameState.reveal_card_by_ability(target, pos.x, pos.y)
 
 
-static func _place_cell_runes(effect: Dictionary, occupied_only: bool) -> void:
-	var target: int = _target_player_index(str(effect.get("target", "player")))
+static func _place_cell_runes(effect: Dictionary, occupied_only: bool, omen_owner: int = 0) -> void:
+	var target: int = _target_player_index(str(effect.get("target", "player")), omen_owner)
 	if target < 0:
 		return
 	var rune: String = str(effect.get("rune", "")).strip_edges().to_lower()
@@ -374,8 +668,8 @@ static func _place_cell_runes(effect: Dictionary, occupied_only: bool) -> void:
 		GameState.cell_runes[target][pos.x][pos.y] = rune
 
 
-static func _apply_unit_stat_on_grid(effect: Dictionary) -> void:
-	var target: int = _target_player_index(str(effect.get("target", "player")))
+static func _apply_unit_stat_on_grid(effect: Dictionary, omen_owner: int = 0) -> void:
+	var target: int = _target_player_index(str(effect.get("target", "player")), omen_owner)
 	if target < 0:
 		return
 	for r: int in range(GameState.GRID_SIZE):
@@ -471,11 +765,11 @@ static func _affinity_from_name(name: String) -> int:
 	return -1
 
 
-static func _apply_affinity_override_all(effect: Dictionary) -> void:
+static func _apply_affinity_override_all(effect: Dictionary, omen_owner: int = 0) -> void:
 	var aff: int = _affinity_from_name(str(effect.get("affinity", "")))
 	if aff < 0:
 		return
-	var target: int = _target_player_index(str(effect.get("target", "player")))
+	var target: int = _target_player_index(str(effect.get("target", "player")), omen_owner)
 	for r: int in range(GameState.GRID_SIZE):
 		for c: int in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(target, r, c)
@@ -564,13 +858,14 @@ static func _card_matches_unit_filter(
 	return true
 
 
-static func _target_player_index(target: String) -> int:
+static func _target_player_index(target: String, omen_owner: int = 0) -> int:
+	## "player" / holder = omen owner; "enemy" / foe = the opposite side.
 	match str(target).strip_edges().to_lower():
-		"player", "p0", "human":
-			return 0
-		"enemy", "foe", "p1", "ai":
-			return 1
-	return 0
+		"player", "p0", "human", "holder", "self":
+			return omen_owner
+		"enemy", "foe", "p1", "ai", "opponent":
+			return 1 - omen_owner
+	return omen_owner
 
 
 static func _ensure_cell_runes_grid() -> void:
@@ -715,9 +1010,10 @@ const _ANPOINT_RUNTIME_TYPES: Array[String] = [
 static func effects_of_type(type_name: String) -> Array:
 	var out: Array = []
 	var want: String = type_name.strip_edges()
-	if want.is_empty() or GameState.active_omens.is_empty():
+	var held_all: Array = all_held_omens()
+	if want.is_empty() or held_all.is_empty():
 		return out
-	for held: Variant in GameState.active_omens:
+	for held: Variant in held_all:
 		if not held is Dictionary:
 			continue
 		var held_d: Dictionary = held as Dictionary
@@ -725,6 +1021,7 @@ static func effects_of_type(type_name: String) -> Array:
 		if omen.is_empty():
 			continue
 		var anointed: String = str(held_d.get("anointed_card", "")).strip_edges()
+		var owner: int = int(held_d.get("owner", 0))
 		for effect: Variant in omen.get("effects", []):
 			if not effect is Dictionary:
 				continue
@@ -735,6 +1032,7 @@ static func effects_of_type(type_name: String) -> Array:
 				"omen_id": str(omen.get("id", "")),
 				"anointed": anointed,
 				"effect": eff,
+				"owner": owner,
 			})
 	return out
 
@@ -791,9 +1089,10 @@ static func _card_matches_effect_unit(
 	if not anointed.is_empty():
 		return card.card_name == anointed
 	var eff: Dictionary = entry.get("effect", {}) as Dictionary
-	# Field-wide filters: owner must be the omen holder (player 0) unless target says otherwise.
+	# Field-wide filters: owner must match omen holder resolved via target.
 	var target: String = str(eff.get("target", "player")).strip_edges().to_lower()
-	var want_owner: int = _target_player_index(target if not target.is_empty() else "player")
+	var omen_owner: int = int(entry.get("owner", 0))
+	var want_owner: int = _target_player_index(target if not target.is_empty() else "player", omen_owner)
 	if owner_player != want_owner:
 		return false
 	# Allow unions for name filters (totems normally skip unions via _card_matches_unit_filter).
@@ -1006,21 +1305,19 @@ static func get_unit_extra_attacks(card: GameState.CardInstance, owner_player: i
 
 
 static func should_lock_attacker_on_trap(trap_card_name: String, trap_owner: int) -> bool:
-	# Omen holder is player 0; trap must be theirs unless anointed trap name matches.
 	for entry: Variant in effects_of_type("lock_attacker_on_trap"):
 		if not entry is Dictionary:
 			continue
 		var e: Dictionary = entry as Dictionary
+		var omen_owner: int = int(e.get("owner", 0))
 		var anointed: String = str(e.get("anointed", "")).strip_edges()
 		if not anointed.is_empty():
-			if trap_card_name == anointed and trap_owner == 0:
+			if trap_card_name == anointed and trap_owner == omen_owner:
 				return true
 			continue
 		var eff: Dictionary = e.get("effect", {}) as Dictionary
-		if trap_owner != _target_player_index(str(eff.get("target", "player"))):
-			# Default: omen protects the holder's traps (player).
-			if trap_owner != 0:
-				continue
+		if trap_owner != _target_player_index(str(eff.get("target", "player")), omen_owner):
+			continue
 		if name_matches_filter(trap_card_name, eff.get("filter", {})):
 			return true
 	return false
@@ -1460,7 +1757,7 @@ static func apply_unit_destroy_cost_multipliers() -> void:
 		var e: Dictionary = entry as Dictionary
 		var eff: Dictionary = e.get("effect", {}) as Dictionary
 		var mult: float = float(eff.get("value", 1.0))
-		var target: int = _target_player_index(str(eff.get("target", "player")))
+		var target: int = _target_player_index(str(eff.get("target", "player")), int(e.get("owner", 0)))
 		for r: int in range(GameState.GRID_SIZE):
 			for c: int in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(target, r, c)
@@ -1704,8 +2001,13 @@ static func attack_lock_defender_turns() -> int:
 	return n
 
 
-static func has_escalating_toll() -> bool:
-	return not effects_of_type("escalating_foe_crystal_loss").is_empty()
+static func has_escalating_toll(for_owner: int = -1) -> bool:
+	for entry: Variant in effects_of_type("escalating_foe_crystal_loss"):
+		if not entry is Dictionary:
+			continue
+		if for_owner < 0 or int((entry as Dictionary).get("owner", 0)) == for_owner:
+			return true
+	return false
 
 
 static func try_spend_mutagen_revive(card: GameState.CardInstance) -> bool:

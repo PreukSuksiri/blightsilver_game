@@ -174,10 +174,21 @@ func format_omen_line(held_entry: Dictionary) -> String:
 	if omen.is_empty():
 		return id
 	var label: String = str(omen.get("label", id))
+	var owner: int = int(held_entry.get("owner", 0))
 	var anointed: String = str(held_entry.get("anointed_card", "")).strip_edges()
+	# Enemy anoint target stays hidden until the card is public (face-up / played).
+	if owner == 1:
+		if anointed.is_empty() or not OmenVisuals.anoint_target_is_public(held_entry):
+			return "Enemy: %s" % label
+		return "Enemy: %s — %s" % [label, anointed]
 	if anointed.is_empty():
 		return label
 	return "%s — %s" % [label, anointed]
+
+
+## Public wrapper for deck-entry construction used by battle anoint helpers.
+func deck_entry_from_name(card_name: String) -> Dictionary:
+	return _deck_entry_from_name(card_name)
 
 
 func _parse_group_csv(group_csv: String) -> Array:

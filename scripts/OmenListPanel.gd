@@ -18,9 +18,13 @@ static func build_list(parent: Control, held_omens: Array) -> void:
 		if not entry is Dictionary:
 			continue
 		var lbl := Label.new()
-		lbl.text = OmenDatabase.format_omen_line(entry as Dictionary)
+		var held: Dictionary = entry as Dictionary
+		lbl.text = OmenDatabase.format_omen_line(held)
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		lbl.add_theme_color_override("font_color", Color(0.88, 0.93, 0.98, 1.0))
+		if int(held.get("owner", 0)) == 1:
+			lbl.add_theme_color_override("font_color", Color(0.95, 0.62, 0.48, 1.0))
+		else:
+			lbl.add_theme_color_override("font_color", Color(0.88, 0.93, 0.98, 1.0))
 		parent.add_child(lbl)
 
 

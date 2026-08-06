@@ -947,6 +947,19 @@ func _pit_lord(A, AB) -> void:
 	var r3 := BattleResolver.resolve_battle(weak_att, strong_divine, 3, 0, 1)
 	assert_true(r3.attacker_destroyed, "TC-FUNC-Pit-Lord-003: destroyed after Reckoning vs DIVINE (loss)")
 	assert_false(r3.defender_destroyed, "TC-FUNC-Pit-Lord-003: Divine defender survives")
+	print("-- TC-FUNC-Pit-Lord-004")
+	# Halve is deferred until Reckoning dismiss — resolve_battle must not mutate yet.
+	var pit_win := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
+		AB.DESTROYED_IF_BATTLES_DIVINE, pit_params)
+	var grunt := _make_char("Chaos Grunt", 20, 20, 200, A.CHAOS)
+	var r4 := BattleResolver.resolve_battle(pit_win, grunt, 3, 0, 1)
+	assert_true(r4.defender_destroyed, "TC-FUNC-Pit-Lord-004: wins vs non-Divine")
+	assert_false(r4.attacker_destroyed, "TC-FUNC-Pit-Lord-004: Pit Lord survives non-Divine win")
+	assert_true(r4.pending_halve_attacker_stats,
+		"TC-FUNC-Pit-Lord-004: pending halve flagged (apply after Reckoning dismiss)")
+	assert_false(pit_win.halved, "TC-FUNC-Pit-Lord-004: stats not halved during resolve_battle")
+	assert_eq(pit_win.current_atk, 120, "TC-FUNC-Pit-Lord-004: ATK still full during overlay")
+	assert_eq(pit_win.current_def, 100, "TC-FUNC-Pit-Lord-004: DEF still full during overlay")
 
 func _vampire_duchess(A, AB) -> void:
 	print("-- TC-FUNC-Vampire-Duchess-001")

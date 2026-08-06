@@ -444,6 +444,9 @@ func _refresh_omen_badge() -> void:
 		return
 	if card_data.card_type == "dead_end" or card_data.was_destroyed:
 		return
+	# Face-down enemy tiles: never show a sigil (would spoil that the card is special).
+	if player_owner == 1 and not card_data.face_up and not _is_peeking:
+		return
 	var badge_size: float = clampf(minf(size.x, size.y) * 0.16, 16.0, 28.0)
 	if badge_size < 1.0:
 		badge_size = 20.0

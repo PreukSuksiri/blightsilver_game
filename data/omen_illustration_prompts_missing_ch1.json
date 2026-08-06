@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "group": "chapter_1",
-    "count": 178,
+    "group": "chapter_1+boss_chapter_1 missing art",
+    "count": 141,
     "aspect_ratio": "2:1 landscape (author at 900x450, crop top-weighted)",
     "style_suffix": "2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark",
     "composition_glue": "centered iconic composition, plain dark ground behind, corners fading to shadow",
@@ -10,548 +10,18 @@
   },
   "prompts": [
     {
-      "id": "third_eye",
-      "label": "Third Eye",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "insights",
-        "chapter_1"
-      ],
-      "description": "Reveal 1 enemy cell at the start of battle.",
-      "subject": "a single haloed eye opening in the palm of an upraised hand, thin rays of gilded light",
-      "prompt": "a single haloed eye opening in the palm of an upraised hand, thin rays of gilded light, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "provocative",
-      "label": "Provocative",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "insights",
-        "chapter_1"
-      ],
-      "description": "Know 1 bluff emoji the enemy is drawn to.",
-      "subject": "a smiling mask held toward the viewer, a moth drawn to its gilt lips",
-      "prompt": "a smiling mask held toward the viewer, a moth drawn to its gilt lips, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "disgusting",
-      "label": "Disgusting",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "insights",
-        "chapter_1"
-      ],
-      "description": "Know 1 bluff emoji the enemy avoids.",
-      "subject": "a turned-away veiled face rejecting a worm-eaten fruit offered on a gold plate",
-      "prompt": "a turned-away veiled face rejecting a worm-eaten fruit offered on a gold plate, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "open_book",
-      "label": "Open Book",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "insights",
-        "chapter_1"
-      ],
-      "description": "Learn the enemy's offensive personality name.",
-      "subject": "an open illuminated manuscript hovering above two clasped hands",
-      "prompt": "an open illuminated manuscript hovering above two clasped hands, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "broken_mirror",
-      "label": "Broken Mirror",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "insights",
-        "chapter_1"
-      ],
-      "description": "2 enemy cells are revealed at battle start, but 1 of yours is too.",
-      "subject": "a cracked hand-mirror held by a veiled figure, two faces splintered in the gold shards",
-      "prompt": "a cracked hand-mirror held by a veiled figure, two faces splintered in the gold shards, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "beggars_curse",
-      "label": "Beggar's Curse",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "Enemy starts with -500 crystals.",
-      "subject": "an empty begging bowl overturned, a few coins slipping into shadow",
-      "prompt": "an empty begging bowl overturned, a few coins slipping into shadow, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "windfall",
-      "label": "Windfall",
+      "id": "cheap_circuit_lock",
+      "label": "Cheap Circuit Lock",
       "rarity": "rare",
       "positive": null,
       "groups": [
         "fortunes",
-        "chapter_1"
-      ],
-      "description": "+2500 starting crystals, but the enemy gains +1000.",
-      "subject": "coins cascading from a tilted golden vessel held by a solemn angel",
-      "prompt": "coins cascading from a tilted golden vessel held by a solemn angel, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "silver_tongue",
-      "label": "Silver Tongue",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "+50% credits from battle victories.",
-      "subject": "a saintly mouth of burnished silver, a thin ribbon of speech curling like incense",
-      "prompt": "a saintly mouth of burnished silver, a thin ribbon of speech curling like incense, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "modest_hoard",
-      "label": "Modest Hoard",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "+200 starting crystals.",
-      "subject": "a small wooden chest cracked open, a modest pile of dull coins within",
-      "prompt": "a small wooden chest cracked open, a modest pile of dull coins within, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "heavy_purse",
-      "label": "Heavy Purse",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1",
+        "bargains",
         "boss_chapter_1"
       ],
-      "description": "+500 starting crystals.",
-      "subject": "a swollen leather purse tied with red cord, heavy with gold coins",
-      "prompt": "a swollen leather purse tied with red cord, heavy with gold coins, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "hesitant_fortune",
-      "label": "Hesitant Fortune",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1"
-      ],
-      "description": "+1000 starting crystals; you cannot attack on your first turn.",
-      "subject": "a crowned figure clutching a overflowing coin purse, sword still sheathed",
-      "prompt": "a crowned figure clutching a overflowing coin purse, sword still sheathed, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "mute_fortune",
-      "label": "Mute Fortune",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1"
-      ],
-      "description": "+1000 starting crystals; you cannot play tech cards.",
-      "subject": "a gagged angel seated upon a heap of gold coins, finger to sealed lips",
-      "prompt": "a gagged angel seated upon a heap of gold coins, finger to sealed lips, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "soft_landing_ii",
-      "label": "Soft Landing II",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "10% reduction to all crystal loss.",
-      "subject": "a falling figure caught gently in a golden cloth held by two hands",
-      "prompt": "a falling figure caught gently in a golden cloth held by two hands, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "quiet_funeral_ii",
-      "label": "Quiet Funeral II",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "10% reduction to crystal loss from unit destruction only.",
-      "subject": "a shrouded body laid upon a dark bier, a single gold coin on the lips",
-      "prompt": "a shrouded body laid upon a dark bier, a single gold coin on the lips, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "quiet_funeral_bargain",
-      "label": "Quiet Funeral Bargain",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1"
-      ],
-      "description": "-15% unit-destruction crystal loss; crystal gains reduced by 50%.",
-      "subject": "a funeral shroud half-gold half-ash, a balance scale tipping both ways",
-      "prompt": "a funeral shroud half-gold half-ash, a balance scale tipping both ways, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "quiet_funeral_lock",
-      "label": "Quiet Funeral Lock",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1"
-      ],
-      "description": "-20% unit-destruction crystal loss; you cannot gain crystals.",
-      "subject": "a sealed tomb door with a locked gold padlock, wilted flowers at the base",
-      "prompt": "a sealed tomb door with a locked gold padlock, wilted flowers at the base, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "cheap_snare_bargain",
-      "label": "Cheap Snare Bargain",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1"
-      ],
-      "description": "-15% trap costs; crystal gains reduced by 50%.",
-      "subject": "a simple snare of cord and wood beside a half-empty coin pouch",
-      "prompt": "a simple snare of cord and wood beside a half-empty coin pouch, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "cheap_snare_lock",
-      "label": "Cheap Snare Lock",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1"
-      ],
-      "description": "-20% trap costs; you cannot gain crystals.",
-      "subject": "a snare of iron wire with a locked clasp, coins sealed behind a grate",
-      "prompt": "a snare of iron wire with a locked clasp, coins sealed behind a grate, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "cheap_circuit_ii",
-      "label": "Cheap Circuit II",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "14% tech cost reduction.",
-      "subject": "a glowing arcane circuit etched into a wood panel like a holy diagram",
-      "prompt": "a glowing arcane circuit etched into a wood panel like a holy diagram, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "cheap_circuit_bargain",
-      "label": "Cheap Circuit Bargain",
-      "rarity": "rare",
-      "positive": null,
-      "groups": [
-        "fortunes",
-        "bargains",
-        "chapter_1",
-        "boss_chapter_1"
-      ],
-      "description": "-25% tech costs; crystal gains reduced by 50%.",
-      "subject": "a sacred circuit diagram drawn in gold ink, half the gold scraped away",
-      "prompt": "a sacred circuit diagram drawn in gold ink, half the gold scraped away, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "divine_requiem",
-      "label": "Divine Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Divine units are destroyed.",
-      "subject": "a kneeling angel mourning over a broken halo, soft white light",
-      "prompt": "a kneeling angel mourning over a broken halo, soft white light, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "chaos_requiem",
-      "label": "Chaos Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Chaos units are destroyed.",
-      "subject": "a horned mourner clutching a shattered black crown amid crimson smoke",
-      "prompt": "a horned mourner clutching a shattered black crown amid crimson smoke, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "arcane_requiem",
-      "label": "Arcane Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Arcane units are destroyed.",
-      "subject": "a wizard's staff broken across a grave, indigo runes fading to ash",
-      "prompt": "a wizard's staff broken across a grave, indigo runes fading to ash, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "bio_requiem",
-      "label": "Bio Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Bio units are destroyed.",
-      "subject": "a wilted organic halo of roots and veins around a skull, greenish gold",
-      "prompt": "a wilted organic halo of roots and veins around a skull, greenish gold, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "nature_requiem",
-      "label": "Nature Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Nature units are destroyed.",
-      "subject": "a dry oak leaf crown laid upon mossy stone, a single green shoot rising",
-      "prompt": "a dry oak leaf crown laid upon mossy stone, a single green shoot rising, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "cosmic_requiem",
-      "label": "Cosmic Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Cosmic units are destroyed.",
-      "subject": "a fallen star cradled in two hands, night sky painted in lapis behind",
-      "prompt": "a fallen star cradled in two hands, night sky painted in lapis behind, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "anima_requiem",
-      "label": "Anima Requiem",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "fortunes",
-        "chapter_1"
-      ],
-      "description": "-15% crystal loss when your Anima units are destroyed.",
-      "subject": "a beast-skull totem wrapped in burial cloth, a living eye still open",
-      "prompt": "a beast-skull totem wrapped in burial cloth, a living eye still open, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "stubborn_soul",
-      "label": "Stubborn Soul",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "wards",
-        "chapter_1"
-      ],
-      "description": "Your units survive Reckoning ties.",
-      "subject": "a defiant figure standing amid broken spears, soul-flame still burning in the chest",
-      "prompt": "a defiant figure standing amid broken spears, soul-flame still burning in the chest, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "null_aegis",
-      "label": "Null Aegis",
-      "rarity": "rare",
-      "positive": true,
-      "groups": [
-        "wards",
-        "chapter_1"
-      ],
-      "description": "Your units unaffected by 0-cost traps become unaffected by ALL traps and tech.",
-      "subject": "a blank circular shield of dull lead and gold, all symbols scraped away",
-      "prompt": "a blank circular shield of dull lead and gold, all symbols scraped away, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "golden_reckoning",
-      "label": "Golden Reckoning",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "wards",
-        "cosmic",
-        "chapter_1"
-      ],
-      "description": "Your Cosmic units grant +200 crystals when they win a Reckoning.",
-      "subject": "a cosmic balance scale tipping toward a radiant gold pan of stars",
-      "prompt": "a cosmic balance scale tipping toward a radiant gold pan of stars, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "contagion_mark",
-      "label": "Contagion Mark",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "bio",
-        "chapter_1"
-      ],
-      "description": "Choose 1 Bio unit. It gains Mutagen when flipped face-up.",
-      "subject": "a bio-saint branded with a green mutagen sigil on the forehead",
-      "prompt": "a bio-saint branded with a green mutagen sigil on the forehead, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "keen_edge",
-      "label": "Keen Edge",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 unit. +5 ATK.",
-      "subject": "a single upright sword with a thin gold cutting edge, point toward heaven",
-      "prompt": "a single upright sword with a thin gold cutting edge, point toward heaven, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "shortcut_circuit",
-      "label": "Shortcut Circuit",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 tech. Halve its cost.",
-      "subject": "a halved arcane glyph cut clean through, both halves still glowing",
-      "prompt": "a halved arcane glyph cut clean through, both halves still glowing, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "wild_bloom",
-      "label": "Wild Bloom",
-      "rarity": "rare",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 Nature unit. Each Reckoning, coin flip: Heads → +10 ATK & +10 DEF.",
-      "subject": "a flowering vine erupting from a cracked stone saint, petals of gold and green",
-      "prompt": "a flowering vine erupting from a cracked stone saint, petals of gold and green, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "frenzy_brand",
-      "label": "Frenzy Brand",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 Chaos unit. It can attack 1 additional time.",
-      "subject": "a Chaos brand of red flame scorched into bare flesh, wild eyes above",
-      "prompt": "a Chaos brand of red flame scorched into bare flesh, wild eyes above, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "free_snare",
-      "label": "Free Snare",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 trap. Its cost becomes 0.",
-      "subject": "an open snare of silk thread floating weightlessly, no cost, no lock",
-      "prompt": "an open snare of silk thread floating weightlessly, no cost, no lock, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "twin_tip",
-      "label": "Twin Tip",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 unit. +5 ATK & +5 DEF.",
-      "subject": "a double-pointed spear with twin gold tips, balanced on a fingertip",
-      "prompt": "a double-pointed spear with twin gold tips, balanced on a fingertip, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "soft_plate",
-      "label": "Soft Plate",
-      "rarity": "common",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 unit. +5 DEF.",
-      "subject": "a soft leather breastplate lined with gold leaf, gently curved",
-      "prompt": "a soft leather breastplate lined with gold leaf, gently curved, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "keen_edge_ii",
-      "label": "Keen Edge II",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 unit. +10 ATK.",
-      "subject": "a longer sword of brighter gold edge, light catching the blade",
-      "prompt": "a longer sword of brighter gold edge, light catching the blade, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "twin_edge",
-      "label": "Twin Edge",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 unit. +10 ATK & +10 DEF.",
-      "subject": "a crossed pair of golden blades forming an X over a dark shield",
-      "prompt": "a crossed pair of golden blades forming an X over a dark shield, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
-    },
-    {
-      "id": "iron_skin",
-      "label": "Iron Skin",
-      "rarity": "uncommon",
-      "positive": true,
-      "groups": [
-        "anoint",
-        "chapter_1"
-      ],
-      "description": "Choose 1 unit. +10 DEF.",
-      "subject": "a knight's torso plated in dark iron with faint gold rivets",
-      "prompt": "a knight's torso plated in dark iron with faint gold rivets, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
+      "description": "-30% tech costs; you cannot gain crystals.",
+      "subject": "a sacred circuit diagram locked behind iron bars, coins frozen outside the grate",
+      "prompt": "a sacred circuit diagram locked behind iron bars, coins frozen outside the grate, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
     },
     {
       "id": "keen_edge_iii",
@@ -623,6 +93,19 @@
       "prompt": "a turtle-shell idol of thick stone and gold, head withdrawn, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
     },
     {
+      "id": "lightweight",
+      "label": "Lightweight",
+      "rarity": "uncommon",
+      "positive": true,
+      "groups": [
+        "anoint",
+        "boss_chapter_1"
+      ],
+      "description": "Choose 1 unit. Union summons using this card as material cost half.",
+      "subject": "a feather-light saint dissolving into Union light, almost weightless gold",
+      "prompt": "a feather-light saint dissolving into Union light, almost weightless gold, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
+    },
+    {
       "id": "bargain_bin",
       "label": "Bargain Bin",
       "rarity": "common",
@@ -634,6 +117,32 @@
       "description": "Choose 1 unit with no ability. +25 ATK & +25 DEF.",
       "subject": "a plain wooden saint with no halo, suddenly gilded and strong",
       "prompt": "a plain wooden saint with no halo, suddenly gilded and strong, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
+    },
+    {
+      "id": "heavy_relic",
+      "label": "Heavy Relic",
+      "rarity": "uncommon",
+      "positive": true,
+      "groups": [
+        "anoint",
+        "boss_chapter_1"
+      ],
+      "description": "Choose 1 unit with cost >= 800. +30% ATK & DEF.",
+      "subject": "a massive gold relic idol too heavy to lift, radiant and crushing",
+      "prompt": "a massive gold relic idol too heavy to lift, radiant and crushing, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
+    },
+    {
+      "id": "glass_cannon",
+      "label": "Glass Cannon",
+      "rarity": "uncommon",
+      "positive": null,
+      "groups": [
+        "anoint",
+        "boss_chapter_1"
+      ],
+      "description": "Choose 1 unit. +40 ATK, -20 DEF.",
+      "subject": "a crystal cannon-saint of thin glass, blazing gold muzzle, cracked fragile armor",
+      "prompt": "a crystal cannon-saint of thin glass, blazing gold muzzle, cracked fragile armor, centered iconic composition, plain dark ground behind, corners fading to shadow, 2:1 aspect ratio, Byzantine church icon painting, egg tempera on cracked wood panel, burnished gold-leaf ground, hieratic frontal composition, muted earth pigments — ochre, oxblood, verdigris, lapis blue, soot-darkened aged varnish, fine craquelure, flaking gilt, candlelit sacred atmosphere, deep shadow at the edges, painterly medieval religious art, no text, no lettering, no ornate frame, no watermark"
     },
     {
       "id": "hollow_offering",

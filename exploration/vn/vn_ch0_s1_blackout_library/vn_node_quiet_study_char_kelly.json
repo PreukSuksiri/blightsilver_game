@@ -423,7 +423,9 @@
 		],
 		"music": "res://assets/audio/bgm_horror_1.mp3",
 		"music_force": true,
-		"shake_screen": 10.0,
+		"shake_magnitude": 10.0,
+		"shake_screen": 20.0,
+		"show_polaroid": "<null>",
 		"text": "!!!",
 		"wait": 2.0
 	},
@@ -465,6 +467,7 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
+		"show_polaroid": "<null>",
 		"speaker": "Kelly",
 		"text": "Nex!! Use the Vellum Card!!"
 	},
@@ -474,7 +477,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+				"sprite": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex/profile_quick_duel_nex_3.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -483,6 +486,7 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
+		"show_polaroid": "<null>",
 		"speaker": "Nex",
 		"text": "May the silver path show your true sins!! Vellum cards commence!!"
 	},
@@ -493,7 +497,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+				"sprite": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex/profile_quick_duel_nex_3.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -504,6 +508,7 @@
 		],
 		"comment": "Animation",
 		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"show_polaroid": "<null>",
 		"wait": 5.8
 	},
 	{
@@ -624,6 +629,7 @@
 				"type": "booster_pack"
 			}
 		],
+		"battle_use_exploration_bg": true,
 		"comment": "Battle - Mayu Kokawa",
 		"enemy_deck": {
 			"characters": [
@@ -654,14 +660,16 @@
 				"Explosive Barrels"
 			]
 		},
+		"enemy_omen_count": 1.0,
+		"enemy_omen_groups": "boss_chapter_1",
 		"force_starting_crystals": true,
 		"on_lose": "game_over",
 		"on_win": "res://campaign/scenes/ch1_s1_post_DEMO.json",
 		"player1_name": "Nexus Crowmont",
 		"player2_name": "Mayu Kokawa",
-		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+		"portrait_p1": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex/profile_quick_duel_nex_3.png",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_possessed_mayu.png",
-		"battle_use_exploration_bg": true,
+		"show_polaroid": "<null>",
 		"start_battle": true,
 		"starting_crystals_p1": 5000.0,
 		"starting_crystals_p2": 5000.0

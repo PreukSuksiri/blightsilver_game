@@ -1577,6 +1577,14 @@ func _run_show_detective_note_beat(spec: Variant) -> void:
 	if chapter.is_empty():
 		push_warning("VNPlayer: show_detective_note needs a resolvable chapter — skipped.")
 		return
+	# Safety: opening a specific topic must unlock it if a prior silent grant was missed.
+	if not topic.is_empty() and not DetectiveNoteManager.is_topic_unlocked(chapter, topic):
+		DetectiveNoteManager.unlock_topic(chapter, topic)
+	# Quiet Study topic also silently grants Ghost/Demon placement clues on enter VN.
+	# Re-apply here so stuck saves (topic unlocked, clues never granted) recover.
+	if chapter == "ch1_s1" and topic == "library_quiet_study_ghost_or_demon":
+		DetectiveNoteManager.add_clue(chapter, "anomaly_quiet_study_ghost", true)
+		DetectiveNoteManager.add_clue(chapter, "anomaly_quiet_study_demon", true)
 	if _note_overlay != null and is_instance_valid(_note_overlay):
 		await _note_overlay.closed
 		_note_overlay = null
@@ -2255,6 +2263,12 @@ func _show_beat() -> void:
 		GameState.battle_player_union_enabled = bool(beat.get("player_union_enabled", true))
 		var pfc: Variant = beat.get("player_forced_cells", null)
 		GameState.battle_player_forced_cells  = pfc if pfc is Array else []
+		# Enemy omen roll config (post-setup phase)
+		var eoc: int = clampi(int(beat.get("enemy_omen_count", 0)), 0, 3)
+		var eog: String = str(beat.get("enemy_omen_groups", "")).strip_edges()
+		GameState.enemy_omen_count = eoc if not eog.is_empty() else 0
+		GameState.enemy_omen_groups = eog if eoc > 0 else ""
+		GameState.enemy_active_omens.clear()
 		await CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return
@@ -2500,8 +2514,10 @@ func _show_beat() -> void:
 	# Wait + deferred side-effects / overlays: run them first; after they finish,
 	# continue without an extra click when there is nothing else to read.
 	if (blocked_on_note_ui or ran_note_commands or ran_side_effects) \
-			and float(beat.get("wait", 0.0)) > 0.0 \
 			and not _beat_needs_click_after_deferred(beat):
+		# Auto-advance after textless grant beats (e.g. detective_note unlock with
+		# no dialogue). Previously required wait>0, so silent unlock frames could
+		# sit on an empty dialog click — easy to miss / desync from play_once.
 		_show_beat()
 		return
 

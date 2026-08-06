@@ -33,6 +33,16 @@ static func ring_color(omen: Dictionary) -> Color:
 	return RARITY_RING.get(rarity, RARITY_RING["common"]) as Color
 
 
+## Ash-crimson hostile tint for enemy-owned omen badges / chrome.
+static func hostile_ring_color(omen: Dictionary) -> Color:
+	var base: Color = ring_color(omen)
+	return Color(
+		clampf(base.r * 0.45 + 0.58, 0.0, 1.0),
+		clampf(base.g * 0.28 + 0.14, 0.0, 1.0),
+		clampf(base.b * 0.22 + 0.08, 0.0, 1.0),
+		1.0)
+
+
 static func rarity_star_count(omen: Dictionary) -> int:
 	var rarity: String = str(omen.get("rarity", "common")).to_lower()
 	return int(RARITY_STARS.get(rarity, 1))
@@ -200,24 +210,48 @@ static func make_placeholder_art_tex(ring: Color) -> Texture2D:
 static func held_entries() -> Array:
 	var entries: Array = []
 	var seen: Dictionary = {}
-	var sources: Array = [GameState.active_omens]
-	if ExplorationManager.is_session_active:
-		sources.append(ExplorationManager.get_active_omens())
-	for src: Variant in sources:
-		if not src is Array:
+	for held: Variant in GameState.active_omens:
+		if not held is Dictionary:
 			continue
-		for held: Variant in src as Array:
-			if not held is Dictionary:
+		var entry: Dictionary = (held as Dictionary).duplicate(true)
+		if not entry.has("owner"):
+			entry["owner"] = 0
+		var id: String = str(entry.get("id", "")).strip_edges()
+		if id.is_empty():
+			continue
+		var key: String = "%s|%s|%d" % [id, str(entry.get("anointed_card", "")), int(entry.get("owner", 0))]
+		if seen.has(key):
+			continue
+		seen[key] = true
+		entries.append(entry)
+	for held2: Variant in GameState.enemy_active_omens:
+		if not held2 is Dictionary:
+			continue
+		var entry2: Dictionary = (held2 as Dictionary).duplicate(true)
+		entry2["owner"] = int(entry2.get("owner", 1))
+		var id2: String = str(entry2.get("id", "")).strip_edges()
+		if id2.is_empty():
+			continue
+		var key2: String = "%s|%s|%d" % [id2, str(entry2.get("anointed_card", "")), int(entry2.get("owner", 1))]
+		if seen.has(key2):
+			continue
+		seen[key2] = true
+		entries.append(entry2)
+	if ExplorationManager.is_session_active:
+		for held3: Variant in ExplorationManager.get_active_omens():
+			if not held3 is Dictionary:
 				continue
-			var entry: Dictionary = held as Dictionary
-			var id: String = str(entry.get("id", "")).strip_edges()
-			if id.is_empty():
+			var entry3: Dictionary = (held3 as Dictionary).duplicate(true)
+			if not entry3.has("owner"):
+				entry3["owner"] = 0
+			var id3: String = str(entry3.get("id", "")).strip_edges()
+			if id3.is_empty():
 				continue
-			var key: String = "%s|%s" % [id, str(entry.get("anointed_card", ""))]
-			if seen.has(key):
+			var key3: String = "%s|%s|%d" % [id3, str(entry3.get("anointed_card", "")), int(entry3.get("owner", 0))]
+			if seen.has(key3):
 				continue
-			seen[key] = true
-			entries.append(entry.duplicate(true))
+			seen[key3] = true
+			entries.append(entry3)
 	return entries
 
 
@@ -236,6 +270,8 @@ static func held_rows() -> Array:
 
 ## Omens anointed to a specific card. Global (non-anoint) omens target no card and
 ## are deliberately excluded — a badge on every card would carry no information.
+## Callers that show a face-down enemy tile must gate the badge themselves so the
+## sigil does not spoil a hidden card.
 static func rows_for_card(card_name: String) -> Array:
 	var wanted: String = card_name.strip_edges()
 	if wanted.is_empty():
@@ -247,6 +283,35 @@ static func rows_for_card(card_name: String) -> Array:
 		if str(entry.get("anointed_card", "")).strip_edges() == wanted:
 			rows.append(r)
 	return rows
+
+
+## True when the player is already allowed to know this anoint target's identity
+## (face-up on board, or enemy tech already played). Player-owned anoints are always public.
+static func anoint_target_is_public(held_entry: Dictionary) -> bool:
+	var owner: int = int(held_entry.get("owner", 0))
+	var anointed: String = str(held_entry.get("anointed_card", "")).strip_edges()
+	if owner != 1:
+		return true
+	if anointed.is_empty():
+		return true
+	# Board: public once any living copy is face-up.
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card == null or card.was_destroyed:
+					continue
+				if card.card_name != anointed:
+					continue
+				if card.face_up:
+					return true
+				# Still face-down — keep searching other copies.
+	# Tech: public after the enemy has played it this duel.
+	var played: Variant = GameState.tech_cards_played_this_game
+	if played is Array and played.size() > 1 and played[1] is Array:
+		if anointed in (played[1] as Array):
+			return true
+	return false
 
 
 static func has_any_omen() -> bool:

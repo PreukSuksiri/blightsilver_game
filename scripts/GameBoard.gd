@@ -1178,6 +1178,8 @@ func _clear_grid_borders() -> void:
 			node.queue_free()
 
 ## Show/hide duel grids + cyan borders. Uses modulate so MainLayout sizing stays stable.
+## Do NOT set card.visible here — GridContainer drops invisible children from layout
+## and the 5x5 boards shrink / reflow.
 func _set_battle_grids_visible(show: bool) -> void:
 	_battle_grids_shown = show
 	var mod: Color = Color.WHITE if show else Color(1.0, 1.0, 1.0, 0.0)
@@ -2116,6 +2118,7 @@ func _on_setup_complete_p1() -> void:
 			or GameState.game_mode == GameState.GameMode.EXPLORATION:
 		_do_ai_setup()
 		GameState.omen_intel_lines = OmenBattleApplier.collect_intel_lines(ai_player)
+		await _run_enemy_omen_roll_phase()
 		_begin_game()
 	elif GameState.game_mode == GameState.GameMode.HOT_SEAT:
 		_show_handoff(1,
@@ -2170,6 +2173,84 @@ func _do_ai_setup() -> void:
 	var setup_bluffs: Dictionary = ai_player.decide_setup_bluffs(placements)
 	for cell: Vector2i in setup_bluffs.keys():
 		GameState.set_bluff(ai_player.player_index, cell.x, cell.y, setup_bluffs[cell])
+
+
+## Post-setup enemy omen roll (VN author config). No-op when count/groups empty.
+func _run_enemy_omen_roll_phase() -> void:
+	var count: int = clampi(GameState.enemy_omen_count, 0, 3)
+	var groups: String = GameState.enemy_omen_groups.strip_edges()
+	if count <= 0 or groups.is_empty():
+		return
+	GameState.enemy_active_omens.clear()
+	var candidates: Array = OmenBattleApplier.build_enemy_anoint_candidates()
+	# Prefer live board deck if GameState.battle_ai_deck was cleared after capture.
+	if candidates.is_empty() and _vs_ai_deck != null:
+		for t: Variant in (_vs_ai_deck as DeckData).techs:
+			var tn: String = str(t).strip_edges()
+			if tn.is_empty():
+				continue
+			var te: Dictionary = OmenDatabase.deck_entry_from_name(tn)
+			te["on_board"] = false
+			candidates.append(te)
+	var held_ids: Array = []
+	for h: Variant in OmenBattleApplier.all_held_omens():
+		if h is Dictionary:
+			held_ids.append(str((h as Dictionary).get("id", "")))
+	var rolled: Array = OmenDatabase.roll_offer(groups, held_ids, count, [], candidates)
+	if rolled.is_empty():
+		return
+	var anim_entries: Array = []
+	for omen_v: Variant in rolled:
+		if not omen_v is Dictionary:
+			continue
+		var omen: Dictionary = omen_v as Dictionary
+		var oid: String = str(omen.get("id", "")).strip_edges()
+		if oid.is_empty():
+			continue
+		var anointed: String = ""
+		if OmenDatabase.is_anoint(omen):
+			anointed = OmenBattleApplier.choose_enemy_anoint_card(omen, candidates)
+		OmenBattleApplier.append_enemy_omen(oid, anointed)
+		held_ids.append(oid)
+		anim_entries.append({
+			"omen": omen,
+			"anointed_card": anointed,
+		})
+	if anim_entries.is_empty():
+		return
+	# Hide setup UI / illustrations before the hostile-omen beat (coin-toss style stage).
+	if setup_phase != null:
+		setup_phase.visible = false
+	var portrait_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[1])
+	if portrait_tex == null and _p2_portrait != null:
+		portrait_tex = _p2_portrait.texture as Texture2D
+	await EnemyOmenRollOverlay.await_roll(
+		self, anim_entries, portrait_tex, Callable(self, "_do_hostile_omen_shake"))
+	OmenBattleApplier.rebuild_anoint_effects_map()
+	# Heavy Purse etc. — enemy crystal_bonus after roll (stacks on forced starting crystals).
+	OmenBattleApplier.apply_enemy_crystal_bonuses()
+	_refresh_hud()
+	# Setup stays hidden into _begin_game; refresh badges if setup node still exists.
+	if setup_phase != null and setup_phase.has_method("_refresh_all_placed_omen_badges"):
+		setup_phase.call("_refresh_all_placed_omen_badges")
+
+
+## Heavy impact shake for hostile omen seal slam / stamp.
+func _do_hostile_omen_shake() -> void:
+	var ml: Control = get_node_or_null("MainLayout") as Control
+	if ml == null:
+		return
+	var origin: Vector2 = ml.position
+	var t := create_tween()
+	t.tween_property(ml, "position", origin + Vector2(18,  10), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(-20, -9), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(16,  8), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(-14, -7), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(10,  5), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(-7,  -4), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(4,   2), 0.04)
+	t.tween_property(ml, "position", origin, 0.06)
+
 
 func _do_ai_setup_p0() -> void:
 	# AI_VS_AI only: set up player 0's board using ai_player_0
@@ -3411,7 +3492,8 @@ func _build_dungeon_modifier_panel() -> void:
 
 
 func _build_omen_hud_panel() -> void:
-	if GameState.active_omens.is_empty():
+	var held_all: Array = OmenBattleApplier.all_held_omens()
+	if held_all.is_empty():
 		return
 
 	const PANEL_HALF_W: float = 76.0
@@ -3456,15 +3538,19 @@ func _build_omen_hud_panel() -> void:
 	hdr.add_theme_color_override("font_color", Color(0.82, 0.72, 1.0, 1.0))
 	vbox.add_child(hdr)
 
-	for entry: Variant in GameState.active_omens:
+	for entry: Variant in held_all:
 		if not entry is Dictionary:
 			continue
+		var held: Dictionary = entry as Dictionary
 		var lbl := Label.new()
-		lbl.text = OmenDatabase.format_omen_line(entry as Dictionary)
+		lbl.text = OmenDatabase.format_omen_line(held)
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", Color(0.88, 0.93, 0.98, 1.0))
+		if int(held.get("owner", 0)) == 1:
+			lbl.add_theme_color_override("font_color", Color(0.95, 0.62, 0.48, 1.0))
+		else:
+			lbl.add_theme_color_override("font_color", Color(0.88, 0.93, 0.98, 1.0))
 		vbox.add_child(lbl)
 
 	if not GameState.omen_intel_lines.is_empty():
@@ -3698,7 +3784,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
 	var _available_unions: Array = []
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
-			and not (ctx_player == 0 and GameState.omen_cannot_union) \
+			and not OmenBattleApplier.cannot_union_for(ctx_player) \
 			and (SaveManager.union_mechanism_unlocked or GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.LOCAL_2P, GameState.GameMode.HOT_SEAT]) and GameState.battle_player_union_enabled \
 			and _union_summoned_this_duel[ctx_player] < _max_unions_per_duel():
 		var _ctx_seen: Dictionary = {}
@@ -4130,7 +4216,7 @@ func _on_union_modal_cancelled() -> void:
 
 func _on_union_selected(player: int, union_name: String, zone_cells: Array) -> void:
 	_union_modal = null
-	if player == 0 and GameState.omen_cannot_union:
+	if OmenBattleApplier.cannot_union_for(player):
 		GameState.post_message("An Omen prevents Union summon this battle.")
 		return
 	if TutorialBattleManager.is_active:
@@ -7896,11 +7982,11 @@ func _show_options_panel() -> void:
 		{"text": "Battle Log", "callback": _show_battle_log_panel},
 		{"text": "Rules", "callback": _show_rules_panel},
 	]
-	if not GameState.active_omens.is_empty():
+	if not GameState.active_omens.is_empty() or not GameState.enemy_active_omens.is_empty():
 		items.append({
 			"text": "Omens",
 			"callback": func() -> void:
-				OmenListPanel.show_dialog(self, GameState.active_omens),
+				OmenListPanel.show_dialog(self, OmenBattleApplier.all_held_omens()),
 		})
 	# Only offer surrender on the acting player's turn (never during AI turn).
 	if _can_surrender_now():
@@ -8739,9 +8825,9 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	overlay.add_child(center)
 
 	# Foreground layer:
-	# - regular battles: steampunk setup frame
+	# - regular / Quick Duel: steampunk setup frame (QD still reveals playmat
+	#   through the open center; without this plate the bottom ledge is missing)
 	# - exploration-bg battles: top+bottom black fog fringes (animated)
-	# - Quick Duel: neither — playmat smoke fog shows through
 	if use_expl_bg:
 		var fog_noise: Texture2D = load(COIN_FOG_NOISE_PATH) as Texture2D
 		const COIN_FOG_BAND_H: float = 160.0
@@ -8800,7 +8886,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 			fog_tw.tween_property(
 				fog_mat, "shader_parameter/scroll", Vector2(1.35, 0.62), 10.0
 			).as_relative().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
-	elif not reveal_playmat:
+	else:
 		var front_frame_tex: Texture2D = HudSkin.setup_phase_front_frame_tex()
 		if front_frame_tex != null:
 			var front_frame := TextureRect.new()
@@ -16699,9 +16785,13 @@ func _show_endgame_screen(winner: int) -> void:
 				})
 			_dismiss_endgame_overlay(overlay))
 
-	# Fade in the endgame screen
+	# Fade in the endgame screen; only then drop grids/cards (covers dismiss bleed
+	# without popping the board away before the win/lose art is fully up).
 	var ft := create_tween()
 	ft.tween_property(overlay, "modulate:a", 1.0, 0.7)
+	ft.tween_callback(func() -> void:
+		if is_instance_valid(self) and _endgame_screen_active:
+			_set_battle_grids_visible(false))
 
 func _make_defeat_choice_button(label_text: String) -> Button:
 	var btn := Button.new()

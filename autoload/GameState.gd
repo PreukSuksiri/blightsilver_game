@@ -348,8 +348,14 @@ var active_dungeon_node_id: String = ""
 var active_dungeon_modifiers: Array = []
 
 # Exploration Omens active for the current battle (copied from ExplorationManager at launch).
-# Each entry: { "id": String, "anointed_card": String }
+# Each entry: { "id": String, "anointed_card": String, "owner": 0 }
 var active_omens: Array = []
+## Enemy omens rolled post-setup. Same shape as active_omens with owner: 1.
+var enemy_active_omens: Array = []
+## VN battle author config — how many enemy omens to roll (0 = disabled).
+var enemy_omen_count: int = 0
+## CSV of omen groups for the enemy roll pool (same idea as grant_omen).
+var enemy_omen_groups: String = ""
 ## cell_runes[player][row][col] -> rune id string ("" if none).
 var cell_runes: Array = []
 ## Cached intel strings for setup/HUD (bluff prefs, personalities).
@@ -886,7 +892,8 @@ func effective_union_summon_cost(base_cost: int, player_index: int = -1) -> int:
 	return cost
 
 func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
-	if amount > 0 and not active_omens.is_empty():
+	if amount > 0 and (not active_omens.is_empty() or not enemy_active_omens.is_empty()):
+		# Holder crystal-loss mods (player omens → P0; enemy omens → P1 via effects).
 		if player_index == 0:
 			if omen_crystal_loss_multiplier != 1.0:
 				amount = int(round(float(amount) * omen_crystal_loss_multiplier))
@@ -902,10 +909,16 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 			if pct_total != 0.0:
 				amount = int(round(float(amount) * (1.0 + pct_total / 100.0)))
 			amount = maxi(0, amount)
-		# Omen escalating_toll — foe (player 1) pays stacked bonus
-		elif player_index == 1 and omen_escalating_toll_stacks > 0:
-			amount = int(round(float(amount) * (1.0 + 0.10 * float(omen_escalating_toll_stacks))))
-			amount = maxi(0, amount)
+		# Omen escalating_toll — foe of the omen holder pays stacked bonus
+		if omen_escalating_toll_stacks > 0:
+			var toll_hits_foe: bool = false
+			if OmenBattleApplier.has_escalating_toll(0) and player_index == 1:
+				toll_hits_foe = true
+			elif OmenBattleApplier.has_escalating_toll(1) and player_index == 0:
+				toll_hits_foe = true
+			if toll_hits_foe:
+				amount = int(round(float(amount) * (1.0 + 0.10 * float(omen_escalating_toll_stacks))))
+				amount = maxi(0, amount)
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
 	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
 		amount = int(amount * 1.25)
@@ -1812,6 +1825,9 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 			OmenBattleApplier.clear()
 		else:
 			OmenBattleApplier.reset_runtime_fields()
+		enemy_active_omens.clear()
+		enemy_omen_count = 0
+		enemy_omen_groups = ""
 		battle_ai_union_enabled = true
 		battle_ai_union_maniac = false
 		battle_player_union_enabled = true
@@ -1830,6 +1846,9 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		vn_battle_rewards.clear()
 		vn_battle_loss_rewards.clear()
 		vn_battle_loss_reward_once = ""
+	else:
+		# Fresh enemy roll each VN battle; config fields were set by VNPlayer.
+		enemy_active_omens.clear()
 	_vn_battle_pending = false
 	battle_ask_player_name = ""
 	if mode != GameMode.VS_AI:

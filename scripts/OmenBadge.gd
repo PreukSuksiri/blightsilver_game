@@ -4,6 +4,8 @@ class_name OmenBadge
 ##
 ## Drawn rather than textured so it tints to the omen's rarity and stays crisp at
 ## any tile size. The pulse is a looping tween on the node, so `_draw` runs once.
+## Enemy-owned anoint uses a warmer ring and inverted fill so hostile brands read
+## at a glance.
 
 const RARITY_ORDER: Array = ["common", "uncommon", "rare", "epic"]
 
@@ -12,6 +14,7 @@ const PULSE_SCALE: float = 1.16
 const PULSE_ALPHA_LOW: float = 0.72
 
 var _ring: Color = Color(0.70, 0.74, 0.82, 1.0)
+var _hostile: bool = false
 
 
 ## Badge for every omen anointed to `card_name`, anchored to the tile's top-left.
@@ -23,7 +26,8 @@ static func attach_to_tile(tile: Control, card_name: String, badge_size: float =
 	if rows.is_empty():
 		return null
 	var badge := OmenBadge.new()
-	badge._ring = _strongest_ring(rows)
+	badge._hostile = _any_hostile(rows)
+	badge._ring = _strongest_ring(rows, badge._hostile)
 	badge.size = Vector2(badge_size, badge_size)
 	badge.custom_minimum_size = badge.size
 	badge.pivot_offset = badge.size * 0.5
@@ -38,7 +42,15 @@ func set_ring(color: Color) -> void:
 	queue_redraw()
 
 
-static func _strongest_ring(rows: Array) -> Color:
+static func _any_hostile(rows: Array) -> bool:
+	for row: Variant in rows:
+		var entry: Dictionary = (row as Dictionary).get("entry", {}) as Dictionary
+		if int(entry.get("owner", 0)) == 1:
+			return true
+	return false
+
+
+static func _strongest_ring(rows: Array, hostile: bool) -> Color:
 	var best: int = -1
 	var best_omen: Dictionary = {}
 	for row: Variant in rows:
@@ -47,6 +59,8 @@ static func _strongest_ring(rows: Array) -> Color:
 		if rank > best:
 			best = rank
 			best_omen = omen
+	if hostile:
+		return OmenVisuals.hostile_ring_color(best_omen)
 	return OmenVisuals.ring_color(best_omen)
 
 
@@ -76,7 +90,9 @@ func _draw() -> void:
 		var t: float = float(i) / 3.0
 		draw_circle(c, r * (1.0 - t * 0.22), Color(_ring.r, _ring.g, _ring.b, 0.09 + t * 0.05))
 
-	draw_circle(c, r * 0.78, Color(0.02, 0.03, 0.07, 0.92))
+	var fill: Color = Color(0.18, 0.04, 0.05, 0.94) if _hostile \
+			else Color(0.02, 0.03, 0.07, 0.92)
+	draw_circle(c, r * 0.78, fill)
 	draw_arc(c, r * 0.78, 0.0, TAU, 28, _ring, maxf(r * 0.10, 1.0), true)
 
 	# Ritual diamond.

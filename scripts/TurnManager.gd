@@ -259,8 +259,9 @@ func _apply_foe_coin_flip_traps(results: Array, source_player: int) -> Array:
 	GameState.reveal_card(trap_owner, trap_pos.x, trap_pos.y)
 	if trap_data.crystal_cost > 0:
 		var _place_trap_cost: int = trap_data.crystal_cost
-		if trap_owner == 0 and GameState.omen_trap_cost_pct != 0.0:
-			_place_trap_cost = int(round(float(_place_trap_cost) * (1.0 + GameState.omen_trap_cost_pct / 100.0)))
+		var omen_trap_pct: float = OmenBattleApplier.trap_cost_pct_for(trap_owner)
+		if omen_trap_pct != 0.0:
+			_place_trap_cost = int(round(float(_place_trap_cost) * (1.0 + omen_trap_pct / 100.0)))
 		_place_trap_cost = int(round(float(_place_trap_cost) * OmenBattleApplier.anoint_cost_multiplier_for(trap_data.card_name)))
 		GameState.lose_crystals(trap_owner, _place_trap_cost, "trap")
 		await _wait_crystal_animation()
@@ -685,9 +686,10 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		if _atk_tax > 0:
 			GameState.lose_crystals(player, _atk_tax, "attack tax")
 			await _wait_crystal_animation()
-	# Omen Adrenal Surge etc. — flat crystal cost per attack (player 0).
-	if player == 0 and GameState.omen_attack_crystal_cost > 0:
-		GameState.lose_crystals(player, GameState.omen_attack_crystal_cost, "omen attack cost")
+	# Omen Adrenal Surge etc. — flat crystal cost per attack (omen holder).
+	var omen_atk_cost: int = OmenBattleApplier.attack_crystal_cost_for(player)
+	if omen_atk_cost > 0:
+		GameState.lose_crystals(player, omen_atk_cost, "omen attack cost")
 		await _wait_crystal_animation()
 
 	GameState.attacker_card = attacker
@@ -1322,7 +1324,7 @@ func _await_reveal_either_side_hidden(chooser: int) -> void:
 
 func play_tech_card(tech_name: String) -> void:
 	var player := GameState.current_player
-	if player == 0 and GameState.omen_cannot_tech:
+	if OmenBattleApplier.cannot_tech_for(player):
 		GameState.show_center_message("An Omen prevents using Tech this battle.")
 		return
 	if GameState.current_phase != GameState.Phase.MODE_SELECT:
@@ -1355,8 +1357,9 @@ func play_tech_card(tech_name: String) -> void:
 		if "tech_broker" in _tm: _eff_tech_cost = 0
 		elif "tech_dealer" in _tm: _eff_tech_cost = int(_eff_tech_cost * 0.5)
 		if "intelligence_tax" in _tm: _eff_tech_cost += 500
-	if player == 0 and GameState.omen_tech_cost_pct != 0.0:
-		_eff_tech_cost = int(round(float(_eff_tech_cost) * (1.0 + GameState.omen_tech_cost_pct / 100.0)))
+	var omen_tech_pct: float = OmenBattleApplier.tech_cost_pct_for(player)
+	if omen_tech_pct != 0.0:
+		_eff_tech_cost = int(round(float(_eff_tech_cost) * (1.0 + omen_tech_pct / 100.0)))
 	_eff_tech_cost = int(round(float(_eff_tech_cost) * OmenBattleApplier.anoint_cost_multiplier_for(tech_name)))
 	if GameState.crystals[player] < _eff_tech_cost:
 		GameState.show_center_message("Not enough Crystals to play %s." % tech_name)
@@ -2214,6 +2217,7 @@ func _apply_friendly_fire_battle_result(
 		GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 	if result.defender_destroyed:
 		GameState.destroy_card(player, friendly_pos.x, friendly_pos.y, false)
+	_apply_deferred_post_attack_halve(result, player, attacker, attacker_pos)
 
 static func _has_archbishop_redirect_target(opponent: int, exclude_pos: Vector2i) -> bool:
 	for r: int in range(GameState.GRID_SIZE):
@@ -2297,8 +2301,9 @@ func _handle_trap_effect(
 		var _trap_mods: Array = GameState.active_dungeon_modifiers
 		if "trap_broker" in _trap_mods: _eff_trap_cost = 0
 		elif "trap_dealer" in _trap_mods: _eff_trap_cost = int(_eff_trap_cost * 0.5)
-	if opponent == 0 and GameState.omen_trap_cost_pct != 0.0:
-		_eff_trap_cost = int(round(float(_eff_trap_cost) * (1.0 + GameState.omen_trap_cost_pct / 100.0)))
+	var omen_trap_pct2: float = OmenBattleApplier.trap_cost_pct_for(opponent)
+	if omen_trap_pct2 != 0.0:
+		_eff_trap_cost = int(round(float(_eff_trap_cost) * (1.0 + omen_trap_pct2 / 100.0)))
 	_eff_trap_cost = int(round(float(_eff_trap_cost) * OmenBattleApplier.anoint_cost_multiplier_for(trap_data.card_name)))
 	GameState.lose_crystals(opponent, _eff_trap_cost, "trap cost")
 	await _wait_crystal_animation()
@@ -3160,6 +3165,29 @@ func _try_apply_perm_stat_penalty_vs_non_affinity(
 		foe.card_name, patk, pdef, scope_label])
 
 
+## Permanent post-attack ATK/DEF halve (Pit Lord / Silent Stabber / Gorewood).
+## Applied after Reckoning overlay dismiss — never during resolve_battle.
+func _apply_deferred_post_attack_halve(
+		result: BattleResolver.BattleResult,
+		player: int,
+		attacker: GameState.CardInstance,
+		attacker_pos: Vector2i
+) -> void:
+	if result == null or not result.pending_halve_attacker_stats:
+		return
+	result.pending_halve_attacker_stats = false
+	if result.attacker_destroyed:
+		return
+	if attacker == null or attacker.card_type != "character":
+		return
+	var board_card: GameState.CardInstance = GameState.get_card(
+		player, attacker_pos.x, attacker_pos.y)
+	if board_card != attacker:
+		return
+	attacker.halve_stats()
+	GameState.post_message("%s: ATK & DEF halved after attack!" % attacker.card_name)
+
+
 func _apply_post_battle_effects(
 		result: BattleResolver.BattleResult,
 		player: int, opponent: int,
@@ -3167,6 +3195,8 @@ func _apply_post_battle_effects(
 		attacker_pos: Vector2i, target_pos: Vector2i
 ) -> int:
 	var extra: int = 0
+	# After Reckoning dismiss (caller awaits overlay before this). Attack-win path only.
+	_apply_deferred_post_attack_halve(result, player, attacker, attacker_pos)
 	if attacker.card_type != "character":
 		return extra
 
@@ -3570,8 +3600,8 @@ func _apply_post_battle_effects(
 		defender.cannot_attack_until = GameState.turn_number + _lock_turns + 1
 		GameState.post_message("Omen: %s waits %d turn(s) to attack." % [defender.card_name, _lock_turns])
 
-	# Omen escalating_toll tracking
-	if player == 0 and OmenBattleApplier.has_escalating_toll():
+	# Omen escalating_toll tracking (stacks raise foe crystal loss for omen holder)
+	if OmenBattleApplier.has_escalating_toll(player):
 		if defender.card_type == "character":
 			if GameState.omen_escalating_toll_stacks > 0:
 				GameState.post_message("Omen Escalating Toll: reset.")

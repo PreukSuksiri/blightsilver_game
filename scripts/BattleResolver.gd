@@ -35,6 +35,8 @@ class BattleResult:
 	# Post-battle pending actions for TurnManager
 	var pending_reveal_opponent_cell: bool = false  # attacker should reveal 1 opp cell
 	var pending_coin_flip_swap_position: bool = false  # attacker should coin-flip swap position
+	## Pit Lord / HALVE_STATS_AFTER_ATTACK — apply after Reckoning overlay dismisses.
+	var pending_halve_attacker_stats: bool = false
 	# Coin results accumulated during this battle resolution (for visual display in GameBoard)
 	var coin_flip_results: Array = []  # Array of bool — true=heads, false=tails
 	# Card names captured before destruction — used by loggers that fire after destroy_card()
@@ -1178,16 +1180,25 @@ static func _death_cobra_venom_def_penalty(defender_player: int) -> int:
 					return 50
 	return 0
 
+## True when this attacker should permanently halve ATK/DEF after an attack resolves.
+static func attacker_defers_halve_after_attack(attacker: GameState.CardInstance) -> bool:
+	if attacker == null or attacker.card_type != "character":
+		return false
+	if attacker.ability_type == CharacterData.AbilityType.HALVE_STATS_AFTER_ATTACK:
+		return true
+	return bool(attacker.ability_params.get("also_halve_after_attack", false))
+
+
 static func _apply_post_attack_effects(
 		attacker: GameState.CardInstance,
-		_result: BattleResult
+		result: BattleResult
 ) -> void:
 	if _silent_mode:
 		return
-	# Pit Lord: halve stats after attacking (skip during silent preview — avoids permanent mutation)
-	var also_halve: bool = attacker.ability_params.get("also_halve_after_attack", false)
-	if attacker.ability_type == CharacterData.AbilityType.HALVE_STATS_AFTER_ATTACK or also_halve:
-		attacker.halve_stats()
+	# Defer permanent mutation until Reckoning dismiss (TurnManager post-battle).
+	# Halving here would change board stats while the overlay is still open.
+	if attacker_defers_halve_after_attack(attacker):
+		result.pending_halve_attacker_stats = true
 
 
 static func _spend_one_use_defense_boosts(
