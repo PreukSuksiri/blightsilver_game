@@ -64,5 +64,11 @@
 		"id": "puzzle_mario_platformer",
 		"name": "Platformer Stage",
 		"params_guide": "No parameters required.\nControls: ← → Move   ↑ Jump   ESC Quit"
+	},
+	{
+		"description": "Period-authentic Game Boy LCD platformer: letterboxed screen, lives, STAGE CLEAR / GAME OVER. Avoid ghosts and pits, reach the flag.",
+		"id": "puzzle_gameboy_platformer",
+		"name": "Game Boy Platformer",
+		"params_guide": "No parameters required.\nControls: ← → Move   ↑ Jump   ESC Quit"
 	}
 ]

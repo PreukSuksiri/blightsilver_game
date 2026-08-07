@@ -187,6 +187,8 @@ func _run_excel_only_manual_tests() -> void:
 
 func _run_ability_tests(A: Dictionary, AB: Dictionary) -> void:
 	_seraphim_fistmaster(A, AB)
+	_seraph_choir_buffs_fistmaster(A, AB)
+	_omen_union_unit_filters(A, AB)
 	_sky_protector(A, AB)
 	_diamond_unicorn(A, AB)
 	_pixie_queen(A, AB)
@@ -221,6 +223,86 @@ func _seraphim_fistmaster(A: Dictionary, AB: Dictionary) -> void:
 	var def_anima := _make_char("Anima Dummy", 0, 50, 100, A.ANIMA)
 	var r2 := BattleResolver.resolve_battle(att, def_anima, 3, 0, 1)
 	assert_eq(r2.attacker_atk_used, 120, "TC-FUNC-Seraphim-Fistmaster-001: ATK 120 unchanged vs non-CHAOS")
+
+# TC-FUNC-Seraph-Choir-Fistmaster-001
+# Seraph Choir unit_stat_flat must buff Seraphim Fistmaster (name totem + union summon).
+func _seraph_choir_buffs_fistmaster(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Seraph-Choir-Fistmaster-001")
+	var prev_omens: Array = GameState.active_omens.duplicate(true)
+	GameState.active_omens = [{"id": "seraph_choir", "anointed_card": "", "owner": 0}]
+
+	var fist := _make_char("Seraphim Fistmaster", 120, 120, 1500, A.DIVINE,
+			AB.DOUBLE_STATS_VS_AFFINITY, {"affinity": A.CHAOS})
+	OmenBattleApplier.apply_matching_unit_stats_to_card(fist, 0)
+	assert_eq(fist.perm_atk_bonus, 50, "TC-FUNC-Seraph-Choir-Fistmaster-001: +50 ATK via apply")
+	assert_eq(fist.perm_def_bonus, 50, "TC-FUNC-Seraph-Choir-Fistmaster-001: +50 DEF via apply")
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.active_omens = [{"id": "seraph_choir", "anointed_card": "", "owner": 0}]
+	var u: UnionData = UnionDatabase.get_union("Seraphim Fistmaster")
+	assert_true(u != null, "TC-FUNC-Seraph-Choir-Fistmaster-001: union data exists")
+	if u != null:
+		GameState.place_union_card(0, 2, 2, u)
+		var on_board: GameState.CardInstance = GameState.get_card(0, 2, 2)
+		assert_eq(on_board.perm_atk_bonus, 50,
+				"TC-FUNC-Seraph-Choir-Fistmaster-001: +50 ATK on summon")
+		assert_eq(on_board.perm_def_bonus, 50,
+				"TC-FUNC-Seraph-Choir-Fistmaster-001: +50 DEF on summon")
+		assert_eq(on_board.get_effective_atk(), 170,
+				"TC-FUNC-Seraph-Choir-Fistmaster-001: effective ATK 120+50")
+
+	GameState.active_omens = prev_omens
+	OmenBattleApplier.reset_runtime_fields()
+
+# TC-FUNC-Omen-Union-Unit-Filters-001
+# Affinity / all / position unit_stat omens must include unions (incl. on summon).
+func _omen_union_unit_filters(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Omen-Union-Unit-Filters-001")
+	var prev_omens: Array = GameState.active_omens.duplicate(true)
+
+	# Halo Fragment: Divine +10 ATK
+	GameState.active_omens = [{"id": "halo_fragment", "anointed_card": "", "owner": 0}]
+	var divine := _make_char("Seraphim Fistmaster", 120, 120, 1500, A.DIVINE, AB.NONE)
+	divine.grid_row = 2
+	divine.grid_col = 2
+	OmenBattleApplier.apply_matching_unit_stats_to_card(divine, 0, 2, 2)
+	assert_eq(divine.perm_atk_bonus, 10, "Halo Fragment: +10 ATK on Divine union")
+	assert_eq(divine.perm_def_bonus, 0, "Halo Fragment: no DEF on Divine union")
+
+	# Ominous Fog must NOT hit Divine
+	GameState.active_omens = [{"id": "ominous_fog", "anointed_card": "", "owner": 0}]
+	var no_fog := _make_char("Seraphim Fistmaster", 120, 120, 1500, A.DIVINE, AB.NONE)
+	OmenBattleApplier.apply_matching_unit_stats_to_card(no_fog, 0, 2, 2)
+	assert_eq(no_fog.perm_atk_bonus, 0, "Ominous Fog: skips Divine union")
+	assert_eq(no_fog.perm_def_bonus, 0, "Ominous Fog: skips Divine union DEF")
+
+	# Blood Pact: all units -10% DEF → floor(120 * -0.10) = -12
+	GameState.active_omens = [{"id": "blood_pact", "anointed_card": "", "owner": 0}]
+	var pact := _make_char("Seraphim Fistmaster", 120, 120, 1500, A.DIVINE, AB.NONE)
+	OmenBattleApplier.apply_matching_unit_stats_to_card(pact, 0, 2, 2)
+	assert_eq(pact.perm_def_bonus, -12, "Blood Pact: -10% DEF on union")
+
+	# Iron Coffin: border +20% DEF; center cell must miss
+	GameState.active_omens = [{"id": "iron_coffin", "anointed_card": "", "owner": 0}]
+	var center := _make_char("Seraphim Fistmaster", 120, 120, 1500, A.DIVINE, AB.NONE)
+	OmenBattleApplier.apply_matching_unit_stats_to_card(center, 0, 2, 2)
+	assert_eq(center.perm_def_bonus, 0, "Iron Coffin: center union not buffed")
+	var border := _make_char("Seraphim Fistmaster", 120, 120, 1500, A.DIVINE, AB.NONE)
+	OmenBattleApplier.apply_matching_unit_stats_to_card(border, 0, 0, 2)
+	assert_eq(border.perm_def_bonus, 24, "Iron Coffin: +20% DEF on border union")
+
+	# Summon path: Halo Fragment on place_union_card
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.active_omens = [{"id": "halo_fragment", "anointed_card": "", "owner": 0}]
+	var u: UnionData = UnionDatabase.get_union("Seraphim Fistmaster")
+	assert_true(u != null, "Omen union filters: Fistmaster data exists")
+	if u != null:
+		GameState.place_union_card(0, 0, 0, u)
+		var on_board: GameState.CardInstance = GameState.get_card(0, 0, 0)
+		assert_eq(on_board.perm_atk_bonus, 10, "Halo Fragment: +10 ATK on union summon")
+
+	GameState.active_omens = prev_omens
+	OmenBattleApplier.reset_runtime_fields()
 
 # TC-FUNC-Sky-Protector-001
 # UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE — summon choice handled in GameBoard._apply_union_summon_ability

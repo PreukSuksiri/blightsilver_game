@@ -96,7 +96,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Learn the enemy's offensive personality name.",
+			"description": "Learn the name of the enemy's offensive personality.",
 			"effects": [
 				{
 					"type": "reveal_enemy_personality",
@@ -119,7 +119,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Learn the enemy's defensive personality name.",
+			"description": "Learn the name of the enemy's defensive personality.",
 			"effects": [
 				{
 					"type": "reveal_enemy_personality",
@@ -165,7 +165,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "2 enemy cells are revealed at battle start, but 1 of yours is too.",
+			"description": "2 enemy cells are revealed at battle start, but 1 of yours is revealed too.",
 			"effects": [
 				{
 					"target": "enemy",
@@ -217,7 +217,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Enemy starts with -500 crystals.",
+			"description": "The enemy starts with -500 crystals.",
 			"effects": [
 				{
 					"target": "enemy",
@@ -1163,7 +1163,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Chaos units +10 DEF.",
+			"description": "Your Chaos units gain +10 DEF.",
 			"effects": [
 				{
 					"def": 10.0,
@@ -1189,7 +1189,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Divine units +10 ATK.",
+			"description": "Your Divine units gain +10 ATK.",
 			"effects": [
 				{
 					"atk": 10.0,
@@ -1215,7 +1215,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your border-cell units +20% DEF.",
+			"description": "Your border-cell units gain +20% DEF.",
 			"effects": [
 				{
 					"def_pct": 20.0,
@@ -1239,7 +1239,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your center-cell unit +100% ATK & DEF.",
+			"description": "Your center-cell unit gains +100% ATK & DEF.",
 			"effects": [
 				{
 					"atk_pct": 100.0,
@@ -1264,7 +1264,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your units +20% ATK, but enemy units +10% ATK.",
+			"description": "Your units gain +20% ATK, but enemy units gain +10% ATK.",
 			"effects": [
 				{
 					"atk_pct": 20.0,
@@ -1371,7 +1371,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your units unaffected by 0-cost traps become unaffected by ALL traps and tech.",
+			"description": "Your units that are unaffected by 0-cost traps become unaffected by ALL traps and tech.",
 			"effects": [
 				{
 					"target": "player",
@@ -1571,7 +1571,7 @@
 			"anoint_filter": {
 				"affinity": "NATURE"
 			},
-			"description": "Choose 1 Nature unit. Each Reckoning, coin flip: Heads → +10 ATK & +10 DEF.",
+			"description": "Choose 1 Nature unit. Each Reckoning, flip a coin: Heads → +10 ATK & +10 DEF.",
 			"effects": [
 				{
 					"atk": 10.0,
@@ -1934,7 +1934,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Union summons using this card as material cost half.",
+			"description": "Choose 1 unit. Union summons using this card as material cost half as much.",
 			"effects": [
 				{
 					"type": "union_material_cost_multiplier",
@@ -2313,7 +2313,7 @@
 			"anoint_filter": {
 				"affinity": "COSMIC"
 			},
-			"description": "Choose 1 Cosmic unit. After hitting a trap or dead end, reveal 1 foe cell.",
+			"description": "Choose 1 Cosmic unit. After hitting a trap or Dead End, reveal 1 foe cell.",
 			"effects": [
 				{
 					"type": "reveal_after_trap_or_dead_end",
@@ -2460,7 +2460,7 @@
 			"anoint_filter": {
 				"affinity": "ARCANE"
 			},
-			"description": "Choose 1 Arcane unit. First attack nullifies defender's ability for that clash.",
+			"description": "Choose 1 Arcane unit. Its first attack nullifies the defender's ability for that clash.",
 			"effects": [
 				{
 					"type": "nullify_defender_first_attack"
@@ -2510,7 +2510,7 @@
 			"anoint_filter": {
 				"affinity": "ARCANE"
 			},
-			"description": "Choose 1 Arcane unit. Cannot be destroyed in Reckoning vs non-Arcane units.",
+			"description": "Choose 1 Arcane unit. It cannot be destroyed in Reckoning vs non-Arcane units.",
 			"effects": [
 				{
 					"affinity": "ARCANE",
@@ -2533,7 +2533,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Union summons using this card as material cost half.",
+			"description": "Choose 1 unit. Union summons using this card as material cost half as much.",
 			"effects": [
 				{
 					"type": "union_material_cost_multiplier",
@@ -2600,7 +2600,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Survives its first destruction once per battle.",
+			"description": "Choose 1 unit. It survives its first destruction once per battle.",
 			"effects": [
 				{
 					"type": "survive_destruction_once"
@@ -2645,7 +2645,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Foe units it destroys cost the foe +50% crystal loss.",
+			"description": "Choose 1 unit. When it destroys a foe unit, that foe takes +50% crystal loss.",
 			"effects": [
 				{
 					"type": "foe_crystal_loss_multiplier_on_kill",
@@ -2668,7 +2668,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Unaffected by 0-cost traps.",
+			"description": "Choose 1 unit. It is unaffected by 0-cost traps.",
 			"effects": [
 				{
 					"type": "negate_zero_cost_traps"
@@ -2690,7 +2690,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Counts as any one Union material requirement.",
+			"description": "Choose 1 unit. It counts as any one Union material requirement.",
 			"effects": [
 				{
 					"type": "union_material_wildcard"
@@ -2756,7 +2756,7 @@
 		{
 			"anoint_card_type": "trap",
 			"anoint_filter": {},
-			"description": "Choose 1 trap. Cost halved.",
+			"description": "Choose 1 trap. Its cost is halved.",
 			"effects": [
 				{
 					"type": "anoint_cost_multiplier",
@@ -2855,7 +2855,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Immune to traps in cells carrying a bluff icon.",
+			"description": "Choose 1 unit. It is immune to traps in cells carrying a bluff icon.",
 			"effects": [
 				{
 					"type": "trap_immunity_on_bluff_cell"
@@ -2970,7 +2970,7 @@
 			"anoint_filter": {
 				"affinity": "DIVINE"
 			},
-			"description": "Choose 1 Divine unit. Destroys Chaos units in Reckoning with it.",
+			"description": "Choose 1 Divine unit. It destroys Chaos units in Reckoning with it.",
 			"effects": [
 				{
 					"target_affinity": "CHAOS",
@@ -2995,7 +2995,7 @@
 			"anoint_filter": {
 				"affinity": "CHAOS"
 			},
-			"description": "Choose 1 Chaos unit. Destroys Divine units in Reckoning with it.",
+			"description": "Choose 1 Chaos unit. It destroys Divine units in Reckoning with it.",
 			"effects": [
 				{
 					"target_affinity": "DIVINE",
@@ -3020,7 +3020,7 @@
 			"anoint_filter": {
 				"affinity": "BIO"
 			},
-			"description": "Choose 1 Bio unit. Destroys Anima units in Reckoning with it.",
+			"description": "Choose 1 Bio unit. It destroys Anima units in Reckoning with it.",
 			"effects": [
 				{
 					"target_affinity": "ANIMA",
@@ -3045,7 +3045,7 @@
 			"anoint_filter": {
 				"affinity": "ARCANE"
 			},
-			"description": "Choose 1 Arcane unit. Destroys Nature units in Reckoning with it.",
+			"description": "Choose 1 Arcane unit. It destroys Nature units in Reckoning with it.",
 			"effects": [
 				{
 					"target_affinity": "NATURE",
@@ -3248,7 +3248,7 @@
 		{
 			"anoint_card_type": "tech",
 			"anoint_filter": {},
-			"description": "Choose 1 tech. First play each battle returns to hand.",
+			"description": "Choose 1 tech. The first time you play it each battle, it returns to hand.",
 			"effects": [
 				{
 					"type": "tech_returns_to_hand_once"
@@ -3269,7 +3269,7 @@
 		{
 			"anoint_card_type": "trap",
 			"anoint_filter": {},
-			"description": "Choose 1 trap. When it triggers, attacker cannot attack next turn.",
+			"description": "Choose 1 trap. When it triggers, the attacker cannot attack on their next turn.",
 			"effects": [
 				{
 					"type": "lock_attacker_on_trap"
@@ -3316,7 +3316,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Counts as a Moon card for Union material requirements.",
+			"description": "Choose 1 unit. It counts as a Moon card for Union material requirements.",
 			"effects": [
 				{
 					"tribe": "Moon",
@@ -3414,7 +3414,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Coin effects always Heads; Union cost +20% when used as material.",
+			"description": "Choose 1 unit. Coin effects always land Heads; Union cost +20% when used as material.",
 			"effects": [
 				{
 					"type": "coin_bias",
@@ -3485,7 +3485,7 @@
 		{
 			"anoint_card_type": "trap",
 			"anoint_filter": {},
-			"description": "Choose 1 trap. All coin flips from its effect always Heads.",
+			"description": "Choose 1 trap. All coin flips from its effect always land Heads.",
 			"effects": [
 				{
 					"type": "coin_bias",
@@ -3508,7 +3508,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. When it hits a foe trap, if the foe's coin is Tails, the trap does nothing.",
+			"description": "Choose 1 unit. When it hits a foe's trap, if the foe's coin is Tails, the trap does nothing.",
 			"effects": [
 				{
 					"type": "trap_coin_negate"
@@ -3694,7 +3694,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Ability None. Revive if destroyed by its own effect or an Omen effect.",
+			"description": "Choose 1 unit. Ability becomes None. Revive if destroyed by its own effect or an Omen effect.",
 			"effects": [
 				{
 					"type": "anoint_set_ability_none"
@@ -3811,7 +3811,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Moon units +15 ATK & +15 DEF.",
+			"description": "Your Moon units gain +15 ATK & +15 DEF.",
 			"effects": [
 				{
 					"atk": 15.0,
@@ -3838,7 +3838,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Wisp units +30 ATK & +30 DEF.",
+			"description": "Your Wisp units gain +30 ATK & +30 DEF.",
 			"effects": [
 				{
 					"atk": 30.0,
@@ -3865,7 +3865,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Princess units +20% ATK & DEF.",
+			"description": "Your Princess units gain +20% ATK & DEF.",
 			"effects": [
 				{
 					"atk_pct": 20.0,
@@ -3892,7 +3892,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Skeleton and Zombie units +15 ATK.",
+			"description": "Your Skeleton and Zombie units gain +15 ATK.",
 			"effects": [
 				{
 					"atk": 15.0,
@@ -3922,7 +3922,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Tank units +25% DEF.",
+			"description": "Your Tank units gain +25% DEF.",
 			"effects": [
 				{
 					"def_pct": 25.0,
@@ -3948,7 +3948,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your Dragon units +15% ATK & DEF.",
+			"description": "Your Dragon units gain +15% ATK & DEF.",
 			"effects": [
 				{
 					"atk_pct": 15.0,
@@ -4109,7 +4109,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "At battle start, every unit on both grids shuffles to a new random cell.",
+			"description": "At battle start, every unit on both grids is shuffled to a new random cell.",
 			"effects": [
 				{
 					"type": "shuffle_all_units"
@@ -4248,7 +4248,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Start battles with 1 extra random tech card in hand.",
+			"description": "Start each battle with 1 extra random tech card in hand.",
 			"effects": [
 				{
 					"type": "extra_tech",
@@ -4593,10 +4593,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random cells of yours; crystal loss is halved when a unit on a rune is destroyed.",
+			"description": "7 runes under random cells of yours; crystal loss is halved when a unit on a rune is destroyed.",
 			"effects": [
 				{
-					"count": 3.0,
+					"count": 7.0,
 					"rune": "fehu",
 					"target": "player",
 					"type": "cell_runes"
@@ -4618,10 +4618,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random cells of yours; units on rune cells gain +20 ATK.",
+			"description": "7 runes under random cells of yours; units on rune cells gain +20 ATK.",
 			"effects": [
 				{
-					"count": 3.0,
+					"count": 7.0,
 					"rune": "uruz",
 					"target": "player",
 					"type": "cell_runes"
@@ -4643,10 +4643,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "1 rune under a random cell of yours; the unit on it revives once when destroyed.",
+			"description": "3 runes under random cells of yours; the unit on a rune revives once when destroyed.",
 			"effects": [
 				{
-					"count": 1.0,
+					"count": 3.0,
 					"rune": "thurisaz",
 					"target": "player",
 					"type": "cell_runes"
@@ -4668,10 +4668,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random enemy cells; crystal loss doubled when unit on rune is destroyed.",
+			"description": "7 runes under random enemy cells; crystal loss is doubled when a unit on a rune is destroyed.",
 			"effects": [
 				{
-					"count": 3.0,
+					"count": 7.0,
 					"rune": "hagalaz",
 					"target": "enemy",
 					"type": "cell_runes"
@@ -4693,10 +4693,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random cells of yours; units on rune cells get -50% DEF.",
+			"description": "7 runes under random cells of yours; units on rune cells get -50% DEF.",
 			"effects": [
 				{
-					"count": 3.0,
+					"count": 7.0,
 					"rune": "nauthiz",
 					"target": "player",
 					"type": "cell_runes"
@@ -4718,10 +4718,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random cells of yours; units on rune cells always lose to Divine in Reckoning.",
+			"description": "7 runes under random cells of yours; units on rune cells always lose to Divine in Reckoning.",
 			"effects": [
 				{
-					"count": 3.0,
+					"count": 7.0,
 					"rune": "jera",
 					"target": "player",
 					"type": "cell_runes"
@@ -4795,10 +4795,11 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "2 runes above random occupied cells of yours; that unit counts as any one Union material.",
+			"description": "2 runes above random cells of yours; a unit on a rune counts as any one Union material.",
 			"effects": [
 				{
 					"count": 2.0,
+					"placement": "setup_visible",
 					"rune": "mannaz",
 					"target": "player",
 					"type": "cell_runes"
@@ -4819,10 +4820,11 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "1 rune above a random occupied cell of yours; if used as Union material, it survives the summon.",
+			"description": "1 rune above a random cell of yours; if used as Union material, it survives the summon.",
 			"effects": [
 				{
 					"count": 1.0,
+					"placement": "setup_visible",
 					"rune": "algiz",
 					"target": "player",
 					"type": "cell_runes"
@@ -4843,10 +4845,10 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "3 runes under random occupied enemy cells; units there have their abilities sealed.",
+			"description": "7 runes under random occupied enemy cells; units there have their abilities sealed.",
 			"effects": [
 				{
-					"count": 3.0,
+					"count": 7.0,
 					"rune": "isa",
 					"target": "enemy",
 					"type": "cell_runes"
@@ -4890,7 +4892,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "1 of your cells starts revealed.",
+			"description": "1 of your cells starts the battle revealed.",
 			"effects": [
 				{
 					"target": "player",
@@ -5740,7 +5742,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Know 1 enemy's strongest unit.",
+			"description": "Know the enemy's strongest unit.",
 			"effects": [
 				{
 					"count": 1.0,
@@ -5764,7 +5766,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Know 1 enemy's highest cost spell.",
+			"description": "Know the enemy's highest-cost spell.",
 			"effects": [
 				{
 					"count": 1.0,
@@ -5788,7 +5790,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Know 1 enemy's highest cost trap.",
+			"description": "Know the enemy's highest-cost trap.",
 			"effects": [
 				{
 					"count": 1.0,
@@ -5812,7 +5814,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Know 1 enemy's strongest unit and 1 strongest union.",
+			"description": "Know the enemy's strongest unit and strongest union.",
 			"effects": [
 				{
 					"count": 1.0,
@@ -5836,7 +5838,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Know 2 enemy's highest cost spell.",
+			"description": "Know the enemy's 2 highest-cost spells.",
 			"effects": [
 				{
 					"count": 2.0,
@@ -5860,7 +5862,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Know 2 enemy's highest cost trap.",
+			"description": "Know the enemy's 2 highest-cost traps.",
 			"effects": [
 				{
 					"count": 2.0,
@@ -6164,7 +6166,7 @@
 		{
 			"anoint_card_type": "",
 			"anoint_filter": {},
-			"description": "Your opponent cannot decline your \"Bribe\" or \"Blackmail\".",
+			"description": "Your opponent cannot decline your Bribe or Blackmail effects.",
 			"effects": [
 				{
 					"filter": {

@@ -1940,17 +1940,8 @@ func _on_chat_character_selected(char_data: Dictionary) -> void:
 	var node_id: String = ExplorationManager.current_node_id
 	var raw_acts: Variant = char_data.get("actions", [])
 	var actions: Array = raw_acts if raw_acts is Array else []
-	var done_cb := func() -> void:
-		var node: ExplorationNode = ExplorationManager.current_node
-		if node != null:
-			_compass_set_visible(true)
-		if play_once and not vn_path.is_empty():
-			ExplorationManager.mark_vn_played(vn_path)
-		if remove_after and char_index >= 0:
-			ExplorationManager.mark_char_talked(node_id, char_index)
-			if node != null:
-				_rebuild_who_is_here(node)
-		_refresh_contextual_hud_glows()
+	var done_cb: Callable = Callable(self, "_finish_char_talk_actions").bind(
+		play_once, vn_path, remove_after, char_index, node_id)
 	if actions.is_empty():
 		if vn_path.is_empty():
 			return
@@ -3765,10 +3756,8 @@ func _try_play_node_vn(node: ExplorationNode, is_story: bool = false) -> void:
 	if not is_story:
 		_compass_set_visible(false)
 	var after_actions: Array = node.resolve_vn_after_actions(vars)
-	var done_cb := func() -> void:
-		if play_once:
-			ExplorationManager.mark_vn_played(vn_path)
-		_on_vn_finished(node)
+	var done_cb: Callable = Callable(self, "_finish_node_vn_after_actions").bind(
+		node, play_once, vn_path)
 	ExplorationManager.mark_exploration_checkpoint_pending()
 	if after_actions.is_empty():
 		_play_vn(vn_path, done_cb, node.vn_keep_bgm)
@@ -4141,6 +4130,9 @@ func _start_tool_fx(item_id: String) -> void:
 		"background_texture": _bg_rect.texture if _bg_rect != null else null,
 		"photo_smoke_spots": _all_tool_gated_spots_for_photo(),
 		"photo_lens_flare_spots": _camera_hidden_spots_for_photo(),
+		# Re-evaluate Conditions at shutter time (not only at tool activate).
+		"photo_smoke_provider": Callable(self, "_all_tool_gated_spots_for_photo"),
+		"photo_lens_flare_provider": Callable(self, "_camera_hidden_spots_for_photo"),
 		"cursor_hotspot": _tool_cursor_hotspot(item_id),
 		"cursor_size": TOOL_CURSOR_SIZE,
 	}
@@ -4190,6 +4182,7 @@ func _all_tool_gated_spots_for_photo() -> Array:
 
 
 ## Camera-hidden spots not yet dismissed — drawn as lens flares on Polaroid photos.
+## Gated by Conditions: unmet Conditions → stalled (no flare). Shutter alone is not enough.
 ## Shown before shutter (hint) and after, until hide_after_interact clears the spot.
 func _camera_hidden_spots_for_photo() -> Array:
 	var out: Array = []
@@ -4205,6 +4198,7 @@ func _camera_hidden_spots_for_photo() -> Array:
 		var spot: Dictionary = spot_var as Dictionary
 		if not bool(spot.get("hidden_until_camera_shutter", false)):
 			continue
+		# Gate: keep stalled until Conditions pass.
 		if not ExplorationManager.is_connection_unlocked(spot):
 			continue
 		if bool(spot.get("hide_after_interact", false)) \
@@ -4289,8 +4283,13 @@ func _tool_spots_for_fx() -> Array:
 
 
 func _sync_tool_fx_spots() -> void:
-	if _tool_fx != null and is_instance_valid(_tool_fx) and not _active_tool_id.is_empty():
-		_tool_fx.call("set_spots", _tool_spots_for_fx())
+	if _tool_fx == null or not is_instance_valid(_tool_fx) or _active_tool_id.is_empty():
+		return
+	_tool_fx.call("set_spots", _tool_spots_for_fx())
+	# Keep Polaroid smoke/flare lists in sync when inventory/vars change mid-tool.
+	if _active_tool_id == "tool_polaroid_camera":
+		_tool_fx.call("set_photo_smoke_spots", _all_tool_gated_spots_for_photo())
+		_tool_fx.call("set_photo_lens_flare_spots", _camera_hidden_spots_for_photo())
 
 
 func _on_tool_fx_photo_vn(path: String) -> void:
@@ -4506,7 +4505,8 @@ func _set_spots_layer_visible(show: bool) -> void:
 		_spots_layer.visible = show
 
 func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0) -> void:
-	# Check conditions — reuse ExplorationManager's connection-unlock logic (reads "conditions" key)
+	# Gate on Conditions first — camera-hidden spots stay stalled until these pass
+	# (shutter alone does not unlock them).
 	if not ExplorationManager.is_connection_unlocked(spot):
 		_log_skipped_spot(spot, spot_index)
 		return
@@ -4602,12 +4602,18 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	var cap_disable: bool = disable_after
 	var cap_node:  String = ExplorationManager.current_node_id
 	var cap_index: int    = spot_index
+	# WeakRef: give_item / set_var can rebuild spots mid-action and free `hit`.
+	# Capturing the Control directly crashes when the deferred complete callback runs.
+	var hit_ref: WeakRef = weakref(hit)
 	var apply_hide := func() -> void:
-		# Spot may already be freed if var/inventory change triggered _rebuild_spots mid-action.
-		if is_instance_valid(hit):
-			hit.visible = false
+		var h: Variant = hit_ref.get_ref()
+		if h != null:
+			(h as Control).visible = false
 	if can_hover:
-		hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip, hit))
+		hit.mouse_entered.connect(func() -> void:
+			var h: Variant = hit_ref.get_ref()
+			if h != null:
+				_on_spot_hover_enter(cap_tip, h as Control))
 		hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
 	if not block_click:
 		hit.gui_input.connect(func(ev: InputEvent) -> void:
@@ -4622,15 +4628,11 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 						apply_hide.call()
 					var complete_cb: Callable = Callable()
 					if cap_hide:
-						complete_cb = func() -> void:
-							ExplorationManager.mark_spot_interacted(cap_node, cap_index)
-							ExplorationManager.end_spot_interaction(cap_node, cap_index)
-							apply_hide.call()
+						complete_cb = Callable(self, "_finish_spot_hide_after").bind(
+							cap_node, cap_index, hit_ref)
 					elif cap_disable:
-						complete_cb = func() -> void:
-							ExplorationManager.mark_spot_interacted(cap_node, cap_index)
-							ExplorationManager.end_spot_interaction(cap_node, cap_index)
-							_refresh_spots_for_state()
+						complete_cb = Callable(self, "_finish_spot_disable_after").bind(
+							cap_node, cap_index)
 					_handle_spot_click(cap_acts, complete_cb, spot))
 
 	# Tool-gated spot: start hidden and reveal by proximity (see _process).
@@ -4722,10 +4724,8 @@ func _resume_node_vn_after_battle(
 		from_index: int,
 		node: ExplorationNode,
 		meta: Dictionary = {}) -> void:
-	var done_cb := func() -> void:
-		if bool(meta.get("play_once", false)):
-			ExplorationManager.mark_vn_played(str(meta.get("vn_path", "")))
-		_on_vn_finished(node)
+	var done_cb: Callable = Callable(self, "_finish_node_vn_after_actions").bind(
+		node, bool(meta.get("play_once", false)), str(meta.get("vn_path", "")))
 	if from_index <= 0:
 		ExplorationManager.reset_pending_play_once_paths()
 	ExplorationManager.set_pending_spot_on_complete(done_cb)
@@ -4735,22 +4735,12 @@ func _resume_char_talk_after_battle(
 		actions: Array,
 		from_index: int,
 		meta: Dictionary = {}) -> void:
-	var done_cb := func() -> void:
-		var node: ExplorationNode = ExplorationManager.current_node
-		if node != null:
-			_compass_set_visible(true)
-		if bool(meta.get("play_once", false)):
-			var vp: String = str(meta.get("vn_path", "")).strip_edges()
-			if not vp.is_empty():
-				ExplorationManager.mark_vn_played(vp)
-		if bool(meta.get("remove_after", false)):
-			var ci: int = int(meta.get("char_index", -1))
-			var nid: String = ExplorationManager.current_node_id
-			if ci >= 0:
-				ExplorationManager.mark_char_talked(nid, ci)
-				if node != null:
-					_rebuild_who_is_here(node)
-		_refresh_contextual_hud_glows()
+	var done_cb: Callable = Callable(self, "_finish_char_talk_actions").bind(
+		bool(meta.get("play_once", false)),
+		str(meta.get("vn_path", "")).strip_edges(),
+		bool(meta.get("remove_after", false)),
+		int(meta.get("char_index", -1)),
+		ExplorationManager.current_node_id)
 	if from_index <= 0:
 		ExplorationManager.reset_pending_play_once_paths()
 	ExplorationManager.set_pending_spot_on_complete(done_cb)
@@ -4768,6 +4758,59 @@ func _abort_pending_spot_interaction() -> void:
 	if bool(ctx.get("hide_after", false)) or bool(ctx.get("disable_after", false)):
 		_refresh_spots_for_state()
 
+func _continue_spot_actions_from_index(actions: Array, index: int, on_complete: Callable) -> void:
+	_run_spot_actions_from_index(actions, index, on_complete)
+
+
+func _spot_actions_after_vn(actions: Array, index: int, on_complete: Callable) -> void:
+	ExplorationManager.clear_spot_action_resume()
+	_continue_spot_actions_from_index(actions, index, on_complete)
+
+
+func _on_spot_puzzle_done(success: bool, actions: Array, index: int, on_complete: Callable) -> void:
+	if success:
+		ExplorationManager.mark_exploration_checkpoint_pending()
+		_continue_spot_actions_from_index(actions, index, on_complete)
+	else:
+		_abort_pending_spot_interaction()
+
+
+func _finish_spot_hide_after(node_id: String, spot_index: int, hit_ref: WeakRef) -> void:
+	ExplorationManager.mark_spot_interacted(node_id, spot_index)
+	ExplorationManager.end_spot_interaction(node_id, spot_index)
+	var h: Variant = hit_ref.get_ref()
+	if h != null:
+		(h as Control).visible = false
+	if hit_ref.get_ref() == null:
+		_refresh_spots_for_state()
+
+
+func _finish_spot_disable_after(node_id: String, spot_index: int) -> void:
+	ExplorationManager.mark_spot_interacted(node_id, spot_index)
+	ExplorationManager.end_spot_interaction(node_id, spot_index)
+	_refresh_spots_for_state()
+
+
+func _finish_char_talk_actions(
+		play_once: bool, vn_path: String, remove_after: bool, char_index: int, node_id: String) -> void:
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node != null:
+		_compass_set_visible(true)
+	if play_once and not vn_path.is_empty():
+		ExplorationManager.mark_vn_played(vn_path)
+	if remove_after and char_index >= 0:
+		ExplorationManager.mark_char_talked(node_id, char_index)
+		if node != null:
+			_rebuild_who_is_here(node)
+	_refresh_contextual_hud_glows()
+
+
+func _finish_node_vn_after_actions(node: ExplorationNode, play_once: bool, vn_path: String) -> void:
+	if play_once:
+		ExplorationManager.mark_vn_played(vn_path)
+	_on_vn_finished(node)
+
+
 func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Callable) -> void:
 	if index >= actions.size():
 		_compass_set_visible(true)
@@ -4782,36 +4825,36 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 	var action: String  = str(act.get("action", ""))
 	var key: String     = str(act.get("key",    ""))
 	var value: String   = str(act.get("value",  ""))
-	var next := func() -> void:
-		_run_spot_actions_from_index(actions, index + 1, on_complete)
+	var advance: Callable = Callable(self, "_continue_spot_actions_from_index").bind(
+		actions, index + 1, on_complete)
 	match action:
 		"give_item":
 			var item_id: String = key if not key.is_empty() else value
 			if not item_id.is_empty():
 				ExplorationManager.add_item(item_id)
 			await _wait_for_reward_overlays()
-			next.call()
+			advance.call()
 		"remove_item":
 			var rem_id: String = key if not key.is_empty() else value
 			if not rem_id.is_empty():
 				ExplorationManager.remove_item(rem_id)
-			next.call()
+			advance.call()
 		"set_var":
 			ExplorationManager.set_var(key, value)
-			next.call()
+			advance.call()
 		"give_credits", "give_booster_pack", "give_union_scroll":
 			ExplorationManager.process_events([act])
 			await _wait_for_reward_overlays()
-			next.call()
+			advance.call()
 		"set_flag", "note_add_clue", "note_unlock_topic", "note_upgrade_topic":
 			ExplorationManager.process_events([act])
-			next.call()
+			advance.call()
 		"show_message":
 			_show_toast(value)
-			next.call()
+			advance.call()
 		"play_sfx":
 			if value.is_empty() or not ResourceLoader.exists(value):
-				next.call()
+				advance.call()
 				return
 			var sfx := AudioStreamPlayer.new()
 			sfx.stream = load(value) as AudioStream
@@ -4819,25 +4862,24 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			add_child(sfx)
 			sfx.finished.connect(func() -> void:
 				sfx.queue_free()
-				next.call()
+				advance.call()
 			, CONNECT_ONE_SHOT)
 			sfx.play()
 		"play_vn":
 			if value.is_empty():
-				next.call()
+				advance.call()
 				return
 			var play_once: bool = bool(act.get("play_once", true))
 			if play_once and ExplorationManager.is_vn_played(value):
-				next.call()
+				advance.call()
 				return
 			if play_once:
 				ExplorationManager.append_pending_play_once_path(value)
 			ExplorationManager.stage_spot_action_resume(
 				ExplorationManager.current_node_id, actions, index + 1)
-			var vn_done := func() -> void:
-				ExplorationManager.clear_spot_action_resume()
-				next.call()
-			_play_vn(value, vn_done)
+			var vn_advance: Callable = Callable(self, "_spot_actions_after_vn").bind(
+				actions, index + 1, on_complete)
+			_play_vn(value, vn_advance)
 		"play_puzzle":
 			var val: String = value.strip_edges()
 			var key_str: String = key.strip_edges()
@@ -4846,15 +4888,10 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			if not val.is_empty() and not key_str.is_empty():
 				params = ExplorationPuzzleBase.parse_params(key_str)
 			if pid.is_empty():
-				next.call()
+				advance.call()
 				return
-			_play_puzzle(pid, func(success: bool) -> void:
-				if success:
-					ExplorationManager.mark_exploration_checkpoint_pending()
-					next.call()
-				else:
-					_abort_pending_spot_interaction()
-			, params)
+			_play_puzzle(pid, Callable(self, "_on_spot_puzzle_done").bind(
+				actions, index + 1, on_complete), params)
 		"navigate_to":
 			_abort_pending_spot_interaction()
 			if not value.is_empty():
@@ -4869,11 +4906,11 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			if not value.is_empty():
 				_do_end_exploration_with_vn(value)
 		"grant_omen":
-			_run_grant_omen(value, next)
+			_run_grant_omen(value, advance)
 		"open_deck_builder":
-			_open_deck_builder_overlay(next)
+			_open_deck_builder_overlay(advance)
 		_:
-			next.call()
+			advance.call()
 
 
 ## Wait until item / mailbox reward obtain overlays finish (same gate as VNPlayer).

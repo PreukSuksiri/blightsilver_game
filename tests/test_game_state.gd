@@ -52,6 +52,7 @@ func run_all_tests() -> void:
 	test_stuck_with_characters_but_no_attack_is_no_moves()
 	test_divine_protection_turn_timing()
 	test_nuki_has_coin_flip_swap_on_place()
+	test_ai_intercept_prefers_bat_swarm_over_servant()
 
 func _start_play_phase() -> void:
 	GameState.set_phase(GameState.Phase.MODE_SELECT)
@@ -275,3 +276,32 @@ func test_nuki_has_coin_flip_swap_on_place() -> void:
 		nuki.ability_type,
 		CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION,
 		"Nuki keeps COIN_FLIP_SWAP_POSITION from CardDatabase")
+
+func test_ai_intercept_prefers_bat_swarm_over_servant() -> void:
+	print("-- test_ai_intercept_prefers_bat_swarm_over_servant")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	# P0 attacker strong enough to kill Duchess (50 DEF).
+	GameState.place_character(0, 2, 2, "Ox Patrol")
+	var att: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	att.face_up = true
+	att.current_atk = 80
+	att.base_atk = 80
+	# P1: Duchess threatened, Bat Swarm can intercept, Servant present.
+	GameState.place_character(1, 2, 2, "Vampire Duchess")
+	GameState.place_character(1, 0, 0, "Bat Swarm")
+	GameState.place_character(1, 4, 4, "Vampire Servant")
+	var duchess: GameState.CardInstance = GameState.get_card(1, 2, 2)
+	duchess.face_up = true
+	var bat: GameState.CardInstance = GameState.get_card(1, 0, 0)
+	bat.face_up = false
+	GameState.attacker_pos = Vector2i(2, 2)
+	GameState.defender_pos = Vector2i(2, 2)
+	GameState.current_player = 0
+	var ai := AIPlayer.new()
+	ai.player_index = 1
+	ai.opponent_index = 0
+	assert_eq(ai._decide_intercept(), 0,
+			"AI intercepts with Bat Swarm to save Duchess")
+	# Decline path must leave Bat face-down (decision itself does not flip).
+	assert_false(bat.face_up, "Bat Swarm stays face-down until intercept is accepted")
+	ai.free()

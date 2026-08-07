@@ -360,6 +360,9 @@ var enemy_omen_groups: String = ""
 var cell_runes: Array = []
 ## Cached intel strings for setup/HUD (bluff prefs, personalities).
 var omen_intel_lines: Array = []
+## Structured intel for omen dossier + bluff UI.
+## Each entry: {omen_id, omen_label, type, kind, text, emoji?}
+var omen_intel: Array = []
 ## Runtime flags from omens this battle.
 var omen_cannot_attack_first_turn: bool = false
 var omen_cannot_union: bool = false
@@ -1613,6 +1616,9 @@ func place_union_card(player_index: int, row: int, col: int, u: UnionData) -> vo
 	inst.grid_row = row
 	inst.grid_col = col
 	grids[player_index][row][col] = inst
+	# Field unit_stat omens miss battle-start for mid-duel summons — apply here
+	# (name / affinity / position / trait filters all include unions).
+	OmenBattleApplier.apply_matching_unit_stats_to_card(inst, player_index, row, col)
 	emit_signal("card_revealed", player_index, row, col)
 	BattleResolver.recalculate_all_field_bonuses()
 

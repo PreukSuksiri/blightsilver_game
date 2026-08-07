@@ -101,7 +101,10 @@ var _attack_reveal_pending: Array = []  # Vector3i(player, row, col)
 var _standalone_reveal_wait: Vector3i = Vector3i(-1, -1, -1)
 const WITNESS_VIEW_DELAY: float = 0.5
 var _pending_trap_self_destruct_boost: int = 0
+var _pending_trap_self_destruct_def: int = 0
 var _pending_trap_self_destruct_player: int = -1
+## After Bunker/Hostage locks the current target mid-attack, resume target pick with this attacker.
+var _pending_retarget_attacker_pos: Vector2i = Vector2i(-1, -1)
 var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
 var _pending_swap_owner_player: int = -1
 var _pending_rebel_king_owner: int = -1
@@ -677,6 +680,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			_emit_attack_aborted()
 			return
 
+	# Surround traps (Bunker, Union Cage, …): face-down adjacent trap with trigger_on_surround.
+	if await _try_trigger_surround_trap(
+			player, opponent, attacker, attacker_pos, target_pos, defender):
+		if not _battle_aborted():
+			GameState.set_phase(GameState.Phase.MODE_SELECT)
+		_emit_attack_aborted()
+		return
+
 	# Dungeon: Weapon Tax (100) and Frenzy Madness (200) per-attack crystal cost
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 		var _mods_tax: Array = GameState.active_dungeon_modifiers
@@ -694,6 +705,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 
 	GameState.attacker_card = attacker
 	GameState.attacker_pos = attacker_pos
+	# Set early so AI intercept / defender-choice helpers can read the threatened cell.
+	GameState.defender_pos = target_pos
 
 	# Exposed = already face-up BEFORE this attack began (pre-reveal).
 	var defender_was_exposed: bool = defender.face_up
@@ -750,8 +763,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				if _ic_aff != -1 and _ic_aff != defender.affinity:
 					continue
 				var _ic_was_exposed: bool = _ic_cand.face_up
-				await _witness_card(opponent, _ic_r, _ic_c)
-				await _witness_pause()
+				# Usable face-down: do NOT flip before the choice. Declining must leave
+				# the interceptor hidden (e.g. Bat Swarm → Vampire Servant save path).
 				await await_card_effect_flash(_ic_cand.card_name)
 				emit_signal("awaiting_defender_choice",
 					"%s can intercept for %s!" % [_ic_cand.card_name, defender.card_name],
@@ -771,6 +784,12 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 					# The attack still targets the original cell — which now holds the interceptor.
 					defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 					defender_was_exposed = _ic_was_exposed
+					# Reveal only after accepting — battle needs a face-up defender visually,
+					# but reckoning still uses defender_was_exposed from pre-intercept state.
+					if not defender.face_up:
+						await _witness_card(opponent, target_pos.x, target_pos.y)
+						await _witness_pause()
+						defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 				_ic_found = true
 				break
 
@@ -1602,14 +1621,26 @@ func play_tech_card(tech_name: String) -> void:
 							_dwro_hidden.append(Vector2i(_dwro_r2, _dwro_c2))
 				_dwro_hidden.shuffle()
 				var _dwro_revealed: int = 0
+				var _dwro_names: PackedStringArray = PackedStringArray()
 				for _dwro_i: int in range(mini(_wisp_slots.size(), _dwro_hidden.size())):
 					var _rev_pos: Vector2i = _dwro_hidden[_dwro_i]
 					GameState.reveal_card_by_ability(_dwro_opp, _rev_pos.x, _rev_pos.y)
 					await _await_standalone_reveal_animation(_dwro_opp, _rev_pos.x, _rev_pos.y)
 					await _witness_pause()
+					var _rev_card: GameState.CardInstance = GameState.get_card(
+						_dwro_opp, _rev_pos.x, _rev_pos.y)
+					if _rev_card.card_type == "dead_end" or _rev_card.card_name.is_empty():
+						_dwro_names.append("Dead End")
+					else:
+						_dwro_names.append(_rev_card.card_name)
 					_dwro_revealed += 1
-				GameState.post_message("Wisp Light: %d Wisps destroyed, %d squares revealed." % [
-					_wisp_slots.size(), _dwro_revealed])
+				if _dwro_names.is_empty():
+					GameState.post_message("Wisp Light: %d Wisps destroyed, %d squares revealed." % [
+						_wisp_slots.size(), _dwro_revealed])
+				else:
+					GameState.post_message(
+						"Wisp Light: %d Wisps destroyed, revealed %s." % [
+							_wisp_slots.size(), ", ".join(_dwro_names)])
 			else:
 				GameState.post_message("Wisp Light: No Wisps on your field.")
 			after_tech_resolved(player)
@@ -1994,10 +2025,13 @@ func resolve_trap_self_destruct(player: int, target_pos: Vector2i) -> void:
 		if not card.face_up:
 			GameState.reveal_card(player, target_pos.x, target_pos.y)
 		card.temp_atk_bonus += _pending_trap_self_destruct_boost
+		card.temp_def_bonus += _pending_trap_self_destruct_def
 		if "self_destruct_next_turn" not in card.flags:
 			card.flags.append("self_destruct_next_turn")
-		GameState.post_message("%s: +%d ATK until end of next turn, then destroyed." % [card.card_name, _pending_trap_self_destruct_boost])
+		GameState.post_message("%s: +%d ATK&DEF until your turn ends, then destroyed." % [
+			card.card_name, _pending_trap_self_destruct_boost])
 	_pending_trap_self_destruct_boost = 0
+	_pending_trap_self_destruct_def = 0
 	_pending_trap_self_destruct_player = -1
 
 func complete_archbishop_redirect() -> void:
@@ -2347,11 +2381,11 @@ func _handle_trap_effect(
 					GameState.locked_attack_positions.append(_hst_pos)
 
 		TrapData.TrapEffectType.NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE:
-			GameState.show_center_message("Hostage: Attack nullified — choose a cell to reveal and lock.")
+			GameState.show_center_message("Hostage: Attack nullified — choose a unit to protect.")
 			GameState.post_message("Hostage: Attack nullified.")
 			_pending_trap_hostage_lock = true
 			await _prompt_and_await_target_selection(
-				"Hostage: Choose 1 of your cells to reveal and lock until turn end.",
+				"Hostage: Choose 1 of your units to reveal (if needed) and protect until turn end.",
 				"trap_hostage_reveal_lock")
 
 		TrapData.TrapEffectType.NULLIFY_ATTACK_CHOICE:
@@ -2601,7 +2635,7 @@ func _handle_trap_effect(
 			_flow_block_depth -= 1
 
 		TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT:
-			GameState.post_message("Bunker: Adjacent squares cannot be targeted this turn.")
+			GameState.post_message("Bunker: Surrounding cells cannot be targeted this turn.")
 			var _bunk_adj: Array = GameState.get_adjacent_positions(target_pos.x, target_pos.y)
 			for _bunk_pos: Vector2i in _bunk_adj:
 				if _bunk_pos not in GameState.locked_attack_positions:
@@ -2722,10 +2756,13 @@ func _handle_trap_effect(
 				GameState.post_message("Not both heads — no effect.")
 
 		TrapData.TrapEffectType.SELF_DESTROY_TEMP_ATK_BOOST:
-			_pending_trap_self_destruct_boost = trap_data.effect_params.get("atk", 15)
+			_pending_trap_self_destruct_boost = trap_data.effect_params.get("atk", 50)
+			_pending_trap_self_destruct_def = trap_data.effect_params.get(
+				"def", _pending_trap_self_destruct_boost)
 			_pending_trap_self_destruct_player = opponent
 			await _prompt_and_await_target_selection(
-				"%s: Choose 1 of your units for +%d ATK until end of next turn (then destroyed)." % [trap_data.card_name, _pending_trap_self_destruct_boost],
+				"%s: Choose 1 of your units for +%d ATK&DEF until your turn ends (then destroyed)." % [
+					trap_data.card_name, _pending_trap_self_destruct_boost],
 				"own_character_for_trap_self_destruct")
 
 		TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL:
@@ -3098,6 +3135,114 @@ func _clear_turn_state(player: int) -> void:
 				card.multi_attack_count = 0
 				card.bonus_attack_pending = false
 
+## Face-down trap with trigger_on_surround adjacent to target_pos (not the target cell).
+## Skips traps that require a Union attacker when the attacker is not a Union.
+func _find_adjacent_face_down_surround_trap(
+		opponent: int,
+		target_pos: Vector2i,
+		attacker: GameState.CardInstance
+) -> Vector2i:
+	var candidates: Array = []
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if pos == target_pos:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+			if card.card_type != "trap" or card.face_up:
+				continue
+			var trap_data: TrapData = CardDatabase.get_trap(card.card_name) as TrapData
+			if trap_data == null:
+				continue
+			if not bool(trap_data.effect_params.get("trigger_on_surround", false)):
+				continue
+			if bool(trap_data.effect_params.get("requires_union_attacker", false)):
+				if attacker == null or not attacker.is_union:
+					continue
+			if target_pos in GameState.get_adjacent_positions(r, c):
+				candidates.append(pos)
+	if candidates.is_empty():
+		return Vector2i(-1, -1)
+	candidates.shuffle()
+	return candidates[0]
+
+
+## Trigger a surround-capable trap when an adjacent cell is attacked.
+## Returns true if the attack must abort so the foe can choose another cell (Bunker lock).
+func _try_trigger_surround_trap(
+		player: int,
+		opponent: int,
+		attacker: GameState.CardInstance,
+		attacker_pos: Vector2i,
+		target_pos: Vector2i,
+		defender: GameState.CardInstance
+) -> bool:
+	# Direct hit on a surround-trap uses the normal trap path.
+	if defender.card_type == "trap":
+		var _direct_td: TrapData = CardDatabase.get_trap(defender.card_name) as TrapData
+		if _direct_td != null and bool(_direct_td.effect_params.get("trigger_on_surround", false)):
+			return false
+	var trap_pos: Vector2i = _find_adjacent_face_down_surround_trap(opponent, target_pos, attacker)
+	if trap_pos.x < 0:
+		return false
+
+	GameState.attacker_card = attacker
+	GameState.attacker_pos = attacker_pos
+	var trap_card: GameState.CardInstance = GameState.get_card(
+		opponent, trap_pos.x, trap_pos.y)
+	if trap_card.card_type != "trap":
+		return false
+	var trap_name: String = trap_card.card_name
+	var trap_data: TrapData = CardDatabase.get_trap(trap_name) as TrapData
+	if trap_data == null or not bool(trap_data.effect_params.get("trigger_on_surround", false)):
+		return false
+	if bool(trap_data.effect_params.get("requires_union_attacker", false)):
+		if attacker == null or not attacker.is_union:
+			return false
+	if not trap_card.face_up:
+		GameState.reveal_card(opponent, trap_pos.x, trap_pos.y)
+		await _await_standalone_reveal_animation(opponent, trap_pos.x, trap_pos.y)
+	await _witness_pause()
+	await await_card_effect_flash(trap_name, "trap")
+	trap_card = GameState.get_card(opponent, trap_pos.x, trap_pos.y)
+	if trap_card.card_type != "trap" or trap_card.card_name != trap_name:
+		return false
+
+	var result: BattleResolver.BattleResult = BattleResolver.resolve_battle(
+		attacker, trap_card, 0, player, opponent, false, trap_pos, true)
+	if result.special_trigger == "trap_nullified":
+		for _nm: String in result.messages:
+			GameState.post_message(_nm)
+		GameState.destroy_card(opponent, trap_pos.x, trap_pos.y, false)
+		GameState.post_message("%s: Surround trigger nullified — trap consumed." % trap_name)
+		# Trap consumed without locks; original attack may continue.
+		return false
+	if result.special_trigger != "trap_effect":
+		return false
+
+	for _bm: String in result.messages:
+		GameState.post_message(_bm)
+	GameState.post_message("%s: Triggered from a surrounding attack!" % trap_name)
+	await _handle_trap_effect(
+		result.special_params, attacker, attacker_pos, trap_pos, player, opponent)
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_TRAP_TRIGGERED,
+		{"source_player": player, "source_card": attacker, "attacker": attacker, "defender": trap_card})
+
+	# Bunker-style adjacent lock: force retarget. Union Cage Hypnosis does not lock cells.
+	if target_pos in GameState.locked_attack_positions:
+		_pending_retarget_attacker_pos = attacker_pos
+		GameState.show_center_message("%s: That cell is locked — choose another cell." % trap_name)
+		GameState.post_message("%s: Surrounding cells locked — choose another cell." % trap_name)
+		return true
+	return false
+
+
+func take_pending_retarget_attacker_pos() -> Vector2i:
+	var pos: Vector2i = _pending_retarget_attacker_pos
+	_pending_retarget_attacker_pos = Vector2i(-1, -1)
+	return pos
+
+
 func _lighthouse_reveal(player: int) -> void:
 	var opponent: int = GameState.get_opponent(player)
 	var hidden_cells: Array = []
@@ -3111,7 +3256,11 @@ func _lighthouse_reveal(player: int) -> void:
 	hidden_cells.shuffle()
 	var cell: Vector2i = hidden_cells[0]
 	GameState.reveal_card_by_ability(opponent, cell.x, cell.y)
-	GameState.post_message("Lighthouse: One of Player %d's cards is revealed!" % (opponent + 1))
+	var _lh_card: GameState.CardInstance = GameState.get_card(opponent, cell.x, cell.y)
+	if _lh_card.card_name.is_empty():
+		GameState.post_message("Lighthouse: Revealed a card belonging to Player %d!" % (opponent + 1))
+	else:
+		GameState.post_message("Lighthouse: Revealed %s!" % _lh_card.card_name)
 
 
 ## PERM_STAT_PENALTY_VS_NON_AFFINITY (Colorful Mage, Dimensional Virus, etc.)

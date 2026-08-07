@@ -535,6 +535,7 @@ var _pending_field_destroy_pos: Vector2i = Vector2i(-1, -1)
 var _pending_field_destroy_player: int = -1
 var pending_tech_name: String = ""
 var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
+var _tech_target_busy: bool = false   # blocks re-entrant Spy/Radar picks during await
 var _deferred_ai_turn_flow: bool = false
 var _ui_flow_block_active: bool = false
 
@@ -1033,22 +1034,20 @@ func _build_grids() -> void:
 				bluff_lbl.add_theme_constant_override("shadow_offset_y", 2)
 				bluff_lbl.add_theme_constant_override("shadow_outline_size", 3)
 				card_node.add_child(bluff_lbl)
-				var bluff_icon: TextureRect = null
-				if HudSkin.version == "v3":
-					bluff_icon = TextureRect.new()
-					bluff_icon.set_anchors_preset(Control.PRESET_CENTER_TOP)
-					bluff_icon.offset_left = -18.0
-					bluff_icon.offset_top = -2.0
-					bluff_icon.offset_right = 18.0
-					bluff_icon.offset_bottom = 34.0
-					bluff_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-					bluff_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-					bluff_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-					bluff_icon.z_as_relative = false
-					bluff_icon.z_index = Z_GRID_BLUFF
-					bluff_icon.clip_contents = false
-					bluff_icon.visible = false
-					card_node.add_child(bluff_icon)
+				var bluff_icon := TextureRect.new()
+				bluff_icon.set_anchors_preset(Control.PRESET_CENTER_TOP)
+				bluff_icon.offset_left = -18.0
+				bluff_icon.offset_top = -2.0
+				bluff_icon.offset_right = 18.0
+				bluff_icon.offset_bottom = 34.0
+				bluff_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				bluff_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				bluff_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				bluff_icon.z_as_relative = false
+				bluff_icon.z_index = Z_GRID_BLUFF
+				bluff_icon.clip_contents = false
+				bluff_icon.visible = false
+				card_node.add_child(bluff_icon)
 				var rune_lbl := Label.new()
 				rune_lbl.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 				rune_lbl.offset_left = 2.0
@@ -1916,6 +1915,16 @@ func _wire_name_line_edit(le: LineEdit, error_lbl: Label) -> void:
 func _begin_setup_phase() -> void:
 	if setup_phase == null:
 		return
+	# Lock AI social/personality early so insight omens (Provocative, etc.) work
+	# during player placement — not only after AI finishes setup.
+	if GameState.game_mode in [
+				GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+				GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+			and ai_player != null:
+		ai_player.reset_personalities()
+		ai_player.ensure_personalities()
+		if not GameState.active_omens.is_empty():
+			OmenBattleApplier.refresh_intel(ai_player, false)
 	setup_phase.visible = true
 	setup_phase.start_setup(0)
 	setup_phase.setup_complete.connect(_on_setup_complete_p1, CONNECT_ONE_SHOT)
@@ -2117,7 +2126,7 @@ func _on_setup_complete_p1() -> void:
 			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			or GameState.game_mode == GameState.GameMode.EXPLORATION:
 		_do_ai_setup()
-		GameState.omen_intel_lines = OmenBattleApplier.collect_intel_lines(ai_player)
+		OmenBattleApplier.refresh_intel(ai_player, true)
 		await _run_enemy_omen_roll_phase()
 		_begin_game()
 	elif GameState.game_mode == GameState.GameMode.HOT_SEAT:
@@ -3553,17 +3562,55 @@ func _build_omen_hud_panel() -> void:
 			lbl.add_theme_color_override("font_color", Color(0.88, 0.93, 0.98, 1.0))
 		vbox.add_child(lbl)
 
-	if not GameState.omen_intel_lines.is_empty():
+	if not GameState.omen_intel.is_empty() or not GameState.omen_intel_lines.is_empty():
 		var sep := HSeparator.new()
 		vbox.add_child(sep)
-		for intel_line: Variant in GameState.omen_intel_lines:
-			var intel_lbl := Label.new()
-			intel_lbl.text = str(intel_line)
-			intel_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			intel_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			intel_lbl.add_theme_font_size_override("font_size", 8)
-			intel_lbl.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
-			vbox.add_child(intel_lbl)
+		if not GameState.omen_intel.is_empty():
+			for intel_v: Variant in GameState.omen_intel:
+				if not intel_v is Dictionary:
+					continue
+				var intel: Dictionary = intel_v as Dictionary
+				var face: String = str(intel.get("emoji", "")).strip_edges()
+				var line: String = str(intel.get("text", "")).strip_edges()
+				if line.is_empty():
+					continue
+				if str(intel.get("type", "")) == "reveal_enemy_bluff_preference" \
+						and BluffEmoji.has_tex(face):
+					var row := HBoxContainer.new()
+					row.alignment = BoxContainer.ALIGNMENT_CENTER
+					row.add_theme_constant_override("separation", 4)
+					var art := TextureRect.new()
+					art.custom_minimum_size = Vector2(14.0, 14.0)
+					art.texture = BluffEmoji.tex(face)
+					art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+					art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+					art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+					row.add_child(art)
+					var intel_lbl := Label.new()
+					intel_lbl.text = line
+					intel_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+					intel_lbl.add_theme_font_size_override("font_size", 8)
+					intel_lbl.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
+					intel_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+					row.add_child(intel_lbl)
+					vbox.add_child(row)
+				else:
+					var intel_lbl2 := Label.new()
+					intel_lbl2.text = line
+					intel_lbl2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+					intel_lbl2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+					intel_lbl2.add_theme_font_size_override("font_size", 8)
+					intel_lbl2.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
+					vbox.add_child(intel_lbl2)
+		else:
+			for intel_line: Variant in GameState.omen_intel_lines:
+				var intel_lbl3 := Label.new()
+				intel_lbl3.text = str(intel_line)
+				intel_lbl3.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				intel_lbl3.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				intel_lbl3.add_theme_font_size_override("font_size", 8)
+				intel_lbl3.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
+				vbox.add_child(intel_lbl3)
 
 	add_child(_omen_hud_panel)
 	call_deferred("_resize_omen_hud_panel")
@@ -4013,14 +4060,23 @@ func _refresh_all_rune_labels() -> void:
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				var lbl: Label = rune_labels[p][r][c] as Label
-				if lbl == null:
-					continue
-				var rune_id: String = OmenBattleApplier.get_cell_rune(p, r, c)
-				var glyph: String = OmenBattleApplier.rune_glyph(rune_id)
-				lbl.text = glyph
-				lbl.visible = not glyph.is_empty()
+				_refresh_rune_label(p, r, c)
 
+
+func _refresh_rune_label(player: int, row: int, col: int) -> void:
+	if rune_labels.is_empty() or player < 0 or player >= rune_labels.size():
+		return
+	if row < 0 or row >= (rune_labels[player] as Array).size():
+		return
+	if col < 0 or col >= (rune_labels[player][row] as Array).size():
+		return
+	var lbl: Label = rune_labels[player][row][col] as Label
+	if lbl == null:
+		return
+	# Above-runes always show; under-runes only as a sigil once the cell is revealed.
+	var glyph: String = OmenBattleApplier.visible_rune_glyph(player, row, col)
+	lbl.text = glyph
+	lbl.visible = not glyph.is_empty()
 
 func _refresh_bluff_label(player: int, row: int, col: int) -> void:
 	_apply_bluff_visual(player, row, col, GameState.get_bluff(player, row, col))
@@ -4039,9 +4095,11 @@ func _bluff_icon_at(player: int, row: int, col: int) -> TextureRect:
 func _apply_bluff_visual(player: int, row: int, col: int, emoji: String) -> void:
 	var lbl: Label = bluff_labels[player][row][col] as Label
 	var icon: TextureRect = _bluff_icon_at(player, row, col)
-	var use_png: bool = icon != null and BluffEmoji.uses_custom() and BluffEmoji.has_tex(emoji)
-	if use_png:
-		icon.texture = BluffEmoji.tex(emoji)
+	var face: String = emoji.strip_edges()
+	var tex: Texture2D = BluffEmoji.tex(face) if not face.is_empty() else null
+	# Prefer PNG art; never show unicode on the grid.
+	if icon != null and tex != null:
+		icon.texture = tex
 		icon.visible = true
 		lbl.text = ""
 		lbl.visible = false
@@ -4049,8 +4107,8 @@ func _apply_bluff_visual(player: int, row: int, col: int, emoji: String) -> void
 		if icon != null:
 			icon.texture = null
 			icon.visible = false
-		lbl.visible = true
-		lbl.text = emoji
+		lbl.text = ""
+		lbl.visible = false
 
 
 ## Sets a bluff emoji and plays the pop animation. Use this instead of
@@ -4155,16 +4213,14 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
-		if BluffEmoji.uses_custom() and BluffEmoji.has_tex(str(emoji)):
-			BluffEmoji.apply_button(btn, str(emoji), emoji_sz * 0.78)
-		else:
-			btn.text = str(emoji)
+		BluffEmoji.apply_button(btn, str(emoji), emoji_sz * 0.78)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
 			_set_bluff_animated(snap_player, snap_row, snap_col, snap_emoji)
 			backdrop.queue_free())
 		_style_overlay_button(btn, true)
 		hbox.add_child(btn)
+		OmenBattleApplier.decorate_bluff_button(btn, str(emoji))
 
 	var clear_btn := Button.new()
 	clear_btn.text = "✕  Remove Bluff"
@@ -5552,7 +5608,7 @@ func _chat_bubble_linger_duration(text: String) -> float:
 	return 6.0
 
 ## Plain + BBCode forms for Curious/Avoid reaction chat (includes bluff emoticon).
-## Prefers Magitech v3 PNG via BBCode [img]; falls back to unicode.
+## Prefers BluffEmoji PNG via BBCode [img]; never embeds unicode faces.
 func _format_bluff_reaction_chat(text: String, trigger: String, emoji: String = "") -> Dictionary:
 	var body := text.strip_edges()
 	var t := trigger.strip_edges().to_lower()
@@ -5567,15 +5623,14 @@ func _format_bluff_reaction_chat(text: String, trigger: String, emoji: String = 
 		tag_color = "#7A2F9E"  # purple
 	else:
 		return {"plain": body, "bbcode": body}
-	var face_plain := face
-	var face_bbcode := face
+	var face_plain := ""
+	var face_bbcode := ""
 	const ICON_PX := 18
-	if not face.is_empty() and BluffEmoji.uses_custom() and BluffEmoji.has_tex(face):
-		var path: String = BluffEmoji.path_for(face)
-		if not path.is_empty():
-			face_bbcode = "[img=%dx%d]%s[/img]" % [ICON_PX, ICON_PX, path]
-			# Wide placeholder so size measurement reserves room for the PNG.
-			face_plain = "■■"
+	var img: String = BluffEmoji.img_bbcode(face, ICON_PX) if not face.is_empty() else ""
+	if not img.is_empty():
+		face_bbcode = img
+		# Wide placeholder so size measurement reserves room for the PNG.
+		face_plain = "■■"
 	var tag_plain := "[%s %s]" % [label, face_plain] if not face_plain.is_empty() else "[%s]" % label
 	var tag_bbcode := "[%s %s]" % [label, face_bbcode] if not face_bbcode.is_empty() else "[%s]" % label
 	return {
@@ -7985,8 +8040,7 @@ func _show_options_panel() -> void:
 	if not GameState.active_omens.is_empty() or not GameState.enemy_active_omens.is_empty():
 		items.append({
 			"text": "Omens",
-			"callback": func() -> void:
-				OmenListPanel.show_dialog(self, OmenBattleApplier.all_held_omens()),
+			"callback": _show_omen_detail_panel,
 		})
 	# Only offer surrender on the acting player's turn (never during AI turn).
 	if _can_surrender_now():
@@ -8010,6 +8064,20 @@ func _close_options_panel() -> void:
 	GameDialog.close_overlay(self)
 	_options_panel = null
 	_force_options_hover_exit()
+
+
+## Full omen dossier (capsule grid + detail / anoint bind). Returns to Options on close.
+func _show_omen_detail_panel() -> void:
+	_options_panel = null
+	var overlay: OmenDetailOverlay = OmenDetailOverlay.open(
+			self, GameDialog.DEFAULT_Z_INDEX + 20)
+	if overlay == null:
+		return
+	overlay.closed.connect(func() -> void:
+		if is_instance_valid(self):
+			_show_options_panel()
+	, CONNECT_ONE_SHOT)
+
 
 # ─────────────────────────────────────────────────────────────
 # Change Music sub-panel
@@ -9640,6 +9708,7 @@ func _refresh_card_node(player: int, row: int, col: int) -> void:
 	var node: Control = grid_nodes[player][row][col]
 	var inst := GameState.get_card(player, row, col)
 	node.set_card_data(inst, player, Vector2i(row, col))
+	_refresh_rune_label(player, row, col)
 
 var _tech_hand_overlay: Control = null
 
@@ -10654,6 +10723,7 @@ func _on_attack_aborted() -> void:
 		TutorialBattleManager.report_action("attack_aborted", {})
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
+	var _retarget_pos: Vector2i = turn_manager.take_pending_retarget_attacker_pos()
 	_clear_selection()
 	_refresh_all_grids()   # reflect any state changes (e.g. attacked_this_turn hourglass)
 	_refresh_attack_labels()
@@ -10665,6 +10735,20 @@ func _on_attack_aborted() -> void:
 		return
 	if _end_turn_btn:
 		_end_turn_btn.visible = true
+	# Bunker surround lock: keep the same attacker and force a new target cell.
+	if _retarget_pos != Vector2i(-1, -1) \
+			and GameState.current_phase != GameState.Phase.GAME_OVER:
+		var _rt_card: GameState.CardInstance = GameState.get_card(
+			GameState.current_player, _retarget_pos.x, _retarget_pos.y)
+		if _rt_card != null and _rt_card.card_type == "character" \
+				and not _rt_card.was_destroyed and not _rt_card.attacked_this_turn:
+			selected_attacker_pos = _retarget_pos
+			grid_nodes[GameState.current_player][_retarget_pos.x][_retarget_pos.y].set_selected(true)
+			_set_selection_state(SelectionState.SELECTING_TARGET)
+			_show_guide("%s: choose another cell (previous target locked)." % _rt_card.card_name)
+			_highlight_valid_targets()
+			_update_end_turn_blink()
+			return
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
 	_update_end_turn_blink()
@@ -10925,6 +11009,9 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			pass
 
 		SelectionState.SELECTING_TECH_TARGET:
+			# Ignore further taps while a prior pick is still resolving (Spy/Radar await).
+			if _tech_target_busy:
+				return
 			var target_node: Control = grid_nodes[player][row][col]
 			if not target_node.is_highlighted:
 				if pending_tech_filter == "self_squares_1_opponent_turn":
@@ -10946,9 +11033,11 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 				elif pending_tech_filter == "venom_flagged_card":
 					GameState.post_message("Potent Poison: Choose 1 card with Venom Flag.")
 				return
+			_tech_target_busy = true
 			SFXManager.play(SFXManager.SFX_TARGET)
 			_set_tech_hover_node(null)
-			_handle_tech_target(player, pos)
+			await _handle_tech_target(player, pos)
+			_tech_target_busy = false
 
 # ─────────────────────────────────────────────────────────────
 # Attack Confirmation Flow
@@ -12069,20 +12158,28 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					await get_tree().create_timer(0.2).timeout
 					_prompt_ai_radar_pick()
 				return
+			# Reserve the pick before any await so rapid taps cannot double-reveal.
+			if _tech_reveals_remaining <= 0 or _tech_reveal_picked.has(pos):
+				return
+			_tech_reveals_remaining -= 1
+			_tech_reveal_picked.append(pos)
+			_clear_highlights()
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
-			if not _tech_reveal_picked.has(pos):
-				_tech_reveal_picked.append(pos)
 			# Wait for reveal anim + any on-expose follow-up before next Radar pick / finish.
 			await _await_card_reveal_animation(player, pos.x, pos.y)
 			card = GameState.get_card(player, pos.x, pos.y)
 			# _on_card_revealed handles trap auto-void when a trap is found
-			# Risky reveal: pay 700 crystals for each character found
+			var _spy_tech: String = pending_tech_name if not pending_tech_name.is_empty() else "Reveal"
+			if card.card_type == "dead_end":
+				GameState.post_message("%s: Revealed Dead End." % _spy_tech)
+			else:
+				GameState.post_message("%s: Revealed %s." % [_spy_tech, card.card_name])
+			# Risky reveal: pay 700 crystals for each character/trap found
 			if "risky" in pending_tech_filter and card.card_type in ["character", "trap"]:
 				var _cs_cost: int = 700
 				GameState.lose_crystals(current_player, _cs_cost, "ability")
 				GameState.post_message(
-					"Corrupted Spy: Found %s — lost %d Crystals!" % [card.card_type, _cs_cost])
-			_tech_reveals_remaining -= 1
+					"Corrupted Spy: lost %d Crystals!" % _cs_cost)
 			if _tech_reveals_remaining <= 0:
 				_finish_tech_action(current_player)
 			else:
@@ -12100,12 +12197,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter.begins_with("own_units_up_to_"):
 		if player == current_player and card.card_type == "character" and not card.face_up:
-			if _tech_reveal_picked.has(pos):
+			if _tech_reveals_remaining <= 0 or _tech_reveal_picked.has(pos):
 				return
-			GameState.reveal_card_by_ability(player, pos.x, pos.y)
-			_tech_reveal_picked.append(pos)
-			await _await_card_reveal_animation(player, pos.x, pos.y)
 			_tech_reveals_remaining -= 1
+			_tech_reveal_picked.append(pos)
+			_clear_highlights()
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
+			await _await_card_reveal_animation(player, pos.x, pos.y)
 			var picked: int = _tech_reveal_picked.size()
 			if _tech_reveals_remaining <= 0 \
 					or _count_own_facedown_units(current_player, _tech_reveal_picked) == 0:
@@ -12376,12 +12474,18 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "trap_hostage_reveal_lock":
-		if player == opponent and card.card_type != "dead_end":
-			if not card.face_up:
+		if player == opponent and card.card_type == "character":
+			var _was_hidden: bool = not card.face_up
+			if _was_hidden:
 				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			if turn_manager._pending_trap_hostage_lock and pos not in GameState.locked_attack_positions:
 				GameState.locked_attack_positions.append(pos)
-			GameState.post_message("Hostage: %s revealed and locked until turn end." % card.card_name)
+			if _was_hidden:
+				GameState.post_message(
+					"Hostage: %s revealed — foe cannot target it until turn end." % card.card_name)
+			else:
+				GameState.post_message(
+					"Hostage: %s protected — foe cannot target it until turn end." % card.card_name)
 			turn_manager._pending_trap_hostage_lock = false
 			_finish_trap_target_selection()
 		elif _player_is_ai(opponent):
@@ -12894,6 +12998,7 @@ func _clear_after_tech() -> void:
 	_tech_reveals_remaining = 0
 	_tech_reveals_total = 0
 	_tech_reveal_picked.clear()
+	_tech_target_busy = false
 	_rift_hover_cell = Vector2i(-1, -1)
 	_rift_last_hover = Vector2i(-1, -1)
 	_hide_guide()
@@ -13361,7 +13466,14 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
 
-	elif filter == "self_reveal_choice" or filter == "trap_hostage_reveal_lock" or filter == "trap_street_joke_reveal":
+	elif filter == "trap_hostage_reveal_lock":
+		# Hostage: any own unit (face-up or face-down) can be protected this turn.
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(card.card_type == "character")
+
+	elif filter == "self_reveal_choice" or filter == "trap_street_joke_reveal":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
@@ -13876,6 +13988,8 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 		_refresh_card_node(player, row, col)
 		if node.has_method("play_reveal_animation"):
 			await node.play_reveal_animation()
+	# Under-cell rune sigil appears on the card once revealed.
+	_refresh_rune_label(player, row, col)
 	await _flush_flag_pops_for_cell(player, row, col)
 	if turn_manager != null:
 		await turn_manager.apply_on_reveal_abilities(player, row, col)
@@ -13888,7 +14002,6 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 			and GameState.current_phase != GameState.Phase.BATTLE \
 			and turn_manager != null:
 		await turn_manager.maybe_apply_on_expose_reveal_foe(player, row, col)
-	_revealing_cells.erase(reveal_key)
 	# Revealed empty cell — brief blank flash then dissolve (Scout Probe, Radar, etc.).
 	# Battle attacks on dead_end skip here; destroy_card runs after Reckoning.
 	if inst != null and inst.card_type == "dead_end":
@@ -13896,9 +14009,13 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 			GameState.destroy_card(player, row, col, false)
 		else:
 			_refresh_card_node(player, row, col)
+		_revealing_cells.erase(reveal_key)
 		return
 	# Trap revealed → play black-smoke dissolve then clear the slot.
 	# BATTLE phase keeps the attacked trap until post-combat handling (Bait/Hostage/etc. dissolve).
+	# IMPORTANT: do NOT erase _revealing_cells before this finishes. Spy/Radar await that
+	# lock, then call _finish_tech_action → _refresh_all_grids → set_card_data, which
+	# resets Card.modulate and aborts the dissolve mid-presentation.
 	if inst != null and inst.card_type == "trap" \
 			and _should_dissolve_trap_after_reveal(player, row, col):
 		_add_to_void_pile(player, inst.card_name, inst.card_type)
@@ -13907,6 +14024,10 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 		GameState.void_trap(player, row, col)
 		if node is Card:
 			(node as Card).modulate = Color.WHITE
+		_revealing_cells.erase(reveal_key)
+		_refresh_card_node(player, row, col)
+		return
+	_revealing_cells.erase(reveal_key)
 	_refresh_card_node(player, row, col)
 
 func _on_card_destruction_blocked(player: int, row: int, col: int) -> void:

@@ -2,10 +2,14 @@ class_name OmenBattleApplier
 extends RefCounted
 ## Applies exploration Omen effects during battle setup and runtime.
 
-const SETUP_VISIBLE_RUNES: Array[String] = ["berkano", "laguz"]
-const BEGIN_GAME_RUNES: Array[String] = ["uruz", "nauthiz", "isa", "mannaz"]
+## Above-cell runes: visible during Setup and always shown on the cell.
+## Under-cell runes: hidden until the cell's card is revealed (face_up).
+const ABOVE_RUNES: Array[String] = ["berkano", "laguz", "mannaz", "algiz"]
+const UNDER_RUNES: Array[String] = [
+	"fehu", "uruz", "thurisaz", "hagalaz", "nauthiz", "isa", "jera",
+]
 
-## Elder Futhark glyphs shown in cell corners.
+## Elder Futhark glyphs shown in cell corners / on revealed cards.
 const RUNE_GLYPHS: Dictionary = {
 	"fehu": "ᚠ",
 	"uruz": "ᚢ",
@@ -23,6 +27,27 @@ const RUNE_GLYPHS: Dictionary = {
 
 static func rune_glyph(rune_id: String) -> String:
 	return str(RUNE_GLYPHS.get(rune_id.strip_edges().to_lower(), ""))
+
+
+static func is_above_rune(rune_id: String) -> bool:
+	return rune_id.strip_edges().to_lower() in ABOVE_RUNES
+
+
+static func is_under_rune(rune_id: String) -> bool:
+	var id: String = rune_id.strip_edges().to_lower()
+	return not id.is_empty() and id in UNDER_RUNES
+
+
+## Visible glyph for UI: under-runes only after the cell is face-up.
+static func visible_rune_glyph(player: int, row: int, col: int) -> String:
+	var rune_id: String = get_cell_rune(player, row, col)
+	if rune_id.is_empty():
+		return ""
+	if is_under_rune(rune_id):
+		var card: GameState.CardInstance = GameState.get_card(player, row, col)
+		if card == null or not card.face_up:
+			return ""
+	return rune_glyph(rune_id)
 
 
 static func prepare_from_exploration() -> void:
@@ -45,6 +70,7 @@ static func clear() -> void:
 static func reset_runtime_fields() -> void:
 	GameState.cell_runes.clear()
 	GameState.omen_intel_lines.clear()
+	GameState.omen_intel.clear()
 	GameState.omen_cannot_attack_first_turn = false
 	GameState.omen_cannot_union = false
 	GameState.omen_cannot_tech = false
@@ -354,6 +380,13 @@ static func apply_enemy_crystal_bonuses() -> void:
 		held["crystal_bonus_applied"] = true
 
 
+## Above-cell runes (`placement` setup_visible / above) place during Setup so the
+## player can see glyphs while arranging cards. Under-cell runes wait until begin_game.
+static func _is_setup_visible_rune(effect: Dictionary) -> bool:
+	var placement: String = str(effect.get("placement", "")).strip_edges().to_lower()
+	return placement == "setup_visible" or placement == "above"
+
+
 static func apply_setup_runes() -> void:
 	if GameState.active_omens.is_empty():
 		return
@@ -371,8 +404,7 @@ static func apply_setup_runes() -> void:
 			var eff: Dictionary = effect as Dictionary
 			if str(eff.get("type", "")) != "cell_runes":
 				continue
-			var placement: String = str(eff.get("placement", "")).strip_edges()
-			if placement != "setup_visible":
+			if not _is_setup_visible_rune(eff):
 				continue
 			_place_cell_runes(eff, false, owner)
 
@@ -400,8 +432,8 @@ static func apply_begin_game(board: Node) -> void:
 					if str(eff.get("timing", "battle_start")).strip_edges() == "battle_start":
 						_apply_reveal_cells(eff, owner)
 				"cell_runes":
-					var placement: String = str(eff.get("placement", "")).strip_edges()
-					if placement != "setup_visible":
+					# Already placed in Setup — do not re-roll at battle start.
+					if not _is_setup_visible_rune(eff):
 						_place_cell_runes(eff, true, owner)
 				"unit_stat_flat", "unit_stat_pct":
 					_apply_unit_stat_on_grid(eff, owner)
@@ -413,62 +445,265 @@ static func apply_begin_game(board: Node) -> void:
 	# Enemy omens roll post-setup — apply their starting crystal bonuses here if pending.
 	apply_enemy_crystal_bonuses()
 	apply_begin_game_extra(board)
-	if board != null and GameState.omen_intel_lines.is_empty():
+	if board != null and GameState.omen_intel.is_empty():
 		var ai: Node = board.get("ai_player") if board.get("ai_player") != null else null
 		if ai != null:
-			GameState.omen_intel_lines = collect_intel_lines(ai)
+			refresh_intel(ai, false)
 	BattleResolver.recalculate_all_field_bonuses()
 
 
-static func collect_intel_lines(ai_player: Node) -> Array:
-	var lines: PackedStringArray = PackedStringArray()
-	# Intel omens are player-facing (owner 0 only).
+## Rebuild / merge player-facing insight intel from held omens.
+## Bluff/personality revelations are sticky (same emoji for the duel).
+## Board-dependent top-stats refresh when `include_board_stats` is true.
+static func refresh_intel(ai_player: Node, include_board_stats: bool = false) -> void:
+	var existing: Dictionary = {}
+	for entry_v: Variant in GameState.omen_intel:
+		if not entry_v is Dictionary:
+			continue
+		var e0: Dictionary = entry_v as Dictionary
+		existing[_intel_key(e0)] = e0
+	var out: Array = []
 	if ai_player == null or GameState.active_omens.is_empty():
-		return lines
+		GameState.omen_intel = out
+		GameState.omen_intel_lines = []
+		return
+	if ai_player.has_method("ensure_personalities"):
+		ai_player.call("ensure_personalities")
 	for held: Variant in GameState.active_omens:
 		if not held is Dictionary:
 			continue
 		var omen: Dictionary = OmenDatabase.get_omen(str((held as Dictionary).get("id", "")))
 		if omen.is_empty():
 			continue
+		var omen_id: String = str(omen.get("id", ""))
+		var omen_label: String = str(omen.get("label", omen_id))
 		for effect: Variant in omen.get("effects", []):
 			if not effect is Dictionary:
 				continue
 			var eff: Dictionary = effect as Dictionary
-			match str(eff.get("type", "")):
+			var etype: String = str(eff.get("type", ""))
+			match etype:
 				"reveal_enemy_bluff_preference":
 					var pref_kind: String = str(eff.get("value", "interested")).strip_edges().to_lower()
-					var pool: Array = []
-					if ai_player.has_method("get_bluff_prefer_emojis") \
-							and ai_player.has_method("get_bluff_avoid_emojis"):
-						pool = ai_player.call("get_bluff_avoid_emojis") if pref_kind == "avoid" \
-							else ai_player.call("get_bluff_prefer_emojis")
-					if pool.is_empty():
-						continue
-					var emoji: String = str(pool[randi() % pool.size()])
+					if pref_kind != "avoid":
+						pref_kind = "interested"
+					var key: String = "%s|%s|%s" % [omen_id, etype, pref_kind]
+					var kept: Dictionary = existing.get(key, {}) as Dictionary
+					var emoji: String = str(kept.get("emoji", "")).strip_edges()
+					if emoji.is_empty():
+						var pool: Array = []
+						if ai_player.has_method("get_bluff_prefer_emojis") \
+								and ai_player.has_method("get_bluff_avoid_emojis"):
+							pool = ai_player.call("get_bluff_avoid_emojis") if pref_kind == "avoid" \
+								else ai_player.call("get_bluff_prefer_emojis")
+						if pool.is_empty():
+							continue
+						emoji = str(pool[randi() % pool.size()])
 					var verb: String = "drawn to" if pref_kind == "interested" else "avoids"
-					lines.append("%s: foe %s %s" % [str(omen.get("label", omen.get("id", ""))), verb, emoji])
+					# Keep unicode out of display text — UI renders BluffEmoji art separately.
+					var text: String = "%s: foe %s this bluff" % [omen_label, verb]
+					out.append({
+						"omen_id": omen_id,
+						"omen_label": omen_label,
+						"type": etype,
+						"kind": pref_kind,
+						"emoji": emoji,
+						"text": text,
+					})
 				"reveal_enemy_personality":
 					var axis: String = str(eff.get("value", "offensive")).strip_edges().to_lower()
-					var pname: String = ""
-					if axis == "defensive":
-						pname = str(ai_player.get("personality_defensive"))
-					else:
-						pname = str(ai_player.get("personality_offensive"))
+					if axis != "defensive":
+						axis = "offensive"
+					var key2: String = "%s|%s|%s" % [omen_id, etype, axis]
+					var kept2: Dictionary = existing.get(key2, {}) as Dictionary
+					var pname: String = str(kept2.get("value", "")).strip_edges()
+					if pname.is_empty():
+						if axis == "defensive":
+							pname = str(ai_player.get("personality_defensive"))
+						else:
+							pname = str(ai_player.get("personality_offensive"))
 					if pname.is_empty():
 						continue
 					var axis_label: String = "Defensive" if axis == "defensive" else "Offensive"
-					lines.append("%s: foe %s — %s" % [
-						str(omen.get("label", omen.get("id", ""))), axis_label, pname])
+					var text2: String = "%s: foe %s — %s" % [omen_label, axis_label, pname]
+					out.append({
+						"omen_id": omen_id,
+						"omen_label": omen_label,
+						"type": etype,
+						"kind": axis,
+						"value": pname,
+						"text": text2,
+					})
 				"reveal_enemy_top_stats":
-					var kind: String = str(eff.get("kind", "strongest_unit")).strip_edges().to_lower()
+					if not include_board_stats:
+						# Keep prior board reveal if any; otherwise skip until board exists.
+						var kind: String = str(eff.get("kind", "strongest_unit")).strip_edges().to_lower()
+						var key3: String = "%s|%s|%s" % [omen_id, etype, kind]
+						if existing.has(key3):
+							out.append((existing[key3] as Dictionary).duplicate(true))
+						continue
+					var kind2: String = str(eff.get("kind", "strongest_unit")).strip_edges().to_lower()
 					var amount: int = maxi(1, int(eff.get("count", 1)))
-					var intel_line: String = _build_enemy_top_stats_line(
-						str(omen.get("label", omen.get("id", ""))),
-						kind, amount)
-					if not intel_line.is_empty():
-						lines.append(intel_line)
-	return lines
+					var intel_line: String = _build_enemy_top_stats_line(omen_label, kind2, amount)
+					if intel_line.is_empty():
+						continue
+					out.append({
+						"omen_id": omen_id,
+						"omen_label": omen_label,
+						"type": etype,
+						"kind": kind2,
+						"text": intel_line,
+					})
+	GameState.omen_intel = out
+	var lines: PackedStringArray = PackedStringArray()
+	for row_v: Variant in out:
+		if row_v is Dictionary:
+			var t: String = str((row_v as Dictionary).get("text", "")).strip_edges()
+			if not t.is_empty():
+				lines.append(t)
+	GameState.omen_intel_lines = lines
+
+
+static func _intel_key(entry: Dictionary) -> String:
+	return "%s|%s|%s" % [
+		str(entry.get("omen_id", "")),
+		str(entry.get("type", "")),
+		str(entry.get("kind", "")),
+	]
+
+
+## Intel rows for a specific omen id.
+static func intel_for_omen(omen_id: String) -> Array:
+	var want: String = omen_id.strip_edges()
+	var rows: Array = []
+	for entry_v: Variant in GameState.omen_intel:
+		if not entry_v is Dictionary:
+			continue
+		if str((entry_v as Dictionary).get("omen_id", "")) == want:
+			rows.append(entry_v)
+	return rows
+
+
+## "interested" / "avoided" / "" for a bluff emoji revealed by insight omens.
+static func bluff_intel_kind(emoji: String) -> String:
+	var needle: String = BluffEmoji.canonical(emoji.strip_edges())
+	if needle.is_empty():
+		return ""
+	var interested: bool = false
+	var avoided: bool = false
+	for entry_v: Variant in GameState.omen_intel:
+		if not entry_v is Dictionary:
+			continue
+		var e: Dictionary = entry_v as Dictionary
+		if str(e.get("type", "")) != "reveal_enemy_bluff_preference":
+			continue
+		if BluffEmoji.canonical(str(e.get("emoji", "")).strip_edges()) != needle:
+			continue
+		var kind: String = str(e.get("kind", "")).strip_edges().to_lower()
+		if kind == "avoid":
+			avoided = true
+		else:
+			interested = true
+	if interested:
+		return "interested"
+	if avoided:
+		return "avoided"
+	return ""
+
+
+## Pulse chrome + instant hover tip above bluff picker buttons for revealed prefs.
+static func decorate_bluff_button(btn: Button, emoji: String) -> void:
+	if btn == null:
+		return
+	var kind: String = bluff_intel_kind(emoji)
+	if kind.is_empty():
+		return
+	var interested: bool = kind == "interested"
+	var tip_text: String = "Interested by enemy" if interested else "Avoided by enemy"
+	# Native tooltip_text has delay + OS placement — use an instant custom tip instead.
+	btn.tooltip_text = ""
+	var tint: Color = Color(0.28, 0.92, 0.55, 1.0) if interested \
+			else Color(1.0, 0.42, 0.38, 1.0)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(tint.r, tint.g, tint.b, 0.22)
+	sb.border_color = Color(tint.r, tint.g, tint.b, 0.85)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 4
+	sb.content_margin_right = 4
+	sb.content_margin_top = 4
+	sb.content_margin_bottom = 4
+	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
+		btn.add_theme_stylebox_override(state, sb)
+	# Soft pulse on border alpha / modulate.
+	var tw: Tween = btn.create_tween().set_loops()
+	tw.tween_property(btn, "modulate", Color(1.15, 1.15, 1.15, 1.0), 0.55) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(btn, "modulate", Color(1, 1, 1, 1), 0.55) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_attach_instant_bluff_tip(btn, tip_text, tint)
+
+
+static func _attach_instant_bluff_tip(btn: Button, tip_text: String, tint: Color) -> void:
+	var tip := PanelContainer.new()
+	tip.name = "BluffIntelTip"
+	tip.visible = false
+	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tip.z_index = 80
+	tip.set_as_top_level(true)
+	var tip_sb := StyleBoxFlat.new()
+	tip_sb.bg_color = Color(0.06, 0.08, 0.14, 0.96)
+	tip_sb.border_color = Color(tint.r, tint.g, tint.b, 0.9)
+	tip_sb.set_border_width_all(1)
+	tip_sb.set_corner_radius_all(6)
+	tip_sb.content_margin_left = 10
+	tip_sb.content_margin_right = 10
+	tip_sb.content_margin_top = 5
+	tip_sb.content_margin_bottom = 5
+	tip.add_theme_stylebox_override("panel", tip_sb)
+	var lbl := Label.new()
+	lbl.text = tip_text
+	lbl.add_theme_font_override("font", FontManager.make_font("primary", 600))
+	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_color_override("font_color", tint.lightened(0.25))
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tip.add_child(lbl)
+	btn.add_child(tip)
+
+	var place_tip := func() -> void:
+		if tip == null or not is_instance_valid(tip) or not is_instance_valid(btn):
+			return
+		tip.reset_size()
+		var br: Rect2 = btn.get_global_rect()
+		var ts: Vector2 = tip.get_combined_minimum_size()
+		if ts.x < 2.0:
+			ts = tip.size
+		const GAP: float = 6.0
+		var tx: float = br.position.x + br.size.x * 0.5 - ts.x * 0.5
+		var ty: float = br.position.y - ts.y - GAP
+		var vp: Vector2 = btn.get_viewport_rect().size
+		tip.global_position = Vector2(
+			clampf(tx, 4.0, maxf(4.0, vp.x - ts.x - 4.0)),
+			clampf(ty, 4.0, maxf(4.0, vp.y - ts.y - 4.0)))
+
+	btn.mouse_entered.connect(func() -> void:
+		if not is_instance_valid(tip):
+			return
+		tip.visible = true
+		place_tip.call()
+		# One-frame defer so size is correct after first show.
+		btn.get_tree().process_frame.connect(place_tip, CONNECT_ONE_SHOT))
+	btn.mouse_exited.connect(func() -> void:
+		if is_instance_valid(tip):
+			tip.visible = false)
+	btn.tree_exiting.connect(func() -> void:
+		if is_instance_valid(tip):
+			tip.queue_free())
+
+
+static func collect_intel_lines(ai_player: Node) -> Array:
+	refresh_intel(ai_player, true)
+	return GameState.omen_intel_lines
 
 
 static func get_cell_rune(player: int, row: int, col: int) -> String:
@@ -680,6 +915,28 @@ static func _apply_unit_stat_on_grid(effect: Dictionary, omen_owner: int = 0) ->
 			_apply_unit_stat_to_card(card, effect)
 
 
+## Apply held unit_stat_flat / unit_stat_pct omens to one card (e.g. a just-summoned union).
+## Optional row/col override position filters (border / center); defaults to card.grid_*.
+static func apply_matching_unit_stats_to_card(
+		card: GameState.CardInstance,
+		owner_player: int,
+		row: int = -1,
+		col: int = -1) -> void:
+	if card == null or card.card_type != "character":
+		return
+	var r: int = row if row >= 0 else int(card.grid_row)
+	var c: int = col if col >= 0 else int(card.grid_col)
+	for type_name: String in ["unit_stat_flat", "unit_stat_pct"]:
+		for entry_v: Variant in effects_of_type(type_name):
+			if not entry_v is Dictionary:
+				continue
+			var entry: Dictionary = entry_v as Dictionary
+			if not _card_matches_effect_unit(card, entry, owner_player, r, c):
+				continue
+			var eff: Dictionary = entry.get("effect", {}) as Dictionary
+			_apply_unit_stat_to_card(card, eff)
+
+
 static func _apply_anoint_effects_on_grid() -> void:
 	for card_name: Variant in GameState.omen_anoint_effects.keys():
 		var effects: Variant = GameState.omen_anoint_effects[card_name]
@@ -804,11 +1061,12 @@ static func _card_matches_unit_filter(
 		filter: Variant,
 		row: int,
 		col: int) -> bool:
-	if card.card_type != "character" or card.is_union:
+	## Unions count as units for every field filter (name / affinity / position / trait).
+	if card == null or card.card_type != "character":
 		return false
 	if filter is String:
 		var fs: String = str(filter).strip_edges().to_lower()
-		if fs == "all":
+		if fs.is_empty() or fs == "all":
 			return true
 		if fs == "border":
 			return row == 0 or row == GameState.GRID_SIZE - 1 \
@@ -822,23 +1080,23 @@ static func _card_matches_unit_filter(
 	var filt: Dictionary = filter as Dictionary
 	if filt.has("affinity"):
 		var want_name: String = str(filt.get("affinity", "")).strip_edges().to_upper()
-		var char_data: CharacterData = CardDatabase.get_character(card.card_name)
-		if char_data == null:
-			return false
-		if char_data.get_affinity_name() != want_name:
+		# Live affinity (covers unions + Mass Transfiguration overrides).
+		if _affinity_name(card.affinity) != want_name:
 			return false
 	if filt.has("card_name"):
 		if card.card_name != str(filt.get("card_name", "")):
 			return false
 	if filt.has("name_contains"):
-		if not card.card_name.contains(str(filt.get("name_contains", ""))):
+		var needle: String = str(filt.get("name_contains", ""))
+		if not card.card_name.to_lower().contains(needle.to_lower()):
 			return false
 	if filt.has("name_contains_any"):
 		var any_list: Variant = filt.get("name_contains_any", [])
 		if any_list is Array:
 			var matched: bool = false
+			var hay: String = card.card_name.to_lower()
 			for fragment: Variant in any_list as Array:
-				if card.card_name.contains(str(fragment)):
+				if hay.contains(str(fragment).to_lower()):
 					matched = true
 					break
 			if not matched:
@@ -1052,14 +1310,16 @@ static func name_matches_filter(card_name: String, filter: Variant) -> bool:
 		if card_name != str(filt.get("card_name", "")):
 			return false
 	if filt.has("name_contains"):
-		if not card_name.contains(str(filt.get("name_contains", ""))):
+		var needle: String = str(filt.get("name_contains", ""))
+		if not card_name.to_lower().contains(needle.to_lower()):
 			return false
 	if filt.has("name_contains_any"):
 		var any_list: Variant = filt.get("name_contains_any", [])
 		if any_list is Array:
 			var matched: bool = false
+			var hay: String = card_name.to_lower()
 			for fragment: Variant in any_list as Array:
-				if card_name.contains(str(fragment)):
+				if hay.contains(str(fragment).to_lower()):
 					matched = true
 					break
 			if not matched:
@@ -1082,7 +1342,9 @@ static func _affinity_name(affinity: int) -> String:
 static func _card_matches_effect_unit(
 		card: GameState.CardInstance,
 		entry: Dictionary,
-		owner_player: int) -> bool:
+		owner_player: int,
+		row: int = -1,
+		col: int = -1) -> bool:
 	if card == null or card.card_type != "character":
 		return false
 	var anointed: String = str(entry.get("anointed", "")).strip_edges()
@@ -1095,11 +1357,10 @@ static func _card_matches_effect_unit(
 	var want_owner: int = _target_player_index(target if not target.is_empty() else "player", omen_owner)
 	if owner_player != want_owner:
 		return false
-	# Allow unions for name filters (totems normally skip unions via _card_matches_unit_filter).
 	var filt: Variant = eff.get("filter", {})
-	if card.is_union:
-		return name_matches_filter(card.card_name, filt)
-	return _card_matches_unit_filter(card, filt, 0, 0)
+	var r: int = row if row >= 0 else int(card.grid_row)
+	var c: int = col if col >= 0 else int(card.grid_col)
+	return _card_matches_unit_filter(card, filt, r, c)
 
 
 static func def_bonus_vs_different_affinity(

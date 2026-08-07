@@ -17,6 +17,7 @@ const SCENE_REGISTRY: Dictionary = {
 	"puzzle_wire_connect": "res://scenes/puzzles/puzzle_wire_connect.tscn",
 	"puzzle_simon_says":        "res://scenes/puzzles/puzzle_simon_says.tscn",
 	"puzzle_mario_platformer": "res://scenes/puzzles/puzzle_mario_platformer.tscn",
+	"puzzle_gameboy_platformer": "res://scenes/puzzles/puzzle_gameboy_platformer.tscn",
 }
 
 var _puzzles: Array = []

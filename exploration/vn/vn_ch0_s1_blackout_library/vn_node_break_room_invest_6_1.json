@@ -13,7 +13,9 @@
 		},
 		"linger_characters": true,
 		"sfx": "res://assets/audio/sfx/mystery_1.mp3",
-		"sfx_volume": 120.0
+		"sfx_volume": 120.0,
+		"show_polaroid": "<null>",
+		"wait": 3.0
 	},
 	{
 		"background": null,

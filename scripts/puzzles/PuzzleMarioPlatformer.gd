@@ -74,9 +74,10 @@ var _monsters: Array = []
 var _spikes: Array = []
 var _spike_spawn_timer := 0.0
 var _hint_label: Label
-var _result_label: Label
 var _close_btn: Button
 var _hint_alpha := 1.0
+var _result_text := ""
+var _show_result := false
 
 # ─────────────────────────────────────────────────────────────
 
@@ -112,15 +113,6 @@ func _ready() -> void:
 	_close_btn.pressed.connect(func() -> void: _end_puzzle(false))
 	ui_layer.add_child(_close_btn)
 	call_deferred("_position_close_btn")
-
-	_result_label = Label.new()
-	_result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_result_label.add_theme_font_size_override("font_size", 48)
-	_result_label.add_theme_color_override("font_color", GB3)
-	_result_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	_result_label.custom_minimum_size = Vector2(700.0, 0.0)
-	_result_label.visible = false
-	ui_layer.add_child(_result_label)
 
 	set_process(true)
 	set_process_unhandled_input(true)
@@ -345,12 +337,12 @@ func _end_puzzle(success: bool) -> void:
 
 	if success:
 		SFXManager.play(SFXManager.SFX_CRYSTAL_GAIN)
-		_result_label.text = "STAGE  CLEAR!"
+		_result_text = "STAGE  CLEAR!"
 	else:
 		SFXManager.play(SFXManager.SFX_CANCEL)
-		_result_label.text = "GAME  OVER"
+		_result_text = "GAME  OVER"
 
-	_result_label.visible = true
+	_show_result = true
 	queue_redraw()
 
 	var delay := 1.4 if success else 1.0
@@ -419,6 +411,28 @@ func _draw() -> void:
 
 	# Player
 	_draw_player(_player_pos.x, _player_pos.y)
+
+	# Win / lose — centered on the actual control (avoids broken CanvasLayer anchors)
+	if _show_result and not _result_text.is_empty():
+		_draw_result_banner()
+
+
+func _draw_result_banner() -> void:
+	var vw: float = size.x if size.x > 1.0 else get_viewport_rect().size.x
+	var vh: float = size.y if size.y > 1.0 else get_viewport_rect().size.y
+	var font: Font = ThemeDB.fallback_font
+	var fs := 48
+	var tw := font.get_string_size(_result_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	var th := float(fs)
+	var tx := floorf((vw - tw) * 0.5)
+	var ty := floorf((vh + th) * 0.5)
+	# Soft backing so text reads over busy scenery
+	var pad_x := 28.0
+	var pad_y := 16.0
+	draw_rect(Rect2(tx - pad_x, ty - th - pad_y * 0.35, tw + pad_x * 2.0, th + pad_y), Color(GB0.r, GB0.g, GB0.b, 0.85))
+	draw_rect(Rect2(tx - pad_x, ty - th - pad_y * 0.35, tw + pad_x * 2.0, 3.0), GB3)
+	draw_rect(Rect2(tx - pad_x, ty + pad_y * 0.55, tw + pad_x * 2.0, 3.0), GB3)
+	draw_string(font, Vector2(tx, ty), _result_text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, GB3)
 
 
 # ─── sub-draw helpers ────────────────────────────────────────

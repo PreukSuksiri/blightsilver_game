@@ -476,14 +476,13 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png"
 			}
 		],
 		"music_fade_out": 3.0,
-		"text": {
-			"en": "....!!!"
-		}
+		"show_polaroid": "<null>",
+		"text": "....!!!"
 	},
 	{
 		"fade_color": "#ffffff",
@@ -527,12 +526,13 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm.png"
 			}
 		],
 		"sfx": "res://assets/audio/sound_axe1.mp3",
 		"sfx_volume": 140.0,
+		"show_polaroid": "<null>",
 		"text": "(The woman pushed Nex away)"
 	},
 	{
@@ -581,14 +581,13 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_surprised.png"
 			}
 		],
+		"show_polaroid": "<null>",
 		"speaker": "Silver-haired woman",
-		"text": {
-			"en": "Wait!"
-		}
+		"text": "Wait!"
 	},
 	{
 		"wait": 0.5

@@ -167,7 +167,7 @@ func _load_characters() -> void:
 
 		["Bat Swarm", CharacterData.Affinity.CHAOS, 15, 15, 200,
 			CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK,
-			{"affinity": CharacterData.Affinity.CHAOS},
+			{"affinity": CharacterData.Affinity.CHAOS, "face_down": true},
 			"If a Chaos card on your side is being attacked, you may swap this card's position with that card. Usable face-down.",
 			CharacterData.Rarity.RARE],
 
@@ -962,7 +962,7 @@ func _load_characters() -> void:
 			CharacterData.AbilityType.ATK_BONUS_VS_FACEDOWN,
 			{"bonus": 50},
 			"+50 ATK vs face-down card",
-			CharacterData.Rarity.RARE],
+			CharacterData.Rarity.UNCOMMON],
 
 		["Spear Shark", CharacterData.Affinity.NATURE, 50, 20, 480,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
@@ -2937,9 +2937,9 @@ func _load_traps() -> void:
 			"The attacker chooses their own ally as an attack target",
 			CharacterData.Rarity.EXOTIC],
 
-		["Bunker", 400, TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT,
-			{"directions": ["up","down","left","right"]},
-			"Attacker cannot target surrounding cells until the end of this turn.",
+		["Bunker", 800, TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT,
+			{"directions": ["up","down","left","right"], "trigger_on_surround": true},
+			"Usable when foe attacks this card or surrounding cells. Foe cannot target surrounding cells until the end of this turn. If already targeted, they must choose another cell.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Cursed Reflection", 600, TrapData.TrapEffectType.SWAP_ATTACKER_ATK_DEF_TEMP,
@@ -2984,9 +2984,9 @@ func _load_traps() -> void:
 			CharacterData.Rarity.COMMON,
 			true],
 
-		["Hostage", 100, TrapData.TrapEffectType.NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE,
-			{"lock_revealed": true},
-			"You reveal 1 own cell. Until this turn ends, attacker cannot target that cell.",
+		["Hostage", 500, TrapData.TrapEffectType.NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE,
+			{"lock_revealed": true, "units_only": true},
+			"Usable when foe attacks. Reveal 1 of your units. Until this turn ends, foe cannot target that unit. If already targeted, foe must choose another cell.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Hypnosis", 500, TrapData.TrapEffectType.HYPNOTIZE_ATTACKER,
@@ -3007,8 +3007,8 @@ func _load_traps() -> void:
 			true],
 
 		["Self-destruct", 0, TrapData.TrapEffectType.SELF_DESTROY_TEMP_ATK_BOOST,
-			{"atk": 10},
-			"You select 1 of your unit. +10 ATK until your turn ends, but also destroy it. You pay no cost.",
+			{"atk": 50, "def": 50},
+			"You select 1 of your units. +50 ATK&DEF until your turn ends, but also destroy it. You pay no cost.",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -3124,7 +3124,7 @@ func _load_traps() -> void:
 			CharacterData.Rarity.RARE,
 			true],
 		["Union Cage", 400, TrapData.TrapEffectType.HYPNOTIZE_ATTACKER,
-			{"requires_union_attacker": true}, "If attacking unit Is Union card, that unit cannot attack until the attacker’s next turn ends.",
+			{"requires_union_attacker": true, "trigger_on_surround": true}, "Usable if a Union card attack this card or the surround cell. That Union card cannot attack until the attacker’s next turn ends.",
 			CharacterData.Rarity.RARE,
 			true],
 		["Plunder", 500, TrapData.TrapEffectType.NULLIFY_ATTACK_CHOICE,
@@ -3495,7 +3495,7 @@ func _load_tech_cards() -> void:
 			"Destroy up to 3 exposed foe units (no cost is paid). You discard all of your tech cards afterward.",
 			CharacterData.Rarity.LEGENDARY],
 
-		["Berserk", 2000, TechCardData.TechEffectType.MULTI_ATTACK_ONE,
+		["Berserk", 900, TechCardData.TechEffectType.MULTI_ATTACK_ONE,
 			{"extra_attacks": 1}, "",
 			"You gain 1 attack count until the end of this turn",
 			CharacterData.Rarity.EXOTIC],

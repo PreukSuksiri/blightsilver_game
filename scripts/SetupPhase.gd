@@ -115,22 +115,41 @@ class GridCell extends Panel:
 	var locked:         bool        = false  # forced placement — cannot be moved or removed
 	var _card_tex:      TextureRect = null
 	var _emoticon_lbl:  Label       = null
+	var _emoticon_icon: TextureRect = null
 	var _rune_lbl:      Label       = null
 	var _flash_overlay: ColorRect   = null
 	var _drag_started:  bool        = false
 	var _omen_badge:    OmenBadge   = null
 
 	func set_emoticon(emoji: String) -> void:
-		if _emoticon_lbl == null:
-			_emoticon_lbl = Label.new()
-			_emoticon_lbl.set_anchors_preset(Control.PRESET_TOP_WIDE)
-			_emoticon_lbl.offset_top    = 2.0
-			_emoticon_lbl.offset_bottom = 26.0
-			_emoticon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			_emoticon_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			_emoticon_lbl.z_index = 5
-			add_child(_emoticon_lbl)
-		_emoticon_lbl.text = emoji
+		var face: String = emoji.strip_edges()
+		var tex: Texture2D = BluffEmoji.tex(face) if not face.is_empty() else null
+		if tex != null:
+			if _emoticon_lbl != null:
+				_emoticon_lbl.visible = false
+				_emoticon_lbl.text = ""
+			if _emoticon_icon == null:
+				_emoticon_icon = TextureRect.new()
+				_emoticon_icon.set_anchors_preset(Control.PRESET_TOP_WIDE)
+				_emoticon_icon.offset_top = 2.0
+				_emoticon_icon.offset_bottom = 26.0
+				_emoticon_icon.offset_left = 10.0
+				_emoticon_icon.offset_right = -10.0
+				_emoticon_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				_emoticon_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				_emoticon_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				_emoticon_icon.z_index = 5
+				add_child(_emoticon_icon)
+			_emoticon_icon.texture = tex
+			_emoticon_icon.visible = true
+			return
+		# No PNG — hide marker rather than falling back to unicode.
+		if _emoticon_icon != null:
+			_emoticon_icon.visible = false
+			_emoticon_icon.texture = null
+		if _emoticon_lbl != null:
+			_emoticon_lbl.text = ""
+			_emoticon_lbl.visible = false
 
 	func set_rune_glyph(glyph: String) -> void:
 		if _rune_lbl == null:
@@ -307,7 +326,9 @@ var _hover_hold_hint: CardHoverHoldHint = null
 var _flash_cells: Array          = []
 var _confirm_in_progress: bool = false
 var _setup_complete_emitted: bool = false
-var _omen_intel_lbl: Label = null
+var _omen_intel_lbl: RichTextLabel = null
+var _omens_btn: Button = null
+var _omen_detail_overlay: OmenDetailOverlay = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -349,6 +370,7 @@ func start_setup(player_index: int) -> void:
 	if player_index == 0 and not GameState.active_omens.is_empty():
 		OmenBattleApplier.apply_setup_runes()
 	_refresh_omen_intel_label()
+	_refresh_omens_button()
 	_refresh_rune_glyphs()
 
 	var deck: DeckData = null
@@ -410,12 +432,55 @@ func start_setup(player_index: int) -> void:
 func _refresh_omen_intel_label() -> void:
 	if _omen_intel_lbl == null:
 		return
-	if GameState.omen_intel_lines.is_empty():
+	if GameState.omen_intel.is_empty() and GameState.omen_intel_lines.is_empty():
 		_omen_intel_lbl.visible = false
-		_omen_intel_lbl.text = ""
+		_omen_intel_lbl.clear()
 		return
-	_omen_intel_lbl.text = "\n".join(PackedStringArray(GameState.omen_intel_lines))
+	_omen_intel_lbl.clear()
+	var first: bool = true
+	if not GameState.omen_intel.is_empty():
+		for entry_v: Variant in GameState.omen_intel:
+			if not entry_v is Dictionary:
+				continue
+			var e: Dictionary = entry_v as Dictionary
+			if not first:
+				_omen_intel_lbl.append_text("\n")
+			first = false
+			var line: String = str(e.get("text", "")).strip_edges()
+			var face: String = str(e.get("emoji", "")).strip_edges()
+			if str(e.get("type", "")) == "reveal_enemy_bluff_preference" and not face.is_empty():
+				var img: String = BluffEmoji.img_bbcode(face, 16)
+				if not img.is_empty():
+					_omen_intel_lbl.append_text("%s %s" % [line, img])
+				else:
+					_omen_intel_lbl.append_text(line)
+			else:
+				_omen_intel_lbl.append_text(line)
+	else:
+		_omen_intel_lbl.append_text("\n".join(PackedStringArray(GameState.omen_intel_lines)))
 	_omen_intel_lbl.visible = true
+
+
+func _refresh_omens_button() -> void:
+	if _omens_btn == null:
+		return
+	var has_mine: bool = false
+	for held: Variant in GameState.active_omens:
+		if held is Dictionary:
+			has_mine = true
+			break
+	_omens_btn.visible = has_mine and current_setup_player == 0
+
+
+func _open_setup_omen_detail() -> void:
+	if _omen_detail_overlay != null and is_instance_valid(_omen_detail_overlay):
+		return
+	_omen_detail_overlay = OmenDetailOverlay.open(self, 250, false)
+	if _omen_detail_overlay == null:
+		return
+	_omen_detail_overlay.closed.connect(func() -> void:
+		_omen_detail_overlay = null
+	, CONNECT_ONE_SHOT)
 
 
 func _refresh_rune_glyphs() -> void:
@@ -499,14 +564,35 @@ func _build_ui() -> void:
 	_player_lbl.add_theme_color_override("font_color", TXT_PRIMARY)
 	header.add_child(_player_lbl)
 
-	_omen_intel_lbl = Label.new()
+	_omens_btn = Button.new()
+	_omens_btn.text = "Omens"
+	_omens_btn.visible = false
+	_omens_btn.focus_mode = Control.FOCUS_NONE
+	_omens_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_omens_btn.offset_left = 12.0
+	_omens_btn.offset_top = 14.0
+	_omens_btn.offset_right = 118.0
+	_omens_btn.offset_bottom = 52.0
+	_omens_btn.add_theme_font_override("font", FontManager.make_font("primary", 600))
+	_omens_btn.add_theme_font_size_override("font_size", 15)
+	_skin_setup_button_black(_omens_btn)
+	_omens_btn.pressed.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_POPUP)
+		_open_setup_omen_detail())
+	header.add_child(_omens_btn)
+
+	_omen_intel_lbl = RichTextLabel.new()
 	_omen_intel_lbl.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	_omen_intel_lbl.offset_top = 42.0
 	_omen_intel_lbl.offset_bottom = 72.0
-	_omen_intel_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_omen_intel_lbl.offset_left = 130.0
+	_omen_intel_lbl.offset_right = -12.0
+	_omen_intel_lbl.bbcode_enabled = true
+	_omen_intel_lbl.fit_content = true
+	_omen_intel_lbl.scroll_active = false
 	_omen_intel_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_omen_intel_lbl.add_theme_font_size_override("font_size", 14)
-	_omen_intel_lbl.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0, 1.0))
+	_omen_intel_lbl.add_theme_font_size_override("normal_font_size", 14)
+	_omen_intel_lbl.add_theme_color_override("default_color", Color(0.72, 0.86, 1.0, 1.0))
 	_omen_intel_lbl.visible = false
 	header.add_child(_omen_intel_lbl)
 
@@ -1833,7 +1919,9 @@ func _card_name_to_snake(p_name: String) -> String:
 const BLUFF_EMOJIS: Array = ["😃","🥺","🤣","😎","❤️","☠️","🧨","👍","🤝","🖕"]
 const BLUFF_MODAL_SIZE := Vector2(598.5, 130.0)  # 570px width + 5%
 func _get_bluff_emojis() -> Array:
-	if SaveManager.nsfw_enabled:
+	# Always use keys that map to BluffEmoji PNGs (never show unicode in the picker).
+	# NSFW still stores 💩; art resolves to the same middle-finger texture.
+	if SaveManager.nsfw_enabled and not BluffEmoji.uses_custom():
 		return BLUFF_EMOJIS.map(func(e: String) -> String: return "💩" if e == "🖕" else e)
 	return BLUFF_EMOJIS
 
@@ -1905,10 +1993,10 @@ func _show_bluff_modal(row: int, col: int) -> void:
 
 	for emoji in _get_bluff_emojis():
 		var btn := Button.new()
-		btn.text = emoji
 		btn.custom_minimum_size = Vector2(46.0, 46.0)
 		btn.add_theme_font_size_override("font_size", 22)
 		_skin_setup_button_black(btn)
+		BluffEmoji.apply_button(btn, str(emoji), 36.0)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
 			SFXManager.play(SFXManager.SFX_BLUFF_PLACE)
@@ -1916,6 +2004,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 			(_grid_cells[snap_row][snap_col] as GridCell).set_emoticon(snap_emoji)
 			backdrop.queue_free())
 		hbox.add_child(btn)
+		OmenBattleApplier.decorate_bluff_button(btn, str(emoji))
 
 	# Clear button
 	var clear_btn := Button.new()

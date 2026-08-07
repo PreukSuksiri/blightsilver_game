@@ -1131,6 +1131,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "2000"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"conditions": [],
@@ -1528,6 +1533,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "10000"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"conditions": [
@@ -1589,7 +1599,13 @@
 							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_break_room_invest_6_1.json"
 						}
 					],
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_not_equals",
+							"value": "act_1_ch_1"
+						}
+					],
 					"disabled_after_interact": false,
 					"hidden_until_camera_shutter": true,
 					"hide_after_interact": true,
@@ -1739,7 +1755,13 @@
 							"value": ""
 						}
 					],
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_not_equals",
+							"value": "act_1_ch_1"
+						}
+					],
 					"disabled_after_interact": false,
 					"hidden_until_camera_shutter": true,
 					"hide_after_interact": true,
@@ -1887,7 +1909,13 @@
 							"value": ""
 						}
 					],
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_not_equals",
+							"value": "act_1_ch_1"
+						}
+					],
 					"disabled_after_interact": false,
 					"hidden_until_camera_shutter": true,
 					"hide_after_interact": true,
@@ -2034,6 +2062,11 @@
 							"key": "item_glued_key",
 							"type": "not_has_item",
 							"value": ""
+						},
+						{
+							"key": "chapter",
+							"type": "var_not_equals",
+							"value": "act_1_ch_1"
 						}
 					],
 					"disabled_after_interact": false,
@@ -2134,6 +2167,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "2000"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"conditions": [
@@ -2213,7 +2251,13 @@
 							"value": ""
 						}
 					],
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch_1"
+						}
+					],
 					"disabled_after_interact": false,
 					"hidden_until_camera_shutter": true,
 					"hide_after_interact": true,
@@ -2350,29 +2394,6 @@
 					"tooltip": "???",
 					"x_norm": 0.449,
 					"y_norm": 0.511
-				},
-				{
-					"actions": [
-						{
-							"action": "play_vn",
-							"key": "",
-							"play_once": true,
-							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_invest_3_0.json"
-						}
-					],
-					"conditions": [],
-					"disabled_after_interact": false,
-					"hide_after_interact": true,
-					"hitbox_h": 96.0,
-					"hitbox_w": 96.0,
-					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
-					"icon_scale": 100.0,
-					"mumbling_sound": "res://assets/audio/sfx/mumbling/sfx_radio_mumbling_1.mp3",
-					"requires_tool": "tool_translator",
-					"temperature": 13.0,
-					"tooltip": "",
-					"x_norm": 0.448,
-					"y_norm": 0.525
 				}
 			],
 			"connections": [
@@ -2576,6 +2597,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "1500"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						},
 						{
 							"action": "set_var",
@@ -2796,6 +2822,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "10000"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"conditions": [],
@@ -3281,6 +3312,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "1500"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"conditions": [
@@ -3763,6 +3799,11 @@
 							"action": "give_credits",
 							"key": "",
 							"value": "1000"
+						},
+						{
+							"action": "grant_omen",
+							"key": "",
+							"value": "chapter_1"
 						}
 					],
 					"conditions": [],

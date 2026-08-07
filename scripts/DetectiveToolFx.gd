@@ -60,6 +60,9 @@ var _photo_vn: String = ""
 var _bg_tex: Texture2D = null
 var _photo_smoke_spots: Array = []  # all tool-gated spots in the room (any tool)
 var _photo_lens_flare_spots: Array = []  # camera-hidden spots → small flare on photo
+## Live providers so Polaroid compose re-checks Conditions (not a stale snapshot).
+var _photo_smoke_provider: Callable = Callable()
+var _photo_lens_flare_provider: Callable = Callable()
 var _cursor_hotspot: Vector2 = Vector2.ZERO
 var _cursor_size: Vector2 = Vector2.ZERO
 
@@ -155,6 +158,8 @@ func start_tool(tool_id: String, spots: Array, opts: Dictionary = {}) -> void:
 	_photo_smoke_spots = (smoke_var as Array).duplicate(true) if smoke_var is Array else []
 	var flare_var: Variant = opts.get("photo_lens_flare_spots", [])
 	_photo_lens_flare_spots = (flare_var as Array).duplicate(true) if flare_var is Array else []
+	_photo_smoke_provider = opts.get("photo_smoke_provider", Callable()) as Callable
+	_photo_lens_flare_provider = opts.get("photo_lens_flare_provider", Callable()) as Callable
 	_cursor_hotspot = opts.get("cursor_hotspot", Vector2.ZERO) as Vector2
 	_cursor_size = opts.get("cursor_size", Vector2.ZERO) as Vector2
 	_display_temp = _room_temp
@@ -185,6 +190,8 @@ func stop_tool() -> void:
 	_spots.clear()
 	_photo_smoke_spots.clear()
 	_photo_lens_flare_spots.clear()
+	_photo_smoke_provider = Callable()
+	_photo_lens_flare_provider = Callable()
 	_cursor_hotspot = Vector2.ZERO
 	_cursor_size = Vector2.ZERO
 	_stop_loops()
@@ -221,6 +228,14 @@ func exit_active_keep_overlay() -> void:
 
 func set_spots(spots: Array) -> void:
 	_spots = spots.duplicate(true)
+
+
+func set_photo_smoke_spots(spots: Array) -> void:
+	_photo_smoke_spots = spots.duplicate(true)
+
+
+func set_photo_lens_flare_spots(spots: Array) -> void:
+	_photo_lens_flare_spots = spots.duplicate(true)
 
 
 func notify_photo_vn_finished() -> void:
@@ -939,7 +954,12 @@ func _compose_photo_texture() -> Texture2D:
 			bi.resize(w, h, Image.INTERPOLATE_BILINEAR)
 		img.blit_rect(bi, Rect2i(0, 0, w, h), Vector2i.ZERO)
 	# Smoke at EVERY tool-gated spot in the room (any detective tool).
+	# Prefer live provider so Conditions are re-checked at shutter time.
 	var smoke_spots: Array = _photo_smoke_spots
+	if _photo_smoke_provider.is_valid():
+		var live_smoke: Variant = _photo_smoke_provider.call()
+		if live_smoke is Array:
+			smoke_spots = live_smoke as Array
 	if smoke_spots.is_empty():
 		smoke_spots = _spots
 	var mouse: Vector2 = get_viewport().get_mouse_position()
@@ -947,8 +967,14 @@ func _compose_photo_texture() -> Texture2D:
 		if not spot_var is Dictionary:
 			continue
 		_blit_smoke_for_spot(img, spot_var as Dictionary, mouse, w, h)
-	# Small lens flares for spots still hidden until camera shutter.
-	for flare_var: Variant in _photo_lens_flare_spots:
+	# Small lens flares for camera-hidden spots whose Conditions currently pass.
+	# Stalled (unmet Conditions) spots are omitted — shutter alone does not unlock them.
+	var flare_spots: Array = _photo_lens_flare_spots
+	if _photo_lens_flare_provider.is_valid():
+		var live_flare: Variant = _photo_lens_flare_provider.call()
+		if live_flare is Array:
+			flare_spots = live_flare as Array
+	for flare_var: Variant in flare_spots:
 		if not flare_var is Dictionary:
 			continue
 		_blit_lens_flare_for_spot(img, flare_var as Dictionary, w, h)

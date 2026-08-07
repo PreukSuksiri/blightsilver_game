@@ -18,7 +18,7 @@ enum TrapEffectType {
 	PERMANENT_ATK_DEBUFF,             # Permanent -N ATK to attacker
 	NULLIFY_ATTACKER_EFFECT,          # Attacker's effect becomes None until end of next turn
 	FORCE_FRIENDLY_FIRE,              # Attacker must choose own ally as target
-	NULLIFY_BLOCK_ADJACENT,           # Nullify + block adjacent squares from being attacked this turn
+	NULLIFY_BLOCK_ADJACENT,           # Nullify + block surrounding cells; may also trigger_on_surround
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 
 	# ── New implemented trap effects ──
@@ -30,9 +30,9 @@ enum TrapEffectType {
 	TEMP_DEF_BOOST_ONE_OWN,           # +N DEF (temp) to 1 chosen own character until end of turn
 	COIN_FLIP_2_ATK_DEBUFF,           # Flip 2 coins; both heads → attacker loses N ATK until end of next turn
 	COIN_FLIP_2_LOCK_ATTACKER,        # Flip 2 coins; both heads → attacker cannot attack next turn
-	SELF_DESTROY_TEMP_ATK_BOOST,      # Choose 1 own character: +N ATK until end of next turn, destroyed at end (no crystal cost)
+	SELF_DESTROY_TEMP_ATK_BOOST,      # Choose 1 own character: +N ATK&DEF until your turn ends, then destroy (no crystal cost)
 	REVEAL_OWN_GAIN_CRYSTAL,          # Reveal 1 own face-down cell (choice); gain N crystals
-	NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE,  # Nullify + trapper reveals/locks 1 own cell until turn end
+	NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE,  # Nullify + trapper reveals/locks 1 own unit until turn end
 
 	# ── Full-release trap effects ──
 	AFFINITY_COIN_FLIP_DESTROY_ATTACKER,  # If attacker matches affinity: coin flip destroy; auto-head if crystals <= threshold

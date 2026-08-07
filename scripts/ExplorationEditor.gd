@@ -2301,8 +2301,9 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	camera_hide_cb.add_theme_font_size_override("font_size", 12)
 	camera_hide_cb.tooltip_text = (
 		"Completely hidden in the room until any Polaroid Mode 2 photo is taken here. "
-		+ "After shutter: invisible hitbox-only in the room; lens flare on Polaroid photos "
-		+ "until Hide after interact dismisses it.")
+		+ "Also gated by Conditions — if Conditions fail, stays stalled (no flare, no hitbox) "
+		+ "even after shutter. After both pass: invisible hitbox-only in the room; lens flare "
+		+ "on Polaroid photos until Hide after interact dismisses it.")
 	camera_hide_row.add_child(camera_hide_cb)
 	vb.add_child(camera_hide_row)
 	var flare_edit := _add_file_field(vb, "Lens flare image (optional)",

@@ -375,8 +375,9 @@ func _ready() -> void:
 	_refresh_tutorial_locked_controls()
 	_setup_deck_file_dialogs()
 
-	# Prologue lock check — show overlay if deckbuilding not yet unlocked
-	if not SaveManager.is_deckbuilding_unlocked():
+	# Prologue lock overlay — kept in code; suppressed so fresh installs can open the page.
+	const SHOW_DECKBUILDING_LOCK_OVERLAY := false
+	if SHOW_DECKBUILDING_LOCK_OVERLAY and not SaveManager.is_deckbuilding_unlocked():
 		_show_deckbuilding_lock_overlay()
 	if exploration_mode:
 		_apply_exploration_mode()

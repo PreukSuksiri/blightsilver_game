@@ -46,7 +46,7 @@ static func evaluate_any(conditions: Array) -> bool:
 static func evaluate_condition(cd: Dictionary) -> bool:
 	var ctype: String = str(cd.get("type", ""))
 	var key: String   = str(cd.get("key",   "")).strip_edges()
-	var val: String   = str(cd.get("value", ""))
+	var val: String   = str(cd.get("value", "")).strip_edges()
 	if key.begins_with("#") and key.ends_with("#") and key.length() >= 2:
 		key = key.substr(1, key.length() - 2).strip_edges()
 	elif key.begins_with("#"):
@@ -57,24 +57,24 @@ static func evaluate_condition(cd: Dictionary) -> bool:
 		"not_has_item":
 			return not ExplorationManager.has_item(key)
 		"var_equals":
-			return ExplorationManager.get_var(key) == val
+			return ExplorationManager.get_var(key).strip_edges() == val
 		"var_not_equals":
-			return ExplorationManager.get_var(key) != val
+			return ExplorationManager.get_var(key).strip_edges() != val
 		"var_greater":
-			return _compare_numeric(ExplorationManager.get_var(key), val, ">")
+			return _compare_numeric(ExplorationManager.get_var(key).strip_edges(), val, ">")
 		"var_less":
-			return _compare_numeric(ExplorationManager.get_var(key), val, "<")
+			return _compare_numeric(ExplorationManager.get_var(key).strip_edges(), val, "<")
 		"var_gte":
-			return _compare_numeric(ExplorationManager.get_var(key), val, ">=")
+			return _compare_numeric(ExplorationManager.get_var(key).strip_edges(), val, ">=")
 		"var_lte":
-			return _compare_numeric(ExplorationManager.get_var(key), val, "<=")
+			return _compare_numeric(ExplorationManager.get_var(key).strip_edges(), val, "<=")
 		"at_node":
 			var node_id: String = val if not val.is_empty() else key
 			return ExplorationManager.current_node_id == node_id
 		"flag_equals":
-			return get_exploration_flag(key) == val
+			return get_exploration_flag(key).strip_edges() == val
 		"flag_not_equals":
-			return get_exploration_flag(key) != val
+			return get_exploration_flag(key).strip_edges() != val
 		"protagonist_equals":
 			var want: String = val if not val.is_empty() else key
 			return SaveManager.current_protagonist_id == ProtagonistVault.normalize_id(want)

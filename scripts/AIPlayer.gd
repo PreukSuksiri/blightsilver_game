@@ -89,6 +89,8 @@ var _trailer_social:    bool = false
 var personality_defensive: String = ""
 var personality_offensive: String = ""
 var personality_social:    String = ""
+## Locked once per duel so insight omens can reveal prefs during player setup.
+var _personalities_ready: bool = false
 
 # ── Personality system (assigned once per game in decide_setup) ──
 var _def_zone:       String  = ""            # defensive formation zone key
@@ -1064,7 +1066,8 @@ func decide_target(filter: String) -> Vector2i:
 			return _best_own_faceup()
 		"own_faceup_character", "own_faceup_character_source", "own_faceup_character_target", \
 				"own_faceup_card_sacrifice", "own_any_card", \
-				"own_character_for_trap_self_destruct", "lock_own_monster":
+				"own_character_for_trap_self_destruct", "lock_own_monster", \
+				"trap_hostage_reveal_lock":
 			return _best_own_character()
 		"own_armored_nature":
 			return _best_own_armored_nature()
@@ -1075,7 +1078,7 @@ func decide_target(filter: String) -> Vector2i:
 		"bribe_reveal":
 			return _random_unrevealed_self_character()
 		"self_reveal_choice", "opponent_facedown_forced", \
-				"trap_hostage_reveal_lock", "trap_street_joke_reveal":
+				"trap_street_joke_reveal":
 			return _random_unrevealed_self()
 		"own_any_as_target":
 			return _worst_own_ally_excluding(GameState.attacker_pos)
@@ -1262,10 +1265,7 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 
 	# INTERCEPT_ALLY_ATTACK — "X can intercept for Y!"
 	if "intercept" in prompt.to_lower():
-		# Intercept (choice 0) if we have enough other cards to spare
-		if _count_faceup(player_index) >= 3:
-			return 0
-		return 1
+		return _decide_intercept()
 
 	# TEMP_REROLL_DICE — "Lucky Break: Re-roll dice? (current: N)"
 	if "Re-roll dice" in prompt:
@@ -1736,7 +1736,7 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 	_union_attempted_this_turn = false
 	_opponent_union_summoned = false
 	_ai_kill_count = 0
-	_pick_personalities()
+	ensure_personalities()
 
 	var placements: Array = []
 
@@ -2093,6 +2093,73 @@ func _setup_char_satisfies(cname: String, cd: CharacterData, cond: Dictionary) -
 # ─────────────────────────────────────────────────────────────
 # Helpers
 # ─────────────────────────────────────────────────────────────
+
+## INTERCEPT_ALLY_ATTACK — swap a cheaper interceptor onto a doomed ally.
+## Prefer intercept whenever the ally would die and the interceptor is less
+## valuable to keep (Bat Swarm for Vampire Duchess, etc.). Choice 0 = Intercept.
+func _decide_intercept() -> int:
+	var ally: GameState.CardInstance = _get_current_target()
+	var attacker: GameState.CardInstance = _get_current_attacker()
+	if ally == null or ally.card_type != "character":
+		return 0
+	var interceptor: GameState.CardInstance = _find_intercept_candidate_for(ally)
+	if interceptor == null:
+		return 0
+	if not _ally_would_lose_defense(ally, attacker):
+		return 1  # Ally survives — don't waste the intercept body
+	# Ally dies (or self-destructs vs Divine). Intercept if the swap body is cheaper
+	# to lose than the ally — also beats relying on Vampire Servant sacrifice later.
+	if _card_keep_value(interceptor) <= _card_keep_value(ally):
+		return 0
+	return 1
+
+
+func _ally_would_lose_defense(
+		ally: GameState.CardInstance,
+		attacker: GameState.CardInstance) -> bool:
+	if ally == null:
+		return true
+	# Vampire Duchess etc.: destroyed before ATK/DEF compare vs Divine.
+	if ally.ability_type == CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
+		if attacker != null and attacker.affinity == CharacterData.Affinity.DIVINE:
+			return true
+	if attacker == null:
+		# Unknown attacker (shouldn't happen mid-attack) — assume threat.
+		return true
+	# Attacker wins ties.
+	return attacker.get_effective_atk() >= ally.get_effective_def()
+
+
+func _card_keep_value(card: GameState.CardInstance) -> int:
+	if card == null:
+		return 0
+	return card.crystal_cost * 2 + card.get_effective_atk() + card.get_effective_def()
+
+
+func _find_intercept_candidate_for(ally: GameState.CardInstance) -> GameState.CardInstance:
+	if ally == null:
+		return null
+	var ally_pos: Vector2i = GameState.defender_pos
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if Vector2i(r, c) == ally_pos:
+				continue
+			var cand: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if cand.card_type != "character":
+				continue
+			if cand.ability_type != CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK:
+				continue
+			if bool(cand.ability_params.get("force_target_self", false)):
+				continue
+			if str(cand.ability_params.get("target", "")) == "dead_end":
+				continue
+			var want_aff: int = int(cand.ability_params.get("affinity", -1))
+			if want_aff != -1 and want_aff != ally.affinity:
+				continue
+			return cand
+	return null
+
+
 func _count_faceup(player: int) -> int:
 	var count: int = 0
 	for r in range(GameState.GRID_SIZE):
@@ -2332,6 +2399,27 @@ const SOC_PERSONALITY_NAMES: Array = [
 const DEF_RANDOM_COUNT: int = 20
 const OFF_RANDOM_COUNT: int = 22
 const SOC_RANDOM_COUNT: int = 14
+
+## Pick one random personality per dimension and cache derived trait values.
+## Call once at the start of each game (from decide_setup / insight omens).
+func ensure_personalities() -> void:
+	if _personalities_ready:
+		return
+	_pick_personalities()
+	_personalities_ready = true
+
+
+## Force a fresh roll next duel (GameBoard should call when a battle starts).
+func reset_personalities() -> void:
+	_personalities_ready = false
+	personality_defensive = ""
+	personality_offensive = ""
+	personality_social = ""
+	_bluff_prefer.clear()
+	_bluff_avoid.clear()
+	_bluff_pool.clear()
+	_emoji_reactions.clear()
+
 
 ## Pick one random personality per dimension and cache derived trait values.
 ## Call once at the start of each game (from decide_setup).

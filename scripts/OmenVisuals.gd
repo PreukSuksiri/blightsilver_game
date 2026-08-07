@@ -77,14 +77,16 @@ static func fill_colors(omen: Dictionary) -> Array:
 ## Fully materialised capsule disc sized `diameter`, inside a `diameter + pad * 2` box.
 ## Rarity is never written on the disc — callers put stars under nearby effect text.
 ## Pass `show_text = false` for art-only discs (Anoint header) where copy lives beside.
+## Optional `ring_override` tints hostile / special chrome without mutating the omen row.
 static func build_capsule(
 		omen: Dictionary,
 		diameter: float,
 		glow_pad: float = GLOW_PAD,
-		show_text: bool = true) -> Control:
+		show_text: bool = true,
+		ring_override: Color = Color(0, 0, 0, 0)) -> Control:
 	var d: float = maxf(diameter, 48.0)
 	var box: float = d + glow_pad * 2.0
-	var ring: Color = ring_color(omen)
+	var ring: Color = ring_color(omen) if ring_override.a <= 0.0 else ring_override
 	var fills: Array = fill_colors(omen)
 
 	var wrapper := Control.new()

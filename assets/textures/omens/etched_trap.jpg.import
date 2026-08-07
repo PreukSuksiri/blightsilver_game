@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctxfpybaqxhd2"
-path="res://.godot/imported/sould_blast.jpg-021e42b5a83da82a4959dc787ea4eeda.ctex"
+uid="uid://cnevyp2wyfibx"
+path="res://.godot/imported/etched_trap.jpg-595c95bc9b6e14617e4c4865437af61a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/traps/sould_blast.jpg"
-dest_files=["res://.godot/imported/sould_blast.jpg-021e42b5a83da82a4959dc787ea4eeda.ctex"]
+source_file="res://assets/textures/omens/etched_trap.jpg"
+dest_files=["res://.godot/imported/etched_trap.jpg-595c95bc9b6e14617e4c4865437af61a.ctex"]
 
 [params]
 

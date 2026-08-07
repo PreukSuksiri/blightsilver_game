@@ -111,7 +111,7 @@ var _note_chapter_id: String = ""             # chapter mapped to this scene; ""
 var _note_icon_allowed: bool = false          # author must show via detective_note_icon beat
 var _note_hover_time: float = 0.0             # 0.5s hover-to-open accumulator
 var _note_overlay: DetectiveNoteOverlay = null
-var _vn_polaroid_layer: CanvasLayer = null
+var _vn_polaroid_layer: Control = null  ## Stage-local overlay (below dialog / name plate)
 var _vn_polaroid_root: Control = null
 var _vn_polaroid_awaiting_click: bool = false
 var _vn_polaroid_click_closed: bool = false
@@ -1439,17 +1439,26 @@ func _run_show_polaroid_beat(spec: Variant) -> void:
 	_dismiss_vn_polaroid(false)
 	_play_sfx("res://assets/audio/sfx/sfx_camera_shutter.mp3")
 
-	var canvas := CanvasLayer.new()
-	canvas.name = "VNPolaroidOverlay"
-	canvas.layer = 128
-	add_child(canvas)
-	_vn_polaroid_layer = canvas
+	# Stage Control (not CanvasLayer) so z-order stays under dialog + name plate.
+	var host := Control.new()
+	host.name = "VNPolaroidOverlay"
+	host.z_index = 0  # dialog_panel is z_index 1; speaker nameplate is a child of dialog
+	host.mouse_filter = Control.MOUSE_FILTER_STOP if dismiss_on_click \
+			else Control.MOUSE_FILTER_IGNORE
+	host.position = Vector2.ZERO
+	host.size = STAGE_DESIGN_SIZE
+	_stage.add_child(host)
+	# Keep under dialog even if sibling order changes.
+	if _dialog_panel != null and is_instance_valid(_dialog_panel):
+		_stage.move_child(host, mini(_dialog_panel.get_index(), _stage.get_child_count() - 1))
+	_vn_polaroid_layer = host
 
 	var root := Control.new()
 	root.mouse_filter = Control.MOUSE_FILTER_STOP if dismiss_on_click \
 			else Control.MOUSE_FILTER_IGNORE
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	canvas.add_child(root)
+	root.position = Vector2.ZERO
+	root.size = STAGE_DESIGN_SIZE
+	host.add_child(root)
 	_vn_polaroid_root = root
 	_layout_vn_polaroid_root()
 
@@ -1457,7 +1466,8 @@ func _run_show_polaroid_beat(spec: Variant) -> void:
 	dim.color = Color(0, 0, 0, 0.55)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP if dismiss_on_click \
 			else Control.MOUSE_FILTER_IGNORE
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.position = Vector2.ZERO
+	dim.size = STAGE_DESIGN_SIZE
 	root.add_child(dim)
 
 	var card: Control = PhotoScatter.make_polaroid_card(tex, 1.85)
@@ -1510,10 +1520,12 @@ func _run_show_polaroid_beat(spec: Variant) -> void:
 func _layout_vn_polaroid_root() -> void:
 	if _vn_polaroid_root == null or not is_instance_valid(_vn_polaroid_root):
 		return
-	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if _vn_polaroid_layer != null and is_instance_valid(_vn_polaroid_layer):
+		_vn_polaroid_layer.position = Vector2.ZERO
+		_vn_polaroid_layer.size = STAGE_DESIGN_SIZE
 	_vn_polaroid_root.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_vn_polaroid_root.position = Vector2.ZERO
-	_vn_polaroid_root.size = vp
+	_vn_polaroid_root.size = STAGE_DESIGN_SIZE
 
 
 func _center_vn_polaroid_card(card: Control) -> void:
@@ -1526,7 +1538,7 @@ func _center_vn_polaroid_card(card: Control) -> void:
 		sz = card.size
 	var area: Vector2 = _vn_polaroid_root.size
 	if area.x <= 1.0 or area.y <= 1.0:
-		area = get_viewport().get_visible_rect().size
+		area = STAGE_DESIGN_SIZE
 	card.position = (area - sz) * 0.5
 
 
