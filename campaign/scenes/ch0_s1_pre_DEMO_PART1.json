@@ -104,8 +104,9 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
+		"show_polaroid": "<null>",
 		"speaker": "Nex",
-		"text": "If I'm rich, I wil..."
+		"text": "If I'm rich, I will..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -119,24 +120,25 @@
 		],
 		"choices": [
 			{
-				"goto_group": 1.0,
+				"goto_group": 1,
 				"label": "Start my own company"
 			},
 			{
-				"goto_group": 2.0,
+				"goto_group": 2,
 				"label": "Travel the world"
 			},
 			{
-				"goto_group": 3.0,
+				"goto_group": 3,
 				"label": "Research a cure for cancer"
 			},
 			{
-				"goto_group": 4.0,
+				"goto_group": 4,
 				"label": "Be a pimp"
 			}
 		],
+		"show_polaroid": "<null>",
 		"speaker": "Nex",
-		"text": "If I'm rich, I wil..."
+		"text": "If I'm rich, I will..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1646,7 +1648,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
 		"flash_color": "#000000",
-		"flash_count": 5,
+		"flash_count": 5.0,
 		"flash_delay": 0.25,
 		"flash_duration": 0.25,
 		"music_fade_out": 3.0,

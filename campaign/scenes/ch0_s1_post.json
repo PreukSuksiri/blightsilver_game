@@ -69,7 +69,9 @@
 	},
 	{
 		"linger_characters": true,
-		"wait": 0.5
+		"sfx": "res://assets/audio/sfx/sfx_toilet_flush_1.mp3",
+		"show_polaroid": "<null>",
+		"wait": 1.0
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",

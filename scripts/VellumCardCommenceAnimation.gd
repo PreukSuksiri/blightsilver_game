@@ -9,10 +9,32 @@ extends CanvasLayer
 const _FACEDOWN:   Texture2D = preload("res://assets/textures/cards/frames/facedown_frame.png")
 const _FACE_BLANK: Texture2D = preload("res://assets/textures/cards/frames/vellum_card_frame_full.png")
 const _FULL_CARDS_DIR := "res://assets/textures/cards/full_cards/"
+const _SFX_COMMENCE: AudioStream = preload("res://assets/audio/vellum_card_commence_2.mp3")
+const _SFX_SPARK_JOLT: AudioStream = preload("res://assets/audio/sfx/sfx_electric_short_circuit.mp3")
+## Same warm streak art as QuickDuel ambient fire sparks.
+const _FIRE_SPARK_STREAK_PATHS: Array[String] = [
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_c.png",
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_f.png",
+	"res://assets/textures/ui/battle/v3_magitech/vfx/ui_magitech_vfx_bolt_g.png",
+]
 
 const _CARD_W  := 160.0
 const _CARD_H  := 220.0
 const _STAGGER := 0.09   # seconds between launching successive cards
+const _SHAKE_BASE_X := 3.2
+const _SHAKE_BASE_Y := 1.6
+const _SHAKE_PUNCH_X := 10.0
+const _SHAKE_PUNCH_Y := 5.0
+const _SPARK_BURSTS := 4
+const _SPARK_BURST_GAP := 0.38
+const _SPARK_BURST_COUNT_MIN := 18
+const _SPARK_BURST_COUNT_MAX := 32
+const _SPARK_SPEED_MIN := 220.0
+const _SPARK_SPEED_MAX := 620.0
+const _SPARK_GRAVITY := 1200.0
+const _SPARK_FLICKER_SEC := 0.05
+const _SPARK_FLASH_ALPHA := 0.12
+const _SPARK_FX_Z := 40
 
 # ─────────────────────────────────────────────────────────────
 # Per-card state  (mirrors DriftingCards dict fields)
@@ -58,7 +80,15 @@ var _scale_base:   Vector2      # base sprite scale (shared by all cards)
 var _flip_enabled: bool         = true
 var _shake:        bool         = false
 var _shake_t:      float        = 0.0
+var _shake_amp_x:  float        = _SHAKE_BASE_X
+var _shake_amp_y:  float        = _SHAKE_BASE_Y
 var _done:         bool         = false
+var _spark_bursts_started: bool = false
+var _flash_rect:   ColorRect    = null
+var _fx_layer:     Control      = null
+var _spark_textures: Array[Texture2D] = []
+var _spark_add_mat: CanvasItemMaterial = null
+var _active_sparks: Array = []
 
 # ─────────────────────────────────────────────────────────────
 # Setup
@@ -71,6 +101,9 @@ func launch(flip: bool = true) -> void:
 	_flip_enabled = flip
 	_center = get_viewport().get_visible_rect().size * 0.5
 	var vp: Vector2 = get_viewport().get_visible_rect().size
+	SFXManager.play(_SFX_COMMENCE)
+	_ensure_flash_rect(vp)
+	_ensure_spark_fx(vp)
 
 	var deck: DeckData = SaveManager.get_active_deck()
 	if deck == null:
@@ -146,6 +179,19 @@ func launch(flip: bool = true) -> void:
 # Per-frame physics  (DriftingCards model, target = _center)
 # ─────────────────────────────────────────────────────────────
 func _process(delta: float) -> void:
+	_tick_fire_sparks(delta)
+
+	# Stack shake can continue briefly after flight ends (spark punches).
+	if _shake:
+		_shake_t += delta
+		_shake_amp_x = lerpf(_shake_amp_x, _SHAKE_BASE_X, 1.0 - exp(-delta * 4.5))
+		_shake_amp_y = lerpf(_shake_amp_y, _SHAKE_BASE_Y, 1.0 - exp(-delta * 4.5))
+		var ox: float = sin(_shake_t * 17.0) * _shake_amp_x
+		var oy: float = cos(_shake_t * 23.5) * _shake_amp_y
+		for c: _Card in _cards:
+			if c.arrived and is_instance_valid(c.sprite):
+				c.sprite.position = _center + c.rest + Vector2(ox, oy)
+
 	if _done:
 		return
 
@@ -212,20 +258,14 @@ func _process(delta: float) -> void:
 		c.sprite.rotation    = c.rot
 		c.particles.position = c.pos
 
-	# ── Stack shake ──
-	if _shake:
-		_shake_t += delta
-		var ox: float = sin(_shake_t * 17.0) * 3.2
-		var oy: float = cos(_shake_t * 23.5) * 1.6
-		for c: _Card in _cards:
-			if c.arrived:
-				c.sprite.position = _center + c.rest + Vector2(ox, oy)
+	# Start warm fire/ember spark bursts once a small stack has formed.
+	if not _spark_bursts_started and _n_arrived >= mini(6, maxi(1, _n_total / 4)):
+		_spark_bursts_started = true
+		_run_spark_bursts()
 
 	if all_in and _n_arrived == _n_total and not _done:
-		_done  = true
-		_shake = false
+		_done = true
 		for c: _Card in _cards:
-			c.sprite.position = _center + c.rest
 			c.sprite.rotation = 0.0
 		_finale()
 
@@ -241,12 +281,23 @@ func _arrive(c: _Card) -> void:
 	c.sprite.scale       = _scale_base
 	_n_arrived           += 1
 	_shake               = true
+	_shake_t             = 0.0
+	_shake_amp_x         = _SHAKE_PUNCH_X
+	_shake_amp_y         = _SHAKE_PUNCH_Y
+	SFXManager.play_flip()
+
 
 # ─────────────────────────────────────────────────────────────
 # Finale sequence
 # ─────────────────────────────────────────────────────────────
 func _finale() -> void:
-	await get_tree().create_timer(0.45).timeout
+	# Extra fire-spark bursts on the finished stack before the white-out.
+	if not _spark_bursts_started:
+		_spark_bursts_started = true
+		await _run_spark_bursts()
+	else:
+		_spawn_stack_fire_sparks()
+		await get_tree().create_timer(0.45).timeout
 
 	var burst := _make_burst()
 	burst.position = _center
@@ -256,19 +307,197 @@ func _finale() -> void:
 	await get_tree().create_timer(0.35).timeout
 
 	var vp: Vector2 = get_viewport().get_visible_rect().size
-	var flash := ColorRect.new()
-	flash.position     = Vector2.ZERO
-	flash.size         = vp
-	flash.color        = Color(1.0, 1.0, 1.0, 0.0)
-	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(flash)
+	_ensure_flash_rect(vp)
+	_flash_rect.color = Color(1.0, 1.0, 1.0, 0.0)
+	_flash_rect.visible = true
+	_flash_rect.z_index = 50
 
 	var tw := create_tween()
-	tw.tween_property(flash, "color:a", 1.0, 1.0) \
+	tw.tween_property(_flash_rect, "color:a", 1.0, 1.0) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	await tw.finished
 
+	_shake = false
 	queue_free()
+
+
+# ─────────────────────────────────────────────────────────────
+# Warm fire/ember sparks (Quick Duel picker style, at stack)
+# ─────────────────────────────────────────────────────────────
+func _run_spark_bursts() -> void:
+	for _i in range(_SPARK_BURSTS):
+		if not is_instance_valid(self):
+			return
+		_spawn_stack_fire_sparks()
+		await get_tree().create_timer(_SPARK_BURST_GAP).timeout
+
+
+func _ensure_spark_fx(vp: Vector2) -> void:
+	if _spark_textures.is_empty():
+		for path: String in _FIRE_SPARK_STREAK_PATHS:
+			var tex: Texture2D = load(path) as Texture2D
+			if tex != null:
+				_spark_textures.append(tex)
+	if _spark_add_mat == null:
+		_spark_add_mat = CanvasItemMaterial.new()
+		_spark_add_mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	if _fx_layer != null and is_instance_valid(_fx_layer):
+		_fx_layer.size = vp
+		return
+	_fx_layer = Control.new()
+	_fx_layer.name = "FireSparkFx"
+	_fx_layer.position = Vector2.ZERO
+	_fx_layer.size = vp
+	_fx_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fx_layer.z_index = _SPARK_FX_Z
+	_fx_layer.z_as_relative = false
+	_fx_layer.clip_contents = false
+	add_child(_fx_layer)
+
+
+func _spawn_stack_fire_sparks() -> void:
+	if not is_instance_valid(self):
+		return
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	_ensure_spark_fx(vp)
+	if _fx_layer == null or _spark_textures.is_empty():
+		return
+
+	SFXManager.play(_SFX_SPARK_JOLT, 0.55)
+	_flash_white_subtle()
+	# Punch the stack shake with each burst.
+	_shake = true
+	_shake_t = 0.0
+	_shake_amp_x = maxf(_shake_amp_x, _SHAKE_PUNCH_X * 0.85)
+	_shake_amp_y = maxf(_shake_amp_y, _SHAKE_PUNCH_Y * 0.85)
+
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	# Origin on the center stack (deck), slightly toward the bottom edge.
+	var origin: Vector2 = _center + Vector2(
+		rng.randf_range(-_CARD_W * 0.18, _CARD_W * 0.18),
+		rng.randf_range(_CARD_H * 0.15, _CARD_H * 0.42))
+	var aim_right: bool = rng.randf() < 0.5
+	var cone_center: float = (-0.35 if aim_right else PI + 0.35) \
+			+ rng.randf_range(-0.25, 0.25)
+	var cone_half: float = rng.randf_range(0.70, 1.05)
+	var count: int = rng.randi_range(_SPARK_BURST_COUNT_MIN, _SPARK_BURST_COUNT_MAX)
+	for _i: int in range(count):
+		_spawn_falling_spark(rng, origin, cone_center, cone_half)
+
+
+func _fire_spark_ember_color(rng: RandomNumberGenerator, peak_a: float) -> Color:
+	# Hot metal: white-yellow core → orange as heat cools.
+	var heat: float = rng.randf()
+	return Color(
+		1.0,
+		lerpf(0.35, 0.98, heat),
+		lerpf(0.08, 0.55, heat * heat),
+		peak_a)
+
+
+func _spawn_falling_spark(
+		rng: RandomNumberGenerator,
+		origin: Vector2,
+		cone_center: float,
+		cone_half: float) -> void:
+	if _fx_layer == null or _spark_textures.is_empty():
+		return
+	var tr := TextureRect.new()
+	tr.texture = _spark_textures[rng.randi_range(0, _spark_textures.size() - 1)]
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.material = _spark_add_mat
+	var len: float = rng.randf_range(16.0, 52.0)
+	if rng.randf() < 0.22:
+		len *= rng.randf_range(0.40, 0.70)
+	elif rng.randf() < 0.14:
+		len *= rng.randf_range(1.20, 1.70)
+	var tex_sz: Vector2 = tr.texture.get_size() if tr.texture != null else Vector2(1, 1)
+	var aspect: float = tex_sz.x / maxf(tex_sz.y, 1.0)
+	if aspect >= 1.0:
+		tr.size = Vector2(len, len / aspect)
+	else:
+		tr.size = Vector2(len * aspect, len)
+	tr.pivot_offset = tr.size * 0.5
+	tr.flip_h = rng.randf() < 0.5
+	tr.flip_v = rng.randf() < 0.5
+	var uni: float = rng.randf_range(0.70, 1.20)
+	tr.scale = Vector2(uni, uni)
+	var peak_a: float = rng.randf_range(0.75, 1.0)
+	tr.modulate = _fire_spark_ember_color(rng, peak_a)
+	var ang: float = cone_center + rng.randf_range(-cone_half, cone_half)
+	var speed: float = rng.randf_range(_SPARK_SPEED_MIN, _SPARK_SPEED_MAX)
+	var vel := Vector2(cos(ang), sin(ang)) * speed
+	tr.position = origin - tr.size * 0.5
+	tr.rotation = ang - PI * 0.5
+	_fx_layer.add_child(tr)
+	_active_sparks.append({
+		"node": tr,
+		"vel": vel,
+		"peak_a": peak_a,
+		"flicker_t": 0.0,
+	})
+
+
+func _tick_fire_sparks(delta: float) -> void:
+	if _active_sparks.is_empty():
+		return
+	var area: Vector2 = get_viewport().get_visible_rect().size
+	var keep: Array = []
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for entry: Variant in _active_sparks:
+		if not (entry is Dictionary):
+			continue
+		var d: Dictionary = entry
+		var node: Variant = d.get("node")
+		if not (node is TextureRect) or not is_instance_valid(node as TextureRect):
+			continue
+		var tr: TextureRect = node as TextureRect
+		var vel: Vector2 = d.get("vel", Vector2.ZERO) as Vector2
+		vel.y += _SPARK_GRAVITY * delta
+		d["vel"] = vel
+		tr.position += vel * delta
+		tr.rotation = lerp_angle(tr.rotation, atan2(vel.y, vel.x) - PI * 0.5, 0.35)
+		var flicker_t: float = float(d.get("flicker_t", 0.0)) + delta
+		if flicker_t >= _SPARK_FLICKER_SEC:
+			flicker_t = 0.0
+			var peak_a: float = float(d.get("peak_a", 1.0))
+			tr.modulate = _fire_spark_ember_color(rng, peak_a * rng.randf_range(0.50, 1.0))
+		d["flicker_t"] = flicker_t
+		var center: Vector2 = tr.position + tr.size * 0.5
+		if center.y > area.y + 80.0 or center.x < -140.0 or center.x > area.x + 140.0:
+			tr.queue_free()
+		else:
+			keep.append(d)
+	_active_sparks = keep
+
+
+func _ensure_flash_rect(vp: Vector2) -> void:
+	if _flash_rect != null and is_instance_valid(_flash_rect):
+		_flash_rect.size = vp
+		return
+	_flash_rect = ColorRect.new()
+	_flash_rect.position = Vector2.ZERO
+	_flash_rect.size = vp
+	_flash_rect.color = Color(1.0, 1.0, 1.0, 0.0)
+	_flash_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flash_rect.z_index = 45
+	_flash_rect.z_as_relative = false
+	add_child(_flash_rect)
+
+
+func _flash_white_subtle() -> void:
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	_ensure_flash_rect(vp)
+	_flash_rect.visible = true
+	_flash_rect.z_index = 45
+	_flash_rect.color = Color(1.0, 1.0, 1.0, _SPARK_FLASH_ALPHA)
+	var tw := create_tween()
+	tw.tween_property(_flash_rect, "color:a", 0.0, 0.22) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
 # ─────────────────────────────────────────────────────────────
 # Particle factories

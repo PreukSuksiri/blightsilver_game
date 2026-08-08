@@ -2039,8 +2039,13 @@ func _show_beat() -> void:
 		_set_music("", fade_out_sec, 0.0, force_music)
 
 	# ── Sound effect ──
+	# Vellum commence plays its own commence sting; skip beat SFX (typically
+	# sound_spellcasting_*.mp3) so it doesn't layer over the animation audio.
+	var anim_key_early: String = str(beat.get("animation", ""))
+	var skip_beat_sfx: bool = anim_key_early == "animation_vellum_card_commence_flip" \
+			or anim_key_early == "animation_vellum_card_commence_facedown"
 	var sfx_path: String = beat.get("sfx", beat.get("sound", ""))
-	if sfx_path != "":
+	if sfx_path != "" and not skip_beat_sfx:
 		var vol_pct: float = clampf(float(beat.get("sfx_volume", beat.get("sound_volume", 100.0))), 0.0, 200.0)
 		var vol_db: float  = -80.0 if vol_pct <= 0.0 else linear_to_db(vol_pct / 100.0)
 		_play_sfx(sfx_path, vol_db)
@@ -2089,9 +2094,8 @@ func _show_beat() -> void:
 		_accepting_input = true
 
 	# ── Animation (fire-and-forget overlay) ──
-	var anim_key: String = str(beat.get("animation", ""))
-	if anim_key != "":
-		_spawn_vn_animation(anim_key)
+	if anim_key_early != "":
+		_spawn_vn_animation(anim_key_early)
 
 	# ── Wait (auto-advance after N seconds, blocks input) ──
 	var wait_sec: float = beat.get("wait", 0.0)

@@ -67,33 +67,44 @@ func launch(thought_pos: Vector2 = Vector2.ZERO) -> void:
 	if _thought == Vector2.ZERO:
 		_thought = _vp * Vector2(0.5, 0.34)
 
-	var pool: Array = _load_omen_textures()
-	if pool.is_empty():
+	# Collect paths first, then load only IMAGE_COUNT textures (not the whole folder).
+	var paths: Array[String] = _list_omen_image_paths()
+	if paths.is_empty():
 		push_warning("OmenThoughtFlowAnimation: no omen illustrations in %s" % OMENS_DIR)
 		queue_free()
 		return
 
-	pool.shuffle()
-	var pick: Array = []
-	for i in range(mini(IMAGE_COUNT, pool.size())):
-		pick.append(pool[i])
-	while pick.size() < IMAGE_COUNT:
-		pool.shuffle()
-		pick.append(pool[randi() % pool.size()])
+	paths.shuffle()
+	var pick: Array[Texture2D] = []
+	var path_i: int = 0
+	while pick.size() < IMAGE_COUNT and path_i < paths.size():
+		var tex: Texture2D = load(paths[path_i]) as Texture2D
+		path_i += 1
+		if tex != null:
+			pick.append(tex)
+	# If some loads failed, reuse already-loaded textures to fill the count.
+	while pick.size() < IMAGE_COUNT and not pick.is_empty():
+		pick.append(pick[randi() % pick.size()])
+	if pick.is_empty():
+		push_warning("OmenThoughtFlowAnimation: failed to load omen textures from %s" % OMENS_DIR)
+		queue_free()
+		return
 
-	_n_total = IMAGE_COUNT
+	_n_total = pick.size()
 	_spawn_thought_glow()
 
 	var delay_acc: float = 0.0
 	var hold: float = HOLD_START
 	var stagger: float = STAGGER_START
-	for i in range(IMAGE_COUNT):
-		var tex: Texture2D = pick[i] as Texture2D
+	var n: int = pick.size()
+	for i in range(n):
+		var tex: Texture2D = pick[i]
 		var s := _Shard.new()
 		s.tex = tex
 		s.delay = delay_acc
 		s.hold = hold
-		s.base_speed = lerpf(FLOW_SPEED_START, FLOW_SPEED_END, float(i) / float(IMAGE_COUNT - 1))
+		s.base_speed = lerpf(FLOW_SPEED_START, FLOW_SPEED_END,
+				float(i) / float(maxi(1, n - 1)))
 		s.pos = _center
 		s.rot = 0.0
 		s.rot_vel = randf_range(-0.8, 0.8)
@@ -110,7 +121,7 @@ func launch(thought_pos: Vector2 = Vector2.ZERO) -> void:
 		spr.rotation = 0.0
 		spr.modulate = Color(1.0, 1.0, 1.0, 0.0)
 		spr.visible = false
-		spr.z_index = IMAGE_COUNT - i  # newest on top during overlap
+		spr.z_index = n - i  # newest on top during overlap
 		add_child(spr)
 		s.sprite = spr
 		_shards.append(s)
@@ -264,8 +275,8 @@ func _finale() -> void:
 	queue_free()
 
 
-func _load_omen_textures() -> Array:
-	var out: Array = []
+func _list_omen_image_paths() -> Array[String]:
+	var out: Array[String] = []
 	var dir := DirAccess.open(OMENS_DIR)
 	if dir == null:
 		return out
@@ -276,10 +287,7 @@ func _load_omen_textures() -> Array:
 			var lower: String = fname.to_lower()
 			if lower.ends_with(".jpg") or lower.ends_with(".jpeg") \
 					or lower.ends_with(".png") or lower.ends_with(".webp"):
-				var path: String = OMENS_DIR.path_join(fname)
-				var tex: Texture2D = load(path) as Texture2D
-				if tex != null:
-					out.append(tex)
+				out.append(OMENS_DIR.path_join(fname))
 		fname = dir.get_next()
 	dir.list_dir_end()
 	return out
