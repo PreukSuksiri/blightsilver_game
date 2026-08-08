@@ -1,0 +1,95 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-08-08 05:05:23.983
+Game Session of Tom Collins (started 2026-08-08 04:47:20.591)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[02:23.402] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[02:30.866] Mode selected P1: ATTACK
+[02:31.187] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[02:33.094] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:34.322] Dice rolled: 4
+[02:34.332] MSG: Trap triggered: Trap Hole!
+[02:38.470] Coin flip: Tails, Tails, Heads
+[02:41.225] MSG: Trap Hole: Tails, Tails, Heads.
+[02:41.226] Crystals: P1 5000 → 4980 (-20)  [trap]
+[02:42.992] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[02:44.387] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(0,0)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[02:44.387] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[02:44.387] Anim: 3D  (attacker survives)
+[02:46.903] Turn ended  P1  |  Crystals P0=5000 P1=4980
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4980 ---
+[02:54.107] Tech played  P0: "Spy"
+[02:55.657] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:56.132] Revealed: P1 (2,2) "Cursed Reflection" {cost 600}
+[02:58.272] MSG: Spy: Revealed Dead End.
+[02:58.571] Tech resolved  P0
+[03:11.228] Revealed: P0 (3,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[03:12.423] Dice rolled: 2
+[03:12.434] MSG: Demon Spawn wins!
+[03:16.186] Crystals: P1 4980 → 4180 (-800)  [battle]
+[03:20.421] Attack P0(3,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=2  ATK=40 vs DEF=20  → WIN
+[03:20.421] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[03:20.421] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:20.421] Anim: 3A  △ P1(0,2)
+[03:20.421] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[03:33.450] Revealed: P0 (2,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[03:33.501] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[03:34.660] Dice rolled: 5
+[03:34.667] MSG: Vampire Duchess is destroyed battling Divine!
+[03:39.066] Crystals: P1 4180 → 3380 (-800)  [battle]
+[03:43.265] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=5  ATK=0 vs DEF=0  → WIN
+[03:43.265] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[03:43.265] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:43.265] Anim: 3A  △ P1(1,2)
+[03:43.265] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[03:46.056] Turn ended  P0  |  Crystals P0=5000 P1=3380
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=3380 ---
+[03:48.534] Mode selected P1: TECH
+[03:48.837] Crystals: P1 3380 → 2380 (-1000)  [tech cost]
+[03:51.683] Tech played  P1: "Accident"
+[03:53.223] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[03:53.628] Card destroyed  P0 (2,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[03:53.637] Tech resolved  P1
+[03:56.018] Crystals: P1 2380 → 880 (-1500)  [union]
+[03:58.844] Revealed: P1 (3,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[03:58.880] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}, "Pit Lord" {Unit ATK140 DEF120 | cost 1250 | affinity Chaos | base 120/100 | buff +permATK20, +permDEF20 | face-down}
+[04:02.274] Mode selected P1: ATTACK
+[04:03.488] Dice rolled: 5
+[04:03.834] MSG: Lord of Terror wins!
+[04:08.187] Crystals: P0 5000 → 4600 (-400)  [battle]
+[04:12.393] Attack P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(3,2)"Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}  Dice=5  ATK=150 vs DEF=35  → WIN
+[04:12.393] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[04:12.393] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:12.393] Anim: 3A  △ P0(3,2)
+[04:12.393] Card destroyed  P0 (3,2) "Demon Spawn" {Unit ATK40 DEF35 | cost 400 | affinity Chaos}
+[04:14.904] Turn ended  P1  |  Crystals P0=4600 P1=880
+
+--- Turn 4  |  Player 0  |  Crystals P0=4600 P1=880 ---
+[04:59.049] Revealed: P0 (2,3) "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima}
+[05:00.283] Dice rolled: 5
+[05:00.406] MSG: Berserker of Ice Sea wins!
+[05:04.794] MSG: Berserker of Ice Sea: Self ATK debuff applied.
+[05:04.877] Coin flip: Heads
+[05:07.636] MSG: Omen: Heads — Berserker of Ice Sea may attack again!
+[05:07.732] Attack P0(2,3)"Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima} → P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}  Dice=5  ATK=105 vs DEF=100  → WIN
+[05:07.732] Reckoning overlay: P0 "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima} badge=105 ATK pill=105 DEF pill=50 mod=+ATK 0 (105+0=105)
+[05:07.732] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=100 ATK pill=150 DEF pill=100 mod=+DEF 0 (100+0=100)
+[05:07.732] Anim: 3A  △ P1(3,2)
+[05:07.732] Card destroyed  P1 (3,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[05:13.889] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[05:15.092] Dice rolled: 2
+[05:15.103] MSG: Berserker of Ice Sea wins!
+[05:17.927] Crystals: P1 880 → 0 (-880)  [battle]
+[05:21.015] Coin flip: Heads
+[05:21.020] Ability choice: -1 (No)
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4600  P1: 0  |  Turns: 4

@@ -38,7 +38,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "That couldn't be! There must be someway to help her! Please help her, Ms.Kelly! "
+		"text": "That couldn't be! There must be some way to help her! Please help her, Ms. Kelly! "
 	},
 	{
 		"wait": 0.5
@@ -55,7 +55,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Ms.Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
+		"text": "Ms. Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
 	},
 	{
 		"wait": 0.5

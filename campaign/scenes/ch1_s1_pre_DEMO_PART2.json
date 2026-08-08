@@ -18,7 +18,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"music": "res://assets/audio/bgm_horror_1.mp3",
-		"text": "The library secluded area has looked a little different this time."
+		"text": "The library secluded area looked a little different this time."
 	},
 	{
 		"wait": 0.5
@@ -26,7 +26,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"music": "res://assets/audio/bgm_horror_1.mp3",
-		"text": "There is broken windows, scattered stuffs, and a pool of blood."
+		"text": "There are broken windows, scattered stuff, and a pool of blood."
 	},
 	{
 		"wait": 0.5
@@ -43,7 +43,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "This look worse..."
+			"en": "This looks worse..."
 		}
 	},
 	{
@@ -76,7 +76,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "Mayu! It's me! Come and get the pretty stuffs! Here, look! My neck is really bright and clean!"
+			"en": "Mayu! It's me! Come and get the pretty stuff! Here, look! My neck is really bright and clean!"
 		}
 	},
 	{
@@ -125,7 +125,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [],
-		"text": "The splatting voice is coming closer..."
+		"text": "The splashing sound is coming closer..."
 	},
 	{
 		"wait": 0.5
@@ -155,7 +155,7 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
-		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
+		"text": "Mayu's body is covered in blood. She crawled on four legs. A gruesome smile is welcoming her tasty friends"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",

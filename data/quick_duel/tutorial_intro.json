@@ -24,7 +24,7 @@
 	},
 	{
 		"music": "res://assets/audio/bgm_investigate_1.mp3",
-		"text": "Your body is all wet. Your head feels all blank, and barely can stand up."
+		"text": "Your body is all wet. Your head feels blank, and you can barely stand up."
 	},
 	{
 		"linger_characters": true,
@@ -32,7 +32,7 @@
 	},
 	{
 		"music": "res://assets/audio/bgm_investigate_1.mp3",
-		"text": "You do not have a slight idea of what was going on, or how did you end up here."
+		"text": "You do not have the slightest idea of what was going on, or how you ended up here."
 	},
 	{
 		"linger_characters": true,
@@ -58,7 +58,7 @@
 	{
 		"linger_characters": true,
 		"music": "res://assets/audio/bgm_investigate_1.mp3",
-		"text": "(A silver-haired woman wearing a tactical uniform approaches you. She have a sharp piercing eyes.)"
+		"text": "(A silver-haired woman wearing a tactical uniform approaches you. She has sharp piercing eyes.)"
 	},
 	{
 		"linger_characters": true,
@@ -118,7 +118,7 @@
 			}
 		],
 		"speaker": "Silver-haired woman",
-		"text": "Can't speak aren't you? This is getting interesting..."
+		"text": "Can't speak, can you? This is getting interesting..."
 	},
 	{
 		"linger_characters": true,
@@ -195,7 +195,7 @@
 			}
 		],
 		"speaker": "Silver-haired woman",
-		"text": "Now, keep holding this deck of cards still. Do not let go of it, no matter what happen."
+		"text": "Now, keep holding this deck of cards still. Do not let go of it, no matter what happens."
 	},
 	{
 		"linger_characters": true,

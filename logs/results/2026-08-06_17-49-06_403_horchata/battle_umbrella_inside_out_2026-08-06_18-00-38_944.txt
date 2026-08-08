@@ -1,0 +1,51 @@
+=== Battle of Umbrella Inside Out ===
+Battle started: 2026-08-06 18:00:38.944
+Game Session of Horchata (started 2026-08-06 17:49:06.403)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:23.356] MSG: Provocative: foe drawn to this bluff
+[00:23.369] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:32.846] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:32.846] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:35.275] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+[02:58.843] Revealed: P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[02:58.880] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[03:00.092] Dice rolled: 3
+[03:02.834] Crystals: P0 5000 → 4620 (-380)  [battle]
+[03:05.664] Attack P0(2,2)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=3  ATK=25 vs DEF=60  → LOSE
+[03:05.664] Reckoning overlay: P0 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[03:05.664] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=60 ATK pill=95 DEF pill=60 mod=+DEF 0 (60+0=60)
+[03:05.664] Anim: 3B  △ P0(2,2)
+[03:05.664] Card destroyed  P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[03:09.304] Revealed: P0 (2,3) "Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10}
+[03:09.338] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[03:10.536] Dice rolled: 5
+[03:10.540] MSG: Pyromancer wins!
+[03:10.541] MSG: Ability triggered: "Vampire Servant" (sacrifice for card type)
+[03:13.191] Ability choice: 0 (Yes)
+[03:15.287] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[03:15.287] Crystals: P1 4950 → 4150 (-800)  [card lost]
+[03:18.074] MSG: Vampire Servant sacrificed itself to save Vampire Duchess!
+[03:19.447] Attack P0(2,3)"Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=5  ATK=80 vs DEF=50  → TIE
+[03:19.447] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10} badge=80 ATK pill=80 DEF pill=10 mod=+ATK 0 (80+0=80)
+[03:19.447] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:19.447] Anim: exchange  (no destruction)
+[03:44.991] MSG: Tap 2 material card(s) on the field.
+[03:45.440] MSG: 1 more material(s) needed.
+[03:46.406] Crystals: P0 4620 → 3120 (-1500)  [union]
+[03:49.234] Revealed: P0 (0,1) "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50}
+[03:49.267] Union summoned P0: "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} from "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50 | face-down}, "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[03:57.011] Dice rolled: 4
+[03:57.047] MSG: Seraphim Fistmaster wins!
+[03:59.695] Crystals: P1 4150 → 2950 (-1200)  [battle]
+[04:03.896] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=4  ATK=170 vs DEF=60  → WIN
+[04:03.896] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} badge=170 ATK pill=170 DEF pill=170 mod=+ATK 0 (170+0=170)
+[04:03.896] Reckoning overlay: P1 "Lab C

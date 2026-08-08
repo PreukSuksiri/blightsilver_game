@@ -4434,6 +4434,8 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 				"%s: Choose a permanent bonus." % u.card_name,
 				["+%d ATK permanently" % _sp_amt, "+%d DEF permanently" % _sp_amt])
 			var _sp_choice: int = await turn_manager.ability_choice_resolved
+			if GameState.current_phase == GameState.Phase.GAME_OVER or _sp_choice < 0:
+				return
 			var _sp_card: GameState.CardInstance = GameState.get_card(player, anchor.x, anchor.y)
 			if _sp_choice == 0:
 				_sp_card.perm_atk_bonus += _sp_amt
@@ -4470,12 +4472,18 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 			GameState.post_message("%s: All foe units lose %d DEF!" % [u.card_name, _acid_debuff])
 		CharacterData.AbilityType.UNION_SUMMON_DESTROY_FIELD:
 			var _df_count: int = maxi(1, int(u.ability_params.get("count", 1)))
+			var _df_done: int = 0
 			for _df_i: int in range(_df_count):
+				if GameState.current_phase == GameState.Phase.GAME_OVER:
+					return
 				await turn_manager._prompt_and_await_target_selection(
 					"%s: Choose a card on the field to destroy (%d remaining)." % [
 						u.card_name, _df_count - _df_i],
 					"any_field_card_destroy")
-			GameState.post_message("%s: Destroyed %d card(s) on the field!" % [u.card_name, _df_count])
+				if GameState.current_phase == GameState.Phase.GAME_OVER:
+					return
+				_df_done += 1
+			GameState.post_message("%s: Destroyed %d card(s) on the field!" % [u.card_name, _df_done])
 		CharacterData.AbilityType.UNION_SUMMON_CRYSTAL_GAIN:
 			var _cg_amount: int = int(u.ability_params.get("amount", 0))
 			if u.ability_params.has("per_exposed_divine"):
@@ -4501,6 +4509,8 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 			if u.ability_params.get("both_players", false):
 				_du_players.append(GameState.get_opponent(player))
 			for _du_p: int in _du_players:
+				if GameState.current_phase == GameState.Phase.GAME_OVER:
+					return
 				var _du_destroyed: int = 0
 				for _du_r: int in range(GameState.GRID_SIZE):
 					for _du_c: int in range(GameState.GRID_SIZE):
@@ -4510,6 +4520,8 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 						if _du_card.card_type == "character":
 							GameState.destroy_card(_du_p, _du_r, _du_c, false)
 							_du_destroyed += 1
+							if GameState.current_phase == GameState.Phase.GAME_OVER:
+								return
 			GameState.post_message("%s: Destroyed up to %d unit(s) per side!" % [u.card_name, _du_count])
 
 
@@ -10097,10 +10109,16 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 	_start_human_prompt_timeout()
 
 func _on_awaiting_blackmail_tech_select(player: int) -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		turn_manager.resolve_blackmail_choice("")
+		return
 	if is_instance_valid(_current_battle_overlay):
 		_current_battle_overlay.pause_for_choice()
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			turn_manager.resolve_blackmail_choice("")
+			return
 		var discarded: String = _active_ai.decide_blackmail_tech()
 		if OmenBattleApplier.cannot_decline_named("Blackmail") and discarded == "":
 			var hand: Array = GameState.tech_hands[player]
@@ -11307,6 +11325,10 @@ func _end_target_selection_blocking() -> void:
 		_ui_flow_block_active = false
 
 func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
+	# Duel already over (e.g. trap cost bankrupted the opponent) — never open a pick UI.
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		_release_target_prompt_on_game_over(filter)
+		return
 	_begin_target_selection_blocking(filter)
 	# Unblock input — player now needs to interact with the field or overlay
 	if _tech_resolve_blocker != null:
@@ -11611,6 +11633,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# If AI turn (AI is attacker), auto-resolve — but skip defender-response filters
 	if _is_ai_turn() and filter not in _defender_response_filters():
 		await get_tree().create_timer(0.4).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			_release_target_prompt_on_game_over(filter)
+			return
 		# Guard: if a reveal-tech has no valid targets, skip rather than hang
 		if "opponent_squares" in filter and _count_opponent_facedown(GameState.get_opponent(GameState.current_player)) == 0:
 			_finish_tech_action(GameState.current_player)
@@ -11733,6 +11758,37 @@ func _first_facedown_character_pos(player: int) -> Vector2i:
 			if card.card_type == "character" and not card.face_up:
 				return Vector2i(r, c)
 	return Vector2i(-1, -1)
+
+## Unblock TurnManager awaits when a target prompt arrived after (or during) GAME_OVER.
+func _release_target_prompt_on_game_over(filter: String) -> void:
+	if turn_manager == null:
+		return
+	if filter == "own_any_as_target":
+		turn_manager.complete_brainwash_redirect()
+	elif filter == "own_divine_character_redirect":
+		turn_manager.complete_archbishop_redirect()
+	else:
+		turn_manager.emit_signal("ability_selection_done")
+	_end_target_selection_blocking()
+	pending_tech_filter = ""
+	_hide_guide()
+	_clear_highlights()
+	_set_selection_state(SelectionState.NONE)
+
+## Hide open choice/target UI when the duel ends mid-prompt.
+func _dismiss_pending_prompts_for_game_over() -> void:
+	_stop_human_prompt_timeout()
+	_pending_human_defender_tech = false
+	if _ability_choice_overlay != null and _ability_choice_overlay.visible:
+		_hide_ability_choice_overlay()
+	if _bribe_overlay != null and _bribe_overlay.visible:
+		_hide_bribe_overlay()
+	if _tech_overlay_mode == "blackmail":
+		_close_blackmail_tech_overlay()
+	var filter: String = pending_tech_filter
+	if filter != "" or selection_state == SelectionState.SELECTING_TECH_TARGET:
+		_release_target_prompt_on_game_over(filter)
+	# TurnManager.game_over handler also emits selection/brainwash signals.
 
 ## Cancel a cross-turn target prompt without leaving the battle hung.
 func _cancel_cross_turn_target(filter: String, message: String = "No valid target — effect cancelled.") -> void:
@@ -12032,6 +12088,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					"tech", current_player, player, pos.x, pos.y)
 			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
 			GameState.post_message("Destroyed %s." % card.card_name)
+			await GameState.wait_crystal_animation()
+			if GameState.current_phase == GameState.Phase.GAME_OVER:
+				if pending_tech_name != "":
+					_finish_tech_action(current_player)
+				else:
+					_clear_after_ability()
+				return
 		if pending_tech_name != "" and turn_manager._field_destroy_remaining > 1:
 			turn_manager._field_destroy_remaining -= 1
 			var _db_data: TechCardData = CardDatabase.get_tech(pending_tech_name)
@@ -12044,6 +12107,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.4).timeout
+				if GameState.current_phase == GameState.Phase.GAME_OVER:
+					_finish_tech_action(current_player)
+					return
 				var _fd_target: Vector2i = _active_ai.decide_target("any_field_card_destroy")
 				var _fd_player: int = current_player
 				for _fd_p: int in range(2):
@@ -12180,6 +12246,10 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				GameState.lose_crystals(current_player, _cs_cost, "ability")
 				GameState.post_message(
 					"Corrupted Spy: lost %d Crystals!" % _cs_cost)
+				await GameState.wait_crystal_animation()
+				if GameState.current_phase == GameState.Phase.GAME_OVER:
+					_finish_tech_action(current_player)
+					return
 			if _tech_reveals_remaining <= 0:
 				_finish_tech_action(current_player)
 			else:
@@ -12638,10 +12708,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			var src: GameState.CardInstance = GameState.get_card(current_player, _tech_buff_move_source.x, _tech_buff_move_source.y)
 			card.perm_atk_bonus += src.perm_atk_bonus
 			card.perm_def_bonus += src.perm_def_bonus
+			card.ability_capped_atk_bonus += src.ability_capped_atk_bonus
 			card.temp_atk_bonus += src.temp_atk_bonus
 			card.temp_def_bonus += src.temp_def_bonus
 			src.perm_atk_bonus = 0
 			src.perm_def_bonus = 0
+			src.ability_capped_atk_bonus = 0
 			src.temp_atk_bonus = 0
 			src.temp_def_bonus = 0
 			GameState.post_message("Essence Transfer: Buffs moved from %s to %s." % [src.card_name, card.card_name])
@@ -12675,6 +12747,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			card.base_def = 0
 			card.perm_atk_bonus = 0
 			card.perm_def_bonus = 0
+			card.ability_capped_atk_bonus = 0
 			GameState.post_message("Blood Ritual: %s's ATK and DEF set to 0!" % card.card_name)
 			_tech_sacrifice_player = -1
 			_finish_tech_action(current_player)
@@ -13131,10 +13204,16 @@ func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
 	_set_bluff_animated(player, row, col, emoticon)
 
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		turn_manager.resolve_ability_choice(-1)
+		return
 	if is_instance_valid(_current_battle_overlay):
 		_current_battle_overlay.pause_for_choice()
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			turn_manager.resolve_ability_choice(-1)
+			return
 		var ai_choice: int = _active_ai.decide_trap_choice(trap_name, choices)
 		turn_manager.resolve_ability_choice(ai_choice)
 	else:
@@ -13143,6 +13222,9 @@ func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
 ## Routes OPTIONAL_CRYSTAL_PAY_DEF_BOOST defender choices to the correct player.
 ## During the attacker's turn the defending player is the opponent — if that's the AI, auto-resolve.
 func _on_awaiting_defender_choice(prompt: String, choices: Array) -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		turn_manager.resolve_ability_choice(-1)
+		return
 	if is_instance_valid(_current_battle_overlay):
 		_current_battle_overlay.pause_for_choice()
 	var defender_player: int = GameState.get_opponent(GameState.current_player)
@@ -13152,6 +13234,9 @@ func _on_awaiting_defender_choice(prompt: String, choices: Array) -> void:
 	if _def_ai_responding:
 		# AI defends: AI decides whether to pay for its own DEF boost
 		await get_tree().create_timer(0.6).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			turn_manager.resolve_ability_choice(-1)
+			return
 		var ai_choice: int = _get_defending_ai().decide_trap_choice(prompt, choices)
 		turn_manager.resolve_ability_choice(ai_choice)
 	else:
@@ -14965,6 +15050,9 @@ func _on_game_over(winner: int) -> void:
 	_wishlist_cta_win_eligible = false
 	# Dismiss guide box immediately so it doesn't bleed into VN or win screen
 	_hide_guide()
+	# Drop any target/choice UI left open when crystals/wipe ended the duel mid-prompt
+	# (e.g. Brainwash trap cost bankrupts, then FORCE_FRIENDLY_FIRE still awaited a pick).
+	_dismiss_pending_prompts_for_game_over()
 	_was_tutorial_battle = TutorialBattleManager.is_active
 	_wishlist_cta_win_eligible = _compute_wishlist_cta_win_eligible(winner)
 	if _wishlist_cta_win_eligible:

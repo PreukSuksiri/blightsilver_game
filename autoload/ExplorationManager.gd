@@ -686,6 +686,12 @@ func clear_saved_session_for_chapter(chapter_vn_path: String, card: Dictionary =
 		return
 	_clear_saved_session()
 
+## Clear held / pending omens without ending the exploration session.
+## Used when a chapter arc completes or is restarted — omens are chapter-scoped.
+func clear_held_omens() -> void:
+	_active_omens.clear()
+	_pending_omens.clear()
+
 ## Discard the stored mid-session snapshot without ending the live session.
 func clear_saved_session() -> void:
 	_clear_saved_session()

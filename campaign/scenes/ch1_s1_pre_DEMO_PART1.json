@@ -20,7 +20,7 @@
 		"characters": [],
 		"music": "res://assets/audio/bgm_storytelling_2.mp3",
 		"text": {
-			"en": "Nex and Kelly proceeded their undecover plan. Nex entered one of the library's toilet stall."
+			"en": "Nex and Kelly proceeded with their undercover plan. Nex entered one of the library's toilet stalls."
 		}
 	},
 	{
@@ -147,7 +147,7 @@
 		"group": 1.0,
 		"linger_characters": true,
 		"speaker": "Nex",
-		"text": "Looks like we're all in the bad side of luck..."
+		"text": "Looks like we're all on the bad side of luck..."
 	},
 	{
 		"group": 2.0,
@@ -183,7 +183,7 @@
 		"group": 3.0,
 		"linger_characters": true,
 		"speaker": "Nex",
-		"text": "May be all of this is staged.... May be she tricked me to hole up in this fucking toilet..."
+		"text": "Maybe all of this is staged.... Maybe she tricked me to hole up in this fucking toilet..."
 	},
 	{
 		"group": 3.0,
@@ -219,13 +219,13 @@
 		"group": 4.0,
 		"linger_characters": true,
 		"speaker": "Nex",
-		"text": "Despite all of that bullshits... Here am I... Struggling to climb a ladder...\nHoping to be the 20%."
+		"text": "Despite all of that bullshit... Here I am... Struggling to climb a ladder...\nHoping to be the 20%."
 	},
 	{
 		"group": 4.0,
 		"linger_characters": true,
 		"speaker": "Nex",
-		"text": "Hope this mess ends... And I'll get back to study hard... May be..."
+		"text": "Hope this mess ends... And I'll get back to study hard... Maybe..."
 	},
 	{
 		"linger_characters": true,
@@ -250,7 +250,7 @@
 	},
 	{
 		"linger_characters": true,
-		"text": "(\"Omens\" act as a buffs that last until the chapter ends. You can find more of them as you progress the chapter.)"
+		"text": "(\"Omens\" act as buffs that last until the chapter ends. You can find more of them as you progress the chapter.)"
 	},
 	{
 		"linger_characters": true,

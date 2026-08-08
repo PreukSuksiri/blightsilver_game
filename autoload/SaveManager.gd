@@ -1401,6 +1401,10 @@ func reset_chapter_arc_progress(chapter_key: String, card: Dictionary = {}) -> v
 		return
 	clear_chapter_arc_progress(key)
 	ExplorationManager.clear_saved_session_for_chapter(key, card)
+	# Omens last for the chapter only. Deckbuilder reads GameState.active_omens even
+	# when no exploration session is live — clear the battle snapshot + EM held list.
+	OmenBattleApplier.clear()
+	ExplorationManager.clear_held_omens()
 	var dungeon_info: Dictionary = DailyDungeonManager.find_dungeon_call_in_vn(key)
 	var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
 	if not dungeon_id.is_empty():

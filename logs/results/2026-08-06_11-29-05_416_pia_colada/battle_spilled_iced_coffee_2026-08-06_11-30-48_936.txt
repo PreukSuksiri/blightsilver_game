@@ -1,0 +1,191 @@
+=== Battle of Spilled Iced Coffee ===
+Battle started: 2026-08-06 11:30:48.936
+Game Session of Piña Colada (started 2026-08-06 11:29:05.416)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.350] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:17.694] Mode selected P1: TECH
+[00:17.997] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:20.820] Tech played  P1: "Radar"
+[00:22.364] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:22.762] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:24.001] MSG: Radar: Revealed Decoy Puppet.
+[00:24.636] Dead-end placed  P0 (3,1)
+[00:24.643] MSG: Radar: Revealed Dead End.
+[00:25.035] Revealed: P0 (2,1) "Pepper Spray" {cost 0}
+[00:26.268] MSG: Radar: Revealed Pepper Spray.
+[00:26.273] Tech resolved  P1
+[00:27.165] Mode selected P1: ATTACK
+[00:27.508] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:29.416] Revealed: P0 (2,4) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:30.610] Dice rolled: 5
+[00:35.232] Crystals: P1 4400 → 4180 (-220)  [battle]
+[00:38.065] Attack P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=5  ATK=20 vs DEF=55  → LOSE
+[00:38.065] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[00:38.065] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[00:38.065] Anim: 3B  △ P1(1,1)
+[00:38.065] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:38.570] Mode selected P1: ATTACK
+[00:38.893] Revealed: P1 (2,0) "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[00:40.861] Revealed: P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:42.013] Dice rolled: 4
+[00:42.028] MSG: Rotten Spider wins!
+[00:46.498] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:50.706] Attack P1(2,0)"Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P0(1,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=40 vs DEF=20  → WIN
+[00:50.706] Reckoning overlay: P1 "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:50.706] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:50.706] Anim: 3A  △ P0(1,4)
+[00:50.706] Card destroyed  P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:51.191] MSG: Ability triggered: "Rotten Spider" (perm atk loss per own turn)
+[00:52.733] Turn ended  P1  |  Crystals P0=4700 P1=4180
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=4180 ---
+[03:01.609] Dice rolled: 3
+[03:01.616] MSG: Nanomites Beast wins!
+[03:04.337] Crystals: P1 4180 → 3730 (-450)  [battle]
+[03:08.543] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(2,0)"Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30}  Dice=3  ATK=50 vs DEF=30  → WIN
+[03:08.543] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[03:08.543] Reckoning overlay: P1 "Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:08.543] Anim: 3A  △ P1(2,0)
+[03:08.543] Card destroyed  P1 (2,0) "Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30}
+[03:11.988] Revealed: P0 (0,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:13.456] Dice rolled: 1
+[03:13.470] MSG: Pyromancer hits Dead End — nothing happens.
+[03:17.395] Attack P0(0,3)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(1,2)(empty)  Dice=1  → DEAD_END
+[03:17.395] Anim: 3F  (blank slot)
+[03:19.304] Turn ended  P0  |  Crystals P0=4700 P1=3730
+
+--- Turn 3  |  Player 1  |  Crystals P0=4700 P1=3730 ---
+[03:21.816] Mode selected P1: ATTACK
+[03:22.137] Revealed: P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[03:24.043] Dice rolled: 1
+[03:24.049] MSG: Bleacher Squad wins!
+[03:26.748] Crystals: P0 4700 → 3800 (-900)  [battle]
+[03:30.964] Attack P1(4,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P0(0,3)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=1  ATK=20 vs DEF=0  → WIN
+[03:30.964] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[03:30.964] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:30.964] Anim: 3A  △ P0(0,3)
+[03:30.964] Card destroyed  P0 (0,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:31.463] Mode selected P1: ATTACK
+[03:31.802] Revealed: P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[03:33.698] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[03:34.919] Dice rolled: 3
+[03:34.923] MSG: Trap triggered: Hard Scale!
+[03:39.035] Crystals: P0 3800 → 3500 (-300)  [trap cost]
+[03:41.856] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[03:43.238] Attack P1(4,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(0,4)"Hard Scale" {cost 300}  Dice=3  → Unit vs Trap
+[03:43.238] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=35 ATK pill=35 DEF pill=30 mod=+ATK 0 (35+0=35)
+[03:43.238] Anim: 3D  (attacker survives)
+[03:43.739] Turn ended  P1  |  Crystals P0=3500 P1=3730
+
+--- Turn 4  |  Player 0  |  Crystals P0=3500 P1=3730 ---
+[03:53.787] Dice rolled: 5
+[03:53.791] MSG: Nanomites Beast wins!
+[03:56.409] Crystals: P1 3730 → 3380 (-350)  [battle]
+[04:00.633] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} → P1(4,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=5  ATK=50 vs DEF=30  → WIN
+[04:00.633] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=60 mod=+ATK 0 (50+0=50)
+[04:00.633] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=30 ATK pill=35 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:00.633] Anim: 3A  △ P1(4,3)
+[04:00.633] Card destroyed  P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[05:46.111] Revealed: P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio}
+[05:47.333] Dice rolled: 1
+[05:47.342] MSG: Dystopian Cultist wins!
+[05:50.021] Crystals: P1 3380 → 3060 (-320)  [battle]
+[05:54.235] Attack P0(2,0)"Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio} → P1(4,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=1  ATK=65 vs DEF=20  → WIN
+[05:54.235] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=45 mod=+ATK 0 (65+0=65)
+[05:54.235] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:54.235] Anim: 3A  △ P1(4,2)
+[05:54.235] Card destroyed  P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[05:56.265] Turn ended  P0  |  Crystals P0=3500 P1=3060
+
+--- Turn 5  |  Player 1  |  Crystals P0=3500 P1=3060 ---
+[05:58.774] Mode selected P1: ATTACK
+[05:59.111] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[06:01.008] Dice rolled: 3
+[06:01.038] MSG: Lab Zombie wins!
+[06:03.753] Crystals: P0 3500 → 2950 (-550)  [battle]
+[06:07.957] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(2,0)"Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio}  Dice=3  ATK=55 vs DEF=45  → WIN
+[06:07.957] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[06:07.957] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio} badge=45 ATK pill=65 DEF pill=45 mod=+DEF 0 (45+0=45)
+[06:07.957] Anim: 3A  △ P0(2,0)
+[06:07.957] Card destroyed  P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF45 | cost 550 | affinity Bio}
+[06:08.464] Mode selected P1: ATTACK
+[06:08.808] Revealed: P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[06:10.736] Revealed: P0 (3,4) "Goddess of Virtue" {Unit ATK80 DEF105 | cost 1400 | affinity Divine}
+[06:11.928] Dice rolled: 2
+[06:14.634] Crystals: P1 3060 → 2260 (-800)  [battle]
+[06:17.463] Attack P1(3,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(3,4)"Goddess of Virtue" {Unit ATK80 DEF105 | cost 1400 | affinity Divine}  Dice=2  ATK=20 vs DEF=105  → LOSE
+[06:17.463] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[06:17.463] Reckoning overlay: P0 "Goddess of Virtue" {Unit ATK80 DEF105 | cost 1400 | affinity Divine} badge=105 ATK pill=80 DEF pill=105 mod=+DEF 0 (105+0=105)
+[06:17.463] Anim: 3B  △ P1(3,1)
+[06:17.463] Card destroyed  P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[06:17.971] Turn ended  P1  |  Crystals P0=2950 P1=2260
+
+--- Turn 6  |  Player 0  |  Crystals P0=2950 P1=2260 ---
+[06:23.665] Dice rolled: 2
+[06:23.669] MSG: Nanomites Beast wins!
+[06:26.327] Crystals: P1 2260 → 1560 (-700)  [battle]
+[06:30.535] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=2  ATK=50 vs DEF=20  → WIN
+[06:30.535] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[06:30.535] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[06:30.535] Anim: 3A  △ P1(2,4)
+[06:30.536] Card destroyed  P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[06:35.904] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[06:35.905] Revealed: P1 (0,0) "Hypnosis" {cost 500}
+[06:37.135] Dice rolled: 1
+[06:37.140] MSG: Trap triggered: Hypnosis!
+[06:39.340] Crystals: P1 1560 → 1060 (-500)  [trap cost]
+[06:42.165] MSG: Hypnosis: Spear Shark cannot attack until end of next turn.
+[06:43.531] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(0,0)"Hypnosis" {cost 500}  Dice=1  → Unit vs Trap
+[06:43.531] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[06:43.531] Anim: 3D  (attacker survives)
+[06:44.479] Turn ended  P0  |  Crystals P0=2950 P1=1060
+
+--- Turn 7  |  Player 1  |  Crystals P0=2950 P1=1060 ---
+[06:46.970] Mode selected P1: ATTACK
+[06:47.300] Revealed: P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[06:49.231] Revealed: P0 (1,3) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[06:50.428] Dice rolled: 2
+[06:54.923] Crystals: P1 1060 → 880 (-180)  [battle]
+[06:57.758] Attack P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(1,3)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=2  ATK=15 vs DEF=30  → LOSE
+[06:57.758] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[06:57.758] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[06:57.758] Anim: 3B  △ P1(1,3)
+[06:57.758] Card destroyed  P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[06:58.251] Mode selected P1: ATTACK
+[06:58.590] Revealed: P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[07:00.489] Revealed: P0 (2,3) "Spike Trap" {cost 800}
+[07:01.720] Dice rolled: 3
+[07:01.727] MSG: Trap triggered: Spike Trap!
+[07:06.753] Crystals: P0 2950 → 2150 (-800)  [trap cost]
+[07:09.577] Crystals: P1 880 → 680 (-200)  [card lost]
+[07:13.063] MSG: Spike Trap: Vile Creeper destroyed!
+[07:13.067] Attack P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(2,3)"Spike Trap" {cost 800}  Dice=3  → Unit vs Trap
+[07:13.067] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=10 ATK pill=10 DEF pill=30 mod=+ATK 0 (10+0=10)
+[07:13.067] Anim: 3E  △ P1(2,2)
+[07:13.571] Turn ended  P1  |  Crystals P0=2150 P1=680
+
+--- Turn 8  |  Player 0  |  Crystals P0=2150 P1=680 ---
+[07:17.760] Tech played  P0: "Tease"
+[07:19.316] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[07:19.750] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[07:20.923] MSG: Tease: Opponent revealed Bladeshifter.
+[07:21.057] Tech resolved  P0
+[07:33.050] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[07:34.322] Dice rolled: 1
+[07:34.347] MSG: Pit Lord wins!
+[07:36.975] Crystals: P1 680 → 260 (-420)  [battle]
+[07:39.827] Attack P0(4,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=1  ATK=120 vs DEF=50  → WIN
+[07:39.827] Reckoning overlay: P0 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[07:39.827] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[07:39.827] Anim: 3A  △ P1(2,1)
+[07:39.827] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2150  P1: 260  |  Turns: 8

@@ -20,7 +20,7 @@
 		"characters": [],
 		"music": "res://assets/audio/bgm_relaxed_1.mp3",
 		"text": {
-			"en": "Kelly gathered and squaring up the Vellum Card deck into a neat and perfect stack."
+			"en": "Kelly gathered and squared up the Vellum Card deck into a neat and perfect stack."
 		}
 	},
 	{
@@ -170,7 +170,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "I need sometimes to practice these chanting and dueling stuffs..."
+		"text": "I need some time to practice these chanting and dueling stuff..."
 	},
 	{
 		"wait": 0.5
@@ -201,7 +201,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "We are going on a field work right away tonight."
+		"text": "We are going on field work right away tonight."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -215,7 +215,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "You are going to be my assistant for a ghost busting at the library."
+		"text": "You are going to be my assistant for a ghostbusting at the library."
 	},
 	{
 		"wait": 0.5
@@ -294,7 +294,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Oh? Are you going to let your friend bleed dried first until you do something?"
+		"text": "Oh? Are you going to let your friend bleed dry first until you do something?"
 	},
 	{
 		"wait": 0.5
@@ -359,7 +359,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "I've already made a plan. We are infiltrating the library and hide in the toilet until midnight. Then we go to the crime scene."
+		"text": "I've already made a plan. We'll infiltrate the library and hide in the toilet until midnight. Then we go to the crime scene."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -388,7 +388,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Ohhh. \"Nexus\" Crowmont. I've forgot to mention that currently... You are a wanted fugitive."
+		"text": "Ohhh. \"Nexus\" Crowmont. I've forgotten to mention that currently... You are a wanted fugitive."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -461,7 +461,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Sometimes, they might not able to capture images of people who got possessed by a high-level anomalies."
+		"text": "Sometimes, they might not be able to capture images of people who got possessed by high-level anomalies."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -475,7 +475,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "So the only image they can captured is you.... Nex."
+		"text": "So the only image they can capture is you.... Nex."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",

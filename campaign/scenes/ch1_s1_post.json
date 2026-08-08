@@ -20,7 +20,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed.png",
 		"fade_color": "#000000",
-		"text": "The possessed girl stopped and barely can stand."
+		"text": "The possessed girl stopped and can barely stand."
 	},
 	{
 		"wait": 1.0
@@ -82,7 +82,7 @@
 		"characters": [],
 		"fade_color": "#000000",
 		"speaker": "The dark entity",
-		"text": "(Mumble unrecognize words)"
+		"text": "(Mumble unrecognized words)"
 	},
 	{
 		"wait": 1.0
@@ -174,7 +174,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_shoot_midnight_shadow_mini.png",
 		"fade_color": "#000000",
-		"text": "Silver bullets blew through the dark entity and shreded it to mere pieces of black smokes"
+		"text": "Silver bullets blew through the dark entity and shredded it to mere pieces of black smoke"
 	},
 	{
 		"wait": 0.5
@@ -206,7 +206,7 @@
 			}
 		],
 		"fade_color": "#000000",
-		"text": "The midnight shadow's body are torn like an old paper."
+		"text": "The midnight shadow's body is torn like an old paper."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
@@ -425,7 +425,7 @@
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_car_drive_university.png",
 		"characters": [],
 		"fade_color": "#000000",
-		"text": "The black sedan glide swiftly on an empty university road, toward the hospital."
+		"text": "The black sedan glided swiftly on an empty university road, toward the hospital."
 	},
 	{
 		"fade_color": "#000000",
@@ -446,7 +446,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
 		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
-		"text": "They've made it to the hospital. Mayu lied unconscious on the bed."
+		"text": "They've made it to the hospital. Mayu lay unconscious on the bed."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
@@ -537,7 +537,7 @@
 		],
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
-		"text": "So these.... things... They do existed....?"
+		"text": "So these.... things... They do exist....?"
 	},
 	{
 		"characters": [
@@ -562,7 +562,7 @@
 		],
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
-		"text": "All of things unexplained... It's them all along...?"
+		"text": "All of the things unexplained... It's them all along...?"
 	},
 	{
 		"characters": [
@@ -587,7 +587,7 @@
 		],
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
-		"text": "What have Mayu done that she have to get hurt like this...?"
+		"text": "What has Mayu done that she has to get hurt like this...?"
 	},
 	{
 		"characters": [
@@ -629,7 +629,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "That's why people like us existed. We are here to turn things back to how it should be."
+		"text": "That's why people like us exist. We are here to turn things back to how they should be."
 	},
 	{
 		"characters": [
@@ -655,7 +655,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "I know you have a lot of question right now.  But I can assured that you're about to find out all the answers soon."
+		"text": "I know you have a lot of questions right now.  But I can assure that you're about to find out all the answers soon."
 	},
 	{
 		"characters": [
@@ -824,7 +824,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "Oh shit, it's 3AM already... Under a [color=#FFFFFF]martial law[/color] law like this... No shop is gonna open."
+		"text": "Oh shit, it's 3AM already... Under a [color=#FFFFFF]martial law[/color] like this... No shop is gonna open."
 	},
 	{
 		"characters": [
@@ -862,7 +862,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "The martial law... right... I've almost forgotten that. We're lucky that we've not been pulled off."
+		"text": "The martial law... right... I've almost forgotten that. We're lucky that we've not been pulled over."
 	},
 	{
 		"characters": [
@@ -938,7 +938,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Oh, it's If you don't mind... I have some snack here..."
+		"text": "Oh — if you don't mind... I have some snack here..."
 	},
 	{
 		"characters": [
@@ -976,7 +976,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "** Kelly handed Nex a bag of what seems to be a crackers **"
+		"text": "** Kelly handed Nex a bag of what seems to be crackers **"
 	},
 	{
 		"characters": [

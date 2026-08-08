@@ -413,6 +413,10 @@ static func apply_begin_game(board: Node) -> void:
 	var held_all: Array = all_held_omens()
 	if held_all.is_empty():
 		return
+	# new_game() / reset_runtime_fields() wipe omen_anoint_effects; rebuild before
+	# applying board stats (Keen Edge etc.) so anoint bonuses are not skipped when
+	# no enemy omen roll rebuilds the map mid-setup.
+	_build_anoint_effects_map()
 	_ensure_cell_runes_grid()
 	for held: Variant in held_all:
 		if not held is Dictionary:

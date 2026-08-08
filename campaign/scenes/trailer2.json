@@ -39,7 +39,7 @@
 			}
 		],
 		"speaker": "Doctor",
-		"text": "Who or whatever you are... if you want to save lives... you are always deserved a seat in my lecture room."
+		"text": "Who or whatever you are... if you want to save lives... you always deserve a seat in my lecture room."
 	},
 	{
 		"wait": 0.5
@@ -56,7 +56,7 @@
 			}
 		],
 		"speaker": "Doctor",
-		"text": "So promised me... Don't ever skip the class again."
+		"text": "So promise me... Don't ever skip the class again."
 	},
 	{
 		"fade_color": "#000000",

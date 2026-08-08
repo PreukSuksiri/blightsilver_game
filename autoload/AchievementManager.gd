@@ -22,6 +22,10 @@ var _definitions: Array = []
 var _definitions_by_id: Dictionary = {}
 var _unlocked: Dictionary = {}
 var _rewards_granted: Dictionary = {}
+## Achievement reward mail was claimed (durable — survives mail delete).
+var _rewards_claimed: Dictionary = {}
+## When save lacks achievement_rewards_claimed, heal orphans once on reconcile.
+var _migrate_orphan_claims: bool = false
 var _pending_reward_queue: Array = []
 var _processing_rewards: bool = false
 
@@ -79,11 +83,20 @@ func load_from_save(data: Dictionary) -> void:
 			var key: String = str(id).strip_edges()
 			if not key.is_empty():
 				_rewards_granted[key] = true
+	_rewards_claimed.clear()
+	_migrate_orphan_claims = not data.has("achievement_rewards_claimed")
+	var rc: Variant = data.get("achievement_rewards_claimed", [])
+	if rc is Array:
+		for id: Variant in rc:
+			var key: String = str(id).strip_edges()
+			if not key.is_empty():
+				_rewards_claimed[key] = true
 	call_deferred("check_threshold_achievements")
 
 
-## Restore unlock / rewards_granted flags from claimed achievement mail.
-## Repairs saves wiped by an early save_data() before achievements were loaded.
+## Restore unlock / rewards_granted / rewards_claimed from claimed achievement mail.
+## Also heals orphaned grants: unlocked + granted, no mail left → mark claimed
+## (mail is deletable; claim state must not live only in the inbox).
 ## Does not emit unlock toasts or re-queue rewards.
 func reconcile_from_claimed_mail() -> bool:
 	var changed: bool = false
@@ -104,6 +117,22 @@ func reconcile_from_claimed_mail() -> bool:
 		if not bool(_rewards_granted.get(ach_id, false)):
 			_rewards_granted[ach_id] = true
 			changed = true
+		if not bool(_rewards_claimed.get(ach_id, false)):
+			_rewards_claimed[ach_id] = true
+			changed = true
+	# One-time migration for saves that never tracked durable claims: if the
+	# reward was granted and no mail remains, treat as claimed (claimed mail was
+	# often deleted). New saves keep unclaimed+clear_all from falsely unlocking.
+	if _migrate_orphan_claims:
+		_migrate_orphan_claims = false
+		for ach_id: Variant in _rewards_granted.keys():
+			var id: String = str(ach_id)
+			if bool(_rewards_claimed.get(id, false)):
+				continue
+			if MailboxManager.has_achievement_reward_mail(id):
+				continue
+			_rewards_claimed[id] = true
+			changed = true
 	return changed
 
 
@@ -116,9 +145,14 @@ func to_save_dict() -> Dictionary:
 	for key: Variant in _rewards_granted.keys():
 		granted.append(str(key))
 	granted.sort()
+	var claimed: Array = []
+	for key: Variant in _rewards_claimed.keys():
+		claimed.append(str(key))
+	claimed.sort()
 	return {
 		"unlocked_achievements": ids,
 		"achievement_rewards_granted": granted,
+		"achievement_rewards_claimed": claimed,
 	}
 
 
@@ -144,6 +178,27 @@ func get_icon_path(def: Dictionary) -> String:
 
 func is_unlocked(achievement_id: String) -> bool:
 	return bool(_unlocked.get(achievement_id, false))
+
+
+## True after the reward queue has processed this achievement (mail sent / granted).
+## Note: this is set when mail is *sent*, not when the player claims it.
+func is_reward_granted(achievement_id: String) -> bool:
+	return bool(_rewards_granted.get(achievement_id, false))
+
+
+## True after the player claimed the achievement reward (durable; survives mail delete).
+func is_reward_claimed(achievement_id: String) -> bool:
+	return bool(_rewards_claimed.get(achievement_id, false))
+
+
+## Record that achievement reward mail was claimed. Safe to call repeatedly.
+func mark_reward_claimed(achievement_id: String) -> void:
+	var ach_id: String = achievement_id.strip_edges()
+	if ach_id.is_empty() or bool(_rewards_claimed.get(ach_id, false)):
+		return
+	_rewards_claimed[ach_id] = true
+	_rewards_granted[ach_id] = true
+	_unlocked[ach_id] = true
 
 
 func is_implemented(achievement_id: String) -> bool:

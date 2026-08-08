@@ -269,13 +269,13 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
 		"group": 3.0,
-		"text": "He randomly slaps and hit the mad girl. But she doesn't seem to care.\nThe grip on his neck get even tighter."
+		"text": "He randomly slaps and hits the mad girl. But she doesn't seem to care.\nThe grip on his neck gets even tighter."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
 		"group": 4.0,
 		"shake_screen": 7.0,
-		"text": "No matter how much he tried to yell, his voice won't come out.\nThe grip on his neck get even tighter."
+		"text": "No matter how much he tried to yell, his voice won't come out.\nThe grip on his neck gets even tighter."
 	},
 	{
 		"go_to": [
@@ -297,7 +297,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
-		"text": "Nex finally be able to escape the death's embrace"
+		"text": "Nex was finally able to escape the death's embrace"
 	},
 	{
 		"wait": 0.5
@@ -460,7 +460,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
 		"characters": [],
 		"text": {
-			"en": "A lot of thoughts came through his mind. His head went blank, but his feet keep running, not noticing what's ahead"
+			"en": "A lot of thoughts came through his mind. His head went blank, but his feet kept running, not noticing what's ahead"
 		}
 	},
 	{
@@ -513,7 +513,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
-		"text": "(He stumbled forward, his frantic fall abruptly halted as his face plunged directly into a “soft, yielding curves”.)"
+		"text": "(He stumbled forward, his frantic fall abruptly halted as his face plunged directly into “soft, yielding curves”.)"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_final.png",
@@ -617,7 +617,7 @@
 		"fade_color": "#000000",
 		"fade_in": 3.0,
 		"text": {
-			"en": "The next morning... at Nex's domitory"
+			"en": "The next morning... at Nex's dormitory"
 		}
 	},
 	{
@@ -646,7 +646,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [],
 		"text": {
-			"en": "Someone's knocking the door"
+			"en": "Someone's knocking on the door"
 		}
 	},
 	{
@@ -708,7 +708,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "(The door knock sound anxious... Or could it be...... Mayu???)"
+			"en": "(The door knock sounds anxious... Or could it be...... Mayu???)"
 		}
 	},
 	{
@@ -734,7 +734,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [],
 		"text": {
-			"en": "Nex carefully open the door..."
+			"en": "Nex carefully opened the door..."
 		}
 	},
 	{
@@ -818,7 +818,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I... I'm so sorry!!! I didn't meant to bumped into you last night! It was an accident! I am a student here!! My name is Nex Crowmont...! Please don't put me in jail!!"
+			"en": "I... I'm so sorry!!! I didn't mean to bump into you last night! It was an accident! I am a student here!! My name is Nex Crowmont...! Please don't put me in jail!!"
 		}
 	},
 	{
@@ -833,7 +833,7 @@
 			}
 		],
 		"speaker": "Silver-haired woman",
-		"text": "Relax. I didn't come here for that matter. Also, I'm not a police... "
+		"text": "Relax. I didn't come here for that matter. Also, I'm not a cop... "
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -885,7 +885,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [],
 		"text": {
-			"en": "The silver-haired woman come inside Nex's room"
+			"en": "The silver-haired woman came inside Nex's room"
 		}
 	},
 	{
@@ -1023,7 +1023,7 @@
 		],
 		"group": 6.0,
 		"speaker": "Nex",
-		"text": "I don't know... but she looked like being crazy. Her eyes glowed purple. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+		"text": "I don't know... but she looked crazy. Her eyes glowed purple. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1038,7 +1038,7 @@
 		],
 		"group": 6.0,
 		"speaker": "Kelly",
-		"text": "Are you sure it's purple? If it's purple, you would've lose some fingers already"
+		"text": "Are you sure it's purple? If it's purple, you would've lost some fingers already"
 	},
 	{
 		"group": 6.0,
@@ -1056,7 +1056,7 @@
 		],
 		"group": 7.0,
 		"speaker": "Nex",
-		"text": "I don't know... but she looked like being crazy. Her eyes glowed red. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+		"text": "I don't know... but she looked crazy. Her eyes glowed red. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1096,7 +1096,7 @@
 		],
 		"group": 8.0,
 		"speaker": "Nex",
-		"text": "I don't know... but she looked like being crazy. There was dark aura everywhere. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
+		"text": "I don't know... but she looked crazy. There was dark aura everywhere. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1111,7 +1111,7 @@
 		],
 		"group": 8.0,
 		"speaker": "Kelly",
-		"text": "Are you sure it's a dark aura? If it's really a dark aura, our whole Order must have get alerted already."
+		"text": "Are you sure it's a dark aura? If it's really a dark aura, our whole Order must have gotten alerted already."
 	},
 	{
 		"group": 8.0,
@@ -1129,7 +1129,7 @@
 		],
 		"group": 9.0,
 		"speaker": "Nex",
-		"text": "Nothing... My friend, she just... went home... It's too late, so I was in hurry..."
+		"text": "Nothing... My friend, she just... went home... It's too late, so I was in a hurry..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1144,7 +1144,7 @@
 		],
 		"group": 9.0,
 		"speaker": "Kelly",
-		"text": "You ran that fast just because you missed your home? Or were you trying fall into my hugs on purpose?"
+		"text": "You ran that fast just because you missed your home? Or were you trying to fall into my hugs on purpose?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1173,11 +1173,11 @@
 		],
 		"group": 9.0,
 		"speaker": "Kelly",
-		"text": "Damn.... I was hoping a little that you're just a pervert trying to sink your face into people's boob.\nI love to play games with these kind of people."
+		"text": "Damn.... I was hoping a little that you're just a pervert trying to sink your face into people's boob.\nI love to play games with this kind of people."
 	},
 	{
 		"group": 9.0,
-		"text": "(I was almost excused of being a pervert... Let's recall my memory again...)"
+		"text": "(I was almost accused of being a pervert... Let's recall my memory again...)"
 	},
 	{
 		"go_to": [
@@ -1210,7 +1210,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "In this world, there have always been a supernatural phenomenons lurking in the shadows. Many people said, it's not if... but when... they will get you, or your family, your friends"
+		"text": "In this world, there have always been supernatural phenomena lurking in the shadows. Many people said, it's not if... but when... they will get you, or your family, your friends"
 	},
 	{
 		"wait": 0.5
@@ -1255,7 +1255,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "The glowing red eyes told us that it's probably a stronger anomaly. But not what we cannot handle."
+		"text": "The glowing red eyes told us that it's probably a stronger anomaly. But it's nothing we can't handle."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1285,7 +1285,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "That couldn't be! There must be someway to help her! Please help her, Ms.Kelly! "
+		"text": "That couldn't be! There must be some way to help her! Please help her, Ms. Kelly! "
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1299,7 +1299,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Ms.Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
+		"text": "Ms. Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
 	},
 	{
 		"wait": 0.5
@@ -1363,7 +1363,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
-		"text": "Kelly handed Nex a deck of card"
+		"text": "Kelly handed Nex a deck of cards"
 	},
 	{
 		"wait": 1.0
@@ -1380,7 +1380,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "These are called [color=#E8F4FF]Vellum Cards[/color]. It's an exorcism tool use to expel supernatural threats."
+		"text": "These are called [color=#E8F4FF]Vellum Cards[/color]. It's an exorcism tool used to expel supernatural threats."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
@@ -1394,7 +1394,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "These cards looks like an ordinary cards. But they're actually a device that channel spiritual influence into a card battle. The stronger the duelist, the better the exorcism power, without relying on a heavy weapon."
+		"text": "These cards look like ordinary cards. But they're actually a device that channels spiritual influence into a card battle. The stronger the duelist, the better the exorcism power, without relying on a heavy weapon."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
@@ -1574,7 +1574,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "May the silver path shows your true sins...!!"
+		"text": "May the silver path show your true sins...!!"
 	},
 	{
 		"linger_characters": true,

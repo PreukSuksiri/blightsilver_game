@@ -74,7 +74,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Oh, it's you. I'm totally fell for it. That flu mask was kinda scary."
+		"text": "Oh, it's you. I totally fell for it. That flu mask was kinda scary."
 	},
 	{
 		"characters": [
@@ -93,7 +93,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "Are you sure you're a ghost busting agent?"
+		"text": "Are you sure you're a ghostbusting agent?"
 	},
 	{
 		"characters": [
@@ -192,7 +192,7 @@
 	},
 	{
 		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_kelly_behind_door.png",
-		"text": "(As she walk past the glass door... Before Nex could catch up, the door was closed and locked)"
+		"text": "(As she walked past the glass door... Before Nex could catch up, the door was closed and locked)"
 	},
 	{
 		"speaker": "Kelly",
@@ -265,7 +265,7 @@
 	{
 		"linger_characters": true,
 		"speaker": "Kelly",
-		"text": "Nevermind... I'll go and investigate the scene at the Quiet Study Area... Quickly and catch up then..."
+		"text": "Nevermind... I'll go and investigate the scene at the Quiet Study Area... Catch up quickly then..."
 	},
 	{
 		"characters": [

@@ -17,8 +17,16 @@ const MAIL_KIND_ACHIEVEMENT := "achievement_reward"
 # ─────────────────────────────────────────────────────────────
 
 ## Send achievement reward mail (unclaimed until claimed in Inventory / Mailbox).
+## No-ops if this achievement was already claimed or mail already exists (mail is
+## deletable; duplicates must not pile up from retries / diagnostics).
 func send_achievement_reward_mail(achievement_id: String, reward: Dictionary = {}) -> void:
 	var ach_id: String = achievement_id.strip_edges()
+	if ach_id.is_empty():
+		return
+	if AchievementManager.is_reward_claimed(ach_id):
+		return
+	if has_achievement_reward_mail(ach_id):
+		return
 	var def: Dictionary = AchievementManager.get_definition(ach_id)
 	var title: String = str(def.get("title", ach_id))
 	var body: String = "Congratulations! Claim your reward from this message."
@@ -52,17 +60,49 @@ func is_achievement_reward_mail(item: Dictionary) -> bool:
 	return str(item.get("subject", "")).begins_with("Achievement:")
 
 
-## True when the player has claimed mailbox reward for this achievement (pose / item rewards).
+## True when the achievement reward has been claimed.
+## Source of truth is AchievementManager.achievement_rewards_claimed (durable).
+## Mail is only a delivery channel and may be deleted after claim.
 func is_achievement_reward_claimed(achievement_id: String) -> bool:
 	var ach_id: String = achievement_id.strip_edges()
 	if ach_id.is_empty():
 		return false
+	if AchievementManager.is_reward_claimed(ach_id):
+		return true
+	# Migrate from still-present claimed mail into the durable flag.
+	var def: Dictionary = AchievementManager.get_definition(ach_id)
+	var title: String = str(def.get("title", "")).strip_edges()
 	for item: Dictionary in mail_items:
 		if not is_achievement_reward_mail(item):
 			continue
-		if str(item.get("achievement_id", "")).strip_edges() != ach_id:
+		if not bool(item.get("claimed", false)):
 			continue
-		return bool(item.get("claimed", false))
+		var item_ach: String = str(item.get("achievement_id", "")).strip_edges()
+		var matches: bool = item_ach == ach_id
+		if not matches and item_ach.is_empty() and not title.is_empty():
+			matches = str(item.get("subject", "")).strip_edges() == "Achievement: %s" % title
+		if matches:
+			AchievementManager.mark_reward_claimed(ach_id)
+			return true
+	return false
+
+
+## True if any achievement reward mail (claimed or not) still exists for this id.
+func has_achievement_reward_mail(achievement_id: String) -> bool:
+	var ach_id: String = achievement_id.strip_edges()
+	if ach_id.is_empty():
+		return false
+	var def: Dictionary = AchievementManager.get_definition(ach_id)
+	var title: String = str(def.get("title", "")).strip_edges()
+	for item: Dictionary in mail_items:
+		if not is_achievement_reward_mail(item):
+			continue
+		var item_ach: String = str(item.get("achievement_id", "")).strip_edges()
+		if item_ach == ach_id:
+			return true
+		if item_ach.is_empty() and not title.is_empty() \
+				and str(item.get("subject", "")).strip_edges() == "Achievement: %s" % title:
+			return true
 	return false
 
 
@@ -136,10 +176,29 @@ func claim_mail(mail_id: String) -> Dictionary:
 	for item: Dictionary in mail_items:
 		if item["id"] == mail_id and not item.get("claimed", false):
 			item["claimed"] = true
+			if is_achievement_reward_mail(item):
+				_mark_achievement_claimed_from_mail(item)
 			emit_signal("mailbox_changed")
 			SaveManager.save_data()
 			return item.duplicate(true)
 	return {}
+
+
+func _mark_achievement_claimed_from_mail(item: Dictionary) -> void:
+	var ach_id: String = str(item.get("achievement_id", "")).strip_edges()
+	if ach_id.is_empty():
+		var subject: String = str(item.get("subject", "")).strip_edges()
+		if subject.begins_with("Achievement: "):
+			var title: String = subject.trim_prefix("Achievement: ").strip_edges()
+			for def: Variant in AchievementManager.get_definitions():
+				if not def is Dictionary:
+					continue
+				if str((def as Dictionary).get("title", "")).strip_edges() == title:
+					ach_id = str((def as Dictionary).get("id", "")).strip_edges()
+					item["achievement_id"] = ach_id
+					break
+	if not ach_id.is_empty():
+		AchievementManager.mark_reward_claimed(ach_id)
 
 ## True when the mail reward grants shop credits (legacy "coins" included).
 func is_credit_reward(reward: Dictionary) -> bool:
@@ -184,6 +243,8 @@ func claim_all() -> Array:
 	for item: Dictionary in mail_items:
 		if not item.get("claimed", false):
 			item["claimed"] = true
+			if is_achievement_reward_mail(item):
+				_mark_achievement_claimed_from_mail(item)
 			rewards.append(item.get("reward", {}))
 	if not rewards.is_empty():
 		emit_signal("mailbox_changed")

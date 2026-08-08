@@ -1,14 +1,14 @@
 [
 	{
 		"music": "res://assets/audio/bgm_horror_1.mp3",
-		"text": "The quiet study area has looked a little different this time."
+		"text": "The quiet study area looked a little different this time."
 	},
 	{
 		"wait": 0.5
 	},
 	{
 		"music": "res://assets/audio/bgm_horror_1.mp3",
-		"text": "There is broken windows, scattered stuffs, and some bloods."
+		"text": "There are broken windows, scattered stuff, and some blood."
 	},
 	{
 		"wait": 0.5
@@ -23,7 +23,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "This look worse..."
+		"text": "This looks worse..."
 	},
 	{
 		"characters": [
@@ -50,7 +50,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "Mayu! It's me! Come and get the pretty stuffs!"
+		"text": "Mayu! It's me! Come and get the pretty stuff!"
 	},
 	{
 		"wait": 0.5
@@ -80,13 +80,13 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "Here, look! My neck is really bright and clean! Don't you want pretty stuffs?"
+		"text": "Here, look! My neck is really bright and clean! Don't you want pretty stuff?"
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"text": "(It's all silence...)"
+		"text": "(It's all silent...)"
 	},
 	{
 		"wait": 1.0
@@ -115,7 +115,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "I remembered some anomalies that loves talking about pretty stuffs..."
+		"text": "I remembered some anomalies that love talking about pretty stuff..."
 	},
 	{
 		"characters": [
@@ -271,7 +271,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "I want you to use these tools to collect some informations."
+		"text": "I want you to use these tools to collect some information."
 	},
 	{
 		"characters": [
@@ -284,7 +284,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily been captured with cameras. If [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
+		"text": "[color=#FF4444]Ghosts[/color] will have a famous characteristic of causing a low temperature, and can easily be captured with cameras. If [color=#FF4444]Ghosts[/color] can speak, they will always speak with human languages."
 	},
 	{
 		"characters": [
@@ -310,7 +310,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Go on and play with these tool. You might start from using \"Thermometer\" in your inventory and scan the window."
+		"text": "Go on and play with these tools. You might start from using \"Thermometer\" in your inventory and scan the window."
 	},
 	{
 		"characters": [

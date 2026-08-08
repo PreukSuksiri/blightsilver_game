@@ -1,0 +1,111 @@
+=== Battle of Frog's Kitchen ===
+Battle started: 2026-08-06 18:07:24.379
+Game Session of Iced Latte (started 2026-08-06 18:06:03.445)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:20.016] MSG: Provocative: foe drawn to this bluff
+[00:20.035] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:27.534] Mode selected P1: ATTACK
+[00:27.854] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:29.773] Revealed: P0 (3,2) "Slug-11" {Unit ATK45 DEF75 | cost 800 | affinity Bio | buff +permDEF10}
+[00:30.970] Dice rolled: 1
+[00:35.575] Crystals: P1 5000 → 4200 (-800)  [battle]
+[00:38.431] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(3,2)"Slug-11" {Unit ATK45 DEF75 | cost 800 | affinity Bio | buff +permDEF10}  Dice=1  ATK=20 vs DEF=75  → LOSE
+[00:38.431] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[00:38.431] Reckoning overlay: P0 "Slug-11" {Unit ATK45 DEF75 | cost 800 | affinity Bio | buff +permDEF10} badge=75 ATK pill=45 DEF pill=75 mod=+DEF 0 (75+0=75)
+[00:38.431] Anim: 3B  △ P1(0,2)
+[00:38.431] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:38.932] Mode selected P1: ATTACK
+[00:39.238] Revealed: P1 (4,2) "Pit Lord" {Unit ATK160 DEF80 | cost 1250 | affinity Chaos | base 120/100 | buff +permATK40, -permDEF20}
+[00:41.145] Dice rolled: 4
+[00:41.150] MSG: Pit Lord wins!
+[00:45.641] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:48.475] MSG: Pit Lord: ATK & DEF halved after attack!
+[00:49.857] Attack P1(4,2)"Pit Lord" {Unit ATK160 DEF80 | cost 1250 | affinity Chaos | base 120/100 | buff +permATK40, -permDEF20} → P0(3,2)"Slug-11" {Unit ATK45 DEF75 | cost 800 | affinity Bio | buff +permDEF10}  Dice=4  ATK=160 vs DEF=75  → WIN
+[00:49.857] Reckoning overlay: P1 "Pit Lord" {Unit ATK160 DEF80 | cost 1250 | affinity Chaos | base 120/100 | buff +permATK40, -permDEF20} badge=160 ATK pill=160 DEF pill=80 mod=+ATK 0 (160+0=160)
+[00:49.857] Reckoning overlay: P0 "Slug-11" {Unit ATK45 DEF75 | cost 800 | affinity Bio | buff +permDEF10} badge=75 ATK pill=45 DEF pill=75 mod=+DEF 0 (75+0=75)
+[00:49.857] Anim: 3A  △ P0(3,2)
+[00:49.857] Card destroyed  P0 (3,2) "Slug-11" {Unit ATK45 DEF75 | cost 800 | affinity Bio | buff +permDEF10}
+[00:50.364] Turn ended  P1  |  Crystals P0=4200 P1=4200
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=4200 ---
+[01:35.147] Revealed: P0 (2,4) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[01:36.372] Dice rolled: 4
+[01:36.375] MSG: Nanomites Beast wins!
+[01:39.108] Crystals: P1 4200 → 2950 (-1250)  [battle]
+[01:43.316] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(4,2)"Pit Lord" {Unit ATK100 DEF30 | cost 1250 | affinity Chaos | base 60/50 | buff +permATK40, -permDEF20 | halved}  Dice=4  ATK=50 vs DEF=30  → WIN
+[01:43.316] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[01:43.316] Reckoning overlay: P1 "Pit Lord" {Unit ATK100 DEF30 | cost 1250 | affinity Chaos | base 60/50 | buff +permATK40, -permDEF20 | halved} badge=30 ATK pill=100 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:43.316] Anim: 3A  △ P1(4,2)
+[01:43.316] Card destroyed  P1 (4,2) "Pit Lord" {Unit ATK100 DEF30 | cost 1250 | affinity Chaos | base 60/50 | buff +permATK40, -permDEF20 | halved}
+[01:47.206] Revealed: P0 (2,3) "Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10}
+[01:47.234] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:48.423] Dice rolled: 3
+[01:48.430] MSG: Pyromancer wins!
+[01:51.153] Crystals: P1 2950 → 2150 (-800)  [battle]
+[01:55.352] Attack P0(2,3)"Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=3  ATK=80 vs DEF=50  → WIN
+[01:55.352] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10} badge=80 ATK pill=80 DEF pill=10 mod=+ATK 0 (80+0=80)
+[01:55.352] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:55.352] Anim: 3A  △ P1(1,2)
+[01:55.352] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:05.645] Revealed: P0 (3,3) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:05.670] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[02:06.867] Dice rolled: 3
+[02:06.871] MSG: Armored Rhino wins!
+[02:09.372] Crystals: P1 2150 → 1270 (-880)  [battle]
+[02:13.566] Attack P0(3,3)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=3  ATK=60 vs DEF=40  → WIN
+[02:13.566] Reckoning overlay: P0 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=60 ATK pill=60 DEF pill=85 mod=+ATK 0 (60+0=60)
+[02:13.566] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=40 ATK pill=60 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:13.566] Anim: 3A  △ P1(1,1)
+[02:13.566] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[02:15.593] Turn ended  P0  |  Crystals P0=4200 P1=1270
+
+--- Turn 3  |  Player 1  |  Crystals P0=4200 P1=1270 ---
+[02:18.107] Mode selected P1: ATTACK
+[02:18.436] Revealed: P1 (3,3) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[02:20.325] Dice rolled: 1
+[02:20.331] MSG: Void Stalker wins!
+[02:24.821] Crystals: P0 4200 → 3300 (-900)  [battle]
+[02:29.031] Attack P1(3,3)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P0(2,3)"Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10}  Dice=1  ATK=85 vs DEF=10  → WIN
+[02:29.031] Reckoning overlay: P1 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} badge=85 ATK pill=65 DEF pill=25 mod=+ATK 20 (65+20=85)
+[02:29.031] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10} badge=10 ATK pill=80 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:29.031] Anim: 3A  △ P0(2,3)
+[02:29.031] Card destroyed  P0 (2,3) "Pyromancer" {Unit ATK80 DEF10 | cost 900 | affinity Arcane | buff +permDEF10}
+[02:29.527] Mode selected P1: ATTACK
+[02:29.867] Revealed: P1 (3,2) "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}
+[02:31.751] Dice rolled: 3
+[02:31.762] MSG: Death Knight wins!
+[02:36.257] Crystals: P0 3300 → 2500 (-800)  [battle]
+[02:40.467] Attack P1(3,2)"Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} → P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=3  ATK=70 vs DEF=55  → WIN
+[02:40.467] Reckoning overlay: P1 "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} badge=70 ATK pill=70 DEF pill=65 mod=+ATK 0 (70+0=70)
+[02:40.467] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:40.467] Anim: 3A  △ P0(2,4)
+[02:40.467] Card destroyed  P0 (2,4) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[02:40.970] Turn ended  P1  |  Crystals P0=2500 P1=1270
+
+--- Turn 4  |  Player 0  |  Crystals P0=2500 P1=1270 ---
+[02:44.665] Crystals: P0 2500 → 1500 (-1000)  [tech cost]
+[02:47.495] Tech played  P0: "War Supply"
+[02:49.041] MSG: War Supply: All your units gain +10 ATK & DEF until end of turn.
+[02:49.048] Tech resolved  P0
+[02:54.174] Dice rolled: 2
+[02:54.181] MSG: Armored Rhino wins!
+[02:57.250] Crystals: P1 1270 → 420 (-850)  [battle]
+[03:01.439] Attack P0(3,3)"Armored Rhino" {Unit ATK70 DEF95 | cost 720 | affinity Nature | base 60/85 | buff +tempATK10, +tempDEF10} → P1(3,2)"Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}  Dice=2  ATK=70 vs DEF=65  → WIN
+[03:01.439] Reckoning overlay: P0 "Armored Rhino" {Unit ATK70 DEF95 | cost 720 | affinity Nature | base 60/85 | buff +tempATK10, +tempDEF10} badge=70 ATK pill=70 DEF pill=95 mod=+ATK 0 (70+0=70)
+[03:01.440] Reckoning overlay: P1 "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} badge=65 ATK pill=70 DEF pill=65 mod=+DEF 0 (65+0=65)
+[03:01.440] Anim: 3A  △ P1(3,2)
+[03:01.440] Card destroyed  P1 (3,2) "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}
+[03:06.726] Revealed: P0 (4,3) "Dystopian Cultist" {Unit ATK75 DEF60 | cost 550 | affinity Bio | base 65/40 | buff +permDEF10, +tempATK10, +tempDEF10}
+[03:07.945] Dice rolled: 4
+[03:07.958] MSG: Dystopian Cultist wins!
+[03:12.443] Crystals: P1 420 → 0 (-420)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1500  P1: 0  |  Turns: 4

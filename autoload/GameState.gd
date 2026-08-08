@@ -119,6 +119,9 @@ class CardInstance:
 	var bonus_attack_pending: bool = false     # dead-end extra attack granted, bonus not yet used
 	var perm_atk_bonus: int = 0
 	var perm_def_bonus: int = 0
+	## Portion of perm_atk_bonus from capped abilities (kill / turn-end). Cap checks this,
+	## not total perm — so omen anoints (Keen Edge) do not eat the ability budget.
+	var ability_capped_atk_bonus: int = 0
 	var field_aura_atk_bonus: int = 0  # passive ATK from allied field auras (e.g. Amber)
 	var field_aura_def_bonus: int = 0  # passive DEF from allied field auras (e.g. Gamma Mermaid mutagen)
 	var temp_atk_bonus: int = 0
@@ -1830,7 +1833,12 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		if active_omens.is_empty():
 			OmenBattleApplier.clear()
 		else:
+			# Keep held omens; wipe per-duel runtime flags, then rebuild anoint map.
+			# Without rebuild, Keen Edge / other anoint_stat_* never apply when the
+			# enemy omen roll is skipped (map was built in prepare_from_exploration
+			# then cleared here).
 			OmenBattleApplier.reset_runtime_fields()
+			OmenBattleApplier.rebuild_anoint_effects_map()
 		enemy_active_omens.clear()
 		enemy_omen_count = 0
 		enemy_omen_groups = ""

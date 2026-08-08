@@ -29,7 +29,7 @@ enum AbilityType {
 	ATK_DEF_BONUS_VS_AFFINITY,    # +N ATK and DEF vs affinity
 	IMMUNE_ZERO_COST_TRAPS,       # Not affected by 0-cost traps
 	CRYSTAL_GAIN_ON_DEFEND,       # +N Crystals when successfully defends
-	BOOST_PER_TYPED_CARD_ON_FIELD,# +N ATK/DEF per matching face-up card (field_scope: owner|all)
+	BOOST_PER_TYPED_CARD_ON_FIELD,# +N ATK/DEF per matching face-up card (field_scope: owner|all|foe|void|both_void)
 	BOOST_PER_ANIMA_ON_FIELD,     # +N ATK/DEF per other face-up Anima on owner's field
 	HALVE_STATS_AFTER_ATTACK,     # Halve ATK and DEF permanently after attacking
 	DESTROYED_IF_BATTLES_DIVINE,  # Destroy this card after Reckoning with Divine (either role)
@@ -124,7 +124,7 @@ enum AbilityType {
 	ONE_USE_DEFEND_MORPH,            # Once: after defending, permanently loses N DEF and gains N ATK vs attacker affinity
 
 	# ── Self modification ──
-	SELF_DEBUFF_ON_ATTACK_AND_DEFEND,# Once: -N ATK on first attack; once: -N DEF on first defend
+	SELF_DEBUFF_ON_ATTACK_AND_DEFEND,# Once: -N ATK on first attack / -N DEF on first defend; once_turn_end → owner turn end
 
 	# ── Turn-based ──
 	PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN, # +N ATK permanently each time this card is alive at end of opponent's turn
@@ -151,7 +151,7 @@ enum AbilityType {
 
 	# ── Union abilities ──
 	DOUBLE_STATS_VS_AFFINITY,            # ATK and DEF are doubled when battling a specific affinity
-	FIELD_ATK_BOOST_OWN_AFFINITY,        # Passive aura: while face-up, all own face-up chars of affinity get +N ATK
+	FIELD_ATK_BOOST_OWN_AFFINITY,        # Passive aura: +ATK/DEF to own face-up chars (atk|atk_bonus, def|def_bonus)
 	ONE_USE_DESTROY_BY_AFFINITY,         # Once: destroy defender if it matches aff1 or aff2 (no crystal loss to defender)
 	COIN_FLIP_NULLIFY_ON_DEFEND,         # When this card is attacked, flip coin; heads = attack does nothing
 	CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, # Cannot attack if any own face-up card has non-allowed affinity
@@ -169,7 +169,7 @@ enum AbilityType {
 	HALVE_ATK_ADD_TO_DEF_ON_DEFEND,      # When this card defends (and survives), halve own ATK permanently and add that to DEF
 
 	# ── Newly implemented ──
-	PERM_ATK_BOOST_ON_KILL_CAPPED,       # +N ATK permanently when this card destroys a character; capped at max_bonus total
+	PERM_ATK_BOOST_ON_KILL_CAPPED,       # +N ATK permanently on kill (or turn_end); capped via ability_capped_atk_bonus
 	COPY_ALLY_STATS_ON_DESTROY,          # When an ally character is destroyed, optionally copy its ATK/DEF/Cost (works face-down)
 	TEMP_ATK_HALF_TARGET,                # When attacking, +ATK equal to half of target's effective ATK (temp, this battle)
 	COIN_FLIP_ATK_DEF_BOOST,             # Flip coin; heads → +N ATK and +N DEF until end of this turn

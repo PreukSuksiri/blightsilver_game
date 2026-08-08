@@ -21,7 +21,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
 		"speaker": "Nex",
-		"text": "Did someone sent me a message...?"
+		"text": "Did someone send me a message...?"
 	},
 	{
 		"linger_characters": true,
@@ -85,7 +85,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
 		"speaker": "Nex",
-		"text": "An unknown user... It seems hacked... I can't even delete it..."
+		"text": "An unknown user... It seems to be hacked... I can't even delete it..."
 	},
 	{
 		"fade_color": "#000000",

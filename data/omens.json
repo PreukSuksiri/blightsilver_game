@@ -1818,8 +1818,7 @@
 			],
 			"groups": [
 				"anoint",
-				"chapter_1",
-				"boss_chapter_1"
+				"chapter_1"
 			],
 			"id": "keen_edge_iii",
 			"illustration": "",
@@ -1867,8 +1866,7 @@
 			],
 			"groups": [
 				"anoint",
-				"chapter_1",
-				"boss_chapter_1"
+				"chapter_1"
 			],
 			"id": "iron_skin_ii",
 			"illustration": "",
@@ -1942,8 +1940,7 @@
 				}
 			],
 			"groups": [
-				"anoint",
-				"boss_chapter_1"
+				"anoint"
 			],
 			"id": "lightweight",
 			"illustration": "",

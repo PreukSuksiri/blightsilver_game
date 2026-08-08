@@ -136,6 +136,7 @@ func is_pose_unlocked(protagonist_id: String, pose_index: int) -> bool:
 		var ach: String = str(p.get("unlock_achievement_id", "")).strip_edges()
 		if ach.is_empty():
 			return true
+		# Achievement unlock + durable claim flag (mail is delivery-only / deletable).
 		return AchievementManager.is_unlocked(ach) \
 				and MailboxManager.is_achievement_reward_claimed(ach)
 	return false

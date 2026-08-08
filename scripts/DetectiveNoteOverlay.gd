@@ -66,6 +66,19 @@ const NEW_BADGE_FONT_SIZE := 13
 const NEW_BADGE_COLOR := Color(1.0, 1.0, 1.0, 1.0)
 const NEW_BADGE_SHADOW := Color(0.0, 0.0, 0.0, 1.0)
 
+## Prologue notebook topic — drag Nex onto Individual #2 (first interactive note tutorial).
+const TUTORIAL_CHAPTER := "ch0_prologue"
+const TUTORIAL_TOPIC := "topic_where_have_mayu_notebook_gone"
+const TUTORIAL_NODE_ID := "node_individual_2"
+const TUTORIAL_CLUE_ID := "person_nex"
+const TUTORIAL_DIM_ALPHA := 0.72
+const TUTORIAL_HOLE_PAD := 10.0
+const TUTORIAL_DRAG_LOOPS := 2
+const TUTORIAL_DRAG_SEC := 0.95
+const TUTORIAL_HOLD_SEC := 0.28
+const TUTORIAL_RETURN_SEC := 0.35
+const TUTORIAL_ARC_HEIGHT := 48.0
+
 var locale: String = "en"
 
 var _active_chapter: String = ""
@@ -115,6 +128,16 @@ var _detail_popup: Control = null
 # Drag ghost (formation-page style — image follows cursor)
 var _drag_ghost: Control = null
 var _drag_ghost_active: bool = false
+
+# Prologue Individual #2 drag tutorial
+var _tutorial_layer: Control = null
+var _tutorial_dim: Control = null
+var _tutorial_ghost: Control = null
+var _tutorial_tween: Tween = null
+var _tutorial_running: bool = false
+var _tutorial_generation: int = 0
+var _tutorial_holes: Array[Rect2] = []
+var _tutorial_prev_process_mode: int = Node.PROCESS_MODE_INHERIT
 
 
 static func open_for_chapter(
@@ -215,6 +238,9 @@ func _sync_viewport_layout() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if _tutorial_running:
+		get_viewport().set_input_as_handled()
+		return
 	if _stamp_view_mode:
 		if not _stamp_view_dismissable:
 			get_viewport().set_input_as_handled()
@@ -236,6 +262,7 @@ func _input(event: InputEvent) -> void:
 func _close() -> void:
 	if not is_inside_tree() or is_queued_for_deletion():
 		return
+	_stop_prologue_nex_tutorial()
 	_stop_done_btn_pulse()
 	_hide_drag_ghost()
 	# VN / exploration: closing dismisses remaining "New" badges for this chapter.
@@ -838,6 +865,7 @@ func _refresh_topic_list() -> void:
 
 
 func _select_topic(topic_id: String) -> void:
+	_stop_prologue_nex_tutorial()
 	_selected_topic = topic_id
 	var topics: Array = DetectiveNoteManager.get_unlocked_topics(_selected_chapter)
 	for i: int in range(_topic_vbox.get_child_count()):
@@ -858,6 +886,7 @@ func _select_topic(topic_id: String) -> void:
 				Color(1.0, 0.96, 0.86) if on else Color(0.90, 0.84, 0.72)
 			)
 	_refresh_map()
+	call_deferred("_maybe_start_prologue_nex_tutorial")
 
 
 func _refresh_map() -> void:
@@ -1399,6 +1428,292 @@ func _show_messenger_for_clue(clue_id: String) -> void:
 		return
 	_hover_end()
 	MessengerOverlay.open(self, conv_id)
+
+
+# ─────────────────────────────────────────────────────────────
+# Prologue tutorial: drag Nex onto Individual #2
+# Shows whenever this topic is selected if the frame is empty and not stamped.
+# ─────────────────────────────────────────────────────────────
+func _should_show_prologue_nex_tutorial() -> bool:
+	if _stamp_view_mode:
+		return false
+	if _selected_chapter != TUTORIAL_CHAPTER or _selected_topic != TUTORIAL_TOPIC:
+		return false
+	if DetectiveNoteManager.is_topic_stamped(_selected_chapter, _selected_topic):
+		return false
+	var placed: String = DetectiveNoteManager.get_placement(
+		_selected_chapter, _selected_topic, TUTORIAL_NODE_ID).strip_edges()
+	# get_placement returns prefill when present; Individual #2 has none, so "" = empty.
+	return placed.is_empty()
+
+
+func _maybe_start_prologue_nex_tutorial() -> void:
+	if not is_inside_tree() or is_queued_for_deletion():
+		return
+	if _tutorial_running:
+		return
+	if not _should_show_prologue_nex_tutorial():
+		return
+	_run_prologue_nex_tutorial()
+
+
+func _run_prologue_nex_tutorial() -> void:
+	_tutorial_generation += 1
+	var gen: int = _tutorial_generation
+	_tutorial_running = true
+	_tutorial_prev_process_mode = process_mode
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_hover_end()
+	_close_detail_popup()
+	_hide_drag_ghost()
+
+	# Ensure Nex is visible on the INDIVs tab before measuring.
+	_switch_clue_tab("individual")
+
+	# Wait for notebook fit + clue grid layout (a few frames — first open is often 0×0).
+	var tile: Control = null
+	var frame_rect := Rect2()
+	for _attempt: int in range(8):
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+		_fit_verdict_map()
+		await get_tree().process_frame
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+		tile = _find_clue_tile(TUTORIAL_CLUE_ID)
+		if tile != null and _clue_scroll != null and is_instance_valid(_clue_scroll):
+			_clue_scroll.ensure_control_visible(tile)
+		if _map != null and _map_scroll != null and is_instance_valid(_map_scroll):
+			var frame_hit: Control = _map.get_node_hit(TUTORIAL_NODE_ID)
+			if frame_hit != null and is_instance_valid(frame_hit):
+				_map_scroll.ensure_control_visible(frame_hit)
+		await get_tree().process_frame
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+		tile = _find_clue_tile(TUTORIAL_CLUE_ID)
+		frame_rect = _map.get_node_hit_global_rect(TUTORIAL_NODE_ID) if _map != null else Rect2()
+		if tile != null and is_instance_valid(tile) and frame_rect.size.x > 8.0 and frame_rect.size.y > 8.0:
+			break
+
+	if tile == null or not is_instance_valid(tile) or frame_rect.size.x <= 8.0 or frame_rect.size.y <= 8.0:
+		push_warning("DetectiveNoteOverlay: prologue drag tutorial skipped (missing Nex tile or Individual #2 frame).")
+		_stop_prologue_nex_tutorial()
+		return
+
+	var tile_rect: Rect2 = tile.get_global_rect()
+	_tutorial_holes = [
+		_pad_rect(tile_rect, TUTORIAL_HOLE_PAD),
+		_pad_rect(frame_rect, TUTORIAL_HOLE_PAD),
+	]
+	_build_tutorial_layer()
+	if _tutorial_layer == null or _tutorial_ghost == null or not is_instance_valid(_tutorial_ghost):
+		_stop_prologue_nex_tutorial()
+		return
+
+	var ghost_size: Vector2 = DetectiveNoteVerdictMap.DRAG_PREVIEW_SIZE
+	_tutorial_ghost.size = ghost_size
+	var start_pos: Vector2 = tile_rect.get_center() - ghost_size * 0.5
+	var end_pos: Vector2 = frame_rect.get_center() - ghost_size * 0.5
+	_set_tutorial_ghost_global_pos(start_pos)
+	_tutorial_ghost.modulate = Color(1, 1, 1, 1)
+	_tutorial_ghost.visible = true
+	_tutorial_ghost.move_to_front()
+
+	for _loop_i: int in range(TUTORIAL_DRAG_LOOPS):
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+		_set_tutorial_ghost_global_pos(start_pos)
+		_tutorial_ghost.modulate = Color(1, 1, 1, 1)
+		await _tween_tutorial_drag(gen, start_pos, end_pos)
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+		# Brief settle on the frame, then fade back for the next loop (or exit).
+		await get_tree().create_timer(TUTORIAL_HOLD_SEC).timeout
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+		if _tutorial_tween != null and _tutorial_tween.is_valid():
+			_tutorial_tween.kill()
+		_tutorial_tween = create_tween()
+		_tutorial_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_tutorial_tween.tween_property(_tutorial_ghost, "modulate:a", 0.0, TUTORIAL_RETURN_SEC) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		await _tutorial_tween.finished
+		if not _is_tutorial_gen_alive(gen):
+			_stop_prologue_nex_tutorial()
+			return
+
+	_stop_prologue_nex_tutorial()
+
+
+func _is_tutorial_gen_alive(gen: int) -> bool:
+	return is_inside_tree() and not is_queued_for_deletion() \
+		and _tutorial_running and gen == _tutorial_generation \
+		and _should_show_prologue_nex_tutorial()
+
+
+func _pad_rect(r: Rect2, pad: float) -> Rect2:
+	return Rect2(r.position - Vector2(pad, pad), r.size + Vector2(pad, pad) * 2.0)
+
+
+func _find_clue_tile(clue_id: String) -> Control:
+	if _clue_grid == null:
+		return null
+	for child: Node in _clue_grid.get_children():
+		if child is Control and str((child as Control).get_meta("clue_id", "")) == clue_id:
+			return child as Control
+	return null
+
+
+func _build_tutorial_layer() -> void:
+	_clear_tutorial_layer_nodes()
+	_tutorial_layer = Control.new()
+	_tutorial_layer.name = "PrologueNexTutorial"
+	_tutorial_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_tutorial_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	_tutorial_layer.z_index = 500
+	# Keep animating even if the VN tree is paused.
+	_tutorial_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_tutorial_layer)
+
+	_tutorial_dim = Control.new()
+	_tutorial_dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_tutorial_dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	_tutorial_dim.draw.connect(_on_tutorial_dim_draw)
+	_tutorial_layer.add_child(_tutorial_dim)
+	_tutorial_dim.queue_redraw()
+
+	if _map == null:
+		return
+	_tutorial_ghost = _map.build_drag_ghost(TUTORIAL_CLUE_ID)
+	_tutorial_ghost.name = "PrologueNexTutorialGhost"
+	# Must draw ABOVE the dim along the whole flight path (not only in holes).
+	# Do not use top_level — that can put the ghost under the CanvasLayer dim.
+	_tutorial_ghost.z_index = 20
+	_tutorial_ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tutorial_ghost.size = DetectiveNoteVerdictMap.DRAG_PREVIEW_SIZE
+	_tutorial_ghost.custom_minimum_size = DetectiveNoteVerdictMap.DRAG_PREVIEW_SIZE
+	_tutorial_ghost.modulate = Color(1, 1, 1, 1)
+	# Brighten past drag-ghost alpha so the demo reads clearly over the dim.
+	for child: Node in _tutorial_ghost.get_children():
+		if child is CanvasItem:
+			(child as CanvasItem).modulate = Color(1, 1, 1, 1)
+	_tutorial_layer.add_child(_tutorial_ghost)
+
+
+func _set_tutorial_ghost_global_pos(global_pos: Vector2) -> void:
+	if _tutorial_ghost == null or not is_instance_valid(_tutorial_ghost):
+		return
+	# Convert viewport/global coords into tutorial-layer local space.
+	if _tutorial_layer != null and is_instance_valid(_tutorial_layer):
+		_tutorial_ghost.position = global_pos - _tutorial_layer.global_position
+	else:
+		_tutorial_ghost.global_position = global_pos
+
+
+func _on_tutorial_dim_draw() -> void:
+	if _tutorial_dim == null or not is_instance_valid(_tutorial_dim):
+		return
+	var full := Rect2(Vector2.ZERO, _tutorial_dim.size)
+	if full.size.x < 2.0 or full.size.y < 2.0:
+		return
+	var local_holes: Array[Rect2] = []
+	var origin: Vector2 = _tutorial_dim.global_position
+	for hole_v: Rect2 in _tutorial_holes:
+		local_holes.append(Rect2(hole_v.position - origin, hole_v.size))
+	for piece: Rect2 in _rects_minus_holes(full, local_holes):
+		if piece.size.x > 0.5 and piece.size.y > 0.5:
+			_tutorial_dim.draw_rect(piece, Color(0.0, 0.0, 0.0, TUTORIAL_DIM_ALPHA), true)
+
+
+func _rects_minus_holes(outer: Rect2, holes: Array[Rect2]) -> Array[Rect2]:
+	var remaining: Array[Rect2] = [outer]
+	for hole: Rect2 in holes:
+		var next: Array[Rect2] = []
+		for r: Rect2 in remaining:
+			next.append_array(_subtract_rect(r, hole))
+		remaining = next
+	return remaining
+
+
+func _subtract_rect(r: Rect2, hole: Rect2) -> Array[Rect2]:
+	var i: Rect2 = r.intersection(hole)
+	if i.size.x <= 0.0 or i.size.y <= 0.0:
+		return [r]
+	var out: Array[Rect2] = []
+	# Top strip
+	if i.position.y > r.position.y:
+		out.append(Rect2(
+			r.position,
+			Vector2(r.size.x, i.position.y - r.position.y)))
+	# Bottom strip
+	var i_end_y: float = i.position.y + i.size.y
+	var r_end_y: float = r.position.y + r.size.y
+	if i_end_y < r_end_y:
+		out.append(Rect2(
+			Vector2(r.position.x, i_end_y),
+			Vector2(r.size.x, r_end_y - i_end_y)))
+	# Left mid
+	if i.position.x > r.position.x:
+		out.append(Rect2(
+			Vector2(r.position.x, i.position.y),
+			Vector2(i.position.x - r.position.x, i.size.y)))
+	# Right mid
+	var i_end_x: float = i.position.x + i.size.x
+	var r_end_x: float = r.position.x + r.size.x
+	if i_end_x < r_end_x:
+		out.append(Rect2(
+			Vector2(i_end_x, i.position.y),
+			Vector2(r_end_x - i_end_x, i.size.y)))
+	return out
+
+
+## Ease-in-out cubic drag with a slight arc so the motion reads as having velocity.
+func _tween_tutorial_drag(gen: int, start_pos: Vector2, end_pos: Vector2) -> void:
+	if _tutorial_ghost == null or not is_instance_valid(_tutorial_ghost):
+		return
+	if _tutorial_tween != null and _tutorial_tween.is_valid():
+		_tutorial_tween.kill()
+	var mid: Vector2 = (start_pos + end_pos) * 0.5 + Vector2(0.0, -TUTORIAL_ARC_HEIGHT)
+	_tutorial_tween = create_tween()
+	_tutorial_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_tutorial_tween.tween_method(
+		func(t: float) -> void:
+			if not _is_tutorial_gen_alive(gen) or _tutorial_ghost == null \
+					or not is_instance_valid(_tutorial_ghost):
+				return
+			# Quadratic bezier; tween already applies CUBIC ease-in-out to t.
+			var p1: Vector2 = start_pos.lerp(mid, t)
+			var p2: Vector2 = mid.lerp(end_pos, t)
+			_set_tutorial_ghost_global_pos(p1.lerp(p2, t)),
+		0.0, 1.0, TUTORIAL_DRAG_SEC
+	).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	await _tutorial_tween.finished
+
+
+func _clear_tutorial_layer_nodes() -> void:
+	if _tutorial_tween != null and _tutorial_tween.is_valid():
+		_tutorial_tween.kill()
+	_tutorial_tween = null
+	if _tutorial_layer != null and is_instance_valid(_tutorial_layer):
+		_tutorial_layer.queue_free()
+	_tutorial_layer = null
+	_tutorial_dim = null
+	_tutorial_ghost = null
+	_tutorial_holes.clear()
+
+
+func _stop_prologue_nex_tutorial() -> void:
+	_tutorial_generation += 1
+	_tutorial_running = false
+	_clear_tutorial_layer_nodes()
+	if not _stamp_view_mode:
+		process_mode = _tutorial_prev_process_mode
 
 
 # ─────────────────────────────────────────────────────────────

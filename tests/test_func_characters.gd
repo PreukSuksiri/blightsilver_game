@@ -728,10 +728,10 @@ func _hammer_shark_field_recalc(A, AB) -> void:
 	GameState.grids[0][2][1] = hammer
 	GameState.grids[0][2][2] = saw
 	BattleResolver.calculate_field_bonuses(0)
-	assert_eq(hammer.perm_atk_bonus, 10, "TC-FUNC-Hammer-Shark-002: +10 with Saw Shark ally")
+	assert_eq(hammer.field_aura_atk_bonus, 10, "TC-FUNC-Hammer-Shark-002: +10 with Saw Shark ally")
 	assert_eq(hammer.get_effective_atk(), 30, "TC-FUNC-Hammer-Shark-002: effective ATK 30")
 	GameState.destroy_card(0, 2, 2, false)
-	assert_eq(hammer.perm_atk_bonus, 0, "TC-FUNC-Hammer-Shark-002: bonus removed when ally leaves")
+	assert_eq(hammer.field_aura_atk_bonus, 0, "TC-FUNC-Hammer-Shark-002: bonus removed when ally leaves")
 	assert_eq(hammer.get_effective_atk(), 20, "TC-FUNC-Hammer-Shark-002: effective ATK back to 20")
 
 	print("-- TC-FUNC-Hammer-Shark-003 [field_scope all]")
@@ -745,7 +745,7 @@ func _hammer_shark_field_recalc(A, AB) -> void:
 	GameState.grids[0][2][1] = hammer3
 	GameState.grids[1][0][0] = foe_shark
 	BattleResolver.calculate_field_bonuses(0)
-	assert_eq(hammer3.perm_atk_bonus, 10, "TC-FUNC-Hammer-Shark-003: +10 from shark on foe field")
+	assert_eq(hammer3.field_aura_atk_bonus, 10, "TC-FUNC-Hammer-Shark-003: +10 from shark on foe field")
 
 func _night_whisperer(A, AB) -> void:
 	print("-- TC-FUNC-Night-Whisperer-001 [Pattern B, perm bonus direct]")
@@ -916,7 +916,7 @@ func _immortal_vampire(A, AB) -> void:
 	GameState.grids[0][2][2] = ally1
 	GameState.grids[0][2][3] = ally2
 	BattleResolver.calculate_field_bonuses(0)
-	assert_eq(vampire.perm_atk_bonus, 100, "TC-FUNC-Immortal-Vampire-003: +50 ATK per 2 other Chaos allies")
+	assert_eq(vampire.field_aura_atk_bonus, 100, "TC-FUNC-Immortal-Vampire-003: +50 ATK per 2 other Chaos allies")
 	assert_eq(vampire.get_effective_atk(), 130, "TC-FUNC-Immortal-Vampire-003: effective ATK 30+100=130")
 
 func _pit_lord(A, AB) -> void:

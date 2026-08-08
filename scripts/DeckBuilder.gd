@@ -333,6 +333,13 @@ class FEUnionHoverTile extends TextureRect:
 
 func _ready() -> void:
 	_deferring_initial_load = true
+	# Omens are chapter-scoped. If no live/saved exploration remains, drop any battle
+	# snapshot left after chapter end so gallery tiles don't keep stale sigils.
+	if not exploration_mode \
+			and not ExplorationManager.is_session_active \
+			and not bool(SaveManager.exploration_session.get("active", false)):
+		if not GameState.active_omens.is_empty() or not GameState.enemy_active_omens.is_empty():
+			OmenBattleApplier.clear()
 	_show_loading_blocker()
 	MenuScreenHeader.style_title(get_node("TitleLabel") as Label)
 	MenuScreenHeader.style_close_button(close_btn)

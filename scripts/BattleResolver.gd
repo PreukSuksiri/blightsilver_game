@@ -855,21 +855,37 @@ static func _get_effective_atk(
 
 		CharacterData.AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD:
 			var needed_aff: int = attacker.ability_params.get("affinity", -1)
-			for p: int in _field_players(attacker_player, attacker.ability_params):
-				var found := false
-				for r in range(GameState.GRID_SIZE):
-					for c in range(GameState.GRID_SIZE):
-						var ally: GameState.CardInstance = GameState.grids[p][r][c]
-						if ally == attacker:
-							continue
-						if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
-							atk += attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
-							found = true
+			var _aif_scope: String = str(attacker.ability_params.get("field_scope", "owner")).to_lower()
+			var _aif_bonus: int = attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
+			if _aif_scope in ["void", "own_void", "both_void", "foe_void"]:
+				var _aif_min: int = int(attacker.ability_params.get(
+					"min_count", attacker.ability_params.get("min_void", 1)))
+				var _aif_units: int = 0
+				if _aif_scope == "both_void":
+					_aif_units = _count_void_units(0) + _count_void_units(1)
+				elif _aif_scope == "foe_void" and attacker_player >= 0:
+					_aif_units = _count_void_units(GameState.get_opponent(attacker_player))
+				elif attacker_player >= 0:
+					_aif_units = _count_void_units(attacker_player)
+				if _aif_units >= _aif_min:
+					atk += _aif_bonus
+			else:
+				for p: int in _field_players(attacker_player, attacker.ability_params):
+					var found := false
+					for r in range(GameState.GRID_SIZE):
+						for c in range(GameState.GRID_SIZE):
+							var ally: GameState.CardInstance = GameState.grids[p][r][c]
+							if ally == attacker:
+								continue
+							if ally.card_type == "character" and ally.face_up \
+									and (needed_aff < 0 or ally.affinity == needed_aff):
+								atk += _aif_bonus
+								found = true
+								break
+						if found:
 							break
 					if found:
 						break
-				if found:
-					break
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_IF_UNION_ON_FIELD:
 			for r in range(GameState.GRID_SIZE):
@@ -1299,11 +1315,15 @@ static func _apply_defend_effects(
 						defender.card_name, def_loss, atk_gain])
 
 		CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
-			if not defender.one_use_def_boost_used:
+			# once_turn_end (Berserker of Ice Sea) is owned by TurnManager turn-end, not defend.
+			if defender.ability_params.get("once_turn_end", false):
+				pass
+			elif not defender.one_use_def_boost_used:
 				result.ability_triggered_defender = true
 				if mutate:
 					defender.one_use_def_boost_used = true
-					var def_debuff: int = defender.ability_params.get("def_amount", 5)
+					var def_debuff: int = defender.ability_params.get(
+						"def", defender.ability_params.get("def_amount", 5))
 					defender.current_def = max(0, defender.current_def - def_debuff)
 					result.messages.append("%s: permanently -%d DEF from defending." % [
 						defender.card_name, def_debuff])
@@ -1330,17 +1350,77 @@ static func _apply_defend_effects(
 #
 # Text rule: bare "on the field" (no possessive) → scope "all" (both players).
 # "its side", "your field", "their own field", etc. → scope "owner" (default).
+# "foe's side" → "foe". Void piles → "void" / "both_void" (handled in counters).
 #
-# Values: "owner" (default) | "all" (aliases: global, both, field)
+# Values: "owner" (default) | "all" | "foe" | void scopes (not grid players)
 # Handler: _field_players() — used by field-count / field-presence abilities.
 # ─────────────────────────────────────────────────────────────
 static func _field_players(owner_player: int, ability_params: Dictionary) -> Array:
 	var scope := str(ability_params.get("field_scope", "owner")).to_lower()
 	if scope in ["all", "global", "both", "field"]:
 		return [0, 1]
+	if scope in ["foe", "opponent", "enemy"]:
+		if owner_player < 0:
+			return []
+		return [GameState.get_opponent(owner_player)]
+	# Void scopes are not field grids — callers must use _count_void_* helpers.
+	if scope in ["void", "own_void", "both_void", "foe_void"]:
+		return []
 	if owner_player < 0:
 		return []
 	return [owner_player]
+
+static func _count_void_units(player_index: int) -> int:
+	if player_index < 0 or player_index >= GameState.void_pile_entries.size():
+		return 0
+	var n: int = 0
+	for entry: Variant in GameState.void_pile_entries[player_index]:
+		if entry is Dictionary and str((entry as Dictionary).get("card_type", "")) == "character":
+			n += 1
+	return n
+
+static func _void_entry_affinity(entry: Dictionary) -> int:
+	if str(entry.get("card_type", "")) != "character":
+		return -1
+	var data: CharacterData = CardDatabase.get_character(str(entry.get("card_name", "")))
+	if data == null:
+		return -1
+	return data.affinity
+
+static func _count_void_matches(player_index: int, source_card: GameState.CardInstance) -> int:
+	if player_index < 0 or player_index >= GameState.void_pile_entries.size():
+		return 0
+	var params: Dictionary = source_card.ability_params
+	var min_void: int = int(params.get("min_void", 0))
+	# Threshold: flat once-grant if enough units (Night Dweller).
+	if min_void > 0:
+		return 1 if _count_void_units(player_index) >= min_void else 0
+	var name_filter: String = str(params.get(
+		"card_name_contains", params.get("name", params.get("name_contains", "")))).to_lower()
+	var affinity_filter: int = int(params.get("affinity", -1))
+	var affinities: Array = params.get("affinities", []) as Array
+	var count: int = 0
+	for entry_v: Variant in GameState.void_pile_entries[player_index]:
+		if not (entry_v is Dictionary):
+			continue
+		var entry: Dictionary = entry_v as Dictionary
+		# Unfiltered (Soul Overlord): every void card counts.
+		if name_filter.is_empty() and affinity_filter < 0 and affinities.is_empty():
+			count += 1
+			continue
+		if str(entry.get("card_type", "")) != "character":
+			continue
+		var entry_name: String = str(entry.get("card_name", "")).to_lower()
+		if not name_filter.is_empty():
+			if name_filter in entry_name:
+				count += 1
+			continue
+		var aff: int = _void_entry_affinity(entry)
+		if affinity_filter >= 0 and aff == affinity_filter:
+			count += 1
+		elif not affinities.is_empty() and aff in affinities:
+			count += 1
+	return count
 
 static func _apply_per_field_count_bonus(
 		card: GameState.CardInstance,
@@ -1352,8 +1432,10 @@ static func _apply_per_field_count_bonus(
 	if cap >= 0:
 		atk_bonus = mini(atk_bonus, cap)
 		def_bonus = mini(def_bonus, cap)
-	card.perm_atk_bonus = atk_bonus
-	card.perm_def_bonus = def_bonus
+	# Use field_aura — never assign perm_atk/def. Those hold omen anoints (Keen Edge),
+	# runes, and other lasting bonuses; calculate_field_bonuses rebuilds aura each time.
+	card.field_aura_atk_bonus += atk_bonus
+	card.field_aura_def_bonus += def_bonus
 
 # ─────────────────────────────────────────────────────────────
 # Field-based stat calculation (called before each battle and when field composition changes)
@@ -1389,22 +1471,42 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 			if source.ability_type == CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY:
 				var target_affinity: int = source.ability_params.get("affinity", -1)
 				var name_filter: String = str(source.ability_params.get("name_contains", "")).to_lower()
-				var atk_boost: int = source.ability_params.get("atk", 0)
-				if atk_boost != 0 and (target_affinity >= 0 or not name_filter.is_empty()):
-					for r2 in range(GameState.GRID_SIZE):
-						for c2 in range(GameState.GRID_SIZE):
-							var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
-							if ally == source or ally.card_type != "character" or not ally.face_up:
-								continue
+				var atk_boost: int = int(source.ability_params.get(
+					"atk", source.ability_params.get("atk_bonus", 0)))
+				var def_boost: int = int(source.ability_params.get(
+					"def", source.ability_params.get("def_bonus", 0)))
+				var mutagen_only: bool = bool(source.ability_params.get("mutagen_flag", false))
+				var ally_only: bool = bool(source.ability_params.get("ally_only", false))
+				if atk_boost == 0 and def_boost == 0:
+					continue
+				var has_filter: bool = target_affinity >= 0 or not name_filter.is_empty() \
+						or mutagen_only or ally_only
+				if not has_filter:
+					continue
+				for r2 in range(GameState.GRID_SIZE):
+					for c2 in range(GameState.GRID_SIZE):
+						var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
+						if ally == source or ally.card_type != "character" or not ally.face_up:
+							continue
+						var matched: bool = false
+						if mutagen_only:
+							matched = ally.has_mutagen_flag
+						elif ally_only and target_affinity < 0 and name_filter.is_empty():
+							matched = true
+						else:
 							var name_match: bool = not name_filter.is_empty() \
 									and name_filter in ally.card_name.to_lower()
 							var aff_match: bool = target_affinity >= 0 and ally.affinity == target_affinity
-							if name_match or aff_match:
-								ally.field_aura_atk_bonus += atk_boost
+							matched = name_match or aff_match
+						if matched:
+							ally.field_aura_atk_bonus += atk_boost
+							ally.field_aura_def_bonus += def_boost
 			if source.ability_type == CharacterData.AbilityType.MOON_ALLY_FIELD_AURA:
 				var _moon_filter: String = str(source.ability_params.get("name_contains", "moon")).to_lower()
-				var _moon_atk: int = source.ability_params.get("atk", 15)
-				var _moon_def: int = source.ability_params.get("def", 15)
+				var _moon_atk: int = int(source.ability_params.get(
+					"atk", source.ability_params.get("atk_bonus", 15)))
+				var _moon_def: int = int(source.ability_params.get(
+					"def", source.ability_params.get("def_bonus", 15)))
 				var _moon_self_atk: int = source.ability_params.get("self_atk", 30)
 				var _moon_ally_found: bool = false
 				for r2 in range(GameState.GRID_SIZE):
@@ -1422,7 +1524,8 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 			if source.ability_type == CharacterData.AbilityType.UNION_ZONE_ALLY_DEF_AURA and source.is_union:
 				var _ud: UnionData = UnionDatabase.get_union(source.card_name)
 				if _ud != null:
-					var _def_aura: int = int(source.ability_params.get("def", 0))
+					var _def_aura: int = int(source.ability_params.get(
+						"def", source.ability_params.get("def_bonus", 0)))
 					for off: Variant in _ud.union_zone:
 						var ov: Vector2i = off as Vector2i if off is Vector2i else Vector2i(int(off.x), int(off.y))
 						var _ar: int = source.grid_row + ov.x
@@ -1480,6 +1583,23 @@ static func _apply_field_ability_bonus(
 		CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD:
 			var count := _count_matching_cards(player_index, card)
 			_apply_per_field_count_bonus(card, count)
+			# Optional separate void-side bonus (Death Knight: +DEF per Chaos in void).
+			var void_atk: int = int(card.ability_params.get("void_atk_bonus", 0))
+			var void_def: int = int(card.ability_params.get("void_def_bonus", 0))
+			if void_atk != 0 or void_def != 0:
+				var void_aff: int = int(card.ability_params.get(
+					"void_affinity", card.ability_params.get("affinity", -1)))
+				var void_n: int = 0
+				for entry_v: Variant in GameState.void_pile_entries[player_index]:
+					if not (entry_v is Dictionary):
+						continue
+					var entry: Dictionary = entry_v as Dictionary
+					if str(entry.get("card_type", "")) != "character":
+						continue
+					if void_aff < 0 or _void_entry_affinity(entry) == void_aff:
+						void_n += 1
+				card.field_aura_atk_bonus += void_atk * void_n
+				card.field_aura_def_bonus += void_def * void_n
 
 		CharacterData.AbilityType.BOOST_PER_ANIMA_ON_FIELD:
 			var count := _count_anima_cards(player_index, card)
@@ -1511,10 +1631,20 @@ static func _has_name_ally_on_field(player_index: int, source_card: GameState.Ca
 	return false
 
 static func _count_matching_cards(player_index: int, source_card: GameState.CardInstance) -> int:
+	var scope := str(source_card.ability_params.get("field_scope", "owner")).to_lower()
+	if scope in ["void", "own_void"]:
+		return _count_void_matches(player_index, source_card)
+	if scope == "both_void":
+		return _count_void_matches(0, source_card) + _count_void_matches(1, source_card)
+	if scope == "foe_void":
+		return _count_void_matches(GameState.get_opponent(player_index), source_card)
+
 	var count := 0
 	var name_filter: String = source_card.ability_params.get(
-		"card_name_contains", source_card.ability_params.get("name", "")).to_lower()
+		"card_name_contains", source_card.ability_params.get("name",
+			source_card.ability_params.get("name_contains", ""))).to_lower()
 	var affinity_filter: int = source_card.ability_params.get("affinity", -1)
+	var affinities: Array = source_card.ability_params.get("affinities", []) as Array
 
 	for p: int in _field_players(player_index, source_card.ability_params):
 		for r in range(GameState.GRID_SIZE):
@@ -1524,12 +1654,14 @@ static func _count_matching_cards(player_index: int, source_card: GameState.Card
 					continue
 				if card.card_type != "character":
 					continue
+				if not card.face_up:
+					continue
 				if name_filter != "" and name_filter in card.card_name.to_lower():
-					if card.face_up:
-						count += 1
+					count += 1
 				elif affinity_filter != -1 and card.affinity == affinity_filter:
-					if card.face_up:
-						count += 1
+					count += 1
+				elif not affinities.is_empty() and card.affinity in affinities:
+					count += 1
 	return count
 
 static func _count_anima_cards(player_index: int, source_card: GameState.CardInstance) -> int:

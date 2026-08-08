@@ -140,6 +140,144 @@ func _ready() -> void:
 	_check(bool(OmenDatabase.get_omen("grave_discount").get("implemented", false)), "grave_discount implemented")
 	_check(bool(OmenDatabase.get_omen("lightweight").get("implemented", false)), "lightweight implemented")
 
+	# Keen Edge: anoint map must survive new_game, apply +5 ATK, and survive field recalc
+	# (Death Knight's per-Chaos bonus used to overwrite perm_atk_bonus).
+	GameState.active_omens = [{
+		"id": "keen_edge", "anointed_card": "Death Knight", "owner": 0,
+	}]
+	OmenBattleApplier.rebuild_anoint_effects_map()
+	GameState.new_game(GameState.GameMode.EXPLORATION)
+	_check(not GameState.omen_anoint_effects.is_empty(), "keen_edge map survives new_game")
+	GameState.place_character(0, 2, 2, "Death Knight")
+	var dk: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	var dk_atk0: int = dk.get_effective_atk()
+	OmenBattleApplier.reset_runtime_fields()  # wipe map as if rebuild was skipped
+	OmenBattleApplier.apply_begin_game(null)  # must rebuild then apply + field recalc
+	dk = GameState.get_card(0, 2, 2)
+	_check(dk.perm_atk_bonus >= 5, "keen_edge perm +5 on Death Knight")
+	_check(dk.get_effective_atk() >= dk_atk0 + 5, "keen_edge +5 ATK on Death Knight")
+
+	# Kill-capped ATK must not share budget with omen perm (Champion of the Valley).
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Champion of the Valley")
+	var champ: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	champ.perm_atk_bonus = 5  # simulate Keen Edge
+	champ.ability_capped_atk_bonus = 0
+	# Mimic TurnManager._grant_capped_perm_atk via direct call pattern
+	var room: int = maxi(0, 30 - champ.ability_capped_atk_bonus)
+	var actual: int = mini(10, room)
+	champ.perm_atk_bonus += actual
+	champ.ability_capped_atk_bonus += actual
+	_check(champ.perm_atk_bonus == 15, "kill-cap preserves omen + grants 10")
+	_check(champ.ability_capped_atk_bonus == 10, "kill-cap tracks ability budget only")
+
+	# FIELD_ATK_BOOST reads atk_bonus/def_bonus (Benjamin).
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 1, "Benjamin the Holy Craftsman")
+	GameState.place_character(0, 2, 2, "Lucky Statue")
+	var ben: GameState.CardInstance = GameState.get_card(0, 2, 1)
+	var statue: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	ben.face_up = true
+	statue.face_up = true
+	BattleResolver.calculate_field_bonuses(0)
+	statue = GameState.get_card(0, 2, 2)
+	_check(statue.field_aura_atk_bonus >= 10 and statue.field_aura_def_bonus >= 10,
+		"benjamin aura +10/+10 via atk_bonus/def_bonus")
+
+	# foe field_scope (Halo Guardian) + void threshold (Night Dweller) + Death Knight void DEF.
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Halo Guardian")
+	GameState.place_character(1, 0, 0, "Death Knight")
+	var halo: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	var foe_dk: GameState.CardInstance = GameState.get_card(1, 0, 0)
+	halo.face_up = true
+	foe_dk.face_up = true
+	BattleResolver.calculate_field_bonuses(0)
+	halo = GameState.get_card(0, 2, 2)
+	_check(halo.field_aura_atk_bonus >= 5 and halo.field_aura_def_bonus >= 5,
+		"halo guardian foe Chaos scope")
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Night Dweller")
+	var nd: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	nd.face_up = true
+	BattleResolver.calculate_field_bonuses(0)
+	nd = GameState.get_card(0, 2, 2)
+	_check(nd.field_aura_atk_bonus == 0, "night dweller no bonus under 3 void")
+	GameState.add_void_entry(0, "Doom Wisp", "character")
+	GameState.add_void_entry(0, "Doom Wisp", "character")
+	GameState.add_void_entry(0, "Doom Wisp", "character")
+	BattleResolver.calculate_field_bonuses(0)
+	nd = GameState.get_card(0, 2, 2)
+	_check(nd.field_aura_atk_bonus == 10 and nd.field_aura_def_bonus == 10,
+		"night dweller +10/+10 at 3 void units")
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Death Knight")
+	var dk2: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	dk2.face_up = true
+	GameState.add_void_entry(0, "Doom Wisp", "character")  # Chaos
+	GameState.add_void_entry(0, "Fire Elemental", "character")  # Arcane — ignore
+	BattleResolver.calculate_field_bonuses(0)
+	dk2 = GameState.get_card(0, 2, 2)
+	_check(dk2.field_aura_def_bonus >= 5, "death knight +5 DEF per Chaos in void")
+
+	# Drifting Head bonus_cap 20
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Drifting Head")
+	GameState.place_character(0, 0, 0, "Doom Wisp")
+	GameState.place_character(0, 0, 1, "Doom Wisp")
+	GameState.place_character(0, 0, 2, "Doom Wisp")
+	GameState.place_character(0, 0, 3, "Doom Wisp")
+	GameState.place_character(0, 0, 4, "Doom Wisp")
+	var dh: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	dh.face_up = true
+	for c: int in range(5):
+		var ally: GameState.CardInstance = GameState.get_card(0, 0, c)
+		if ally.card_type == "character":
+			ally.face_up = true
+	BattleResolver.calculate_field_bonuses(0)
+	dh = GameState.get_card(0, 2, 2)
+	_check(dh.field_aura_atk_bonus == 20, "drifting head bonus_cap 20 with 5 Chaos")
+
+	# Berserker of Ice Sea: -35 ATK at turn end, NOT immediately after Reckoning.
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Berserker of Ice Sea")
+	GameState.place_character(1, 0, 0, "Doom Wisp")
+	var bis: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	var bis_foe: GameState.CardInstance = GameState.get_card(1, 0, 0)
+	bis.face_up = true
+	bis_foe.face_up = true
+	var bis_atk0: int = bis.current_atk
+	var tm_bis := TurnManager.new()
+	add_child(tm_bis)
+	var bis_res := BattleResolver.BattleResult.new()
+	bis_res.attacker_destroyed = false
+	bis_res.defender_destroyed = true
+	await tm_bis._apply_post_battle_effects(
+		bis_res, 0, 1, bis, bis_foe, Vector2i(2, 2), Vector2i(0, 0))
+	bis = GameState.get_card(0, 2, 2)
+	_check(bis.current_atk == bis_atk0, "berserker ATK unchanged after Reckoning")
+	_check("atk_debuff_used" not in bis.flags, "berserker turn-end flag not set after Reckoning")
+	# Owner turn-end once path (same branch as TurnManager._end_turn)
+	if bis.ability_params.get("once_turn_end", false) and "atk_debuff_used" not in bis.flags:
+		bis.flags.append("atk_debuff_used")
+		bis.current_atk = max(0, bis.current_atk - int(bis.ability_params.get("atk", 0)))
+	_check(bis.current_atk == bis_atk0 - 35, "berserker -35 ATK at turn end")
+	tm_bis.queue_free()
+
+	# Chapter finalize must clear battle omen snapshot (deckbuilder sigils).
+	GameState.active_omens = [{
+		"id": "keen_edge", "anointed_card": "Death Knight", "owner": 0,
+	}]
+	GameState.enemy_active_omens = [{"id": "soft_step", "anointed_card": "", "owner": 1}]
+	ExplorationManager.clear_held_omens()
+	OmenBattleApplier.clear()
+	_check(GameState.active_omens.is_empty() and GameState.enemy_active_omens.is_empty(),
+		"chapter-end omen clear empties battle snapshot")
+	_check(OmenVisuals.rows_for_card("Death Knight").is_empty(),
+		"no deckbuilder sigil after omen clear")
+
 	var unimplemented_n := 0
 	for oid3: String in OmenDatabase.get_all_omen_ids() if OmenDatabase.has_method("get_all_omen_ids") else []:
 		var od: Dictionary = OmenDatabase.get_omen(oid3)

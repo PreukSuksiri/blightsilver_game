@@ -1,0 +1,232 @@
+=== Battle of Aunt Edna's Meatloaf ===
+Battle started: 2026-08-06 16:09:57.505
+Game Session of Protein Shake (started 2026-08-06 16:07:21.449)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:09.133] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:16.393] Mode selected P1: TECH
+[00:16.700] Tech played  P1: "Spy"
+[00:18.253] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:18.681] Revealed: P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[00:19.883] MSG: Spy: Revealed Water Elemental.
+[00:19.891] Tech resolved  P1
+[00:20.794] Mode selected P1: ATTACK
+[00:21.121] Revealed: P1 (0,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:23.005] Dice rolled: 5
+[00:23.015] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Water Elemental!
+[00:23.015] MSG: Vampire Duchess wins!
+[00:28.510] Crystals: P0 5000 → 4620 (-380)  [battle]
+[00:32.709] Attack P1(0,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(2,2)"Water Elemental" {Unit ATK20 DEF30 | cost 380 | affinity Arcane | base 20/30}  Dice=5  ATK=55 vs DEF=30  → WIN
+[00:32.709] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[00:32.709] Reckoning overlay: P0 "Water Elemental" {Unit ATK20 DEF30 | cost 380 | affinity Arcane | base 20/30} badge=30 ATK pill=25 DEF pill=35 mod=+DEF 0 (35+0=30) MISMATCH
+[00:32.709] Anim: 3A  △ P0(2,2)
+[00:32.709] Card destroyed  P0 (2,2) "Water Elemental" {Unit ATK20 DEF30 | cost 380 | affinity Arcane | base 20/30}
+[00:33.208] Mode selected P1: ATTACK
+[00:33.543] Revealed: P1 (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:35.453] Revealed: P0 (1,1) "Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10}
+[00:36.651] Dice rolled: 1
+[00:41.264] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:44.140] Attack P1(0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(1,1)"Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10}  Dice=1  ATK=20 vs DEF=110  → LOSE
+[00:44.141] Reckoning overlay: P1 "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} badge=20 ATK pill=20 DEF pill=0 mod=+ATK 0 (20+0=20)
+[00:44.141] Reckoning overlay: P0 "Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10} badge=110 ATK pill=80 DEF pill=110 mod=+DEF 0 (110+0=110)
+[00:44.141] Anim: 3B  △ P1(0,3)
+[00:44.142] Card destroyed  P1 (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:44.648] Turn ended  P1  |  Crystals P0=4620 P1=4900
+
+--- Turn 2  |  Player 0  |  Crystals P0=4620 P1=4900 ---
+[00:52.989] Revealed: P0 (0,1) "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50}
+[00:54.244] Revealed: P1 (4,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:55.934] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[00:58.084] Ability choice: 1 (No)
+[00:58.093] Dice rolled: 3
+[00:58.096] MSG: Vampire Duchess is destroyed battling Divine!
+[00:58.097] MSG: Ability triggered: "Vampire Servant" (sacrifice for card type)
+[01:00.750] Ability choice: 0 (Yes)
+[01:03.722] Revealed: P1 (1,0) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:03.723] Crystals: P1 4900 → 4100 (-800)  [card lost]
+[01:06.518] MSG: Vampire Servant sacrificed itself to save Vampire Duchess!
+[01:07.839] Attack P0(0,1)"Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} → P1(0,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}  Dice=3  ATK=0 vs DEF=0  → TIE
+[01:07.839] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[01:07.839] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:07.839] Anim: exchange  (no destruction)
+[04:05.139] MSG: Tap 2 material card(s) on the field.
+[04:05.314] MSG: 1 more material(s) needed.
+[04:06.014] Crystals: P0 4620 → 3120 (-1500)  [union]
+[04:08.840] Revealed: P0 (0,1) "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50}
+[04:08.873] Union summoned P0: "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} from "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50 | attacked}, "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[04:16.856] MSG: Ability triggered: "Bat Swarm" (intercept ally attack)
+[04:18.996] Ability choice: 1 (No)
+[04:19.001] Dice rolled: 2
+[04:19.025] MSG: Vampire Duchess is destroyed battling Divine!
+[04:22.855] Crystals: P1 4100 → 3300 (-800)  [battle]
+[04:27.027] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} → P1(0,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}  Dice=2  ATK=0 vs DEF=0  → WIN
+[04:27.027] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[04:27.027] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[04:27.028] Anim: 3A  △ P1(0,2)
+[04:27.028] Card destroyed  P1 (0,2) "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}
+[04:36.110] Dice rolled: 5
+[04:36.114] MSG: Goddess of Virtue destroys Bat Swarm by affinity!
+[04:39.713] Crystals: P1 3300 → 3100 (-200)  [battle]
+[04:43.963] Attack P0(1,1)"Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10} → P1(4,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=5  ATK=80 vs DEF=15  → WIN
+[04:43.963] Reckoning overlay: P0 "Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10} badge=80 ATK pill=80 DEF pill=110 mod=+ATK 0 (80+0=80)
+[04:43.963] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:43.963] Anim: 3A  △ P1(4,0)
+[04:43.963] Card destroyed  P1 (4,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[04:45.756] Turn ended  P0  |  Crystals P0=3120 P1=3100
+
+--- Turn 3  |  Player 1  |  Crystals P0=3120 P1=3100 ---
+[04:48.263] Mode selected P1: TECH
+[04:48.572] Tech played  P1: "Bribe"
+[04:50.122] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[04:51.291] MSG: Bribe: Opponent passed.
+[04:51.297] Tech resolved  P1
+[04:53.672] Crystals: P1 3100 → 1600 (-1500)  [union]
+[04:56.508] Revealed: P1 (3,1) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[04:56.552] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down}, "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down}
+[04:59.930] Mode selected P1: ATTACK
+[05:01.125] Dice rolled: 3
+[05:01.154] MSG: Lord of Terror wins!
+[05:03.922] Crystals: P0 3120 → 1720 (-1400)  [battle]
+[05:08.163] Attack P1(3,1)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(1,1)"Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10}  Dice=3  ATK=150 vs DEF=110  → WIN
+[05:08.164] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[05:08.164] Reckoning overlay: P0 "Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10} badge=110 ATK pill=80 DEF pill=110 mod=+DEF 0 (110+0=110)
+[05:08.164] Anim: 3A  △ P0(1,1)
+[05:08.164] Card destroyed  P0 (1,1) "Goddess of Virtue" {Unit ATK80 DEF110 | cost 1400 | affinity Divine | buff +permDEF10}
+[05:08.682] Mode selected P1: ATTACK
+[05:09.009] Revealed: P1 (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[05:10.899] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[05:12.133] Dice rolled: 3
+[05:12.142] MSG: Trap triggered: Trap Hole!
+[05:15.209] Coin flip: Tails, Heads, Heads
+[05:17.967] MSG: Trap Hole: Tails, Heads, Heads.
+[05:17.967] Crystals: P1 1600 → 1560 (-40)  [trap]
+[05:20.179] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[05:21.548] Attack P1(1,2)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(0,0)"Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[05:21.548] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[05:21.548] Anim: 3D  (attacker survives)
+[05:22.050] Turn ended  P1  |  Crystals P0=1720 P1=1560
+
+--- Turn 4  |  Player 0  |  Crystals P0=1720 P1=1560 ---
+[05:26.790] Tech played  P0: "Tease"
+[05:28.339] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:28.765] Revealed: P1 (0,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[05:29.970] MSG: Tease: Opponent revealed Foul Wisp.
+[05:30.140] Tech resolved  P0
+[05:33.150] Dice rolled: 5
+[05:33.216] MSG: Seraphim Fistmaster wins!
+[05:37.911] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} → P1(3,1)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}  Dice=5  ATK=340 vs DEF=100  → WIN
+[05:37.912] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} badge=340 ATK pill=170 DEF pill=170 mod=+ATK 170 (170+170=340)
+[05:37.912] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=100 ATK pill=150 DEF pill=100 mod=+DEF 0 (100+0=100)
+[05:37.912] Anim: 3A  △ P1(3,1)
+[05:37.912] Card destroyed  P1 (3,1) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[05:41.852] Revealed: P0 (1,2) "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio}
+[05:43.074] Dice rolled: 3
+[05:43.078] MSG: Slug-11 wins!
+[05:45.881] Crystals: P1 1560 → 1160 (-400)  [battle]
+[05:50.131] Attack P0(1,2)"Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P1(1,2)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=3  ATK=45 vs DEF=25  → WIN
+[05:50.133] Reckoning overlay: P0 "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[05:50.133] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:50.133] Anim: 3A  △ P1(1,2)
+[05:50.133] Card destroyed  P1 (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[05:56.308] Revealed: P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[05:57.533] Dice rolled: 1
+[05:57.541] MSG: Dystopian Cultist wins!
+[06:00.092] Crystals: P1 1160 → 1060 (-100)  [battle]
+[06:04.353] Attack P0(2,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(0,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=1  ATK=65 vs DEF=25  → WIN
+[06:04.353] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[06:04.353] Reckoning overlay: P1 "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} badge=25 ATK pill=0 DEF pill=25 mod=+DEF 0 (25+0=25)
+[06:04.353] Anim: 3A  △ P1(0,1)
+[06:04.353] Card destroyed  P1 (0,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[06:05.570] Turn ended  P0  |  Crystals P0=1720 P1=1060
+
+--- Turn 5  |  Player 1  |  Crystals P0=1720 P1=1060 ---
+[06:08.083] Mode selected P1: ATTACK
+[06:08.413] Revealed: P1 (0,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[06:10.338] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[06:11.530] Dice rolled: 3
+[06:15.251] Crystals: P1 1060 → 660 (-400)  [battle]
+[06:18.089] Attack P1(0,0)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=3  ATK=15 vs DEF=20  → LOSE
+[06:18.089] Reckoning overlay: P1 "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} badge=15 ATK pill=15 DEF pill=20 mod=+ATK 0 (15+0=15)
+[06:18.089] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[06:18.089] Anim: 3B  △ P1(0,0)
+[06:18.089] Card destroyed  P1 (0,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[06:18.578] Mode selected P1: ATTACK
+[06:18.904] Revealed: P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[06:21.042] Dice rolled: 3
+[06:21.059] MSG: Doom Wisp hits Dead End — nothing happens.
+[06:24.325] Attack P1(1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(1,0)(empty)  Dice=3  → DEAD_END
+[06:24.325] Anim: 3F  (blank slot)
+[06:24.823] Turn ended  P1  |  Crystals P0=1720 P1=660
+
+--- Turn 6  |  Player 0  |  Crystals P0=1720 P1=660 ---
+[06:39.432] Dice rolled: 2
+[06:39.440] MSG: Spear Shark wins!
+[06:42.344] Crystals: P1 660 → 560 (-100)  [battle]
+[06:46.604] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=2  ATK=50 vs DEF=15  → WIN
+[06:46.604] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[06:46.604] Reckoning overlay: P1 "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[06:46.604] Anim: 3A  △ P1(1,3)
+[06:46.604] Card destroyed  P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[06:52.909] Revealed: P1 (3,4) "Red Card" {cost 0}
+[06:54.139] Dice rolled: 4
+[06:54.147] MSG: Trap triggered: Red Card!
+[06:56.476] Coin flip: Heads, Heads
+[06:59.219] MSG: Red Card: Heads, Heads.
+[06:59.219] MSG: Both heads! Slug-11 cannot attack next turn!
+[07:00.584] Attack P0(1,2)"Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} → P1(3,4)"Red Card" {cost 0}  Dice=4  → Unit vs Trap
+[07:00.584] Reckoning overlay: P0 "Slug-11" {Unit ATK45 DEF65 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=65 mod=+ATK 0 (45+0=45)
+[07:00.584] Anim: 3D  (attacker survives)
+[07:08.108] Revealed: P1 (2,0) "Red Card" {cost 0}
+[07:09.324] Dice rolled: 3
+[07:09.346] MSG: Trap triggered: Red Card!
+[07:11.503] Coin flip: Tails, Heads
+[07:14.208] MSG: Red Card: Tails, Heads.
+[07:14.209] MSG: Not both heads — no effect.
+[07:15.647] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} → P1(2,0)"Red Card" {cost 0}  Dice=3  → Unit vs Trap
+[07:15.647] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} badge=170 ATK pill=170 DEF pill=170 mod=+ATK 0 (170+0=170)
+[07:15.647] Anim: 3D  (attacker survives)
+[07:16.282] Turn ended  P0  |  Crystals P0=1720 P1=560
+
+--- Turn 7  |  Player 1  |  Crystals P0=1720 P1=560 ---
+[07:18.731] Mode selected P1: ATTACK
+[07:19.073] Revealed: P1 (3,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[07:20.947] Revealed: P0 (2,3) "Spike Trap" {cost 800}
+[07:22.177] Dice rolled: 1
+[07:22.182] MSG: Trap triggered: Spike Trap!
+[07:26.943] Crystals: P0 1720 → 920 (-800)  [trap cost]
+[07:29.767] Crystals: P1 560 → 210 (-350)  [card lost]
+[07:33.250] MSG: Spike Trap: Jacob the Ski Mask destroyed!
+[07:33.254] Attack P1(3,3)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(2,3)"Spike Trap" {cost 800}  Dice=1  → Unit vs Trap
+[07:33.254] Reckoning overlay: P1 "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} badge=15 ATK pill=15 DEF pill=20 mod=+ATK 0 (15+0=15)
+[07:33.254] Anim: 3E  △ P1(3,3)
+[07:35.770] Turn ended  P1  |  Crystals P0=920 P1=210
+
+--- Turn 8  |  Player 0  |  Crystals P0=920 P1=210 ---
+[07:44.521] Revealed: P1 (2,1) "Bait" {cost 0}
+[07:45.736] Dice rolled: 2
+[07:45.771] MSG: Trap triggered: Bait!
+[07:48.032] MSG: Ability triggered: "Bait"
+[07:48.049] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[07:49.980] Revealed: P1 (2,3) "Acid Trap Hole" {cost 0}
+[07:52.111] MSG: Bait: Defender revealed .
+[07:53.653] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} → P1(2,1)"Bait" {cost 0}  Dice=2  → Unit vs Trap
+[07:53.653] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK170 DEF170 | destroy-cost 0 | summon-cost 1500 | affinity Divine | base 120/120 | buff +permATK50, +permDEF50} badge=170 ATK pill=170 DEF pill=170 mod=+ATK 0 (170+0=170)
+[07:53.653] Anim: 3D  (attacker survives)
+[07:57.645] Revealed: P1 (0,4) "Explosive Barrels" {cost 0}
+[07:58.880] Dice rolled: 3
+[07:58.886] MSG: Trap triggered: Explosive Barrels!
+[08:02.007] Crystals: P0 920 → 440 (-480)  [card lost]
+[08:05.481] Crystals: P1 210 → 0 (-210)  [trap]
+[08:08.474] MSG: Explosive Barrels: Spear Shark destroyed! Defender loses 480 Crystals.
+[08:08.481] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(0,4)"Explosive Barrels" {cost 0}  Dice=3  → Unit vs Trap
+[08:08.481] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[08:08.481] Anim: 3E  △ P0(0,2)
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 440  P1: 0  |  Turns: 8

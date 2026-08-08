@@ -144,6 +144,24 @@ var _rg_friendly_fire_pos: Vector2i = Vector2i(-1, -1)
 ## finish before turn/AI continuation is allowed.
 var _flow_block_depth: int = 0
 
+func _ready() -> void:
+	# Crystal/wipe GAME_OVER can fire while TurnManager is awaiting a prompt.
+	# Always release those awaits so the attack/tech coroutine can exit cleanly.
+	if not GameState.game_over.is_connected(_release_input_awaits_on_game_over):
+		GameState.game_over.connect(_release_input_awaits_on_game_over)
+
+func _is_match_over() -> bool:
+	return GameState.current_phase == GameState.Phase.GAME_OVER
+
+func _release_input_awaits_on_game_over(_winner: int) -> void:
+	emit_signal("ability_selection_done")
+	emit_signal("brainwash_redirect_resolved")
+	emit_signal("archbishop_redirect_resolved")
+	# -1 = cancelled; callers must not treat this as a real pick (see Checkpoint).
+	emit_signal("ability_choice_resolved", -1)
+	emit_signal("blackmail_choice_resolved", "")
+	_flow_block_depth = 0
+
 func is_flow_blocked() -> bool:
 	return _flow_block_depth > 0
 
@@ -268,6 +286,8 @@ func _apply_foe_coin_flip_traps(results: Array, source_player: int) -> Array:
 		_place_trap_cost = int(round(float(_place_trap_cost) * OmenBattleApplier.anoint_cost_multiplier_for(trap_data.card_name)))
 		GameState.lose_crystals(trap_owner, _place_trap_cost, "trap")
 		await _wait_crystal_animation()
+		if _is_match_over():
+			return results
 	GameState.post_message("%s triggered!" % trap_data.card_name)
 	var mode: String = str(trap_data.effect_params.get("coin_manipulation", ""))
 	if mode == "force_tails":
@@ -391,6 +411,8 @@ func start_turn(player_index: int) -> void:
 	# Turn-start per-card effects
 	for _ts_r: int in range(GameState.GRID_SIZE):
 		for _ts_c: int in range(GameState.GRID_SIZE):
+			if _is_match_over():
+				return
 			var _ts_card: GameState.CardInstance = GameState.get_card(player_index, _ts_r, _ts_c)
 			if _ts_card.card_type != "character" or not _ts_card.face_up:
 				continue
@@ -399,10 +421,14 @@ func start_turn(player_index: int) -> void:
 					await await_card_effect_flash(_ts_card.card_name)
 					_ts_card.temp_atk_bonus += _ts_card.ability_params.get("atk", 5)
 				CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL:
+					if _is_match_over():
+						return
 					await _prompt_and_await_target_selection(
 						"%s: Choose 1 opponent cell to reveal." % _ts_card.card_name,
 						"ability_false_prophet_reveal")
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
+					if _is_match_over():
+						return
 					await await_card_effect_flash(_ts_card.card_name)
 					var _p29_cf: Array = await _do_coin_flips(1, player_index, _ts_r, _ts_c)
 					if not _plant29_has_valid_targets(player_index, _p29_cf[0]):
@@ -428,19 +454,29 @@ func start_turn(player_index: int) -> void:
 						GameState.lose_crystals(player_index, _ts_loss, "ability")
 						GameState.post_message("%s: No units to destroy — lost %d crystals!" % [
 							_ts_card.card_name, _ts_loss])
+						await _wait_crystal_animation()
+						if _is_match_over():
+							return
 						continue
 					emit_signal("awaiting_trap_choice",
 						"%s: Destroy 1 of your units or lose %d crystals?" % [
 							_ts_card.card_name, _ts_loss],
 						["Destroy 1 unit", "Lose %d crystals" % _ts_loss])
 					var _ts_choice: int = await ability_choice_resolved
+					if _is_match_over() or _ts_choice < 0:
+						return
 					if _ts_choice == 0:
 						await _prompt_and_await_target_selection(
 							"%s: Choose 1 of your units to destroy." % _ts_card.card_name,
 							"own_character_destroy_no_cost")
+						if _is_match_over():
+							return
 					else:
 						GameState.lose_crystals(player_index, _ts_loss, "ability")
 						GameState.post_message("%s: Lost %d crystals!" % [_ts_card.card_name, _ts_loss])
+						await _wait_crystal_animation()
+						if _is_match_over():
+							return
 
 	# Foe-turn-start abilities on opponent's field (e.g. Alluring Witch)
 	var _opp_for_foe_start: int = GameState.get_opponent(player_index)
@@ -697,11 +733,17 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		if _atk_tax > 0:
 			GameState.lose_crystals(player, _atk_tax, "attack tax")
 			await _wait_crystal_animation()
+			if _battle_aborted():
+				_emit_attack_aborted()
+				return
 	# Omen Adrenal Surge etc. — flat crystal cost per attack (omen holder).
 	var omen_atk_cost: int = OmenBattleApplier.attack_crystal_cost_for(player)
 	if omen_atk_cost > 0:
 		GameState.lose_crystals(player, omen_atk_cost, "omen attack cost")
 		await _wait_crystal_animation()
+		if _battle_aborted():
+			_emit_attack_aborted()
+			return
 
 	GameState.attacker_card = attacker
 	GameState.attacker_pos = attacker_pos
@@ -867,9 +909,15 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				"Pay %d Crystals to destroy %s? (no crystal loss to opponent)" % [_xd_cost, defender.card_name],
 				["Pay %d Crystals" % _xd_cost, "Skip"])
 			var _xd_choice: int = await ability_choice_resolved
+			if _battle_aborted() or _xd_choice < 0:
+				_emit_attack_aborted()
+				return
 			if _xd_choice == 0:
 				GameState.lose_crystals(player, _xd_cost, "ability")
 				await _wait_crystal_animation()
+				if _battle_aborted():
+					_emit_attack_aborted()
+					return
 				GameState.post_message("%s: %s is destroyed!" % [attacker.card_name, defender.card_name])
 				GameState.place_dead_end(opponent, target_pos.x, target_pos.y)
 				_emit_attack_aborted()
@@ -984,9 +1032,17 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			"Executioner's Pact: Discard 1 Tech to destroy %s?" % defender.card_name,
 			["Discard Tech", "Fight normally"])
 		var _ex_choice: int = await ability_choice_resolved
+		if _battle_aborted() or _ex_choice < 0:
+			complete_battle_preview()
+			_emit_attack_aborted()
+			return
 		if _ex_choice == 0:
 			emit_signal("awaiting_blackmail_tech_select", player)
 			var _ex_discard: String = await blackmail_choice_resolved
+			if _battle_aborted():
+				complete_battle_preview()
+				_emit_attack_aborted()
+				return
 			if _ex_discard != "" and _ex_discard in GameState.tech_hands[player]:
 				GameState.tech_hands[player].erase(_ex_discard)
 				GameState.post_message("Omen: Discarded %s — %s destroyed!" % [
@@ -998,7 +1054,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				GameState.omen_destruction_source = ""
 				attacker.attacked_this_turn = true
 				GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1)
-				emit_signal("battle_resolved", preview_result)
+				complete_battle_preview()
 				if not _battle_aborted():
 					GameState.set_phase(GameState.Phase.MODE_SELECT)
 				return
@@ -1011,20 +1067,33 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		if _pb_mandatory or GameState.crystals[player] >= _pb_cost:
 			if _pb_mandatory and GameState.crystals[player] < _pb_cost:
 				GameState.post_message("%s: Cannot pay %d Crystals — attack cancelled!" % [attacker.card_name, _pb_cost])
-				emit_signal("battle_resolved", preview_result)
+				complete_battle_preview()
+				_emit_attack_aborted()
 				return
 			if _pb_mandatory:
 				GameState.lose_crystals(player, _pb_cost, "ability")
 				await _wait_crystal_animation()
+				if _battle_aborted():
+					complete_battle_preview()
+					_emit_attack_aborted()
+					return
 				GameState.post_message("%s: Paid %d Crystals to attack!" % [attacker.card_name, _pb_cost])
 			elif GameState.crystals[player] >= _pb_cost:
 				emit_signal("awaiting_trap_choice",
 					"Pay %d Crystals for +%d ATK this battle?" % [_pb_cost, _pb_boost],
 					["Pay %d Crystals" % _pb_cost, "Skip"])
 				var _pb_choice: int = await ability_choice_resolved
+				if _battle_aborted() or _pb_choice < 0:
+					complete_battle_preview()
+					_emit_attack_aborted()
+					return
 				if _pb_choice == 0:
 					GameState.lose_crystals(player, _pb_cost, "ability")
 					await _wait_crystal_animation()
+					if _battle_aborted():
+						complete_battle_preview()
+						_emit_attack_aborted()
+						return
 					attacker.temp_atk_bonus += _pb_boost
 					GameState.post_message("%s: Paid %d Crystals for +%d ATK!" % [attacker.card_name, _pb_cost, _pb_boost])
 
@@ -1039,9 +1108,17 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				"%s: Pay %d Crystals for +%d DEF this battle?" % [defender.card_name, _dd_cost, _dd_boost],
 				["Pay %d Crystals" % _dd_cost, "Skip"])
 			var _dd_choice: int = await ability_choice_resolved
+			if _battle_aborted() or _dd_choice < 0:
+				complete_battle_preview()
+				_emit_attack_aborted()
+				return
 			if _dd_choice == 0:
 				GameState.lose_crystals(opponent, _dd_cost, "ability")
 				await _wait_crystal_animation()
+				if _battle_aborted():
+					complete_battle_preview()
+					_emit_attack_aborted()
+					return
 				defender.temp_def_bonus += _dd_boost
 				GameState.post_message("%s: Paid %d Crystals for +%d DEF!" % [defender.card_name, _dd_cost, _dd_boost])
 
@@ -1120,6 +1197,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	# Handle trap special triggers
 	if result.special_trigger == "trap_effect":
 		await _handle_trap_effect(result.special_params, attacker, attacker_pos, target_pos, player, opponent)
+		if _battle_aborted():
+			return
 		CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_TRAP_TRIGGERED,
 			{"source_player": player, "source_card": attacker, "attacker": attacker, "defender": defender})
 		await _apply_omen_reveal_after_trap_or_dead_end(attacker, player)
@@ -1393,6 +1472,12 @@ func play_tech_card(tech_name: String) -> void:
 	# Pay cost
 	GameState.lose_crystals(player, _eff_tech_cost, "tech cost")
 	await _wait_crystal_animation()
+	# Spending last crystals ends the duel — consume the card but do not open prompts.
+	if _is_match_over():
+		if tech_name in GameState.tech_hands[player]:
+			GameState.tech_hands[player].erase(tech_name)
+			GameState.tech_cards_played_this_game[player].append(tech_name)
+		return
 	GameState.tech_hands[player].erase(tech_name)
 	GameState.tech_cards_played_this_game[player].append(tech_name)
 
@@ -1937,10 +2022,14 @@ func _apply_battle_result(
 	if result.defender_destroyed and defender.card_type == "character" \
 			and defender.ability_type == CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY \
 			and _has_archbishop_redirect_target(opponent, target_pos):
+		if _battle_aborted():
+			return
 		emit_signal("awaiting_target_selection",
 			"Archbishop: Destroy 1 other Divine Unit instead?",
 			"own_divine_character_redirect")
 		await archbishop_redirect_resolved
+		if _battle_aborted():
+			return
 		result.defender_destroyed = false
 		result.defender_crystal_loss = 0
 		return
@@ -2321,6 +2410,8 @@ func _handle_trap_effect(
 		if _ovr_cost > 0:
 			GameState.lose_crystals(opponent, _ovr_cost, "trap cost")
 			await _wait_crystal_animation()
+			if _is_match_over():
+				return
 		GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 		for _ri: int in range(_rn):
 			await _await_reveal_opponent_hidden_selection(attacker, player)
@@ -2341,6 +2432,10 @@ func _handle_trap_effect(
 	_eff_trap_cost = int(round(float(_eff_trap_cost) * OmenBattleApplier.anoint_cost_multiplier_for(trap_data.card_name)))
 	GameState.lose_crystals(opponent, _eff_trap_cost, "trap cost")
 	await _wait_crystal_animation()
+	# Trap cost can bankrupt the trap owner (e.g. Brainwash) — stop before any
+	# target/choice prompts that would otherwise hang the UI after GAME_OVER.
+	if _is_match_over():
+		return
 	var _trap_foe_mult: float = OmenBattleApplier.trap_crystal_loss_mult(trap_data.card_name)
 
 	# Honored Duel: trap is consumed but its effect is cancelled
@@ -2393,6 +2488,8 @@ func _handle_trap_effect(
 				"Checkpoint",
 				["Lose 500 Crystals", "Destroy your attacking unit"])
 			var _nac_choice: int = await ability_choice_resolved
+			if _is_match_over() or _nac_choice < 0:
+				return
 			if _nac_choice == 0:
 				GameState.lose_crystals(player, 500, "trap")
 				await _wait_crystal_animation()
@@ -2411,6 +2508,8 @@ func _handle_trap_effect(
 			var _bm_force: bool = OmenBattleApplier.cannot_decline_named(trap_data.card_name)
 			emit_signal("awaiting_blackmail_tech_select", player)
 			var _bm_discarded: String = await blackmail_choice_resolved
+			if _is_match_over():
+				return
 			if _bm_force and _bm_discarded == "":
 				# Forced Confession — auto-pick a tech if any; otherwise end attacks.
 				var _bm_hand_forced: Array = GameState.tech_hands[player]
@@ -2441,10 +2540,14 @@ func _handle_trap_effect(
 					return
 			GameState.lose_crystals(player, int(round(float(attacker.crystal_cost) * _trap_foe_mult)), "card lost")
 			await _wait_crystal_animation()
+			if _is_match_over():
+				return
 			GameState.mark_destroy_achievement_context(
 				"trap", opponent, player, attacker_pos.x, attacker_pos.y)
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			await get_tree().create_timer(0.65).timeout
+			if _is_match_over():
+				return
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 			await _prompt_and_await_target_selection(
 				"Explosive Barrels: Choose 1 revealed card on defender's field to destroy (no crystal loss).",
@@ -2624,6 +2727,8 @@ func _handle_trap_effect(
 			GameState.post_message("Snare Trap: %s's effect nullified until end of next turn!" % attacker.card_name)
 
 		TrapData.TrapEffectType.FORCE_FRIENDLY_FIRE:
+			if _is_match_over():
+				return
 			if not _has_brainwash_target(player, attacker_pos):
 				GameState.post_message("Brainwash: No ally to redirect — effect fizzles.")
 				return
@@ -2632,7 +2737,7 @@ func _handle_trap_effect(
 				"Brainwash: Choose one of your own allies as the attack target.",
 				"own_any_as_target")
 			await brainwash_redirect_resolved
-			_flow_block_depth -= 1
+			_flow_block_depth = maxi(0, _flow_block_depth - 1)
 
 		TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT:
 			GameState.post_message("Bunker: Surrounding cells cannot be targeted this turn.")
@@ -2929,6 +3034,18 @@ func _end_turn(player: int) -> void:
 			if _te_card.card_type != "character" or not _te_card.face_up:
 				continue
 			match _te_card.ability_type:
+				CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
+					# Berserker of Ice Sea: Once, at your turn end, -N ATK
+					if _te_card.ability_params.get("once_turn_end", false) \
+							and "atk_debuff_used" not in _te_card.flags:
+						var _bis_loss: int = int(_te_card.ability_params.get("atk", 0))
+						if _bis_loss > 0:
+							_te_card.flags.append("atk_debuff_used")
+							await await_card_effect_flash(_te_card.card_name)
+							await _witness_pause()
+							_te_card.current_atk = max(0, _te_card.current_atk - _bis_loss)
+							GameState.post_message("%s: -%d ATK at turn end." % [
+								_te_card.card_name, _bis_loss])
 				CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN:
 					if not _te_card.has_mutagen_flag:
 						await await_card_effect_flash(_te_card.card_name)
@@ -2994,6 +3111,8 @@ func _end_turn(player: int) -> void:
 						GameState.post_message("%s: Foe loses %d Crystals (%d Mutagen on field)!" % [
 							_te_card.card_name, _bw_loss, _bw_mutagen_count])
 						await _wait_crystal_animation()
+						if _is_match_over():
+							return
 
 	# Omen witching_hour — re-fire safe end-of-turn boosts once more
 	if player == 0 and OmenBattleApplier.double_turn_end_abilities():
@@ -3462,7 +3581,10 @@ func _apply_post_battle_effects(
 				GameState.post_message("%s: Coin flip failed — no extra attack." % attacker.card_name)
 
 		CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
-			if attacker.ability_params.get("once_in_reckoning", false):
+			# Berserker of Ice Sea: once_turn_end — deferred to owner turn end.
+			if attacker.ability_params.get("once_turn_end", false):
+				pass
+			elif attacker.ability_params.get("once_in_reckoning", false):
 				if "reckoning_buff_used" not in attacker.flags:
 					attacker.flags.append("reckoning_buff_used")
 					var _sw_atk: int = int(attacker.ability_params.get("atk", 0))
@@ -3529,15 +3651,18 @@ func _apply_post_battle_effects(
 				GameState.post_message("%s: -%d ATK permanently from dead-end attack!" % [attacker.card_name, _ded_pen])
 
 		CharacterData.AbilityType.PERM_ATK_BOOST_ON_KILL_CAPPED:
-			if result.defender_destroyed and defender.card_type == "character":
-				var _cov_gain: int = attacker.ability_params.get("atk", 10)
-				var _cov_max: int = attacker.ability_params.get("max_bonus", 30)
-				var _cov_new: int = min(attacker.perm_atk_bonus + _cov_gain, _cov_max)
-				var _cov_actual: int = _cov_new - attacker.perm_atk_bonus
+			# Bloom Fairy uses turn_end; kill path is Champion of the Valley etc.
+			if not attacker.ability_params.get("turn_end", false) \
+					and result.defender_destroyed and defender.card_type == "character":
+				var _cov_actual: int = _grant_capped_perm_atk(
+					attacker,
+					int(attacker.ability_params.get("atk", 10)),
+					int(attacker.ability_params.get("max_bonus", 30)))
 				if _cov_actual > 0:
-					attacker.perm_atk_bonus = _cov_new
 					GameState.post_message("%s: +%d ATK permanently! (bonus: %d/%d)" % [
-						attacker.card_name, _cov_actual, _cov_new, _cov_max])
+						attacker.card_name, _cov_actual,
+						attacker.ability_capped_atk_bonus,
+						int(attacker.ability_params.get("max_bonus", 30))])
 
 	if defender.card_type == "character" \
 			and defender.effect_nullified_until < GameState.turn_number \
@@ -3587,9 +3712,12 @@ func _apply_post_battle_effects(
 							defender.card_name, defender.current_atk, defender.current_def, defender.crystal_cost],
 						["Absorb", "Decline"])
 					var _ec_choice: int = await ability_choice_resolved
+					if _is_match_over() or _ec_choice < 0:
+						return extra
 					if _ec_choice == 0:
 						_ecto.current_atk = defender.current_atk
 						_ecto.perm_atk_bonus = 0
+						_ecto.ability_capped_atk_bonus = 0
 						_ecto.current_def = defender.current_def
 						_ecto.perm_def_bonus = 0
 						_ecto.crystal_cost = defender.crystal_cost
@@ -3914,10 +4042,13 @@ func _apply_nuki_pre_reckoning(
 
 
 func _prompt_and_await_target_selection(prompt: String, filter: String) -> void:
+	# Never open (or hang on) a target prompt after the duel has already ended.
+	if _is_match_over():
+		return
 	_flow_block_depth += 1
 	emit_signal("awaiting_target_selection", prompt, filter)
 	await ability_selection_done
-	_flow_block_depth -= 1
+	_flow_block_depth = maxi(0, _flow_block_depth - 1)
 
 func _await_attacker_anchored_target_selection(
 		attacker_player: int, prompt: String, filter: String) -> void:
@@ -4303,12 +4434,16 @@ func _emit_post_attack_target_selections(
 		attacker: GameState.CardInstance, defender: GameState.CardInstance,
 		attacker_pos: Vector2i, target_pos: Vector2i
 ) -> void:
+	if _battle_aborted():
+		return
 	if attacker.card_type != "character":
 		return
 
 	# Pending reveals from BattleResolver (e.g. COIN_FLIP_2_DESTROY_NON_AFFINITY win)
 	if result.pending_reveal_opponent_cell:
 		await _await_reveal_opponent_hidden_selection(attacker, player)
+		if _battle_aborted():
+			return
 
 	if attacker.effect_nullified_until >= GameState.turn_number:
 		return
@@ -4353,13 +4488,20 @@ func _emit_post_attack_target_selections(
 				"%s: Choose 1 card on the field to destroy." % attacker.card_name,
 				"any_field_card_destroy")
 
+	if _battle_aborted():
+		return
+
 	# Omen post-Reckoning follow-ups (unit vs unit only).
 	if defender.card_type == "character" and not result.attacker_destroyed:
 		var _omen_reveal_n: int = OmenBattleApplier.post_reckoning_reveal_count(attacker, player)
 		for _or_i: int in range(_omen_reveal_n):
+			if _battle_aborted():
+				return
 			await _await_reveal_opponent_hidden_selection(attacker, player)
 		var _omen_destroy_n: int = OmenBattleApplier.post_reckoning_destroy_count(attacker, player)
 		for _od_i: int in range(_omen_destroy_n):
+			if _battle_aborted():
+				return
 			await _await_attacker_anchored_target_selection(
 				player,
 				"Omen: Choose 1 card on the field to destroy.",
@@ -4367,6 +4509,8 @@ func _emit_post_attack_target_selections(
 
 	# Omen scout_brand — reveal adjacent after any attack
 	for entry: Variant in OmenBattleApplier.effects_of_type("reveal_adjacent_on_attack"):
+		if _battle_aborted():
+			return
 		if entry is Dictionary and OmenBattleApplier._card_matches_effect_unit(
 				attacker, entry as Dictionary, player):
 			await _await_attacker_anchored_target_selection(
@@ -4377,6 +4521,8 @@ func _emit_post_attack_target_selections(
 
 	# Omen anoint: post-attack coin flip -> reveal adjacent cells.
 	for entry5: Variant in OmenBattleApplier.effects_of_type("post_attack_coin_reveal_adjacent"):
+		if _battle_aborted():
+			return
 		if not entry5 is Dictionary:
 			continue
 		if not OmenBattleApplier._card_matches_effect_unit(attacker, entry5 as Dictionary, player):
@@ -4385,11 +4531,15 @@ func _emit_post_attack_target_selections(
 		var _pcra_heads_n: int = maxi(1, int(_pcra_eff.get("heads", 2)))
 		var _pcra_tails_n: int = maxi(1, int(_pcra_eff.get("tails", 1)))
 		var _pcra_vals: Array = await _do_coin_flips(1, player, attacker_pos.x, attacker_pos.y)
+		if _battle_aborted():
+			return
 		var _pcra_count: int = _pcra_heads_n if bool(_pcra_vals[0]) else _pcra_tails_n
 		GameState.post_message(
 			"Omen: %s — reveal %d adjacent cell(s)." % [
 				"Heads" if bool(_pcra_vals[0]) else "Tails", _pcra_count])
 		for _pcra_i: int in range(_pcra_count):
+			if _battle_aborted():
+				return
 			await _await_attacker_anchored_target_selection(
 				player,
 				"Omen: Choose an adjacent square to reveal.",
@@ -4513,6 +4663,20 @@ func _plant29_has_valid_targets(player: int, heads: bool) -> bool:
 	return false
 
 
+## Grant up to `gain` into perm_atk_bonus, capped by ability_capped_atk_bonus vs max_bonus.
+## Returns the amount actually granted (0 if already at cap). Omens in perm_* are untouched.
+func _grant_capped_perm_atk(card: GameState.CardInstance, gain: int, max_bonus: int) -> int:
+	if gain <= 0 or max_bonus <= 0:
+		return 0
+	var room: int = maxi(0, max_bonus - card.ability_capped_atk_bonus)
+	var actual: int = mini(gain, room)
+	if actual <= 0:
+		return 0
+	card.perm_atk_bonus += actual
+	card.ability_capped_atk_bonus += actual
+	return actual
+
+
 func _apply_end_of_turn_boosts(player: int) -> void:
 	# Applied at start of own turn = "end of opponent's turn"
 	for r in range(GameState.GRID_SIZE):
@@ -4521,6 +4685,18 @@ func _apply_end_of_turn_boosts(player: int) -> void:
 			if card.card_type != "character" or not card.face_up:
 				continue
 			match card.ability_type:
+				CharacterData.AbilityType.PERM_ATK_BOOST_ON_KILL_CAPPED:
+					# Bloom Fairy: +N ATK at end of turn, capped (ability budget only).
+					if not card.ability_params.get("turn_end", false):
+						continue
+					var _bf_gain: int = int(card.ability_params.get("atk", 5))
+					var _bf_max: int = int(card.ability_params.get("max_bonus", 25))
+					var _bf_actual: int = _grant_capped_perm_atk(card, _bf_gain, _bf_max)
+					if _bf_actual > 0:
+						await await_card_effect_flash(card.card_name)
+						await _witness_pause()
+						GameState.post_message("%s: +%d ATK permanently! (bonus: %d/%d)" % [
+							card.card_name, _bf_actual, card.ability_capped_atk_bonus, _bf_max])
 				CharacterData.AbilityType.PERM_BOOST_END_OF_TURN:
 					if card.ability_params.get("on_crystal_gain", false) \
 							or card.ability_params.get("vs_trap", false):

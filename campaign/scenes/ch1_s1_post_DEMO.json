@@ -27,7 +27,7 @@
 			}
 		],
 		"fade_color": "#000000",
-		"text": "The possessed girl stopped and barely can stand."
+		"text": "The possessed girl stopped and can barely stand."
 	},
 	{
 		"wait": 1.0
@@ -87,7 +87,7 @@
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_3.png",
 		"fade_color": "#000000",
 		"speaker": "Anomaly",
-		"text": "(Mumble unrecognize words)"
+		"text": "(Mumble unrecognized words)"
 	},
 	{
 		"wait": 1.0
@@ -179,7 +179,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/kelly_shoot_midnight_shadow_2.png",
 		"fade_color": "#000000",
-		"text": "Silver bullets blew through the demon and shreded it to mere pieces of black smokes"
+		"text": "Silver bullets blew through the demon and shredded it to mere pieces of black smoke"
 	},
 	{
 		"wait": 0.5
@@ -213,7 +213,7 @@
 			}
 		],
 		"fade_color": "#000000",
-		"text": "The demon's shadowy body get torn like an old paper."
+		"text": "The demon's shadowy body gets torn like an old paper."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
@@ -338,7 +338,7 @@
 		],
 		"fade_color": "#000000",
 		"speaker": "Kelly",
-		"text": "Demons love to possess human, so they can hide their name..."
+		"text": "Demons love to possess humans, so they can hide their name..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_bg_quiet_study_area_ransacked.png",
@@ -352,7 +352,7 @@
 		],
 		"fade_color": "#000000",
 		"speaker": "Kelly",
-		"text": "We need that demon's name to track it down. Let's search for its name at the headquarter."
+		"text": "We need that demon's name to track it down. Let's search for its name at the headquarters."
 	},
 	{
 		"characters": [

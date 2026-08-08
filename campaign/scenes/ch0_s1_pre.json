@@ -97,7 +97,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "You're gonna lost it all"
+			"en": "You're gonna lose it all"
 		}
 	},
 	{
@@ -159,7 +159,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "Before starting your own company, let's finished the sample exam first, how's it's going? Everyone has already gone home, let's hurry and finish it."
+			"en": "Before starting your own company, let's finish the sample exam first, how's it going? Everyone has already gone home, let's hurry and finish it."
 		}
 	},
 	{
@@ -204,7 +204,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I've tried what you have thought me, but the result is always different from yours... what happened...!?"
+			"en": "I've tried what you have taught me, but the result is always different from yours... what happened...!?"
 		}
 	},
 	{
@@ -220,7 +220,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "You didn't pay attention at all, aren't you?"
+			"en": "You didn't pay attention at all, did you?"
 		}
 	},
 	{
@@ -235,7 +235,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I've paid attention! But there were too much detail that I lost it"
+			"en": "I've paid attention! But there was too much detail that I lost it"
 		}
 	},
 	{
@@ -292,7 +292,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
 		"text": {
-			"en": "Mayu stuck her head right into Nex's personal space and read what he've been piddling. Strands of her hair hit just right below his chin"
+			"en": "Mayu stuck her head right into Nex's personal space and read what he'd been piddling. Strands of her hair hit just right below his chin"
 		}
 	},
 	{
@@ -327,7 +327,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "I suggest you copy the kernel formula from my notebook instead. The one that you've borrowed me. The one with a lot of bookmarks. Did you bring it?"
+			"en": "I suggest you copy the kernel formula from my notebook instead. The one that you borrowed from me. The one with a lot of bookmarks. Did you bring it?"
 		}
 	},
 	{
@@ -407,7 +407,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "What??? Alice??? You've lent my notebook to other person??"
+			"en": "What??? Alice??? You've lent my notebook to another person??"
 		}
 	},
 	{
@@ -438,7 +438,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "That notebook were meant to be only for you! How dare you give it away to other girl!"
+			"en": "That notebook was meant to be only for you! How dare you give it away to another girl!"
 		}
 	},
 	{
@@ -705,7 +705,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "May be I should go for a quick check on her"
+			"en": "Maybe I should go for a quick check on her"
 		}
 	},
 	{
@@ -855,7 +855,7 @@
 		],
 		"speaker": "Mayu",
 		"text": {
-			"en": "Your smell is so nice I want to drink every single drops of it."
+			"en": "Your smell is so nice I want to drink every single drop of it."
 		}
 	},
 	{
@@ -880,7 +880,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"text": "Mayu jumped toward Nex unprepared, and immediately grip her hand on his neck. She strangled him. Her grip is absurdly powerful"
+		"text": "Mayu jumped toward an unprepared Nex, and immediately gripped her hand on his neck. She strangled him. Her grip is absurdly powerful"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
@@ -905,7 +905,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
 		"shake_screen": 10.0,
-		"text": "Nex kicked and knock the mad girl off-balance"
+		"text": "Nex kicked and knocked the mad girl off-balance"
 	},
 	{
 		"wait": 0.5
@@ -914,7 +914,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
 		"characters": [],
 		"text": {
-			"en": "Nex finally be able to escape the death's embrace"
+			"en": "Nex was finally able to escape the death's embrace"
 		}
 	},
 	{
@@ -1079,7 +1079,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
 		"characters": [],
 		"text": {
-			"en": "A lot of thoughts came through his mind. His head went blank, but his feet keep running, not noticing what's ahead"
+			"en": "A lot of thoughts came through his mind. His head went blank, but his feet kept running, not noticing what's ahead"
 		}
 	},
 	{
@@ -1234,7 +1234,7 @@
 		"fade_color": "#000000",
 		"fade_in": 3.0,
 		"text": {
-			"en": "The next morning... at Nex's domitory"
+			"en": "The next morning... at Nex's dormitory"
 		}
 	},
 	{
@@ -1265,7 +1265,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [],
 		"text": {
-			"en": "Someone's knocking the door"
+			"en": "Someone's knocking on the door"
 		}
 	},
 	{
@@ -1329,7 +1329,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "(The door knock sound anxious... Or could it be...... Mayu???)"
+			"en": "(The door knock sounds anxious... Or could it be...... Mayu???)"
 		}
 	},
 	{
@@ -1359,7 +1359,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [],
 		"text": {
-			"en": "Nex carefully open the door..."
+			"en": "Nex carefully opened the door..."
 		}
 	},
 	{
@@ -1445,7 +1445,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I... I'm so sorry!!! I didn't meant to bumped into you last night! It was an accident! I am a student here!! My name is Nex Crowmont...! Please don't put me in jail!!"
+			"en": "I... I'm so sorry!!! I didn't mean to bump into you last night! It was an accident! I am a student here!! My name is Nex Crowmont...! Please don't put me in jail!!"
 		}
 	},
 	{
@@ -1460,7 +1460,7 @@
 			}
 		],
 		"speaker": "Silver-haired woman",
-		"text": "Relax. I didn't come here for that matter. Also, I'm not a police... "
+		"text": "Relax. I didn't come here for that matter. Also, I'm not a cop... "
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1512,7 +1512,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"characters": [],
 		"text": {
-			"en": "The silver-haired woman come inside Nex's room"
+			"en": "The silver-haired woman came inside Nex's room"
 		}
 	},
 	{
@@ -1591,7 +1591,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I don't know... but she looked like being crazy. Her eyes glowed red. And she strangled me. I broke free... She broke everything in the library... I escaped... and met you..."
+			"en": "I don't know... but she looked crazy. Her eyes glowed red. And she strangled me. I broke free... She broke everything in the library... I escaped... and met you..."
 		}
 	},
 	{
@@ -1620,7 +1620,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "In this world, there have always been a supernatural phenomenons lurking in the shadows. Many people said, it's not if... but when... they will get you, or your family, your friends"
+		"text": "In this world, there have always been supernatural phenomena lurking in the shadows. Many people said, it's not if... but when... they will get you, or your family, your friends"
 	},
 	{
 		"wait": 0.5
@@ -1668,7 +1668,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "That couldn't be! There must be someway to help her! Please help her, Ms.Kelly! "
+			"en": "That couldn't be! There must be some way to help her! Please help her, Ms. Kelly! "
 		}
 	},
 	{
@@ -1683,7 +1683,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Ms.Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
+		"text": "Ms. Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
 	},
 	{
 		"wait": 0.5
@@ -1747,7 +1747,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
-		"text": "Kelly handed Nex a deck of card"
+		"text": "Kelly handed Nex a deck of cards"
 	},
 	{
 		"wait": 1.0
@@ -1764,7 +1764,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "These are called [color=#E8F4FF]Vellum Cards[/color]. It's an exorcism tool use to expel supernatural threats."
+		"text": "These are called [color=#E8F4FF]Vellum Cards[/color]. It's an exorcism tool used to expel supernatural threats."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
@@ -1778,7 +1778,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "These cards looks like an ordinary cards. But they're actually a device that channel spiritual influence into a card battle. The stronger the duelist, the better the exorcism power, without relying on a heavy weapon."
+		"text": "These cards look like ordinary cards. But they're actually a device that channels spiritual influence into a card battle. The stronger the duelist, the better the exorcism power, without relying on a heavy weapon."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",

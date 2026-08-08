@@ -1,0 +1,113 @@
+=== Battle of Spilled Iced Coffee ===
+Battle started: 2026-08-08 04:50:51.420
+Game Session of Tom Collins (started 2026-08-08 04:47:20.591)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:51.533] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:58.861] Mode selected P1: TECH
+[00:59.161] Crystals: P1 3000 → 2400 (-600)  [tech cost]
+[01:01.988] Tech played  P1: "Radar"
+[01:03.546] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:03.983] Revealed: P0 (2,3) "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima}
+[01:05.176] MSG: Radar: Revealed Berserker of Ice Sea.
+[01:05.561] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[01:07.702] MSG: Radar: Revealed Dead End.
+[01:08.185] Revealed: P0 (3,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:09.342] MSG: Radar: Revealed Skeleton Lancer.
+[01:09.348] Tech resolved  P1
+[01:10.247] Mode selected P1: ATTACK
+[01:10.580] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:12.474] Dice rolled: 2
+[01:12.491] MSG: Lab Zombie wins!
+[01:16.982] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[01:21.194] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(2,3)"Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima}  Dice=2  ATK=55 vs DEF=50  → WIN
+[01:21.194] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[01:21.194] Reckoning overlay: P0 "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima} badge=50 ATK pill=105 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:21.194] Anim: 3A  △ P0(2,3)
+[01:21.194] Card destroyed  P0 (2,3) "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima}
+[01:21.713] Mode selected P1: ATTACK
+[01:22.042] Revealed: P1 (2,0) "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio}
+[01:23.925] Dice rolled: 2
+[01:23.940] MSG: Rotten Spider wins!
+[01:28.425] Crystals: P0 4000 → 3700 (-300)  [battle]
+[01:32.602] Attack P1(2,0)"Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} → P0(3,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=2  ATK=40 vs DEF=5  → WIN
+[01:32.602] Reckoning overlay: P1 "Rotten Spider" {Unit ATK40 DEF30 | cost 450 | affinity Bio} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:32.602] Reckoning overlay: P0 "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} badge=5 ATK pill=45 DEF pill=5 mod=+DEF 0 (5+0=5)
+[01:32.602] Anim: 3A  △ P0(3,1)
+[01:32.602] Card destroyed  P0 (3,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:33.096] MSG: Ability triggered: "Rotten Spider" (perm atk loss per own turn)
+[01:34.659] Turn ended  P1  |  Crystals P0=3700 P1=2400
+
+--- Turn 2  |  Player 0  |  Crystals P0=3700 P1=2400 ---
+[01:53.050] Revealed: P0 (1,1) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:54.269] Dice rolled: 2
+[01:54.275] MSG: Huntress of Green Glade wins!
+[01:56.785] Crystals: P1 2400 → 1950 (-450)  [battle]
+[02:01.003] Attack P0(1,1)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(2,0)"Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30}  Dice=2  ATK=50 vs DEF=30  → WIN
+[02:01.003] Reckoning overlay: P0 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:01.003] Reckoning overlay: P1 "Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:01.003] Anim: 3A  △ P1(2,0)
+[02:01.003] Card destroyed  P1 (2,0) "Rotten Spider" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30}
+[02:06.223] Revealed: P0 (1,3) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[02:07.461] Dice rolled: 5
+[02:07.480] MSG: Mad Wyvern wins!
+[02:09.975] Crystals: P1 1950 → 1250 (-700)  [battle]
+[02:14.160] Attack P0(1,3)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(2,4)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=5  ATK=65 vs DEF=20  → WIN
+[02:14.160] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[02:14.160] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:14.160] Anim: 3A  △ P1(2,4)
+[02:14.160] Card destroyed  P1 (2,4) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[02:23.015] Turn ended  P0  |  Crystals P0=3700 P1=1250
+
+--- Turn 3  |  Player 1  |  Crystals P0=3700 P1=1250 ---
+[02:27.015] Crystals: P1 1250 → 750 (-500)  [union]
+[02:29.857] Revealed: P1 (1,1) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[02:29.902] Union summoned P1: "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} from "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[02:33.287] Mode selected P1: ATTACK
+[02:34.486] Dice rolled: 1
+[02:34.569] MSG: Gamma Mermaid: -20 DEF vs non-BIO defender!
+[02:34.569] MSG: Gamma Mermaid wins!
+[02:38.994] Crystals: P0 3700 → 3150 (-550)  [battle]
+[02:43.194] Attack P1(1,1)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} → P0(1,3)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}  Dice=1  ATK=30 vs DEF=20  → WIN
+[02:43.194] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[02:43.194] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=20 ATK pill=65 DEF pill=40 mod=-DEF 20 (40-20=20)
+[02:43.194] Anim: 3A  △ P0(1,3)
+[02:43.194] Card destroyed  P0 (1,3) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[02:45.712] Turn ended  P1  |  Crystals P0=3150 P1=750
+
+--- Turn 4  |  Player 0  |  Crystals P0=3150 P1=750 ---
+[03:25.576] Revealed: P0 (4,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[03:26.801] Dice rolled: 4
+[03:26.927] MSG: Death Knight wins!
+[03:32.657] Attack P0(4,2)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(1,1)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}  Dice=4  ATK=65 vs DEF=20  → WIN
+[03:32.658] Reckoning overlay: P0 "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[03:32.658] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:32.658] Anim: 3A  △ P1(1,1)
+[03:32.658] Card destroyed  P1 (1,1) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[05:10.826] Dice rolled: 3
+[05:10.856] MSG: Huntress of Green Glade hits Dead End — nothing happens.
+[05:14.047] Attack P0(1,1)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(1,2)(empty)  Dice=3  → DEAD_END
+[05:14.047] Anim: 3F  (blank slot)
+[05:15.135] Turn ended  P0  |  Crystals P0=3150 P1=750
+
+--- Turn 5  |  Player 1  |  Crystals P0=3150 P1=750 ---
+[05:17.625] Mode selected P1: ATTACK
+[05:17.955] Revealed: P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[05:19.881] Revealed: P0 (1,0) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[05:21.089] Dice rolled: 4
+[05:23.989] Crystals: P1 750 → 0 (-750)  [battle]
+[05:26.999] Attack P1(3,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(1,0)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}  Dice=4  ATK=20 vs DEF=40  → LOSE
+[05:26.999] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[05:26.999] Reckoning overlay: P0 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=40 ATK pill=20 DEF pill=40 mod=+DEF 0 (40+0=40)
+[05:26.999] Anim: 3B  △ P1(3,1)
+[05:26.999] Card destroyed  P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[05:27.007] Ability choice: -1 (No)
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3150  P1: 0  |  Turns: 5

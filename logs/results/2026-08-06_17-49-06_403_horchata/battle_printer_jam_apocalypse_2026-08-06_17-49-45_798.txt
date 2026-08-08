@@ -1,0 +1,269 @@
+=== Battle of Printer Jam Apocalypse ===
+Battle started: 2026-08-06 17:49:45.798
+Game Session of Horchata (started 2026-08-06 17:49:06.403)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:18.869] MSG: Provocative: foe drawn to this bluff
+[00:18.891] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:26.357] Mode selected P1: TECH
+[00:26.663] Tech played  P1: "Spy"
+[00:28.207] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:28.848] Dead-end placed  P0 (1,1)
+[00:28.853] MSG: Spy: Revealed Dead End.
+[00:28.858] Tech resolved  P1
+[00:29.763] Mode selected P1: ATTACK
+[00:30.085] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[00:31.280] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[00:33.522] Revealed: P0 (2,3) "Spike Trap" {cost 800}
+[00:34.767] Dice rolled: 3
+[00:34.777] MSG: Trap triggered: Spike Trap!
+[00:39.815] Crystals: P0 5000 → 4200 (-800)  [trap cost]
+[00:42.640] Crystals: P1 5000 → 4800 (-200)  [card lost]
+[00:46.137] MSG: Spike Trap: Striker Comet destroyed!
+[00:46.146] Attack P1(1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P0(2,3)"Spike Trap" {cost 800}  Dice=3  → Unit vs Trap
+[00:46.146] Reckoning overlay: P1 "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:46.146] Anim: 3E  △ P1(1,1)
+[00:46.642] Mode selected P1: ATTACK
+[00:46.965] Revealed: P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:48.860] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:50.085] Dice rolled: 3
+[00:50.095] MSG: Trap triggered: Trap Hole!
+[00:50.095] MSG: Mars Drill is immune to 0-cost Traps!
+[00:55.562] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(0,0)"Trap Hole" {cost 0}  Dice=3  → Unit vs Trap (nullified)
+[00:55.562] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:55.562] Anim: 3D  (attacker survives)
+[00:56.062] Turn ended  P1  |  Crystals P0=4200 P1=4800
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=4800 ---
+[02:17.595] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:18.820] Dice rolled: 3
+[02:18.833] MSG: Spear Shark wins!
+[02:21.539] Crystals: P1 4800 → 4400 (-400)  [battle]
+[02:25.757] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=3  ATK=50 vs DEF=30  → WIN
+[02:25.757] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[02:25.757] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:25.757] Anim: 3A  △ P1(0,0)
+[02:25.759] Card destroyed  P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[02:38.617] Revealed: P0 (2,4) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[02:38.618] Revealed: P1 (0,1) "Foul Gas" {cost 0}
+[02:39.836] Dice rolled: 5
+[02:39.843] MSG: Trap triggered: Foul Gas!
+[02:42.137] MSG: Foul Gas: All of Player 1's units -5 ATK this turn!
+[02:43.505] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(0,1)"Foul Gas" {cost 0}  Dice=5  → Unit vs Trap
+[02:43.505] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[02:43.505] Anim: 3D  (attacker survives)
+[02:47.425] Revealed: P0 (3,1) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:48.884] Dice rolled: 2
+[02:48.908] MSG: Armored Rhino hits Dead End — nothing happens.
+[02:51.846] Attack P0(3,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[02:51.847] Anim: 3F  (blank slot)
+[02:53.360] Turn ended  P0  |  Crystals P0=4200 P1=4400
+
+--- Turn 3  |  Player 1  |  Crystals P0=4200 P1=4400 ---
+[02:55.867] Mode selected P1: TECH
+[02:56.175] Crystals: P1 4400 → 3800 (-600)  [tech cost]
+[02:58.987] Tech played  P1: "Radar"
+[03:00.536] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:01.175] Dead-end placed  P0 (1,0)
+[03:01.182] MSG: Radar: Revealed Dead End.
+[03:01.818] Dead-end placed  P0 (1,2)
+[03:01.825] MSG: Radar: Revealed Dead End.
+[03:02.254] Revealed: P0 (4,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[03:03.458] MSG: Radar: Revealed Mephisto the Fallen.
+[03:03.470] Tech resolved  P1
+[03:04.371] Mode selected P1: ATTACK
+[03:04.705] Revealed: P1 (4,2) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[03:06.597] Dice rolled: 1
+[03:06.607] MSG: Laser Walker wins!
+[03:11.084] Crystals: P0 4200 → 3340 (-860)  [battle]
+[03:15.295] Attack P1(4,2)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P0(4,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=1  ATK=20 vs DEF=0  → WIN
+[03:15.295] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[03:15.295] Reckoning overlay: P0 "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} badge=0 ATK pill=75 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:15.295] Anim: 3A  △ P0(4,1)
+[03:15.295] Card destroyed  P0 (4,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[03:15.799] Mode selected P1: ATTACK
+[03:16.135] Revealed: P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[03:18.026] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[03:19.263] Dice rolled: 3
+[03:19.267] MSG: Trap triggered: Hard Scale!
+[03:23.369] Crystals: P0 3340 → 3040 (-300)  [trap cost]
+[03:26.193] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[03:27.579] Attack P1(4,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(0,4)"Hard Scale" {cost 300}  Dice=3  → Unit vs Trap
+[03:27.579] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[03:27.579] Anim: 3D  (attacker survives)
+[03:28.078] Turn ended  P1  |  Crystals P0=3040 P1=3800
+
+--- Turn 4  |  Player 0  |  Crystals P0=3040 P1=3800 ---
+[03:33.524] Dice rolled: 5
+[03:33.530] MSG: Nanomites Beast wins!
+[03:36.287] Crystals: P1 3800 → 3500 (-300)  [battle]
+[03:40.507] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} → P1(4,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=5  ATK=100 vs DEF=15  → WIN
+[03:40.507] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} badge=100 ATK pill=50 DEF pill=60 mod=+ATK 50 (50+50=100)
+[03:40.507] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:40.507] Anim: 3A  △ P1(4,3)
+[03:40.507] Card destroyed  P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[03:44.487] Dice rolled: 5
+[03:44.497] MSG: Spear Shark wins!
+[03:48.832] Crystals: P1 3500 → 3250 (-250)  [battle]
+[03:53.025] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} → P1(4,2)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}  Dice=5  ATK=50 vs DEF=10  → WIN
+[03:53.025] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=25 mod=+ATK 0 (50+0=50)
+[03:53.025] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[03:53.025] Anim: 3A  △ P1(4,2)
+[03:53.025] Card destroyed  P1 (4,2) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[04:01.593] Revealed: P1 (2,2) "Flame Trap" {cost 200}
+[04:02.817] Dice rolled: 2
+[04:02.828] MSG: Trap triggered: Flame Trap!
+[04:05.945] Crystals: P1 3250 → 3050 (-200)  [trap cost]
+[04:08.756] MSG: Flame Trap: Armored Rhino debuffed!
+[04:10.138] Attack P0(3,1)"Armored Rhino" {Unit ATK60 DEF90 | cost 720 | affinity Nature} → P1(2,2)"Flame Trap" {cost 200}  Dice=2  → Unit vs Trap
+[04:10.138] Reckoning overlay: P0 "Armored Rhino" {Unit ATK60 DEF90 | cost 720 | affinity Nature} badge=60 ATK pill=60 DEF pill=90 mod=+ATK 0 (60+0=60)
+[04:10.138] Anim: 3D  (attacker survives)
+[04:13.109] Turn ended  P0  |  Crystals P0=3040 P1=3050
+
+--- Turn 5  |  Player 1  |  Crystals P0=3040 P1=3050 ---
+[04:15.597] Mode selected P1: TECH
+[04:15.905] Tech played  P1: "Tease"
+[04:17.695] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:20.042] Revealed: P0 (4,2) "Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio}
+[04:21.261] MSG: Tease: Opponent revealed Slug-11.
+[04:21.269] Tech resolved  P1
+[04:23.655] Crystals: P1 3050 → 2550 (-500)  [union]
+[04:26.489] Revealed: P1 (1,3) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[04:26.518] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10 | face-down}, "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}
+[04:26.518] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[04:29.940] Mode selected P1: ATTACK
+[04:30.275] Revealed: P1 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[04:32.159] Dice rolled: 2
+[04:32.166] MSG: Moon Tribe Twin Blader wins!
+[04:35.831] Crystals: P0 3040 → 2560 (-480)  [battle]
+[04:38.728] Coin flip: Tails
+[04:41.472] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[04:42.847] Attack P1(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(0,2)"Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}  Dice=2  ATK=30 vs DEF=25  → WIN
+[04:42.847] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[04:42.847] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:42.847] Anim: 3A  △ P0(0,2)
+[04:42.847] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF25 | cost 480 | affinity Nature}
+[04:43.350] Mode selected P1: ATTACK
+[04:44.559] Revealed: P0 (4,3) "Alarm" {cost 0}
+[04:45.792] Dice rolled: 5
+[04:45.829] MSG: Trap triggered: Alarm!
+[04:49.917] MSG: Alarm: +10 ATK & +10 DEF to all ANIMA units this turn!
+[04:51.277] Attack P1(1,3)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(4,3)"Alarm" {cost 0}  Dice=5  → Unit vs Trap
+[04:51.277] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=25 ATK pill=25 DEF pill=55 mod=+ATK 0 (25+0=25)
+[04:51.277] Anim: 3D  (attacker survives)
+[04:51.783] Turn ended  P1  |  Crystals P0=2560 P1=2550
+
+--- Turn 6  |  Player 0  |  Crystals P0=2560 P1=2550 ---
+[05:01.478] MSG: Tap 2 material card(s) on the field.
+[05:08.188] Revealed: P0 (0,1) "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50}
+[05:09.411] Dice rolled: 4
+[05:09.450] MSG: Sonic Seraph wins!
+[05:13.278] Attack P0(0,1)"Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} → P1(1,3)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}  Dice=4  ATK=95 vs DEF=55  → WIN
+[05:13.278] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} badge=95 ATK pill=95 DEF pill=100 mod=+ATK 0 (95+0=95)
+[05:13.278] Reckoning overlay: P1 "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=55 ATK pill=25 DEF pill=55 mod=+DEF 0 (55+0=55)
+[05:13.278] Anim: 3A  △ P1(1,3)
+[05:13.278] Card destroyed  P1 (1,3) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[05:23.598] Dice rolled: 1
+[05:23.607] MSG: Nanomites Beast wins!
+[05:26.138] Crystals: P1 2550 → 2250 (-300)  [battle]
+[05:30.336] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=100 vs DEF=20  → WIN
+[05:30.337] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=100 ATK pill=50 DEF pill=55 mod=+ATK 50 (50+50=100)
+[05:30.337] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:30.337] Anim: 3A  △ P1(2,4)
+[05:30.337] Card destroyed  P1 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:37.917] Dice rolled: 3
+[05:37.940] MSG: Armored Rhino hits Dead End — nothing happens.
+[05:41.114] Attack P0(3,1)"Armored Rhino" {Unit ATK50 DEF85 | cost 720 | affinity Nature | base 50/85} → P1(1,4)(empty)  Dice=3  → DEAD_END
+[05:41.114] Anim: 3F  (blank slot)
+[05:41.755] Turn ended  P0  |  Crystals P0=2560 P1=2250
+
+--- Turn 7  |  Player 1  |  Crystals P0=2560 P1=2250 ---
+[05:44.260] Mode selected P1: ATTACK
+[05:44.601] Revealed: P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[05:46.488] Revealed: P0 (2,1) "Pepper Spray" {cost 0}
+[05:47.724] Dice rolled: 1
+[05:47.731] MSG: Trap triggered: Pepper Spray!
+[05:50.491] Coin flip: Heads, Heads
+[05:53.255] MSG: Pepper Spray: Heads, Heads.
+[05:53.255] MSG: Pepper Spray: 2 head(s) — Neptune Diver -10 ATK until next turn ends!
+[05:54.635] Attack P1(3,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(2,1)"Pepper Spray" {cost 0}  Dice=1  → Unit vs Trap
+[05:54.635] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[05:54.635] Anim: 3D  (attacker survives)
+[05:54.637] MSG: Ability triggered: "Neptune Diver" (reveal on trap attack)
+[05:54.661] Target prompt: "Neptune Diver: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[05:56.811] MSG: Revealed: (empty)
+[05:57.312] Mode selected P1: ATTACK
+[05:57.641] Revealed: P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:59.562] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[06:00.795] Dice rolled: 4
+[06:00.802] MSG: Trap triggered: Decoy Puppet!
+[06:03.426] Crystals: P0 2560 → 2460 (-100)  [trap cost]
+[06:06.251] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[06:07.609] Attack P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=4  → Unit vs Trap
+[06:07.609] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[06:07.609] Anim: 3D  (attacker survives)
+[06:08.110] Turn ended  P1  |  Crystals P0=2460 P1=2250
+
+--- Turn 8  |  Player 0  |  Crystals P0=2460 P1=2250 ---
+[06:13.763] Dice rolled: 4
+[06:13.775] MSG: Nanomites Beast wins!
+[06:16.263] Crystals: P1 2250 → 1950 (-300)  [battle]
+[06:20.455] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=100 vs DEF=20  → WIN
+[06:20.455] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=100 ATK pill=50 DEF pill=55 mod=+ATK 50 (50+50=100)
+[06:20.455] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[06:20.455] Anim: 3A  △ P1(3,4)
+[06:20.455] Card destroyed  P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[06:23.521] Dice rolled: 3
+[06:23.530] MSG: Sonic Seraph wins!
+[06:26.396] Crystals: P1 1950 → 1750 (-200)  [battle]
+[06:30.620] Attack P0(0,1)"Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} → P1(3,3)"Neptune Diver" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | base 20/10}  Dice=3  ATK=95 vs DEF=10  → WIN
+[06:30.620] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} badge=95 ATK pill=95 DEF pill=100 mod=+ATK 0 (95+0=95)
+[06:30.620] Reckoning overlay: P1 "Neptune Diver" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | base 20/10} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[06:30.622] Anim: 3A  △ P1(3,3)
+[06:30.622] Card destroyed  P1 (3,3) "Neptune Diver" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | base 20/10}
+[06:34.061] Revealed: P1 (4,0) "Cursed Reflection" {cost 600}
+[06:35.301] Dice rolled: 1
+[06:35.315] MSG: Trap triggered: Cursed Reflection!
+[06:37.559] Crystals: P1 1750 → 1150 (-600)  [trap cost]
+[06:40.377] MSG: Cursed Reflection: Armored Rhino's ATK and DEF swapped until end of defender's turn!
+[06:41.756] Attack P0(3,1)"Armored Rhino" {Unit ATK50 DEF85 | cost 720 | affinity Nature | base 50/85} → P1(4,0)"Cursed Reflection" {cost 600}  Dice=1  → Unit vs Trap
+[06:41.756] Reckoning overlay: P0 "Armored Rhino" {Unit ATK50 DEF85 | cost 720 | affinity Nature | base 50/85} badge=50 ATK pill=50 DEF pill=85 mod=+ATK 0 (50+0=50)
+[06:41.756] Anim: 3D  (attacker survives)
+[06:43.387] Turn ended  P0  |  Crystals P0=2460 P1=1150
+
+--- Turn 9  |  Player 1  |  Crystals P0=2460 P1=1150 ---
+[06:45.901] Mode selected P1: ATTACK
+[06:46.239] Revealed: P1 (4,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[06:48.155] Revealed: P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[06:49.359] Dice rolled: 2
+[06:49.367] MSG: Both cards are destroyed!
+[06:53.621] Crystals: P1 1150 → 450 (-700)  [battle]
+[06:56.448] Crystals: P0 2460 → 1910 (-550)  [battle]
+[06:59.298] Attack P1(4,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(2,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=2  ATK=40 vs DEF=40  → TIE
+[06:59.298] Reckoning overlay: P1 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[06:59.298] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[06:59.298] Anim: 3C  △ P1(4,4) + △ P0(2,0)
+[06:59.298] Card destroyed  P1 (4,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[06:59.298] Card destroyed  P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[06:59.298] MSG: Ability triggered: "Scout Probe"
+[06:59.322] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[07:00.838] MSG: No valid target — effect cancelled.
+[07:01.342] Mode selected P1: ATTACK
+[07:01.677] Revealed: P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[07:03.607] Revealed: P0 (1,3) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[07:04.800] Dice rolled: 3
+[07:09.379] Crystals: P1 450 → 250 (-200)  [battle]
+[07:12.228] Attack P1(2,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P0(1,3)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=3  ATK=10 vs DEF=30  → LOSE
+[07:12.228] Reckoning overlay: P1 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+ATK 0 (10+0=10)
+[07:12.228] Reckoning overlay: P0 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[07:12.228] Anim: 3B  △ P1(2,0)
+[07:12.228] Card destroyed  P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1910  P1: 250  |  Turns: 9

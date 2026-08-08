@@ -128,7 +128,7 @@
 			},
 			{
 				"goto_group": 3.0,
-				"label": "Research cure for cancers"
+				"label": "Research a cure for cancer"
 			},
 			{
 				"goto_group": 4.0,
@@ -410,7 +410,7 @@
 		],
 		"group": 4.0,
 		"speaker": "Mayu",
-		"text": "I will give you a worst life right now if you do not finish this sample exam."
+		"text": "I will give you a worse life right now if you do not finish this sample exam."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -468,7 +468,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I've tried what you have thought me, but the result is always different from yours... what happened...!?"
+			"en": "I've tried what you have taught me, but the result is always different from yours... what happened...!?"
 		}
 	},
 	{
@@ -483,7 +483,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": "You didn't pay attention at all, aren't you?"
+		"text": "You didn't pay attention at all, did you?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -497,7 +497,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "I've paid attention! But there were too much detail that I lost it"
+			"en": "I've paid attention! But there was too much detail that I lost it"
 		}
 	},
 	{
@@ -512,7 +512,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": "Too much detail? Don't try to fool me. You have photographic memory since you were kid."
+		"text": "Too much detail? Don't try to fool me. You have photographic memory since you were a kid."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -616,7 +616,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
-		"text": "Mayu stuck her head right in and read what he've been piddling. Strands of her hair hit just right below his chin"
+		"text": "Mayu stuck her head right in and read what he'd been piddling. Strands of her hair hit just right below his chin"
 	},
 	{
 		"wait": 0.5
@@ -654,7 +654,7 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
 		"hidden": true,
-		"text": "(Let's help Nex recall his memory about \"The book name he have copied from\" using a \"Detective Note\")"
+		"text": "(Let's help Nex recall his memory about \"The book name he has copied from\" using a \"Detective Note\")"
 	},
 	{
 		"hidden": true,
@@ -1332,7 +1332,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": "That notebook were meant to be only for you! How dare you give it away to other girl!"
+		"text": "That notebook was meant to be only for you! How dare you give it away to another girl!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1379,7 +1379,7 @@
 		},
 		"fade_in": 0.3,
 		"hidden": true,
-		"text": "(She shove her feet into her shoes, ready to throw trantrum)"
+		"text": "(She shoves her feet into her shoes, ready to throw tantrum)"
 	},
 	{
 		"fade_out": 0.3,
@@ -1532,7 +1532,7 @@
 			},
 			{
 				"goto_group": 6.0,
-				"label": "She might have fallen alseep"
+				"label": "She might have fallen asleep"
 			},
 			{
 				"goto_group": 7.0,
@@ -1582,7 +1582,7 @@
 		],
 		"group": 6.0,
 		"speaker": "Nex",
-		"text": "Is she... Went crying in the back... And fell alseep?"
+		"text": "Did she go crying in the back... And fall asleep?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -1747,7 +1747,7 @@
 		],
 		"group": 6.0,
 		"speaker": "Nex",
-		"text": "Why don't Mayu just come out of the study room and yell or something already?"
+		"text": "Why doesn't Mayu just come out of the study room and yell or something already?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
@@ -1761,7 +1761,7 @@
 		],
 		"group": 6.0,
 		"speaker": "Nex",
-		"text": "Strange... May be I should go for a quick check on her"
+		"text": "Strange... Maybe I should go for a quick check on her"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
@@ -1775,7 +1775,7 @@
 		],
 		"group": 7.0,
 		"speaker": "Nex",
-		"text": "Why don't Mayu just come out of the study room and yell or something already?"
+		"text": "Why doesn't Mayu just come out of the study room and yell or something already?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
@@ -1789,7 +1789,7 @@
 		],
 		"group": 7.0,
 		"speaker": "Nex",
-		"text": "Strange... May be I should go for a quick check on her"
+		"text": "Strange... Maybe I should go for a quick check on her"
 	},
 	{
 		"fade_color": "#000000",

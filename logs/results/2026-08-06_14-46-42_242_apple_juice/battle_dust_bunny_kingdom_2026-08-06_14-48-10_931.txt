@@ -1,0 +1,218 @@
+=== Battle of Dust Bunny Kingdom ===
+Battle started: 2026-08-06 14:48:10.931
+Game Session of Apple Juice (started 2026-08-06 14:46:42.242)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:13.088] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:20.395] Mode selected P1: TECH
+[00:20.703] Tech played  P1: "Spy"
+[00:22.247] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:22.886] Dead-end placed  P0 (1,0)
+[00:22.894] MSG: Spy: Revealed Dead End.
+[00:22.898] Tech resolved  P1
+[00:23.794] Mode selected P1: ATTACK
+[00:24.122] Revealed: P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:26.020] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[00:27.247] Dice rolled: 2
+[00:27.255] MSG: Trap triggered: Hard Scale!
+[00:29.954] Crystals: P0 5000 → 4700 (-300)  [trap cost]
+[00:32.779] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:34.165] Attack P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,4)"Hard Scale" {cost 300}  Dice=2  → Unit vs Trap
+[00:34.165] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:34.165] Anim: 3D  (attacker survives)
+[00:34.165] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[00:34.198] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:36.149] Revealed: P0 (1,2) "Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio}
+[00:37.339] MSG: Revealed: Slug-11
+[00:37.834] Mode selected P1: ATTACK
+[00:38.171] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:40.062] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:41.292] Dice rolled: 5
+[00:41.300] MSG: Trap triggered: Trap Hole!
+[00:44.094] Coin flip: Tails, Tails, Tails
+[00:46.854] MSG: Trap Hole: Tails, Tails, Tails.
+[00:46.854] MSG: Trap Hole: No heads — no crystal loss.
+[00:48.242] Attack P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:48.243] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[00:48.243] Anim: 3D  (attacker survives)
+[00:48.733] Turn ended  P1  |  Crystals P0=4700 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=5000 ---
+[00:57.454] Revealed: P0 (2,4) "Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio}
+[00:58.678] Dice rolled: 5
+[00:58.682] MSG: Nanomites Beast wins!
+[01:01.324] Crystals: P1 5000 → 4600 (-400)  [battle]
+[01:05.525] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} → P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=5  ATK=50 vs DEF=25  → WIN
+[01:05.525] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF60 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=60 mod=+ATK 0 (50+0=50)
+[01:05.525] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:05.525] Anim: 3A  △ P1(0,1)
+[01:05.525] Card destroyed  P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:08.699] Dice rolled: 3
+[01:08.706] MSG: Slug-11 wins!
+[01:11.942] Crystals: P1 4600 → 4320 (-280)  [battle]
+[01:16.162] Attack P0(1,2)"Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=3  ATK=45 vs DEF=20  → WIN
+[01:16.162] Reckoning overlay: P0 "Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio} badge=45 ATK pill=45 DEF pill=70 mod=+ATK 0 (45+0=45)
+[01:16.162] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:16.162] Anim: 3A  △ P1(1,1)
+[01:16.162] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[01:19.136] Turn ended  P0  |  Crystals P0=4700 P1=4320
+
+--- Turn 3  |  Player 1  |  Crystals P0=4700 P1=4320 ---
+[01:21.637] Mode selected P1: TECH
+[01:21.945] Tech played  P1: "Bribe"
+[01:23.487] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:25.137] MSG: Bribe: Opponent passed.
+[01:25.143] Tech resolved  P1
+[01:26.044] Mode selected P1: ATTACK
+[01:26.370] Revealed: P1 (4,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:28.273] Dice rolled: 4
+[01:28.278] MSG: Tomb Bandit wins!
+[01:31.065] Crystals: P0 4700 → 3900 (-800)  [battle]
+[01:35.279] Attack P1(4,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(1,2)"Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio}  Dice=4  ATK=75 vs DEF=70  → WIN
+[01:35.279] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[01:35.279] Reckoning overlay: P0 "Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio} badge=70 ATK pill=45 DEF pill=70 mod=+DEF 0 (70+0=70)
+[01:35.279] Anim: 3A  △ P0(1,2)
+[01:35.279] Card destroyed  P0 (1,2) "Slug-11" {Unit ATK45 DEF70 | cost 800 | affinity Bio}
+[01:35.776] Mode selected P1: ATTACK
+[01:36.105] Revealed: P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:38.044] Revealed: P0 (0,1) "Sonic Seraph" {Unit ATK95 DEF105 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50}
+[01:39.229] Dice rolled: 1
+[01:43.433] Crystals: P1 4320 → 3920 (-400)  [battle]
+[01:46.271] Attack P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(0,1)"Sonic Seraph" {Unit ATK95 DEF105 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50}  Dice=1  ATK=40 vs DEF=105  → LOSE
+[01:46.271] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[01:46.271] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK95 DEF105 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50} badge=105 ATK pill=95 DEF pill=105 mod=+DEF 0 (105+0=105)
+[01:46.271] Anim: 3B  △ P1(0,3)
+[01:46.271] Card destroyed  P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:46.776] Turn ended  P1  |  Crystals P0=3900 P1=3920
+
+--- Turn 4  |  Player 0  |  Crystals P0=3900 P1=3920 ---
+[01:56.071] MSG: Tap 2 material card(s) on the field.
+[01:56.294] MSG: 1 more material(s) needed.
+[01:57.469] Crystals: P0 3900 → 2400 (-1500)  [union]
+[02:00.296] Revealed: P0 (0,1) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[02:00.337] Union summoned P0: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Sonic Seraph" {Unit ATK95 DEF100 | cost 550 | affinity Divine | base 45/50 | buff +permATK50, +permDEF50}, "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[03:10.752] Dice rolled: 2
+[03:10.788] MSG: Seraphim Fistmaster wins!
+[03:13.294] Crystals: P1 3920 → 2920 (-1000)  [battle]
+[03:17.491] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(4,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=2  ATK=120 vs DEF=60  → WIN
+[03:17.491] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=120 ATK pill=120 DEF pill=120 mod=+ATK 0 (120+0=120)
+[03:17.491] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[03:17.491] Anim: 3A  △ P1(4,3)
+[03:17.491] Card destroyed  P1 (4,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[03:27.971] Revealed: P1 (1,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[03:29.176] Dice rolled: 5
+[03:29.183] MSG: Nanomites Beast wins!
+[03:31.728] Crystals: P1 2920 → 2620 (-300)  [battle]
+[03:35.931] Attack P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(1,2)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=5  ATK=50 vs DEF=15  → WIN
+[03:35.931] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[03:35.931] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:35.931] Anim: 3A  △ P1(1,2)
+[03:35.931] Card destroyed  P1 (1,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[03:37.166] Turn ended  P0  |  Crystals P0=2400 P1=2620
+
+--- Turn 5  |  Player 1  |  Crystals P0=2400 P1=2620 ---
+[03:41.142] Crystals: P1 2620 → 1620 (-1000)  [union]
+[03:43.966] Revealed: P1 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[03:44.006] Union summoned P1: "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} from "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}, "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[03:47.384] Mode selected P1: ATTACK
+[03:48.584] Dice rolled: 1
+[03:48.614] MSG: Kiba the Giant Slayer wins!
+[03:53.095] Crystals: P0 2400 → 1600 (-800)  [battle]
+[03:57.305] Attack P1(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} → P0(2,4)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=1  ATK=80 vs DEF=55  → WIN
+[03:57.305] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=80 ATK pill=80 DEF pill=55 mod=+ATK 0 (80+0=80)
+[03:57.305] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[03:57.305] Anim: 3A  △ P0(2,4)
+[03:57.305] Card destroyed  P0 (2,4) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[03:59.814] Turn ended  P1  |  Crystals P0=1600 P1=1620
+
+--- Turn 6  |  Player 0  |  Crystals P0=1600 P1=1620 ---
+[04:13.456] Revealed: P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[04:14.679] Dice rolled: 4
+[04:14.715] MSG: Dystopian Cultist wins!
+[04:18.953] Attack P0(2,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(2,1)"Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}  Dice=4  ATK=65 vs DEF=55  → WIN
+[04:18.953] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[04:18.953] Reckoning overlay: P1 "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima} badge=55 ATK pill=80 DEF pill=55 mod=+DEF 0 (55+0=55)
+[04:18.953] Anim: 3A  △ P1(2,1)
+[04:18.953] Card destroyed  P1 (2,1) "Kiba the Giant Slayer" {Union ATK80 DEF55 | destroy-cost 0 | summon-cost 1000 | affinity Anima}
+[04:23.879] Revealed: P1 (1,4) "Decoy Puppet" {cost 100}
+[04:25.109] Dice rolled: 4
+[04:25.152] MSG: Trap triggered: Decoy Puppet!
+[04:27.323] Crystals: P1 1620 → 1520 (-100)  [trap cost]
+[04:30.148] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[04:31.519] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(1,4)"Decoy Puppet" {cost 100}  Dice=4  → Unit vs Trap
+[04:31.519] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=120 ATK pill=120 DEF pill=120 mod=+ATK 0 (120+0=120)
+[04:31.519] Anim: 3D  (attacker survives)
+[04:32.459] Turn ended  P0  |  Crystals P0=1600 P1=1520
+
+--- Turn 7  |  Player 1  |  Crystals P0=1600 P1=1520 ---
+[04:34.951] Mode selected P1: ATTACK
+[04:35.288] Revealed: P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[04:37.178] Dice rolled: 4
+[04:37.186] MSG: Huntress of Green Glade wins!
+[04:40.924] Crystals: P0 1600 → 1050 (-550)  [battle]
+[04:45.131] Attack P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(2,0)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=4  ATK=50 vs DEF=40  → WIN
+[04:45.131] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[04:45.131] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[04:45.131] Anim: 3A  △ P0(2,0)
+[04:45.131] Card destroyed  P0 (2,0) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[04:47.636] Turn ended  P1  |  Crystals P0=1050 P1=1520
+
+--- Turn 8  |  Player 0  |  Crystals P0=1050 P1=1520 ---
+[04:51.241] Tech played  P0: "Tease"
+[04:52.770] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:53.208] Revealed: P1 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[04:54.398] MSG: Tease: Opponent revealed Street Rogue.
+[04:54.570] Tech resolved  P0
+[05:04.814] Dice rolled: 1
+[05:04.837] MSG: Seraphim Fistmaster wins!
+[05:07.465] Crystals: P1 1520 → 720 (-800)  [battle]
+[05:11.676] Attack P0(0,1)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=1  ATK=120 vs DEF=50  → WIN
+[05:11.676] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} badge=120 ATK pill=120 DEF pill=120 mod=+ATK 0 (120+0=120)
+[05:11.676] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[05:11.676] Anim: 3A  △ P1(3,2)
+[05:11.676] Card destroyed  P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[05:14.642] Revealed: P0 (3,2) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[05:15.870] Dice rolled: 3
+[05:15.887] MSG: Armored Rhino wins!
+[05:20.340] Crystals: P1 720 → 370 (-350)  [battle]
+[05:24.522] Attack P0(3,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=3  ATK=60 vs DEF=20  → WIN
+[05:24.522] Reckoning overlay: P0 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=60 ATK pill=60 DEF pill=85 mod=+ATK 0 (60+0=60)
+[05:24.522] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:24.522] Anim: 3A  △ P1(1,3)
+[05:24.522] Card destroyed  P1 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[05:25.441] Turn ended  P0  |  Crystals P0=1050 P1=370
+
+--- Turn 9  |  Player 1  |  Crystals P0=1050 P1=370 ---
+[05:27.933] Mode selected P1: ATTACK
+[05:28.259] Revealed: P1 (4,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[05:30.182] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[05:31.392] Dice rolled: 3
+[05:31.397] MSG: Mafia Associates wins!
+[05:34.624] Crystals: P0 1050 → 570 (-480)  [battle]
+[05:38.834] Attack P1(4,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=3  ATK=45 vs DEF=20  → WIN
+[05:38.834] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[05:38.834] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=20 ATK pill=50 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:38.834] Anim: 3A  △ P0(0,2)
+[05:38.834] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[05:39.320] MSG: Ability triggered: "Mafia Associates" (def zero when exposed)
+[05:40.872] MSG: Mafia Associates: DEF becomes 0 at end of expose turn.
+[05:40.883] Turn ended  P1  |  Crystals P0=570 P1=370
+
+--- Turn 10  |  Player 0  |  Crystals P0=570 P1=370 ---
+[05:46.530] Dice rolled: 4
+[05:46.538] MSG: Armored Rhino wins!
+[05:49.222] Crystals: P1 370 → 0 (-370)  [battle]
+[05:52.231] Attack P0(3,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(4,1)"Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}  Dice=4  ATK=60 vs DEF=0  → WIN
+[05:52.231] Reckoning overlay: P0 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=60 ATK pill=60 DEF pill=85 mod=+ATK 0 (60+0=60)
+[05:52.231] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0} badge=0 ATK pill=45 DEF pill=0 mod=+DEF 0 (0+0=0)
+[05:52.231] Anim: 3A  △ P1(4,1)
+[05:52.231] Card destroyed  P1 (4,1) "Mafia Associates" {Unit ATK45 DEF0 | cost 500 | affinity Anima | base 45/0}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 570  P1: 0  |  Turns: 10

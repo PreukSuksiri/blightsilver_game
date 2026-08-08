@@ -135,6 +135,19 @@ func set_placements(placements: Dictionary) -> void:
 	queue_redraw()
 
 
+## Global screen rect of a node frame hit area; empty Rect2 when missing.
+func get_node_hit_global_rect(node_id: String) -> Rect2:
+	var hit: Control = get_node_hit(node_id)
+	if hit == null:
+		return Rect2()
+	return hit.get_global_rect()
+
+
+## Player frame hit control for a node id, or null.
+func get_node_hit(node_id: String) -> Control:
+	return _hit_areas.get(node_id.strip_edges()) as Control
+
+
 func get_topic() -> Dictionary:
 	return _topic.duplicate(true)
 

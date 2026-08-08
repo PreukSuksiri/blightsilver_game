@@ -1,0 +1,163 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-08-06 10:03:11.677
+Game Session of Cappuccino (started 2026-08-06 10:02:42.677)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:09.429] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:16.949] Mode selected P1: TECH
+[00:17.256] Tech played  P1: "Spy"
+[00:18.796] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:19.436] Dead-end placed  P0 (3,2)
+[00:19.446] Tech resolved  P1
+[00:20.342] Mode selected P1: ATTACK
+[00:20.706] Revealed: P1 (0,2) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:22.596] Revealed: P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:23.785] Dice rolled: 3
+[00:23.794] MSG: Goblin Poacher wins!
+[00:28.279] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:32.474] Attack P1(0,2)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(1,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=30 vs DEF=20  → WIN
+[00:32.474] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=30 ATK pill=30 DEF pill=10 mod=+ATK 0 (30+0=30)
+[00:32.474] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:32.474] Anim: 3A  △ P0(1,4)
+[00:32.474] Card destroyed  P0 (1,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:32.957] Mode selected P1: ATTACK
+[00:33.300] Revealed: P1 (0,1) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[00:35.430] MSG: Ability triggered: "Nuki the Tanuki" (coin flip swap position)
+[00:37.525] Coin flip: Tails
+[00:40.270] MSG: Nuki the Tanuki: Coin flip — Tails.
+[00:40.270] Dice rolled: 2
+[00:40.300] MSG: Nuki the Tanuki hits Dead End — nothing happens.
+[00:43.546] Attack P1(0,1)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P0(3,4)(empty)  Dice=2  → DEAD_END
+[00:43.546] Anim: 3F  (blank slot)
+[00:44.048] Turn ended  P1  |  Crystals P0=4700 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=3000 ---
+[01:41.809] MSG: Tap 2 material card(s) on the field.
+[01:42.406] MSG: 1 more material(s) needed.
+[01:42.751] Crystals: P0 4700 → 3700 (-1000)  [union]
+[01:45.574] Revealed: P0 (1,3) "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane}
+[01:45.616] Union summoned P0: "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} from "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane | face-down}, "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane | face-down}
+[02:14.193] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[02:15.417] MSG: Ability triggered: "Nuki the Tanuki" (coin flip swap position)
+[02:17.507] Coin flip: Tails
+[02:20.244] MSG: Nuki the Tanuki: Coin flip — Tails.
+[02:20.244] Dice rolled: 5
+[02:20.252] MSG: Spear Shark wins!
+[02:24.729] Crystals: P1 3000 → 2900 (-100)  [battle]
+[02:28.928] Attack P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(0,1)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}  Dice=5  ATK=50 vs DEF=10  → WIN
+[02:28.928] Reckoning overlay: P0 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[02:28.928] Reckoning overlay: P1 "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:28.928] Anim: 3A  △ P1(0,1)
+[02:28.928] Card destroyed  P1 (0,1) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[02:31.932] Revealed: P0 (0,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[02:33.145] Dice rolled: 2
+[02:33.158] MSG: Sonic Seraph wins!
+[02:36.033] Crystals: P1 2900 → 2650 (-250)  [battle]
+[02:40.237] Attack P0(0,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(0,2)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=2  ATK=45 vs DEF=10  → WIN
+[02:40.237] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[02:40.237] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:40.237] Anim: 3A  △ P1(0,2)
+[02:40.237] Card destroyed  P1 (0,2) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:43.116] Turn ended  P0  |  Crystals P0=3700 P1=2650
+
+--- Turn 3  |  Player 1  |  Crystals P0=3700 P1=2650 ---
+[02:45.616] Mode selected P1: TECH
+[02:45.916] Crystals: P1 2650 → 2050 (-600)  [tech cost]
+[02:48.744] Tech played  P1: "Radar"
+[02:50.302] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[02:50.691] Revealed: P0 (0,4) "Hard Scale" {cost 300}
+[02:52.323] Revealed: P0 (4,3) "Alarm" {cost 0}
+[02:53.941] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:55.185] Tech resolved  P1
+[02:56.078] Mode selected P1: ATTACK
+[02:56.411] Revealed: P1 (4,1) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:58.279] Dice rolled: 2
+[02:58.289] MSG: Armored Rhino wins!
+[03:01.854] Crystals: P0 3700 → 3150 (-550)  [battle]
+[03:06.067] Attack P1(4,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(0,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=2  ATK=60 vs DEF=50  → WIN
+[03:06.067] Reckoning overlay: P1 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=60 ATK pill=60 DEF pill=85 mod=+ATK 0 (60+0=60)
+[03:06.067] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:06.067] Anim: 3A  △ P0(0,1)
+[03:06.067] Card destroyed  P0 (0,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[03:08.563] Turn ended  P1  |  Crystals P0=3150 P1=2050
+
+--- Turn 4  |  Player 0  |  Crystals P0=3150 P1=2050 ---
+[03:24.218] Crystals: P0 3150 → 2150 (-1000)  [tech cost]
+[03:27.035] Tech played  P0: "War Supply"
+[03:28.586] MSG: War Supply: All your units gain +10 ATK & DEF until end of turn.
+[03:28.592] Tech resolved  P0
+[03:32.694] Dice rolled: 1
+[03:32.733] MSG: Ice Elemental wins!
+[03:35.495] Crystals: P1 2050 → 1330 (-720)  [battle]
+[03:38.337] MSG: Armored Rhino locked — cannot attack until end of next turn.
+[03:39.672] Attack P0(1,3)"Ice Elemental" {Union ATK90 DEF60 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 80/50 | buff +tempATK10, +tempDEF10} → P1(4,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}  Dice=1  ATK=90 vs DEF=85  → WIN
+[03:39.672] Reckoning overlay: P0 "Ice Elemental" {Union ATK90 DEF60 | destroy-cost 0 | summon-cost 1000 | affinity Arcane | base 80/50 | buff +tempATK10, +tempDEF10} badge=90 ATK pill=90 DEF pill=60 mod=+ATK 0 (90+0=90)
+[03:39.672] Reckoning overlay: P1 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=85 ATK pill=60 DEF pill=85 mod=+DEF 0 (85+0=85)
+[03:39.672] Anim: 3A  △ P1(4,1)
+[03:39.672] Card destroyed  P1 (4,1) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[03:43.299] Revealed: P1 (0,0) "Spike Trap" {cost 800}
+[03:44.531] Dice rolled: 3
+[03:44.540] MSG: Trap triggered: Spike Trap!
+[03:48.744] Crystals: P1 1330 → 530 (-800)  [trap cost]
+[03:51.587] Crystals: P0 2150 → 1670 (-480)  [card lost]
+[03:55.047] MSG: Spike Trap: Spear Shark destroyed!
+[03:55.055] Attack P0(0,2)"Spear Shark" {Unit ATK60 DEF30 | cost 480 | affinity Nature | base 50/20 | buff +tempATK10, +tempDEF10} → P1(0,0)"Spike Trap" {cost 800}  Dice=3  → Unit vs Trap
+[03:55.055] Reckoning overlay: P0 "Spear Shark" {Unit ATK60 DEF30 | cost 480 | affinity Nature | base 50/20 | buff +tempATK10, +tempDEF10} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[03:55.055] Anim: 3E  △ P0(0,2)
+[03:57.951] Turn ended  P0  |  Crystals P0=1670 P1=530
+
+--- Turn 5  |  Player 1  |  Crystals P0=1670 P1=530 ---
+[04:00.457] Mode selected P1: TECH
+[04:00.764] Tech played  P1: "Tease"
+[04:02.465] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:06.027] Revealed: P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[04:07.246] MSG: Tease: Opponent revealed Street Rogue.
+[04:07.251] Tech resolved  P1
+[04:08.148] Mode selected P1: ATTACK
+[04:08.478] Revealed: P1 (4,0) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[04:10.376] Dice rolled: 1
+[04:10.382] MSG: Flame Lizard wins!
+[04:13.656] Crystals: P0 1670 → 1320 (-350)  [battle]
+[04:17.874] Attack P1(4,0)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=25 vs DEF=20  → WIN
+[04:17.874] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[04:17.874] Reckoning overlay: P0 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:17.874] Anim: 3A  △ P0(2,0)
+[04:17.874] Card destroyed  P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[04:20.384] Turn ended  P1  |  Crystals P0=1320 P1=530
+
+--- Turn 6  |  Player 0  |  Crystals P0=1320 P1=530 ---
+[04:25.545] Dice rolled: 4
+[04:25.580] MSG: Ice Elemental wins!
+[04:28.502] Crystals: P1 530 → 130 (-400)  [battle]
+[04:31.337] MSG: Flame Lizard locked — cannot attack until end of next turn.
+[04:32.713] Attack P0(1,3)"Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} → P1(4,0)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=4  ATK=80 vs DEF=40  → WIN
+[04:32.713] Reckoning overlay: P0 "Ice Elemental" {Union ATK80 DEF50 | destroy-cost 0 | summon-cost 1000 | affinity Arcane} badge=80 ATK pill=80 DEF pill=50 mod=+ATK 0 (80+0=80)
+[04:32.713] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=40 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=40)
+[04:32.713] Anim: 3A  △ P1(4,0)
+[04:32.713] Card destroyed  P1 (4,0) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[04:36.938] Tech played  P0: "Tease"
+[04:38.475] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:38.913] Revealed: P1 (2,2) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[04:40.101] MSG: Tease: Opponent revealed Archbishop.
+[04:40.246] Tech resolved  P0
+[04:51.151] Revealed: P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[04:52.376] Dice rolled: 5
+[04:52.386] MSG: Pit Lord wins!
+[04:52.386] MSG: Pit Lord is destroyed by Divine!
+[04:57.582] Crystals: P0 1320 → 70 (-1250)  [battle]
+[05:00.410] Crystals: P1 130 → 0 (-130)  [battle]
+[05:03.427] Attack P0(4,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(2,2)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=5  ATK=120 vs DEF=90  → TIE
+[05:03.428] Reckoning overlay: P0 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[05:03.428] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=90 ATK pill=70 DEF pill=90 mod=+DEF 0 (90+0=90)
+[05:03.428] Anim: 3C  △ P0(4,0) + △ P1(2,2)
+[05:03.428] Card destroyed  P0 (4,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[05:03.428] Card destroyed  P1 (2,2) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 70  P1: 0  |  Turns: 6

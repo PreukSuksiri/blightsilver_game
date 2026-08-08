@@ -1,0 +1,116 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-08-07 20:59:55.882
+Game Session of Whiskey Sour (started 2026-08-07 20:57:15.419)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:13.868] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:21.261] Mode selected P1: TECH
+[00:21.567] Tech played  P1: "Spy"
+[00:23.124] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:23.553] Revealed: P0 (0,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:24.756] MSG: Spy: Revealed Ox Patrol.
+[00:24.761] Tech resolved  P1
+[00:25.660] Mode selected P1: ATTACK
+[00:25.971] Revealed: P1 (2,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:27.881] Dice rolled: 5
+[00:27.888] MSG: Kiyoko the Death Whisper wins!
+[00:30.767] Crystals: P0 5000 → 4580 (-420)  [battle]
+[00:34.971] Attack P1(2,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(0,3)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=5  ATK=40 vs DEF=35  → WIN
+[00:34.971] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:34.971] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:34.971] Anim: 3A  △ P0(0,3)
+[00:34.971] Card destroyed  P0 (0,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:37.473] Turn ended  P1  |  Crystals P0=4580 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4580 P1=3000 ---
+[00:46.442] Revealed: P0 (1,1) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:47.660] Dice rolled: 1
+[00:47.670] MSG: Huntress of Green Glade wins!
+[00:50.791] Crystals: P1 3000 → 2200 (-800)  [battle]
+[00:55.009] Attack P0(1,1)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(2,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=1  ATK=50 vs DEF=35  → WIN
+[00:55.009] Reckoning overlay: P0 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[00:55.009] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:55.009] Anim: 3A  △ P1(2,1)
+[00:55.009] Card destroyed  P1 (2,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:59.989] Revealed: P0 (2,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:00.036] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:01.228] Dice rolled: 3
+[01:01.233] MSG: Sonic Seraph wins!
+[01:04.042] Crystals: P1 2200 → 1920 (-280)  [battle]
+[01:08.254] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=3  ATK=45 vs DEF=20  → WIN
+[01:08.254] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[01:08.254] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:08.254] Anim: 3A  △ P1(1,1)
+[01:08.254] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:09.322] Turn ended  P0  |  Crystals P0=4580 P1=1920
+
+--- Turn 3  |  Player 1  |  Crystals P0=4580 P1=1920 ---
+[01:11.824] Mode selected P1: TECH
+[01:12.132] Tech played  P1: "Bribe"
+[01:13.683] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:15.478] MSG: Bribe: Opponent passed.
+[01:15.485] Tech resolved  P1
+[01:16.383] Mode selected P1: ATTACK
+[01:16.706] Revealed: P1 (4,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:18.617] Dice rolled: 4
+[01:18.622] MSG: Tomb Bandit wins!
+[01:23.126] Crystals: P0 4580 → 3780 (-800)  [battle]
+[01:27.340] Attack P1(4,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(1,1)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=4  ATK=75 vs DEF=50  → WIN
+[01:27.340] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[01:27.340] Reckoning overlay: P0 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:27.340] Anim: 3A  △ P0(1,1)
+[01:27.340] Card destroyed  P0 (1,1) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:27.846] Mode selected P1: ATTACK
+[01:28.172] Revealed: P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:30.073] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[01:31.294] Dice rolled: 1
+[01:31.304] MSG: Trap triggered: Trap Hole!
+[01:35.446] Coin flip: Heads, Tails, Tails
+[01:38.191] MSG: Trap Hole: Heads, Tails, Tails.
+[01:38.191] Crystals: P1 1920 → 1900 (-20)  [trap]
+[01:39.961] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[01:41.332] Attack P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[01:41.332] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:41.332] Anim: 3D  (attacker survives)
+[01:41.333] MSG: Ability triggered: "Shepherd Detective" (reveal on any attack)
+[01:41.360] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:43.320] Revealed: P0 (1,3) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[01:44.518] MSG: Revealed: Mad Wyvern
+[01:45.003] Turn ended  P1  |  Crystals P0=3780 P1=1900
+
+--- Turn 4  |  Player 0  |  Crystals P0=3780 P1=1900 ---
+[01:52.616] Dice rolled: 3
+[01:52.627] MSG: Mad Wyvern wins!
+[01:55.351] Crystals: P1 1900 → 1500 (-400)  [battle]
+[01:59.535] Attack P0(1,3)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=3  ATK=65 vs DEF=25  → WIN
+[01:59.535] Reckoning overlay: P0 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[01:59.535] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:59.535] Anim: 3A  △ P1(0,1)
+[01:59.535] Card destroyed  P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:06.034] Revealed: P0 (2,3) "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima}
+[02:07.260] Dice rolled: 2
+[02:07.269] MSG: Berserker of Ice Sea wins!
+[02:11.547] Crystals: P1 1500 → 500 (-1000)  [battle]
+[02:14.403] MSG: Berserker of Ice Sea: Self ATK debuff applied.
+[02:14.451] Coin flip: Heads
+[02:17.179] MSG: Omen: Heads — Berserker of Ice Sea may attack again!
+[02:17.188] Attack P0(2,3)"Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima} → P1(4,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=2  ATK=105 vs DEF=60  → WIN
+[02:17.188] Reckoning overlay: P0 "Berserker of Ice Sea" {Unit ATK105 DEF50 | cost 1000 | affinity Anima} badge=105 ATK pill=105 DEF pill=50 mod=+ATK 0 (105+0=105)
+[02:17.188] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=60 ATK pill=75 DEF pill=60 mod=+DEF 0 (60+0=60)
+[02:17.188] Anim: 3A  △ P1(4,3)
+[02:17.188] Card destroyed  P1 (4,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[02:23.074] Revealed: P1 (2,2) "Brainwash" {cost 800}
+[02:24.316] Dice rolled: 2
+[02:24.327] MSG: Trap triggered: Brainwash!
+[02:28.432] Crystals: P1 500 → 0 (-500)  [trap cost]
+[02:31.405] MSG: Ability triggered: "Brainwash"
+[02:31.436] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3780  P1: 0  |  Turns: 4

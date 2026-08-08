@@ -1,0 +1,67 @@
+=== Battle of Neighbor's Leaf Blower ===
+Battle started: 2026-08-06 16:44:21.516
+Game Session of Protein Shake (started 2026-08-06 16:41:55.334)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[02:53.388] MSG: Provocative: foe drawn to 😃
+[02:53.405] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[02:58.843] Mode selected P1: TECH
+[02:59.149] Tech played  P1: "Spy"
+[03:00.702] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:01.349] Dead-end placed  P0 (3,1)
+[03:01.355] MSG: Spy: Revealed Dead End.
+[03:01.360] Tech resolved  P1
+[03:02.260] Mode selected P1: ATTACK
+[03:02.582] Revealed: P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:04.499] Revealed: P0 (0,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:05.710] Dice rolled: 3
+[03:05.720] MSG: Mars Drill wins!
+[03:10.199] Crystals: P0 5000 → 4100 (-900)  [battle]
+[03:14.408] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(0,3)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=3  ATK=40 vs DEF=0  → WIN
+[03:14.408] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[03:14.408] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:14.408] Anim: 3A  △ P0(0,3)
+[03:14.408] Card destroyed  P0 (0,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:14.919] Mode selected P1: ATTACK
+[03:15.240] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[03:16.426] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[03:18.907] Dice rolled: 1
+[03:18.927] MSG: Striker Comet hits Dead End — nothing happens.
+[03:23.660] Attack P1(1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P0(1,1)(empty)  Dice=1  → DEAD_END
+[03:23.660] Anim: 3F  (blank slot)
+[03:24.179] MSG: Ability triggered: "Striker Comet" (destroy self at end of expose turn)
+[03:25.722] MSG: Striker Comet self-destructs at end of turn!
+[03:25.724] Crystals: P1 5000 → 4800 (-200)  [card lost]
+[03:25.731] Card destroyed  P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending | attacked}
+[03:25.740] Turn ended  P1  |  Crystals P0=4100 P1=4800
+
+--- Turn 2  |  Player 0  |  Crystals P0=4100 P1=4800 ---
+[03:48.028] Crystals: P0 4100 → 4050 (-50)  [skip tax]
+[03:48.028] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[03:50.458] Turn ended  P0  |  Crystals P0=4050 P1=4800
+
+--- Turn 3  |  Player 1  |  Crystals P0=4050 P1=4800 ---
+[03:52.945] Mode selected P1: TECH
+[03:53.245] Crystals: P1 4800 → 4200 (-600)  [tech cost]
+[03:56.067] Tech played  P1: "Radar"
+[03:57.625] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:58.046] Revealed: P0 (2,2) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[03:59.258] MSG: Radar: Revealed Water Elemental.
+[03:59.675] Revealed: P0 (4,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[04:00.867] MSG: Radar: Revealed Mephisto the Fallen.
+[04:01.282] Revealed: P0 (1,4) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[04:02.502] MSG: Radar: Revealed Armored Rhino.
+[04:02.511] Tech resolved  P1
+[04:03.426] Mode selected P1: ATTACK
+[04:04.614] Dice rolled: 1
+[04:04.621] MSG: Mars Drill wins!
+[04:09.118] Crystals: P0 4050 → 3190 (-860)  [battle]
+[04:13.313] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(4,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=1  ATK=40 vs DEF=0  → WIN
+[04:13.313] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[04:13.313] Reckoning overlay: P0 "Mephisto the Fallen" {U

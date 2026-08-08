@@ -20,7 +20,7 @@
 				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
-		"text": "(Kelly is standing there, seems to wait for Nex. She is looking to the other way)."
+		"text": "(Kelly is standing there, seems to be waiting for Nex. She is looking the other way)."
 	},
 	{
 		"text": "(Use \"chat\" function to talk to her)"
