@@ -1,0 +1,63 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-08-08 14:23:40.316
+Game Session of Orange Juice (started 2026-08-08 14:22:46.064)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.049] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[00:23.230] MSG: Tap 3 material card(s) on the field.
+[00:44.526] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:44.563] Revealed: P1 (2,2) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:45.776] Dice rolled: 5
+[00:45.789] MSG: Magical Butterfly wins!
+[00:49.058] Crystals: P1 3000 → 2800 (-200)  [battle]
+[00:53.255] Attack P0(3,2)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P1(2,2)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=5  ATK=15 vs DEF=10  → WIN
+[00:53.255] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} badge=15 ATK pill=15 DEF pill=15 mod=+ATK 0 (15+0=15)
+[00:53.255] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:53.255] Anim: 3A  △ P1(2,2)
+[00:53.255] Card destroyed  P1 (2,2) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:58.912] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:00.355] Dice rolled: 4
+[01:00.382] MSG: Silver Spearman hits Dead End — nothing happens.
+[01:03.467] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[01:03.467] Anim: 3F  (blank slot)
+[01:05.251] Turn ended  P0  |  Crystals P0=5000 P1=2800
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=2800 ---
+[01:07.742] Mode selected P1: TECH
+[01:08.051] Tech played  P1: "Spy"
+[01:10.092] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[01:11.635] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[01:11.640] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:12.103] Revealed: P0 (3,3) "Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature}
+[01:13.265] MSG: Spy: Revealed Dew the Frog Knight.
+[01:13.272] Tech resolved  P1
+[01:14.166] Mode selected P1: ATTACK
+[01:14.505] Revealed: P1 (2,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:16.403] Dice rolled: 4
+[01:16.412] MSG: Moonrise Gentleman wins!
+[01:20.899] Crystals: P0 5000 → 4580 (-420)  [battle]
+[01:25.102] Attack P1(2,4)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P0(3,3)"Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature}  Dice=4  ATK=40 vs DEF=35  → WIN
+[01:25.102] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:25.102] Reckoning overlay: P0 "Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature} badge=35 ATK pill=45 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:25.102] Anim: 3A  △ P0(3,3)
+[01:25.102] Card destroyed  P0 (3,3) "Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature}
+[01:25.597] Mode selected P1: ATTACK
+[01:25.935] Revealed: P1 (3,4) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:28.067] Dice rolled: 4
+[01:28.092] MSG: Mine Guard hits Dead End — nothing happens.
+[01:32.856] Attack P1(3,4)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(1,2)(empty)  Dice=4  → DEAD_END
+[01:32.856] Anim: 3F  (blank slot)
+[01:33.360] Turn ended  P1  |  Crystals P0=4580 P1=2800
+
+--- Turn 3  |  Player 0  |  Crystals P0=4580 P1=2800 ---
+[01:40.187] Crystals: P0 4580 → 2580 (-2000)  [tech cost]
+[01:43.016] Tech played  P0: "Rift Strike"
+[01:44.556] Target prompt: "Rift Strike: Choose 3 adjacent cells on the foe's field."  filter=rift_strike_triplet
+[03:19.963] Card destroyed  P1 (2,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[03:19.975] Card destroyed  P1 (2,3) "Bait" {c

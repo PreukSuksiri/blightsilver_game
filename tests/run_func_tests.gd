@@ -13,6 +13,10 @@ func _ready() -> void:
 		"res://tests/test_func_techs.gd",
 		"res://tests/test_func_unions.gd",
 	]
+	if "--union-only" in OS.get_cmdline_user_args():
+		suites = ["res://tests/test_func_unions.gd"]
+	while not UnionDatabase.is_bootstrapped():
+		await get_tree().process_frame
 
 	var total_pass: int = 0
 	var total_fail: int = 0

@@ -765,8 +765,8 @@
 					"value": -20.0
 				},
 				{
-					"type": "crystal_gain_pct",
-					"value": 0.0
+					"type": "cannot_gain_crystals",
+					"value": true
 				}
 			],
 			"groups": [
@@ -865,8 +865,8 @@
 					"value": -20.0
 				},
 				{
-					"type": "crystal_gain_pct",
-					"value": 0.0
+					"type": "cannot_gain_crystals",
+					"value": true
 				}
 			],
 			"groups": [
@@ -967,8 +967,8 @@
 					"value": -30.0
 				},
 				{
-					"type": "crystal_gain_pct",
-					"value": 0.0
+					"type": "cannot_gain_crystals",
+					"value": true
 				}
 			],
 			"groups": [
@@ -2551,7 +2551,7 @@
 			"stackable": true
 		},
 		{
-			"anoint_card_type": "unit",
+			"anoint_card_type": "",
 			"anoint_filter": {},
 			"description": "All units on your side change to Anima affinity.",
 			"effects": [
@@ -3201,7 +3201,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. Dead-end attacks are refunded.",
+			"description": "Choose 1 unit. Dead End attacks refund 1 attack count.",
 			"effects": [
 				{
 					"type": "refund_dead_end_attack"
@@ -3527,7 +3527,7 @@
 		{
 			"anoint_card_type": "unit",
 			"anoint_filter": {},
-			"description": "Choose 1 unit. ATK/DEF changes it causes become permanent.",
+			"description": "Choose 1 unit. ATK/DEF changes from Tech/Trap effects it causes become permanent.",
 			"effects": [
 				{
 					"mode": "permanent",
@@ -3550,7 +3550,7 @@
 		{
 			"anoint_card_type": "trap",
 			"anoint_filter": {},
-			"description": "Choose 1 trap. ATK/DEF changes it causes become permanent.",
+			"description": "Choose 1 trap. ATK/DEF changes from Tech/Trap effects it causes become permanent.",
 			"effects": [
 				{
 					"mode": "permanent",
@@ -3573,7 +3573,7 @@
 		{
 			"anoint_card_type": "tech",
 			"anoint_filter": {},
-			"description": "Choose 1 tech. ATK/DEF changes it causes become permanent.",
+			"description": "Choose 1 tech. ATK/DEF changes from Tech/Trap effects it causes become permanent.",
 			"effects": [
 				{
 					"mode": "permanent",
@@ -3642,7 +3642,7 @@
 		{
 			"anoint_card_type": "tech",
 			"anoint_filter": {},
-			"description": "Choose 1 tech. ATK/DEF changes it causes last +1 turn.",
+			"description": "Choose 1 tech. ATK/DEF changes from Tech/Trap effects it causes last +1 turn.",
 			"effects": [
 				{
 					"mode": "extend",
@@ -4974,7 +4974,7 @@
 					"atk": 0.0,
 					"def": 50.0,
 					"filter": {
-						"name_contains": "Diamond Unicorn"
+						"name_contains": "Choir Lead Amber"
 					},
 					"target": "player",
 					"type": "unit_stat_flat"
@@ -5779,7 +5779,7 @@
 			"illustration": "",
 			"implemented": true,
 			"include_in_demo": true,
-			"label": "Spell Ledger",
+			"label": "Tech Ledger",
 			"positive": true,
 			"rarity": "uncommon",
 			"stackable": true
@@ -5851,7 +5851,7 @@
 			"illustration": "",
 			"implemented": true,
 			"include_in_demo": true,
-			"label": "Spell Ledger II",
+			"label": "Tech Ledger II",
 			"positive": true,
 			"rarity": "rare",
 			"stackable": true

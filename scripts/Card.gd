@@ -195,9 +195,9 @@ func _ready() -> void:
 	_crystal_cost_icon.anchor_top     = 0.0
 	_crystal_cost_icon.anchor_bottom  = 0.0
 	_crystal_cost_icon.offset_left    = -30
-	_crystal_cost_icon.offset_top     = 2
+	_crystal_cost_icon.offset_top     = 1
 	_crystal_cost_icon.offset_right   = -21
-	_crystal_cost_icon.offset_bottom  = 11
+	_crystal_cost_icon.offset_bottom  = 10
 	_crystal_cost_icon.expand_mode    = TextureRect.EXPAND_IGNORE_SIZE
 	_crystal_cost_icon.stretch_mode   = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_crystal_cost_icon.mouse_filter   = MOUSE_FILTER_IGNORE

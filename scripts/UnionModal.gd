@@ -148,7 +148,10 @@ func _build_ui() -> void:
 		var entry: Dictionary = _available[i]
 		var u: UnionData      = entry["union"]
 		var zone_cells: Array = entry["zone_cells"]
-		var can_afford: bool  = GameState.crystals[_player] >= u.summon_cost
+		var final_cost: int = int(entry.get(
+			"final_cost",
+			GameState.final_union_summon_cost(u.summon_cost, _player)))
+		var can_afford: bool = GameState.crystals[_player] >= final_cost
 
 		var col := VBoxContainer.new()
 		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -185,7 +188,7 @@ func _build_ui() -> void:
 		var btn := Button.new()
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.custom_minimum_size = Vector2(0.0, 52.0 * MENU_SCALE)
-		btn.text = "UNION  (%d◆)" % u.summon_cost
+		btn.text = "UNION  (%d◆)" % final_cost
 		btn.disabled = not can_afford
 		btn.add_theme_font_size_override("font_size", int(16.0 * MENU_SCALE))
 		btn.pressed.connect(func() -> void:

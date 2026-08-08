@@ -91,7 +91,8 @@ static func _roll_battle_coin() -> bool:
 			if not _silent_mode:
 				GameState.post_message("Maria the Battle Priest: Coin flip forced to heads!")
 			return true
-		var _bias: int = OmenBattleApplier.biased_coin_result(_coin_flip_source_card.card_name)
+		var _bias: int = OmenBattleApplier.biased_coin_result(
+			_coin_flip_source_card.card_name, _coin_flip_source_player)
 		if _bias >= 0:
 			return _bias == 1
 	if OmenBattleApplier.consume_force_heads():
@@ -349,10 +350,11 @@ static func _resolve_character_vs_character(
 	_apply_omen_bane_counter_kill(attacker, defender, result, attacker_player)
 	# Omen spiteful_echo — foe that wins vs anointed is also destroyed
 	if result.attacker_destroyed and not result.defender_destroyed \
-			and OmenBattleApplier.anoint_has_type(defender.card_name, "destroy_reckoning_winner"):
+			and OmenBattleApplier.anoint_has_type(
+				defender.card_name, "destroy_reckoning_winner", defender_player):
 		result.defender_destroyed = true
 		var _se: Dictionary = OmenBattleApplier.anoint_effect(
-			defender.card_name, "destroy_reckoning_winner")
+			defender.card_name, "destroy_reckoning_winner", defender_player)
 		result.defender_crystal_loss = 0 if bool(_se.get("foe_pays_no_cost", false)) else defender.crystal_cost
 		result.messages.append("Omen: Spiteful Echo destroys %s!" % defender.card_name)
 
@@ -360,7 +362,8 @@ static func _resolve_character_vs_character(
 	if result.attacker_destroyed and attacker_player >= 0:
 		var _ag_pos: Vector2i = GameState.find_card_position(attacker_player, attacker)
 		if _ag_pos.x >= 0 and OmenBattleApplier.try_survive_reckoning_vs_bluff(
-				attacker, not GameState.get_bluff(attacker_player, _ag_pos.x, _ag_pos.y).is_empty()):
+				attacker, attacker_player,
+				not GameState.get_bluff(attacker_player, _ag_pos.x, _ag_pos.y).is_empty()):
 			result.attacker_destroyed = false
 			result.attacker_crystal_loss = 0
 			result.destruction_blocked_attacker = true
@@ -368,7 +371,8 @@ static func _resolve_character_vs_character(
 	if result.defender_destroyed and defender_player >= 0:
 		var _dg_pos: Vector2i = GameState.find_card_position(defender_player, defender)
 		if _dg_pos.x >= 0 and OmenBattleApplier.try_survive_reckoning_vs_bluff(
-				defender, not GameState.get_bluff(defender_player, _dg_pos.x, _dg_pos.y).is_empty()):
+				defender, defender_player,
+				not GameState.get_bluff(defender_player, _dg_pos.x, _dg_pos.y).is_empty()):
 			result.defender_destroyed = false
 			result.defender_crystal_loss = 0
 			result.destruction_blocked_defender = true
@@ -625,7 +629,7 @@ static func _resolve_trap(
 	# Immune to zero-cost traps
 	if trap_data.crystal_cost == 0:
 		if attacker.ability_type == CharacterData.AbilityType.IMMUNE_ZERO_COST_TRAPS \
-				or OmenBattleApplier.has_negate_zero_cost_traps(attacker):
+				or OmenBattleApplier.has_negate_zero_cost_traps(attacker, attacker_player):
 			result.messages.append("%s is immune to 0-cost Traps!" % attacker.card_name)
 			result.special_trigger = "trap_nullified"
 			return
@@ -634,13 +638,31 @@ static func _resolve_trap(
 			result.special_trigger = "trap_nullified"
 			return
 
-	# Immune to all traps (ability, mutagen aegis, null_aegis)
-	if attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS \
-			or OmenBattleApplier.has_full_trap_tech_immunity(attacker):
-		result.messages.append("%s cannot be destroyed by Traps!" % attacker.card_name)
-		if not _silent_mode and attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS:
-			attacker.current_def = max(0, attacker.current_def - 20)
-			result.messages.append("%s permanently loses 20 DEF from trap attack!" % attacker.card_name)
+	# IMMUNE_TO_TRAPS: default is full nullify ("unaffected by traps").
+	# Tomb Bandit-style cards set trap_destroy_immunity_only so non-destroy effects resolve;
+	# TurnManager then blocks destruction only.
+	if attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS:
+		var _trap_def_loss: int = int(attacker.ability_params.get("def_loss_on_trap", 0))
+		var _trap_both_loss: int = int(attacker.ability_params.get("atk_def_loss_vs_trap", 0))
+		if _trap_both_loss > 0:
+			if not _silent_mode:
+				attacker.current_atk = max(0, attacker.current_atk - _trap_both_loss)
+				attacker.current_def = max(0, attacker.current_def - _trap_both_loss)
+			result.messages.append("%s permanently loses %d ATK&DEF from trap attack!" % [
+				attacker.card_name, _trap_both_loss])
+		elif _trap_def_loss > 0:
+			if not _silent_mode:
+				attacker.current_def = max(0, attacker.current_def - _trap_def_loss)
+			result.messages.append("%s permanently loses %d DEF from trap attack!" % [
+				attacker.card_name, _trap_def_loss])
+		if not bool(attacker.ability_params.get("trap_destroy_immunity_only", false)):
+			result.messages.append("%s is unaffected by Traps!" % attacker.card_name)
+			result.special_trigger = "trap_nullified"
+			return
+
+	# Omen aegises still grant full Trap immunity.
+	if OmenBattleApplier.has_full_trap_tech_immunity(attacker, attacker_player):
+		result.messages.append("%s is unaffected by Traps and Tech!" % attacker.card_name)
 		result.special_trigger = "trap_nullified"
 		return
 
@@ -653,7 +675,7 @@ static func _resolve_trap(
 		return
 
 	# Omen soft_step — force a coin; Tails nullifies the trap
-	if OmenBattleApplier.has_trap_coin_negate(attacker):
+	if OmenBattleApplier.has_trap_coin_negate(attacker, attacker_player):
 		result.special_params = {
 			"trap_name": trap.card_name,
 			"trap_data": trap_data,
@@ -797,7 +819,8 @@ static func _get_effective_atk(
 	var _dyn: Vector2i = OmenBattleApplier.dynamic_stat_bonuses(attacker, attacker_player)
 	atk += _dyn.x
 	if target_pos.x >= 0:
-		atk += OmenBattleApplier.bluff_atk_bonus(attacker, GameState.get_opponent(attacker_player), target_pos)
+		atk += OmenBattleApplier.bluff_atk_bonus(
+			attacker, attacker_player, GameState.get_opponent(attacker_player), target_pos)
 	atk += OmenBattleApplier.same_affinity_atk_bonus(attacker, defender, attacker_player)
 	atk += OmenBattleApplier.facedown_atk_bonus(attacker, attacker_player, defender_was_exposed)
 
@@ -888,12 +911,8 @@ static func _get_effective_atk(
 						break
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_IF_UNION_ON_FIELD:
-			for r in range(GameState.GRID_SIZE):
-				for c in range(GameState.GRID_SIZE):
-					var ally: GameState.CardInstance = GameState.grids[attacker_player][r][c]
-					if ally.is_union and ally.face_up:
-						atk += attacker.ability_params.get("atk", 0)
-						break
+			if _has_own_union(attacker_player):
+				atk += attacker.ability_params.get("atk", 0)
 
 		CharacterData.AbilityType.ATTACK_STANCE_BOOST:
 			atk += attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
@@ -992,7 +1011,7 @@ static func _get_effective_atk(
 			for _r in range(GameState.GRID_SIZE):
 				for _c in range(GameState.GRID_SIZE):
 					var _cell: GameState.CardInstance = GameState.grids[attacker_player][_r][_c]
-					if _cell.face_up and _cell.card_type != "dead_end":
+					if _cell.face_up:
 						_rev_count += 1
 			if attacker.ability_params.get("per_revealed", false):
 				atk += _rev_count * attacker.ability_params.get("atk", 10)
@@ -1098,6 +1117,10 @@ static func _get_effective_def(
 			if _non_aff_d == -2 or attacker.affinity != _non_aff_d:
 				def_val += defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
 
+		CharacterData.AbilityType.ATK_DEF_BONUS_IF_UNION_ON_FIELD:
+			if defender_player >= 0 and _has_own_union(defender_player):
+				def_val += defender.ability_params.get("def", 0)
+
 		CharacterData.AbilityType.ONE_USE_DEF_BOOST:
 			if not defender.one_use_def_boost_used:
 				def_val += defender.ability_params.get("bonus", 0)
@@ -1142,7 +1165,7 @@ static func _get_effective_def(
 				for _r in range(GameState.GRID_SIZE):
 					for _c in range(GameState.GRID_SIZE):
 						var _cell: GameState.CardInstance = GameState.grids[defender_player][_r][_c]
-						if _cell.face_up and _cell.card_type != "dead_end":
+						if _cell.face_up:
 							_rev_d += 1
 				if defender.ability_params.get("per_revealed", false):
 					def_val += _rev_d * defender.ability_params.get("def", 10)
@@ -1227,6 +1250,11 @@ static func _spend_one_use_defense_boosts(
 		CharacterData.AbilityType.ONE_USE_DEF_BOOST, \
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
 			defender.one_use_def_boost_used = true
+			if defender.ability_params.get("until_turn_end", false):
+				defender.temp_def_bonus += defender.ability_params.get(
+					"bonus", defender.ability_params.get(
+						"def_bonus", defender.ability_params.get("def", 0)))
+				defender.flags.append("ability_temp_def_turn_%d" % GameState.turn_number)
 			result.ability_triggered_defender = true
 
 
@@ -1302,6 +1330,16 @@ static func _apply_defend_effects(
 				defender.current_def += _perm_def
 			result.messages.append("%s gains +%d DEF permanently!" % [defender.card_name, _perm_def])
 
+		CharacterData.AbilityType.ONE_USE_COPY_STATS_ON_SURVIVE:
+			if not result.defender_destroyed and "copy_stats_used" not in defender.flags:
+				result.ability_triggered_defender = true
+				if mutate:
+					defender.flags.append("copy_stats_used")
+					defender.perm_atk_bonus += int(attacker.current_atk / 2)
+					defender.perm_def_bonus += int(attacker.current_def / 2)
+				result.messages.append("%s gains half of %s's stats!" % [
+					defender.card_name, attacker.card_name])
+
 		CharacterData.AbilityType.ONE_USE_DEFEND_MORPH:
 			if not defender.one_use_def_boost_used:
 				result.ability_triggered_defender = true
@@ -1341,8 +1379,9 @@ static func _apply_defend_effects(
 			if not result.defender_destroyed:
 				result.ability_triggered_defender = true
 				if mutate:
-					attacker.cannot_attack_until = GameState.turn_number + 2
-				result.messages.append("%s: %s cannot attack until end of next turn!" % [
+					attacker.cannot_attack_until = GameState.turn_number + (
+						0 if defender.ability_params.get("current_turn_only", false) else 2)
+				result.messages.append("%s: %s cannot attack until the lock expires!" % [
 					defender.card_name, attacker.card_name])
 
 # ─────────────────────────────────────────────────────────────
@@ -1369,6 +1408,18 @@ static func _field_players(owner_player: int, ability_params: Dictionary) -> Arr
 	if owner_player < 0:
 		return []
 	return [owner_player]
+
+
+static func _has_own_union(player: int) -> bool:
+	if player < 0:
+		return false
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.grids[player][r][c]
+			if card.is_union:
+				return true
+	return false
+
 
 static func _count_void_units(player_index: int) -> int:
 	if player_index < 0 or player_index >= GameState.void_pile_entries.size():
@@ -1477,6 +1528,8 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 					"def", source.ability_params.get("def_bonus", 0)))
 				var mutagen_only: bool = bool(source.ability_params.get("mutagen_flag", false))
 				var ally_only: bool = bool(source.ability_params.get("ally_only", false))
+				# Default excludes source (historical field-count behavior). Set exclude_self:false to include.
+				var exclude_self: bool = bool(source.ability_params.get("exclude_self", true))
 				if atk_boost == 0 and def_boost == 0:
 					continue
 				var has_filter: bool = target_affinity >= 0 or not name_filter.is_empty() \
@@ -1486,7 +1539,9 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 				for r2 in range(GameState.GRID_SIZE):
 					for c2 in range(GameState.GRID_SIZE):
 						var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
-						if ally == source or ally.card_type != "character" or not ally.face_up:
+						if ally.card_type != "character" or not ally.face_up:
+							continue
+						if ally == source and exclude_self:
 							continue
 						var matched: bool = false
 						if mutagen_only:
@@ -1646,11 +1701,13 @@ static func _count_matching_cards(player_index: int, source_card: GameState.Card
 	var affinity_filter: int = source_card.ability_params.get("affinity", -1)
 	var affinities: Array = source_card.ability_params.get("affinities", []) as Array
 
+	# Default excludes source. Set exclude_self:false for literal "all/each" buffs (Pixie Queen, etc.).
+	var exclude_self: bool = bool(source_card.ability_params.get("exclude_self", true))
 	for p: int in _field_players(player_index, source_card.ability_params):
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.grids[p][r][c]
-				if card == source_card:
+				if card == source_card and exclude_self:
 					continue
 				if card.card_type != "character":
 					continue

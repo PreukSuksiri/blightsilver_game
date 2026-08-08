@@ -13,7 +13,7 @@ enum TechEffectType {
 	DIVINE_PROTECTION,                # If a Divine on your field would be destroyed, it is not (once)
 	DESTROY_ALL_REVEALED_OPPONENT,    # Destroy all revealed opponent Characters; discard all your Tech
 	DESTROY_ROW_OR_COLUMN,            # Destroy all revealed cards in one row or column
-	DESTROY_ROW_AROUND_TARGET,        # Destroy other face-up cards on anchor's row (anchor survives)
+	DESTROY_ROW_AROUND_TARGET,        # Rift Strike: pick 3 adjacent foe cells and destroy them (no crystal loss)
 	REVEAL_ALL_OWN_CHARACTERS,        # Reveal up to N of your own units (count in effect_params)
 	PERM_BOOST_ALL_FACEUP,            # +N ATK and DEF permanently to all face-up characters
 	PERM_ATK_BOOST_ONE,               # +N ATK permanently to 1 face-up character

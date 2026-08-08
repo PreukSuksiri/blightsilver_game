@@ -231,33 +231,100 @@ static func _enemy_anoint_score(entry: Dictionary) -> int:
 
 ## True when this player's held omens (or legacy P0 flags) block tech.
 static func cannot_tech_for(player: int) -> bool:
-	if player == 0 and GameState.omen_cannot_tech:
-		return true
 	return _holder_has_effect(player, "cannot_tech")
 
 
 static func cannot_union_for(player: int) -> bool:
-	if player == 0 and GameState.omen_cannot_union:
-		return true
 	return _holder_has_effect(player, "cannot_union")
 
 
 static func attack_crystal_cost_for(player: int) -> int:
-	if player == 0:
-		return GameState.omen_attack_crystal_cost
 	return _sum_holder_effect_int(player, "attack_crystal_cost")
 
 
 static func tech_cost_pct_for(player: int) -> float:
-	if player == 0:
-		return GameState.omen_tech_cost_pct
 	return _sum_holder_effect_float(player, "tech_cost_pct")
 
 
 static func trap_cost_pct_for(player: int) -> float:
-	if player == 0:
-		return GameState.omen_trap_cost_pct
 	return _sum_holder_effect_float(player, "trap_cost_pct")
+
+
+static func cannot_gain_crystals_for(player: int) -> bool:
+	if _holder_has_effect(player, "cannot_gain_crystals"):
+		return true
+	# crystal_gain_pct <= -100 is an alternate "cannot gain" encoding.
+	for entry: Variant in _holder_effects(player, "crystal_gain_pct"):
+		if float((entry as Dictionary).get("value", 0.0)) <= -100.0:
+			return true
+	return false
+
+
+static func crystal_gain_multiplier_for(player: int) -> float:
+	if cannot_gain_crystals_for(player):
+		return 0.0
+	var mult: float = 1.0
+	for entry: Variant in _holder_effects(player, "crystal_gain_pct"):
+		var pct: float = float((entry as Dictionary).get("value", 0.0))
+		mult *= maxf(0.0, 1.0 + pct / 100.0)
+	return mult
+
+
+static func crystal_loss_multiplier_for(player: int, reason: String = "", affinity: String = "") -> float:
+	var mult: float = 1.0
+	for effect_type: String in ["crystal_loss_multiplier", "crystal_loss_pct"]:
+		for entry: Variant in _holder_effects(player, effect_type):
+			var eff: Dictionary = entry as Dictionary
+			if effect_type == "crystal_loss_multiplier":
+				mult *= maxf(0.0, float(eff.get("value", 1.0)))
+				continue
+			var scope: String = str(eff.get("scope", "all")).strip_edges().to_lower()
+			if scope == "unit_destroy" and reason != "card lost":
+				continue
+			if scope == "reckoning" and reason != "battle":
+				continue
+			if scope == "affinity" and (
+					reason != "card lost"
+					or str(eff.get("affinity", "")).strip_edges().to_upper() != affinity.to_upper()):
+				continue
+			mult *= maxf(0.0, 1.0 + float(eff.get("value", 0.0)) / 100.0)
+	return mult
+
+
+static func union_cost_multiplier_for(player: int) -> float:
+	var mult: float = 1.0
+	for entry: Variant in _holder_effects(player, "union_cost_multiplier"):
+		mult *= maxf(0.0, float((entry as Dictionary).get("value", 1.0)))
+	return mult
+
+
+static func max_attacks_bonus_for(player: int, first_turn: bool) -> int:
+	var total: int = 0
+	for entry: Variant in _holder_effects(player, "max_attacks_bonus"):
+		var eff: Dictionary = entry as Dictionary
+		if bool(eff.get("first_turn_only", false)) and not first_turn:
+			continue
+		total += int(eff.get("value", 0))
+	return total
+
+
+static func cannot_attack_first_turn_for(player: int) -> bool:
+	return _holder_has_effect(player, "cannot_attack_first_turn")
+
+
+static func _holder_effects(player: int, effect_type: String) -> Array:
+	var out: Array = []
+	for held: Variant in all_held_omens():
+		if not held is Dictionary:
+			continue
+		var held_d: Dictionary = held as Dictionary
+		if int(held_d.get("owner", 0)) != player:
+			continue
+		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
+		for effect: Variant in omen.get("effects", []):
+			if effect is Dictionary and str((effect as Dictionary).get("type", "")) == effect_type:
+				out.append(effect)
+	return out
 
 
 static func _holder_has_effect(player: int, effect_type: String) -> bool:
@@ -267,9 +334,6 @@ static func _holder_has_effect(player: int, effect_type: String) -> bool:
 			continue
 		var held_d: Dictionary = held as Dictionary
 		if int(held_d.get("owner", 0)) != player:
-			continue
-		# Skip legacy P0 flags already checked via GameState fields above.
-		if player == 0:
 			continue
 		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
 		if omen.is_empty():
@@ -732,9 +796,8 @@ static func get_anoint_lines_for_card(card_name: String) -> PackedStringArray:
 	var lines: PackedStringArray = PackedStringArray()
 	if card_name.is_empty():
 		return lines
-	var effects: Variant = GameState.omen_anoint_effects.get(card_name, [])
-	if effects is Array:
-		for eff: Variant in effects as Array:
+	for owner: int in range(2):
+		for eff: Variant in _anoint_bucket(owner, card_name):
 			if not eff is Dictionary:
 				continue
 			var eff_d: Dictionary = eff as Dictionary
@@ -781,7 +844,9 @@ static func _build_anoint_effects_map() -> void:
 		var omen: Dictionary = OmenDatabase.get_omen(str(held_d.get("id", "")))
 		if omen.is_empty():
 			continue
-		var bucket: Array = GameState.omen_anoint_effects.get(anointed, [])
+		var owner: int = int(held_d.get("owner", 0))
+		var key: String = _anoint_key(owner, anointed)
+		var bucket: Array = GameState.omen_anoint_effects.get(key, [])
 		if not bucket is Array:
 			bucket = []
 		for effect: Variant in omen.get("effects", []):
@@ -789,10 +854,20 @@ static func _build_anoint_effects_map() -> void:
 				var eff: Dictionary = (effect as Dictionary).duplicate(true)
 				var etype: String = str(eff.get("type", ""))
 				if etype.begins_with("anoint_") or etype in _ANPOINT_RUNTIME_TYPES:
-					eff["omen_owner"] = int(held_d.get("owner", 0))
+					eff["omen_owner"] = owner
+					eff["anointed_card"] = anointed
 					bucket.append(eff)
 		if not bucket.is_empty():
-			GameState.omen_anoint_effects[anointed] = bucket
+			GameState.omen_anoint_effects[key] = bucket
+
+
+static func _anoint_key(owner: int, card_name: String) -> String:
+	return "%d::%s" % [owner, card_name]
+
+
+static func _anoint_bucket(owner: int, card_name: String) -> Array:
+	var bucket: Variant = GameState.omen_anoint_effects.get(_anoint_key(owner, card_name), [])
+	return bucket as Array if bucket is Array else []
 
 
 static func _apply_pre_battle_effect(effect: Dictionary, _anointed: String, omen_owner: int = 0) -> void:
@@ -942,19 +1017,23 @@ static func apply_matching_unit_stats_to_card(
 
 
 static func _apply_anoint_effects_on_grid() -> void:
-	for card_name: Variant in GameState.omen_anoint_effects.keys():
-		var effects: Variant = GameState.omen_anoint_effects[card_name]
+	for key: Variant in GameState.omen_anoint_effects.keys():
+		var effects: Variant = GameState.omen_anoint_effects[key]
 		if not effects is Array:
 			continue
-		for r: int in range(GameState.GRID_SIZE):
-			for c: int in range(GameState.GRID_SIZE):
-				for p: int in range(2):
-					var card: GameState.CardInstance = GameState.get_card(p, r, c)
-					if card.card_name != str(card_name):
-						continue
-					for eff_v: Variant in effects as Array:
-						if eff_v is Dictionary:
-							_apply_anoint_stat_to_card(card, eff_v as Dictionary)
+		for eff_v: Variant in effects as Array:
+			if not eff_v is Dictionary:
+				continue
+			var eff: Dictionary = eff_v as Dictionary
+			var owner: int = int(eff.get("omen_owner", -1))
+			var card_name: String = str(eff.get("anointed_card", ""))
+			if owner < 0 or card_name.is_empty():
+				continue
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(owner, r, c)
+					if card.card_name == card_name:
+						_apply_anoint_stat_to_card(card, eff)
 
 
 static func _apply_rune_card_effects() -> void:
@@ -1039,8 +1118,8 @@ static func _apply_affinity_override_all(effect: Dictionary, omen_owner: int = 0
 
 
 static func _apply_anoint_affinity_overrides() -> void:
-	for card_name: Variant in GameState.omen_anoint_effects.keys():
-		var effects: Variant = GameState.omen_anoint_effects[card_name]
+	for key: Variant in GameState.omen_anoint_effects.keys():
+		var effects: Variant = GameState.omen_anoint_effects[key]
 		if not effects is Array:
 			continue
 		for eff_v: Variant in effects as Array:
@@ -1052,12 +1131,13 @@ static func _apply_anoint_affinity_overrides() -> void:
 			var aff: int = _affinity_from_name(str(eff.get("affinity", "")))
 			if aff < 0:
 				continue
-			for p: int in range(2):
-				for r: int in range(GameState.GRID_SIZE):
-					for c: int in range(GameState.GRID_SIZE):
-						var card: GameState.CardInstance = GameState.get_card(p, r, c)
-						if card.card_name == str(card_name) and card.card_type == "character":
-							card.affinity = aff
+			var owner: int = int(eff.get("omen_owner", -1))
+			var card_name: String = str(eff.get("anointed_card", ""))
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(owner, r, c)
+					if card.card_name == card_name and card.card_type == "character":
+						card.affinity = aff
 
 
 static func _card_matches_unit_filter(
@@ -1231,6 +1311,7 @@ const _ANPOINT_RUNTIME_TYPES: Array[String] = [
 	"union_material_cost_multiplier",
 	"union_material_stat_boost",
 	"union_material_crystal_gain",
+	"union_material_wildcard",
 	"mutagen_immunity",
 	"ability_immunity_vs_units",
 	"stat_per_void_card",
@@ -1353,7 +1434,7 @@ static func _card_matches_effect_unit(
 		return false
 	var anointed: String = str(entry.get("anointed", "")).strip_edges()
 	if not anointed.is_empty():
-		return card.card_name == anointed
+		return card.card_name == anointed and owner_player == int(entry.get("owner", -1))
 	var eff: Dictionary = entry.get("effect", {}) as Dictionary
 	# Field-wide filters: owner must match omen holder resolved via target.
 	var target: String = str(eff.get("target", "player")).strip_edges().to_lower()
@@ -1427,28 +1508,24 @@ static func blocks_destruction_by_affinity(
 	return false
 
 
-static func try_consume_survive_destruction_once(card: GameState.CardInstance) -> bool:
+static func try_consume_survive_destruction_once(
+		card: GameState.CardInstance, owner_player: int) -> bool:
 	if card == null or card.card_type != "character":
 		return false
 	if "omen_survive_used" in card.flags:
 		return false
 	# Anoint map
-	var anoint_bucket: Variant = GameState.omen_anoint_effects.get(card.card_name, [])
-	if anoint_bucket is Array:
-		for eff_v: Variant in anoint_bucket as Array:
-			if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == "survive_destruction_once":
-				card.flags.append("omen_survive_used")
-				return true
+	if anoint_has_type(card.card_name, "survive_destruction_once", owner_player):
+		card.flags.append("omen_survive_used")
+		return true
 	# Field-wide omens (owner = player 0)
 	for entry: Variant in effects_of_type("survive_destruction_once"):
 		if not entry is Dictionary:
 			continue
 		var e: Dictionary = entry as Dictionary
-		# Prefer matching against both owners; field filters use target player.
-		for owner_guess: int in [0, 1]:
-			if _card_matches_effect_unit(card, e, owner_guess):
-				card.flags.append("omen_survive_used")
-				return true
+		if _card_matches_effect_unit(card, e, owner_player):
+			card.flags.append("omen_survive_used")
+			return true
 	# Adjacent aura once: if this card is adjacent to an anointed hub.
 	for entry2: Variant in effects_of_type("adjacent_aura_survive_once"):
 		if not entry2 is Dictionary:
@@ -1581,6 +1658,7 @@ static func should_lock_attacker_on_trap(trap_card_name: String, trap_owner: int
 				return true
 			continue
 		var eff: Dictionary = e.get("effect", {}) as Dictionary
+		var owner: int = int(e.get("owner", -1))
 		if trap_owner != _target_player_index(str(eff.get("target", "player")), omen_owner):
 			continue
 		if name_matches_filter(trap_card_name, eff.get("filter", {})):
@@ -1612,6 +1690,20 @@ static func post_reckoning_reveal_count(
 	return count
 
 
+static func post_reckoning_reveal_targets_field(
+		attacker: GameState.CardInstance,
+		attacker_player: int) -> bool:
+	for entry: Variant in effects_of_type("reveal_after_reckoning"):
+		if not entry is Dictionary:
+			continue
+		var e: Dictionary = entry as Dictionary
+		if _card_matches_effect_unit(attacker, e, attacker_player) \
+				and str((e.get("effect", {}) as Dictionary).get(
+					"target", "enemy")).strip_edges().to_lower() == "field":
+			return true
+	return false
+
+
 static func post_reckoning_destroy_count(
 		attacker: GameState.CardInstance,
 		attacker_player: int) -> int:
@@ -1626,16 +1718,14 @@ static func post_reckoning_destroy_count(
 	return count
 
 
-static func anoint_cost_multiplier_for(card_name: String) -> float:
+static func anoint_cost_multiplier_for(card_name: String, owner: int) -> float:
 	var mult: float = 1.0
-	var bucket: Variant = GameState.omen_anoint_effects.get(card_name, [])
-	if bucket is Array:
-		for eff_v: Variant in bucket as Array:
-			if not eff_v is Dictionary:
-				continue
-			var eff: Dictionary = eff_v as Dictionary
-			if str(eff.get("type", "")) == "anoint_cost_multiplier":
-				mult *= float(eff.get("value", 1.0))
+	for eff_v: Variant in _anoint_bucket(owner, card_name):
+		if not eff_v is Dictionary:
+			continue
+		var eff: Dictionary = eff_v as Dictionary
+		if str(eff.get("type", "")) == "anoint_cost_multiplier":
+			mult *= float(eff.get("value", 1.0))
 	return mult
 
 
@@ -1783,32 +1873,31 @@ static func apply_pre_reckoning_effects(
 			GameState.post_message("Omen: %s is laced with Venom!" % attacker.card_name)
 
 
-static func anoint_has_type(card_name: String, type_name: String) -> bool:
-	var bucket: Variant = GameState.omen_anoint_effects.get(card_name, [])
-	if bucket is Array:
-		for eff_v: Variant in bucket as Array:
-			if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == type_name:
-				return true
+static func anoint_has_type(card_name: String, type_name: String, owner: int) -> bool:
+	for eff_v: Variant in _anoint_bucket(owner, card_name):
+		if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == type_name:
+			return true
 	return false
 
 
-static func anoint_effect(card_name: String, type_name: String) -> Dictionary:
-	var bucket: Variant = GameState.omen_anoint_effects.get(card_name, [])
-	if bucket is Array:
-		for eff_v: Variant in bucket as Array:
-			if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == type_name:
-				return eff_v as Dictionary
+static func anoint_effect(card_name: String, type_name: String, owner: int) -> Dictionary:
+	for eff_v: Variant in _anoint_bucket(owner, card_name):
+		if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == type_name:
+			return eff_v as Dictionary
 	return {}
 
+static func union_material_wildcard_for(card_name: String, owner: int) -> bool:
+	return anoint_has_type(card_name, "union_material_wildcard", owner)
 
-static func coin_bias_for_card(card_name: String) -> String:
-	var eff: Dictionary = anoint_effect(card_name, "coin_bias")
+
+static func coin_bias_for_card(card_name: String, owner: int) -> String:
+	var eff: Dictionary = anoint_effect(card_name, "coin_bias", owner)
 	return str(eff.get("value", "")).strip_edges()
 
 
-static func biased_coin_result(card_name: String) -> int:
+static func biased_coin_result(card_name: String, owner: int) -> int:
 	## Returns 1=heads, 0=tails, -1=no bias.
-	var bias: String = coin_bias_for_card(card_name)
+	var bias: String = coin_bias_for_card(card_name, owner)
 	if bias == "always_heads":
 		return 1
 	if bias == "soft_heads":
@@ -1816,14 +1905,20 @@ static func biased_coin_result(card_name: String) -> int:
 	return -1
 
 
+## Apply ATK/DEF deltas with anointed stat_duration (Etched Brand etc.).
+## Routed: trap field/one-unit temp boosts, tech TEMP_ATK_BOOST_ATTACK_NOW,
+## trap TEMP_DEBUFF_ALL_ATTACKER_CHARS, trap self-destruct temp boost.
+## Gaps (unit ability self-buffs, carry-def traps, perm tech boosts, coin omen
+## turn-start ATK): still write temp/perm directly — Etched Brand will not rewrite those.
 static func apply_stat_change_from_source(
 		target: GameState.CardInstance,
 		atk_delta: int,
 		def_delta: int,
-		source_card_name: String) -> void:
+		source_card_name: String,
+		source_owner: int) -> void:
 	if target == null:
 		return
-	var dur: Dictionary = anoint_effect(source_card_name, "stat_duration")
+	var dur: Dictionary = anoint_effect(source_card_name, "stat_duration", source_owner)
 	var mode: String = str(dur.get("mode", "")).strip_edges()
 	if mode == "permanent":
 		target.perm_atk_bonus += atk_delta
@@ -1836,39 +1931,41 @@ static func apply_stat_change_from_source(
 		target.flags.append("omen_temp_extend_%d" % turns)
 
 
-static func has_trap_coin_negate(attacker: GameState.CardInstance) -> bool:
-	return attacker != null and anoint_has_type(attacker.card_name, "trap_coin_negate")
+static func has_trap_coin_negate(attacker: GameState.CardInstance, owner: int) -> bool:
+	return attacker != null and anoint_has_type(attacker.card_name, "trap_coin_negate", owner)
 
 
-static func has_negate_zero_cost_traps(attacker: GameState.CardInstance) -> bool:
-	return attacker != null and anoint_has_type(attacker.card_name, "negate_zero_cost_traps")
+static func has_negate_zero_cost_traps(attacker: GameState.CardInstance, owner: int) -> bool:
+	return attacker != null and anoint_has_type(attacker.card_name, "negate_zero_cost_traps", owner)
 
 
-static func has_full_trap_tech_immunity(attacker: GameState.CardInstance) -> bool:
+static func has_full_trap_tech_immunity(attacker: GameState.CardInstance, owner: int) -> bool:
 	if attacker == null:
 		return false
-	if anoint_has_type(attacker.card_name, "mutagen_immunity"):
+	if anoint_has_type(attacker.card_name, "mutagen_immunity", owner):
 		if attacker.has_mutagen_flag or "mutagen" in attacker.flags:
 			return true
 	# null_aegis: extend existing 0-cost trap immunity to all traps/tech
-	if not effects_of_type("extend_trap_immunity").is_empty():
-		if attacker.ability_type in [
+	for entry: Variant in effects_of_type("extend_trap_immunity"):
+		if entry is Dictionary and int((entry as Dictionary).get("owner", -1)) == owner \
+				and (attacker.ability_type in [
 				CharacterData.AbilityType.IMMUNE_ZERO_COST_TRAPS,
 				CharacterData.AbilityType.IMMUNE_TO_TECH_DESTRUCTION] \
-				or has_negate_zero_cost_traps(attacker):
+				or has_negate_zero_cost_traps(attacker, owner)):
 			return true
 	return false
 
 
-static func has_ability_immunity_vs_units(card: GameState.CardInstance) -> bool:
-	return card != null and anoint_has_type(card.card_name, "ability_immunity_vs_units")
+static func has_ability_immunity_vs_units(card: GameState.CardInstance, owner: int) -> bool:
+	return card != null and anoint_has_type(card.card_name, "ability_immunity_vs_units", owner)
 
 
 static func has_trap_immunity_on_bluff(
 		attacker: GameState.CardInstance,
 		attacker_player: int,
 		attacker_pos: Vector2i) -> bool:
-	if attacker == null or not anoint_has_type(attacker.card_name, "trap_immunity_on_bluff_cell"):
+	if attacker == null or not anoint_has_type(
+			attacker.card_name, "trap_immunity_on_bluff_cell", attacker_player):
 		return false
 	return not GameState.get_bluff(attacker_player, attacker_pos.x, attacker_pos.y).is_empty()
 
@@ -1891,7 +1988,7 @@ static func omen_taunt_target(defender_player: int) -> GameState.CardInstance:
 static func should_survive_reckoning_tie(card: GameState.CardInstance, owner_player: int) -> bool:
 	if card == null:
 		return false
-	if anoint_has_type(card.card_name, "survive_reckoning_ties"):
+	if anoint_has_type(card.card_name, "survive_reckoning_ties", owner_player):
 		return true
 	for entry: Variant in effects_of_type("survive_reckoning_ties"):
 		if entry is Dictionary and _card_matches_effect_unit(card, entry as Dictionary, owner_player):
@@ -1921,12 +2018,13 @@ static func conditional_survival_blocks(card: GameState.CardInstance, owner_play
 
 static func try_survive_reckoning_vs_bluff(
 		card: GameState.CardInstance,
+		owner_player: int,
 		cell_has_bluff: bool) -> bool:
 	if card == null or not cell_has_bluff:
 		return false
 	if "omen_gambler_used" in card.flags:
 		return false
-	if anoint_has_type(card.card_name, "survive_reckoning_vs_bluff_once"):
+	if anoint_has_type(card.card_name, "survive_reckoning_vs_bluff_once", owner_player):
 		card.flags.append("omen_gambler_used")
 		return true
 	return false
@@ -1970,30 +2068,34 @@ static func dynamic_stat_bonuses(card: GameState.CardInstance, owner_player: int
 
 static func bluff_atk_bonus(
 		attacker: GameState.CardInstance,
+		attacker_player: int,
 		defender_player: int,
 		target_pos: Vector2i) -> int:
-	if attacker == null or not anoint_has_type(attacker.card_name, "conditional_stat_vs_bluff"):
+	if attacker == null or not anoint_has_type(
+			attacker.card_name, "conditional_stat_vs_bluff", attacker_player):
 		return 0
 	if GameState.get_bluff(defender_player, target_pos.x, target_pos.y).is_empty():
 		return 0
-	var eff: Dictionary = anoint_effect(attacker.card_name, "conditional_stat_vs_bluff")
+	var eff: Dictionary = anoint_effect(
+		attacker.card_name, "conditional_stat_vs_bluff", attacker_player)
 	return int(eff.get("atk", 0))
 
 
-static func effect_override_for(card_name: String) -> Dictionary:
-	return anoint_effect(card_name, "effect_override")
+static func effect_override_for(card_name: String, owner: int) -> Dictionary:
+	return anoint_effect(card_name, "effect_override", owner)
 
 
 static func barrel_gospel_active(trap_owner: int) -> bool:
-	if trap_owner != 0:
-		return false
-	return not effects_of_type("trap_effect_override_all").is_empty()
+	for entry: Variant in effects_of_type("trap_effect_override_all"):
+		if entry is Dictionary and int((entry as Dictionary).get("owner", -1)) == trap_owner:
+			return true
+	return false
 
 
-static func max_tech_per_turn() -> int:
+static func max_tech_per_turn(player: int) -> int:
 	var n: int = 1
 	for entry: Variant in effects_of_type("extra_tech_per_turn"):
-		if entry is Dictionary:
+		if entry is Dictionary and int((entry as Dictionary).get("owner", -1)) == player:
 			n = maxi(n, int((entry as Dictionary).get("effect", {}).get("value", 2)))
 	return n
 
@@ -2031,60 +2133,71 @@ static func apply_unit_destroy_cost_multipliers() -> void:
 				card.crystal_cost = int(round(float(card.crystal_cost) * mult))
 
 
-static func union_material_bonuses(material_names: Array) -> Dictionary:
+static func _anoint_effect_for_owner(card_name: String, type_name: String, owner: int) -> Dictionary:
+	return anoint_effect(card_name, type_name, owner)
+
+
+static func union_material_bonuses(material_names: Array, owner: int = 0) -> Dictionary:
 	var cost_mult: float = 1.0
 	var atk: int = 0
 	var defv: int = 0
 	var crystals: int = 0
 	for name_v: Variant in material_names:
 		var name: String = str(name_v)
-		var cm: Dictionary = anoint_effect(name, "union_material_cost_multiplier")
+		var cm: Dictionary = _anoint_effect_for_owner(
+			name, "union_material_cost_multiplier", owner)
 		if not cm.is_empty():
 			cost_mult *= float(cm.get("value", 1.0))
-		var st: Dictionary = anoint_effect(name, "union_material_stat_boost")
+		var st: Dictionary = _anoint_effect_for_owner(
+			name, "union_material_stat_boost", owner)
 		if not st.is_empty():
 			atk += int(st.get("atk", 0))
 			defv += int(st.get("def", 0))
-		var cg: Dictionary = anoint_effect(name, "union_material_crystal_gain")
+		var cg: Dictionary = _anoint_effect_for_owner(
+			name, "union_material_crystal_gain", owner)
 		if not cg.is_empty():
 			crystals += int(cg.get("value", 0))
 	return {"cost_mult": cost_mult, "atk": atk, "def": defv, "crystals": crystals}
 
 
-static func should_refund_dead_end(attacker: GameState.CardInstance) -> bool:
-	return attacker != null and anoint_has_type(attacker.card_name, "refund_dead_end_attack")
+static func should_refund_dead_end(attacker: GameState.CardInstance, owner: int) -> bool:
+	return attacker != null and anoint_has_type(attacker.card_name, "refund_dead_end_attack", owner)
 
 
-static func foe_kill_crystal_mult(attacker: GameState.CardInstance) -> float:
+static func foe_kill_crystal_mult(attacker: GameState.CardInstance, owner: int) -> float:
 	if attacker == null:
 		return 1.0
-	var eff: Dictionary = anoint_effect(attacker.card_name, "foe_crystal_loss_multiplier_on_kill")
+	var eff: Dictionary = anoint_effect(
+		attacker.card_name, "foe_crystal_loss_multiplier_on_kill", owner)
 	if eff.is_empty():
 		return 1.0
 	return float(eff.get("value", 1.0))
 
 
-static func trap_crystal_loss_mult(trap_name: String) -> float:
-	var eff: Dictionary = anoint_effect(trap_name, "trap_crystal_loss_multiplier")
+static func trap_crystal_loss_mult(trap_name: String, owner: int) -> float:
+	var eff: Dictionary = anoint_effect(trap_name, "trap_crystal_loss_multiplier", owner)
 	if eff.is_empty():
 		return 1.0
 	return float(eff.get("value", 1.0))
 
 
-static func has_executioners_pact(attacker: GameState.CardInstance) -> bool:
-	return attacker != null and anoint_has_type(attacker.card_name, "discard_tech_destroy_foe")
+static func has_executioners_pact(attacker: GameState.CardInstance, owner: int) -> bool:
+	return attacker != null and anoint_has_type(
+		attacker.card_name, "discard_tech_destroy_foe", owner)
 
 
-static func has_hex_seal(attacker: GameState.CardInstance) -> bool:
-	return attacker != null and anoint_has_type(attacker.card_name, "nullify_defender_first_attack")
+static func has_hex_seal(attacker: GameState.CardInstance, owner: int) -> bool:
+	return attacker != null and anoint_has_type(
+		attacker.card_name, "nullify_defender_first_attack", owner)
 
 
-static func has_silence_brand(card: GameState.CardInstance) -> bool:
-	return card != null and anoint_has_type(card.card_name, "nullify_foe_ability_in_reckoning")
+static func has_silence_brand(card: GameState.CardInstance, owner: int) -> bool:
+	return card != null and anoint_has_type(
+		card.card_name, "nullify_foe_ability_in_reckoning", owner)
 
 
 static func queue_divine_return(card: GameState.CardInstance, player: int, row: int, col: int) -> void:
-	if card == null or not anoint_has_type(card.card_name, "revive_once_end_of_turn"):
+	if card == null or not anoint_has_type(card.card_name, "revive_once_end_of_turn", player):
 		return
 	if "divine_return_used" in card.flags:
 		return
@@ -2095,9 +2208,11 @@ static func queue_divine_return(card: GameState.CardInstance, player: int, row: 
 	})
 
 
-static func should_phoenix_revive(card: GameState.CardInstance, destroy_source: String) -> bool:
+static func should_phoenix_revive(
+		card: GameState.CardInstance, owner: int, destroy_source: String) -> bool:
 	## destroy_source: "own_tech" | "own_ability" | "omen" | "foe" | "other"
-	if card == null or not anoint_has_type(card.card_name, "conditional_revive_omen_or_self"):
+	if card == null or not anoint_has_type(
+			card.card_name, "conditional_revive_omen_or_self", owner):
 		return false
 	return destroy_source in ["own_tech", "own_ability", "omen"]
 
@@ -2105,14 +2220,12 @@ static func should_phoenix_revive(card: GameState.CardInstance, destroy_source: 
 static func apply_begin_game_extra(board: Node) -> void:
 	apply_unit_destroy_cost_multipliers()
 	# Mark destroy_at_expose_turn_end anointed units
-	for card_name: Variant in GameState.omen_anoint_effects.keys():
-		if anoint_has_type(str(card_name), "destroy_at_expose_turn_end"):
-			for p: int in range(2):
-				for r: int in range(GameState.GRID_SIZE):
-					for c: int in range(GameState.GRID_SIZE):
-						var card: GameState.CardInstance = GameState.get_card(p, r, c)
-						if card.card_name == str(card_name):
-							card.flags.append("omen_burn_on_expose_eot")
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if anoint_has_type(card.card_name, "destroy_at_expose_turn_end", p):
+					card.flags.append("omen_burn_on_expose_eot")
 	apply_adjacent_auras()
 	apply_adjacent_flat_auras()
 	apply_adjacent_cost_auras_once()
@@ -2126,11 +2239,9 @@ static func apply_grant_flag_on_reveal(
 	if card == null or card.card_type != "character":
 		return
 	var flags_to_grant: Array = []
-	var bucket: Variant = GameState.omen_anoint_effects.get(card.card_name, [])
-	if bucket is Array:
-		for oe: Variant in bucket as Array:
-			if oe is Dictionary and str((oe as Dictionary).get("type", "")) == "grant_flag_on_reveal":
-				flags_to_grant.append(str((oe as Dictionary).get("flag", "")))
+	for oe: Variant in _anoint_bucket(owner_player, card.card_name):
+		if oe is Dictionary and str((oe as Dictionary).get("type", "")) == "grant_flag_on_reveal":
+			flags_to_grant.append(str((oe as Dictionary).get("flag", "")))
 	for entry: Variant in effects_of_type("grant_flag_on_reveal"):
 		if not entry is Dictionary:
 			continue
@@ -2161,10 +2272,11 @@ static func apply_adjacent_auras() -> void:
 		if anointed.is_empty():
 			continue
 		var eff: Dictionary = e.get("effect", {}) as Dictionary
+		var owner: int = int(e.get("owner", -1))
 		var want_aff: int = _affinity_from_name(str(eff.get("affinity", "")))
 		var atk_pct: float = float(eff.get("atk_pct", 0))
 		var def_pct: float = float(eff.get("def_pct", 0))
-		for p: int in range(2):
+		for p: int in [owner]:
 			for r: int in range(GameState.GRID_SIZE):
 				for c: int in range(GameState.GRID_SIZE):
 					var hub: GameState.CardInstance = GameState.get_card(p, r, c)
@@ -2189,9 +2301,10 @@ static func apply_adjacent_flat_auras() -> void:
 		if anointed.is_empty():
 			continue
 		var eff: Dictionary = e.get("effect", {}) as Dictionary
+		var owner: int = int(e.get("owner", -1))
 		var add_atk: int = int(eff.get("atk", 0))
 		var add_def: int = int(eff.get("def", 0))
-		for p: int in range(2):
+		for p: int in [owner]:
 			for r: int in range(GameState.GRID_SIZE):
 				for c: int in range(GameState.GRID_SIZE):
 					var hub: GameState.CardInstance = GameState.get_card(p, r, c)
@@ -2214,8 +2327,9 @@ static func apply_adjacent_cost_auras_once() -> void:
 		if anointed.is_empty():
 			continue
 		var eff: Dictionary = e.get("effect", {}) as Dictionary
+		var owner: int = int(e.get("owner", -1))
 		var mult: float = maxf(0.0, float(eff.get("value", 1.0)))
-		for p: int in range(2):
+		for p: int in [owner]:
 			for r: int in range(GameState.GRID_SIZE):
 				for c: int in range(GameState.GRID_SIZE):
 					var hub: GameState.CardInstance = GameState.get_card(p, r, c)
@@ -2250,12 +2364,12 @@ static func shuffle_all_units_if_needed() -> void:
 	GameState.post_message("Omen Poltergeist: All units shuffled!")
 
 
-static func ignores_trap_affinity(trap_name: String) -> bool:
-	return anoint_has_type(trap_name, "ignore_trap_affinity")
+static func ignores_trap_affinity(trap_name: String, owner: int) -> bool:
+	return anoint_has_type(trap_name, "ignore_trap_affinity", owner)
 
 
-static func should_reveal_on_trap_trigger(trap_name: String) -> bool:
-	return anoint_has_type(trap_name, "reveal_on_trap_trigger")
+static func should_reveal_on_trap_trigger(trap_name: String, owner: int) -> bool:
+	return anoint_has_type(trap_name, "reveal_on_trap_trigger", owner)
 
 
 static func attack_lock_defender_turns() -> int:
@@ -2275,8 +2389,8 @@ static func has_escalating_toll(for_owner: int = -1) -> bool:
 	return false
 
 
-static func try_spend_mutagen_revive(card: GameState.CardInstance) -> bool:
-	if card == null or not anoint_has_type(card.card_name, "spend_mutagen_revive"):
+static func try_spend_mutagen_revive(card: GameState.CardInstance, owner: int) -> bool:
+	if card == null or not anoint_has_type(card.card_name, "spend_mutagen_revive", owner):
 		return false
 	if not card.has_mutagen_flag and "mutagen" not in card.flags:
 		return false
@@ -2288,10 +2402,10 @@ static func try_spend_mutagen_revive(card: GameState.CardInstance) -> bool:
 	return true
 
 
-static func tech_returns_to_hand(tech_name: String) -> bool:
-	if not anoint_has_type(tech_name, "tech_returns_to_hand_once"):
+static func tech_returns_to_hand(tech_name: String, owner: int) -> bool:
+	if not anoint_has_type(tech_name, "tech_returns_to_hand_once", owner):
 		return false
-	var key: String = "omen_second_charge_%s" % tech_name
+	var key: String = "omen_second_charge_%d_%s" % [owner, tech_name]
 	# Track on GameState via intel lines isn't ideal; use anoint effects map side channel.
 	if GameState.omen_anoint_effects.has(key):
 		return false

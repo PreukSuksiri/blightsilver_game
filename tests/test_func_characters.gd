@@ -529,15 +529,24 @@ func _aerial(A, AB) -> void:
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	var union_card := _make_char("Gryphon Rider", 125, 90, 1000, A.DIVINE)
 	union_card.is_union = true
-	union_card.face_up = true
+	union_card.face_up = false
 	GameState.grids[0][0][1] = union_card
+	var second_union := _make_char("Ice Hawk", 80, 70, 900, A.NATURE)
+	second_union.is_union = true
+	second_union.face_up = false
+	GameState.grids[0][1][1] = second_union
 	var att := _make_char("Aerial the Battlemage", 50, 45, 700, A.ARCANE,
 		AB.ATK_DEF_BONUS_IF_UNION_ON_FIELD, {"atk": 20, "def": 20})
 	att.face_up = true
 	GameState.grids[0][0][0] = att
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 70, "TC-FUNC-Aerial-001: ATK 50+20=70 with union on field")
+	assert_eq(r.attacker_atk_used, 70,
+		"TC-FUNC-Aerial-001: ATK gains +20 once if any own Union exists")
+	var foe_att := _make_char("Foe", 10, 0, 100, A.ANIMA)
+	var r2 := BattleResolver.resolve_battle(foe_att, att, 3, 1, 0)
+	assert_eq(r2.defender_def_used, 65,
+		"TC-FUNC-Aerial-002: DEF 45+20=65 with union on field")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ATK_DEF_BONUS_VS_AFFINITY
@@ -916,8 +925,8 @@ func _immortal_vampire(A, AB) -> void:
 	GameState.grids[0][2][2] = ally1
 	GameState.grids[0][2][3] = ally2
 	BattleResolver.calculate_field_bonuses(0)
-	assert_eq(vampire.field_aura_atk_bonus, 100, "TC-FUNC-Immortal-Vampire-003: +50 ATK per 2 other Chaos allies")
-	assert_eq(vampire.get_effective_atk(), 130, "TC-FUNC-Immortal-Vampire-003: effective ATK 30+100=130")
+	assert_eq(vampire.field_aura_atk_bonus, 60, "TC-FUNC-Immortal-Vampire-003: +30 ATK per 2 other Chaos allies")
+	assert_eq(vampire.get_effective_atk(), 90, "TC-FUNC-Immortal-Vampire-003: effective ATK 30+60=90")
 
 func _pit_lord(A, AB) -> void:
 	var pit_params: Dictionary = {}
@@ -1024,15 +1033,19 @@ func _feral_vampire(A, AB) -> void:
 func _tomb_bandit(A, AB) -> void:
 	print("-- TC-FUNC-Tomb-Bandit-001")
 	var att := _make_char("Tomb Bandit", 75, 60, 900, A.ANIMA,
-		AB.IMMUNE_TO_TRAPS, {})
+		AB.IMMUNE_TO_TRAPS, {"def_loss_on_trap": 20, "trap_destroy_immunity_only": true})
 	var trap_spike := _make_trap("Spike Trap", 1500)
 	var r := BattleResolver.resolve_battle(att, trap_spike, 3, 0, 1)
-	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Tomb-Bandit-001: immune to Spike Trap")
+	assert_eq(r.special_trigger, "trap_effect",
+		"TC-FUNC-Tomb-Bandit-001: non-destruction Trap effects still resolve")
 	assert_true(not r.attacker_destroyed, "TC-FUNC-Tomb-Bandit-001: attacker survives")
+	assert_eq(att.current_def, 40, "TC-FUNC-Tomb-Bandit-001: loses 20 DEF after attacking Trap")
 	# Also verify against a 0-cost trap
 	var trap_hole := _make_trap("Trap Hole", 0)
 	var r2 := BattleResolver.resolve_battle(att, trap_hole, 3, 0, 1)
-	assert_eq(r2.special_trigger, "trap_nullified", "TC-FUNC-Tomb-Bandit-001: immune to 0-cost trap too")
+	assert_eq(r2.special_trigger, "trap_effect",
+		"TC-FUNC-Tomb-Bandit-001b: 0-cost Trap effect is not nullified")
+	assert_eq(att.current_def, 20, "TC-FUNC-Tomb-Bandit-001b: loses 20 DEF again")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # IMMUNE_ZERO_COST_TRAPS
@@ -1191,7 +1204,8 @@ func _grand_fort_archer(A, AB) -> void:
 func _laughing_granny(A, AB) -> void:
 	print("-- TC-FUNC-Laughing-Granny-001")
 	var att := _make_char("Laughing Granny", 15, 20, 350, A.CHAOS,
-		AB.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND, {"atk": 10, "def": 10})
+		AB.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND,
+		{"atk": 10, "def": 10, "until_turn_end": true})
 	att.one_use_atk_boost_used = false
 	var def_ := _make_char("Grand Fort Footsoldier", 25, 25, 300, A.ANIMA)
 	var r1 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
@@ -1210,16 +1224,16 @@ func _armored_bee(A, AB) -> void:
 	print("-- TC-FUNC-Armored-Bee-001")
 	var opp_att := _make_char("Attacker", 50, 0, 100, A.ANIMA)
 	var def_ := _make_char("Armored Bee", 30, 0, 480, A.NATURE,
-		AB.ONE_USE_DEF_BOOST, {"bonus": 60})
+		AB.ONE_USE_DEF_BOOST, {"bonus": 60, "until_turn_end": true})
 	def_.one_use_def_boost_used = false
 	# First defense: +60 DEF
 	var r1 := BattleResolver.resolve_battle(opp_att, def_, 3, 0, 1)
 	assert_eq(r1.defender_def_used, 60, "TC-FUNC-Armored-Bee-001: first defense DEF 0+60=60")
 	assert_true(not r1.defender_destroyed, "TC-FUNC-Armored-Bee-001: Armored Bee survives (50 < 60)")
-	# Second defense: no boost
-	def_.one_use_def_boost_used = true
+	# Second defense in the same turn retains the triggered bonus.
 	var r2 := BattleResolver.resolve_battle(opp_att, def_, 3, 0, 1)
-	assert_eq(r2.defender_def_used, 0, "TC-FUNC-Armored-Bee-001: second defense DEF 0 (used)")
+	assert_eq(r2.defender_def_used, 60,
+		"TC-FUNC-Armored-Bee-001: triggered DEF bonus lasts through turn end")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ONE_USE_PERM_DEBUFF_ATTACKER_ATK
@@ -1401,16 +1415,16 @@ func _dark_tengu(A, AB) -> void:
 	print("-- TC-FUNC-Dark-Tengu-001 [defend-side; attack-ATK-debuff is MANUAL]")
 	var att := _make_char("Weak Attacker", 10, 0, 100, A.ANIMA)
 	var def_ := _make_char("Dark Tengu", 25, 25, 250, A.CHAOS,
-		AB.SELF_DEBUFF_ON_ATTACK_AND_DEFEND, {"atk": 5, "def": 5})
-	# ATK 10 < DEF 25 → Dark Tengu survives → loses 5 DEF permanently
+		AB.SELF_DEBUFF_ON_ATTACK_AND_DEFEND, {"atk": 10, "def": 10})
+	# ATK 10 < DEF 25 → Dark Tengu survives → loses 10 DEF permanently
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_false(r.defender_destroyed, "TC-FUNC-Dark-Tengu-001: survives ATK 10 vs DEF 25")
-	assert_eq(def_.current_def, 20, "TC-FUNC-Dark-Tengu-001: DEF 25-5=20 after defending")
+	assert_eq(def_.current_def, 15, "TC-FUNC-Dark-Tengu-001: DEF 25-10=15 after defending")
 	assert_true(def_.one_use_def_boost_used, "TC-FUNC-Dark-Tengu-001: defend-debuff flag set")
 	# Second defense: flag already set, no further DEF loss
 	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_false(r2.defender_destroyed, "TC-FUNC-Dark-Tengu-001b: still survives (DEF 20 > ATK 10)")
-	assert_eq(def_.current_def, 20, "TC-FUNC-Dark-Tengu-001b: DEF unchanged on second defense (one-use)")
+	assert_eq(def_.current_def, 15, "TC-FUNC-Dark-Tengu-001b: DEF unchanged on second defense (one-use)")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ONE_USE_DEFEND_MORPH — Bladeshifter (Pattern A)
@@ -1466,3 +1480,16 @@ func _slim_gray_trooper(A, AB) -> void:
 	GameState.grids[0][0][0] = att
 	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_eq(r2.attacker_atk_used, 45, "TC-FUNC-Slim-Gray-Trooper-001b: ATK 45 base (<10 revealed)")
+	# Slim Gray Tank counts every revealed cell, including revealed Dead Ends.
+	var tank := _make_char("Slim Gray Tank", 30, 30, 1000, A.COSMIC,
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE,
+		{"per_revealed": true, "atk": 10, "def": 10})
+	tank.face_up = true
+	GameState.grids[0][0][0] = tank
+	var dead_end := GameState.CardInstance.new()
+	dead_end.card_type = "dead_end"
+	dead_end.face_up = true
+	GameState.grids[0][0][1] = dead_end
+	var r3 := BattleResolver.resolve_battle(tank, def_, 3, 0, 1)
+	assert_eq(r3.attacker_atk_used, 50,
+		"TC-FUNC-Slim-Gray-Tank-001: self and revealed Dead End each grant +10 ATK")

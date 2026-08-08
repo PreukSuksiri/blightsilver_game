@@ -51,7 +51,13 @@ func run_all_tests() -> void:
 	test_stuck_without_characters_ends_game_at_turn_start()
 	test_stuck_with_characters_but_no_attack_is_no_moves()
 	test_divine_protection_turn_timing()
+	test_divine_protection_blocks_generic_destruction_once()
+	test_effective_tech_cost_uses_dungeon_modifiers()
+	test_demo_tech_data_and_ai_target_parity()
 	test_nuki_has_coin_flip_swap_on_place()
+	test_nuki_ai_can_choose_facedown_swap()
+	test_bone_dragon_queues_foe_turn_end_revival()
+	test_triggered_unit_bonuses_expire_on_trigger_turn()
 	test_ai_intercept_prefers_bat_swarm_over_servant()
 
 func _start_play_phase() -> void:
@@ -110,11 +116,55 @@ func test_divine_protection_turn_timing() -> void:
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.divine_protection_active[0] = true
 	GameState.expire_divine_protection_at_turn_end(0)
-	assert_true(GameState.divine_protection_active[0],
-		"Prayer protection survives through the caster's turn end")
-	GameState.expire_divine_protection_at_turn_end(1)
 	assert_false(GameState.divine_protection_active[0],
-		"Prayer protection clears when opponent's turn ends")
+		"Prayer protection clears at the end of the caster's turn")
+
+func test_divine_protection_blocks_generic_destruction_once() -> void:
+	print("-- test_divine_protection_blocks_generic_destruction_once")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Lightbringer")
+	GameState.place_character(0, 0, 1, "Padmapani")
+	GameState.place_character(1, 1, 1, "Canyon Warg")
+	_start_play_phase()
+	GameState.divine_protection_active[0] = true
+	assert_false(GameState.destroy_card(0, 0, 0, false),
+		"Prayer blocks destruction routed through GameState")
+	assert_eq(GameState.get_card(0, 0, 0).card_name, "Lightbringer",
+		"Protected Divine remains on the field")
+	assert_false(GameState.divine_protection_active[0],
+		"Prayer is consumed after one prevented destruction")
+	assert_true(GameState.destroy_card(0, 0, 1, false),
+		"Second Divine destruction is not protected")
+
+func test_effective_tech_cost_uses_dungeon_modifiers() -> void:
+	print("-- test_effective_tech_cost_uses_dungeon_modifiers")
+	GameState.new_game(GameState.GameMode.DAILY_DUNGEON)
+	GameState.active_dungeon_modifiers = ["tech_dealer", "intelligence_tax"]
+	assert_eq(GameState.effective_tech_cost("Great Diplomacy", 0), 1000,
+		"Shared effective Tech cost applies discount then tax")
+	GameState.active_dungeon_modifiers = []
+
+func test_demo_tech_data_and_ai_target_parity() -> void:
+	print("-- test_demo_tech_data_and_ai_target_parity")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	assert_eq(CardDatabase.get_tech("Great Diplomacy").effect_params.get("count", 0), 3,
+		"Great Diplomacy reveals exactly three units")
+	GameState.place_trap(1, 0, 1, "Flame Trap")
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if Vector2i(r, c) != Vector2i(0, 1):
+				GameState.get_card(1, r, c).face_up = true
+	var ai := AIPlayer.new()
+	ai.player_index = 1
+	ai.opponent_index = 0
+	assert_eq(ai.decide_target("self_squares_1_opponent_turn"), Vector2i(0, 1),
+		"Tease AI can choose a face-down non-unit cell")
+	GameState.place_character(1, 0, 0, "Ox Patrol")
+	assert_eq(ai.decide_bribe_target(700), Vector2i(0, 0),
+		"Bribe AI accepts 700 Crystals with a legal hidden unit")
+	assert_true(ai._score_tech("War Supply", ai._board_snapshot()) > 0,
+		"War Supply receives a positive AI score with own units")
+	ai.free()
 
 func test_new_game_initial_state() -> void:
 	print("-- test_new_game_initial_state")
@@ -193,7 +243,7 @@ func test_place_and_get_trap() -> void:
 	var card := GameState.get_card(1, 2, 3)
 	assert_eq(card.card_type, "trap", "Card type is trap")
 	assert_eq(card.card_name, "Flame Trap", "Card name matches")
-	assert_eq(card.crystal_cost, 250, "Flame Trap cost = 250")
+	assert_eq(card.crystal_cost, 200, "Flame Trap cost = 200")
 
 func test_place_dead_end_overwrites() -> void:
 	print("-- test_place_dead_end_overwrites")
@@ -276,6 +326,58 @@ func test_nuki_has_coin_flip_swap_on_place() -> void:
 		nuki.ability_type,
 		CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION,
 		"Nuki keeps COIN_FLIP_SWAP_POSITION from CardDatabase")
+
+
+func test_nuki_ai_can_choose_facedown_swap() -> void:
+	print("-- test_nuki_ai_can_choose_facedown_swap")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(1, 2, 2, "Nuki the Tanuki")
+	GameState.place_character(1, 0, 0, "Ox Patrol")
+	GameState.get_card(1, 2, 2).face_up = true
+	GameState.get_card(1, 0, 0).face_up = false
+	GameState.attacker_pos = Vector2i(2, 2)
+	var ai := AIPlayer.new()
+	ai.player_index = 1
+	ai.opponent_index = 0
+	assert_eq(ai.decide_target("own_character_for_swap"), Vector2i(0, 0),
+		"Nuki AI can choose a legal face-down own unit and excludes itself")
+	ai.free()
+
+
+func test_bone_dragon_queues_foe_turn_end_revival() -> void:
+	print("-- test_bone_dragon_queues_foe_turn_end_revival")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Bone Dragon")
+	GameState.place_character(0, 0, 1, "Dark Monk")
+	GameState.place_character(1, 1, 1, "Canyon Warg")
+	var union_destroyer: GameState.CardInstance = GameState.get_card(1, 1, 1)
+	union_destroyer.is_union = true
+	GameState.attacker_card = union_destroyer
+	GameState.destroy_card(0, 0, 0, false)
+	assert_eq(GameState.foe_turn_end_revives.size(), 1,
+		"Bone Dragon queues foe-turn-end revival even when destroyed by a Union")
+	assert_eq(GameState.turn_start_revives.size(), 0,
+		"Bone Dragon does not use owner-turn-start revival")
+	var entry: Dictionary = GameState.foe_turn_end_revives[0]
+	assert_true(GameState.revive_foe_turn_end_entry(entry),
+		"Heads-path helper revives Bone Dragon into its original cell")
+	assert_eq(GameState.get_card(0, 0, 0).card_name, "Bone Dragon",
+		"Bone Dragon is restored on successful foe-turn-end coin")
+
+
+func test_triggered_unit_bonuses_expire_on_trigger_turn() -> void:
+	print("-- test_triggered_unit_bonuses_expire_on_trigger_turn")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(1, 0, 0, "Armored Bee")
+	var bee: GameState.CardInstance = GameState.get_card(1, 0, 0)
+	bee.temp_def_bonus = 60
+	bee.flags.append("ability_temp_def_turn_4")
+	GameState.expire_triggered_ability_bonuses(4)
+	assert_eq(bee.temp_def_bonus, 0,
+		"Armored Bee bonus expires when the triggering foe turn ends")
+	assert_false("ability_temp_def_turn_4" in bee.flags,
+		"Armored Bee turn-expiry marker is consumed")
+
 
 func test_ai_intercept_prefers_bat_swarm_over_servant() -> void:
 	print("-- test_ai_intercept_prefers_bat_swarm_over_servant")

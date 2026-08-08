@@ -24,11 +24,11 @@ func _run_manual_tests() -> void:
 	_manual("TC-FUNC-Accident-001")        # destroy face-up, no crystal loss
 
 	# Prayer — DIVINE_PROTECTION
-	_manual("TC-FUNC-Prayer-001")          # Divine character survives destruction once
+	_manual("TC-FUNC-Prayer-001")          # Divine card survives any destruction source once this turn
 	_manual("TC-FUNC-Prayer-002")          # playable at 0 crystals
 
-	# War Supply — NOT_IMPLEMENTED
-	_manual("TC-FUNC-War-Supply-001")      # shows 'Ability not implemented' message
+	# War Supply — TEMP_ATK_DEF_BOOST_ALL
+	_manual("TC-FUNC-War-Supply-001")      # all own units get +10 ATK&DEF this turn
 
 	# Siege Cannon — OPPONENT_NEXT_DEFENDER_DESTROYED
 	_manual("TC-FUNC-Siege-Cannon-001")    # next defender auto-destroyed after battle
@@ -41,8 +41,8 @@ func _run_manual_tests() -> void:
 	_manual("TC-FUNC-Tease-001")           # opponent reveals own square
 	_manual("TC-FUNC-Tease-002")           # playable at 0 crystals
 
-	# Great Diplomacy — REVEAL_ALL_OWN_CHARACTERS (count=5)
-	_manual("TC-FUNC-Great-Diplomacy-001") # select up to 5 own units to reveal
+	# Great Diplomacy — REVEAL_ALL_OWN_CHARACTERS (count=3)
+	_manual("TC-FUNC-Great-Diplomacy-001") # select up to 3 own units to reveal
 
 	# Radar — REVEAL_OPPONENT_SQUARE (count=3)
 	_manual("TC-FUNC-Radar-001")           # reveal 3 opponent squares; crystals -= 600

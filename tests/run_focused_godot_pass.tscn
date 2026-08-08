@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://focused_godot_pass"]
+
+[ext_resource type="Script" path="res://tests/run_focused_godot_pass.gd" id="1"]
+
+[node name="FocusedGodotPassRunner" type="Node"]
+script = ExtResource("1")

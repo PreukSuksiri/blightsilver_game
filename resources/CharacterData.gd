@@ -37,7 +37,7 @@ enum AbilityType {
 	ATK_BONUS_IF_DICE_HIGH,       # +N ATK if dice roll >= threshold
 	REVEAL_ADJACENT_AFTER_ATTACK, # Reveal an adjacent square after attacking (even if destroyed)
 	ATK_BONUS_VS_TWO_AFFINITIES,  # +N ATK vs two specific affinities
-	IMMUNE_TO_TRAPS,              # Cannot be destroyed by Traps
+	IMMUNE_TO_TRAPS,              # Cannot be destroyed by Traps; other Trap effects apply
 	IMMUNE_TO_TECH_DESTRUCTION,   # Cannot be destroyed by Tech Cards (but can be affected)
 	REDIRECT_DESTRUCTION_TO_ALLY, # Can destroy ally of same affinity instead of self
 	PERM_BOOST_END_OF_TURN,       # +N ATK/DEF permanently at end of each turn
@@ -87,7 +87,7 @@ enum AbilityType {
 
 	# ── One-use ATK boost ──
 	ONE_USE_ATK_BOOST,               # Once per card lifetime, +N ATK when attacking
-	ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND, # Once: +N ATK when attacking; once: +N DEF when defending (separate uses)
+	ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND, # Once: trigger +N ATK/DEF through turn end (separate uses)
 
 	# ── Post-attack extra attacks ──
 	ONE_USE_EXTRA_ATTACK_ON_KILL,    # Once: win a battle → get one extra attack this turn
@@ -114,11 +114,11 @@ enum AbilityType {
 	CRYSTAL_GAIN_ON_DEAD_END_ATTACK, # +N crystals when this card attacks a dead_end cell
 
 	# ── Copy stats ──
-	ONE_USE_COPY_STATS_ON_SURVIVE,   # Once: survive battle → gain ATK and DEF of battled card as perm bonus
+	ONE_USE_COPY_STATS_ON_SURVIVE,   # Once: survive battle → gain half battled card's ATK/DEF permanently
 
 	# ── Defend effects ──
 	PERM_DEF_BOOST_ON_DEFEND,        # +N DEF permanently after this card successfully defends
-	LOCK_ATTACKER_ON_DEFEND,         # Attacker cannot attack until end of their player's next turn
+	LOCK_ATTACKER_ON_DEFEND,         # Lock attacker; current_turn_only shortens duration to current turn
 	ONE_USE_PERM_DEBUFF_ATTACKER_ATK,# Once: when defending, attacker permanently loses N ATK
 	DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF, # When defending, attacker permanently loses N ATK and DEF
 	ONE_USE_DEFEND_MORPH,            # Once: after defending, permanently loses N DEF and gains N ATK vs attacker affinity
@@ -180,7 +180,7 @@ enum AbilityType {
 	POST_BATTLE_COIN_FLIP_DESTROY,       # After battle: coin flip; heads → destroy 1 foe character
 	UNION_SUMMON_VENOM_ALL_FOE,          # On union summon: venom flag on all foe face-up characters
 	IMMUNE_DESTROY_BY_NON_UNION,         # Cannot be destroyed unless attacker is a union card
-	REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, # Once: if destroyed by a non-union card, revive at owner's turn start
+	REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, # Revival timing/source restrictions come from params
 	PERM_STAT_PENALTY_VS_NON_AFFINITY,   # Permanent -N ATK&DEF when battling non-matching affinity
 	DEF_PENALTY_VS_NON_AFFINITY,         # Defender: -N DEF when attacked by non-matching affinity
 	PERM_ATK_BOOST_ONCE_PER_AFFINITY,    # After battle vs non-affinity: +N ATK once per defender affinity

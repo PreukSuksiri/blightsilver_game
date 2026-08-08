@@ -1,0 +1,116 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-08-08 15:15:02.074
+Game Session of Ginger Beer (started 2026-08-08 15:12:26.378)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.890] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[00:11.340] Mode selected P1: TECH
+[00:11.648] Tech played  P1: "Spy"
+[00:13.282] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:14.933] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[00:16.481] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[00:16.486] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:16.915] Revealed: P0 (3,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:18.114] MSG: Spy: Revealed Choir Lady Alice.
+[00:18.119] Tech resolved  P1
+[00:19.011] Mode selected P1: ATTACK
+[00:19.355] Revealed: P1 (1,1) "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine}
+[00:21.261] Dice rolled: 3
+[00:21.294] MSG: Sunrise Lady wins!
+[00:25.743] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:28.577] MSG: Sunrise Lady: +10 ATK, -10 DEF permanently (if possible).
+[00:29.924] Attack P1(1,1)"Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine} → P0(3,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=3  ATK=30 vs DEF=25  → WIN
+[00:29.924] Reckoning overlay: P1 "Sunrise Lady" {Unit ATK20 DEF30 | cost 300 | affinity Divine} badge=30 ATK pill=20 DEF pill=30 mod=+ATK 10 (20+10=30)
+[00:29.924] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=25 ATK pill=20 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:29.924] Anim: 3A  △ P0(3,0)
+[00:29.924] Card destroyed  P0 (3,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:30.421] Mode selected P1: ATTACK
+[00:30.760] Revealed: P1 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:32.646] Dice rolled: 3
+[00:32.661] MSG: Moonrise Gentleman wins!
+[00:37.155] Crystals: P0 4750 → 4570 (-180)  [battle]
+[00:41.404] Attack P1(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P0(3,2)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}  Dice=3  ATK=40 vs DEF=25  → WIN
+[00:41.405] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:41.405] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:41.405] Anim: 3A  △ P0(3,2)
+[00:41.405] Card destroyed  P0 (3,2) "Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +permATK10, +permDEF10}
+[00:41.891] Turn ended  P1  |  Crystals P0=4570 P1=3000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4570 P1=3000 ---
+[00:53.050] Revealed: P0 (2,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:54.274] Dice rolled: 3
+[00:54.283] MSG: Moon Tribe Twin Blader wins!
+[00:58.785] Crystals: P1 3000 → 2700 (-300)  [battle]
+[01:01.704] Coin flip: Heads
+[01:04.396] MSG: Moon Tribe Twin Blader: Coin flip heads — extra attack!
+[01:04.408] Attack P0(2,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(1,1)"Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20}  Dice=3  ATK=30 vs DEF=20  → WIN
+[01:04.408] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[01:04.408] Reckoning overlay: P1 "Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:04.408] Anim: 3A  △ P1(1,1)
+[01:04.408] Card destroyed  P1 (1,1) "Sunrise Lady" {Unit ATK30 DEF20 | cost 300 | affinity Divine | base 30/20}
+[01:06.819] Dice rolled: 5
+[01:06.851] MSG: Moon Tribe Twin Blader hits Dead End — nothing happens.
+[01:10.281] Coin flip: Tails
+[01:13.028] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:14.477] Attack P0(2,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[01:14.477] Anim: 3F  (blank slot)
+[01:18.695] Tech played  P0: "Spy"
+[01:20.241] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:20.564] Revealed: P1 (2,1) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[01:21.789] MSG: Spy: Revealed Neptune Diver.
+[01:22.085] Tech resolved  P0
+[01:25.217] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:26.676] Dice rolled: 1
+[01:26.691] MSG: Silver Spearman hits Dead End — nothing happens.
+[01:29.755] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(2,0)(empty)  Dice=1  → DEAD_END
+[01:29.755] Anim: 3F  (blank slot)
+[01:32.036] Turn ended  P0  |  Crystals P0=4570 P1=2700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4570 P1=2700 ---
+[01:34.502] Mode selected P1: TECH
+[01:34.802] Crystals: P1 2700 → 2100 (-600)  [tech cost]
+[01:37.635] Tech played  P1: "Radar"
+[01:39.194] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:39.827] Dead-end placed  P0 (3,1)
+[01:39.834] MSG: Radar: Revealed Dead End.
+[01:40.471] Dead-end placed  P0 (2,3)
+[01:40.475] MSG: Radar: Revealed Dead End.
+[01:40.873] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[01:43.009] MSG: Radar: Revealed Dead End.
+[01:43.019] Tech resolved  P1
+[01:43.908] Mode selected P1: ATTACK
+[01:45.105] Dice rolled: 2
+[01:45.117] MSG: Moonrise Gentleman wins!
+[01:49.616] Crystals: P0 4570 → 4320 (-250)  [battle]
+[01:53.803] Attack P1(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=40 vs DEF=20  → WIN
+[01:53.803] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:53.803] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:53.803] Anim: 3A  △ P0(1,3)
+[01:53.803] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:54.305] Mode selected P1: ATTACK
+[01:54.598] Revealed: P1 (1,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:56.526] Dice rolled: 1
+[01:56.538] MSG: Moon Tribe Twin Blader wins!
+[02:00.211] Crystals: P0 4320 → 4020 (-300)  [battle]
+[02:03.091] Coin flip: Tails
+[02:05.819] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[02:07.252] Attack P1(1,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(2,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=30 vs DEF=20  → WIN
+[02:07.256] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[02:07.256] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:07.256] Anim: 3A  △ P0(2,0)
+[02:07.256] Card destroyed  P0 (2,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:07.744] Turn ended  P1  |  Crystals P0=4020 P1=2100
+
+--- Turn 4  |  Player 0  |  Crystals P0=4020 P1=2100 ---
+[02:11.443] Crystals: P0 4020 → 2020 (-2000)  [tech cost]
+[02:14.285] Tech played  P0: "Rift Strike"
+[02:15.830] Target prompt: "Rift Strike: Choose 3 adjacent cells on the foe's field."  filter=rift_strike_triplet
+[03:13.054] Card destroyed  P1 (0,2) "Street Joke" {cost 0}
+[03:13.063] Card destroyed  P1 (1,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[03:13.083] MSG: Rift Strike: Destroyed 2 cards

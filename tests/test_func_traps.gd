@@ -12,6 +12,7 @@ func _ready() -> void:
 	var AB := CharacterData.AbilityType
 	_run_immunity_tests(A, AB)
 	_run_attacker_lock_turn_tests()
+	_run_confirmed_demo_trap_tests(A)
 	_run_manual_tests()
 	print("  Traps: %d passed, %d failed" % [passed, failed])
 
@@ -177,6 +178,60 @@ func _run_attacker_lock_turn_tests() -> void:
 		"Hypnosis +1 expires before attacker's next acting turn")
 	assert_true(correct_lock >= attacker_next_turn,
 		"Attacker lock +2 blocks attacker's next acting turn")
+
+
+func _run_confirmed_demo_trap_tests(A: Dictionary) -> void:
+	var plunder: TrapData = CardDatabase.get_trap("Plunder")
+	assert_eq(plunder.effect_params.get("crystal_gain", 0), 1000,
+		"Plunder grants the trap owner 1000 Crystals")
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.add_void_entry(1, "Unit A", "character")
+	GameState.add_void_entry(1, "Union A", "union")
+	GameState.add_void_entry(1, "Trap A", "trap")
+	GameState.add_void_entry(1, "Tech A", "tech")
+	assert_eq(TurnManager.count_void_units(1, true), 2,
+		"Soul Blast counts only unit and Union entries in trap owner's Void")
+	assert_eq(TurnManager.count_void_units(1, true), 2,
+		"Grudge uses the same character/union Void filter as Soul Blast")
+	assert_eq(TurnManager.count_void_card_type(1, "trap"), 1,
+		"Radiation counts only traps in trap owner's Void")
+	GameState.void_pile_entries[1].clear()
+	assert_eq(TurnManager.count_void_units(1, true), 0,
+		"Void-scaled trap effects have a zero minimum")
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var armored := _make_char(
+		"Armored Test", 40, 50, 500, A.NATURE)
+	armored.face_up = false
+	GameState.set_card(1, 1, 1, armored)
+	var tm := TurnManager.new()
+	add_child(tm)
+	tm._pending_pheromone_owner = 1
+	tm._pending_pheromone_target_pos = Vector2i(2, 2)
+	assert_true(tm.resolve_defensive_pheromone_swap(1, Vector2i(1, 1)),
+		"Defensive Pheromone accepts an own Armored Nature unit")
+	assert_true(GameState.get_card(1, 2, 2) == armored,
+		"Defensive Pheromone moves the selected unit into the trap cell")
+	assert_eq(GameState.get_card(1, 1, 1).card_type, "dead_end",
+		"Defensive Pheromone vacates the selected unit's old cell")
+	assert_true(tm._pending_pheromone_swap_done,
+		"Defensive Pheromone queues repeat Reckoning")
+	tm.queue_free()
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.set_card(0, 0, 0, _make_char("Retargeter", 50, 50, 700, A.ANIMA))
+	GameState.set_card(1, 4, 4, _make_char("Only Target", 10, 10, 100, A.ANIMA))
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if Vector2i(r, c) != Vector2i(4, 4):
+				GameState.locked_attack_positions.append(Vector2i(r, c))
+	var ai := AIPlayer.new()
+	ai.init_as(0)
+	add_child(ai)
+	assert_eq(ai.choose_retarget_for(Vector2i(0, 0)), Vector2i(4, 4),
+		"Bunker/Hostage AI retargets with the supplied same attacker")
+	ai.queue_free()
 
 # ---------------------------------------------------------------------------
 # Pattern C — MANUAL (all trap effect -001 tests; TurnManager required)

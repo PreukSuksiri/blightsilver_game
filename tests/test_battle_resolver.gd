@@ -159,11 +159,11 @@ func test_defend_crystal_gain() -> void:
 	var defender := _make_char("Fierce Gladiator", 70, 90, 1300,
 		CharacterData.Affinity.ANIMA,
 		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEFEND,
-		{"amount": 500})
+		{"amount": 200})
 	var result := BattleResolver.resolve_battle(attacker, defender, 3, 0, 1)
 	# ATK 40 < DEF 90 → defender wins
 	assert_true(result.attacker_destroyed, "Attacker destroyed")
-	assert_eq(result.defender_crystal_gain, 500, "Defender gains 500 crystals on defend")
+	assert_eq(result.defender_crystal_gain, 200, "Defender gains 200 crystals on defend")
 
 func test_defend_drain_attacker() -> void:
 	print("-- test_defend_drain_attacker (Aether Warden)")

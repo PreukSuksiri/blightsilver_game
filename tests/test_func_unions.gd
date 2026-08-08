@@ -11,8 +11,13 @@ func _ready() -> void:
 	print("\n--- test_func_unions.gd ---")
 	var A := CharacterData.Affinity
 	var AB := CharacterData.AbilityType
+	if "--confirmed-union-fixes" in OS.get_cmdline_user_args():
+		_run_confirmed_union_fix_tests(A, AB)
+		print("  Unions: %d passed, %d failed" % [passed, failed])
+		return
 	_run_summon_manual_tests()
 	_run_full_release_summon_tests()
+	_run_confirmed_union_fix_tests(A, AB)
 	_run_excel_only_manual_tests()
 	_run_ability_tests(A, AB)
 	_run_none_smoke_tests(A, AB)
@@ -111,7 +116,7 @@ func _run_full_release_summon_tests() -> void:
 	_assert_deck_can_form_union("Dwarven Drill", ["Dwarven Explorer", "Dwarven Miner"], "TC-FUNC-Dwarven-Drill-summon")
 	_assert_deck_can_form_union("Cullan the Flaming Blade", ["Cullan the Magic Swordsman", "Red Mage"], "TC-FUNC-Cullan-the-Flaming-Blade-summon")
 	_assert_deck_can_form_union("The Undertaker", ["Sinister Cultist", "Chaotic Wisp"], "TC-FUNC-The-Undertaker-summon")
-	_assert_deck_can_form_union("Ethereal Marquees", ["Moon Nobleman", "Energy Wisp"], "TC-FUNC-Ethereal-Marquees-summon")
+	_assert_deck_can_form_union("Ethereal Marquees", ["Moon Nobleman", "Ethereal Soldiers"], "TC-FUNC-Ethereal-Marquees-summon")
 	_assert_deck_can_form_union("Charm Mistress", ["Alluring Witch", "Energy Wisp"], "TC-FUNC-Charm-Mistress-summon")
 	_assert_deck_can_form_union("Chronomancer", ["Freya the Rift Hunter", "Bingo the Chrono Rabbit"], "TC-FUNC-Chronoteleporter-summon")
 	_assert_deck_can_form_union("Death Colony", ["Long Tongue", "Lessor Leech"], "TC-FUNC-Death-Colony-summon")
@@ -160,6 +165,101 @@ func _run_full_release_summon_tests() -> void:
 	_assert_deck_can_form_union("Elven King", ["Elven Archer", "Elven Swordsman"], "TC-FUNC-Elven-King-summon")
 	_assert_deck_can_form_union("Bloody Mask", ["Jacob the Ski Mask", "Franky the Steel Claw"], "TC-FUNC-Bloody-Mask-summon")
 	_assert_deck_can_form_union("Lab Abomination", ["Lab Bloater", "Lab Crawler"], "TC-FUNC-Lab-Abomination-summon")
+
+func _run_confirmed_union_fix_tests(A: Dictionary, AB: Dictionary) -> void:
+	print("-- Confirmed Demo Union fixes")
+	var armored: UnionData = UnionDatabase.get_union("Armored Dino")
+	var armored_nature := _make_char("Armored Beetle", 1, 1, 100, A.NATURE)
+	armored_nature.is_union = false
+	assert_true(UnionDatabase.card_satisfies_condition(
+		armored_nature, armored.material_conditions[0]),
+		"TC-FUNC-Armored-Dino-fix: Armored name plus Nature affinity matches")
+	armored_nature.affinity = A.COSMIC
+	assert_false(UnionDatabase.card_satisfies_condition(
+		armored_nature, armored.material_conditions[0]),
+		"TC-FUNC-Armored-Dino-fix-b: non-Nature Armored unit does not match")
+	var mining: UnionData = UnionDatabase.get_union("Giant Mining Pod")
+	assert_eq(mining.material_conditions[0].get("card_name", ""), "Miner Probe",
+		"TC-FUNC-Giant-Mining-Pod-fix: exact Miner Probe casing")
+	var phoenix: UnionData = UnionDatabase.get_union("Burning Phoenix")
+	assert_true(bool(phoenix.ability_params.get("tech_target_self_destruct", false)),
+		"TC-FUNC-Burning-Phoenix-fix: documented Tech self-destruct retained")
+	assert_true(phoenix.ability_description.contains("If targeted by Tech"),
+		"TC-FUNC-Burning-Phoenix-fix-b: ability text documents Tech self-destruct")
+	var virus: UnionData = UnionDatabase.get_union("Dimensional Virus")
+	assert_false(virus.ability_params.has("affinity"),
+		"TC-FUNC-Dimensional-Virus-fix: no Bio exclusion from foe debuff")
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var helios := _make_char("Helios the Prideful Fortress", 145, 60, 1500, A.COSMIC,
+		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP,
+		{"affinity": A.COSMIC, "tech_target_self_destruct": true})
+	var ally := _make_char("Space Boy", 1, 1, 100, A.COSMIC)
+	ally.is_union = false
+	GameState.grids[0][0][0] = helios
+	GameState.grids[0][0][1] = ally
+	assert_false(GameState.destroy_card(0, 0, 0, false),
+		"TC-FUNC-Helios-fix: centralized generic destruction is blocked")
+	GameState.destruction_from_tech_self_destruct = true
+	assert_true(GameState.destroy_card(0, 0, 0, false),
+		"TC-FUNC-Helios-fix-b: documented targeted-Tech self-destruct remains")
+	GameState.destruction_from_tech_self_destruct = false
+
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var wildcard := _make_char("Wrong Material", 1, 1, 100, A.NATURE)
+	wildcard.is_union = false
+	var cosmic := _make_char("Cosmic Material", 1, 1, 100, A.COSMIC)
+	cosmic.is_union = false
+	GameState.grids[0][0][0] = wildcard
+	GameState.grids[0][0][1] = cosmic
+	var foe_wildcard := _make_char("Wrong Material", 1, 1, 100, A.NATURE)
+	foe_wildcard.is_union = false
+	var foe_cosmic := _make_char("Cosmic Material", 1, 1, 100, A.COSMIC)
+	foe_cosmic.is_union = false
+	GameState.grids[1][0][0] = foe_wildcard
+	GameState.grids[1][0][1] = foe_cosmic
+	GameState.cell_runes = [[], []]
+	for p: int in range(2):
+		var rune_grid: Array = []
+		for r: int in range(GameState.GRID_SIZE):
+			var rune_row: Array = []
+			rune_row.resize(GameState.GRID_SIZE)
+			rune_row.fill("")
+			rune_grid.append(rune_row)
+		GameState.cell_runes[p] = rune_grid
+	GameState.cell_runes[0][0][0] = "mannaz"
+	var wildcard_conditions: Array = [
+		{"card_name": "Needed Material"},
+		{"affinity": A.COSMIC},
+	]
+	var zone: Array = [Vector2i(0, 0), Vector2i(0, 1)]
+	assert_eq(UnionDatabase.solve_material_cells(
+		0, zone, wildcard_conditions).size(), 2,
+		"TC-FUNC-Mannaz-fix: discovery and assignment share wildcard solver")
+	GameState.cell_runes[0][0][0] = ""
+	GameState.omen_anoint_effects["0::Wrong Material"] = [{
+		"type": "union_material_wildcard", "omen_owner": 0}]
+	assert_eq(UnionDatabase.solve_material_cells(
+		0, zone, wildcard_conditions).size(), 2,
+		"TC-FUNC-Substitute-Seal-fix: anointed own unit is wildcard")
+	assert_true(UnionDatabase.solve_material_cells(
+		1, zone, wildcard_conditions).is_empty(),
+		"TC-FUNC-Substitute-Seal-fix-b: wildcard is owner-aware")
+
+	GameState.active_omens = [{"id": "test", "owner": 0}]
+	GameState.active_dungeon_modifiers = ["risk_and_reward", "reunion"]
+	GameState.game_mode = GameState.GameMode.DAILY_DUNGEON
+	GameState.omen_anoint_effects["0::Wrong Material"] = [{
+		"type": "union_material_cost_multiplier", "value": 1.5, "omen_owner": 0}]
+	# 1000 * 1.5 material anoint = 1500; *1.25 Risk&Reward = 1875
+	assert_eq(GameState.final_union_summon_cost(
+		1000, 0, ["Wrong Material"]), 1875,
+		"TC-FUNC-Union-cost-fix: material and later loss modifiers produce one final cost")
+	var ai := AIPlayer.new()
+	ai.player_index = 1
+	assert_eq(ai._max_unions_per_duel(), 2,
+		"TC-FUNC-Reunion-AI-fix: AI supports the second Union summon")
+	ai.free()
 
 # ---------------------------------------------------------------------------
 # Pattern C — EXCEL_ONLY_NOT_IN_UNION_DATABASE (not wired in engine)

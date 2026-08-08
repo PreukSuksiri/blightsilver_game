@@ -131,7 +131,8 @@ class CardInstance:
 	var trap_carry_def_bonus: int = 0  # Trap DEF (Hard Scale); cleared after attacker's next turn ends
 	var trap_carry_def_clear_attacker: int = -1
 	var trap_carry_def_ends_after_attacker_turns: int = 0
-	var carry_atk_debuff: int = 0  # ATK debuff until start of owner's next turn (e.g. Pepper Spray)
+	var carry_atk_debuff: int = 0  # ATK debuff through owner's next turn (e.g. Pepper Spray)
+	var carry_atk_debuff_until_turn: int = -1
 	var atk_def_swapped: bool = false  # Cursed Reflection: effective ATK/DEF swapped until defender's turn ends
 	var atk_def_swap_clear_on_player_end: int = -1
 	var force_shielded: bool = false
@@ -477,7 +478,8 @@ var battle_ai_featured_union: String = ""    # Legacy alias for battle_featured_
 var battle_featured_unions: Array = ["", ""] # Per-player featured union preference [P0, P1]
 
 var divine_protection_active: Array = [false, false]
-var galaxos_immunity_owner: int = -1  # Team Galaxos: owner whose Cosmic+Anima allies cannot be destroyed
+## Team Galaxos: per-player flag — Cosmic+Anima allies of that owner cannot be destroyed.
+var galaxos_immunity_active: Array = [false, false]
 var siege_cannon_active: Array = [false, false]
 var berserk_active: Array = [null, null]     # CardInstance or null
 var skip_next_turn: Array = [false, false]
@@ -487,6 +489,7 @@ var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may
 var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
 var turn_start_revives: Array = []                  # {player, row, col, card_name} — e.g. Burning Phoenix
 var turn_end_material_revives: Array = []           # Red Zombie union-material revive at turn end
+var foe_turn_end_revives: Array = []                # Bone Dragon: coin flip when foe ends turn
 var destruction_from_tech_self_destruct: bool = false
 var analytics_battle_tag: String = ""
 var analytics_battle_id: String = ""
@@ -893,28 +896,43 @@ func effective_union_summon_cost(base_cost: int, player_index: int = -1) -> int:
 			cost = int(base_cost * 1.2)
 		elif "sealing_ceremony" in active_dungeon_modifiers:
 			cost = int(base_cost * 1.5)
-	if player_index in [-1, 0] and omen_union_cost_multiplier != 1.0:
-		cost = int(round(float(cost) * omen_union_cost_multiplier))
+	if player_index < 0:
+		player_index = current_player
+	cost = int(round(float(cost) * OmenBattleApplier.union_cost_multiplier_for(player_index)))
 	return cost
 
-func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
+## Tech cost after dungeon modifiers, holder omens, and card anoints.
+## Shared by validation, UI affordability, and AI decisions.
+func effective_tech_cost(tech_name: String, player_index: int = -1) -> int:
+	var data: TechCardData = CardDatabase.get_tech(tech_name)
+	if data == null:
+		return 0
+	if player_index < 0:
+		player_index = current_player
+	var cost: int = data.crystal_cost
+	if game_mode == GameMode.DAILY_DUNGEON:
+		if "tech_broker" in active_dungeon_modifiers:
+			cost = 0
+		elif "tech_dealer" in active_dungeon_modifiers:
+			cost = int(cost * 0.5)
+		if "intelligence_tax" in active_dungeon_modifiers:
+			cost += 500
+	var omen_pct: float = OmenBattleApplier.tech_cost_pct_for(player_index)
+	if omen_pct != 0.0:
+		cost = int(round(float(cost) * (1.0 + omen_pct / 100.0)))
+	cost = int(round(float(cost) * OmenBattleApplier.anoint_cost_multiplier_for(
+		tech_name, player_index)))
+	return maxi(0, cost)
+
+## Final amount a loss will deduct after all currently relevant modifiers.
+## Callers that validate affordability can use this without mutating state.
+func effective_crystal_loss(player_index: int, amount: int, reason: String = "") -> int:
 	if amount > 0 and (not active_omens.is_empty() or not enemy_active_omens.is_empty()):
-		# Holder crystal-loss mods (player omens → P0; enemy omens → P1 via effects).
-		if player_index == 0:
-			if omen_crystal_loss_multiplier != 1.0:
-				amount = int(round(float(amount) * omen_crystal_loss_multiplier))
-			var pct_total: float = 0.0
-			if reason == "card lost":
-				pct_total += omen_unit_destroy_loss_pct
-				var aff_name: String = _omen_last_destroyed_affinity(player_index)
-				if not aff_name.is_empty():
-					pct_total += float(omen_affinity_destroy_loss.get(aff_name, 0.0))
-			elif reason == "battle":
-				pct_total += omen_reckoning_loss_pct
-			pct_total += omen_crystal_loss_pct
-			if pct_total != 0.0:
-				amount = int(round(float(amount) * (1.0 + pct_total / 100.0)))
-			amount = maxi(0, amount)
+		var aff_name: String = _omen_last_destroyed_affinity(player_index) \
+				if reason == "card lost" else ""
+		amount = int(round(float(amount) * OmenBattleApplier.crystal_loss_multiplier_for(
+			player_index, reason, aff_name)))
+		amount = maxi(0, amount)
 		# Omen escalating_toll — foe of the omen holder pays stacked bonus
 		if omen_escalating_toll_stacks > 0:
 			var toll_hits_foe: bool = false
@@ -939,6 +957,24 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 				if opp_card.ability_type == CharacterData.AbilityType.OPPONENT_EXTRA_CRYSTAL_LOSS:
 					extra_loss += opp_card.ability_params.get("amount", 0)
 	amount += extra_loss
+	return maxi(0, amount)
+
+## Authoritative Union payment, including material anoints and general loss modifiers.
+func final_union_summon_cost(base_cost: int, player_index: int, material_names: Array = []) -> int:
+	var amount: int = effective_union_summon_cost(base_cost, player_index)
+	var material_bonus: Dictionary = OmenBattleApplier.union_material_bonuses(
+		material_names, player_index)
+	amount = int(round(float(amount) * float(material_bonus.get("cost_mult", 1.0))))
+	return effective_crystal_loss(player_index, amount, "union")
+
+func lose_crystals(
+		player_index: int,
+		amount: int,
+		reason: String = "",
+		amount_is_final: bool = false
+) -> void:
+	if not amount_is_final:
+		amount = effective_crystal_loss(player_index, amount, reason)
 
 	crystals[player_index] = max(0, crystals[player_index] - amount)
 	_begin_crystal_animation()
@@ -969,10 +1005,11 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	_check_crystal_win_condition()
 
 func gain_crystals(player_index: int, amount: int, reason: String = "") -> void:
-	if amount > 0 and player_index == 0 and omen_crystal_gain_pct <= 0.0:
+	if amount > 0 and OmenBattleApplier.cannot_gain_crystals_for(player_index):
 		return
-	if amount > 0 and player_index == 0 and omen_crystal_gain_pct != 1.0:
-		amount = int(round(float(amount) * omen_crystal_gain_pct))
+	if amount > 0:
+		amount = int(round(float(amount) * OmenBattleApplier.crystal_gain_multiplier_for(
+			player_index)))
 	crystals[player_index] += amount
 	_begin_crystal_animation()
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
@@ -1185,8 +1222,58 @@ func process_turn_start_revives(player_index: int) -> void:
 		revived.face_up = true
 		grids[player_index][row][col] = revived
 		BattleResolver.recalculate_all_field_bonuses()
-		post_message("%s revives at the start of your turn!" % revived.display_name)
+		post_message("%s revives at the start of %s's turn!" % [
+			revived.display_name, format_player_label(player_index)])
 	turn_start_revives = kept
+
+
+func revive_foe_turn_end_entry(entry: Dictionary) -> bool:
+	var player_index: int = int(entry.get("player", -1))
+	var row: int = int(entry.get("row", -1))
+	var col: int = int(entry.get("col", -1))
+	var card_name: String = str(entry.get("card_name", ""))
+	if player_index < 0 or row < 0 or col < 0 or card_name.is_empty():
+		return false
+	if not is_valid_revive_placement_cell(player_index, row, col):
+		return false
+	var source: CardInstance = null
+	var gy: Array = graveyards[player_index]
+	for i: int in range(gy.size() - 1, -1, -1):
+		var candidate: CardInstance = gy[i]
+		if candidate.card_name == card_name:
+			source = candidate
+			gy.remove_at(i)
+			break
+	if source == null:
+		return false
+	var revived: CardInstance = _clone_card_for_revive(source)
+	revived.is_revived = true
+	revived.grid_row = row
+	revived.grid_col = col
+	revived.face_up = true
+	grids[player_index][row][col] = revived
+	BattleResolver.recalculate_all_field_bonuses()
+	post_message("%s revives at the end of the foe's turn!" % revived.display_name)
+	return true
+
+
+func expire_triggered_ability_bonuses(ending_turn: int) -> void:
+	var atk_flag: String = "ability_temp_atk_turn_%d" % ending_turn
+	var def_flag: String = "ability_temp_def_turn_%d" % ending_turn
+	for player_index: int in range(2):
+		for row: int in range(GRID_SIZE):
+			for col: int in range(GRID_SIZE):
+				var card: CardInstance = get_card(player_index, row, col)
+				if atk_flag in card.flags:
+					card.flags.erase(atk_flag)
+					card.temp_atk_bonus -= int(card.ability_params.get(
+						"atk_bonus", card.ability_params.get("atk", 0)))
+				if def_flag in card.flags:
+					card.flags.erase(def_flag)
+					card.temp_def_bonus -= int(card.ability_params.get(
+						"bonus", card.ability_params.get(
+							"def_bonus", card.ability_params.get("def", 0))))
+
 
 func queue_union_material_turn_end_revive(
 		player_index: int,
@@ -1232,7 +1319,8 @@ func process_turn_end_material_revives(player_index: int) -> void:
 		revived.face_up = true
 		grids[player_index][row][col] = revived
 		BattleResolver.recalculate_all_field_bonuses()
-		post_message("%s revives at the end of your turn!" % revived.display_name)
+		post_message("%s revives at the end of %s's turn!" % [
+			revived.display_name, format_player_label(player_index)])
 	turn_end_material_revives = kept
 
 func _offer_ancestral_spirit_if_applicable(
@@ -1265,12 +1353,12 @@ func _offer_ancestral_spirit_if_applicable(
 			}
 			return
 
-func is_immune_to_tech_cards(card: CardInstance) -> bool:
+func is_immune_to_tech_cards(card: CardInstance, owner_player: int) -> bool:
 	if card == null or card.card_type != "character":
 		return false
 	if card.ability_type == CharacterData.AbilityType.IMMUNE_TO_TECH_CARDS:
 		return true
-	return false
+	return OmenBattleApplier.has_full_trap_tech_immunity(card, owner_player)
 
 func _clone_card_for_revive(source: CardInstance) -> CardInstance:
 	var copy := CardInstance.new()
@@ -1379,10 +1467,31 @@ func _card_matches_destruction_immunity(card: CardInstance, player_index: int) -
 			return true
 	return false
 
+func _helios_blocks_destruction(card: CardInstance, player_index: int) -> bool:
+	if card.card_type != "character" \
+			or card.ability_type != CharacterData.AbilityType.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP:
+		return false
+	# Helios explicitly self-destructs when targeted by Tech.
+	if destruction_from_tech_self_destruct:
+		return false
+	var required_affinity: int = int(card.ability_params.get("affinity", -1))
+	for r: int in range(GRID_SIZE):
+		for c: int in range(GRID_SIZE):
+			var ally: CardInstance = get_card(player_index, r, c)
+			if ally != card and ally.card_type == "character" and ally.face_up \
+					and ally.affinity == required_affinity:
+				return true
+	return false
+
 func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 	var card: CardInstance = get_card(player_index, row, col)
 	if card.card_type != "character":
 		return false
+	if divine_protection_active[player_index] \
+			and card.affinity == CharacterData.Affinity.DIVINE:
+		return true
+	if _helios_blocks_destruction(card, player_index):
+		return true
 	if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
 		if _one_use_survive_matches_destroyer(card):
 			if "indestructible_used" not in card.flags:
@@ -1392,7 +1501,8 @@ func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 		if _dv_destroyer != null and _dv_destroyer.card_type == "character" \
 				and _dv_destroyer.affinity != CharacterData.Affinity.ARCANE:
 			return true
-	if galaxos_immunity_owner >= 0 and player_index == galaxos_immunity_owner \
+	if player_index >= 0 and player_index < galaxos_immunity_active.size() \
+			and bool(galaxos_immunity_active[player_index]) \
 			and card.affinity in [CharacterData.Affinity.COSMIC, CharacterData.Affinity.ANIMA]:
 		return true
 	if _card_matches_destruction_immunity(card, player_index):
@@ -1404,7 +1514,8 @@ func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 	if "omen_survive_used" not in card.flags:
 		# Preview only — do not consume the once-per-battle omen here.
 		if not OmenBattleApplier.effects_of_type("survive_destruction_once").is_empty() \
-				or GameState.omen_anoint_effects.has(card.card_name):
+				or OmenBattleApplier.anoint_has_type(
+					card.card_name, "survive_destruction_once", player_index):
 			# Cheap check: would try_consume succeed without mutating?
 			if _omen_would_survive_once(card, player_index):
 				return true
@@ -1414,11 +1525,9 @@ func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 func _omen_would_survive_once(card: CardInstance, player_index: int) -> bool:
 	if "omen_survive_used" in card.flags:
 		return false
-	var anoint_bucket: Variant = omen_anoint_effects.get(card.card_name, [])
-	if anoint_bucket is Array:
-		for eff_v: Variant in anoint_bucket as Array:
-			if eff_v is Dictionary and str((eff_v as Dictionary).get("type", "")) == "survive_destruction_once":
-				return true
+	if OmenBattleApplier.anoint_has_type(
+			card.card_name, "survive_destruction_once", player_index):
+		return true
 	for entry: Variant in OmenBattleApplier.effects_of_type("survive_destruction_once"):
 		if entry is Dictionary and OmenBattleApplier._card_matches_effect_unit(
 				card, entry as Dictionary, player_index):
@@ -1427,9 +1536,34 @@ func _omen_would_survive_once(card: CardInstance, player_index: int) -> bool:
 
 func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> bool:
 	var card: CardInstance = get_card(player_index, row, col)
+	# Destroy face-down Dead End / trap = reveal (flip → dissolve/clear via GameBoard).
+	# Skip redirect for the current BATTLE defender cell — TurnManager already owns
+	# reveal-then-destroy timing there (_is_battle_attack_dead_end_reveal / trap resolve).
+	# Card is already face_up when _on_card_revealed calls back into destroy_card for blanks.
+	if not card.was_destroyed and not card.face_up \
+			and card.card_type in ["dead_end", "trap"]:
+		var is_battle_defender: bool = current_phase == Phase.BATTLE \
+				and defender_pos == Vector2i(row, col)
+		if not is_battle_defender:
+			var from_ability: bool = analytics_destroy_source in ["tech", "trap", "omen"] \
+					or destruction_from_tech_self_destruct \
+					or not omen_destruction_source.is_empty()
+			reveal_card(player_index, row, col, from_ability)
+			return true
 	var was_character: bool = card.card_type == "character"
 	# ONE_USE_SURVIVE_DESTRUCTION: card survives once
 	if was_character:
+		# Prayer is source-agnostic: the first Divine destruction this turn is prevented.
+		if divine_protection_active[player_index] \
+				and card.affinity == CharacterData.Affinity.DIVINE:
+			divine_protection_active[player_index] = false
+			post_message("Prayer protects %s from destruction!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
+		if _helios_blocks_destruction(card, player_index):
+			post_message("%s is protected by another exposed Cosmic ally!" % card.card_name)
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
 		if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
 			if _one_use_survive_matches_destroyer(card) \
 					and "indestructible_used" not in card.flags:
@@ -1446,8 +1580,9 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 				post_message("%s: Mutagen shields against non-Arcane destruction!" % card.card_name)
 				emit_signal("card_destruction_blocked", player_index, row, col)
 				return false
-		# Team Galaxos immunity
-		if galaxos_immunity_owner >= 0 and player_index == galaxos_immunity_owner \
+		# Team Galaxos immunity (per-player; both sides may hold it)
+		if player_index >= 0 and player_index < galaxos_immunity_active.size() \
+				and bool(galaxos_immunity_active[player_index]) \
 				and card.affinity in [CharacterData.Affinity.COSMIC, CharacterData.Affinity.ANIMA]:
 			post_message("%s is protected by Team Galaxos!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
@@ -1460,7 +1595,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 			post_message("%s: Omen wards off destruction!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
-		if OmenBattleApplier.try_consume_survive_destruction_once(card):
+		if OmenBattleApplier.try_consume_survive_destruction_once(card, player_index):
 			post_message("%s survives destruction (Omen)!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
@@ -1468,7 +1603,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 			post_message("%s: Martyr's Halo — another Divine ally protects them!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
-		if OmenBattleApplier.try_spend_mutagen_revive(card):
+		if OmenBattleApplier.try_spend_mutagen_revive(card, player_index):
 			post_message("Omen Mutagen Lazarus: %s discards Mutagen and survives!" % card.card_name)
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
@@ -1481,18 +1616,28 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 		if card.ability_type == CharacterData.AbilityType.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION \
 				and not destruction_from_tech_self_destruct \
 				and "phoenix_revive_used" not in card.flags:
-			var _phoenix_destroyer: CardInstance = attacker_card
-			var _by_non_union: bool = _phoenix_destroyer == null \
-					or _phoenix_destroyer.card_type != "character" \
-					or not _phoenix_destroyer.is_union
-			if _by_non_union:
+			if card.ability_params.get("foe_turn_end", false):
 				card.flags.append("phoenix_revive_used")
-				turn_start_revives.append({
+				foe_turn_end_revives.append({
 					"player": player_index,
 					"row": row,
 					"col": col,
 					"card_name": card.card_name,
+					"coin_flip": bool(card.ability_params.get("coin_flip", false)),
 				})
+			else:
+				var _phoenix_destroyer: CardInstance = attacker_card
+				var _by_non_union: bool = _phoenix_destroyer == null \
+						or _phoenix_destroyer.card_type != "character" \
+						or not _phoenix_destroyer.is_union
+				if _by_non_union:
+					card.flags.append("phoenix_revive_used")
+					turn_start_revives.append({
+						"player": player_index,
+						"row": row,
+						"col": col,
+						"card_name": card.card_name,
+					})
 		# Omen phoenix_bargain — revive only if destroyed by own tech/ability/omen
 		var _omen_src: String = omen_destruction_source
 		if _omen_src.is_empty():
@@ -1504,7 +1649,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 				_omen_src = "omen"
 			else:
 				_omen_src = "foe"
-		if OmenBattleApplier.should_phoenix_revive(card, _omen_src) \
+		if OmenBattleApplier.should_phoenix_revive(card, player_index, _omen_src) \
 				and "omen_phoenix_used" not in card.flags:
 			card.flags.append("omen_phoenix_used")
 			turn_start_revives.append({
@@ -1533,12 +1678,9 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	if pay_cost and card.card_type != "dead_end":
 		var _dc_cost: int = card.crystal_cost
 		# Omen grave_rebate / zero_crystal_loss_on_destroy (anointed unit)
-		var _zr_bucket: Variant = omen_anoint_effects.get(card.card_name, [])
-		if _zr_bucket is Array:
-			for _zr: Variant in _zr_bucket as Array:
-				if _zr is Dictionary and str((_zr as Dictionary).get("type", "")) == "zero_crystal_loss_on_destroy":
-					_dc_cost = 0
-					break
+		if OmenBattleApplier.anoint_has_type(
+				card.card_name, "zero_crystal_loss_on_destroy", player_index):
+			_dc_cost = 0
 		if game_mode == GameMode.DAILY_DUNGEON:
 			if "coffin_broker" in active_dungeon_modifiers: _dc_cost = 0
 			elif "coffin_dealer" in active_dungeon_modifiers: _dc_cost = int(_dc_cost * 0.5)
@@ -1678,11 +1820,13 @@ func get_all_characters(player_index: int) -> Array:
 func get_opponent(player_index: int) -> int:
 	return 1 - player_index
 
-## Prayer (DIVINE_PROTECTION): clears when the protected player's opponent finishes a turn.
+## Prayer (DIVINE_PROTECTION): lasts only through the caster's current turn.
 func expire_divine_protection_at_turn_end(turn_ending_player: int) -> void:
-	divine_protection_active[get_opponent(turn_ending_player)] = false
-	if galaxos_immunity_owner >= 0 and turn_ending_player == get_opponent(galaxos_immunity_owner):
-		galaxos_immunity_owner = -1
+	divine_protection_active[turn_ending_player] = false
+	# Galaxos: "until end of foe's turn" — clear each owner whose foe just ended.
+	for owner: int in range(galaxos_immunity_active.size()):
+		if bool(galaxos_immunity_active[owner]) and turn_ending_player == get_opponent(owner):
+			galaxos_immunity_active[owner] = false
 
 ## Human-facing label: "AI Player 0/1" in AI vs AI logs, "Player 1/2" elsewhere.
 func format_player_label(player_index: int) -> String:
@@ -1705,7 +1849,7 @@ func has_playable_tech(player_index: int) -> bool:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
 		if data == null:
 			continue
-		if crystals[player_index] >= data.crystal_cost:
+		if crystals[player_index] >= effective_tech_cost(str(tech_name), player_index):
 			# Check chain requirement
 			if data.required_prior_card != "":
 				if not tech_name_played_this_game(player_index, data.required_prior_card):
@@ -1809,7 +1953,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	attacker_pos = Vector2i(-1, -1)
 	defender_pos = Vector2i(-1, -1)
 	divine_protection_active = [false, false]
-	galaxos_immunity_owner = -1
+	galaxos_immunity_active = [false, false]
 	siege_cannon_active = [false, false]
 	berserk_active = [null, null]
 	skip_next_turn = [false, false]
@@ -1819,6 +1963,9 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	_pending_crystal_win_check = false
 	reroll_dice_available = [false, false]
 	graveyards = [[], []]
+	turn_start_revives = []
+	turn_end_material_revives = []
+	foe_turn_end_revives = []
 	locked_attack_positions = []
 	protected_defender_positions = []
 	destruction_immune_name_tokens = []

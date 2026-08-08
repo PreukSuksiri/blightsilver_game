@@ -329,6 +329,8 @@ var _revealing_cells: Dictionary = {}   # "p,r,c" → true while reveal animatio
 var _pending_flag_pops: Array = []      # {player, row, col, flag}
 var _enemy_view_active: bool = false
 var _enemy_view_return_dialog: Control = null
+var _rift_strike_confirm_dialog: Control = null
+var _rift_strike_confirm_result: int = -1  # -1 pending, 0 = No, 1 = Yes
 
 # Playmat fog (Noise 3.png)
 var _fog_container: Control = null
@@ -628,6 +630,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		_hide_hover_info()
 		if _tech_overlay_mode != "blackmail":
 			_close_tech_overlay()
+		# Rift Strike: tap empty/unrelated UI to clear picks without leaving selection mode.
+		if selection_state == SelectionState.SELECTING_TECH_TARGET \
+				and not _tech_target_busy \
+				and (pending_tech_filter == "rift_strike_triplet" \
+					or pending_tech_filter == "rift_strike_anchor"):
+			_reset_rift_strike_selection()
 
 func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
@@ -799,6 +807,16 @@ func _max_unions_per_duel() -> int:
 func _effective_union_cost(base_cost: int, player: int = 0) -> int:
 	return GameState.effective_union_summon_cost(base_cost, player)
 
+func _union_material_names(player: int, material_cells: Array) -> Array:
+	var names: Array = []
+	for cell: Vector2i in material_cells:
+		names.append(GameState.get_card(player, cell.x, cell.y).card_name)
+	return names
+
+func _final_union_cost(u: UnionData, player: int, material_cells: Array) -> int:
+	return GameState.final_union_summon_cost(
+		u.summon_cost, player, _union_material_names(player, material_cells))
+
 func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
@@ -810,7 +828,8 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null or not UnionDatabase.is_playable_in_demo(u) \
-			or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost, cp):
+			or material_cells.is_empty() \
+			or GameState.crystals[cp] < _final_union_cost(u, cp, material_cells):
 		await get_tree().create_timer(0.3).timeout
 		if GameState.current_phase != GameState.Phase.GAME_OVER:
 			_request_ai_continue_after_union()
@@ -863,6 +882,13 @@ func _force_cancel_pending_human_prompts(timed_out: bool = false) -> void:
 			GameState.post_message("Prompt timed out — declined.")
 		_force_decline_pending_ability_choice()
 		return
+	if is_instance_valid(_rift_strike_confirm_dialog):
+		if timed_out:
+			GameState.post_message("Prompt timed out — selection reset.")
+		_rift_strike_confirm_result = 0
+		_rift_strike_confirm_dialog.queue_free()
+		_rift_strike_confirm_dialog = null
+		return
 	if _bribe_overlay != null and _bribe_overlay.visible:
 		if OmenBattleApplier.cannot_decline_named("Bribe"):
 			if timed_out:
@@ -912,6 +938,8 @@ func _human_prompt_blocks_ai_watchdog() -> bool:
 		return true
 	if _pending_human_ability_choice \
 			or (_ability_choice_overlay != null and _ability_choice_overlay.visible):
+		return true
+	if is_instance_valid(_rift_strike_confirm_dialog):
 		return true
 	if _bribe_overlay != null and _bribe_overlay.visible:
 		return true
@@ -2736,7 +2764,7 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 			use_btn.position = Vector2(cx, btn_y)
 			use_btn.size = Vector2(CARD_W, BTN_H)
 			use_btn.text = "USE"
-			use_btn.disabled = crystals < data.crystal_cost
+			use_btn.disabled = crystals < GameState.effective_tech_cost(tech_name, player)
 			use_btn.add_theme_font_size_override("font_size", 10)
 			var captured: String = tech_name
 			use_btn.pressed.connect(func() -> void: _on_tech_use_pressed(captured, false))
@@ -3840,7 +3868,9 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 			if _ctx_seen.has(_u.card_name):
 				continue
 			for _cond: Dictionary in _u.material_conditions:
-				if UnionDatabase.card_satisfies_condition(card, _cond):
+				if UnionDatabase.card_satisfies_condition(card, _cond) \
+						or OmenBattleApplier.union_material_wildcard_for(
+							card.card_name, ctx_player):
 					_ctx_seen[_u.card_name] = true
 					_available_unions.append(_entry)
 					break
@@ -4281,7 +4311,10 @@ func _on_union_selected(player: int, union_name: String, zone_cells: Array) -> v
 	if u == null:
 		push_error("Union not found: " + union_name)
 		return
-	if GameState.crystals[player] < _effective_union_cost(u.summon_cost, player):
+	var solved_materials: Array = UnionDatabase.solve_material_cells(
+		player, zone_cells, u.material_conditions)
+	if solved_materials.is_empty() \
+			or GameState.crystals[player] < _final_union_cost(u, player, solved_materials):
 		GameState.post_message("Not enough crystals.")
 		return
 	_enter_union_material_selection(player, u, zone_cells)
@@ -4347,18 +4380,19 @@ func _play_union_zone_preview(player: int, zone_cells: Array) -> void:
 	blocker.queue_free()
 
 func _compute_flash_cells() -> Array:
-	# Cards in zone_cells that satisfy at least one remaining condition
+	# A cell is selectable only if the shared solver can still complete the formula.
 	var flash: Array = []
 	for cell: Vector2i in _pending_union_zone_cells:
 		if cell in _pending_union_selected_materials:
 			continue
-		var card: GameState.CardInstance = GameState.get_card(_pending_union_player, cell.x, cell.y)
-		if card.card_type != "character":
-			continue
-		for cond: Dictionary in _pending_union_conditions_remaining:
-			if UnionDatabase.card_satisfies_condition(card, cond):
-				flash.append(cell)
-				break
+		var required: Array = _pending_union_selected_materials.duplicate()
+		required.append(cell)
+		if not UnionDatabase.solve_material_cells(
+				_pending_union_player,
+				_pending_union_zone_cells,
+				_pending_union_data.material_conditions,
+				required).is_empty():
+			flash.append(cell)
 	return flash
 
 func _refresh_union_flash_cells() -> void:
@@ -4378,22 +4412,22 @@ func _clear_union_flash_nodes() -> void:
 
 func _on_union_material_tapped(pos: Vector2i) -> void:
 	SFXManager.play(SFXManager.SFX_TARGET)
-	var card: GameState.CardInstance = GameState.get_card(_pending_union_player, pos.x, pos.y)
-	# Find a remaining condition this card satisfies
-	var matched_idx: int = -1
-	for i: int in range(_pending_union_conditions_remaining.size()):
-		if UnionDatabase.card_satisfies_condition(card, _pending_union_conditions_remaining[i]):
-			matched_idx = i
-			break
-	if matched_idx < 0:
-		return  # card doesn't satisfy any remaining condition, ignore tap
+	var required: Array = _pending_union_selected_materials.duplicate()
+	required.append(pos)
+	if UnionDatabase.solve_material_cells(
+			_pending_union_player,
+			_pending_union_zone_cells,
+			_pending_union_data.material_conditions,
+			required).is_empty():
+		return
 	_pending_union_selected_materials.append(pos)
-	_pending_union_conditions_remaining.remove_at(matched_idx)
-	if _pending_union_conditions_remaining.is_empty():
+	var remaining_count: int = _pending_union_data.material_conditions.size() \
+			- _pending_union_selected_materials.size()
+	if remaining_count <= 0:
 		_perform_pending_union()
 	else:
 		_refresh_union_flash_cells()
-		GameState.post_message("%d more material(s) needed." % _pending_union_conditions_remaining.size())
+		GameState.post_message("%d more material(s) needed." % remaining_count)
 
 func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) -> void:
 	match u.ability_type:
@@ -4408,7 +4442,7 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 		CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH:
 			await _begin_union_revive_match(player, u)
 		CharacterData.AbilityType.UNION_SUMMON_COSMIC_ANIMA_IMMUNITY:
-			GameState.galaxos_immunity_owner = player
+			GameState.galaxos_immunity_active[player] = true
 			GameState.post_message("%s: Cosmic and Anima allies protected until foe's turn ends!" % u.card_name)
 		CharacterData.AbilityType.UNION_SUMMON_REVEAL_FIELD:
 			var _ll_count: int = maxi(1, int(u.ability_params.get("count", 3)))
@@ -4545,12 +4579,26 @@ func _perform_pending_union() -> void:
 		var _card: GameState.CardInstance = GameState.get_card(player, _mc.x, _mc.y)
 		material_labels.append(BattleLogFormat.format_card(_card))
 		material_names.append(_card.card_name)
-	var _omen_mat: Dictionary = OmenBattleApplier.union_material_bonuses(material_names)
-	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost + omen material mult)
-	var _union_pay: int = _effective_union_cost(u.summon_cost, player)
-	_union_pay = int(round(float(_union_pay) * float(_omen_mat.get("cost_mult", 1.0))))
-	GameState.lose_crystals(player, _union_pay, "union")
+	var _omen_mat: Dictionary = OmenBattleApplier.union_material_bonuses(material_names, player)
+	var _union_pay: int = GameState.final_union_summon_cost(
+		u.summon_cost, player, material_names)
+	if GameState.crystals[player] < _union_pay:
+		GameState.post_message("Not enough crystals for the final Union cost (%d)." % _union_pay)
+		_pending_union_data = null
+		_pending_union_player = -1
+		_pending_union_zone_cells.clear()
+		_pending_union_conditions_remaining.clear()
+		_pending_union_selected_materials.clear()
+		return
+	GameState.lose_crystals(player, _union_pay, "union", true)
 	await GameState.wait_crystal_animation()
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		_pending_union_data = null
+		_pending_union_player = -1
+		_pending_union_zone_cells.clear()
+		_pending_union_conditions_remaining.clear()
+		_pending_union_selected_materials.clear()
+		return
 	if _is_ai_turn():
 		_restart_ai_watchdog()
 	# Remove selected material cards (except the first which becomes the union)
@@ -7280,11 +7328,18 @@ func _collect_all_available_unions(player: int) -> Array:
 				continue
 			for entry: Dictionary in UnionDatabase.find_available_unions(player, r, c):
 				var u: UnionData = entry["union"]
-				if GameState.crystals[player] < _effective_union_cost(u.summon_cost, player):
+				var materials: Array = UnionDatabase.solve_material_cells(
+					player, entry["zone_cells"], u.material_conditions)
+				if materials.is_empty():
+					continue
+				var final_cost: int = _final_union_cost(u, player, materials)
+				if GameState.crystals[player] < final_cost:
 					continue
 				if seen.has(u.card_name):
 					continue
 				seen[u.card_name] = true
+				entry["material_cells"] = materials
+				entry["final_cost"] = final_cost
 				results.append(entry)
 	return results
 
@@ -8521,7 +8576,7 @@ func _build_hover_panel() -> void:
 	_hover_desc_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vbox.add_child(_hover_desc_lbl)
 
-## Highlights the full row or full column on the opponent's grid for Rift Strike targeting.
+## Highlights the full row or full column on the opponent's grid for legacy row_or_column targeting.
 func _rift_update_highlight() -> void:
 	var opp: int = GameState.get_opponent(GameState.current_player)
 	for r: int in range(GameState.GRID_SIZE):
@@ -8545,7 +8600,7 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
 	if inst == null:
 		return
-	# Rift Strike hover: track direction and highlight full row or column
+	# Rift Strike hover: track direction and highlight full row or column (legacy)
 	if selection_state == SelectionState.SELECTING_TECH_TARGET \
 			and pending_tech_filter == "row_or_column" \
 			and player == GameState.get_opponent(GameState.current_player):
@@ -9790,9 +9845,7 @@ func _refresh_tech_hand(player: int = -1) -> void:
 		and "stone_age" in GameState.active_dungeon_modifiers
 	var _tech_royale: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 		and "tech_royale" in GameState.active_dungeon_modifiers
-	var _max_techs: int = 1
-	if player == 0:
-		_max_techs = maxi(1, OmenBattleApplier.max_tech_per_turn())
+	var _max_techs: int = maxi(1, OmenBattleApplier.max_tech_per_turn(player))
 	var can_use_tech: bool = (not conceal
 		and GameState.current_phase == GameState.Phase.MODE_SELECT
 		and (_tech_plays_this_turn[player] < _max_techs or _tech_royale)
@@ -9891,7 +9944,8 @@ func _refresh_tech_hand(player: int = -1) -> void:
 	for i in range(hand.size()):
 		var tech_name: String = str(hand[i])
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
-		var can_use := (not conceal) and data != null and crystals >= data.crystal_cost
+		var can_use := (not conceal) and data != null \
+			and crystals >= GameState.effective_tech_cost(tech_name, player)
 		# Reveal-type cards need at least 1 face-down opponent cell to be usable
 		# (includes dead_end cells — Radar can target blank slots)
 		if can_use and data != null and data.effect_type in [
@@ -10538,9 +10592,8 @@ func _start_ai_turn_flow() -> void:
 	_active_ai.decide_bluff()
 	if not showed_reaction_chat:
 		_start_ai_thinking()
-	var _ai_max_tech: int = 1
-	if GameState.current_player == 0:
-		_ai_max_tech = maxi(1, OmenBattleApplier.max_tech_per_turn())
+	var _ai_max_tech: int = maxi(
+		1, OmenBattleApplier.max_tech_per_turn(GameState.current_player))
 	var _ai_tech_done: bool = _tech_plays_this_turn[GameState.current_player] >= _ai_max_tech
 	if (_ai_tech_done and not _tech_royale_ai) \
 			or _ai_turn_action_started[GameState.current_player]:
@@ -10745,6 +10798,16 @@ func _on_attack_aborted() -> void:
 	_clear_selection()
 	_refresh_all_grids()   # reflect any state changes (e.g. attacked_this_turn hourglass)
 	_refresh_attack_labels()
+	# Bunker / Hostage: AI must retarget with the same attacker, not enter its generic abort path.
+	if _retarget_pos != Vector2i(-1, -1) and _is_ai_turn() \
+			and GameState.current_phase != GameState.Phase.GAME_OVER:
+		var _ai_retarget: Vector2i = _active_ai.choose_retarget_for(_retarget_pos)
+		if _ai_retarget.x >= 0:
+			_active_ai.ai_attack_chosen.emit(_retarget_pos, _ai_retarget)
+		else:
+			_active_ai.register_attack_aborted()
+			await _request_ai_continue_after_union_delayed()
+		return
 	# If AI aborted its own attack (e.g. attacks_remaining ran out, coin-flip cancel),
 	# re-trigger the AI decision loop instead of showing human UI.
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
@@ -10753,7 +10816,7 @@ func _on_attack_aborted() -> void:
 		return
 	if _end_turn_btn:
 		_end_turn_btn.visible = true
-	# Bunker surround lock: keep the same attacker and force a new target cell.
+	# Bunker / Hostage lock: keep the same attacker and force a new target cell.
 	if _retarget_pos != Vector2i(-1, -1) \
 			and GameState.current_phase != GameState.Phase.GAME_OVER:
 		var _rt_card: GameState.CardInstance = GameState.get_card(
@@ -10763,7 +10826,7 @@ func _on_attack_aborted() -> void:
 			selected_attacker_pos = _retarget_pos
 			grid_nodes[GameState.current_player][_retarget_pos.x][_retarget_pos.y].set_selected(true)
 			_set_selection_state(SelectionState.SELECTING_TARGET)
-			_show_guide("%s: choose another cell (previous target locked)." % _rt_card.card_name)
+			_show_guide("%s: choose another cell (locked targets unavailable)." % _rt_card.card_name)
 			_highlight_valid_targets()
 			_update_end_turn_blink()
 			return
@@ -10786,9 +10849,7 @@ func _on_battle_overlay_pause_requested() -> void:
 
 func _on_tech_played(player: int, tech_name: String) -> void:
 	_tech_plays_this_turn[player] += 1
-	var _max_techs_p: int = 1
-	if player == 0:
-		_max_techs_p = maxi(1, OmenBattleApplier.max_tech_per_turn())
+	var _max_techs_p: int = maxi(1, OmenBattleApplier.max_tech_per_turn(player))
 	_tech_used_this_turn[player] = _tech_plays_this_turn[player] >= _max_techs_p
 	GameState.omen_stat_source_card = tech_name
 	_update_tech_stacks()
@@ -11032,12 +11093,15 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 				return
 			var target_node: Control = grid_nodes[player][row][col]
 			if not target_node.is_highlighted:
+				if pending_tech_filter == "rift_strike_triplet" \
+						or pending_tech_filter == "rift_strike_anchor":
+					# Tap outside the current valid picks to clear and stay in selection mode.
+					_reset_rift_strike_selection()
+					return
 				if pending_tech_filter == "self_squares_1_opponent_turn":
 					var _tease_card: GameState.CardInstance = GameState.get_card(player, row, col)
-					if _tease_card.card_type != "character":
-						GameState.post_message("Tease: Choose a face-down unit.")
-					elif _tease_card.face_up:
-						GameState.post_message("Tease: Choose a face-down unit.")
+					if _tease_card.face_up or _tease_card.was_destroyed:
+						GameState.post_message("Tease: Choose a face-down cell.")
 				elif pending_tech_filter == "bribe_reveal":
 					var _bribe_card: GameState.CardInstance = GameState.get_card(player, row, col)
 					if _bribe_card.card_type != "character":
@@ -11047,7 +11111,7 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 				elif pending_tech_filter == "ability_plant29_venom":
 					GameState.post_message("Plant-29: Choose 1 exposed ally or foe.")
 				elif pending_tech_filter == "ability_plant29_mutagen":
-					GameState.post_message("Plant-29: Choose 1 of your units.")
+					GameState.post_message("Plant-29: Choose 1 of %s's units." % GameState.format_player_label(player))
 				elif pending_tech_filter == "venom_flagged_card":
 					GameState.post_message("Potent Poison: Choose 1 card with Venom Flag.")
 				return
@@ -11274,7 +11338,31 @@ func _handle_revive_placement(player: int, pos: Vector2i) -> void:
 	if _pending_revive_strip_stats:
 		placed.current_atk = 0
 		placed.current_def = 0
+		placed.base_atk = 0
+		placed.base_def = 0
+		placed.perm_atk_bonus = 0
+		placed.perm_def_bonus = 0
+		placed.ability_capped_atk_bonus = 0
+		placed.field_aura_atk_bonus = 0
+		placed.field_aura_def_bonus = 0
+		placed.temp_atk_bonus = 0
+		placed.temp_def_bonus = 0
+		placed.eot_atk_bonus = 0
+		placed.carry_def_bonus = 0
+		placed.trap_carry_def_bonus = 0
+		placed.trap_carry_def_clear_attacker = -1
+		placed.trap_carry_def_ends_after_attacker_turns = 0
+		placed.carry_atk_debuff = 0
+		placed.carry_atk_debuff_until_turn = -1
+		placed.atk_debuff = 0
+		placed.atk_def_swapped = false
+		placed.atk_def_swap_clear_on_player_end = -1
+		placed.halved = false
+		placed.has_mutagen_flag = false
+		placed.flags.clear()
+		placed.active_rules.clear()
 		placed.ability_type = int(CharacterData.AbilityType.NONE)
+		placed.ability_params = {}
 	if _pending_revive_double_cost:
 		placed.crystal_cost *= 2
 	placed.is_revived = true
@@ -11285,6 +11373,9 @@ func _handle_revive_placement(player: int, pos: Vector2i) -> void:
 	_refresh_card_node(player, pos.x, pos.y)
 	GameState.emit_signal("card_revealed", player, pos.x, pos.y)
 	BattleResolver.recalculate_all_field_bonuses()
+	if _pending_revive_strip_stats:
+		placed.field_aura_atk_bonus = 0
+		placed.field_aura_def_bonus = 0
 	var _source_label: String = _pending_revive_union_source
 	var _was_tech: TechCardData = _pending_revive_tech_data
 	var _was_awaiting: bool = _pending_revive_awaiting
@@ -11337,13 +11428,22 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# Bribe: show a non-dismissable choice overlay instead of grid selection
 	if filter == "bribe":
 		var opponent := GameState.get_opponent(GameState.current_player)
-		# In VS_AI mode (opponent is AI player 1) or AI_VS_AI (both players are AI) → auto-pass
+		# AI defender evaluates the 700-Crystal reveal instead of always passing.
 		var ai_will_respond := (GameState.game_mode == GameState.GameMode.VS_AI and opponent == 1) \
 			or GameState.game_mode == GameState.GameMode.AI_VS_AI
 		if ai_will_respond:
 			await get_tree().create_timer(0.5).timeout
-			GameState.post_message("Bribe: AI passed.")
-			_finish_tech_action(GameState.current_player)
+			var bribe_ai: AIPlayer = _get_ai_for_player(opponent)
+			var bribe_target := Vector2i(-1, -1)
+			if bribe_ai != null:
+				bribe_target = bribe_ai.decide_bribe_target(700)
+			if bribe_target.x >= 0:
+				if bribe_ai != null:
+					bribe_ai.ai_target_chosen.emit(bribe_target)
+				_apply_bribe_reveal(opponent, bribe_target)
+			else:
+				GameState.post_message("Bribe: AI passed.")
+				_finish_tech_action(GameState.current_player)
 		else:
 			_begin_human_defender_tech_choice()
 			_show_bribe_overlay(opponent)
@@ -11377,9 +11477,13 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_tech_reveals_remaining = int(_flag_parts[-1]) if _flag_parts[-1].is_valid_int() else 1
 		_tech_reveals_total = _tech_reveals_remaining
 		_tech_reveal_picked.clear()
+	elif filter == "rift_strike_triplet" or filter == "rift_strike_anchor":
+		_tech_reveals_remaining = 3
+		_tech_reveals_total = 3
+		_tech_reveal_picked.clear()
 	else:
 		_tech_reveals_total = 0
-	# Reset Rift Strike hover state when entering row_or_column targeting
+	# Reset legacy full-line Rift Strike hover (row_or_column only)
 	if filter == "row_or_column":
 		_rift_hover_cell = Vector2i(-1, -1)
 		_rift_last_hover = Vector2i(-1, -1)
@@ -11390,6 +11494,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_show_guide("Great Diplomacy: select up to %d units (0/%d). CLOSE when done." % [_tech_reveals_total, _tech_reveals_total])
 	elif filter.begins_with("own_units_flag_up_to_"):
 		_show_guide("Select up to %d unit(s) for flag (0/%d). CLOSE when done." % [_tech_reveals_total, _tech_reveals_total])
+	elif filter == "rift_strike_triplet" or filter == "rift_strike_anchor":
+		_show_guide("Rift Strike: select 3 adjacent cells (0/3).")
 	elif _tech_reveals_total > 1:
 		_show_guide("Select %s card to reveal" % _ordinal(1))
 	else:
@@ -11409,7 +11515,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if filter == "self_squares_1_opponent_turn":
 		var tease_defender := GameState.get_opponent(GameState.current_player)
 		if _local_human_is_selecting(tease_defender):
-			_set_own_facedown_char_peek(true, tease_defender)
+			_set_own_facedown_char_peek(true, tease_defender, true)
+	if filter == "accident_foe_choice":
+		var accident_defender := GameState.get_opponent(GameState.current_player)
+		if _local_human_is_selecting(accident_defender):
+			_set_own_facedown_char_peek(true, accident_defender, true)
 
 	# Brainwash: attacker may pick any own ally, including face-down units
 	if filter == "own_any_as_target":
@@ -11447,7 +11557,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# cancel the effect rather than leaving any player (human or AI) stuck.
 	if not _any_highlighted():
 		if filter == "self_squares_1_opponent_turn":
-			GameState.post_message("Tease: No face-down units to reveal — effect cancelled.")
+			GameState.post_message("Tease: No face-down cells to reveal — effect cancelled.")
 		else:
 			GameState.post_message("No valid target — effect cancelled.")
 		if filter == "own_any_as_target":
@@ -11653,11 +11763,16 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		if "opponent_squares" in filter:
 			_prompt_ai_radar_pick()
 			return
+		if filter == "rift_strike_triplet" or filter == "rift_strike_anchor":
+			await _prompt_ai_rift_strike_pick()
+			return
 		var ai_target := _active_ai.decide_target(filter)
 		if ai_target.x < 0:
 			ai_target = _first_highlighted_pos_for_player(
 				GameState.get_opponent(GameState.current_player) \
-					if ("opponent" in filter or filter == "row_or_column" or filter == "adjacent") \
+					if ("opponent" in filter or filter == "row_or_column" \
+						or filter == "rift_strike_triplet" or filter == "rift_strike_anchor" \
+						or filter == "adjacent") \
 					else GameState.current_player)
 		if ai_target.x < 0:
 			if filter == "own_any_as_target":
@@ -11682,12 +11797,16 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 					target_player = p
 					break
 		elif filter == "venom_flagged_card":
-			for p in range(2):
+			# A coordinate can contain Venom cards for both owners; preserve the
+			# owner implied by the AI's foe-first target scoring.
+			for p in [GameState.get_opponent(GameState.current_player), GameState.current_player]:
 				var picked: GameState.CardInstance = GameState.get_card(p, ai_target.x, ai_target.y)
 				if picked.card_type == "character" and "venom" in picked.flags:
 					target_player = p
 					break
-		elif "opponent" in filter or filter == "row_or_column" or filter == "adjacent":
+		elif "opponent" in filter or filter == "row_or_column" \
+				or filter == "rift_strike_triplet" or filter == "rift_strike_anchor" \
+				or filter == "adjacent":
 			target_player = GameState.get_opponent(GameState.current_player)
 		_flash_target_card(target_player, ai_target.x, ai_target.y)
 		_handle_tech_target(target_player, ai_target)
@@ -11732,7 +11851,8 @@ func _defender_response_filters() -> Array:
 		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
 		"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
 		"self_squares_1_opponent_turn", "own_divine_character_redirect",
-		"bribe_reveal", "trap_hostage_reveal_lock", "trap_street_joke_reveal",
+		"bribe_reveal", "accident_foe_choice",
+		"trap_hostage_reveal_lock", "trap_street_joke_reveal",
 	]
 
 func _player_is_ai(pi: int) -> bool:
@@ -11781,6 +11901,10 @@ func _dismiss_pending_prompts_for_game_over() -> void:
 	_pending_human_defender_tech = false
 	if _ability_choice_overlay != null and _ability_choice_overlay.visible:
 		_hide_ability_choice_overlay()
+	if is_instance_valid(_rift_strike_confirm_dialog):
+		_rift_strike_confirm_result = 0
+		_rift_strike_confirm_dialog.queue_free()
+		_rift_strike_confirm_dialog = null
 	if _bribe_overlay != null and _bribe_overlay.visible:
 		_hide_bribe_overlay()
 	if _tech_overlay_mode == "blackmail":
@@ -11829,14 +11953,14 @@ func _begin_human_defender_tech_choice() -> void:
 		_end_turn_btn.visible = false
 	_start_human_prompt_timeout()
 
-## Tease (OPPONENT_REVEALS_SQUARE): defender picks one of their face-down units.
+## Tease (OPPONENT_REVEALS_SQUARE): defender picks one of their face-down cells.
 ## Always finishes the tech — never leave SELECTING_TECH_TARGET hanging.
 func _resolve_tease_target_selection(prompt: String) -> void:
 	var tease_defender: int = GameState.get_opponent(GameState.current_player)
 	_show_guide(prompt)
 	_highlight_tech_targets("self_squares_1_opponent_turn")
 	if not _any_highlighted():
-		GameState.post_message("Tease: No face-down units to reveal — effect cancelled.")
+		GameState.post_message("Tease: No face-down cells to reveal — effect cancelled.")
 		_finish_tech_action(GameState.current_player)
 		return
 	var tease_ai_responds: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
@@ -11862,13 +11986,13 @@ func _resolve_tease_target_selection(prompt: String) -> void:
 	if tease_target.x >= 0 and tease_target.y >= 0:
 		var tease_card: GameState.CardInstance = GameState.get_card(
 			tease_defender, tease_target.x, tease_target.y)
-		tease_ok = tease_card.card_type == "character" and not tease_card.face_up
+		tease_ok = not tease_card.face_up and not tease_card.was_destroyed
 	if not tease_ok:
 		tease_target = _first_highlighted_pos_for_player(tease_defender)
 		if tease_target.x < 0:
-			tease_target = _first_facedown_character_pos(tease_defender)
+			tease_target = _first_highlighted_pos_for_player(tease_defender)
 	if tease_target.x < 0:
-		GameState.post_message("Tease: No face-down units to reveal — effect cancelled.")
+		GameState.post_message("Tease: No face-down cells to reveal — effect cancelled.")
 		_finish_tech_action(GameState.current_player)
 		return
 	if tease_ai != null:
@@ -11881,11 +12005,23 @@ func _resolve_tease_target_selection(prompt: String) -> void:
 ## otherwise AI/tech flow resumes mid Lockpicker pick and freezes.
 func _apply_tease_reveal(defender: int, pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(defender, pos.x, pos.y)
-	if card.card_type != "character" or card.face_up:
-		GameState.post_message("Tease: Choose a face-down unit.")
+	if card.face_up or card.was_destroyed:
+		GameState.post_message("Tease: Choose a face-down cell.")
 		return
 	card = await _reveal_by_ability_and_await(defender, pos.x, pos.y)
-	GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
+	var label: String = card.card_name if card.card_type != "dead_end" else "Dead End"
+	GameState.post_message("Tease: Opponent revealed %s." % label)
+	_finish_tech_action(GameState.current_player)
+
+func _apply_bribe_reveal(defender: int, pos: Vector2i) -> void:
+	var card: GameState.CardInstance = GameState.get_card(defender, pos.x, pos.y)
+	if card.card_type != "character" or card.face_up:
+		_finish_tech_action(GameState.current_player)
+		return
+	card = await _reveal_by_ability_and_await(defender, pos.x, pos.y)
+	GameState.gain_crystals(defender, 700, "ability")
+	GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [
+		defender + 1, card.card_name])
 	_finish_tech_action(GameState.current_player)
 
 func _get_target_selecting_player(filter: String) -> int:
@@ -11961,7 +12097,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		"ability_false_prophet_reveal", "ability_lockpicker_reveal", "ability_expose_reveal_own",
 		"own_bio_character", "bribe_reveal", "self_squares_1_opponent_turn",
 		"own_character_destroy_no_cost",
-	] and card.card_type == "character" and GameState.is_immune_to_tech_cards(card):
+		# Anchor/pick cell may be tech-immune; other cells in the strike still resolve.
+		"rift_strike_triplet", "rift_strike_anchor",
+	] and card.card_type == "character" and GameState.is_immune_to_tech_cards(card, player):
 		GameState.post_message("%s is unaffected by Tech cards!" % card.card_name)
 		if pending_tech_filter == "any_field_card_destroy":
 			_clear_after_ability()
@@ -12086,8 +12224,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if player != current_player:
 				GameState.mark_destroy_achievement_context(
 					"tech", current_player, player, pos.x, pos.y)
-			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
-			GameState.post_message("Destroyed %s." % card.card_name)
+			var _fd_label: String = card.card_name
+			await _destroy_card_and_await(player, pos.x, pos.y, pay_cost)
+			GameState.post_message("Destroyed %s." % _fd_label)
 			await GameState.wait_crystal_animation()
 			if GameState.current_phase == GameState.Phase.GAME_OVER:
 				if pending_tech_name != "":
@@ -12213,8 +12352,11 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		{"source_player": current_player, "target_player": player,
 		 "tech_name": pending_tech_name})
 
-	_apply_tech_target_self_destruct(player, pos, card)
-	card = GameState.get_card(player, pos.x, pos.y)
+	# Rift Strike resolves all three cells in one batch — do not destroy early on click.
+	if pending_tech_filter != "rift_strike_triplet" \
+			and pending_tech_filter != "rift_strike_anchor":
+		_apply_tech_target_self_destruct(player, pos, card)
+		card = GameState.get_card(player, pos.x, pos.y)
 
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:
@@ -12291,10 +12433,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "bribe_reveal":
 		var bribe_opponent := GameState.get_opponent(current_player)
 		if player == bribe_opponent and card.card_type == "character" and not card.face_up:
-			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
-			GameState.gain_crystals(player, 700, "ability")
-			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
-			_finish_tech_action(current_player)
+			_apply_bribe_reveal(player, pos)
 		elif _player_is_ai(bribe_opponent):
 			_cancel_cross_turn_target("bribe_reveal")
 		return
@@ -12377,13 +12516,14 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 						GameState.post_message("%s: %s permanently gains +%d DEF." % [data.card_name, card.card_name, _boost_def])
 					TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW:
 						var _boost_tmp: int = GameState.scaled_tech_effect_for_unit(card, data.effect_params.get("atk", 0))
-						card.temp_atk_bonus += _boost_tmp
+						OmenBattleApplier.apply_stat_change_from_source(
+							card, _boost_tmp, 0, data.card_name, current_player)
 						GameState.post_message("%s: %s gains +%d ATK this attack." % [data.card_name, card.card_name, _boost_tmp])
 					TechCardData.TechEffectType.MULTI_ATTACK_ONE:
-						GameState.berserk_active[current_player] = card
 						var _berserk_attacks: int = GameState.scaled_tech_effect_for_unit(card, 1)
-						GameState.attacks_remaining = _berserk_attacks
-						GameState.post_message("%s: %s gets %d attack(s) this turn (Berserk)." % [data.card_name, card.card_name, _berserk_attacks])
+						GameState.attacks_remaining += _berserk_attacks
+						GameState.post_message("%s: gained %d attack count this turn." % [
+							data.card_name, _berserk_attacks])
 					TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
 						# Find a blank slot to place the clone
 						var _clone_placed: bool = false
@@ -12431,13 +12571,17 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		_finish_tech_action(current_player)
 		return
 
-	if pending_tech_filter in ["any_faceup_card", "opponent_faceup_no_cost"]:
-		if card.face_up and card.card_type != "dead_end":
+	if pending_tech_filter in [
+		"any_faceup_card", "opponent_faceup_no_cost",
+		"opponent_faceup_accident", "accident_foe_choice",
+	]:
+		var _accident_hidden_ok: bool = pending_tech_filter == "accident_foe_choice"
+		if (card.face_up or _accident_hidden_ok) and card.card_type != "dead_end":
 			var pay_cost := pending_tech_name != "Accident" and pending_tech_filter != "opponent_faceup_no_cost"
 			if player != current_player:
 				GameState.mark_destroy_achievement_context(
 					"tech", current_player, player, pos.x, pos.y)
-			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
+			await _destroy_card_and_await(player, pos.x, pos.y, pay_cost)
 			if pending_tech_filter == "opponent_faceup_no_cost":
 				_finish_trap_target_selection()
 			else:
@@ -12526,9 +12670,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "self_squares_1_opponent_turn":
-		# Opponent (of tech player) reveals 1 of their own face-down units
+		# Opponent (of tech player) reveals 1 of their own face-down cells.
 		if player != opponent:
-			GameState.post_message("Tease: Choose a face-down unit.")
+			GameState.post_message("Tease: Choose a face-down cell.")
 			return
 		_apply_tease_reveal(player, pos)
 		return
@@ -12544,18 +12688,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "trap_hostage_reveal_lock":
-		if player == opponent and card.card_type == "character":
-			var _was_hidden: bool = not card.face_up
-			if _was_hidden:
-				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
+		if player == opponent and card.card_type == "character" and not card.face_up:
+			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			if turn_manager._pending_trap_hostage_lock and pos not in GameState.locked_attack_positions:
 				GameState.locked_attack_positions.append(pos)
-			if _was_hidden:
-				GameState.post_message(
-					"Hostage: %s revealed — foe cannot target it until turn end." % card.card_name)
-			else:
-				GameState.post_message(
-					"Hostage: %s protected — foe cannot target it until turn end." % card.card_name)
+			GameState.post_message(
+				"Hostage: %s revealed — foe cannot target it until turn end." % card.card_name)
 			turn_manager._pending_trap_hostage_lock = false
 			_finish_trap_target_selection()
 		elif _player_is_ai(opponent):
@@ -12567,7 +12705,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
 			var _sj_gain: int = turn_manager._pending_street_joke_crystal
 			GameState.gain_crystals(player, _sj_gain, "trap")
-			GameState.post_message("Street Joke: Revealed %s — you gain %d Crystals!" % [card.card_name, _sj_gain])
+			GameState.post_message("Street Joke: Revealed %s — %s gains %d Crystals!" % [
+				card.card_name, GameState.format_player_label(player), _sj_gain])
 			turn_manager._pending_street_joke_crystal = 0
 			_finish_trap_target_selection()
 		elif _player_is_ai(opponent):
@@ -12775,28 +12914,57 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if data and data.effect_params.get("copy_to_hand", false):
 				if not picked in GameState.tech_hands[current_player]:
 					GameState.tech_hands[current_player].append(picked)
-				GameState.post_message("Tech Copy: Copied %s into your Tech Stack." % picked)
+				GameState.post_message("Tech Copy: Copied %s into %s's Tech Stack." % [
+					picked, GameState.format_player_label(current_player)])
 			else:
 				GameState.post_message("Tech Copy: Opponent holds: %s" % ", ".join(opp_hand))
 		_finish_tech_action(current_player)
 		return
 
-	if pending_tech_filter == "rift_strike_anchor":
-		if player == opponent and card.card_type == "character" and card.face_up:
-			var _rs_row: int = pos.x
-			var _rs_destroyed: int = 0
-			for _rs_c: int in range(GameState.GRID_SIZE):
-				if _rs_c == pos.y:
-					continue
-				var _rs_cell: GameState.CardInstance = GameState.get_card(opponent, _rs_row, _rs_c)
-				if _rs_cell.face_up and _rs_cell.card_type == "character":
-					GameState.mark_destroy_achievement_context(
-						"tech", current_player, opponent, _rs_row, _rs_c)
-					GameState.destroy_card(opponent, _rs_row, _rs_c, false)
-					_rs_destroyed += 1
-			GameState.post_message(
-				"Rift Strike: %d other face-up card(s) on Row %d destroyed." % [_rs_destroyed, _rs_row + 1])
-			_finish_tech_action(current_player)
+	if pending_tech_filter == "rift_strike_triplet" or pending_tech_filter == "rift_strike_anchor":
+		# Multi-select exactly 3 orthogonally adjacent foe cells, then destroy (no crystal loss).
+		if player != opponent:
+			_reset_rift_strike_selection()
+			return
+		if _tech_reveal_picked.has(pos):
+			# Undo last pick only.
+			if not _tech_reveal_picked.is_empty() \
+					and _tech_reveal_picked[_tech_reveal_picked.size() - 1] == pos:
+				_tech_reveal_picked.pop_back()
+				_tech_reveals_remaining += 1
+				_clear_rift_strike_pick_visuals()
+				_show_guide("Rift Strike: select 3 adjacent cells (%d/3)." % _tech_reveal_picked.size())
+				_highlight_tech_targets(pending_tech_filter)
+				_apply_rift_strike_pick_visuals()
+			return
+		if not _rift_strike_is_valid_next(pos):
+			_reset_rift_strike_selection()
+			return
+		_tech_reveal_picked.append(pos)
+		_tech_reveals_remaining -= 1
+		_apply_rift_strike_pick_visuals()
+		if _tech_reveals_remaining > 0:
+			_show_guide("Rift Strike: select 3 adjacent cells (%d/3)." % _tech_reveal_picked.size())
+			_highlight_tech_targets(pending_tech_filter)
+			_apply_rift_strike_pick_visuals()
+			if not _rift_strike_has_valid_extension():
+				if _is_ai_turn():
+					await get_tree().create_timer(0.35).timeout
+					await _rift_strike_resolve_and_finish(current_player, opponent)
+					return
+				# N = selected cells. Survival (blank, immune, etc.) is not Rift Strike's count.
+				var _rs_n: int = _tech_reveal_picked.size()
+				var _rs_ok: bool = await _rift_strike_prompt_partial_confirm(_rs_n)
+				if _rs_ok:
+					await _rift_strike_resolve_and_finish(current_player, opponent)
+				else:
+					_reset_rift_strike_selection()
+				return
+			if _is_ai_turn():
+				await get_tree().create_timer(0.35).timeout
+				await _prompt_ai_rift_strike_pick()
+			return
+		await _rift_strike_resolve_and_finish(current_player, opponent)
 		return
 
 	if pending_tech_filter == "own_any_card":
@@ -12821,16 +12989,10 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_armored_nature":
-		# SWAP_ARMORED_NATURE: swap trap position with chosen Armored Nature card
+		# SWAP_ARMORED_NATURE: move the chosen unit into the consumed trap's cell.
 		if player == opponent and card.card_type == "character" \
 				and card.affinity == CharacterData.Affinity.NATURE and "Armored" in card.card_name:
-			if not card.face_up:
-				card = await _reveal_by_ability_and_await(player, pos.x, pos.y)
-			# Swap this card into the trap slot (trap already destroyed → dead_end)
-			# Find the trap position — stored in GameState.attacker_pos (attacker attacked it)
-			# Actually the target_pos is gone. Use a simpler approach: move card to first dead_end slot
-			# or just post a message that swap completed (complex without persistent trap pos)
-			GameState.post_message("Defensive Pheromone: %s swapped positions." % card.card_name)
+			turn_manager.resolve_defensive_pheromone_swap(player, pos)
 			_finish_trap_target_selection()
 		elif _player_is_ai(opponent):
 			_cancel_cross_turn_target("own_armored_nature")
@@ -13070,6 +13232,7 @@ func _clear_after_tech() -> void:
 	pending_tech_name = ""
 	_tech_reveals_remaining = 0
 	_tech_reveals_total = 0
+	_clear_rift_strike_pick_visuals()
 	_tech_reveal_picked.clear()
 	_tech_target_busy = false
 	_rift_hover_cell = Vector2i(-1, -1)
@@ -13093,6 +13256,179 @@ func _prompt_ai_radar_pick() -> void:
 	_active_ai.ai_target_chosen.emit(ai_target)
 	_flash_target_card(opponent, ai_target.x, ai_target.y)
 	_handle_tech_target(opponent, ai_target)
+
+func _rift_strike_is_orth_adjacent(a: Vector2i, b: Vector2i) -> bool:
+	return absi(a.x - b.x) + absi(a.y - b.y) == 1
+
+## Foe cells with a card, or face-down Dead Ends (bluff blanks).
+## Revealed empties / dissolved traps / destroyed units are not selectable.
+func _rift_strike_cell_is_selectable(grid_player: int, pos: Vector2i) -> bool:
+	if pos.x < 0 or pos.y < 0 or pos.x >= GameState.GRID_SIZE or pos.y >= GameState.GRID_SIZE:
+		return false
+	var card: GameState.CardInstance = GameState.get_card(grid_player, pos.x, pos.y)
+	if card.was_destroyed:
+		return false
+	if card.card_type == "dead_end" and card.face_up:
+		return false
+	return true
+
+func _rift_strike_is_valid_next(pos: Vector2i) -> bool:
+	if pos.x < 0 or pos.y < 0 or pos.x >= GameState.GRID_SIZE or pos.y >= GameState.GRID_SIZE:
+		return false
+	if _tech_reveal_picked.has(pos):
+		return false
+	var opp: int = GameState.get_opponent(GameState.current_player)
+	if not _rift_strike_cell_is_selectable(opp, pos):
+		return false
+	if _tech_reveal_picked.is_empty():
+		return true
+	for picked: Vector2i in _tech_reveal_picked:
+		if _rift_strike_is_orth_adjacent(picked, pos):
+			return true
+	return false
+
+func _rift_strike_has_valid_extension() -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if _rift_strike_is_valid_next(Vector2i(r, c)):
+				return true
+	return false
+
+func _rift_strike_prompt_partial_confirm(destroy_count: int) -> bool:
+	if is_instance_valid(_rift_strike_confirm_dialog):
+		_rift_strike_confirm_dialog.queue_free()
+		_rift_strike_confirm_dialog = null
+	var card_word: String = "card" if destroy_count == 1 else "cards"
+	var destroy_line: String
+	if destroy_count <= 0:
+		destroy_line = "Rift Strike will destroy no cards."
+	else:
+		destroy_line = "Rift Strike will destroy only %d %s." % [destroy_count, card_word]
+	var body: String = (
+		"There are no more adjacent cells to select.\n\n"
+		+ destroy_line + "\n\n"
+		+ "Do you want to confirm?"
+	)
+	_rift_strike_confirm_result = -1
+	SFXManager.play(SFXManager.SFX_POPUP)
+	_start_human_prompt_timeout()
+	_rift_strike_confirm_dialog = GameDialog.confirmation_overlay(
+		self,
+		"Rift Strike",
+		body,
+		"Yes",
+		"No",
+		func() -> void:
+			_stop_human_prompt_timeout()
+			_rift_strike_confirm_result = 1
+			_rift_strike_confirm_dialog = null,
+		func() -> void:
+			_stop_human_prompt_timeout()
+			_rift_strike_confirm_result = 0
+			_rift_strike_confirm_dialog = null)
+	while _rift_strike_confirm_result < 0 \
+			and GameState.current_phase != GameState.Phase.GAME_OVER:
+		await get_tree().process_frame
+	_stop_human_prompt_timeout()
+	if is_instance_valid(_rift_strike_confirm_dialog):
+		_rift_strike_confirm_dialog.queue_free()
+		_rift_strike_confirm_dialog = null
+	return _rift_strike_confirm_result == 1
+
+func _rift_strike_resolve_and_finish(current_player: int, opponent: int) -> void:
+	# Snapshot before destroys — game-over / UI dismiss must not shrink the list mid-loop.
+	var _rs_targets: Array = _tech_reveal_picked.duplicate()
+	var _rs_selected: int = _rs_targets.size()
+	var _rs_destroyed: int = 0
+	for _rs_pos_v: Variant in _rs_targets:
+		var _rs_pos: Vector2i = _rs_pos_v as Vector2i
+		var _rs_cell: GameState.CardInstance = GameState.get_card(
+			opponent, _rs_pos.x, _rs_pos.y)
+		if _rs_cell.was_destroyed:
+			continue
+		if _rs_cell.card_type == "character" \
+				and GameState.is_immune_to_tech_cards(_rs_cell, opponent):
+			GameState.post_message(
+				"%s is unaffected by Tech cards!" % _rs_cell.card_name)
+			continue
+		var _rs_tech_sd: bool = _rs_cell.card_type == "character" \
+				and bool(_rs_cell.ability_params.get("tech_target_self_destruct", false))
+		if _rs_tech_sd:
+			GameState.post_message(
+				"%s: self-destructs when targeted by tech!" % _rs_cell.card_name)
+			GameState.destruction_from_tech_self_destruct = true
+		GameState.mark_destroy_achievement_context(
+			"tech", current_player, opponent, _rs_pos.x, _rs_pos.y)
+		# destroy_card redirects face-down Dead End / trap → reveal.
+		if await _destroy_card_and_await(opponent, _rs_pos.x, _rs_pos.y, false):
+			_rs_destroyed += 1
+		GameState.destruction_from_tech_self_destruct = false
+	_clear_rift_strike_pick_visuals()
+	if _rs_destroyed == 0:
+		GameState.post_message("Rift Strike: No cards were destroyed.")
+	elif _rs_selected < 3:
+		GameState.post_message(
+			"Rift Strike: Destroyed %d of %d selected card%s." % [
+				_rs_destroyed, _rs_selected, "" if _rs_selected == 1 else "s"])
+	else:
+		GameState.post_message(
+			"Rift Strike: Destroyed %d card%s on 3 adjacent cells!" % [
+				_rs_destroyed, "" if _rs_destroyed == 1 else "s"])
+	if _rs_destroyed > 0:
+		# Allow character destroy (0.55s) and trap dissolve (0.90s) VFX to finish
+		# before _finish_tech_action refreshes the grids.
+		await get_tree().create_timer(1.0).timeout
+	_finish_tech_action(current_player)
+
+## Destroy a cell; face-down Dead End / trap become reveal+clear (await flip/dissolve).
+func _destroy_card_and_await(
+		player: int, row: int, col: int, pay_cost: bool = true) -> bool:
+	var cell: GameState.CardInstance = GameState.get_card(player, row, col)
+	var need_reveal_await: bool = not cell.was_destroyed and not cell.face_up \
+			and cell.card_type in ["dead_end", "trap"]
+	var ok: bool = GameState.destroy_card(player, row, col, pay_cost)
+	if ok and need_reveal_await:
+		await _await_card_reveal_animation(player, row, col)
+	return ok
+
+func _apply_rift_strike_pick_visuals() -> void:
+	var opp: int = GameState.get_opponent(GameState.current_player)
+	for picked: Vector2i in _tech_reveal_picked:
+		grid_nodes[opp][picked.x][picked.y].set_selected(true)
+
+func _clear_rift_strike_pick_visuals() -> void:
+	var opp: int = GameState.get_opponent(GameState.current_player)
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			grid_nodes[opp][r][c].set_selected(false)
+
+func _reset_rift_strike_selection() -> void:
+	if _tech_reveal_picked.is_empty() and _tech_reveals_remaining >= _tech_reveals_total:
+		return
+	_clear_rift_strike_pick_visuals()
+	_tech_reveal_picked.clear()
+	_tech_reveals_remaining = _tech_reveals_total
+	_show_guide("Rift Strike: select 3 adjacent cells (0/3).")
+	_highlight_tech_targets(pending_tech_filter)
+
+func _prompt_ai_rift_strike_pick() -> void:
+	_restart_ai_watchdog()
+	var opponent: int = GameState.get_opponent(GameState.current_player)
+	var current_player: int = GameState.current_player
+	var ai_target: Vector2i = _active_ai.decide_rift_strike_next(_tech_reveal_picked)
+	if ai_target.x < 0:
+		ai_target = _first_highlighted_pos_for_player(opponent)
+	if ai_target.x < 0:
+		# No further adjacent cells — resolve whatever is already selected.
+		if not _tech_reveal_picked.is_empty():
+			await _rift_strike_resolve_and_finish(current_player, opponent)
+		else:
+			GameState.post_message("No valid target — effect cancelled.")
+			_finish_tech_action(current_player)
+		return
+	_active_ai.ai_target_chosen.emit(ai_target)
+	_flash_target_card(opponent, ai_target.x, ai_target.y)
+	await _handle_tech_target(opponent, ai_target)
 
 ## AI Great Diplomacy: pick up to N own face-down units.
 func _prompt_ai_diplomacy_pick() -> void:
@@ -13477,7 +13813,7 @@ func _highlight_tech_targets(filter: String) -> void:
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
 					var ok: bool = card.card_type != "dead_end"
 					if ok and card.card_type == "character" \
-							and GameState.is_immune_to_tech_cards(card):
+							and GameState.is_immune_to_tech_cards(card, p):
 						ok = false
 					grid_nodes[p][r][c].set_highlighted(ok)
 
@@ -13527,6 +13863,15 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(_swap_owner, r, c)
 				grid_nodes[_swap_owner][r][c].set_highlighted(card.card_type == "character")
 
+	elif filter == "own_armored_nature":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character"
+					and card.affinity == CharacterData.Affinity.NATURE
+					and "Armored" in card.card_name)
+
 	elif filter in ["own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct"]:
 		# DEFENDER (trap owner = opponent) picks one of their own characters
 		var require_faceup: bool = filter == "own_faceup_for_trap_temp_def_boost"
@@ -13543,7 +13888,19 @@ func _highlight_tech_targets(filter: String) -> void:
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(
-					card.card_type == "character" and not card.face_up)
+					not card.face_up and not card.was_destroyed)
+
+	elif filter in ["opponent_faceup_accident", "accident_foe_choice"]:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				var ok: bool = card.card_type != "dead_end"
+				if filter == "opponent_faceup_accident":
+					ok = ok and card.face_up
+				if ok and card.card_type == "character" \
+						and GameState.is_immune_to_tech_cards(card, opponent):
+					ok = false
+				grid_nodes[opponent][r][c].set_highlighted(ok)
 
 	elif filter == "opponent_facedown_forced":
 		for r in range(GameState.GRID_SIZE):
@@ -13552,11 +13909,12 @@ func _highlight_tech_targets(filter: String) -> void:
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
 
 	elif filter == "trap_hostage_reveal_lock":
-		# Hostage: any own unit (face-up or face-down) can be protected this turn.
+		# Hostage must reveal a unit, so already-exposed units are not legal.
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(card.card_type == "character")
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character" and not card.face_up)
 
 	elif filter == "self_reveal_choice" or filter == "trap_street_joke_reveal":
 		for r in range(GameState.GRID_SIZE):
@@ -13564,12 +13922,14 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
 
-	elif filter == "rift_strike_anchor":
+	elif filter == "rift_strike_triplet" or filter == "rift_strike_anchor":
+		# First pick: any foe cell that still has a card. Later: orth-adjacent to selection.
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(
-					card.card_type == "character" and card.face_up)
+				var _rs_pos := Vector2i(r, c)
+				var _ok: bool = _rift_strike_is_valid_next(_rs_pos) \
+						or _tech_reveal_picked.has(_rs_pos)
+				grid_nodes[opponent][r][c].set_highlighted(_ok)
 
 	elif filter in ["lock_own_monster", "own_faceup_character_source", "own_faceup_character_target",
 			"own_faceup_card_sacrifice", "own_any_card", "own_facedown_character"] \
@@ -13998,9 +14358,11 @@ func _should_dissolve_trap_after_reveal(player: int, row: int, col: int) -> bool
 	return true
 
 
-func _add_to_void_pile(player: int, card_name: String, card_type: String) -> void:
+func _add_to_void_pile(
+		player: int, card_name: String, card_type: String, state_card_type: String = "") -> void:
 	_void_piles[player].append({"card_name": card_name, "card_type": card_type})
-	GameState.add_void_entry(player, card_name, card_type)
+	GameState.add_void_entry(
+		player, card_name, state_card_type if not state_card_type.is_empty() else card_type)
 	_update_void_stacks()
 
 
@@ -14126,7 +14488,8 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	# Signal fires before place_dead_end(), so card data is still available
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
 	if inst != null and inst.card_type != "dead_end":
-		_add_to_void_pile(player, inst.card_name, inst.card_type)
+		_add_to_void_pile(
+			player, inst.card_name, inst.card_type, "union" if inst.is_union else inst.card_type)
 	# AI death-bluff reaction: when a face-up AI character is destroyed
 	if inst != null and inst.card_type == "character" and inst.face_up and randf() < 0.60:
 		if GameState.game_mode == GameState.GameMode.VS_AI and player == ai_player.player_index:

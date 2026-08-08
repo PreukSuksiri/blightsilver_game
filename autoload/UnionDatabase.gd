@@ -201,8 +201,9 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Cleaver Saint"}, {"affinity": A.DIVINE}], 10))
 
 	_add("Pixie Queen", A.DIVINE, 30, 30, 300, R.UNCOMMON,
-		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"atk_bonus": 5, "def_bonus": 0, "affinity": A.DIVINE},
-		"+5 ATK for each Divine cards on your side",
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD,
+		{"atk_bonus": 5, "def_bonus": 0, "affinity": A.DIVINE, "exclude_self": false},
+		"+5 ATK for each Divine card on your side",
 		"+5 ATK for each ????",
 		"1 Tiny Pixie + 1 Divine+ 300 cost",
 		"1 ??? + 1 ??? + 300 cost",
@@ -219,7 +220,9 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "ponycorn"}, {"affinity": A.DIVINE}], 8))
 
 	_add("Choir Lead Amber", A.DIVINE, 35, 35, 500, R.RARE,
-		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"affinity": A.DIVINE, "atk": 20}, "+20 ATK to all Divine units on your side",
+		AB.FIELD_ATK_BOOST_OWN_AFFINITY,
+		{"affinity": A.DIVINE, "atk": 20, "exclude_self": false},
+		"+20 ATK to all Divine units on your side",
 		"+20 ATK to all ?????",
 		"3 Choir Lady cards + 500 cost",
 		"3 ??? + 500 cost",
@@ -341,12 +344,12 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.NATURE, "min_cost": 800}, {"affinity": A.NATURE, "min_cost": 800}], 5))
 
 	_add("Armored Dino", A.NATURE, 95, 60, 800, R.UNCOMMON,
-		AB.OPTIONAL_CRYSTAL_PAY_DEF_BOOST, {"cost": 1000, "def": 60}, "In Reckoning, pay 1000 Crystal cost to +60 DEF",
+		AB.OPTIONAL_CRYSTAL_PAY_DEF_BOOST, {"cost": 1000, "def": 60}, "In Reckoning, owner may pay 1000 Crystal cost: this unit gains +60 DEF for that Reckoning.",
 		"In Reckoning, pay ??? Crystal cost to +??DEF",
 		"1 Armored Nature card + 1 Nature (≥ 700 cost) + 800 cost",
-		"1 ??? + 1 ??? + 700 cost",
+		"1 ??? + 1 ??? + 800 cost",
 		_z([[1,1], [1,2], [1,3], [2,0], [2,1], [2,2], [2,3], [2,4]]),
-		_conds([{"name_contains": "armored nature"}, {"affinity": A.NATURE, "min_cost": 700}], 8))
+		_conds([{"name_contains": "armored", "affinity": A.NATURE}, {"affinity": A.NATURE, "min_cost": 700}], 8))
 
 	_add("Ancient Lizard", A.NATURE, 75, 75, 800, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
@@ -381,8 +384,9 @@ func _load_unions() -> void:
 	# ── Arcane ────────────────────────────────────────────────
 
 	_add("Burning Phoenix", A.ARCANE, 125, 50, 800, R.LEGENDARY,
-		AB.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, {"tech_target_self_destruct": true}, "Once, if destroyed by non-union cards, revive it at the start of your turn.",
-		"Once, if ???, revive it at the start of your turn.",
+		AB.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, {"tech_target_self_destruct": true},
+		"Once, if destroyed by non-union cards, revive it at the start of your turn. If targeted by Tech, destroy this card (no revive).",
+		"Once, if ???, revive it at the start of your turn. If targeted by Tech, destroy this card (no revive).",
 		"1 Arcane (≥ 500 cost) + 1 Nature (≥ 500 cost) + 1 Divine (≥ 500 cost) + 800 cost",
 		"1 ??? + 1 ??? + 1 ??? + 800 cost",
 		_z([[0,2], [1,1], [1,2], [1,3], [2,0], [2,2], [2,4]]),
@@ -412,7 +416,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Earth Elemental"}], 9))
 
 	_add("Ice Elemental", A.ARCANE, 80, 50, 1000, R.RARE,
-		AB.LOCK_TARGET_ON_ATTACK, {"on_battle": true}, "Card that battles this card cannot perform attack until the end of their next turn.",
+		AB.LOCK_TARGET_ON_ATTACK, {"on_battle": true}, "A unit that battles this unit cannot attack until the end of its owner's next turn.",
 		"Card that battles this card cannot ??? until the end of their next turn.",
 		"Water Elemental + Wind Elemental + 1000 cost",
 		"??? + ??? + 1000 cost",
@@ -474,7 +478,7 @@ func _load_unions() -> void:
 		"Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all ally Bio units",
 		"Non-Bio defender get ???. With Mutagen Flag: +20 ???",
 		"1 Gamma cards + 1 Bio card + 500 cost",
-		"??? + ??? + 1000 cost",
+		"??? + ??? + 500 cost",
 		_z([[1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]),
 		_conds([{"name_contains": "gamma"}, {"affinity": A.BIO}], 8))
 
@@ -487,11 +491,11 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "bladeshifter"}, {"affinity": A.BIO}], 8))
 
 	_add("Dimensional Virus", A.BIO, 0, 0, 800, R.RARE,
-		AB.PERM_STAT_PENALTY_VS_NON_AFFINITY, {"affinity": A.BIO, "atk": 10, "def": 10},
-		"Foe’s unit get -10 ATK&DEF permanently in Reckoning . With Mutagen Flag : Cannot be destroyed by Non-Arcane.",
+		AB.PERM_STAT_PENALTY_VS_NON_AFFINITY, {"atk": 10, "def": 10},
+		"In Reckoning, all foe units get -10 ATK&DEF permanently. With a Mutagen flag on this unit: cannot be destroyed by Non-Arcane.",
 		"Foe’s unit get ??? in Reckoning . With Mutagen Flag : ???",
 		"1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost",
-		"1 ??? + 1 ??? + 1500 cost",
+		"1 ??? + 1 ??? + 800 cost",
 		_z([[0,0], [0,2], [0,3], [1,1], [1,4], [2,0], [2,3], [3,1], [3,3], [4,2], [4,4]]),
 		_conds([{"affinity": A.BIO, "min_cost": 800}, {"affinity": A.ARCANE, "min_cost": 800}], 11))
 
@@ -528,7 +532,7 @@ func _load_unions() -> void:
 		"1 Miner probe + 1 Cosmic + 500 cost",
 		"1 ??? + 1 ??? + 500 cost",
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,2]]),
-		_conds([{"card_name": "Miner probe"}, {"affinity": A.COSMIC}], 12))
+		_conds([{"card_name": "Miner Probe"}, {"affinity": A.COSMIC}], 12))
 
 	_add("Blood-hungry Mutant", A.BIO, 55, 40, 600, R.RARE,
 		AB.CRYSTAL_GAIN_ON_DESTROY, {"amount": 80}, "After destroying foe’s card: +80 Crystals",
@@ -539,7 +543,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "mutant"}, {"name_contains": "mutant"}], 7))
 
 	_add("Giant Meteor Vergaia", A.COSMIC, 60, 0, 1000, R.LEGENDARY,
-		AB.DESTROY_END_TURN_BLAST_ADJACENT, {}, "Destroy it at turn's end, then destroy all exposed foe’s units surrounding the card that this card attacked.",
+		AB.DESTROY_END_TURN_BLAST_ADJACENT, {}, "Destroy this unit at turn's end, then destroy all exposed foe units surrounding the cell this unit attacked.",
 		"Destroy it at turn's end, then destroy all ???",
 		"Striker Comet + 2 Cosmic card + 1000 cost",
 		"??? + ??? + 1000 cost",
@@ -622,7 +626,7 @@ func _load_unions() -> void:
 	# ── Chaos ─────────────────────────────────────────────────
 
 	_add("Lord of Terror", A.CHAOS, 150, 100, 1500, R.LEGENDARY,
-		AB.ATK_PENALTY_VS_DEAD_END, {"penalty": 50}, "-50 ATK if attacks Dead End",
+		AB.ATK_PENALTY_VS_DEAD_END, {"penalty": 50}, "After this unit attacks a Dead End: -50 ATK permanently.",
 		"-50 ATK if ???",
 		"2 Chaos (≥ 800 cost) + 1500 cost",
 		"2 ??? + 1500 cost",
@@ -646,10 +650,10 @@ func _load_unions() -> void:
 
 	_add("Ten Arms Yaksa", A.CHAOS, 50, 30, 800, R.RARE,
 		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5, "atk_loss_from_attack": 3},
-		"This card can choose up to 3 attack targets. -5 ATK after the third attack.",
+		"This unit can attack up to 3 times per turn. After its third attack, it loses 5 ATK permanently.",
 		"This card can choose up to ???attack targets. -5 ATK after ???",
 		"Yaksa + 1 Chaos + 800 cost",
-		"1 ??? + 1 ??? + 600 cost",
+		"1 ??? + 1 ??? + 800 cost",
 		_z([[0,0], [0,1], [0,3], [0,4], [1,2], [2,2], [3,1], [3,2], [3,3], [4,1], [4,3]]),
 		_conds([{"name_contains": "yaksa"}, {"affinity": A.CHAOS}], 11))
 
@@ -748,7 +752,7 @@ func _load_unions() -> void:
 		AB.DEF_PENALTY_VS_NON_AFFINITY, {"affinity": CharacterData.Affinity.ARCANE, "def": 80, "survive_crystal_cost": 500}, "-80 DEF vs Arcane card. If this survived Reckoning, pay 500 cost", "-80 DEF if ???",
 		"Nobleman card + Ethereal card + 1500 cost", "Nobleman card + Ethereal card + 1500 cost",
 		_z([[0,2], [1,1], [1,3], [2,0], [2,2], [2,4], [3,1], [3,3], [4,0], [4,2], [4,4]]),
-		_conds([{"card_name": "Nobleman card"}, {"card_name": "Ethereal card"}], 11))
+		_conds([{"name_contains": "nobleman"}, {"name_contains": "ethereal"}], 11))
 
 	_add("Charm Mistress", A.ARCANE, 30, 50, 1000, R.COMMON,
 		AB.LIMIT_FOE_ATTACKS_COIN_FLIP_ONCE, {}, "Foe’s turn start: flip a coin. Head, foe can only attack once.", "Foe’s turn start: flip a coin. Head, ???",
@@ -1221,44 +1225,71 @@ func find_available_unions(
 func check_union_materials(player: int, u: UnionData) -> bool:
 	return _materials_match(player, u.union_zone, u.material_conditions)
 
-## Check whether zone_cells (Array[Vector2i]) contain cards satisfying all material_conditions.
-## Uses greedy matching: most-specific conditions first.
-## The zone may have more cells than conditions — only conditions.size() cards need to match.
+## Check whether zone_cells contain cards satisfying all material conditions.
 func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool:
+	return not solve_material_cells(player, zone_cells, conditions).is_empty()
+
+## Shared backtracking solver used by discovery, human selection, and AI assignment.
+## required_cells lets an in-progress human selection constrain the final assignment.
+func solve_material_cells(
+		player: int,
+		zone_cells: Array,
+		conditions: Array,
+		required_cells: Array = []
+) -> Array:
 	if conditions.is_empty():
-		return true
-
-	# Sort conditions by specificity descending (named cards before generic affinity).
+		return []
+	if required_cells.size() > conditions.size():
+		return []
+	for required: Vector2i in required_cells:
+		if required not in zone_cells:
+			return []
 	var sorted_conds: Array = sort_material_conditions(conditions)
+	return _solve_material_cells_recursive(
+		player, zone_cells, sorted_conds, required_cells, 0, [], false)
 
-	var used: Array = []
-	used.resize(zone_cells.size())
-	used.fill(false)
-
-	# Mannaz rune: at most one material condition may be satisfied as a wildcard.
-	var mannaz_wildcard_used: bool = false
-	for cond: Dictionary in sorted_conds:
-		var found: bool = false
-		for i: int in range(zone_cells.size()):
-			if used[i]:
-				continue
-			var pos: Vector2i = zone_cells[i]
-			var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
-			if _card_satisfies(card, cond):
-				used[i] = true
-				found = true
-				break
-			if not mannaz_wildcard_used \
-					and OmenBattleApplier.get_cell_rune(player, pos.x, pos.y) == "mannaz" \
-					and card.card_type == "character" and not card.is_union:
-				used[i] = true
-				mannaz_wildcard_used = true
-				found = true
-				break
-		if not found:
-			return false
-
-	return true
+func _solve_material_cells_recursive(
+		player: int,
+		zone_cells: Array,
+		conditions: Array,
+		required_cells: Array,
+		condition_index: int,
+		selected: Array,
+		mannaz_used: bool
+) -> Array:
+	if condition_index >= conditions.size():
+		for required: Vector2i in required_cells:
+			if required not in selected:
+				return []
+		return selected
+	var cond: Dictionary = conditions[condition_index]
+	var candidates: Array = zone_cells.duplicate()
+	candidates.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return (a in required_cells) and not (b in required_cells))
+	for pos: Vector2i in candidates:
+		if pos in selected:
+			continue
+		var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+		if card.card_type != "character" or card.is_union:
+			continue
+		var uses_mannaz: bool = false
+		var matches: bool = _card_satisfies(card, cond)
+		if not matches and OmenBattleApplier.union_material_wildcard_for(card.card_name, player):
+			matches = true
+		elif not matches and not mannaz_used \
+				and OmenBattleApplier.get_cell_rune(player, pos.x, pos.y) == "mannaz":
+			matches = true
+			uses_mannaz = true
+		if not matches:
+			continue
+		var next_selected: Array = selected.duplicate()
+		next_selected.append(pos)
+		var solved: Array = _solve_material_cells_recursive(
+			player, zone_cells, conditions, required_cells, condition_index + 1,
+			next_selected, mannaz_used or uses_mannaz)
+		if not solved.is_empty():
+			return solved
+	return []
 
 func _card_satisfies(card: GameState.CardInstance, cond: Dictionary) -> bool:
 	if card.card_type != "character" or card.is_union:

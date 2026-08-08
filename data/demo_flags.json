@@ -638,7 +638,7 @@
 	"Rift Strike": true,
 	"Great Diplomacy": true,
 	"War Supply": true,
-	"Harsh Training": true,
+	"Harsh Training": false,
 	"Illegal Steroid": false,
 	"Secret Dagger": false,
 	"Garrison": true,

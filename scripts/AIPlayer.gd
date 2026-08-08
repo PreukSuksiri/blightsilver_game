@@ -73,12 +73,14 @@ signal ai_bluff(player: int, row: int, col: int, emoticon: String)
 
 # Per-duel state
 var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
-var _union_used:    bool = false
+var _unions_summoned: int = 0
 var _union_attempted_this_turn: bool = false
 var _opponent_union_summoned: bool = false  # set when the other player summons a union
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 var _aborted_attackers_this_turn: Array = []  # positions excluded after attack_aborted this turn
 var _last_chosen_attacker_pos: Vector2i = Vector2i(-1, -1)
+## Owner of the last decide_target pick when the filter can hit either board (e.g. Potent Poison).
+var last_target_player: int = -1
 
 # Trailer personality flags (set by admin console; excluded from random pool)
 var _trailer_offensive: bool = false
@@ -130,24 +132,26 @@ const TECH_CRYSTAL_RESERVE: int = 300
 
 ## True crystal hit of summoning this union (dungeon cost modifiers plus the
 ## Risk & Reward 25% surcharge applied inside GameState.lose_crystals).
-func _union_crystal_hit(u: UnionData) -> int:
-	var cost: int = GameState.effective_union_summon_cost(u.summon_cost, player_index)
-	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
-			and "risk_and_reward" in GameState.active_dungeon_modifiers:
-		cost = int(cost * 1.25)
-	return cost
+func _union_crystal_hit(u: UnionData, material_cells: Array = []) -> int:
+	var material_names: Array = []
+	for pos: Vector2i in material_cells:
+		material_names.append(GameState.get_card(player_index, pos.x, pos.y).card_name)
+	return GameState.final_union_summon_cost(
+		u.summon_cost, player_index, material_names)
 
 ## Can the AI pay for this union without dying or going nearly broke?
 ## Union Maniac mode (and the E2E harness) only checks raw affordability.
-func _union_safely_affordable(u: UnionData) -> bool:
-	var remaining: int = GameState.crystals[player_index] - _union_crystal_hit(u)
+func _union_safely_affordable(u: UnionData, material_cells: Array = []) -> bool:
+	var remaining: int = GameState.crystals[player_index] \
+			- _union_crystal_hit(u, material_cells)
 	if _union_maniac_active() or CardE2ERunner.is_active():
 		return remaining >= 0
 	return remaining >= UNION_CRYSTAL_RESERVE
 
 ## Can the AI pay for this tech without dying or going nearly broke?
 func _tech_safely_affordable(data: TechCardData) -> bool:
-	var remaining: int = GameState.crystals[player_index] - data.crystal_cost
+	var remaining: int = GameState.crystals[player_index] \
+		- GameState.effective_tech_cost(data.card_name, player_index)
 	if _union_maniac_active() or CardE2ERunner.is_active():
 		return remaining >= 0
 	return remaining >= TECH_CRYSTAL_RESERVE
@@ -156,8 +160,9 @@ func _tech_safely_affordable(data: TechCardData) -> bool:
 func _tech_cost_penalty(data: TechCardData) -> int:
 	if _union_maniac_active():
 		return 0
-	var penalty: int = data.crystal_cost / 50
-	if data.crystal_cost * 2 > GameState.crystals[player_index]:
+	var cost: int = GameState.effective_tech_cost(data.card_name, player_index)
+	var penalty: int = cost / 50
+	if cost * 2 > GameState.crystals[player_index]:
 		penalty += 30
 	return penalty
 
@@ -210,11 +215,17 @@ func decide_turn() -> void:
 
 ## Mark a union as successfully summoned this duel (called by GameBoard after validation).
 func register_union_summoned() -> void:
-	_union_used = true
+	_unions_summoned += 1
+
+func _max_unions_per_duel() -> int:
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "reunion" in GameState.active_dungeon_modifiers:
+		return 2
+	return 1
 
 ## Attempt a union summon roll for this turn. Returns true if ai_union_chosen was emitted.
 func _try_union_summon() -> bool:
-	if _union_attempted_this_turn or _union_used:
+	if _union_attempted_this_turn or _unions_summoned >= _max_unions_per_duel():
 		return false
 	var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
 			and not CardE2ERunner.is_union_test()
@@ -263,7 +274,7 @@ func continue_after_union(try_union_after_tech: bool = false) -> void:
 	# In E2E, the non-highlight player (P1) ends the turn immediately after
 	# summoning a union.  This guarantees P0's highlight card can engage the
 	# union on the following turn instead of being destroyed by it first.
-	if CardE2ERunner.is_active() and player_index != 0 and _union_used:
+	if CardE2ERunner.is_active() and player_index != 0 and _unions_summoned > 0:
 		await get_tree().create_timer(0.3).timeout
 		emit_signal("ai_end_turn")
 		return
@@ -673,6 +684,11 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 
 	return best_pos
 
+
+func choose_retarget_for(attacker_pos: Vector2i) -> Vector2i:
+	return _choose_target_for(attacker_pos)
+
+
 ## Crystal investment already paid for this attacker (union grid copies store cost as 0).
 func _attacker_summon_investment(attacker: GameState.CardInstance) -> int:
 	if attacker.crystal_cost > 0:
@@ -795,7 +811,8 @@ func _choose_tech() -> void:
 			var _tname: String = str(_scenario.get("card_name", ""))
 			if _tname != "" and _tname in GameState.tech_hands[player_index]:
 				var _tdata: TechCardData = CardDatabase.get_tech(_tname)
-				if _tdata != null and GameState.crystals[player_index] >= _tdata.crystal_cost:
+				if _tdata != null and GameState.crystals[player_index] \
+						>= GameState.effective_tech_cost(_tname, player_index):
 					emit_signal("ai_tech_chosen", _tname)
 					return
 		# Forced setup techs (e.g. Great Diplomacy before an ability attack).
@@ -804,7 +821,8 @@ func _choose_tech() -> void:
 			var fst_name: String = str(fst_v)
 			if fst_name in GameState.tech_hands[player_index]:
 				var fst_data: TechCardData = CardDatabase.get_tech(fst_name)
-				if fst_data != null and GameState.crystals[player_index] >= fst_data.crystal_cost:
+				if fst_data != null and GameState.crystals[player_index] \
+						>= GameState.effective_tech_cost(fst_name, player_index):
 					emit_signal("ai_tech_chosen", fst_name)
 					return
 
@@ -879,9 +897,13 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 				return 0
 			return 40 + opp_hidden * 5
 
-		TechCardData.TechEffectType.OPPONENT_REVEALS_SQUARE, \
+		TechCardData.TechEffectType.OPPONENT_REVEALS_SQUARE:
+			if snap["opp_facedown_cells"] == 0:
+				return 0
+			return 30
+
 		TechCardData.TechEffectType.OPPONENT_REVEALS_OR_GAINS:
-			if opp_hidden == 0:
+			if snap["opp_hidden_units"] == 0:
 				return 0
 			return 30
 
@@ -901,9 +923,14 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 			return 55 + _count_beatables_with_boost(data.effect_params.get("atk", 5)) * 15
 
 		TechCardData.TechEffectType.TEMP_DEF_BOOST_ALL:
-			if ai_faceup == 0:
+			if snap["ai_units"] == 0:
 				return 0
-			return 35 + ai_faceup * 8
+			return 35 + int(snap["ai_units"]) * 8
+
+		TechCardData.TechEffectType.TEMP_ATK_DEF_BOOST_ALL:
+			if snap["ai_units"] == 0:
+				return 0
+			return 45 + int(snap["ai_units"]) * 10
 
 		TechCardData.TechEffectType.PERM_DEF_BOOST_ONE:
 			if ai_faceup == 0:
@@ -920,14 +947,17 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 				return 0
 			return 40 + opp_rev * 35
 
-		TechCardData.TechEffectType.DESTROY_ROW_OR_COLUMN:
-			if opp_rev == 0:
+		TechCardData.TechEffectType.DESTROY_ROW_OR_COLUMN, \
+		TechCardData.TechEffectType.DESTROY_ROW_AROUND_TARGET:
+			if opp_rev == 0 and opp_hidden == 0:
 				return 0
-			return 30 + opp_rev * 20
+			return 30 + opp_rev * 20 + opp_hidden * 8
 
 		TechCardData.TechEffectType.DESTROY_FACEUP_CARD, \
 		TechCardData.TechEffectType.DESTROY_FACEUP_NO_CRYSTAL_LOSS:
-			if opp_rev == 0:
+			var target_count: int = int(snap["opp_cards"]) \
+				if tech_name == "Accident" else int(snap["opp_exposed_cards"])
+			if target_count == 0:
 				return 0
 			return 60 + _strongest_opp_def() / 3
 
@@ -942,7 +972,8 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 			return 70
 
 		TechCardData.TechEffectType.MULTI_ATTACK_ONE:
-			if ai_faceup == 0:
+			# Berserk is a free +1 attack count — no unit focus required.
+			if int(snap["ai_units"]) == 0:
 				return 0
 			return 50
 
@@ -969,7 +1000,7 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 			return 40
 
 		TechCardData.TechEffectType.ADD_MUTAGEN_FLAG:
-			if not snap["has_bio_char"]:
+			if snap["ai_units"] == 0:
 				return 0
 			return 35
 
@@ -979,7 +1010,7 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 			return 50
 
 		TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS:
-			var ai_hidden: int = _count_hidden(player_index)
+			var ai_hidden: int = int(snap["ai_hidden_units"])
 			if ai_hidden == 0:
 				return 0
 			var cap: int = int(data.effect_params.get("count", ai_hidden))
@@ -1052,31 +1083,40 @@ func decide_target(filter: String) -> Vector2i:
 		"opponent_any_hidden", "ability_false_prophet_reveal", "ability_lockpicker_reveal", "lock_opponent_monster":
 			return _random_unrevealed_opponent()
 		"ability_expose_reveal_own":
-			return _random_unrevealed_self()
+			return _random_unrevealed_self_cell()
 		"opponent_character_ability_destroy":
 			return _random_faceup_opponent()
 		"ability_rebel_king_swap":
 			return _strongest_opp_faceup_pos()
 		"row_or_column":
 			return _best_rift_strike_cell()
+		"rift_strike_triplet", "rift_strike_anchor":
+			return decide_rift_strike_next([])
 		"opponent_faceup_zero_stats":
 			return _random_faceup_opponent()
 		"own_faceup_character_berserk", "own_faceup_for_trap_temp_def_boost", \
-				"self_faceup_for_copy", "own_character_for_swap":
+				"self_faceup_for_copy":
 			return _best_own_faceup()
+		"own_character_for_swap":
+			return _best_own_character_excluding(GameState.attacker_pos)
 		"own_faceup_character", "own_faceup_character_source", "own_faceup_character_target", \
 				"own_faceup_card_sacrifice", "own_any_card", \
-				"own_character_for_trap_self_destruct", "lock_own_monster", \
-				"trap_hostage_reveal_lock":
+				"own_character_for_trap_self_destruct", "lock_own_monster":
 			return _best_own_character()
+		"trap_hostage_reveal_lock":
+			return _random_unrevealed_self_character()
 		"own_armored_nature":
 			return _best_own_armored_nature()
 		"own_bio_character":
 			return _best_own_faceup_bio()
-		"self_squares_1_opponent_turn", "own_facedown_character":
+		"self_squares_1_opponent_turn":
+			return _random_unrevealed_self_cell()
+		"own_facedown_character":
 			return _random_unrevealed_self_character()
 		"bribe_reveal":
 			return _random_unrevealed_self_character()
+		"accident_foe_choice":
+			return _weakest_own_card_pos()
 		"self_reveal_choice", "opponent_facedown_forced", \
 				"trap_street_joke_reveal":
 			return _random_unrevealed_self()
@@ -1109,6 +1149,8 @@ func decide_target(filter: String) -> Vector2i:
 			return _strongest_venom_flagged_pos()
 		"opponent_faceup_no_cost":
 			return _strongest_opp_faceup_pos()
+		"opponent_faceup_accident":
+			return _strongest_opp_exposed_card_pos()
 		"adjacent":
 			# Post-attack reveal (Scout Probe, etc.) — pick unrevealed cell adjacent to defender
 			return _random_adjacent_unrevealed_to(GameState.defender_pos, opponent_index)
@@ -1216,7 +1258,9 @@ func _strongest_venom_flagged_pos() -> Vector2i:
 					best_player = p
 					best_pos = Vector2i(r, c)
 	if best_pos == Vector2i(-1, -1):
+		last_target_player = -1
 		return Vector2i(0, 0)
+	last_target_player = best_player
 	return best_pos
 
 ## Intelligent binary choice handler for awaiting_trap_choice prompts.
@@ -1284,14 +1328,19 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 		# Servant is cheaper than most Vampire allies — save the ally.
 		return 0
 
-	# NULLIFY_ATTACK_CHOICE — legacy trap removed from demo roster
-	if "Lose 500 Crystals" in prompt or "NULLIFY_ATTACK_CHOICE" in prompt:
+	# Plunder — preserve an attacker whose investment exceeds the Crystal gift.
+	if "Plunder" in prompt:
+		var gain: int = 1000
+		if not choices.is_empty():
+			gain = _extract_first_int(str(choices[0]))
 		var att: GameState.CardInstance = _get_current_attacker()
-		if att != null and GameState.crystals[player_index] >= 500:
-			# Pay crystals if attacker is high-value (ATK+DEF >= 40)
-			if att.get_effective_atk() + att.get_effective_def() >= 40:
-				return 0
-		return 1  # let attacker be destroyed
+		if att != null and _attacker_summon_investment(att) >= gain:
+			return 0
+		return 1
+
+	# Hostage is optional; use it whenever the defender has a legal hidden unit.
+	if "Hostage" in prompt:
+		return 0 if _random_unrevealed_self_character().x >= 0 else 1
 
 	# ATTACKER_DISCARD_OR_END_TURN (Blackmail trap) — discard a tech or end turn
 	if "Blackmail" in prompt:
@@ -1332,6 +1381,19 @@ func _random_unrevealed_self() -> Vector2i:
 		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
 
+
+func _random_unrevealed_self_cell() -> Vector2i:
+	var options: Array = []
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if not card.face_up and not card.was_destroyed:
+				options.append(Vector2i(r, c))
+	if options.is_empty():
+		return Vector2i(-1, -1)
+	return options[randi() % options.size()]
+
+
 func _random_unrevealed_self_character() -> Vector2i:
 	var options: Array = []
 	for r in range(GameState.GRID_SIZE):
@@ -1342,6 +1404,23 @@ func _random_unrevealed_self_character() -> Vector2i:
 	if options.is_empty():
 		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
+
+## Bribe's 700-Crystal reward is worth exposing the least valuable legal unit.
+func decide_bribe_target(reward: int) -> Vector2i:
+	if reward <= 0:
+		return Vector2i(-1, -1)
+	var best_pos := Vector2i(-1, -1)
+	var lowest_reveal_cost: int = 999999
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type != "character" or card.face_up:
+				continue
+			var reveal_cost: int = card.get_effective_atk() + card.get_effective_def()
+			if reveal_cost < lowest_reveal_cost:
+				lowest_reveal_cost = reveal_cost
+				best_pos = Vector2i(r, c)
+	return best_pos
 
 func _worst_own_faceup() -> Vector2i:
 	return _worst_own_faceup_excluding(Vector2i(-1, -1))
@@ -1497,6 +1576,22 @@ func _best_own_character() -> Vector2i:
 					best_pos = Vector2i(r, c)
 	return best_pos
 
+
+func _best_own_character_excluding(exclude_pos: Vector2i) -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_atk: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if pos == exclude_pos:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character" and card.get_effective_atk() > best_atk:
+				best_atk = card.get_effective_atk()
+				best_pos = pos
+	return best_pos
+
+
 func _weakest_own_character_pos() -> Vector2i:
 	var best_pos: Vector2i = Vector2i(-1, -1)
 	var best_atk: int = 999999
@@ -1512,6 +1607,40 @@ func _weakest_own_character_pos() -> Vector2i:
 		return Vector2i(0, 0)
 	return best_pos
 
+func _weakest_own_card_pos() -> Vector2i:
+	var best_pos := Vector2i(-1, -1)
+	var best_value: int = 999999999
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "dead_end":
+				continue
+			if card.card_type == "character" \
+					and GameState.is_immune_to_tech_cards(card, player_index):
+				continue
+			var value: int = card.crystal_cost + card.get_effective_atk() + card.get_effective_def()
+			if value < best_value:
+				best_value = value
+				best_pos = Vector2i(r, c)
+	return best_pos
+
+func _strongest_opp_exposed_card_pos() -> Vector2i:
+	var best_pos := Vector2i(-1, -1)
+	var best_value: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
+			if card.card_type == "dead_end" or not card.face_up:
+				continue
+			if card.card_type == "character" \
+					and GameState.is_immune_to_tech_cards(card, opponent_index):
+				continue
+			var value: int = card.crystal_cost + card.get_effective_atk() + card.get_effective_def()
+			if value > best_value:
+				best_value = value
+				best_pos = Vector2i(r, c)
+	return best_pos
+
 func _best_field_destroy_target() -> Vector2i:
 	var best_pos: Vector2i = Vector2i(-1, -1)
 	var best_score: int = -1
@@ -1521,7 +1650,8 @@ func _best_field_destroy_target() -> Vector2i:
 				var card: GameState.CardInstance = GameState.get_card(p, r, c)
 				if card.card_type == "dead_end":
 					continue
-				if card.card_type == "character" and GameState.is_immune_to_tech_cards(card):
+				if card.card_type == "character" \
+						and GameState.is_immune_to_tech_cards(card, p):
 					continue
 				var score: int = card.get_effective_atk() + card.get_effective_def()
 				if p == opponent_index:
@@ -1572,8 +1702,7 @@ func _best_own_faceup_bio() -> Vector2i:
 					best_pos = Vector2i(r, c)
 	return best_pos
 
-## Returns the intersection of the opponent's best row and best column for Rift Strike.
-## GameBoard picks whichever (row or col) destroys more after receiving this cell.
+## Returns a foe cell that maximizes destroys for legacy full-line Rift Strike.
 func _best_rift_strike_cell() -> Vector2i:
 	var opp: int = GameState.get_opponent(player_index)
 	var best_row: int = 0
@@ -1600,6 +1729,137 @@ func _best_rift_strike_cell() -> Vector2i:
 			best_col = c
 	return Vector2i(best_row, best_col)
 
+func _rift_strike_cell_is_selectable(opp: int, pos: Vector2i) -> bool:
+	if pos.x < 0 or pos.y < 0 or pos.x >= GameState.GRID_SIZE or pos.y >= GameState.GRID_SIZE:
+		return false
+	var card: GameState.CardInstance = GameState.get_card(opp, pos.x, pos.y)
+	if card.was_destroyed:
+		return false
+	if card.card_type == "dead_end" and card.face_up:
+		return false
+	return true
+
+## Next cell for Rift Strike multi-select (3 orthogonally connected foe cells).
+func decide_rift_strike_next(already: Array) -> Vector2i:
+	var best_triple: Array = _best_rift_strike_triplet()
+	if already.is_empty():
+		if best_triple.is_empty():
+			return Vector2i(-1, -1)
+		return best_triple[0] as Vector2i
+	# Prefer completing a high-scoring triple that contains all already-picked cells.
+	var ranked: Array = _enumerate_rift_strike_triples()
+	ranked.sort_custom(func(a: Array, b: Array) -> bool:
+		return _rift_strike_triple_score(a) > _rift_strike_triple_score(b))
+	for candidate: Array in ranked:
+		var contains_all: bool = true
+		for picked: Variant in already:
+			if not candidate.has(picked):
+				contains_all = false
+				break
+		if not contains_all:
+			continue
+		for cell: Variant in candidate:
+			var pos: Vector2i = cell as Vector2i
+			if already.has(pos):
+				continue
+			if not _rift_strike_cell_is_selectable(GameState.get_opponent(player_index), pos):
+				continue
+			for picked2: Variant in already:
+				var p: Vector2i = picked2 as Vector2i
+				if absi(p.x - pos.x) + absi(p.y - pos.y) == 1:
+					return pos
+	# Fallback: any orthogonally adjacent extension from current picks.
+	var opp: int = GameState.get_opponent(player_index)
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -1
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if already.has(pos):
+				continue
+			if not _rift_strike_cell_is_selectable(opp, pos):
+				continue
+			var adj: bool = false
+			for picked: Variant in already:
+				var p: Vector2i = picked as Vector2i
+				if absi(p.x - pos.x) + absi(p.y - pos.y) == 1:
+					adj = true
+					break
+			if not adj:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(opp, r, c)
+			var score: int = 0
+			if card.card_type != "dead_end" \
+					and not (card.card_type == "character" \
+						and GameState.is_immune_to_tech_cards(card, opp)):
+				score = 1
+			if score > best_score:
+				best_score = score
+				best_pos = pos
+	return best_pos
+
+func _rift_strike_triple_score(cells: Array) -> int:
+	var opp: int = GameState.get_opponent(player_index)
+	var score: int = 0
+	for cell: Variant in cells:
+		var pos: Vector2i = cell as Vector2i
+		var card: GameState.CardInstance = GameState.get_card(opp, pos.x, pos.y)
+		if card.card_type == "dead_end":
+			continue
+		if card.card_type == "character" and GameState.is_immune_to_tech_cards(card, opp):
+			continue
+		score += 1
+	return score
+
+func _enumerate_rift_strike_triples() -> Array:
+	var triples: Array = []
+	var seen: Dictionary = {}
+	var opp: int = GameState.get_opponent(player_index)
+	var dirs: Array = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var a := Vector2i(r, c)
+			if not _rift_strike_cell_is_selectable(opp, a):
+				continue
+			for d1: Vector2i in dirs:
+				var b := a + d1
+				if b.x < 0 or b.y < 0 or b.x >= GameState.GRID_SIZE or b.y >= GameState.GRID_SIZE:
+					continue
+				if not _rift_strike_cell_is_selectable(opp, b):
+					continue
+				for d2: Vector2i in dirs:
+					var cpos := b + d2
+					if cpos == a:
+						continue
+					if cpos.x < 0 or cpos.y < 0 \
+							or cpos.x >= GameState.GRID_SIZE or cpos.y >= GameState.GRID_SIZE:
+						continue
+					if not _rift_strike_cell_is_selectable(opp, cpos):
+						continue
+					var cells: Array = [a, b, cpos]
+					cells.sort_custom(func(p: Vector2i, q: Vector2i) -> bool:
+						return p.x < q.x or (p.x == q.x and p.y < q.y))
+					# Deduplicate path A-B-A style (only 2 unique cells).
+					if cells[0] == cells[1] or cells[1] == cells[2] or cells[0] == cells[2]:
+						continue
+					var key: String = "%d,%d|%d,%d|%d,%d" % [
+						cells[0].x, cells[0].y, cells[1].x, cells[1].y, cells[2].x, cells[2].y]
+					if seen.has(key):
+						continue
+					seen[key] = true
+					triples.append(cells)
+	return triples
+
+func _best_rift_strike_triplet() -> Array:
+	var best: Array = []
+	var best_score: int = -1
+	for triple: Array in _enumerate_rift_strike_triples():
+		var score: int = _rift_strike_triple_score(triple)
+		if score > best_score:
+			best_score = score
+			best = triple
+	return best
+
 # ─────────────────────────────────────────────────────────────
 # Union awareness
 # ─────────────────────────────────────────────────────────────
@@ -1618,12 +1878,13 @@ func _get_available_unions() -> Array:
 				var u: UnionData = entry["union"]
 				if seen.has(u.card_name):
 					continue
-				if not _union_safely_affordable(u):
-					continue
-				seen[u.card_name] = true
-				var mats: Array = _solve_materials(u, entry["zone_cells"])
+				var mats: Array = UnionDatabase.solve_material_cells(
+					player_index, entry["zone_cells"], u.material_conditions)
 				if mats.is_empty() and not u.material_conditions.is_empty():
 					continue
+				if not _union_safely_affordable(u, mats):
+					continue
+				seen[u.card_name] = true
 				results.append({
 					"union": u,
 					"zone_cells": entry["zone_cells"],
@@ -1654,14 +1915,14 @@ func _pick_best_union(unions: Array) -> Dictionary:
 	var best_score: int = -1
 	for entry: Dictionary in unions:
 		var u: UnionData = entry["union"]
-		var sc: int = _score_union(u) + randi() % 5
+		var sc: int = _score_union(u, entry.get("material_cells", [])) + randi() % 5
 		if sc > best_score:
 			best_score = sc
 			best_entry = entry
 	return best_entry
 
 ## Score a union for how desirable it is to summon right now.
-func _score_union(u: UnionData) -> int:
+func _score_union(u: UnionData, material_cells: Array = []) -> int:
 	var score: int = u.base_atk + u.base_def
 
 	var featured := _featured_union_preference()
@@ -1694,45 +1955,24 @@ func _score_union(u: UnionData) -> int:
 	# Cost awareness (skipped in Union Maniac mode): expensive summons must
 	# earn their price, and anything eating over half our crystals is scary.
 	if not _union_maniac_active():
-		var hit: int = _union_crystal_hit(u)
+		var hit: int = _union_crystal_hit(u, material_cells)
 		score -= hit / 50
 		if hit * 2 > GameState.crystals[player_index]:
 			score -= 40
 
 	return score
 
-## Greedy material-cell solver: returns the ordered list of Vector2i positions
-## that satisfy u.material_conditions from the given zone_cells.
-## Returns [] if any condition cannot be satisfied.
+## Compatibility wrapper around the shared human/AI material solver.
 func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
-	var conditions: Array = UnionDatabase.sort_material_conditions(
-		u.material_conditions.duplicate())
-	var used: Array = []
-	used.resize(zone_cells.size())
-	used.fill(false)
-	var selected: Array = []
-	for cond: Dictionary in conditions:
-		var found_idx: int = -1
-		for i: int in range(zone_cells.size()):
-			if used[i]:
-				continue
-			var pos: Vector2i = zone_cells[i]
-			var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
-			if UnionDatabase.card_satisfies_condition(card, cond):
-				found_idx = i
-				break
-		if found_idx < 0:
-			return []
-		used[found_idx] = true
-		selected.append(zone_cells[found_idx])
-	return selected
+	return UnionDatabase.solve_material_cells(
+		player_index, zone_cells, u.material_conditions)
 
 # ─────────────────────────────────────────────────────────────
 # Setup phase placement
 # ─────────────────────────────────────────────────────────────
 func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -> Array:
 	_ai_turn_count = 0
-	_union_used    = false
+	_unions_summoned = 0
 	_union_attempted_this_turn = false
 	_opponent_union_summoned = false
 	_ai_kill_count = 0
@@ -2178,6 +2418,39 @@ func _count_hidden(player: int) -> int:
 				count += 1
 	return count
 
+func _count_units(player: int, face_up_filter: int = -1) -> int:
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type != "character":
+				continue
+			if face_up_filter >= 0 and card.face_up != (face_up_filter == 1):
+				continue
+			count += 1
+	return count
+
+func _count_cards(player: int, exposed_only: bool = false) -> int:
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "dead_end":
+				continue
+			if exposed_only and not card.face_up:
+				continue
+			count += 1
+	return count
+
+func _count_facedown_cells(player: int) -> int:
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if not card.face_up and not card.was_destroyed:
+				count += 1
+	return count
+
 func _has_affinity_faceup(player: int, aff: CharacterData.Affinity) -> bool:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
@@ -2271,6 +2544,12 @@ func _board_snapshot() -> Dictionary:
 		"ai_faceup": _count_faceup(player_index),
 		"opp_revealed": _count_faceup(opponent_index),
 		"opp_hidden": _count_hidden(opponent_index),
+		"ai_units": _count_units(player_index),
+		"ai_hidden_units": _count_units(player_index, 0),
+		"opp_hidden_units": _count_units(opponent_index, 0),
+		"opp_facedown_cells": _count_facedown_cells(opponent_index),
+		"opp_exposed_cards": _count_cards(opponent_index, true),
+		"opp_cards": _count_cards(opponent_index),
 		"ai_crystals": GameState.crystals[player_index],
 		"has_graveyard": not GameState.graveyards[player_index].is_empty(),
 		"has_bio_char": _has_affinity_faceup(player_index, CharacterData.Affinity.BIO),

@@ -1,0 +1,215 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-08-08 13:52:56.228
+Game Session of Mineral Water (started 2026-08-08 13:52:02.098)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:15.238] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=3000 ---
+[12:00.347] Revealed: P0 (2,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[12:01.802] Dice rolled: 5
+[12:01.833] MSG: Moon Tribe Twin Blader hits Dead End — nothing happens.
+[12:03.504] Coin flip: Tails
+[12:06.252] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[12:07.639] Attack P0(2,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[12:07.639] Anim: 3F  (blank slot)
+[13:05.546] Revealed: P0 (4,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[13:05.547] Revealed: P1 (1,1) "Self-destruct" {cost 0}
+[13:06.766] Dice rolled: 1
+[13:06.776] MSG: Trap triggered: Self-destruct!
+[13:08.981] MSG: Ability triggered: "Self-destruct"
+[13:09.001] Target prompt: "Self-destruct: Choose 1 of your units for +50 ATK&DEF until your turn ends (then destroyed)."  filter=own_character_for_trap_self_destruct
+[13:10.954] Revealed: P1 (1,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[13:10.954] MSG: Scout Probe: +50 ATK&DEF until your turn ends, then destroyed.
+[13:12.453] Attack P0(4,2)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(1,1)"Self-destruct" {cost 0}  Dice=1  → Unit vs Trap
+[13:12.454] Reckoning overlay: P0 "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} badge=65 ATK pill=65 DEF pill=65 mod=+ATK 0 (65+0=65)
+[13:12.454] Anim: 3D  (attacker survives)
+[13:56.405] Turn ended  P0  |  Crystals P0=5000 P1=3000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3000 ---
+[13:58.884] Mode selected P1: TECH
+[13:59.196] Tech played  P1: "Spy"
+[14:00.768] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[14:02.489] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[14:04.028] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[14:04.031] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[14:04.668] Dead-end placed  P0 (1,2)
+[14:04.676] MSG: Spy: Revealed Dead End.
+[14:04.689] Tech resolved  P1
+[14:05.566] Mode selected P1: ATTACK
+[14:06.807] Dice rolled: 3
+[14:06.844] MSG: Scout Probe wins!
+[14:11.281] Crystals: P0 5000 → 4150 (-850)  [battle]
+[14:15.493] Attack P1(1,3)"Scout Probe" {Unit ATK90 DEF100 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK50, +tempDEF50 | flags:self_destruct_next_turn} → P0(4,2)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}  Dice=3  ATK=90 vs DEF=65  → WIN
+[14:15.493] Reckoning overlay: P1 "Scout Probe" {Unit ATK90 DEF100 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK50, +tempDEF50 | flags:self_destruct_next_turn} badge=90 ATK pill=90 DEF pill=100 mod=+ATK 0 (90+0=90)
+[14:15.493] Reckoning overlay: P0 "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} badge=65 ATK pill=65 DEF pill=65 mod=+DEF 0 (65+0=65)
+[14:15.493] Anim: 3A  △ P0(4,2)
+[14:15.493] Card destroyed  P0 (4,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[14:15.497] MSG: Ability triggered: "Scout Probe" (reveal adjacent after attack)
+[14:15.548] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[14:17.673] MSG: Scout Probe: adjacent cell revealed (empty).
+[14:18.189] Mode selected P1: ATTACK
+[14:18.526] Revealed: P1 (2,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[14:20.419] Dice rolled: 2
+[14:20.435] MSG: Parom the Smuggler wins!
+[14:24.903] Crystals: P0 4150 → 3850 (-300)  [battle]
+[14:29.134] Attack P1(2,0)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(2,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=30 vs DEF=20  → WIN
+[14:29.134] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[14:29.135] Reckoning overlay: P0 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[14:29.136] Anim: 3A  △ P0(2,0)
+[14:29.136] Card destroyed  P0 (2,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[14:29.608] MSG: Scout Probe is destroyed by self-destruct trap!
+[14:29.609] Crystals: P1 3000 → 2300 (-700)  [card lost]
+[14:29.619] Card destroyed  P1 (1,3) "Scout Probe" {Unit ATK90 DEF100 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK50, +tempDEF50 | attacked}
+[14:29.628] Turn ended  P1  |  Crystals P0=3850 P1=2300
+
+--- Turn 3  |  Player 0  |  Crystals P0=3850 P1=2300 ---
+[17:56.158] Revealed: P0 (3,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[17:57.382] Dice rolled: 1
+[17:57.401] MSG: Both cards are destroyed!
+[18:01.557] Crystals: P0 3850 → 3600 (-250)  [battle]
+[18:04.383] Crystals: P1 2300 → 2000 (-300)  [battle]
+[18:07.333] Attack P0(3,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(2,0)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=20 vs DEF=20  → TIE
+[18:07.333] Reckoning overlay: P0 "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=25 mod=+ATK 0 (20+0=20)
+[18:07.333] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[18:07.333] Anim: 3C  △ P0(3,0) + △ P1(2,0)
+[18:07.333] Card destroyed  P0 (3,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[18:07.333] Card destroyed  P1 (2,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[18:10.420] Turn ended  P0  |  Crystals P0=3600 P1=2000
+
+--- Turn 4  |  Player 1  |  Crystals P0=3600 P1=2000 ---
+[18:12.899] Mode selected P1: TECH
+[18:13.197] Crystals: P1 2000 → 1400 (-600)  [tech cost]
+[18:16.029] Tech played  P1: "Radar"
+[18:18.080] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[18:19.629] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[18:19.631] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[18:20.057] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[18:21.264] MSG: Radar: Revealed Grand Fort Archer.
+[18:21.712] Revealed: P0 (3,3) "Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature}
+[18:22.887] MSG: Radar: Revealed Dew the Frog Knight.
+[18:23.521] Dead-end placed  P0 (3,1)
+[18:23.528] MSG: Radar: Revealed Dead End.
+[18:23.532] Tech resolved  P1
+[18:24.439] Mode selected P1: ATTACK
+[18:24.754] Revealed: P1 (3,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[18:26.652] Dice rolled: 5
+[18:26.660] MSG: Mars Drill wins!
+[18:31.154] Crystals: P0 3600 → 3180 (-420)  [battle]
+[18:35.353] Attack P1(3,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(3,3)"Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature}  Dice=5  ATK=40 vs DEF=35  → WIN
+[18:35.353] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[18:35.353] Reckoning overlay: P0 "Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature} badge=35 ATK pill=45 DEF pill=35 mod=+DEF 0 (35+0=35)
+[18:35.353] Anim: 3A  △ P0(3,3)
+[18:35.353] Card destroyed  P0 (3,3) "Dew the Frog Knight" {Unit ATK45 DEF35 | cost 420 | affinity Nature}
+[18:37.868] Turn ended  P1  |  Crystals P0=3180 P1=1400
+
+--- Turn 5  |  Player 0  |  Crystals P0=3180 P1=1400 ---
+[18:43.999] MSG: Tap 2 material card(s) on the field.
+[18:44.162] MSG: 1 more material(s) needed.
+[18:44.880] Crystals: P0 3180 → 2680 (-500)  [union]
+[18:47.712] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[18:47.766] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[18:47.768] MSG: Diamond Unicorn: +15 ATK, +0 DEF until turn end!
+[18:58.490] Dice rolled: 4
+[18:58.518] MSG: Magical Butterfly wins!
+[19:01.648] Crystals: P1 1400 → 1000 (-400)  [battle]
+[19:05.898] Attack P0(3,2)"Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20} → P1(3,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=4  ATK=35 vs DEF=30  → WIN
+[19:05.898] Reckoning overlay: P0 "Magical Butterfly" {Unit ATK35 DEF35 | cost 180 | affinity Nature | base 15/15 | buff +permATK20, +permDEF20} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[19:05.898] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[19:05.898] Anim: 3A  △ P1(3,1)
+[19:05.898] Card destroyed  P1 (3,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[19:24.107] Crystals: P0 2680 → 680 (-2000)  [tech cost]
+[19:26.940] Tech played  P0: "Rift Strike"
+[19:28.468] Target prompt: "Rift Strike: Choose 3 adjacent cells on the foe's field."  filter=rift_strike_triplet
+[19:43.527] Card destroyed  P1 (2,2) "Moon Tribe Marksman" {Unit ATK25 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff -auraATK10 | face-down}
+[19:43.553] MSG: Rift Strike: Destroyed 1 card(s) on 3 adjacent cells!
+[19:44.285] Tech resolved  P0
+[23:07.564] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[23:09.025] Dice rolled: 3
+[23:09.092] MSG: Grand Fort Footsoldier hits Dead End — nothing happens.
+[23:11.995] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(3,2)(empty)  Dice=3  → DEAD_END
+[23:11.995] Anim: 3F  (blank slot)
+[23:12.737] Turn ended  P0  |  Crystals P0=680 P1=1000
+
+--- Turn 6  |  Player 1  |  Crystals P0=680 P1=1000 ---
+[23:15.153] Mode selected P1: TECH
+[23:15.465] Tech played  P1: "Tease"
+[23:17.514] MSG: Ability triggered: "Magical Butterfly" (temp boost on opp tech)
+[23:19.068] MSG: Magical Butterfly: +10 ATK & +10 DEF permanently!
+[23:19.246] Target prompt: "Tease: Choose 1 of your face-down cells to reveal."  filter=self_squares_1_opponent_turn
+[23:22.636] Dead-end placed  P0 (4,1)
+[23:22.645] MSG: Tease: Opponent revealed Dead End.
+[23:22.662] Tech resolved  P1
+[23:25.027] Crystals: P1 1000 → 500 (-500)  [union]
+[23:27.861] Revealed: P1 (0,0) "Giant Mining Pod" {Union ATK20 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[23:27.923] Union summoned P1: "Giant Mining Pod" {Union ATK20 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down}, "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic | face-down}
+[23:31.288] Mode selected P1: ATTACK
+[23:32.490] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[23:33.731] Dice rolled: 5
+[23:34.027] MSG: Trap triggered: Trap Hole!
+[23:38.086] Coin flip: Heads, Heads, Heads
+[23:40.773] MSG: Trap Hole: Heads, Heads, Heads.
+[23:40.776] Crystals: P1 500 → 440 (-60)  [trap]
+[23:43.420] MSG: Trap Hole: 3 head(s) — Player 2 loses 60 Crystals!
+[23:44.875] Attack P1(0,0)"Giant Mining Pod" {Union ATK20 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[23:44.875] Reckoning overlay: P1 "Giant Mining Pod" {Union ATK20 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=80 mod=+ATK 0 (20+0=20)
+[23:44.875] Anim: 3D  (attacker survives)
+[23:47.390] Turn ended  P1  |  Crystals P0=680 P1=440
+
+--- Turn 7  |  Player 0  |  Crystals P0=680 P1=440 ---
+[23:54.920] Tech played  P0: "Tease"
+[23:56.466] Target prompt: "Tease: Choose 1 of your face-down cells to reveal."  filter=self_squares_1_opponent_turn
+[23:56.863] Revealed: P1 (1,4) "Foul Gas" {cost 0}
+[23:59.005] MSG: Tease: Opponent revealed Dead End.
+[23:59.218] Tech resolved  P0
+[24:08.875] Revealed: P1 (4,3) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[24:10.073] Dice rolled: 2
+[24:10.088] MSG: Grand Fort Archer wins!
+[24:12.578] Crystals: P1 440 → 240 (-200)  [battle]
+[24:16.766] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(4,3)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=2  ATK=30 vs DEF=20  → WIN
+[24:16.766] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[24:16.766] Reckoning overlay: P1 "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[24:16.766] Anim: 3A  △ P1(4,3)
+[24:16.766] Card destroyed  P1 (4,3) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[24:21.578] Dice rolled: 4
+[24:21.616] MSG: Magical Butterfly hits Dead End — nothing happens.
+[24:24.738] Attack P0(3,2)"Magical Butterfly" {Unit ATK45 DEF45 | cost 180 | affinity Nature | base 15/15 | buff +permATK30, +permDEF30} → P1(0,4)(empty)  Dice=4  → DEAD_END
+[24:24.738] Anim: 3F  (blank slot)
+[24:26.006] Turn ended  P0  |  Crystals P0=680 P1=240
+
+--- Turn 8  |  Player 1  |  Crystals P0=680 P1=240 ---
+[24:28.351] Mode selected P1: ATTACK
+[24:28.684] Revealed: P1 (4,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[24:30.590] Dice rolled: 4
+[24:30.606] MSG: Moon Tribe Twin Blader wins!
+[24:33.088] Crystals: P0 680 → 380 (-300)  [battle]
+[24:35.990] Coin flip: Tails
+[24:38.704] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[24:40.068] Attack P1(4,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=4  ATK=30 vs DEF=25  → WIN
+[24:40.068] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[24:40.068] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[24:40.068] Anim: 3A  △ P0(1,1)
+[24:40.068] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[24:40.554] Mode selected P1: ATTACK
+[24:41.755] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[24:42.978] Dice rolled: 2
+[24:43.218] MSG: Trap triggered: Decoy Puppet!
+[24:45.729] Crystals: P0 380 → 280 (-100)  [trap cost]
+[24:48.553] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[24:50.005] Attack P1(0,0)"Giant Mining Pod" {Union ATK20 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=2  → Unit vs Trap
+[24:50.005] Reckoning overlay: P1 "Giant Mining Pod" {Union ATK20 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=80 mod=+ATK 0 (20+0=20)
+[24:50.005] Anim: 3D  (attacker survives)
+[24:50.470] Turn ended  P1  |  Crystals P0=280 P1=240
+
+--- Turn 9  |  Player 0  |  Crystals P0=280 P1=240 ---
+[25:01.374] Dice rolled: 3
+[25:01.390] MSG: Magical Butterfly wins!
+[25:05.862] Crystals: P1 240 → 0 (-240)  [battle]
+[25:08.870] Ability choice: -1 (No)
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 280  P1: 0  |  Turns: 9
